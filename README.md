@@ -34,10 +34,13 @@
 * Make sure it works for all types of data
 * Animation but carefully used
 * Dealing with missing data
-* Text warping for long names
+* Text wrap for long names (see [d3plus word wrap](https://github.com/alexandersimoes/d3plus/wiki/Basic-Utilities#wordwrap))
 * Guaranty that exported SVG will be correct
 * Make components as reusable as possible (e.g. axis, ..)
 * Customizable tooltips
-* Capture state (and enable slide shows)
+* Capture state (and enable slide shows), enable loading at a specific state
 * Dynamically load data, lazy data loading
 * Some storytelling feature: step by step animation, etc.
+* Callback once the loading is terminated
+* Binding with external buttons/widgets
+* Legend: should be informative on the mapping and the quantity of attributes, also actionable for filtering. Multiple selections should be allowed.
