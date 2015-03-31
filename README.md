@@ -6,11 +6,11 @@
 * Re-create standard examples from d3
  * Treeemap ([with word wrap](http://bl.ocks.org/mundhradevang/1387786))
  * Scatterplot http://bl.ocks.org/mbostock/3887118
- * Stacked graph http://bl.ocks.org/mbostock/4060954
+ * Stacked graph http://bl.ocks.org/mbostock/4060954 and transition to [small multiples](http://bl.ocks.org/mbostock/9490516)
  * Maps
  * Google maps
  * SVG geojson
- * Some flow map
+ * Some flow map or graph such as [pivotgraph](http://bl.ocks.org/mbostock/4343153)
  * Horizontal or vertical dot plot
  * Rankings
 
