@@ -21,20 +21,23 @@
 
 ## What it should achieve
 
+* Should be fast, kept simple
 * Create multiple instances of visualizations on the same page
-Configurable to be customized
-Default values should be coherent
-Extensible to add new functionalities
-Performances
-Testings
-Consistent input file
-Export
-Make sure it works for all types of data
-Animation
-Dealing with missing data
-Labels for long names
-Guaranty that exported SVG will be correct
-Make components as reusable as possible (e.g. axis, ..)
-Customizable tooltips
-Lazy data loading
-Capture state (and enable slide shows)
+* Customized visual design
+* Default values should be coherent
+* Extensible to add new functionalities
+* Performances
+* Testings
+* Consistent input file
+* Export: svg, png, ..
+* Make sure it works for all types of data
+* Animation
+* Dealing with missing data
+* Labels for long names
+* Guaranty that exported SVG will be correct
+* Make components as reusable as possible (e.g. axis, ..)
+* Customizable tooltips
+* Lazy data loading
+* Capture state (and enable slide shows)
+* Dynamically load data
+* Some storytelling feature: step by step animation, etc.
