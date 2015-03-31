@@ -14,6 +14,9 @@
  * Horizontal or vertical dot plot
  * Rankings
 
+* Templating visualizations
+ * Consider states issues later on 
+
 * Boilerplate code
  * Dev environment
  * Automate compilation
@@ -44,3 +47,4 @@
 * Callback once the loading is terminated
 * Binding with external buttons/widgets
 * Legend: should be informative on the mapping and the quantity of attributes, also actionable for filtering. Multiple selections should be allowed.
+* Complex states should be captured and avaibale via the URL
