@@ -18,8 +18,9 @@
 * With utils
  * Labels http://bl.ocks.org/dbuezas/9306799
  * Color scale / legend (should contain the min/max values and min/max color range)
- * Create time slider
- * Create filters button
+ * Time slider
+ * Filters button
+ * Title
 
 * Templating visualizations
  * Standard interface to create them
@@ -33,6 +34,10 @@
  * Performances (included in unit testing?)
  * Sample datasets we will be using
  * Consistent input file
+
+* Visual customization
+ * Margin, padding, etc.
+ * Number format. Font, font weight.
 
 
 ## What it should achieve
@@ -66,4 +71,26 @@ Storytelling
 * See https://idl.cs.washington.edu/files/2014-Ellipsis-EuroVis.pdf
 * See also http://www.visualcinnamon.com/2014/12/using-data-storytelling-with-chord.html
 
+Template
+* See http://bost.ocks.org/mike/chart/
+* See http://bost.ocks.org/mike/chart/time-series-chart.js
+
+.container("#viz")
+.type("tree_map")
+.height(height)
+.width(width)
+.data(sample_data)
+.year(year) 
+.render()
+
+Update
+
+vis.render()
+
+# Refs
+
+NVd3 - http://nvd3.org/ 
+C3.js - http://c3js.org/ 
+xCharts - http://tenxer.github.io/xcharts/ 
+Rickshaw - http://code.shutterstock.com/rickshaw/
 
