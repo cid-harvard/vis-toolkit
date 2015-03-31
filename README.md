@@ -5,19 +5,19 @@
 
 * Re-create standard examples from d3
  * Treeemap ([with word wrap](http://bl.ocks.org/mundhradevang/1387786))
-** Scatterplot http://bl.ocks.org/mbostock/3887118
-** Stacked graph http://bl.ocks.org/mbostock/4060954
-** Maps
-** Google maps
-** SVG geojson
-** Some flow map
-** Horizontal or vertical dot plot
-** Rankings
+ * Scatterplot http://bl.ocks.org/mbostock/3887118
+ * Stacked graph http://bl.ocks.org/mbostock/4060954
+ * Maps
+ * Google maps
+ * SVG geojson
+ * Some flow map
+ * Horizontal or vertical dot plot
+ * Rankings
 
 * Boilerplate code
-** Dev environment
-** Automate compilation
-** Testing 
+ * Dev environment
+ * Automate compilation
+ * Testing 
 
 ## What it should achieve
 
