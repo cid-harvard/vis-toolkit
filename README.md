@@ -4,7 +4,7 @@
 ## Roadmap
 
 * Re-create standard examples from d3
-** Treeemap ([with word wrap](http://bl.ocks.org/mundhradevang/1387786))
+ * Treeemap ([with word wrap](http://bl.ocks.org/mundhradevang/1387786))
 ** Scatterplot http://bl.ocks.org/mbostock/3887118
 ** Stacked graph http://bl.ocks.org/mbostock/4060954
 ** Maps
