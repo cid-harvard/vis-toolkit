@@ -23,6 +23,7 @@
 
 * Should be fast, kept simple
 * Create multiple instances of visualizations on the same page
+* Interactions: focus, selection, filter, aggregate, time change
 * Customized visual design
 * Default values should be coherent
 * Extensible to add new functionalities
@@ -31,13 +32,12 @@
 * Consistent input file
 * Export: svg, png, ..
 * Make sure it works for all types of data
-* Animation
+* Animation but carefully used
 * Dealing with missing data
-* Labels for long names
+* Text warping for long names
 * Guaranty that exported SVG will be correct
 * Make components as reusable as possible (e.g. axis, ..)
 * Customizable tooltips
-* Lazy data loading
 * Capture state (and enable slide shows)
-* Dynamically load data
+* Dynamically load data, lazy data loading
 * Some storytelling feature: step by step animation, etc.
