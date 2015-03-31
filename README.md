@@ -75,13 +75,30 @@ Template
 * See http://bost.ocks.org/mike/chart/
 * See http://bost.ocks.org/mike/chart/time-series-chart.js
 
+## Shared
+
 .container("#viz")
-.type("tree_map")
+
 .height(height)
 .width(width)
 .data(sample_data)
 .year(year) 
 .render()
+
+## Tree_map
+
+.type("tree_map")
+
+## Rankings
+
+.type("rankings")
+.cols(["A", "B", "C"])
+
+## Line chart
+
+## Rankings
+
+
 
 Update
 
@@ -89,8 +106,8 @@ vis.render()
 
 # Refs
 
-NVd3 - http://nvd3.org/ 
-C3.js - http://c3js.org/ 
-xCharts - http://tenxer.github.io/xcharts/ 
-Rickshaw - http://code.shutterstock.com/rickshaw/
+* NVd3 - http://nvd3.org/ 
+* C3.js - http://c3js.org/ 
+* xCharts - http://tenxer.github.io/xcharts/ 
+* Rickshaw - http://code.shutterstock.com/rickshaw/
 
