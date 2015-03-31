@@ -13,6 +13,9 @@
  * Some flow map or graph such as [pivotgraph](http://bl.ocks.org/mbostock/4343153)
  * Horizontal or vertical dot plot
  * Rankings
+ * Labels http://bl.ocks.org/dbuezas/9306799
+ * Diverging bar charts http://bl.ocks.org/wpoely86/e285b8e4c7b84710e463
+
 
 * Templating visualizations
  * Consider states issues later on 
