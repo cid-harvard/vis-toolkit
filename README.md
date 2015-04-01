@@ -71,19 +71,51 @@ Storytelling
 * See https://idl.cs.washington.edu/files/2014-Ellipsis-EuroVis.pdf
 * See also http://www.visualcinnamon.com/2014/12/using-data-storytelling-with-chord.html
 * Vertical scrolling support? [graph-scroll](http://1wheel.github.io/graph-scroll/)
+* See [Miso project](https://github.com/misoproject/storyboard)
+
+Misc Considerations (TBD)
+
+* Cross Browser Compatibility
+* Cross Device Compatibility
+
 
 Template
 * See http://bost.ocks.org/mike/chart/
 * See http://bost.ocks.org/mike/chart/time-series-chart.js
 
+## Code Structure
+
+* build
+** vistk.css
+** vistk.js
+* examples
+* src
+* test
+** treemapTest.html
+
+
+
 ## Create a chart
+
+We should be able to create a chart like that:
+
+```json
+var chart = new vistk.Chart({
+    data: datasource,
+    type: 'line',
+    x: 'x-var',
+    y: 'y-var',
+    color: 'type'
+});
+```
 
 ```json
 .container("#viz")
 .height(height)
 .width(width)
-.data(sample_data)
-.year(year) 
+.data(data)
+.id("name")
+.year("year")
 .render()
 ```
 
@@ -91,6 +123,11 @@ Template
 
 ```json
 .type("tree_map")
+.size("value")
+.color(function(d){
+  return color(d);
+})
+.text("name")
 ```
 
 ### Rankings
@@ -98,6 +135,7 @@ Template
 ```json
 .type("rankings")
 .cols(["A", "B", "C"])
+.order()
 ```
 
 ### Line chart
@@ -106,6 +144,13 @@ Template
 .type("rankings")
 ```
 
+### Geo map
+
+```json
+.type("geo_map")
+.text("text")
+
+```
 
 ## Update a chart
 
