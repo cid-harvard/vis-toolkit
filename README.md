@@ -94,6 +94,18 @@ Template
 ** treemapTest.html
 
 
+## Usage
+
+Simply add the vistk JavaScript and CSS files.
+
+```html
+<link href="vistk.css" rel="stylesheet">
+<script src="vistk.js"></script>
+```
+
+### Dependencies
+
+* D3 (which version?)
 
 ## Create a chart
 

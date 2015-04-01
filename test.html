@@ -1,0 +1,25 @@
+<!doctype html>
+<meta charset="utf-8">
+<script src="js/d3.js"></script>
+<script src="js/vistk.js"></script>
+<body>
+<div id="viz"></div>
+<script>
+
+  var test_data = [
+    {"group": "transportation", "usd": 12897429187, "product": "cars", "image": "trans.png"},
+    {"group": "transportation", "usd": 8974520985, "product": "airplanes", "image": "trans.png"},
+    {"group": "foodstuffs", "usd": 98723420, "product": "apples", "image": "food.png"},
+    {"group": "foodstuffs", "usd": 6897234098, "product": "bananas", "image": "food.png"},
+    {"group": "foodstuffs", "usd": 590834587, "product": "oranges", "image": "food.png"}
+  ];
+
+  var visualization = vistk.viz()
+    .container("body")
+    .data(test_data)
+	  .columns(["id", "year", "name", "continent"])
+
+  d3.select("#viz").call(visualization)
+
+</script>
+</body>
