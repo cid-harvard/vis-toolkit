@@ -70,39 +70,48 @@ Storytelling
 * Part of the visualization
 * See https://idl.cs.washington.edu/files/2014-Ellipsis-EuroVis.pdf
 * See also http://www.visualcinnamon.com/2014/12/using-data-storytelling-with-chord.html
+* Vertical scrolling support? [graph-scroll](http://1wheel.github.io/graph-scroll/)
 
 Template
 * See http://bost.ocks.org/mike/chart/
 * See http://bost.ocks.org/mike/chart/time-series-chart.js
 
-## Shared
+## Create a chart
 
+```json
 .container("#viz")
-
 .height(height)
 .width(width)
 .data(sample_data)
 .year(year) 
 .render()
+```
 
-## Tree_map
+### Tree_map
 
+```json
 .type("tree_map")
+```
 
-## Rankings
+### Rankings
 
+```json
 .type("rankings")
 .cols(["A", "B", "C"])
+```
 
-## Line chart
+### Line chart
 
-## Rankings
+```json
+.type("rankings")
+```
 
 
+## Update a chart
 
-Update
-
+```json
 vis.render()
+```
 
 # Refs
 
