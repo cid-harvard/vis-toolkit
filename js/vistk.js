@@ -1,10 +1,14 @@
-vistk = window.vistk || {};
-
+var vistk = window.vistk || {};
 window.vistk = vistk;
+
+vistk.version = "0.0.0.1";
+vistk.dev = true;
+vistk.utils = vistk.utils || {};
 
 vistk.viz = function() {
 
 	// Plenty of default params here
+	// TODO: should we keep them?
   vars = {
     "container" : "#viz",
     "dev" : true,
@@ -33,8 +37,9 @@ vistk.viz = function() {
 
     selection.each(function(data_passed) {
 
-
-    	d3.select("#viz").append("span").html(JSON.stringify(vars.data))
+    	// Basic dump of the data we have
+    	d3.select("#viz").append("span")
+    		.html(JSON.stringify(vars.data));
 
   	});
 
@@ -56,12 +61,6 @@ vistk.viz = function() {
   chart.year = function(x) {
     if (!arguments.length) return vars.year;
     vars.year = x;
-    return chart;
-  };
-
-  chart.columns = function(x) {
-    if (!arguments.length) return vars.columns;
-    vars.columns = x;
     return chart;
   };
 
@@ -130,6 +129,14 @@ vistk.viz = function() {
 	  vars.depth = x;
 	  return chart;
 	};
+
+	// RANKINGS
+  chart.columns = function(x) {
+    if (!arguments.length) return vars.columns;
+    vars.columns = x;
+    return chart;
+  };
+
 
 	if(vars.dev)   
 		console.log("update", chart.year())
