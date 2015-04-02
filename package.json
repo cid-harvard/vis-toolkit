@@ -1,0 +1,28 @@
+{
+  "name": "vis-toolkit",
+  "version": "0.0.0",
+  "description": "vis-toolkit ===================",
+  "main": "\"\"",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cid-harvard/vis-toolkit.git"
+  },
+  "keywords": [
+    "grunt",
+    "bower"
+  ],
+  "author": "romsson",
+  "license": "BSD",
+  "bugs": {
+    "url": "https://github.com/cid-harvard/vis-toolkit/"
+  },
+  "devDependencies": {
+    "grunt": "*",
+    "grunt-contrib-concat": "~0.3.0",
+    "grunt-contrib-watch": "~0.6.1"
+  },
+  "dependencies": {}
+}
