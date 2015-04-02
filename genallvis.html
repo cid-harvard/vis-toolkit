@@ -7,10 +7,13 @@
 <div id="viz" style="float: right"></div>
 
 <h1>Gen All Vis</h1>
-
+Datasets: 
+<button onclick="load_dataset('default', fill_text_area)">Default</button>
 <button onclick="load_dataset('cars', fill_text_area)">Cars</button>
 <button onclick="load_dataset('flare', fill_text_area)">Flare</button>
+<button onclick="load_dataset('casy_usa_2012', fill_text_area)">U.S. exports 2012</button>
 <br>
+Visualizations:
 <button onclick="gen_vis('treemap')">Treemap</button>
 <button onclick="gen_vis('table')">Table</button>
 <br><br>
@@ -53,9 +56,11 @@ function gen_vis(type) {
 
   //dataset = eval(d3.select('#data-textarea').html());
 
+  d3.select("#viz").selectAll("*").remove()
+
   dataset = JSON.parse(d3.select('#data-textarea').html())
 
-  var visualization = vistk.viz()
+   visualization = vistk.viz()
     .type(type)
     .height(400)
     .width(600)
@@ -71,9 +76,7 @@ function gen_vis(type) {
     -Detect data format type
     -Handle when zero or empty valyes
 
-
     */
-
 
   d3.select("#viz").call(visualization)
 
@@ -86,7 +89,11 @@ function fill_text_area(txt) {
 
 function load_dataset(dataset_name, callback) {
 
-  if(dataset_name == "flare") {
+  if(dataset_name == "default") {
+
+    fill_text_area(JSON.stringify(root));
+
+  } else if(dataset_name == "flare") {
 
     d3.json("data/flare.json", function(error, json) {
 
@@ -97,23 +104,43 @@ function load_dataset(dataset_name, callback) {
 
     d3.csv("data/cars.csv", function(error, csv) {
 
+      result = {"name": "flare", "children": []};
+
+      // JSON.stringify(csv)
+
+      result.children = csv.map(function(d, i) { d.size = parseInt(d.weight); return d;});
+      c = csv;
+      callback(JSON.stringify(result));
+
+    })
+
+  } else if(dataset_name == "casy_usa_2012") {
+
+    d3.json("data/casy_usa_2012.json", function(error, csv) {
+
       callback(JSON.stringify(csv));
 
     })
 
   }
 
+
 }
 
-fill_text_area(JSON.stringify(root))
+
+load_dataset('default', fill_text_area);
+
 
 /* TODO
 
   Input for URLs
   https://api.github.com/users/romsson/repos
 
-https://codemirror.net/
-
+  https://codemirror.net/
+  If file content too long then cut it off
+  -If tree structure then generate permutations for the table
+  -When creating a treemap, make sure the structure is the right one
+  -
 */
 </script>
 
