@@ -1,5 +1,34 @@
 # vis-toolkit
 
+## Usage
+
+Simply add the vistk JavaScript and CSS files.
+
+```html
+<link href="vistk.css" rel="stylesheet">
+<script src="vistk.js"></script>
+```
+
+### Dependencies
+
+* D3 (which version?)
+
+## Examples
+
+* Table
+* Treemap
+
+* Build your own graph environment
+
+## Tests
+
+
+## Howto create a new app
+
+* What is the interface?
+* What should be reused or not?
+
+
 
 ## Roadmap
 
@@ -26,7 +55,8 @@
  * Standard interface to create them
  * Consider states issues later on 
  * Export: svg, png, ..
- * 
+
+
 * Boilerplate code
  * Dev environment
  * Automate compilation
@@ -57,7 +87,6 @@
 * Customizable tooltips (d3plus.tooltip.create())
 * Capture state (and enable slide shows), enable loading at a specific state
 * Dynamically load data, lazy data loading
-* Some storytelling feature: step by step animation, etc.
 * Callback once the loading is terminated
 * Binding with external buttons/widgets
 * Legend: should be informative on the mapping and the quantity of attributes, also actionable for filtering. Multiple selections should be allowed.
@@ -72,6 +101,12 @@ Storytelling
 * See also http://www.visualcinnamon.com/2014/12/using-data-storytelling-with-chord.html
 * Vertical scrolling support? [graph-scroll](http://1wheel.github.io/graph-scroll/)
 * See [Miso project](https://github.com/misoproject/storyboard)
+
+* Tentative
+ * Use the grammar of graphics visual decomposition
+ * First show the background
+ * Or a specificly highlighted element (e.g. focus)
+ * 
 
 Misc Considerations (TBD)
 
@@ -93,19 +128,6 @@ Template
 * test
 ** treemapTest.html
 
-
-## Usage
-
-Simply add the vistk JavaScript and CSS files.
-
-```html
-<link href="vistk.css" rel="stylesheet">
-<script src="vistk.js"></script>
-```
-
-### Dependencies
-
-* D3 (which version?)
 
 ## Create a chart
 
