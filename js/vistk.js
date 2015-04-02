@@ -14,6 +14,7 @@ vistk.viz = function() {
     "dev" : true,
     "id" : "id",
     "id_var" : "id",
+    "group_var": "",
     "data"  : [],
     "year"  : 1995,
     "columns": ["Rank", "year", "Abbrv", "Country"],
@@ -21,6 +22,7 @@ vistk.viz = function() {
     "solo": [],
     "nesting": null,
     "nesting_aggs": {},
+    "type": "table"
   }
 
   vars.parent = d3.select(vars.container);
@@ -37,9 +39,33 @@ vistk.viz = function() {
 
     selection.each(function(data_passed) {
 
-    	// Basic dump of the data we have
-    	d3.select("#viz").append("span")
-    		.html(JSON.stringify(vars.data));
+      if(vars.type == "undefined") {
+
+        // Basic dump of the data we have
+        d3.select("#viz").append("span")
+          .html(JSON.stringify(vars.data));
+
+      } else if(vars.type == "table") {
+
+        d3.select("#viz").append("span")
+          .html("CURRENT TYPE: " + vars.type);
+
+        // Basic dump of the data we have
+        d3.select("#viz").append("span")
+          .html(JSON.stringify(vars.data));
+
+
+        // Basic dump of the current parameters
+
+        // ENTER
+
+        // REMOVE
+
+        // UPDATE
+
+
+      }
+
 
   	});
 
@@ -111,6 +137,13 @@ vistk.viz = function() {
 
 	  return chart;
 	};
+
+
+  chart.group = function(x) {
+    if (!arguments.length) return vars.group_var;
+    vars.group_var = x;
+    return chart;
+  };
 
 	chart.nesting = function(x) {
 	  if (!arguments.length) return vars.nesting;
