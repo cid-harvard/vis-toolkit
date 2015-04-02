@@ -2,6 +2,7 @@
 <meta charset="utf-8">
 <script src="js/d3.js"></script>
 <script src="js/vistk.js"></script>
+<link href="css/vistk.css" rel="stylesheet">
 <body>
 <div id="viz"></div>
 <script>
@@ -15,11 +16,13 @@
   ];
 
   var visualization = vistk.viz()
-    .container("body")
+    .type("table")
+    .container("#viz")
     .data(test_data)
+    .columns(['group', 'product'])
     .id("product")
     .group("group")
-	  .columns(["id", "year", "name", "continent"])
+    .title("Products")
 
   d3.select("#viz").call(visualization)
 
@@ -42,13 +45,25 @@
       .html(function(d) { return d})
 
   // TODO: find levels of aggregation
-  d3.select("body").append("input")
+  d3.select(vars.container).append("input")
              .attr("type", "radio")
              .attr("id", "id")  
              .attr("name", "radio-nest")
              .property("checked", true)
              .on("change", function() { vars.show_color = !vars.show_color; })
 
+  // TODO: find time range
+  d3.select(vars.container).append("input")
+                .attr("type", "range")
+                .attr("class", "slider-random")
+                .property("min", 0)
+                .property("max", 1000)
+                .property("value", 100)
+                .attr("step", 1)
+                .on("input", function() {
+                  d3.select("#max-time").text(this.value);
+                })
+                .style("width", "100px")
 
 </script>
 
