@@ -1,0 +1,121 @@
+<!doctype html>
+<meta charset="utf-8">
+<script src="js/d3.js"></script>
+<script src="js/vistk.js"></script>
+<link href="css/vistk.css" rel="stylesheet">
+<body>
+<div id="viz" style="float: right"></div>
+
+<h1>Gen All Vis</h1>
+
+<button onclick="load_dataset('cars', fill_text_area)">Cars</button>
+<button onclick="load_dataset('flare', fill_text_area)">Flare</button>
+<br>
+<button onclick="gen_vis('treemap')">Treemap</button>
+<button onclick="gen_vis('table')">Table</button>
+<br><br>
+<textarea rows="40" cols="100" id="data-textarea">
+</textarea>
+
+<script>
+
+  var root = [{
+   "name": "flare",
+   "children": [
+    {
+     "name": "analytics",
+     "children": [
+      {
+       "name": "cluster",
+       "children": [
+        {"name": "AgglomerativeCluster", "size": 3938},
+        {"name": "CommunityStructure", "size": 3812},
+        {"name": "HierarchicalCluster", "size": 6714},
+        {"name": "MergeEdge", "size": 743}
+       ]
+      },
+      {
+       "name": "cluster",
+       "children": [
+        {"name": "AgglomerativeCluster", "size": 3938},
+        {"name": "CommunityStructure", "size": 3812},
+        {"name": "HierarchicalCluster", "size": 6714},
+        {"name": "MergeEdge", "size": 743}
+       ]
+      }
+    ]
+   }]
+  }];
+
+function gen_vis(type) {
+
+  // Retrieve the current variable
+
+  //dataset = eval(d3.select('#data-textarea').html());
+
+  dataset = JSON.parse(d3.select('#data-textarea').html())
+
+  var visualization = vistk.viz()
+    .type(type)
+    .height(400)
+    .width(600)
+    .container("#viz")
+    .data(dataset)
+    .id("product")
+    .group("group")
+    .title("Products")
+
+    /* TODO
+
+    -Find good parameters
+    -Detect data format type
+    -Handle when zero or empty valyes
+
+
+    */
+
+
+  d3.select("#viz").call(visualization)
+
+}
+
+function fill_text_area(txt) {
+  d3.select('#data-textarea').html(txt);
+
+}
+
+function load_dataset(dataset_name, callback) {
+
+  if(dataset_name == "flare") {
+
+    d3.json("data/flare.json", function(error, json) {
+
+      callback(JSON.stringify(json));
+    })
+
+  } else if(dataset_name == "cars") {
+
+    d3.csv("data/cars.csv", function(error, csv) {
+
+      callback(JSON.stringify(csv));
+
+    })
+
+  }
+
+}
+
+fill_text_area(JSON.stringify(root))
+
+/* TODO
+
+  Input for URLs
+  https://api.github.com/users/romsson/repos
+
+https://codemirror.net/
+
+*/
+</script>
+
+
+</body>
