@@ -7,7 +7,7 @@
 <div id="viz"></div>
 <script>
 
-  var root = [{
+  var test_data = [{
    "name": "flare",
    "children": [
     {
@@ -35,11 +35,12 @@
    }]
   }];
 
-  var visualization = vistk.viz()
+  visualization = vistk.viz()
     .type("treemap")
     .container("#viz")
-    .data(root)
-    .columns(['group', 'product'])
+    .height(400)
+    .width(600)
+    .data(test_data)
     .id("product")
     .group("group")
     .title("Products")
