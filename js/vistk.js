@@ -38,12 +38,66 @@ vistk.viz = function() {
   if (vars.dev) console.log("Init")
 
   // TODO: remove visualization
-	//d3.select(vars.container).select("table").remove();
+	// d3.select(vars.container).select("table").remove();
 
 	if (!vars.data) vars.data = []
 
 	// Constructor
-	chart  = function(selection) {	
+	chart = function(selection) {	
+
+
+    /* TODO
+
+    -Should aggregate and filter happen here?
+    -
+
+  // AGGREGATE DATA
+    if(vars.aggregate == 'continent') {
+
+      vars.accessor_year = accessor_year_agg;
+
+      // Do the nesting by continent
+      nested_data = d3.nest()
+        .key(function(d) { 
+          return d.continent;
+        })
+        .rollup(function(leaves) {
+
+          // Generates a new dataset with aggregated data
+          return {
+            "name" : leaves[0].continent,
+            "continent": leaves[0].continent,
+            "years": [{
+              'population': d3.sum(leaves, function(d) {
+                return accessor_year(d)['population'];
+              }),
+              'life_expectancy': d3.mean(leaves, function(d) {
+                return accessor_year(d)['life_expectancy'];
+              }),
+              'gdp': d3.mean(leaves, function(d) {
+                return accessor_year(d)['gdp'];
+              }),
+            }]
+          }
+        })
+        .entries(agg_data);      
+
+      // Transform key/value into values tab only
+      agg_data = nested_data.map(function(d) { return d.values});
+    }
+
+    // FILTER DATA
+    if(vars.filter.length > 0) {
+      agg_data = agg_data.filter(function(d) {
+
+          // We don't keep values that are not in the vars.filter array
+          return vars.filter.indexOf(d["continent"]) > -1;
+        })
+    }
+
+
+    */
+
 
     selection.each(function(data_passed) {
 
@@ -72,7 +126,6 @@ vistk.viz = function() {
 
       } else if(vars.type == "treemap") {
 
-
         var width = vars.width,
         height = vars.height,
         color = d3.scale.category20c();
@@ -82,7 +135,7 @@ vistk.viz = function() {
             .size([width, height])
             .value(function(d) { return d.size; });
 
-        var svg = d3.select("body").append("svg")
+        var svg = d3.select(vars.container).append("svg")
             .attr("width", width)
             .attr("height", height)
           .append("g")
@@ -107,7 +160,6 @@ vistk.viz = function() {
             .text(function(d) { return d.children ? null : d.name; });
 
       }
-
 
   	});
 
@@ -171,8 +223,6 @@ vistk.viz = function() {
 	chart.solo = function(x) {
 	  if (!arguments.length) return vars.solo;
 
-	  console.log("solo", x);
-
 	  if(x instanceof Array) {
 	    vars.solo = x;
 	  } else {
@@ -221,7 +271,6 @@ vistk.viz = function() {
 		console.log("update", chart.year())
 
   return chart;
-
 }
 
 function row_data(row, i) {
@@ -267,7 +316,7 @@ function create_table(data) {
 
     if(vars.debug) console.log("[create_table]");    
 
-    var table = d3.select("body").append("table"),
+    var table = d3.select(vars.container).append("table"),
       thead = table.append("thead").attr("class", "thead");
       tbody = table.append("tbody");
 
