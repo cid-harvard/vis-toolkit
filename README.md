@@ -15,20 +15,22 @@ Simply add the vistk JavaScript and CSS files.
 
 ## Examples
 
-* Table
-* Treemap
+* Table (examples/table.html) | Source)
+* Treemap ([Demo](examples/treemap.html) | Source)
 
 * Build your own graph environment
 
 ## Tests
 
-
 ## Howto create a new app
 
 * What is the interface?
 * What should be reused or not?
+* What is inherited from the main interface?
+* W
 
-
+* Parameters
+* Internal state
 
 ## Roadmap
 
@@ -41,7 +43,6 @@ Simply add the vistk JavaScript and CSS files.
  * Choropleth map (using geojson)
  * Some flow map or graph such as [pivotgraph](http://bl.ocks.org/mbostock/4343153)
  * Horizontal or vertical dot plot (https://github.com/marmelab/EventDrops)
- * Rankings
  * Diverging bar charts http://bl.ocks.org/wpoely86/e285b8e4c7b84710e463
 
 * With utils
@@ -56,7 +57,6 @@ Simply add the vistk JavaScript and CSS files.
  * Consider states issues later on 
  * Export: svg, png, ..
 
-
 * Boilerplate code
  * Dev environment
  * Automate compilation
@@ -69,32 +69,41 @@ Simply add the vistk JavaScript and CSS files.
  * Margin, padding, etc.
  * Number format. Font, font weight.
 
-
 ## What it should achieve
 
 * Should be fast (e.g. only requires attributes to be loaded once)
-* Create multiple instances of visualizations on the same page
+** More importantly: we should be able to measure the performances
+* Able to create multiple instances of visualizations on the same page
+** And eventually coordinate them (e.g brushing one filters another one)
 * Interactions: focus, selection, filter, aggregate, time change
+** Either from the visualization itslef, or with auto-generated widgets
+** Binding with external buttons/widgets
 * Customized visual design
+** Default CSS but should allow this to be overloaded
 * Default values should be coherent
+** Especially when transitionning
 * Extensible to add new functionalities
+** New charts
+** New utils functions
 * Make sure it works for all types of data
 * Animation but carefully used
+** Should we use object consistancy to transform them? http://bost.ocks.org/mike/constancy/
 * Dealing/robust even with missing data
 * Text wrap for long names (see [d3plus word wrap](https://github.com/alexandersimoes/d3plus/wiki/Basic-Utilities#wordwrap))
 * Guaranty that exported SVG will be correct
-* Make components as reusable as possible (e.g. axis, ..)
+** Same with other export file formats
 * Customizable tooltips (d3plus.tooltip.create())
 * Capture state (and enable slide shows), enable loading at a specific state
 * Dynamically load data, lazy data loading
 * Callback once the loading is terminated
-* Binding with external buttons/widgets
 * Legend: should be informative on the mapping and the quantity of attributes, also actionable for filtering. Multiple selections should be allowed.
 * Complex states should be captured and avaibale via the URL
 
 Storytelling
 
 * Show one step at a time
+** Use delays and duration
+** Controled by external widgets
 * Wireframe, then color mapping, then ...
 * Part of the visualization
 * See https://idl.cs.washington.edu/files/2014-Ellipsis-EuroVis.pdf
@@ -109,17 +118,14 @@ Storytelling
  * 
 
 Misc Considerations (TBD)
-
 * Cross Browser Compatibility
 * Cross Device Compatibility
-
 
 Template
 * See http://bost.ocks.org/mike/chart/
 * See http://bost.ocks.org/mike/chart/time-series-chart.js
 
 ## Code Structure
-
 * build
 ** vistk.css
 ** vistk.js
