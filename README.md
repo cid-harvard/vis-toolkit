@@ -15,8 +15,8 @@ Simply add the vistk JavaScript and CSS files.
 
 ## Examples
 
-* Table (examples/table.html) | Source)
-* Treemap ([Demo](examples/treemap.html) | Source)
+* Table ([Source](examples/table.html))
+* Treemap ([Source](examples/treemap.html))
 
 * Build your own graph environment
 
