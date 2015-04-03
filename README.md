@@ -15,8 +15,9 @@ Simply add the vistk JavaScript and CSS files.
 
 ## Examples
 
-* Table ([Source](examples/table.html))
-* Treemap ([Source](examples/treemap.html))
+* Table ([Demo](http://cid-harvard.github.io/vis-toolkit/examples/table.html) | [Source](examples/table.html))
+* Treemap ([Demo](http://cid-harvard.github.io/vis-toolkit/examples/treemap.html) | [Source](examples/treemap.html))
+* Scatterplot ([Demo](http://cid-harvard.github.io/vis-toolkit/examples/scatterplot.html) | [Source](examples/scatterplot.html))
 
 * Build your own graph environment
 
@@ -27,7 +28,6 @@ Simply add the vistk JavaScript and CSS files.
 * What is the interface?
 * What should be reused or not?
 * What is inherited from the main interface?
-* W
 
 * Parameters
 * Internal state

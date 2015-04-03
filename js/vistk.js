@@ -159,6 +159,112 @@ vistk.viz = function() {
             .attr("text-anchor", "middle")
             .text(function(d) { return d.children ? null : d.name; });
 
+
+      } else if(vars.type == "scatterplot") {
+
+        // Original scatterplot from http://bl.ocks.org/mbostock/3887118
+        var margin = {top: 20, right: 150, bottom: 30, left: 40},
+            width = 1060 - margin.left - margin.right,
+            height = 600 - margin.top - margin.bottom;
+
+        var x = d3.scale.linear()
+            .range([0, width]);
+
+        var y = d3.scale.linear()
+            .range([height, 0]);
+
+        var color = d3.scale.category10();
+
+        var xAxis = d3.svg.axis()
+            .scale(x)
+            .orient("bottom");
+
+        var yAxis = d3.svg.axis()
+            .scale(y)
+            .orient("left");
+
+        var svg = d3.select("#viz").append("svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+          .append("g")
+            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+        var time_current = 0;
+
+        var label = svg.append("text")
+            .attr("class", "year label")
+            .attr("text-anchor", "end")
+            .attr("y", 124)
+            .attr("x", 500)
+            .text(time_current);
+
+
+          x.domain([0, d3.max(vars.data, function(d) { return d3.max(d.years, function(e) { return e.nb_products; }) })]).nice();
+          y.domain([0, d3.max(vars.data, function(d) { return d3.max(d.years, function(e) { return e.avg_products; }) })]).nice();
+
+          svg.append("g")
+              .attr("class", "x axis")
+              .attr("transform", "translate(0," + height + ")")
+              .call(xAxis)
+            .append("text")
+              .attr("class", "label")
+              .attr("x", width)
+              .attr("y", -6)
+              .style("text-anchor", "end")
+              .text("Countries Diversity");
+
+          svg.append("g")
+              .attr("class", "y axis")
+              .call(yAxis)
+            .append("text")
+              .attr("class", "label")
+              .attr("transform", "rotate(-90)")
+              .attr("y", 6)
+              .attr("dy", ".71em")
+              .style("text-anchor", "end")
+              .text("Average number of countries making the same products")
+
+          var gPoints = svg.selectAll(".points")
+                          .data(vars.data)
+                        .enter()
+                          .append("g")
+                          .attr("class", "points")
+                          .attr("transform", function(d) {
+                            return "translate("+x(d.years[time_current].nb_products)+", "+y(d.years[time_current].avg_products)+")";
+                          })
+                          .on("mouseenter",function(d, i) {
+
+                            dots.style("opacity", .1)
+                            labels.style("opacity", 0)          
+                            d3.select(this).select("circle").style("opacity", 1)
+                            d3.select(this).select("text").style("opacity", 1)
+                          //  dragit.trajectory.display(d, i);
+
+                          })
+                          .on("mouseleave", function(d, i) {
+                            dots.style("opacity", 1)
+                            labels.style("opacity", 1)     
+        //                    dragit.trajectory.remove(d, i)
+                          })
+                       //   .call(dragit.object.activate)
+
+          var dots = gPoints.append("circle")
+            .attr("r", 5)
+            .attr("cx", 0)
+            .attr("cy", 0)
+            .style("fill", function(d) { return color(d.name); })
+
+          var labels = gPoints.append("text")
+              .attr("x", 10)
+              .attr("y", 0)
+              .attr("dy", ".35em")
+              .style("text-anchor", "start")
+              .text(function(d) { return d.name; });
+
+
+
+
+
       }
 
   	});
@@ -264,6 +370,19 @@ vistk.viz = function() {
   chart.columns = function(x) {
     if (!arguments.length) return vars.columns;
     vars.columns = x;
+    return chart;
+  };
+
+  // SCATTERPLOT
+  chart.x = function(x) {
+    if (!arguments.length) return vars.x;
+    vars.x = x;
+    return chart;
+  };
+
+  chart.y = function(y) {
+    if (!arguments.length) return vars.y;
+    vars.y = y;
     return chart;
   };
 
