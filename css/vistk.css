@@ -1,6 +1,9 @@
+body {
+  font: 10px sans-serif;
+}
 
 
-/* TREEMAP */
+/* Treemap */
 
 rect {
   fill: none;
@@ -9,4 +12,23 @@ rect {
 
 text {
   font: 10px sans-serif;
+}
+
+
+/* Scatterplot */
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.dot {
+  stroke: #000;
+}
+
+.year.label {
+  font: 500 196px "Helvetica Neue";
+  fill: #ddd;
 }
