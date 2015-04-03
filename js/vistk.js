@@ -198,9 +198,8 @@ vistk.viz = function() {
             .attr("x", 500)
             .text(time_current);
 
-
-          x.domain([0, d3.max(vars.data, function(d) { return d3.max(d.years, function(e) { return e.nb_products; }) })]).nice();
-          y.domain([0, d3.max(vars.data, function(d) { return d3.max(d.years, function(e) { return e.avg_products; }) })]).nice();
+          x.domain([0, d3.max(vars.data, function(d) { return d3.max(d.years, function(e) { return e[vars.x_var]; }) })]).nice();
+          y.domain([0, d3.max(vars.data, function(d) { return d3.max(d.years, function(e) { return e[vars.y_var]; }) })]).nice();
 
           svg.append("g")
               .attr("class", "x axis")
@@ -374,15 +373,15 @@ vistk.viz = function() {
   };
 
   // SCATTERPLOT
-  chart.x = function(x) {
-    if (!arguments.length) return vars.x;
-    vars.x = x;
+  chart.x_var = function(x) {
+    if (!arguments.length) return vars.x_var;
+    vars.x_var = x;
     return chart;
   };
 
-  chart.y = function(y) {
-    if (!arguments.length) return vars.y;
-    vars.y = y;
+  chart.y_var = function(y) {
+    if (!arguments.length) return vars.y_var;
+    vars.y_var = y;
     return chart;
   };
 

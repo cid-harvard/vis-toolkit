@@ -5,7 +5,7 @@
 <link href="../css/vistk.css" rel="stylesheet">
 <body>
 <div id="viz"></div>
-</head>
+
 <body>
 
 <script>
@@ -16,8 +16,8 @@ d3.json("../data/diversification_ubiquity_hs4_1995_2012.json", function(error, c
     .type("scatterplot")
     .container("#viz")
     .data(countries)
-    .x("nb_products")
-    .y("avg_products")
+    .x_var("nb_products")
+    .y_var("avg_products")
     .id("product")
     .year(0)
     .title("Testing Table")
