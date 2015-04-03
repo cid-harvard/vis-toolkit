@@ -1,0 +1,52 @@
+<!doctype html>
+<meta charset="utf-8">
+<script src="../js/d3.js"></script>
+<script src="../js/vistk.js"></script>
+<link href="../css/vistk.css" rel="stylesheet">
+<body>
+<div id="viz"></div>
+<script>
+
+  var test_data = [{
+   "name": "flare",
+   "children": [
+    {
+     "name": "analytics",
+     "children": [
+      {
+       "name": "cluster",
+       "children": [
+        {"name": "AgglomerativeCluster", "size": 3938},
+        {"name": "CommunityStructure", "size": 3812},
+        {"name": "HierarchicalCluster", "size": 6714},
+        {"name": "MergeEdge", "size": 743}
+       ]
+      },
+      {
+       "name": "cluster",
+       "children": [
+        {"name": "AgglomerativeCluster", "size": 3938},
+        {"name": "CommunityStructure", "size": 3812},
+        {"name": "HierarchicalCluster", "size": 6714},
+        {"name": "MergeEdge", "size": 743}
+       ]
+      }
+    ]
+   }]
+  }];
+
+  visualization = vistk.viz()
+    .type("treemap")
+    .container("#viz")
+    .height(400)
+    .width(600)
+    .data(test_data)
+    .id("product")
+    .group("group")
+    .title("Products")
+
+  d3.select("#viz").call(visualization)
+
+</script>
+
+</body>

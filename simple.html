@@ -1,0 +1,16 @@
+<!doctype html>
+<meta charset="utf-8">
+<script src="js/d3.js"></script>
+<script src="js/vistk.js"></script>
+
+<script>
+
+ var visualization = vistk.viz()
+    .container("#exports")
+    .data(trade_data)
+	  .columns(["id", "year", "name", "continent"])
+    .nesting(["nesting_0","nesting_1","nesting_2"])
+    .nesting_aggs({"complexity":"mean","distance":"mean","rca":"mean"})
+    .depth("nesting_2");
+
+</script>

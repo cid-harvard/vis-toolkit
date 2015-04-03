@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+
+rect {
+  fill: none;
+  stroke: #fff;
+}
+
+text {
+  font: 10px sans-serif;
+}
+
+</style>
+<form>
+  <label><input type="radio" name="mode" value="size" checked> Size</label>
+  <label><input type="radio" name="mode" value="count"> Count</label>
+  <button onclick="filter()">Filter</button>
+</form>
+<body>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script>
+
+// From http://bl.ocks.org/mbostock/4063582
+
+// Alternatives: 
+// Zoomable treemap http://mbostock.github.io/d3/talk/20111018/treemap.html
+
+// This is what the data should look like
+var root = [{
+ "name": "flare",
+ "children": [
+  {
+   "name": "analytics",
+   "children": [
+    {
+     "name": "cluster",
+     "children": [
+      {"name": "AgglomerativeCluster", "size": 3938},
+      {"name": "CommunityStructure", "size": 3812},
+      {"name": "HierarchicalCluster", "size": 6714},
+      {"name": "MergeEdge", "size": 743}
+     ]
+    },
+    {
+     "name": "cluster",
+     "children": [
+      {"name": "AgglomerativeCluster", "size": 3938},
+      {"name": "CommunityStructure", "size": 3812},
+      {"name": "HierarchicalCluster", "size": 6714},
+      {"name": "MergeEdge", "size": 743}
+     ]
+    }
+  ]
+ }]
+}];
+
+var width = 960,
+    height = 500,
+    color = d3.scale.category20c();
+
+var treemap = d3.layout.treemap()
+    .padding(4)
+    .size([width, height])
+    .value(function(d) { return d.size; });
+
+var svg = d3.select("body").append("svg")
+    .attr("width", width)
+    .attr("height", height)
+  .append("g")
+    .attr("transform", "translate(-.5,-.5)");
+
+var cell = svg.data(root).selectAll("g")
+    .data(treemap.nodes)
+  .enter().append("g")
+    .attr("class", "cell")
+    .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+
+cell.append("rect")
+    .attr("width", function(d) { return d.dx; })
+    .attr("height", function(d) { return d.dy; })
+    .style("fill", function(d) { return d.children ? color(d.name) : null; });
+
+cell.append("text")
+    .attr("x", function(d) { return d.dx / 2; })
+    .attr("y", function(d) { return d.dy / 2; })
+    .attr("dy", ".35em")
+    .attr("text-anchor", "middle")
+    .text(function(d) { return d.children ? null : d.name; });
+
+
+</script>

@@ -1,0 +1,71 @@
+<!doctype html>
+<meta charset="utf-8">
+<script src="js/d3.js"></script>
+<script src="js/vistk.js"></script>
+<link href="css/vistk.css" rel="stylesheet">
+<body>
+<div id="viz"></div>
+<script>
+
+  var test_data = [
+    {"group": "transportation", "usd": 12897429187, "product": "cars", "image": "trans.png"},
+    {"group": "transportation", "usd": 8974520985, "product": "airplanes", "image": "trans.png"},
+    {"group": "foodstuffs", "usd": 98723420, "product": "apples", "image": "food.png"},
+    {"group": "foodstuffs", "usd": 6897234098, "product": "bananas", "image": "food.png"},
+    {"group": "foodstuffs", "usd": 590834587, "product": "oranges", "image": "food.png"}
+  ];
+
+  var visualization = vistk.viz()
+    .type("table")
+    .container("#viz")
+    .data(test_data)
+    .columns(['group', 'product'])
+    .id("product")
+    .group("group")
+    .title("Products")
+
+  d3.select("#viz").call(visualization)
+
+  // Identify the unique categories that can be used to filter
+
+  var unique_categories = d3.set(test_data.map(function(d) { return d[vars.group_var]; })).values();
+
+  var label_checkboxes = d3.select("body").selectAll("input").data(unique_categories)
+    .enter()
+      .append("label");
+
+  label_checkboxes.append("input")
+      .attr("type", "checkbox")
+      .property("checked", false)
+      .on("change", function(d) { 
+        // TODO: filter by d
+      })
+
+  label_checkboxes.append("span")
+      .html(function(d) { return d})
+
+  // TODO: find levels of aggregation
+  d3.select(vars.container).append("input")
+             .attr("type", "radio")
+             .attr("id", "id")  
+             .attr("name", "radio-nest")
+             .property("checked", true)
+             .on("change", function() { vars.show_color = !vars.show_color; })
+
+  // TODO: find time range
+  d3.select(vars.container).append("input")
+                .attr("type", "range")
+                .attr("class", "slider-random")
+                .property("min", 0)
+                .property("max", 1000)
+                .property("value", 100)
+                .attr("step", 1)
+                .on("input", function() {
+                  d3.select("#max-time").text(this.value);
+                })
+                .style("width", "100px")
+
+</script>
+
+<br>
+</body>
