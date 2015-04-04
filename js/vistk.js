@@ -95,12 +95,14 @@ vistk.viz = function() {
         })
     }
 
-
     */
 
 
     selection.each(function(data_passed) {
 
+
+    alert(vars.depth)
+    
       if(vars.type == "undefined") {
 
         // Basic dump of the data we have
@@ -108,6 +110,99 @@ vistk.viz = function() {
           .html(JSON.stringify(vars.data));
 
       } else if(vars.type == "table") {
+
+
+      function row_data(row, i) {
+
+        // Creates an array first of the size of the desired rows
+        // Then fills the array with the appropriate data
+        // Applies some formatting depending on the index of the column
+        return vars.columns.map(function(column, i) {
+          
+          console.log( vars.accessor_year(row)[vars.columns[i]], i, vars.columns, row["group"], row[vars.columns[i]])
+
+          if(i==0 || i==1) {
+
+            return row[column];      
+
+           } else if(i == 4) {
+
+            var million_scale = 1;
+            var population = vars.accessor_year(row)[vars.columns[i]];
+
+            return d3.format(",")(population);//+d3.formatPrefix(million_scale).symbol;
+          
+           } else if(i == 3) {
+
+            return parseFloat(vars.accessor_year(row)[vars.columns[i]]).toFixed(1);
+
+          } else if(i == 2) {
+
+            var gdp = vars.accessor_year(row)[vars.columns[i]];
+            var million_scale = 1000000000;
+            return d3.round(d3.formatPrefix(million_scale, 1).scale(gdp), 1)+d3.formatPrefix(million_scale).symbol;
+          
+          // Extra attribute that we manually added
+          } else {
+
+            return vars.year;
+
+          }
+        });
+      }
+
+      function create_table(data) {
+
+          if(vars.debug) console.log("[create_table]");    
+
+          var table = d3.select(vars.container).append("table"),
+            thead = table.append("thead").attr("class", "thead");
+            tbody = table.append("tbody");
+
+          table.append("caption")
+            .html(vars.title);
+
+          thead.append("tr").selectAll("th")
+            .data(vars.columns)
+          .enter()
+            .append("th")
+            .text(function(d) { return d; })
+
+            // Sorting function 
+            .on("click", function(header, i) {
+
+              click_header(header);
+              paint_zebra_rows(tbody.selectAll("tr.row"));
+
+            });
+
+          var rows = tbody.selectAll("tr.row")
+            .data(data)
+          .enter()
+            .append("tr")
+            .attr("class", "row");
+
+          var cells = rows.selectAll("td")
+            .data(row_data)
+            .enter()
+            .append("td")
+            .text(function(d) { return d; })
+            .on("mouseover", function(d, i) {
+
+              // Highlight the current row (which is a parent of the current cell)
+              d3.select(this.parentNode)
+                .style("background-color", "#F3ED86");
+          
+            }).on("mouseout", function() {
+
+              // Reset highlight all the rows (not the cells)
+              tbody.selectAll("tr")
+                .style("background-color", null)
+
+            });
+
+        }
+
 
         // If no column have been specified, take all columns
 
@@ -261,9 +356,6 @@ vistk.viz = function() {
               .text(function(d) { return d.name; });
 
 
-
-
-
       }
 
   	});
@@ -390,94 +482,3 @@ vistk.viz = function() {
 
   return chart;
 }
-
-function row_data(row, i) {
-
-  // Creates an array first of the size of the desired rows
-  // Then fills the array with the appropriate data
-  // Applies some formatting depending on the index of the column
-  return vars.columns.map(function(column, i) {
-    
-    console.log( vars.accessor_year(row)[vars.columns[i]], i, vars.columns, row["group"], row[vars.columns[i]])
-
-    if(i==0 || i==1) {
-
-      return row[column];      
-
-     } else if(i == 4) {
-
-      var million_scale = 1;
-      var population = vars.accessor_year(row)[vars.columns[i]];
-
-      return d3.format(",")(population);//+d3.formatPrefix(million_scale).symbol;
-    
-     } else if(i == 3) {
-
-      return parseFloat(vars.accessor_year(row)[vars.columns[i]]).toFixed(1);
-
-    } else if(i == 2) {
-
-      var gdp = vars.accessor_year(row)[vars.columns[i]];
-      var million_scale = 1000000000;
-      return d3.round(d3.formatPrefix(million_scale, 1).scale(gdp), 1)+d3.formatPrefix(million_scale).symbol;
-    
-    // Extra attribute that we manually added
-    } else {
-
-      return vars.year;
-
-    }
-  });
-}
-
-function create_table(data) {
-
-    if(vars.debug) console.log("[create_table]");    
-
-    var table = d3.select(vars.container).append("table"),
-      thead = table.append("thead").attr("class", "thead");
-      tbody = table.append("tbody");
-
-    table.append("caption")
-      .html(vars.title);
-
-    thead.append("tr").selectAll("th")
-      .data(vars.columns)
-    .enter()
-      .append("th")
-      .text(function(d) { return d; })
-
-      // Sorting function 
-      .on("click", function(header, i) {
-
-        click_header(header);
-        paint_zebra_rows(tbody.selectAll("tr.row"));
-
-      });
-
-    var rows = tbody.selectAll("tr.row")
-      .data(data)
-    .enter()
-      .append("tr")
-      .attr("class", "row");
-
-    var cells = rows.selectAll("td")
-      .data(row_data)
-      .enter()
-      .append("td")
-      .text(function(d) { return d; })
-      .on("mouseover", function(d, i) {
-
-        // Highlight the current row (which is a parent of the current cell)
-        d3.select(this.parentNode)
-          .style("background-color", "#F3ED86");
-    
-      }).on("mouseout", function() {
-
-        // Reset highlight all the rows (not the cells)
-        tbody.selectAll("tr")
-          .style("background-color", null)
-
-      });
-
-  }

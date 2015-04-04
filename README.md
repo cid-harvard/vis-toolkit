@@ -23,6 +23,20 @@ Simply add the vistk JavaScript and CSS files.
 
 ## Tests
 
+* What should be tested?
+* Where should it be tested? Client or remove server?
+
+
+## Input Format
+
+* Which format should be used as input?
+* How to detect items? rows?
+* How to deal with trees?
+
+## Data Management
+
+* 
+
 ## Howto create a new app
 
 * What is the interface?
@@ -37,7 +51,7 @@ Simply add the vistk JavaScript and CSS files.
 * Re-create standard examples from d3
  * Treeemap ([with word wrap](http://bl.ocks.org/mundhradevang/1387786))
  * Scatterplot http://bl.ocks.org/mbostock/3887118
- * Stacked graph http://bl.ocks.org/mbostock/4060954 and transition to [small multiples](http://bl.ocks.org/mbostock/9490516)
+ * Stacked graph http://bl.ocks.org/mbostock/4060954 and transition to [small multiples](http://bl.ocks.org/mbostock/9490516) and [here too](http://bl.ocks.org/mbostock/3885211)
  * Maps
  * Google maps
  * Choropleth map (using geojson)
@@ -159,6 +173,10 @@ var chart = new vistk.Chart({
 .render()
 ```
 
+### Table
+
+* http://handsontable.com/demo/pagination.html#5
+
 ### Tree_map
 
 ```json
@@ -204,4 +222,4 @@ vis.render()
 * C3.js - http://c3js.org/ 
 * xCharts - http://tenxer.github.io/xcharts/ 
 * Rickshaw - http://code.shutterstock.com/rickshaw/
-
+* https://github.com/ndarville/d3-charts
