@@ -11,13 +11,14 @@ Simply add the vistk JavaScript and CSS files.
 
 ### Dependencies
 
-* D3 (which version?)
+* D3 (which version? latest one?)
 
 ## Examples
 
 * Table ([Demo](http://cid-harvard.github.io/vis-toolkit/examples/table.html) | [Source](examples/table.html))
 * Treemap ([Demo](http://cid-harvard.github.io/vis-toolkit/examples/treemap.html) | [Source](examples/treemap.html))
 * Scatterplot ([Demo](http://cid-harvard.github.io/vis-toolkit/examples/scatterplot.html) | [Source](examples/scatterplot.html))
+* Product Space ([Demo](http://cid-harvard.github.io/vis-toolkit/examples/nodelink.html) | [Source](examples/nodelink.html))
 
 * Build your own graph environment
 
@@ -25,26 +26,40 @@ Simply add the vistk JavaScript and CSS files.
 
 * What should be tested?
 * Where should it be tested? Client or remove server?
-
+* Which dataset should be used for the tests?
 
 ## Input Format
 
 * Which format should be used as input?
 * How to detect items? rows?
 * How to deal with trees?
+* Different types of datasets
+ * **Items:** which are elements we want to visualize
+ * **Properties:** which are the static properties of the items
+ * **Attributes:** which are some none-static, non-universal properties
+ * **Time-dependent:** attributes that change over time
+
+* Some of the properties are made for the visualization (e.g. product space)
 
 ## Data Management
 
-* 
+* Items should be loaded first, and ideally loaded only once
+* Then other properties, attributes, can be loaded on-demand and eventually be kept
+
+* Dynamically load data, lazy data loading
+
+* Streaming data?
 
 ## Howto create a new app
 
 * What is the interface?
 * What should be reused or not?
 * What is inherited from the main interface?
+* How to define the transitions to other apps?
 
-* Parameters
 * Internal state
+ * How is this kept by the application?
+
 
 ## Roadmap
 
@@ -77,7 +92,7 @@ Simply add the vistk JavaScript and CSS files.
  * Testing (using Travis)
  * Performances (included in unit testing?)
  * Sample datasets we will be using
- * Consistent input file
+ * Consistent input file format
 
 * Visual customization
  * Margin, padding, etc.
@@ -86,29 +101,34 @@ Simply add the vistk JavaScript and CSS files.
 ## What it should achieve
 
 * Should be fast (e.g. only requires attributes to be loaded once)
-** More importantly: we should be able to measure the performances
+ * More importantly: we should be able to measure the performances
+ * Benchmark with other toolkits for similar visualizations
 * Able to create multiple instances of visualizations on the same page
-** And eventually coordinate them (e.g brushing one filters another one)
+ * And eventually coordinate them (e.g brushing one filters another one)
+ * Should also share some similar attributes/properties
 * Interactions: focus, selection, filter, aggregate, time change
-** Either from the visualization itslef, or with auto-generated widgets
-** Binding with external buttons/widgets
+ * Either from the visualization itslef, or with auto-generated widgets
+ * Binding with external buttons/widgets
 * Customized visual design
-** Default CSS but should allow this to be overloaded
+ * Default CSS but should allow this to be overloaded
 * Default values should be coherent
-** Especially when transitionning
+ * Default parameters
+ * Especially when transitionning
 * Extensible to add new functionalities
-** New charts
-** New utils functions
+ * New charts
+ * New utils functions
 * Make sure it works for all types of data
 * Animation but carefully used
-** Should we use object consistancy to transform them? http://bost.ocks.org/mike/constancy/
+ * Should we use object consistancy to transform them? http://bost.ocks.org/mike/constancy/
+ * Using points for transition?
 * Dealing/robust even with missing data
+ * Should be visually reflected too
 * Text wrap for long names (see [d3plus word wrap](https://github.com/alexandersimoes/d3plus/wiki/Basic-Utilities#wordwrap))
 * Guaranty that exported SVG will be correct
-** Same with other export file formats
+ * Same with other export file formats
 * Customizable tooltips (d3plus.tooltip.create())
 * Capture state (and enable slide shows), enable loading at a specific state
-* Dynamically load data, lazy data loading
+ * Default states (similar to default config)
 * Callback once the loading is terminated
 * Legend: should be informative on the mapping and the quantity of attributes, also actionable for filtering. Multiple selections should be allowed.
 * Complex states should be captured and avaibale via the URL
@@ -176,6 +196,7 @@ var chart = new vistk.Chart({
 ### Table
 
 * http://handsontable.com/demo/pagination.html#5
+* https://github.com/mleibman/SlickGrid
 
 ### Tree_map
 
