@@ -9,12 +9,12 @@
 
 <script>
 
-d3.json("../data/product_space_hs4.json", function(error, countries) {
+d3.json("../data/product_space_hs4.json", function(error, products) {
 
   var visualization = vistk.viz()
     .type("nodelink")
     .container("#viz")
-    .data(countries)
+    .data(products)
     .x_var("nb_products")
     .y_var("avg_products")
     .id("product")
@@ -24,7 +24,7 @@ d3.json("../data/product_space_hs4.json", function(error, countries) {
 
   d3.select("#viz").call(visualization)
 
-  console.log(countries)
+  console.log(products)
 
 });
 

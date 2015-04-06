@@ -12,13 +12,13 @@ vistk.viz = function() {
   vars = {
 
     // PUBLIC (set by the user)
-    "container" : "",
-    "dev" : true,
-    "id" : "id",
-    "id_var" : "id",
-    group_var: "",
+    container : "",
+    dev : true,
+    id : "id",
+    id_var : "id",
+    group_var: null,
     data: [],
-    year: 1995,
+    year: null,
     title: "",
     solo: [],
     nesting: null,
@@ -28,19 +28,16 @@ vistk.viz = function() {
     width: 1000,
     height: 600,
 
-    "margin": {top: 20, right: 150, bottom: 30, left: 40},
+    margin: {top: 20, right: 150, bottom: 30, left: 40},
 
-    "time_current": 0,
+    time_current: 0,
 
     // PRIVATE (set automatically)
 
     // TABLE
-    "columns": [],
-
-    "color": d3.scale.category20c(),
-
-    "accessor_year": function(d) { return d; },
-
+    columns: [],
+    color: d3.scale.category20c(),
+    accessor_year: function(d) { return d; },
     svg: null,
   }
 
@@ -121,7 +118,6 @@ vistk.viz = function() {
       vars.height = vars.height - vars.margin.top - vars.margin.bottom;
 
     }
-
 
     selection.each(function(data_passed) {
     
@@ -443,28 +439,73 @@ vistk.viz = function() {
 
       }
 
-      unique_categories = d3.set(vars.data.map(function(d) { return d[vars.group_var]; })).values();
+      if(vars.group_var) {
 
-      var label_checkboxes = d3.select("body").selectAll("input").data(unique_categories)
-        .enter()
-          .append("label");
+        unique_categories = d3.set(vars.data.map(function(d) { return d[vars.group_var]; })).values();
 
-      label_checkboxes.append("input")
-          .attr("type", "checkbox")
-          .property("checked", false)
-          .on("change", function(d) { 
+        var label_checkboxes = d3.select(vars.container).selectAll("input").data(unique_categories)
+          .enter()
+            .append("label");
 
-            vars.data = vars.data.filter(function(e, j) {
-              console.log(e[vars.group_var], d)
-              return e[vars.group_var] == d;
+        label_checkboxes.append("input")
+            .attr("type", "checkbox")
+            .property("checked", false)
+            .on("change", function(d) { 
+
+              vars.data = vars.data.filter(function(e, j) {
+                console.log(e[vars.group_var], d)
+                return e[vars.group_var] == d;
+              })
+
+              d3.select("#viz").call(visualization);
             })
 
-            d3.select("#viz").call(visualization);
-          })
+        label_checkboxes.append("span")
+            .html(function(d) { return d})
 
-      label_checkboxes.append("span")
-          .html(function(d) { return d})
+      }
 
+      if(typeof vars.id == "object") {
+
+         label_radios = d3.select(vars.container).selectAll(".aggregations").data(vars.id)
+          .enter()
+            .append("label")
+            .attr("class", "aggregations")
+
+        // TODO: find levels of aggregation
+        label_radios.append("input")
+                   .attr("type", "radio")
+                   .attr("id", "id")  
+                   .attr("name", "radio-nest")
+                   .property("checked", true)
+                   .on("change", function() { 
+
+                    vars.show_color = !vars.show_color; 
+
+                   })
+
+        label_radios.append("span")
+            .html(function(d) { return d})
+
+
+      }
+
+      if(vars.year) {
+
+        // TODO: find time range
+        d3.select(vars.container).append("input")
+                      .attr("type", "range")
+                      .attr("class", "slider-random")
+                      .property("min", 0)
+                      .property("max", 1000)
+                      .property("value", 100)
+                      .attr("step", 1)
+                      .on("input", function() {
+                        d3.select("#max-time").text(this.value);
+                      })
+                      .style("width", "100px")
+
+      }
 
 
   	});
