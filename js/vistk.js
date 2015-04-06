@@ -352,6 +352,87 @@ vistk.viz = function() {
               .text(function(d) { return d.name; });
 
 
+      } else if(vars.type == "nodelink") {
+
+        var width = 960,
+            height = 500;
+
+        var color = d3.scale.category20();
+
+        var force = d3.layout.force()
+            .charge(-120)
+            .linkDistance(30)
+            .size([width, height]);
+
+        var svg = d3.select("body").append("svg")
+            .attr("width", width)
+            .attr("height", height);
+
+        //d3.json("../data/product_space_hs4.json", function(raw) {
+
+          d3.json("../data/network_hs.json", function(graph) {
+
+            var min_x = Infinity, max_x = 0;
+            var min_y = Infinity, max_y = 0;
+
+            graph.nodes.forEach(function(d, i) {
+
+              d.id = i;
+
+              if(d.x < min_x)
+                min_x = d.x;
+
+              if(d.y < min_y)
+                min_y = d.y;
+
+              if(d.x > max_x)
+                max_x = d.x;
+
+              if(d.y > max_y)
+                max_y = d.y;
+
+            })
+
+            graph.links.forEach(function(d, i) {
+
+              d.source = graph.nodes[d.source];
+              d.target = graph.nodes[d.target];
+
+            })
+
+            var x = d3.scale.linear()
+                .range([0, width]);
+
+            var y = d3.scale.linear()
+                .range([height, 0]);
+
+            x.domain([min_x, max_x]);
+            y.domain([min_y, max_y]);
+
+            var link = svg.selectAll(".link")
+                .data(graph.links)
+              .enter().append("line")
+                .attr("class", "link")
+                .style("stroke-width", function(d) { return Math.sqrt(d.value); });
+
+            var node = svg.selectAll(".node")
+                .data(graph.nodes)
+              .enter().append("circle")
+                .attr("class", "node")
+                .attr("r", 5)
+            //    .style("fill", function(d) { return color(d.group); })
+
+            link.attr("x1", function(d) { return x(d.source.x); })
+                .attr("y1", function(d) { return y(d.source.y); })
+                .attr("x2", function(d) { return x(d.target.x); })
+                .attr("y2", function(d) { return y(d.target.y); });
+
+            node.attr("cx", function(d) { return x(d.x); })
+                .attr("cy", function(d) { return y(d.y); });
+
+          });
+
+
       }
 
   	});
@@ -470,6 +551,14 @@ vistk.viz = function() {
   chart.y_var = function(y) {
     if (!arguments.length) return vars.y_var;
     vars.y_var = y;
+    return chart;
+  };
+
+  // NODELINK
+
+  chart.size = function(size) {
+    if (!arguments.length) return vars.size;
+    vars.size = size;
     return chart;
   };
 
