@@ -91,7 +91,6 @@ d3.json("../data/network_hs.json", function(g) {
 
   test_data.children = find_links_node(graph.nodes[0].id)
     
-
   test_data.children.forEach(function(d, i) {
     d.name = i;
     d.size = 0;
@@ -116,7 +115,7 @@ d3.json("../data/network_hs.json", function(g) {
     .append("g")
       .attr("transform", "translate(" + radius + "," + radius + ")");
 
-   nodes = cluster.nodes(test_data);
+  nodes = cluster.nodes(test_data);
 
   var link = svg.selectAll("path.link")
       .data(cluster.links(nodes))
