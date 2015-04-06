@@ -25,6 +25,8 @@ vistk.viz = function() {
     nesting_aggs: {},
     type: "table",
 
+    filter: [],
+
     width: 1000,
     height: 600,
 
@@ -57,8 +59,6 @@ vistk.viz = function() {
 
     /* TODO
 
-    -Should aggregate and filter happen here?
-    -
 
   // AGGREGATE DATA
     if(vars.aggregate == 'continent') {
@@ -119,7 +119,19 @@ vistk.viz = function() {
 
     }
 
-    selection.each(function(data_passed) {
+    new_data = vars.data;
+
+    // FILTER DATA
+    if(vars.filter.length > 0) {
+      new_data = new_data.filter(function(d) {
+          // We don't keep values that are not in the vars.filter array
+          return vars.filter.indexOf(d["continent"]) > -1;
+        })
+    }
+
+
+
+    selection.each(function() {
     
       if(vars.type == "undefined") {
 
@@ -281,7 +293,7 @@ vistk.viz = function() {
             .scale(y)
             .orient("left");
 
-        vars.svg.selectAll(".label").data(vars.data).enter().append("text")
+        vars.svg.selectAll(".label").data(new_data).enter().append("text")
             .attr("class", "year label")
             .attr("text-anchor", "end");
 
@@ -290,10 +302,10 @@ vistk.viz = function() {
             .attr("x", 500)
             .text(vars.time_current);
 
-          x.domain([0, d3.max(vars.data, function(d) { return d3.max(d.years, function(e) { return e[vars.x_var]; }) })]).nice();
-          y.domain([0, d3.max(vars.data, function(d) { return d3.max(d.years, function(e) { return e[vars.y_var]; }) })]).nice();
+          x.domain([0, d3.max(new_data, function(d) { return d3.max(d.years, function(e) { return e[vars.x_var]; }) })]).nice();
+          y.domain([0, d3.max(new_data, function(d) { return d3.max(d.years, function(e) { return e[vars.y_var]; }) })]).nice();
 
-          vars.svg.selectAll(".x.axis").data([vars.data]).enter().append("g")
+          vars.svg.selectAll(".x.axis").data([new_data]).enter().append("g")
               .attr("class", "x axis")
               .attr("transform", "translate(0," + (vars.height-vars.margin.bottom) + ")")              
             .append("text")
@@ -303,7 +315,7 @@ vistk.viz = function() {
               .style("text-anchor", "end")
               .text("Countries Diversity");
 
-          vars.svg.selectAll(".y.axis").data([vars.data]).enter().append("g")
+          vars.svg.selectAll(".y.axis").data([new_data]).enter().append("g")
               .attr("class", "y axis")
               .attr("transform", "translate("+vars.margin.left+", 0)")              
             .append("text")
@@ -319,7 +331,7 @@ vistk.viz = function() {
           vars.svg.selectAll(".y.axis").call(yAxis)
 
           var gPoints = vars.svg.selectAll(".points")
-                          .data(vars.data);
+                          .data(new_data);
 
           gPoints_enter = gPoints.enter()
                           .append("g")
@@ -449,13 +461,17 @@ vistk.viz = function() {
 
         label_checkboxes.append("input")
             .attr("type", "checkbox")
+            .attr("value", function(d) { return d; })
             .property("checked", false)
             .on("change", function(d) { 
 
+              update_filters(this.value, this.checked);
+              /*
               vars.data = vars.data.filter(function(e, j) {
                 console.log(e[vars.group_var], d)
                 return e[vars.group_var] == d;
               })
+*/
 
               d3.select("#viz").call(visualization);
             })
@@ -505,6 +521,21 @@ vistk.viz = function() {
                       })
                       .style("width", "100px")
 
+      }
+
+
+     function update_filters(value, add) {
+        if(vars.debug) console.log("[update_filters]", value);  
+        // If we add a new value to filter
+        if(add) {
+          if(vars.filter.indexOf(value) < 0) {
+            vars.filter.push(value)
+          }
+        } else {
+          var index = vars.filter.indexOf(value)
+          if(index > -1)
+            vars.filter.splice(index, 1);
+        }
       }
 
 
