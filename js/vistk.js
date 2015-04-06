@@ -56,56 +56,6 @@ vistk.viz = function() {
 	// Constructor
 	chart = function(selection) {	
 
-
-    /* TODO
-
-
-  // AGGREGATE DATA
-    if(vars.aggregate == 'continent') {
-
-      vars.accessor_year = accessor_year_agg;
-
-      // Do the nesting by continent
-      nested_data = d3.nest()
-        .key(function(d) { 
-          return d.continent;
-        })
-        .rollup(function(leaves) {
-
-          // Generates a new dataset with aggregated data
-          return {
-            "name" : leaves[0].continent,
-            "continent": leaves[0].continent,
-            "years": [{
-              'population': d3.sum(leaves, function(d) {
-                return accessor_year(d)['population'];
-              }),
-              'life_expectancy': d3.mean(leaves, function(d) {
-                return accessor_year(d)['life_expectancy'];
-              }),
-              'gdp': d3.mean(leaves, function(d) {
-                return accessor_year(d)['gdp'];
-              }),
-            }]
-          }
-        })
-        .entries(agg_data);      
-
-      // Transform key/value into values tab only
-      agg_data = nested_data.map(function(d) { return d.values});
-    }
-
-    // FILTER DATA
-    if(vars.filter.length > 0) {
-      agg_data = agg_data.filter(function(d) {
-
-          // We don't keep values that are not in the vars.filter array
-          return vars.filter.indexOf(d["continent"]) > -1;
-        })
-    }
-
-    */
-
     if(!vars.svg) {
      
       vars.svg = d3.select(vars.container).append("svg")
@@ -129,7 +79,36 @@ vistk.viz = function() {
         })
     }
 
+    // AGGREGATE DATA
+    if(vars.aggregate == 'continent') {
 
+      accessor_year = vars.accessor_year;
+
+      // Do the nesting by continent
+      nested_data = d3.nest()
+        .key(function(d) { 
+          return d.continent;
+        })
+        .rollup(function(leaves) {
+          // Generates a new dataset with aggregated data
+          return {
+            "name" : leaves[0].continent,
+            "continent": leaves[0].continent,
+            "years": [{
+              'avg_products': d3.sum(leaves, function(d) {
+                return accessor_year(d).years[0]['avg_products'];
+              }),
+              'nb_products': d3.mean(leaves, function(d) {
+                return accessor_year(d).years[0]['nb_products'];
+              }),
+            }]
+          }
+        })
+        .entries(new_data);      
+
+      // Transform key/value into values tab only
+      new_data = nested_data.map(function(d) { return d.values});
+    }
 
     selection.each(function() {
     
@@ -492,11 +471,13 @@ vistk.viz = function() {
         label_radios.append("input")
                    .attr("type", "radio")
                    .attr("id", "id")  
+                   .attr("value", function(d) { return d; })
                    .attr("name", "radio-nest")
                    .property("checked", true)
-                   .on("change", function() { 
+                   .on("change", function(d) { 
 
-                    vars.show_color = !vars.show_color; 
+                     vars.aggregate=d;
+                     d3.select("#viz").call(visualization);
 
                    })
 
