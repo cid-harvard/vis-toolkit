@@ -55,7 +55,7 @@ d3.json("../data/exports_2012.json", function(error, data) {
       groups[data.attr_data[d.product_id].code[0]] = [];
     }
 
-    groups[data.attr_data[d.product_id].code[0]].push({name: d.product_id, size: d.world_trade, attr: data.attr_data[d.product_id]});
+    groups[data.attr_data[d.product_id].code[0]].push({name: d.product_id, size: d.world_trade, attr: data.attr_data[d.product_id], group: +data.attr_data[d.product_id].code[0]});
 
   })
 
@@ -64,8 +64,9 @@ d3.json("../data/exports_2012.json", function(error, data) {
     node = {};
     node.name = i;
 
+
     node.children = d.map(function(e, j) {
-      return {name: e.attr.name, size: e.size}
+      return {name: e.attr.name, size: e.size, group: e.group}
     })
 
     return node;
