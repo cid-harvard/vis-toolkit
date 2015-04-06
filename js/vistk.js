@@ -39,7 +39,9 @@ vistk.viz = function() {
 
     "color": d3.scale.category20c(),
 
-    "accessor_year": function(d) { return d; }
+    "accessor_year": function(d) { return d; },
+
+    svg: null,
   }
 
 
@@ -107,14 +109,18 @@ vistk.viz = function() {
 
     */
 
-    vars.svg = d3.select(vars.container).append("svg")
-        .attr("width", vars.width)
-        .attr("height", vars.height)
-      .append("g")
-        .attr("transform", "translate(-.5,-.5)");
+    if(!vars.svg) {
+     
+      vars.svg = d3.select(vars.container).append("svg")
+          .attr("width", vars.width)
+          .attr("height", vars.height)
+        .append("g")
+          .attr("transform", "translate(-.5,-.5)");
 
-    vars.width = vars.width - vars.margin.left - vars.margin.right;
-    vars.height = vars.height - vars.margin.top - vars.margin.bottom;
+      vars.width = vars.width - vars.margin.left - vars.margin.right;
+      vars.height = vars.height - vars.margin.top - vars.margin.bottom;
+
+    }
 
 
     selection.each(function(data_passed) {
@@ -279,9 +285,11 @@ vistk.viz = function() {
             .scale(y)
             .orient("left");
 
-        var label = vars.svg.append("text")
+        vars.svg.selectAll(".label").data(vars.data).enter().append("text")
             .attr("class", "year label")
-            .attr("text-anchor", "end")
+            .attr("text-anchor", "end");
+
+        vars.svg.selectAll(".label")    
             .attr("y", 124)
             .attr("x", 500)
             .text(vars.time_current);
@@ -289,10 +297,9 @@ vistk.viz = function() {
           x.domain([0, d3.max(vars.data, function(d) { return d3.max(d.years, function(e) { return e[vars.x_var]; }) })]).nice();
           y.domain([0, d3.max(vars.data, function(d) { return d3.max(d.years, function(e) { return e[vars.y_var]; }) })]).nice();
 
-          vars.svg.append("g")
+          vars.svg.selectAll(".x.axis").data([vars.data]).enter().append("g")
               .attr("class", "x axis")
-              .attr("transform", "translate(0," + (vars.height-vars.margin.bottom) + ")")
-              .call(xAxis)
+              .attr("transform", "translate(0," + (vars.height-vars.margin.bottom) + ")")              
             .append("text")
               .attr("class", "label")
               .attr("x", vars.width)
@@ -300,10 +307,9 @@ vistk.viz = function() {
               .style("text-anchor", "end")
               .text("Countries Diversity");
 
-          vars.svg.append("g")
+          vars.svg.selectAll(".y.axis").data([vars.data]).enter().append("g")
               .attr("class", "y axis")
               .attr("transform", "translate("+vars.margin.left+", 0)")              
-              .call(yAxis)
             .append("text")
               .attr("class", "label")
               .attr("transform", "rotate(-90)")
@@ -312,14 +318,16 @@ vistk.viz = function() {
               .style("text-anchor", "end")
               .text("Average number of countries making the same products")
 
+
+          vars.svg.selectAll(".x.axis").call(xAxis)
+          vars.svg.selectAll(".y.axis").call(yAxis)
+
           var gPoints = vars.svg.selectAll(".points")
-                          .data(vars.data)
-                        .enter()
+                          .data(vars.data);
+
+          gPoints_enter = gPoints.enter()
                           .append("g")
                           .attr("class", "points")
-                          .attr("transform", function(d) {
-                            return "translate("+x(d.years[vars.time_current].nb_products)+", "+y(d.years[vars.time_current].avg_products)+")";
-                          })
                           .on("mouseenter",function(d, i) {
 
                             dots.style("opacity", .1)
@@ -337,13 +345,25 @@ vistk.viz = function() {
                           })
                        //   .call(dragit.object.activate)
 
-          var dots = gPoints.append("circle")
+          gPoints_exit = gPoints.exit().style("opacity", .1);
+
+
+          gPoints.style("opacity", 1)    
+
+          vars.svg.selectAll(".points")
+                          .transition()
+                          .attr("transform", function(d) {
+                            return "translate("+x(d.years[vars.time_current].nb_products)+", "+y(d.years[vars.time_current].avg_products)+")";
+                          })
+
+
+          var dots = gPoints_enter.append("circle")
             .attr("r", 5)
             .attr("cx", 0)
             .attr("cy", 0)
             .style("fill", function(d) { return vars.color(d.name); })
 
-          var labels = gPoints.append("text")
+          var labels = gPoints_enter.append("text")
               .attr("x", 10)
               .attr("y", 0)
               .attr("dy", ".35em")
@@ -433,7 +453,13 @@ vistk.viz = function() {
           .attr("type", "checkbox")
           .property("checked", false)
           .on("change", function(d) { 
-            // TODO: filter by d
+
+            vars.data = vars.data.filter(function(e, j) {
+              console.log(e[vars.group_var], d)
+              return e[vars.group_var] == d;
+            })
+
+            d3.select("#viz").call(visualization);
           })
 
       label_checkboxes.append("span")
