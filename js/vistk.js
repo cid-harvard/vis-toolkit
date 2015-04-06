@@ -7,8 +7,7 @@ vistk.utils = vistk.utils || {};
 
 vistk.viz = function() {
 
-	// Plenty of default params here
-	// TODO: should we keep them?
+  // Parameters for the visualization
   vars = {
 
     // PUBLIC (set by the user)
@@ -38,8 +37,12 @@ vistk.viz = function() {
 
     // TABLE
     columns: [],
+
+
     color: d3.scale.category20c(),
     accessor_year: function(d) { return d; },
+
+    // Container
     svg: null,
   }
 
@@ -69,9 +72,10 @@ vistk.viz = function() {
 
     }
 
+    // Get a copy of the whole dataset
     new_data = vars.data;
 
-    // FILTER DATA
+    // Filter data
     if(vars.filter.length > 0) {
       new_data = new_data.filter(function(d) {
           // We don't keep values that are not in the vars.filter array
@@ -79,7 +83,7 @@ vistk.viz = function() {
         })
     }
 
-    // AGGREGATE DATA
+    // Aggregate data
     if(vars.aggregate == 'continent') {
 
       accessor_year = vars.accessor_year;
@@ -212,7 +216,6 @@ vistk.viz = function() {
 
         }
 
-
         // If no column have been specified, take all columns
 
         vars.columns = d3.keys(vars.data[0])
@@ -235,7 +238,7 @@ vistk.viz = function() {
             .size([vars.width, vars.height])
             .value(function(d) { return d.size; });
 
-        var cell = vars.svg.data(vars.data).selectAll("g")
+        var cell = vars.svg.data(new_data).selectAll("g")
             .data(treemap.nodes)
           .enter().append("g")
             .attr("class", "cell")
@@ -244,7 +247,9 @@ vistk.viz = function() {
         cell.append("rect")
             .attr("width", function(d) { return d.dx; })
             .attr("height", function(d) { return d.dy; })
-            .style("fill", function(d) { return d.children ? vars.color(d.name) : null; });
+            .style("fill", function(d) {
+             return d.children ? vars.color(d.name) : null; 
+           });
 
         cell.append("text")
             .attr("x", function(d) { return 10; })
@@ -311,7 +316,7 @@ vistk.viz = function() {
           var gPoints = vars.svg.selectAll(".points")
                           .data(new_data, function(d) { return d.name; });
 
-          gPoints_enter = gPoints.enter()
+          var gPoints_enter = gPoints.enter()
                           .append("g")
                           .attr("class", "points")
                           .on("mouseenter",function(d, i) {
@@ -331,15 +336,6 @@ vistk.viz = function() {
                           })
                        //   .call(dragit.object.activate)
 
-          gPoints_exit = gPoints.exit().style("opacity", .1);
-
-          gPoints.style("opacity", 1)    
-
-          vars.svg.selectAll(".points")
-                          .transition()
-                          .attr("transform", function(d) {
-                            return "translate("+x(d.years[vars.time_current].nb_products)+", "+y(d.years[vars.time_current].avg_products)+")";
-                          })
 
           var dots = gPoints_enter.append("circle")
             .attr("r", 5)
@@ -353,6 +349,17 @@ vistk.viz = function() {
               .attr("dy", ".35em")
               .style("text-anchor", "start")
               .text(function(d) { return d.name; });
+
+          var gPoints_exit = gPoints.exit().style("opacity", .1);
+
+          // Update all the remaining dots
+          gPoints.style("opacity", 1)    
+
+          vars.svg.selectAll(".points")
+                          .transition()
+                          .attr("transform", function(d) {
+                            return "translate("+x(d.years[vars.time_current].nb_products)+", "+y(d.years[vars.time_current].avg_products)+")";
+                          })
 
       } else if(vars.type == "nodelink") {
 
