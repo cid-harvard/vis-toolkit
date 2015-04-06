@@ -32,3 +32,16 @@ text {
   font: 500 196px "Helvetica Neue";
   fill: #ddd;
 }
+
+/* nodelink */
+
+circle.node {
+  stroke: black;
+  stroke-width: 1.5px;
+  fill: white;
+}
+
+.link {
+  stroke: #999;
+  stroke-opacity: .6;
+}
