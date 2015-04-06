@@ -39,16 +39,34 @@ Simply add the vistk JavaScript and CSS files.
  * **Attributes:** which are some none-static, non-universal properties
  * **Time-dependent:** attributes that change over time
 
+Example with Colombia:
+* Departments are items http://54.172.130.22/api/departments/
+* International product space http://54.172.130.22/labs/data/atlas_international_product_space.json
+* Attributes http://54.172.130.22/api/products/?aggregation=2digit
+
+What to do when some attribuets are missing over time?
+
 * Some of the properties are made for the visualization (e.g. product space)
 
-## Data Management
+## Data Management (TODO: discuss with QUIN)
 
 * Items should be loaded first, and ideally loaded only once
+ * But for which level of details?..
+
 * Then other properties, attributes, can be loaded on-demand and eventually be kept
+ * How do we decide to get rid of some items/attributes/properties?
 
 * Dynamically load data, lazy data loading
 
 * Streaming data?
+
+## States (TODO: discuss with QUIN)
+
+* Capture state (and enable slide shows), enable loading at a specific state
+ * Default states (similar to default config)
+
+* Internal state
+ * How is this kept by the application?
 
 ## Howto create a new app
 
@@ -57,8 +75,6 @@ Simply add the vistk JavaScript and CSS files.
 * What is inherited from the main interface?
 * How to define the transitions to other apps?
 
-* Internal state
- * How is this kept by the application?
 
 
 ## Roadmap
@@ -83,7 +99,6 @@ Simply add the vistk JavaScript and CSS files.
 
 * Templating visualizations
  * Standard interface to create them
- * Consider states issues later on 
  * Export: svg, png, ..
 
 * Boilerplate code
@@ -127,11 +142,9 @@ Simply add the vistk JavaScript and CSS files.
 * Guaranty that exported SVG will be correct
  * Same with other export file formats
 * Customizable tooltips (d3plus.tooltip.create())
-* Capture state (and enable slide shows), enable loading at a specific state
- * Default states (similar to default config)
 * Callback once the loading is terminated
 * Legend: should be informative on the mapping and the quantity of attributes, also actionable for filtering. Multiple selections should be allowed.
-* Complex states should be captured and avaibale via the URL
+
 
 Storytelling
 
@@ -163,7 +176,7 @@ Template
 * build
 ** vistk.css
 ** vistk.js
-* examples
+* examples - currently supported visualizations
 * src
 * test
 ** treemapTest.html
