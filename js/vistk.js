@@ -16,17 +16,18 @@ vistk.viz = function() {
     "dev" : true,
     "id" : "id",
     "id_var" : "id",
-    "group_var": "",
-    "data"  : [],
-    "year"  : 1995,
-    "title": "",
-    "solo": [],
-    "nesting": null,
-    "nesting_aggs": {},
-    "type": "table",
+    group_var: "",
+    data: [],
+    year: 1995,
+    title: "",
+    solo: [],
+    nesting: null,
+    nesting_aggs: {},
+    type: "table",
 
     width: 1000,
     height: 600,
+
     "margin": {top: 20, right: 150, bottom: 30, left: 40},
 
     "time_current": 0,
@@ -40,7 +41,6 @@ vistk.viz = function() {
 
     "accessor_year": function(d) { return d; }
   }
-
 
 
  // vars.parent = d3.select(vars.container);
@@ -113,9 +113,8 @@ vistk.viz = function() {
       .append("g")
         .attr("transform", "translate(-.5,-.5)");
 
-
-  vars.width = vars.width - vars.margin.left - vars.margin.right;
-  vars.height = vars.height - vars.margin.top - vars.margin.bottom;
+    vars.width = vars.width - vars.margin.left - vars.margin.right;
+    vars.height = vars.height - vars.margin.top - vars.margin.bottom;
 
 
     selection.each(function(data_passed) {
@@ -423,6 +422,24 @@ vistk.viz = function() {
           });
 
       }
+
+      unique_categories = d3.set(vars.data.map(function(d) { return d[vars.group_var]; })).values();
+
+      var label_checkboxes = d3.select("body").selectAll("input").data(unique_categories)
+        .enter()
+          .append("label");
+
+      label_checkboxes.append("input")
+          .attr("type", "checkbox")
+          .property("checked", false)
+          .on("change", function(d) { 
+            // TODO: filter by d
+          })
+
+      label_checkboxes.append("span")
+          .html(function(d) { return d})
+
+
 
   	});
 

@@ -28,21 +28,7 @@
 
   // Identify the unique categories that can be used to filter
 
-  var unique_categories = d3.set(test_data.map(function(d) { return d[vars.group_var]; })).values();
 
-  var label_checkboxes = d3.select("body").selectAll("input").data(unique_categories)
-    .enter()
-      .append("label");
-
-  label_checkboxes.append("input")
-      .attr("type", "checkbox")
-      .property("checked", false)
-      .on("change", function(d) { 
-        // TODO: filter by d
-      })
-
-  label_checkboxes.append("span")
-      .html(function(d) { return d})
 
   // TODO: find levels of aggregation
   d3.select(vars.container).append("input")
