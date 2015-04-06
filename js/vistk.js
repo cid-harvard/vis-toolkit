@@ -97,11 +97,7 @@ vistk.viz = function() {
 
     */
 
-
     selection.each(function(data_passed) {
-
-
-    alert(vars.depth)
     
       if(vars.type == "undefined") {
 
