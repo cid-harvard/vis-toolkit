@@ -31,6 +31,64 @@ var svg = d3.select("body").append("svg")
     .attr("width", width)
     .attr("height", height);
 
+d3.json("../data/product_space_hs4.json", function(raw) {
+
+  d3.json("../data/network_hs.json", function(d) {
+
+    graph = d;
+
+    graph.nodes.forEach(function(d, i) {
+
+      d.id = i;
+
+      d.name = raw["data"].filter(function(e) { 
+        return parseInt(e.id) == parseInt(d._id.slice(2,6));
+      })[0].name;
+
+    })
+
+    graph.links.forEach(function(d, i) {
+
+      d.source = graph.nodes[d.source];
+      d.target = graph.nodes[d.target];
+
+    })
+
+    var x = d3.scale.linear()
+        .range([0, width]);
+
+    var y = d3.scale.linear()
+        .range([height, 0]);
+
+    x.domain(d3.extent(graph.nodes.map(function(d) { return d.x; })));
+    y.domain(d3.extent(graph.nodes.map(function(d) { return d.y; })));
+
+    var link = svg.selectAll(".link")
+        .data(graph.links)
+      .enter().append("line")
+        .attr("class", "link")
+        .style("stroke-width", function(d) { return Math.sqrt(d.value); });
+
+    var node = svg.selectAll(".node")
+        .data(graph.nodes)
+      .enter().append("circle")
+        .attr("class", "node")
+        .attr("r", 5)
+        .style("fill", function(d) { return color(d.group); })
+
+    link.attr("x1", function(d) { return x(d.source.x); })
+        .attr("y1", function(d) { return y(d.source.y); })
+        .attr("x2", function(d) { return x(d.target.x); })
+        .attr("y2", function(d) { return y(d.target.y); });
+
+    node.attr("cx", function(d) { return x(d.x); })
+        .attr("cy", function(d) { return y(d.y); });
+
+  });
+
+})
+
+/* IN CASE WE WANT FOR LAYOUT
 d3.json("../data/miserables.json", function(error, graph) {
   force
       .nodes(graph.nodes)
@@ -64,5 +122,7 @@ d3.json("../data/miserables.json", function(error, graph) {
         .attr("cy", function(d) { return d.y; });
   });
 });
+
+*/
 
 </script>
