@@ -25,6 +25,12 @@ vistk.viz = function() {
     "nesting_aggs": {},
     "type": "table",
 
+    width: 1000,
+    height: 600,
+    "margin": {top: 20, right: 150, bottom: 30, left: 40},
+
+    "time_current": 0,
+
     // PRIVATE (set automatically)
 
     // TABLE
@@ -34,6 +40,8 @@ vistk.viz = function() {
 
     "accessor_year": function(d) { return d; }
   }
+
+
 
  // vars.parent = d3.select(vars.container);
 
@@ -98,6 +106,17 @@ vistk.viz = function() {
     }
 
     */
+
+    vars.svg = d3.select(vars.container).append("svg")
+        .attr("width", vars.width)
+        .attr("height", vars.height)
+      .append("g")
+        .attr("transform", "translate(-.5,-.5)");
+
+
+  vars.width = vars.width - vars.margin.left - vars.margin.right;
+  vars.height = vars.height - vars.margin.top - vars.margin.bottom;
+
 
     selection.each(function(data_passed) {
     
@@ -224,13 +243,7 @@ vistk.viz = function() {
             .size([vars.width, vars.height])
             .value(function(d) { return d.size; });
 
-        var svg = d3.select(vars.container).append("svg")
-            .attr("width", vars.width)
-            .attr("height", vars.height)
-          .append("g")
-            .attr("transform", "translate(-.5,-.5)");
-
-        var cell = svg.data(vars.data).selectAll("g")
+        var cell = vars.svg.data(vars.data).selectAll("g")
             .data(treemap.nodes)
           .enter().append("g")
             .attr("class", "cell")
@@ -249,21 +262,15 @@ vistk.viz = function() {
             .text(function(d) { return d.children ? null : d.name; })
            // .call(wrap)
 
-
       } else if(vars.type == "scatterplot") {
 
         // Original scatterplot from http://bl.ocks.org/mbostock/3887118
-        var margin = {top: 20, right: 150, bottom: 30, left: 40},
-            width = 1060 - margin.left - margin.right,
-            height = 600 - margin.top - margin.bottom;
 
         var x = d3.scale.linear()
-            .range([0, width]);
+            .range([0, vars.width]);
 
         var y = d3.scale.linear()
-            .range([height, 0]);
-
-        var color = d3.scale.category10();
+            .range([vars.height, 0]);
 
         var xAxis = d3.svg.axis()
             .scale(x)
@@ -273,37 +280,30 @@ vistk.viz = function() {
             .scale(y)
             .orient("left");
 
-        var svg = d3.select("#viz").append("svg")
-            .attr("width", width + margin.left + margin.right)
-            .attr("height", height + margin.top + margin.bottom)
-          .append("g")
-            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-        var time_current = 0;
-
-        var label = svg.append("text")
+        var label = vars.svg.append("text")
             .attr("class", "year label")
             .attr("text-anchor", "end")
             .attr("y", 124)
             .attr("x", 500)
-            .text(time_current);
+            .text(vars.time_current);
 
           x.domain([0, d3.max(vars.data, function(d) { return d3.max(d.years, function(e) { return e[vars.x_var]; }) })]).nice();
           y.domain([0, d3.max(vars.data, function(d) { return d3.max(d.years, function(e) { return e[vars.y_var]; }) })]).nice();
 
-          svg.append("g")
+          vars.svg.append("g")
               .attr("class", "x axis")
-              .attr("transform", "translate(0," + height + ")")
+              .attr("transform", "translate(0," + (vars.height-vars.margin.bottom) + ")")
               .call(xAxis)
             .append("text")
               .attr("class", "label")
-              .attr("x", width)
+              .attr("x", vars.width)
               .attr("y", -6)
               .style("text-anchor", "end")
               .text("Countries Diversity");
 
-          svg.append("g")
+          vars.svg.append("g")
               .attr("class", "y axis")
+              .attr("transform", "translate("+vars.margin.left+", 0)")              
               .call(yAxis)
             .append("text")
               .attr("class", "label")
@@ -313,18 +313,19 @@ vistk.viz = function() {
               .style("text-anchor", "end")
               .text("Average number of countries making the same products")
 
-          var gPoints = svg.selectAll(".points")
+          var gPoints = vars.svg.selectAll(".points")
                           .data(vars.data)
                         .enter()
                           .append("g")
                           .attr("class", "points")
                           .attr("transform", function(d) {
-                            return "translate("+x(d.years[time_current].nb_products)+", "+y(d.years[time_current].avg_products)+")";
+                            return "translate("+x(d.years[vars.time_current].nb_products)+", "+y(d.years[vars.time_current].avg_products)+")";
                           })
                           .on("mouseenter",function(d, i) {
 
                             dots.style("opacity", .1)
                             labels.style("opacity", 0)          
+
                             d3.select(this).select("circle").style("opacity", 1)
                             d3.select(this).select("text").style("opacity", 1)
                           //  dragit.trajectory.display(d, i);
@@ -341,7 +342,7 @@ vistk.viz = function() {
             .attr("r", 5)
             .attr("cx", 0)
             .attr("cy", 0)
-            .style("fill", function(d) { return color(d.name); })
+            .style("fill", function(d) { return vars.color(d.name); })
 
           var labels = gPoints.append("text")
               .attr("x", 10)
@@ -350,22 +351,12 @@ vistk.viz = function() {
               .style("text-anchor", "start")
               .text(function(d) { return d.name; });
 
-
       } else if(vars.type == "nodelink") {
-
-        var width = 960,
-            height = 500;
-
-        var color = d3.scale.category20();
 
         var force = d3.layout.force()
             .charge(-120)
             .linkDistance(30)
-            .size([width, height]);
-
-        var svg = d3.select("body").append("svg")
-            .attr("width", width)
-            .attr("height", height);
+            .size([vars.width, vars.height]);
 
         //d3.json("../data/product_space_hs4.json", function(raw) {
 
@@ -400,21 +391,21 @@ vistk.viz = function() {
             })
 
             var x = d3.scale.linear()
-                .range([0, width]);
+                .range([0, vars.width]);
 
             var y = d3.scale.linear()
-                .range([height, 0]);
+                .range([vars.height, 0]);
 
             x.domain([min_x, max_x]);
             y.domain([min_y, max_y]);
 
-            var link = svg.selectAll(".link")
+            var link = vars.svg.selectAll(".link")
                 .data(graph.links)
               .enter().append("line")
                 .attr("class", "link")
                 .style("stroke-width", function(d) { return Math.sqrt(d.value); });
 
-            var node = svg.selectAll(".node")
+            var node = vars.svg.selectAll(".node")
                 .data(graph.nodes)
               .enter().append("circle")
                 .attr("class", "node")
@@ -430,7 +421,6 @@ vistk.viz = function() {
                 .attr("cy", function(d) { return y(d.y); });
 
           });
-
 
       }
 
