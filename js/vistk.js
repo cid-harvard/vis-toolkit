@@ -305,12 +305,11 @@ vistk.viz = function() {
               .style("text-anchor", "end")
               .text("Average number of countries making the same products")
 
-
           vars.svg.selectAll(".x.axis").call(xAxis)
           vars.svg.selectAll(".y.axis").call(yAxis)
 
           var gPoints = vars.svg.selectAll(".points")
-                          .data(new_data);
+                          .data(new_data, function(d) { return d.name; });
 
           gPoints_enter = gPoints.enter()
                           .append("g")
@@ -334,7 +333,6 @@ vistk.viz = function() {
 
           gPoints_exit = gPoints.exit().style("opacity", .1);
 
-
           gPoints.style("opacity", 1)    
 
           vars.svg.selectAll(".points")
@@ -342,7 +340,6 @@ vistk.viz = function() {
                           .attr("transform", function(d) {
                             return "translate("+x(d.years[vars.time_current].nb_products)+", "+y(d.years[vars.time_current].avg_products)+")";
                           })
-
 
           var dots = gPoints_enter.append("circle")
             .attr("r", 5)
