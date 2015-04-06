@@ -30,6 +30,8 @@ vistk.viz = function() {
     // TABLE
     "columns": [],
 
+    "color": d3.scale.category20c(),
+
     "accessor_year": function(d) { return d; }
   }
 
@@ -217,18 +219,14 @@ vistk.viz = function() {
 
       } else if(vars.type == "treemap") {
 
-        var width = vars.width,
-        height = vars.height,
-        color = d3.scale.category20c();
-
         var treemap = d3.layout.treemap()
             .padding(4)
-            .size([width, height])
+            .size([vars.width, vars.height])
             .value(function(d) { return d.size; });
 
         var svg = d3.select(vars.container).append("svg")
-            .attr("width", width)
-            .attr("height", height)
+            .attr("width", vars.width)
+            .attr("height", vars.height)
           .append("g")
             .attr("transform", "translate(-.5,-.5)");
 
@@ -241,14 +239,15 @@ vistk.viz = function() {
         cell.append("rect")
             .attr("width", function(d) { return d.dx; })
             .attr("height", function(d) { return d.dy; })
-            .style("fill", function(d) { return d.children ? color(d.name) : null; });
+            .style("fill", function(d) { return d.children ? vars.color(d.name) : null; });
 
         cell.append("text")
-            .attr("x", function(d) { return d.dx / 2; })
-            .attr("y", function(d) { return d.dy / 2; })
+            .attr("x", function(d) { return 10; })
+            .attr("y", function(d) { return 10; })
             .attr("dy", ".35em")
-            .attr("text-anchor", "middle")
-            .text(function(d) { return d.children ? null : d.name; });
+            .attr("text-anchor", "left")
+            .text(function(d) { return d.children ? null : d.name; })
+           // .call(wrap)
 
 
       } else if(vars.type == "scatterplot") {
@@ -567,3 +566,35 @@ vistk.viz = function() {
 
   return chart;
 }
+
+/* One way to wrap text.. 
+http://bl.ocks.org/mbostock/7555321
+
+function wrap(text, width) {
+
+  text.each(function() {
+
+    width = d3.select(this).data()[0].dx;
+
+    var text = d3.select(this),
+        words = text.text().split(/\s+/).reverse(),
+        word,
+        line = [],
+        lineNumber = 0,
+        lineHeight = 1.1, // ems
+        y = text.attr("y"),
+        dy = parseFloat(text.attr("dy")),
+        tspan = text.text(null).append("tspan").attr("x", 0).attr("y", y).attr("dy", dy + "em");
+    while (word = words.pop()) {
+      line.push(word);
+      tspan.text(line.join(" "));
+      if (tspan.node().getComputedTextLength() > width) {
+        line.pop();
+        tspan.text(line.join(" "));
+        line = [word];
+        tspan = text.append("tspan").attr("x", 0).attr("y", y).attr("dy", ++lineNumber * lineHeight + dy + "em").text(word);
+      }
+    }
+  });
+}
+*/
