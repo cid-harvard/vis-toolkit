@@ -24,15 +24,17 @@ vistk.viz = function() {
     nesting_aggs: {},
     type: "table",
 
-
-    filter: [],
-    aggregate: [],
-
     width: 1000,
     height: 600,
 
     margin: {top: 20, right: 150, bottom: 30, left: 40},
 
+
+    // Interaction
+    focus: [],
+    selections: [],
+    filter: [],
+    aggregate: [],
     time_current: 0,
 
     // PRIVATE (set automatically)
@@ -436,7 +438,7 @@ vistk.viz = function() {
           vars.svg.selectAll(".points")
                           .transition()
                           .attr("transform", function(d) {
-                            return "translate("+x(d.years[vars.time_current].nb_products)+", "+y(d.years[vars.time_current].avg_products)+")";
+                            return "translate("+x(d.years[vars.time_current][vars.x_var])+", "+y(d.years[vars.time_current][vars.x_var])+")";
                           })
 
       } else if(vars.type == "nodelink") {
@@ -538,7 +540,10 @@ vistk.viz = function() {
             })
 
         label_checkboxes.append("span")
-            .html(function(d) { return d})
+            .html(function(d) { 
+              var count = vars.data.filter(function(e, j) { return e[vars.group_var] == d; }).length;
+              return d + " (" + count + ")";
+            })
 
       }
 
@@ -686,6 +691,31 @@ vistk.viz = function() {
     return chart;
   };
 
+  chart.join = function(data, var_join) {
+
+    if (!arguments.length) return vars.var_join;
+
+    vars.var_join = var_join;
+
+    join_data = data;
+
+    // Go through all the dataset and merge with the current one
+    data.forEach(function(d, i) {
+
+      vars.data.forEach(function(e, j) {
+
+        if( (d[vars.var_join] == e[vars.var_join]) && (d.year == 2011)) {
+
+//          console.log("merge", d, e, merge(d, e));
+          return  merge(d, e);
+
+        }
+      });
+    });
+
+    return chart;
+  };
+
 	chart.solo = function(x) {
 	  if (!arguments.length) return vars.solo;
 
@@ -747,10 +777,15 @@ vistk.viz = function() {
   };
 
   // NODELINK
-
   chart.size = function(size) {
     if (!arguments.length) return vars.size;
     vars.size = size;
+    return chart;
+  };
+
+  chart.items = function(size) {
+    if (!arguments.length) return vars.items;
+    vars.items = size;
     return chart;
   };
 
@@ -759,6 +794,22 @@ vistk.viz = function() {
 
   return chart;
 }
+
+// http://stackoverflow.com/questions/171251/how-can-i-merge-properties-of-two-javascript-objects-dynamically
+var merge = function() {
+    var obj = {},
+        i = 0,
+        il = arguments.length,
+        key;
+    for (; i < il; i++) {
+        for (key in arguments[i]) {
+            if (arguments[i].hasOwnProperty(key)) {
+                obj[key] = arguments[i][key];
+            }
+        }
+    }
+    return obj;
+};
 
 /* One way to wrap text.. 
 http://bl.ocks.org/mbostock/7555321
