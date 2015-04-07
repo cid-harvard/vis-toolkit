@@ -24,6 +24,7 @@ vistk.viz = function() {
     nesting_aggs: {},
     type: "table",
 
+
     filter: [],
     aggregate: [],
 
@@ -38,6 +39,7 @@ vistk.viz = function() {
 
     // TABLE
     columns: [],
+    sort_by: {'column': 'name', 'asc': true},
 
 
     color: d3.scale.category20c(),
@@ -92,13 +94,17 @@ vistk.viz = function() {
 
       nested_data = d3.nest()
         .key(function(d) { 
-          return d.continent;
+          return d[vars.group_var];
         })
         .rollup(function(leaves) {
           // Generates a new dataset with aggregated data
+
+          // TODO: should return a generic aggregation
+          // Only for the values that have been specified??
+
           return {
-            "name" : leaves[0].continent,
-            "continent": leaves[0].continent,
+            "name" : leaves[0][vars.group_var],
+            "continent": leaves[0][vars.group_var],
             "years": [{
               'avg_products': d3.sum(leaves, function(d) {
                 return accessor_year(d).years[0]['avg_products'];
@@ -187,7 +193,7 @@ vistk.viz = function() {
             .on("click", function(header, i) {
 
               click_header(header);
-              paint_zebra_rows(tbody.selectAll("tr.row"));
+             // paint_zebra_rows(tbody.selectAll("tr.row"));
 
             });
 
@@ -218,8 +224,78 @@ vistk.viz = function() {
 
         }
 
-        // If no column have been specified, take all columns
+       // Function that orders the rows of the table
+        function sort_by(header) {
 
+          if(vars.debug) console.log("[sort_by]", header);
+
+          vars.sort_by.column = header;
+          var is_sorted = vars.sort_by.is_sorted;
+/*
+          if(vars.aggregate == 'continent') {
+            vars.accessor_year = accessor_year_agg;
+          } else {
+            vars.accessor_year = accessor_year;
+          }
+  */
+          d3.select(".thead").selectAll("th").attr("id", null);
+
+          // For those specific columns, we are sorting strings
+          if (header == "continent" || header == "name") {
+
+            tbody.selectAll("tr").sort(function(a, b) {
+              var ascending = d3.ascending(a[header], b[header]);
+              return is_sorted ? ascending : - ascending;
+            });
+
+          // For the others, we sort numerical values
+          } else {
+
+            tbody.selectAll("tr").sort(function(a, b) {
+
+              a = vars.accessor_year(a)[header];
+              b = vars.accessor_year(b)[header];
+              var ascending =  a > b ? 1 : a == b ? 0 : -1;
+
+              return is_sorted ? ascending : - ascending;
+            });
+
+          }
+        }
+
+
+        function click_header(header) {
+
+          var this_node = d3.selectAll("th").filter(function(d) {
+              return d == header;
+            })
+
+          var is_sorted = (this_node.attr("class") == "sorted");
+
+          d3.selectAll("th").text(function(d) {
+            return d.replace("▴", "");
+          })
+          d3.selectAll("th").text(function(d) {
+            return d.replace("▾", "");
+          })
+
+          if(!is_sorted) {
+            this_node.classed("sorted", true)
+            this_node.text(this_node.text()+"▾")
+          }
+          else {
+            this_node.classed("sorted", false)
+            this_node.text(this_node.text()+"▴")
+          }
+
+          if(vars.debug) console.log("[click_header]", is_sorted)
+
+         // vars.sort_by.is_sorted = !vars.sort_by.is_sorted;
+          sort_by(header);
+
+        }
+
+        // If no column have been specified, take all columns
         vars.columns = d3.keys(vars.data[0])
 
         // Basic dump of the data we have
@@ -513,6 +589,27 @@ vistk.viz = function() {
                       .style("width", "100px")
 
       }
+
+      var label_loader = d3.select(vars.container).selectAll(".loader").data([vars.id])
+        .enter()
+          .append("label")
+          .attr("class", "loader")
+
+      label_loader.append("select")
+        .attr("id", "select_x_var")
+        .on("change", function(d) {
+          vars.x_var = this.value;
+          ds.update(vars.current_view);
+        })
+        .selectAll("option")
+        .data(["../data/exports_2012.json"])
+      .enter()
+        .append("option")
+        .attr("value", function(d) { return d; })
+        .html(function(d) { return d; })
+
+
+      // d3.json("../data/exports_2012.json", function(error, data) {
 
 
      function update_filters(value, add) {

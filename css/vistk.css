@@ -2,6 +2,41 @@ body {
   font: 10px sans-serif;
 }
 
+/* Table */
+
+
+table {
+  border-collapse: collapse;
+}
+
+thead {
+  font-weight: bold;
+}
+
+table td, table th, caption {
+  padding: 3px;
+  border: 1px solid gray;;
+}
+
+table th {
+  cursor: n-resize;
+}
+
+table th.sorted {
+  cursor: s-resize;
+}
+
+table td:first-child, table td:nth-child(2) {
+  text-align: center;
+}
+
+table tr.odd {
+  background-color: #EEE;
+}
+
+td {
+  text-align: right;
+}
 
 /* Treemap */
 
@@ -45,3 +80,4 @@ circle.node {
   stroke: #999;
   stroke-opacity: .6;
 }
+
