@@ -29,6 +29,7 @@ vistk.viz = function() {
 
     margin: {top: 20, right: 150, bottom: 30, left: 40},
 
+    var_text: "name",
 
     // Interaction
     focus: [],
@@ -347,7 +348,7 @@ vistk.viz = function() {
             .attr("y", function(d) { return 10; })
             .attr("dy", ".35em")
             .attr("text-anchor", "left")
-            .text(function(d) { return d.children ? null : d.name; })
+            .text(function(d) { return d.children ? null : d[vars.var_text]; })
            // .call(wrap)
 
       } else if(vars.type == "scatterplot") {
@@ -427,19 +428,18 @@ vistk.viz = function() {
                           })
                        //   .call(dragit.object.activate)
 
-
           var dots = gPoints_enter.append("circle")
             .attr("r", 5)
             .attr("cx", 0)
             .attr("cy", 0)
-            .style("fill", function(d) { return vars.color(d.name); })
+            .style("fill", function(d) { return d.color; })
 
           var labels = gPoints_enter.append("text")
               .attr("x", 10)
               .attr("y", 0)
               .attr("dy", ".35em")
               .style("text-anchor", "start")
-              .text(function(d) { return d.name; });
+              .text(function(d) { return d[vars.var_text]; });
 
           var gPoints_exit = gPoints.exit().style("opacity", .1);
 
@@ -762,6 +762,12 @@ vistk.viz = function() {
   chart.group = function(x) {
     if (!arguments.length) return vars.group_var;
     vars.group_var = x;
+    return chart;
+  };
+
+  chart.text = function(x) {
+    if (!arguments.length) return vars.var_text;
+    vars.var_text = x;
     return chart;
   };
 

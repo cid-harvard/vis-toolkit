@@ -12,10 +12,7 @@ d3.json("../data/exports_2012.json", function(error, exports) {
 
   console.log(exports)
 
-  data = exports.data.filter(function(d) {
-
-
-
+  data = exports.data.filter(function(d) {  
     return d.year == 2012;
   })
 
@@ -23,10 +20,11 @@ d3.json("../data/exports_2012.json", function(error, exports) {
     .type("scatterplot")
     .container("#viz")
     .data(data)
-    .x_var("share")
-    .y_var("value")
-    .id(["name"])
-//    .group("continent")
+    .x_var("rca")
+    .y_var("pci")
+    .id(["community_id", "name"])
+    .group("community_name")
+    .text("id")
     .year(2012)
     .title("Testing Table")
 
