@@ -44,8 +44,12 @@ vistk.viz = function() {
     columns: [],
     sort_by: {'column': 'name', 'asc': true},
 
+    // DOTPLOT
+    x_scale: "linear",
 
+    var_color: null,
     color: d3.scale.category20c(),
+
     accessor_year: function(d) { return d; },
 
     // Container
@@ -62,7 +66,7 @@ vistk.viz = function() {
 	// Constructor
 	chart = function(selection) {	
 
-    if(!vars.svg) {
+    if(!vars.svg && vars.type != "table") {
      
       vars.svg = d3.select(vars.container).append("svg")
           .attr("width", vars.width)
@@ -310,7 +314,7 @@ vistk.viz = function() {
         }
 
         // If no column have been specified, take all columns
-        vars.columns = d3.keys(vars.data[0])
+        // vars.columns = d3.keys(vars.data[0])
 
         // Basic dump of the data we have
         create_table(new_data)
@@ -340,7 +344,7 @@ vistk.viz = function() {
             .attr("width", function(d) { return d.dx; })
             .attr("height", function(d) { return d.dy; })
             .style("fill", function(d) {
-             return d.children ? vars.color(d.name) : null; 
+             return d.children ? vars.color(d[vars.var_color]) : null; 
            });
 
         cell.append("text")
@@ -355,7 +359,7 @@ vistk.viz = function() {
 
         // Original scatterplot from http://bl.ocks.org/mbostock/3887118
 
-         x = d3.scale.linear()
+        var x = d3.scale.linear()
             .range([vars.margin.left, vars.width-vars.margin.left-vars.margin.right]);
 
         var y = d3.scale.linear()
@@ -422,6 +426,7 @@ vistk.viz = function() {
 
                           })
                           .on("mouseleave", function(d, i) {
+
                             dots.style("opacity", 1)
                             labels.style("opacity", 1)     
         //                    dragit.trajectory.remove(d, i)
@@ -432,7 +437,9 @@ vistk.viz = function() {
             .attr("r", 5)
             .attr("cx", 0)
             .attr("cy", 0)
-            .style("fill", function(d) { return d.color; })
+//            .style("fill", function(d) { return d.color; })
+            .style("fill", function(d) { return vars.color(d[vars.var_color]); })
+
 
           var labels = gPoints_enter.append("text")
               .attr("x", 10)
@@ -451,6 +458,145 @@ vistk.viz = function() {
                           .attr("transform", function(d) {
                             return "translate("+x(d[vars.x_var])+", "+y(d[vars.y_var])+")";
                           })
+
+      } else if(vars.type == "dotplot") {
+
+
+        // Original scatterplot from http://bl.ocks.org/mbostock/3887118
+
+        
+         x = d3.scale.linear()
+            .range([vars.margin.left, vars.width-vars.margin.left-vars.margin.right]);
+
+        var y = d3.scale.linear()
+            .range([vars.height-vars.margin.top-vars.margin.bottom, vars.margin.top]);
+
+        x.domain([0, d3.max(vars.data, function(d) { return d[vars.x_var]; })]).nice();
+        y.domain([0, d3.max(vars.data, function(d) { return d[vars.y_var]; })]).nice();
+
+
+        if(vars.x_scale == "index") {
+
+          x = d3.scale.ordinal()
+                .domain(d3.range(new_data.length))
+                .rangeBands([vars.margin.left, vars.width-vars.margin.left-vars.margin.right]);
+
+            new_data.sort(function ascendingKey(a, b) {
+              return d3.ascending(a[vars.x_var], b[vars.x_var]);
+            })
+  /*
+            .forEach(function(d, i) {
+              d.x = width/2;
+              d.y = scale_y(i);
+            })
+  */
+        } 
+
+        var xAxis = d3.svg.axis()
+            .scale(x)
+            .orient("bottom");
+
+        var yAxis = d3.svg.axis()
+            .scale(y)
+            .orient("left");
+
+        vars.svg.selectAll(".label").data(new_data).enter().append("text")
+            .attr("class", "year label")
+            .attr("text-anchor", "end");
+
+        vars.svg.selectAll(".label")    
+            .attr("y", 124)
+            .attr("x", 500)
+            .text(vars.current_time);
+
+
+          vars.svg.selectAll(".x.axis").data([new_data]).enter().append("g")
+              .attr("class", "x axis")
+              .attr("transform", "translate(0," + (vars.height-vars.margin.bottom-vars.margin.top) + ")")              
+            .append("text")
+              .attr("class", "label")
+              .attr("x", vars.width-vars.margin.left-vars.margin.right)
+              .attr("y", -6)
+              .style("text-anchor", "end")
+              .text(function(d) { return vars.x_var; })
+
+          vars.svg.selectAll(".y.axis").data([new_data]).enter().append("g")
+              .attr("class", "y axis")
+              .attr("transform", "translate("+vars.margin.left+", 0)")              
+            .append("text")
+              .attr("class", "label")
+              .attr("transform", "rotate(-90)")
+              .attr("y", 6)
+              .attr("dy", ".71em")
+              .style("text-anchor", "end")
+              .text(function(d) { return vars.y_var; })
+
+          vars.svg.selectAll(".x.axis").call(xAxis)
+          vars.svg.selectAll(".y.axis").call(yAxis)
+
+          var gPoints = vars.svg.selectAll(".points")
+                          .data(new_data, function(d, i) { return d[vars.var_text]; });
+
+          var gPoints_enter = gPoints.enter()
+                          .append("g")
+                          .attr("class", "points")
+                          .on("mouseenter",function(d, i) {
+
+                            dots.style("opacity", .1)
+                            labels.style("opacity", 0)          
+
+                            d3.select(this).select("circle").style("opacity", 1)
+                            d3.select(this).select("text").style("opacity", 1)
+                          //  dragit.trajectory.display(d, i);
+
+                          })
+                          .on("mouseleave", function(d, i) {
+
+                            dots.style("opacity", 1)
+                            labels.style("opacity", 1)     
+        //                    dragit.trajectory.remove(d, i)
+                          })
+                       //   .call(dragit.object.activate)
+
+          var dots = gPoints_enter.append("circle")
+            .attr("r", 5)
+            .attr("cx", 0)
+            .attr("cy", 0)
+            .style("opacity", .2)
+            .style("fill", function(d) { return "gray"; })
+
+
+          var labels = gPoints_enter.append("text")
+              .attr("x", 10)
+              .attr("y", 0)
+              .attr("dy", ".35em")
+              .style("text-anchor", "start")
+              .attr("transform", "rotate(-30)")
+              .text(function(d) { return d[vars.var_text]; });
+
+          var gPoints_exit = gPoints.exit().style("opacity", .1);
+
+          // Update all the remaining dots
+          gPoints.style("opacity", 1)    
+
+        if(vars.x_scale == "index") {
+
+          vars.svg.selectAll(".points")
+                          .transition()
+                          .attr("transform", function(d, i) {
+                            return "translate("+x(i)+", "+vars.height/2+")";
+                          })
+
+        } else {
+
+          vars.svg.selectAll(".points")
+                          .transition()
+                          .attr("transform", function(d) {
+                            return "translate("+x(d[vars.x_var])+", "+vars.height/2+")";
+                          })
+        }
+
+
 
       } else if(vars.type == "nodelink") {
 
@@ -511,7 +657,7 @@ vistk.viz = function() {
               .enter().append("circle")
                 .attr("class", "node")
                 .attr("r", 5)
-            //    .style("fill", function(d) { return color(d.group); })
+                .style("fill", function(d) { return vars.color(d[vars.var_color]); })
 
             link.attr("x1", function(d) { return x(d.source.x); })
                 .attr("y1", function(d) { return y(d.source.y); })
@@ -809,6 +955,13 @@ vistk.viz = function() {
     return chart;
   };
 
+  // DOTPLOT
+  chart.x_scale = function(x) {
+    if (!arguments.length) return vars.x_scale;
+    vars.x_scale = x;
+    return chart;
+  }; 
+
   // NODELINK
   chart.size = function(size) {
     if (!arguments.length) return vars.size;
@@ -819,6 +972,12 @@ vistk.viz = function() {
   chart.items = function(size) {
     if (!arguments.length) return vars.items;
     vars.items = size;
+    return chart;
+  };
+
+  chart.color = function(x) {
+    if (!arguments.length) return vars.var_color;
+    vars.var_color = x;
     return chart;
   };
 
