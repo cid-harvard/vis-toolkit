@@ -77,13 +77,24 @@ vistk.viz = function() {
     // Get a copy of the whole dataset
     new_data = vars.data;
 
-    // Filter data
+    // Filter data by time
+    if(typeof vars.var_time != "undefined") {
+
+      new_data = new_data.filter(function(d) {
+        return d[vars.var_time] == vars.current_time;
+      })
+
+    }
+
+
+    // Filter data by attribute
     if(vars.filter.length > 0) {
       new_data = new_data.filter(function(d) {
           // We don't keep values that are not in the vars.filter array
           return vars.filter.indexOf(d[vars.group_var]) > -1;
         })
     }
+
 
     // Aggregate data
     if(vars.aggregate == vars.group_var) {
@@ -109,10 +120,10 @@ vistk.viz = function() {
             "continent": leaves[0][vars.group_var],
             "years": [{
               'avg_products': d3.sum(leaves, function(d) {
-                return accessor_year(d).years[0]['avg_products'];
+                return accessor_year(d)['avg_products'];
               }),
               'nb_products': d3.mean(leaves, function(d) {
-                return accessor_year(d).years[0]['nb_products'];
+                return accessor_year(d)['nb_products'];
               }),
             }]
           }
@@ -364,10 +375,10 @@ vistk.viz = function() {
         vars.svg.selectAll(".label")    
             .attr("y", 124)
             .attr("x", 500)
-            .text(vars.time_current);
+            .text(vars.current_time);
 
-          x.domain([0, d3.max(new_data, function(d) { return d3.max(d.years, function(e) { return e[vars.x_var]; }) })]).nice();
-          y.domain([0, d3.max(new_data, function(d) { return d3.max(d.years, function(e) { return e[vars.y_var]; }) })]).nice();
+          x.domain([0, d3.max(new_data, function(d) { return d[vars.x_var]; })]).nice();
+          y.domain([0, d3.max(new_data, function(d) { return d[vars.y_var]; })]).nice();
 
           vars.svg.selectAll(".x.axis").data([new_data]).enter().append("g")
               .attr("class", "x axis")
@@ -438,7 +449,7 @@ vistk.viz = function() {
           vars.svg.selectAll(".points")
                           .transition()
                           .attr("transform", function(d) {
-                            return "translate("+x(d.years[vars.time_current][vars.x_var])+", "+y(d.years[vars.time_current][vars.x_var])+")";
+                            return "translate("+x(d[vars.x_var])+", "+y(d[vars.x_var])+")";
                           })
 
       } else if(vars.type == "nodelink") {
@@ -570,13 +581,15 @@ vistk.viz = function() {
 
         label_radios.append("span")
             .html(function(d) { 
-              var count = vars.data.filter(function(e, j) { return e[vars.group_var] == d; }).length;
+//              var count = vars.data.filter(function(e, j) { return e[vars.group_var] == d; }).length;
+              // TODO
+              var count = "";
               return d + " (" + count + ")";
             });
 
       }
 
-      if(vars.year) {
+      if(vars.var_time) {
 
         var label_slider = d3.select(vars.container).selectAll(".slider").data([vars.id])
           .enter()
@@ -587,12 +600,13 @@ vistk.viz = function() {
         label_slider.append("input")
                       .attr("type", "range")
                       .attr("class", "slider-random")
-                      .property("min", 0)
-                      .property("max", 1000)
-                      .property("value", 100)
+                      .property("min", 1995)
+                      .property("max", 2011)
+                      .property("value", 1995)
                       .attr("step", 1)
                       .on("input", function() {
-                        d3.select("#max-time").text(this.value);
+                        vars.current_time = +this.value;
+                        d3.select("#viz").call(visualization);
                       })
                       .style("width", "100px")
 
@@ -719,6 +733,14 @@ vistk.viz = function() {
     return chart;
   };
 
+  chart.time = function(params) {
+    if (!arguments.length) return vars.current_time;
+    vars.var_time = params.var_time;
+    vars.current_time = params.current_time;
+    return chart;
+  };
+
+
 	chart.solo = function(x) {
 	  if (!arguments.length) return vars.solo;
 
@@ -813,6 +835,26 @@ var merge = function() {
     }
     return obj;
 };
+
+function flattenYears(data) {
+    var flat = [];
+
+    //for each country
+    data.forEach(function(root) {
+        //for each year in each country
+        root.years.forEach(function(year) {
+            //extend the year object with the common properties stored just once in the country object
+
+          var current_year = merge(root, year);
+          delete current_year.years;
+
+            //add it to the final flat array
+            flat.push(current_year);
+        })
+    });
+
+    return flat;
+}
 
 /* One way to wrap text.. 
 http://bl.ocks.org/mbostock/7555321
