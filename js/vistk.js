@@ -25,6 +25,7 @@ vistk.viz = function() {
     type: "table",
 
     filter: [],
+    aggregate: [],
 
     width: 1000,
     height: 600,
@@ -51,9 +52,6 @@ vistk.viz = function() {
 
   if (vars.dev) console.log("Init")
 
-  // TODO: remove visualization
-	// d3.select(vars.container).select("table").remove();
-
 	if (!vars.data) vars.data = []
 
 	// Constructor
@@ -79,16 +77,19 @@ vistk.viz = function() {
     if(vars.filter.length > 0) {
       new_data = new_data.filter(function(d) {
           // We don't keep values that are not in the vars.filter array
-          return vars.filter.indexOf(d["continent"]) > -1;
+          return vars.filter.indexOf(d[vars.group_var]) > -1;
         })
     }
 
     // Aggregate data
-    if(vars.aggregate == 'continent') {
+    if(vars.aggregate == vars.group_var) {
 
       accessor_year = vars.accessor_year;
 
-      // Do the nesting by continent
+      // Do the nesting
+      // Should make sure it works for a generc dataset
+      // Also for time or none-time attributes
+
       nested_data = d3.nest()
         .key(function(d) { 
           return d.continent;
@@ -124,6 +125,7 @@ vistk.viz = function() {
 
       } else if(vars.type == "table") {
 
+      d3.select(vars.container).select("table").remove();
 
       function row_data(row, i) {
 
@@ -221,7 +223,7 @@ vistk.viz = function() {
         vars.columns = d3.keys(vars.data[0])
 
         // Basic dump of the data we have
-        create_table(vars.data)
+        create_table(new_data)
 
         // Now update the table
 
@@ -514,7 +516,7 @@ vistk.viz = function() {
 
 
      function update_filters(value, add) {
-        if(vars.debug) console.log("[update_filters]", value);  
+        if(vars.dev) console.log("[update_filters]", value);  
         // If we add a new value to filter
         if(add) {
           if(vars.filter.indexOf(value) < 0) {
