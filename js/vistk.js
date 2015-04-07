@@ -466,7 +466,7 @@ vistk.viz = function() {
 
       if(typeof vars.id == "object") {
 
-         label_radios = d3.select(vars.container).selectAll(".aggregations").data(vars.id)
+        var label_radios = d3.select(vars.container).selectAll(".aggregations").data(vars.id)
           .enter()
             .append("label")
             .attr("class", "aggregations")
@@ -488,13 +488,17 @@ vistk.viz = function() {
         label_radios.append("span")
             .html(function(d) { return d})
 
-
       }
 
       if(vars.year) {
 
+        var label_slider = d3.select(vars.container).selectAll(".slider").data([vars.id])
+          .enter()
+            .append("label")
+            .attr("class", "slider")
+
         // TODO: find time range
-        d3.select(vars.container).append("input")
+        label_slider.append("input")
                       .attr("type", "range")
                       .attr("class", "slider-random")
                       .property("min", 0)
