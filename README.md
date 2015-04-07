@@ -1,5 +1,10 @@
 # vis-toolkit
 
+* A simple, fast visualization toolkit based on D3 charts
+* Enable storytelling with step by step display and annotations
+* Allow transitions between charts
+* Extensible with a modular architecture
+
 ## Usage
 
 Simply add the vistk JavaScript and CSS files.
@@ -18,7 +23,7 @@ Simply add the vistk JavaScript and CSS files.
 * Table ([Demo](http://cid-harvard.github.io/vis-toolkit/examples/table.html) | [Source](examples/table.html))
 * Treemap ([Demo](http://cid-harvard.github.io/vis-toolkit/examples/treemap.html) | [Source](examples/treemap.html))
 * Scatterplot ([Demo](http://cid-harvard.github.io/vis-toolkit/examples/scatterplot.html) | [Source](examples/scatterplot.html))
-* Product Space ([Demo](http://cid-harvard.github.io/vis-toolkit/examples/nodelink.html) | [Source](examples/nodelink.html))
+* Node-Link ([Demo](http://cid-harvard.github.io/vis-toolkit/examples/nodelink.html) | [Source](examples/nodelink.html))
 
 * Build your own graph environment
 
@@ -48,7 +53,7 @@ What to do when some attribuets are missing over time?
 
 * Some of the properties are made for the visualization (e.g. product space)
 
-## Data Management (TODO: discuss with QUIN)
+## Data Management (TODO: discuss with QUINN)
 
 * Items should be loaded first, and ideally loaded only once
  * But for which level of details?..
@@ -60,7 +65,7 @@ What to do when some attribuets are missing over time?
 
 * Streaming data?
 
-## States (TODO: discuss with QUIN)
+## States (TODO: discuss with QUINN)
 
 * Capture state (and enable slide shows), enable loading at a specific state
  * Default states (similar to default config)
@@ -68,13 +73,14 @@ What to do when some attribuets are missing over time?
 * Internal state
  * How is this kept by the application?
 
-## Howto create a new app
+## Howto create a new chart
 
-* What is the interface?
+* What is the interface? Options are:
+ * Object inheritance
+ * Create a list of pre-defined visualization
+ * Implement a specific interface (à la d3plus)
 * What should be reused or not?
-* What is inherited from the main interface?
 * How to define the transitions to other apps?
-
 
 
 ## Roadmap
@@ -104,7 +110,7 @@ What to do when some attribuets are missing over time?
 * Boilerplate code
  * Dev environment
  * Automate compilation
- * Testing (using Travis)
+ * Testing (using Travis?)
  * Performances (included in unit testing?)
  * Sample datasets we will be using
  * Consistent input file format
@@ -112,6 +118,17 @@ What to do when some attribuets are missing over time?
 * Visual customization
  * Margin, padding, etc.
  * Number format. Font, font weight.
+
+* Interactions: 
+ * `.focus` highlights one particular element
+ * `.selection` selects a group of nodes
+ * `.filter` 
+ * `aggregate`
+ * `time change`
+
+* UI elements for interaction
+ * Either from the visualization itslef, or with auto-generated widgets
+ * Binding with external buttons/widgets
 
 ## What it should achieve
 
@@ -121,9 +138,8 @@ What to do when some attribuets are missing over time?
 * Able to create multiple instances of visualizations on the same page
  * And eventually coordinate them (e.g brushing one filters another one)
  * Should also share some similar attributes/properties
-* Interactions: focus, selection, filter, aggregate, time change
- * Either from the visualization itslef, or with auto-generated widgets
- * Binding with external buttons/widgets
+
+
 * Customized visual design
  * Default CSS but should allow this to be overloaded
 * Default values should be coherent
@@ -142,9 +158,23 @@ What to do when some attribuets are missing over time?
 * Guaranty that exported SVG will be correct
  * Same with other export file formats
 * Customizable tooltips (d3plus.tooltip.create())
+
 * Callback once the loading is terminated
+** This is quite tricky as many things are pending
+** enter, update and exit
+** Other transitions (e.g. attrTween)
+** Other custom transitions, physical simulation, etc.
+** Dispatching other events
+
 * Legend: should be informative on the mapping and the quantity of attributes, also actionable for filtering. Multiple selections should be allowed.
 
+
+
+Intresting reading on D3 modular/reusable
+
+* [Mike Bostock’s reusable D3](http://bost.ocks.org/mike/chart/)
+
+* https://blog.safaribooksonline.com/2013/07/11/reusable-d3-js-using-attrtween-transitions-and-mv/
 
 Storytelling
 
