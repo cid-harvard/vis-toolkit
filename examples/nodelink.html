@@ -11,20 +11,31 @@
 
 d3.json("../data/product_space_hs4.json", function(error, products) {
 
-  var visualization = vistk.viz()
-    .type("nodelink")
-    .container("#viz")
-    .data(products)
-    .x_var("nb_products")
-    .y_var("avg_products")
-    .id("product")
-    .size("value")
-    .year(2011)
-    .title("Testing Table")
+  d3.json("../data/network_hs.json", function(graph) {
 
-  d3.select("#viz").call(visualization)
+    // Data cleaning
+    graph.nodes.forEach(function(node){
+      node.id = node._id.slice(2, 6);
+      node.category = node._id.slice(0, 2);      
+    });
 
-  console.log(products)
+    var visualization = vistk.viz()
+      .data(graph.nodes)
+      .join(products.data, "id")
+      .type("nodelink")
+      .container("#viz")
+      .x_var("nb_products")
+      .y_var("avg_products")
+      .id(["category", "id"])
+      .group("category")
+      .size("value")
+      .year(2012)
+      .title("Product space")
+
+    d3.select("#viz")
+      .call(visualization)
+
+  });
 
 });
 

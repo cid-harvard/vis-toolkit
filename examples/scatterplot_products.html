@@ -1,0 +1,37 @@
+<!doctype html>
+<meta charset="utf-8">
+<script src="../js/d3.js"></script>
+<script src="../js/vistk.js"></script>
+<link href="../css/vistk.css" rel="stylesheet">
+<body>
+<div id="viz"></div>
+
+<script>
+
+d3.json("../data/exports_2012.json", function(error, exports) {
+
+  console.log(exports)
+
+  data = exports.data.filter(function(d) {
+
+
+
+    return d.year == 2012;
+  })
+
+  visualization = vistk.viz()
+    .type("scatterplot")
+    .container("#viz")
+    .data(data)
+    .x_var("share")
+    .y_var("value")
+    .id(["name"])
+//    .group("continent")
+    .year(2012)
+    .title("Testing Table")
+
+  d3.select("#viz").call(visualization)
+
+});
+
+</script>
