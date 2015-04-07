@@ -252,9 +252,14 @@ var chart = new vistk.Chart({
 .render()
 ```
 
-* `id` tells which attribute can be used as unique idenfifier for the data
- * `id("country")` the `country` variable is going to be used
- * `id(["continent", "country"])` the `country` is still the id, but `continent` may be used as a natural hierarchy
+* `.id()` tells which attribute can be used as unique idenfifier for the data
+ * `.id("country")` the `country` variable is going to be used
+ * `.id(["continent", "country"])` the `country` is still the id, but `continent` may be used as a natural hierarchy
+
+
+* `.time()` sets the current time variable and time point    
+ * `.time({var_time: "year", current_time: 1995})`
+
 
 ### Table
 

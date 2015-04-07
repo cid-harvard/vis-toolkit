@@ -378,18 +378,18 @@ vistk.viz = function() {
             .attr("x", 500)
             .text(vars.current_time);
 
-          x.domain([0, d3.max(new_data, function(d) { return d[vars.x_var]; })]).nice();
-          y.domain([0, d3.max(new_data, function(d) { return d[vars.y_var]; })]).nice();
+          x.domain([0, d3.max(vars.data, function(d) { return d[vars.x_var]; })]).nice();
+          y.domain([0, d3.max(vars.data, function(d) { return d[vars.y_var]; })]).nice();
 
           vars.svg.selectAll(".x.axis").data([new_data]).enter().append("g")
               .attr("class", "x axis")
-              .attr("transform", "translate(0," + (vars.height-vars.margin.bottom) + ")")              
+              .attr("transform", "translate(0," + (vars.height-vars.margin.bottom-vars.margin.top) + ")")              
             .append("text")
               .attr("class", "label")
-              .attr("x", vars.width)
+              .attr("x", vars.width-vars.margin.left-vars.margin.right)
               .attr("y", -6)
               .style("text-anchor", "end")
-              .text("Countries Diversity");
+              .text(function(d) { return vars.x_var; })
 
           vars.svg.selectAll(".y.axis").data([new_data]).enter().append("g")
               .attr("class", "y axis")
@@ -400,7 +400,7 @@ vistk.viz = function() {
               .attr("y", 6)
               .attr("dy", ".71em")
               .style("text-anchor", "end")
-              .text("Average number of countries making the same products")
+              .text(function(d) { return vars.y_var; })
 
           vars.svg.selectAll(".x.axis").call(xAxis)
           vars.svg.selectAll(".y.axis").call(yAxis)
