@@ -1,6 +1,6 @@
 <!doctype html>
 <meta charset="utf-8">
-<script src="../js/d3.js"></script>
+<script src="../js/d3.js" charset="utf-8"></script>
 <script src="../js/vistk.js"></script>
 <link href="../css/vistk.css" rel="stylesheet">
 <body>
@@ -10,11 +10,12 @@
 
 d3.csv("../data/COL_pop_realgdp_dept_2000-2013.csv", function(error, departments) {
 
-
   departments.forEach(function(d, i) {
 
     d.dept_pop = +d.dept_pop;
     d.year = +d.year;    
+    d.realgdp = +d.realgdp;
+    d.realgdp_percap = +d.realgdp_percap;    
   })
 
   dep = departments;

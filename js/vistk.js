@@ -464,16 +464,14 @@ vistk.viz = function() {
 
         // Original scatterplot from http://bl.ocks.org/mbostock/3887118
 
-        
          x = d3.scale.linear()
             .range([vars.margin.left, vars.width-vars.margin.left-vars.margin.right]);
 
         var y = d3.scale.linear()
             .range([vars.height-vars.margin.top-vars.margin.bottom, vars.margin.top]);
 
-        x.domain([0, d3.max(vars.data, function(d) { return d[vars.x_var]; })]).nice();
-        y.domain([0, d3.max(vars.data, function(d) { return d[vars.y_var]; })]).nice();
-
+        x.domain([0, d3.max(new_data, function(d) { return d[vars.x_var]; })]).nice();
+        y.domain([0, d3.max(new_data, function(d) { return d[vars.y_var]; })]).nice();
 
         if(vars.x_scale == "index") {
 
@@ -484,12 +482,10 @@ vistk.viz = function() {
             new_data.sort(function ascendingKey(a, b) {
               return d3.ascending(a[vars.x_var], b[vars.x_var]);
             })
-  /*
             .forEach(function(d, i) {
-              d.x = width/2;
-              d.y = scale_y(i);
+              d.rank = x(i);
             })
-  */
+
         } 
 
         var xAxis = d3.svg.axis()
@@ -505,10 +501,9 @@ vistk.viz = function() {
             .attr("text-anchor", "end");
 
         vars.svg.selectAll(".label")    
-            .attr("y", 124)
+            .attr("y", 144)
             .attr("x", 500)
             .text(vars.current_time);
-
 
           vars.svg.selectAll(".x.axis").data([new_data]).enter().append("g")
               .attr("class", "x axis")
@@ -584,7 +579,7 @@ vistk.viz = function() {
           vars.svg.selectAll(".points")
                           .transition()
                           .attr("transform", function(d, i) {
-                            return "translate("+x(i)+", "+vars.height/2+")";
+                            return "translate("+d.rank+", "+vars.height/2+")";
                           })
 
         } else {
@@ -749,8 +744,8 @@ vistk.viz = function() {
                       .attr("type", "range")
                       .attr("class", "slider-random")
                       .property("min", 1995)
-                      .property("max", 2011)
-                      .property("value", 1995)
+                      .property("max", 2013)
+                      .property("value", 2013)
                       .attr("step", 1)
                       .on("input", function() {
                         vars.current_time = +this.value;
