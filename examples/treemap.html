@@ -86,6 +86,7 @@ d3.json("../data/exports_2012.json", function(error, data) {
     .data([r])
     .id("product")
     .group("group")
+    .color("name")
     .title("Products")
 
   d3.select("#viz").call(visualization)

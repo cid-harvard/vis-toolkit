@@ -19,7 +19,7 @@ d3.json("../data/product_space_hs4.json", function(error, products) {
       node.category = node._id.slice(0, 2);      
     });
 
-    var visualization = vistk.viz()
+    visualization = vistk.viz()
       .data(graph.nodes)
       .join(products.data, "id")
       .type("nodelink")
