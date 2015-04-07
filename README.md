@@ -252,6 +252,10 @@ var chart = new vistk.Chart({
 .render()
 ```
 
+* `id` tells which attribute can be used as unique idenfifier for the data
+ * `id("country")` the `country` variable is going to be used
+ * `id(["continent", "country"])` the `country` is still the id, but `continent` may be used as a natural hierarchy
+
 ### Table
 
 * http://handsontable.com/demo/pagination.html#5

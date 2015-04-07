@@ -566,10 +566,13 @@ vistk.viz = function() {
                      vars.aggregate=d;
                      d3.select("#viz").call(visualization);
 
-                   })
+                   });
 
         label_radios.append("span")
-            .html(function(d) { return d})
+            .html(function(d) { 
+              var count = vars.data.filter(function(e, j) { return e[vars.group_var] == d; }).length;
+              return d + " (" + count + ")";
+            });
 
       }
 
