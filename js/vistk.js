@@ -69,8 +69,8 @@ vistk.viz = function() {
         .append("g")
           .attr("transform", "translate(-.5,-.5)");
 
-      vars.width = vars.width - vars.margin.left - vars.margin.right;
-      vars.height = vars.height - vars.margin.top - vars.margin.bottom;
+   //   vars.width = vars.width - vars.margin.left - vars.margin.right;
+   //   vars.height = vars.height - vars.margin.top - vars.margin.bottom;
 
     }
 
@@ -354,11 +354,11 @@ vistk.viz = function() {
 
         // Original scatterplot from http://bl.ocks.org/mbostock/3887118
 
-        var x = d3.scale.linear()
-            .range([0, vars.width]);
+         x = d3.scale.linear()
+            .range([vars.margin.left, vars.width-vars.margin.left-vars.margin.right]);
 
         var y = d3.scale.linear()
-            .range([vars.height, 0]);
+            .range([vars.height-vars.margin.top-vars.margin.bottom, vars.margin.top]);
 
         var xAxis = d3.svg.axis()
             .scale(x)
@@ -449,7 +449,7 @@ vistk.viz = function() {
           vars.svg.selectAll(".points")
                           .transition()
                           .attr("transform", function(d) {
-                            return "translate("+x(d[vars.x_var])+", "+y(d[vars.x_var])+")";
+                            return "translate("+x(d[vars.x_var])+", "+y(d[vars.y_var])+")";
                           })
 
       } else if(vars.type == "nodelink") {
@@ -524,6 +524,8 @@ vistk.viz = function() {
           });
 
       }
+
+      d3.select(vars.container).selectAll(".break").data([vars.id]).enter().append("p").attr("class", "break");
 
       if(vars.group_var) {
 
