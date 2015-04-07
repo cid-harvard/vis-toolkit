@@ -26,6 +26,8 @@ Simply add the vistk JavaScript and CSS files.
 * Node-Link ([Demo](http://cid-harvard.github.io/vis-toolkit/examples/nodelink.html) | [Source](examples/nodelink.html))
 
 * Build your own graph environment
+ * Using an editor http://ace.c9.io/#nav=about
+ * Build your own grid
 
 ## Tests
 
@@ -130,6 +132,11 @@ What to do when some attribuets are missing over time?
  * Either from the visualization itslef, or with auto-generated widgets
  * Binding with external buttons/widgets
 
+* Visual manager 
+* Initialize components constructors
+* Use d3.dispatch and custom events for transimtions management
+
+
 ## What it should achieve
 
 * Should be fast (e.g. only requires attributes to be loaded once)
@@ -142,33 +149,42 @@ What to do when some attribuets are missing over time?
 
 * Customized visual design
  * Default CSS but should allow this to be overloaded
+
 * Default values should be coherent
  * Default parameters
  * Especially when transitionning
+ * Enable minimal set of parameters to begin with
+
 * Extensible to add new functionalities
  * New charts
  * New utils functions
+ * New components (parts of the chart)
+
 * Make sure it works for all types of data
+ * But should make sure an input format has been defined
+ * Dealing/robust even with missing data
+ * Should be visually reflected too
+
 * Animation but carefully used
  * Should we use object consistancy to transform them? http://bost.ocks.org/mike/constancy/
  * Using points for transition?
-* Dealing/robust even with missing data
- * Should be visually reflected too
+
 * Text wrap for long names (see [d3plus word wrap](https://github.com/alexandersimoes/d3plus/wiki/Basic-Utilities#wordwrap))
-* Guaranty that exported SVG will be correct
+ * Guaranty that exported SVG will be correct
  * Same with other export file formats
-* Customizable tooltips (d3plus.tooltip.create())
+ * Customizable tooltips (d3plus.tooltip.create())
 
 * Callback once the loading is terminated
-** This is quite tricky as many things are pending
-** enter, update and exit
-** Other transitions (e.g. attrTween)
-** Other custom transitions, physical simulation, etc.
-** Dispatching other events
+ * This is quite tricky as many things are pending
+ * enter, update and exit
+ * Other transitions (e.g. attrTween)
+ * Other custom transitions, physical simulation, etc.
+ * Dispatching other events
 
-* Legend: should be informative on the mapping and the quantity of attributes, also actionable for filtering. Multiple selections should be allowed.
-
-
+* Legend: should be informative on the mapping and the quantity of attributes, also actionable for filtering. 
+ * Multiple selections should be allowed
+ * Automatically generated
+ 
 
 Intresting reading on D3 modular/reusable
 
@@ -179,8 +195,8 @@ Intresting reading on D3 modular/reusable
 Storytelling
 
 * Show one step at a time
-** Use delays and duration
-** Controled by external widgets
+ * Use delays and duration
+ * Controled by external widgets
 * Wireframe, then color mapping, then ...
 * Part of the visualization
 * See https://idl.cs.washington.edu/files/2014-Ellipsis-EuroVis.pdf
