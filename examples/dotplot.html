@@ -8,7 +8,7 @@
 
 <script>
 
-d3.csv("../data/COL_pop_realgdp_dept_2000-2013.csv", function(error, departments) {
+d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments) {
 
   departments.forEach(function(d, i) {
 
@@ -17,6 +17,8 @@ d3.csv("../data/COL_pop_realgdp_dept_2000-2013.csv", function(error, departments
     d.realgdp = +d.realgdp;
     d.realgdp_percap = +d.realgdp_percap;    
     d["sum(export_value)"] = +d["sum(export_value)"];
+    d["value_added"] = +d["value_added"];
+
   })
 
   dep = departments;
