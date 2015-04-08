@@ -340,12 +340,42 @@ vistk.viz = function() {
 
       } else if(vars.type == "treemap") {
 
+        r = {}
+        r.name = "root";
+        groups = []
+
+        new_data.filter(function(d, i) { return d.world_trade > 1000000; }).map(function(d, i) {
+
+          if(typeof groups[data.attr_data[d.product_id].code[0]] == "undefined") {
+            console.log("new")
+            groups[data.attr_data[d.product_id].code[0]] = [];
+          }
+
+          //groups[data.attr_data[d.product_id].code[0]]
+          //.push({name: d.product_id, size: d.world_trade, attr: data.attr_data[d.product_id], group: +data.attr_data[d.product_id].code[0], year: d.year});
+
+        })
+
+        child = groups.map(function(d, i) {
+
+          node = {};
+          node.name = i;
+
+          node.children = d.map(function(e, j) {
+            return {name: e.attr.name, size: e.size, group: e.group, year: e.year}
+          })
+
+          return node;
+        })
+
+        r.children = child;
+
         var treemap = d3.layout.treemap()
             .padding(4)
             .size([vars.width, vars.height])
-            .value(function(d) { return d.size; });
+            .value(function(d) { return d[vars.var_size]; });
 
-        var cell = vars.svg.data(new_data).selectAll("g")
+        var cell = vars.svg.data([r]).selectAll("g")
             .data(treemap.nodes)
           .enter().append("g")
             .attr("class", "cell")
@@ -1007,8 +1037,8 @@ vistk.viz = function() {
 
   // NODELINK
   chart.size = function(size) {
-    if (!arguments.length) return vars.size;
-    vars.size = size;
+    if (!arguments.length) return vars.var_size;
+    vars.var_size = size;
     return chart;
   };
 

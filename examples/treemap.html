@@ -36,58 +36,22 @@
   }];
 
 
-d3.json("../data/exports_2012.json", function(error, data) {
-
-  rawData = data;
-
-  trade = data.world_trade.filter(function(d) {
-    return d.year == "2012";
-  })
-
-  r = {}
-  r.name = "root";
-
-  groups = []
-
-  trade.filter(function(d, i) { return d.world_trade > 1000000; }).map(function(d, i) {
-    if(typeof groups[data.attr_data[d.product_id].code[0]] == "undefined") {
-      console.log("new")
-      groups[data.attr_data[d.product_id].code[0]] = [];
-    }
-
-    groups[data.attr_data[d.product_id].code[0]].push({name: d.product_id, size: d.world_trade, attr: data.attr_data[d.product_id], group: +data.attr_data[d.product_id].code[0]});
-
-  })
-
-  child = groups.map(function(d, i) {
-
-    node = {};
-    node.name = i;
-
-
-    node.children = d.map(function(e, j) {
-      return {name: e.attr.name, size: e.size, group: e.group}
-    })
-
-    return node;
-  })
-/*
-  r.children = trade.filter(function(d, i) { return d.world_trade > 1000000; }).map(function(d, i) {
-    return {name: d.product_id, size: d.world_trade, attr: data.attr.name} 
-  })
-*/
-  r.children = child;
+d3.json("../data/exports_2012.json", function(error, exports) {
 
   visualization = vistk.viz()
     .type("treemap")
     .container("#viz")
     .height(600)
     .width(900)
-    .data([r])
+    .data(exports.data)
     .id("product")
     .group("group")
     .color("name")
     .title("Products")
+    .size("size")
+
+    .time({var_time: "year", current_time: 2012})
+
 
   d3.select("#viz").call(visualization)
 
