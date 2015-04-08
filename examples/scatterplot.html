@@ -12,6 +12,17 @@ d3.json("../data/diversification_ubiquity_hs4_1995_2012.json", function(error, c
 
   flat_years = flattenYears(countries);
 
+  // Here we should define the configuration for the aggregation
+
+  /*
+
+  agg = vistk.viz()
+    .type("pie")
+    .data(aggregation)
+    .data([""])
+
+  */
+
   visualization = vistk.viz()
     .type("scatterplot")
     .container("#viz")

@@ -91,7 +91,6 @@ vistk.viz = function() {
 
     }
 
-
     // Filter data by attribute
     if(vars.filter.length > 0) {
       new_data = new_data.filter(function(d) {
