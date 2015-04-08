@@ -12,7 +12,6 @@ d3.json("../data/exports_2012.json", function(error, exports) {
 
   console.log(exports)
 
-
   visualization = vistk.viz()
     .type("scatterplot")
     .container("#viz")
@@ -20,7 +19,7 @@ d3.json("../data/exports_2012.json", function(error, exports) {
     .x_var("rca")
     .y_var("share")
     .id(["community_id", "name"])
-    .group("community_name")
+    .group("community_id")
     .text("id")
     .time({var_time: "year", current_time: 1995})
     .title("Testing Table")

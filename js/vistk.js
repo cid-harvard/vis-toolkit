@@ -15,7 +15,7 @@ vistk.viz = function() {
     dev : true,
     id : "id",
     id_var : "id",
-    group_var: null,
+    var_group: null,
     data: [],
     year: null,
     title: "",
@@ -96,13 +96,13 @@ vistk.viz = function() {
     if(vars.filter.length > 0) {
       new_data = new_data.filter(function(d) {
           // We don't keep values that are not in the vars.filter array
-          return vars.filter.indexOf(d[vars.group_var]) > -1;
+          return vars.filter.indexOf(d[vars.var_group]) > -1;
         })
     }
 
 
     // Aggregate data
-    if(vars.aggregate == vars.group_var) {
+    if(vars.aggregate == vars.var_group) {
 
       accessor_year = vars.accessor_year;
 
@@ -112,26 +112,26 @@ vistk.viz = function() {
 
       nested_data = d3.nest()
         .key(function(d) { 
-          return d[vars.group_var];
+          return d[vars.var_group];
         })
         .rollup(function(leaves) {
           // Generates a new dataset with aggregated data
 
-          // TODO: should return a generic aggregation
-          // Only for the values that have been specified??
+          var aggregation = {};
 
-          return {
-            "name" : leaves[0][vars.group_var],
-            "continent": leaves[0][vars.group_var],
-            "years": [{
-              'avg_products': d3.sum(leaves, function(d) {
-                return accessor_year(d)['avg_products'];
-              }),
-              'nb_products': d3.mean(leaves, function(d) {
-                return accessor_year(d)['nb_products'];
-              }),
-            }]
-          }
+          aggregation[vars.var_text] = leaves[0][vars.var_group];
+
+          aggregation[vars.var_group] = leaves[0][vars.var_group];
+
+          aggregation[vars.x_var] = d3.mean(leaves, function(d) {
+            return d[vars.x_var];
+          });
+
+          aggregation[vars.y_var] = d3.mean(leaves, function(d) {
+              return d[vars.y_var];
+            })
+
+          return aggregation;
         })
         .entries(new_data);      
 
@@ -412,52 +412,89 @@ vistk.viz = function() {
           var gPoints = vars.svg.selectAll(".points")
                           .data(new_data, function(d) { return d.name; });
 
-          var gPoints_enter = gPoints.enter()
-                          .append("g")
-                          .attr("class", "points")
-                          .on("mouseenter",function(d, i) {
+          // Here we want to deal with aggregated datasets
+          if(vars.aggregate == vars.var_group) {
 
-                            dots.style("opacity", .1)
-                            labels.style("opacity", 0)          
+            var gPoints_enter = gPoints.enter()
+                            .append("g")
+                            .attr("class", "points")
 
-                            d3.select(this).select("circle").style("opacity", 1)
-                            d3.select(this).select("text").style("opacity", 1)
-                          //  dragit.trajectory.display(d, i);
-
-                          })
-                          .on("mouseleave", function(d, i) {
-
-                            dots.style("opacity", 1)
-                            labels.style("opacity", 1)     
-        //                    dragit.trajectory.remove(d, i)
-                          })
-                       //   .call(dragit.object.activate)
-
-          var dots = gPoints_enter.append("circle")
-            .attr("r", 5)
-            .attr("cx", 0)
-            .attr("cy", 0)
-//            .style("fill", function(d) { return d.color; })
-            .style("fill", function(d) { return vars.color(d[vars.var_color]); })
+            var dots = gPoints_enter.append("circle")
+              .attr("r", 5)
+              .attr("cx", 0)
+              .attr("cy", 0)
+              .style("fill", function(d) { return vars.color(d[vars.var_color]); })
 
 
-          var labels = gPoints_enter.append("text")
-              .attr("x", 10)
-              .attr("y", 0)
-              .attr("dy", ".35em")
-              .style("text-anchor", "start")
-              .text(function(d) { return d[vars.var_text]; });
+            var labels = gPoints_enter.append("text")
+                .attr("x", 10)
+                .attr("y", 0)
+                .attr("dy", ".35em")
+                .style("text-anchor", "start")
+                .text(function(d) { return d[vars.var_text]; });
 
-          var gPoints_exit = gPoints.exit().style("opacity", .1);
+            var gPoints_exit = gPoints.exit().style("opacity", .1);
 
-          // Update all the remaining dots
-          gPoints.style("opacity", 1)    
+            // Update all the remaining dots
+            gPoints.style("opacity", 1)    
 
-          vars.svg.selectAll(".points")
-                          .transition()
-                          .attr("transform", function(d) {
-                            return "translate("+x(d[vars.x_var])+", "+y(d[vars.y_var])+")";
-                          })
+            vars.svg.selectAll(".points")
+                            .transition()
+                            .attr("transform", function(d) {
+                              return "translate("+x(d[vars.x_var])+", "+y(d[vars.y_var])+")";
+                            })
+
+
+          } else { 
+
+            var gPoints_enter = gPoints.enter()
+                            .append("g")
+                            .attr("class", "points")
+                            .on("mouseenter",function(d, i) {
+
+                              dots.style("opacity", .1)
+                              labels.style("opacity", 0)          
+
+                              d3.select(this).select("circle").style("opacity", 1)
+                              d3.select(this).select("text").style("opacity", 1)
+                            //  dragit.trajectory.display(d, i);
+
+                            })
+                            .on("mouseleave", function(d, i) {
+
+                              dots.style("opacity", 1)
+                              labels.style("opacity", 1)     
+          //                    dragit.trajectory.remove(d, i)
+                            })
+                         //   .call(dragit.object.activate)
+
+            var dots = gPoints_enter.append("circle")
+              .attr("r", 5)
+              .attr("cx", 0)
+              .attr("cy", 0)
+  //            .style("fill", function(d) { return d.color; })
+              .style("fill", function(d) { return vars.color(d[vars.var_color]); })
+
+
+            var labels = gPoints_enter.append("text")
+                .attr("x", 10)
+                .attr("y", 0)
+                .attr("dy", ".35em")
+                .style("text-anchor", "start")
+                .text(function(d) { return d[vars.var_text]; });
+
+            var gPoints_exit = gPoints.exit().style("opacity", .1);
+
+            // Update all the remaining dots
+            gPoints.style("opacity", 1)    
+
+            vars.svg.selectAll(".points")
+                            .transition()
+                            .attr("transform", function(d) {
+                              return "translate("+x(d[vars.x_var])+", "+y(d[vars.y_var])+")";
+                            })
+
+          }
 
       } else if(vars.type == "dotplot") {
 
@@ -668,9 +705,9 @@ vistk.viz = function() {
 
       d3.select(vars.container).selectAll(".break").data([vars.id]).enter().append("p").attr("class", "break");
 
-      if(vars.group_var) {
+      if(vars.var_group) {
 
-        unique_categories = d3.set(vars.data.map(function(d) { return d[vars.group_var]; })).values();
+        unique_categories = d3.set(vars.data.map(function(d) { return d[vars.var_group]; })).values();
 
         var label_checkboxes = d3.select(vars.container).selectAll("input").data(unique_categories)
           .enter()
@@ -685,8 +722,8 @@ vistk.viz = function() {
               update_filters(this.value, this.checked);
               /*
               vars.data = vars.data.filter(function(e, j) {
-                console.log(e[vars.group_var], d)
-                return e[vars.group_var] == d;
+                console.log(e[vars.var_group], d)
+                return e[vars.var_group] == d;
               })
 */
 
@@ -695,7 +732,7 @@ vistk.viz = function() {
 
         label_checkboxes.append("span")
             .html(function(d) { 
-              var count = vars.data.filter(function(e, j) { return e[vars.group_var] == d; }).length;
+              var count = vars.data.filter(function(e, j) { return e[vars.var_group] == d; }).length;
               return d + " (" + count + ")";
             })
 
@@ -724,7 +761,7 @@ vistk.viz = function() {
 
         label_radios.append("span")
             .html(function(d) { 
-//              var count = vars.data.filter(function(e, j) { return e[vars.group_var] == d; }).length;
+//              var count = vars.data.filter(function(e, j) { return e[vars.var_group] == d; }).length;
               // TODO
               var count = "";
               return d + " (" + count + ")";
@@ -901,8 +938,8 @@ vistk.viz = function() {
 	};
 
   chart.group = function(x) {
-    if (!arguments.length) return vars.group_var;
-    vars.group_var = x;
+    if (!arguments.length) return vars.var_group;
+    vars.var_group = x;
     return chart;
   };
 

@@ -1,9 +1,9 @@
 # vis-toolkit
 
 * A simple, fast visualization toolkit based on D3 charts
-* Enable storytelling with step by step display and annotations
-* Allow transitions between charts
-* Extensible with a modular architecture
+* Enables storytelling with step by step display and annotations
+* Allows transitions between charts using points
+* Extensible with a modular architecture to allow nested and connected charts
 
 ## Usage
 
@@ -306,6 +306,13 @@ vis.render()
 ```
 
 # Refs
+
+## Interactive environments
+
+* http://uwdata.github.io/voyager/#/
+
+## Reusable toolkits
+
 
 * NVd3 - http://nvd3.org/ 
 * C3.js - http://c3js.org/ 
