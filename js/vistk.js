@@ -743,7 +743,7 @@ vistk.viz = function() {
 
         label_checkboxes.append("span")
             .html(function(d) { 
-              var count = vars.data.filter(function(e, j) { return e[vars.var_group] == d; }).length;
+              var count = new_data.filter(function(e, j) { return e[vars.var_group] == d; }).length;
               return d + " (" + count + ")";
             })
 

@@ -20,7 +20,7 @@ d3.json("../data/exports_2012.json", function(error, exports) {
     .group("community_name")
     .text("name")
     .time({var_time: "year", current_time: 1995})
-    .title("Testing Table")
+    .title("Products")
     .color("community_name")
 
   d3.select("#viz").call(visualization)
