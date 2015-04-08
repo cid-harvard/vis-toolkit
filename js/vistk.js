@@ -130,6 +130,15 @@ vistk.viz = function() {
               return d[vars.y_var];
             })
 
+          vars.columns.forEach(function(c) {
+            if(c == vars.var_text || c == vars.var_group)
+              return;
+
+            aggregation[c] = d3.mean(leaves, function(d) {
+              return d[c];
+            })
+          })
+
           return aggregation;
         })
         .entries(new_data);      
@@ -157,8 +166,10 @@ vistk.viz = function() {
         // Applies some formatting depending on the index of the column
         return vars.columns.map(function(column, i) {
           
-          console.log( vars.accessor_year(row)[vars.columns[i]], i, vars.columns, row["group"], row[vars.columns[i]])
+          // console.log( vars.accessor_year(row)[vars.columns[i]], i, vars.columns, row["group"], row[vars.columns[i]])
 
+           return row[column];      
+/*
           if(i==0 || i==1) {
 
             return row[column];      
@@ -186,6 +197,7 @@ vistk.viz = function() {
             return vars.year;
 
           }
+          */
         });
       }
 

@@ -7,24 +7,25 @@
 <div id="viz"></div>
 <script>
 
-  var test_data = [
-    {"group": "transportation", "usd": 12897429187, "product": "cars", "image": "trans.png"},
-    {"group": "transportation", "usd": 8974520985, "product": "airplanes", "image": "trans.png"},
-    {"group": "foodstuffs", "usd": 98723420, "product": "apples", "image": "food.png"},
-    {"group": "foodstuffs", "usd": 6897234098, "product": "bananas", "image": "food.png"},
-    {"group": "foodstuffs", "usd": 590834587, "product": "oranges", "image": "food.png"}
-  ];
+d3.json("../data/exports_2012.json", function(error, exports) {
 
-  var visualization = vistk.viz()
+  console.log(exports)
+
+  visualization = vistk.viz()
     .type("table")
     .container("#viz")
-    .data(test_data)
-    .columns(['group', 'product', 'usd'])
-    .id(["group", "product"])
-    .group("group")
+    .data(exports.data)
+    .columns(['community_name', 'name', 'distance', 'pci', 'rca', 'share', 'year'])
+    .id(["community_name", "name"])
+    .group("community_name")
+    .text("name")
+    .time({var_time: "year", current_time: 1995})
     .title("Testing Table")
+    .color("community_name")
 
   d3.select("#viz").call(visualization)
+
+})
 
 </script>
 
