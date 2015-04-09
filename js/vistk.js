@@ -643,74 +643,94 @@ var svg = d3.select("body").append("svg")
             .attr("x", 500)
             .text(vars.current_time);
 
-          vars.svg.selectAll(".x.axis").data([new_data]).enter().append("g")
-              .attr("class", "x axis")
-              .attr("transform", "translate(0," + (vars.height-vars.margin.bottom-vars.margin.top) + ")")              
-            .append("text")
-              .attr("class", "label")
-              .attr("x", vars.width-vars.margin.left-vars.margin.right)
-              .attr("y", -6)
-              .style("text-anchor", "end")
-              .text(function(d) { return vars.x_var; })
+        vars.svg.selectAll(".x.axis").data([new_data]).enter().append("g")
+            .attr("class", "x axis")
+            .attr("transform", "translate(0," + (vars.height-vars.margin.bottom-vars.margin.top) + ")")              
+          .append("text")
+            .attr("class", "label")
+            .attr("x", vars.width-vars.margin.left-vars.margin.right)
+            .attr("y", -6)
+            .style("text-anchor", "end")
+            .text(function(d) { return vars.x_var; })
 
-          vars.svg.selectAll(".y.axis").data([new_data]).enter().append("g")
-              .attr("class", "y axis")
-              .attr("transform", "translate("+vars.margin.left+", 0)")              
-            .append("text")
-              .attr("class", "label")
-              .attr("transform", "rotate(-90)")
-              .attr("y", 6)
-              .attr("dy", ".71em")
-              .style("text-anchor", "end")
-              .text(function(d) { return vars.y_var; })
+        vars.svg.selectAll(".y.axis").data([new_data]).enter().append("g")
+            .attr("class", "y axis")
+            .attr("transform", "translate("+vars.margin.left+", 0)")              
+          .append("text")
+            .attr("class", "label")
+            .attr("transform", "rotate(-90)")
+            .attr("y", 6)
+            .attr("dy", ".71em")
+            .style("text-anchor", "end")
+            .text(function(d) { return vars.y_var; })
 
-          vars.svg.selectAll(".x.axis").call(xAxis)
-          vars.svg.selectAll(".y.axis").call(yAxis)
+        vars.svg.selectAll(".x.axis").call(xAxis)
+        vars.svg.selectAll(".y.axis").call(yAxis)
 
-          var gPoints = vars.svg.selectAll(".points")
-                          .data(new_data, function(d, i) { return d[vars.var_text]; });
+        var gPoints = vars.svg.selectAll(".points")
+                        .data(new_data, function(d, i) { return d[vars.var_text]; });
 
-          var gPoints_enter = gPoints.enter()
-                          .append("g")
-                          .attr("class", "points")
-                          .on("mouseenter",function(d, i) {
+        var gPoints_enter = gPoints.enter()
+                        .append("g")
+                        .attr("class", "points")
+                        .on("mouseenter",function(d, i) {
 
-                            dots.style("opacity", .1)
-                            labels.style("opacity", 0)          
+                          dots.style("opacity", .1)
+                          labels.style("opacity", 0)          
 
-                            d3.select(this).select("circle").style("opacity", 1)
-                            d3.select(this).select("text").style("opacity", 1)
-                          //  dragit.trajectory.display(d, i);
+                          d3.select(this).select("circle").style("opacity", 1)
+                          d3.select(this).select("text").style("opacity", 1)
+                        //  dragit.trajectory.display(d, i);
 
-                          })
-                          .on("mouseleave", function(d, i) {
+                        })
+                        .on("mouseleave", function(d, i) {
 
-                            dots.style("opacity", 1)
-                            labels.style("opacity", 1)     
-        //                    dragit.trajectory.remove(d, i)
-                          })
-                       //   .call(dragit.object.activate)
+                          dots.style("opacity", 1)
+                          labels.style("opacity", 1)     
+      //                    dragit.trajectory.remove(d, i)
+                        })
+                     //   .call(dragit.object.activate)
 
-          var dots = gPoints_enter.append("circle")
-            .attr("r", 5)
-            .attr("cx", 0)
-            .attr("cy", 0)
-            .style("opacity", .2)
-            .style("fill", function(d) { return "gray"; })
+        var dots = gPoints_enter.append("circle")
+                        .attr("r", 5)
+                        .attr("cx", 0)
+                        .attr("cy", 0)
+                        .style("opacity", .5)
+                        .style("fill", function(d) { return "gray"; })
+
+        var labels = gPoints_enter.append("text")
+                        .attr("x", 10)
+                        .attr("y", 0)
+                        .attr("dy", ".35em")
+                        .style("text-anchor", "start")
+                        .attr("transform", "rotate(-30)")
+                        .text(function(d) { return d[vars.var_text]; });
+
+        // TODO: dispatch focus event here and highlight nodes
+        if(vars.focus.length > 0) {
+
+          dots
+            .filter(function(d, i) {
+              return i == vars.focus[0];
+            })
+            .style({"stroke": "black", "stroke-width": "3px", "opacity": 1})
+
+          labels
+            .filter(function(d, i) {
+              return i == vars.focus[0];
+            })
+            .style({"stroke": "black", "stroke-width": ".9px", "opacity": 1})
 
 
-          var labels = gPoints_enter.append("text")
-              .attr("x", 10)
-              .attr("y", 0)
-              .attr("dy", ".35em")
-              .style("text-anchor", "start")
-              .attr("transform", "rotate(-30)")
-              .text(function(d) { return d[vars.var_text]; });
+          // TODO: filter the data or the current nodes?
 
-          var gPoints_exit = gPoints.exit().style("opacity", .1);
+        }            
 
-          // Update all the remaining dots
-          gPoints.style("opacity", 1)    
+
+        var gPoints_exit = gPoints.exit().style("opacity", .1);
+
+        // Update all the remaining dots
+        gPoints.style("opacity", 1)    
 
         if(vars.x_scale == "index") {
 
@@ -820,7 +840,8 @@ var svg = d3.select("body").append("svg")
                 .attr("class", function(d) { 
                   return "link source_"+d.source._id+" target_"+d.target._id;
                 })
-                .style("stroke-width", function(d) { return Math.sqrt(d.value); });
+                .style("stroke-width", function(d) { return Math.sqrt(d.value); })
+                .style("opacity", .4);
 
             var node = vars.svg.selectAll(".node")
                 .data(new_data, function(d) { return d._id});
@@ -841,15 +862,20 @@ var svg = d3.select("body").append("svg")
                   d3.selectAll(".node").style("opacity", 0)    
                   d3.select(this).style("opacity", 1)
 
-                  // TODO: find all connected nodes to this one
-                  //d.years[vars.year-vars.min_year].top_partners.forEach(function(e) {
-                  //  d3.select("#node_"+e._id).style("opacity", 1) 
-                  //})
-
                   // Highlight Links
-                  d3.selectAll(".link").style("opacity", .1) 
-                  d3.selectAll(".source_"+d._id).style("opacity", 1) 
-                  d3.selectAll(".target_"+d._id).style("opacity", 1) 
+                  d3.selectAll(".link").style("opacity", .1);
+                  
+                  d3.selectAll(".source_"+d._id).each(function(e) {
+                    d3.select("#node_"+e.target._id).style("opacity", 1) 
+                  })
+                  .style("opacity", 1)
+                  .style("stroke-width", function(d) { return 3; });
+
+                  d3.selectAll(".target_"+d._id).each(function(e) {
+                    d3.select("#node_"+e.source._id).style("opacity", 1) 
+                  })
+                  .style("opacity", 1)
+                  .style("stroke-width", function(d) { return 3; })
 
                 })
                 .on("mouseleave",function(){
@@ -858,7 +884,9 @@ var svg = d3.select("body").append("svg")
                   // Shoul be isolated with a proper interface
 
                   d3.selectAll(".node").style("opacity", 1)
-                  d3.selectAll(".link").style("opacity", .2)                  
+                  d3.selectAll(".link")
+                    .style("opacity", .4)
+                    .style("stroke-width", function(d) { return 1; })
                 });
 
             var node_exit = node.exit().remove("circle")

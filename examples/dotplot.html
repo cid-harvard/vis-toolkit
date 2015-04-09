@@ -33,6 +33,7 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
     .id("name")
     .group("community_name")
     .text("dept_name")
+    .focus(0)
     .time({var_time: "year", current_time: 2013})
 
   d3.select("#viz").call(visualization)
