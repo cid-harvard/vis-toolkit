@@ -17,6 +17,7 @@ vistk.viz = function() {
     id_var : "id",
     var_group: null,
     data: [],
+    links: [],
     year: null,
     title: "",
     solo: [],
@@ -703,6 +704,9 @@ vistk.viz = function() {
 
       } else if(vars.type == "nodelink") {
 
+        // TODO
+        // -Use t 
+
         var force = d3.layout.force()
             .charge(-120)
             .linkDistance(30)
@@ -710,12 +714,12 @@ vistk.viz = function() {
 
         //d3.json("../data/product_space_hs4.json", function(raw) {
 
-          d3.json("../data/network_hs.json", function(graph) {
+//          d3.json("../data/network_hs.json", function(graph) {
 
             var min_x = Infinity, max_x = 0;
             var min_y = Infinity, max_y = 0;
 
-            graph.nodes.forEach(function(d, i) {
+            vars.data.forEach(function(d, i) {
 
               d.id = i;
 
@@ -735,10 +739,10 @@ vistk.viz = function() {
 
             })
 
-            graph.links.forEach(function(d, i) {
+            vars.links.forEach(function(d, i) {
 
-              d.source = graph.nodes[d.source];
-              d.target = graph.nodes[d.target];
+              d.source = new_data[d.source];
+              d.target = new_data[d.target];
 
             })
 
@@ -752,44 +756,47 @@ vistk.viz = function() {
             y.domain([min_y, max_y]);
 
             var link = vars.svg.selectAll(".link")
-                .data(graph.links)
+                .data(vars.links)
               .enter().append("line")
                 .attr("class", function(d) { 
-                  console.log(d)
                   return "link source_"+d.source._id+" target_"+d.target._id;
                 })
                 .style("stroke-width", function(d) { return Math.sqrt(d.value); });
 
             var node = vars.svg.selectAll(".node")
-                .data(graph.nodes)
-              .enter().append("circle")
+                .data(new_data, function(d) { return d._id});
+
+            var node_enter = node.enter().append("circle")
                 .attr("class", "node")
                 .attr("id", function(d) { return "node_"+d._id; })
                 .attr("r", 5)
-                .style("fill", function(d) { return vars.color(d[vars.var_color]); })
-                 .on("mouseenter",function(d,i){ 
+                .style("fill", function(d) { 
+                  return vars.color(d[vars.var_color]); 
+                })
+                .on("mouseenter",function(d,i){ 
 
-                    // Highlight nodes
-                    d3.selectAll(".node").style("opacity", 0)    
-                    d3.select(this).style("opacity", 1)
+                  // Highlight nodes
+                  d3.selectAll(".node").style("opacity", 0)    
+                  d3.select(this).style("opacity", 1)
 
-                    // TODO: find all connected nodes to this one
-                    //d.years[vars.year-vars.min_year].top_partners.forEach(function(e) {
-                    //  d3.select("#node_"+e._id).style("opacity", 1) 
-                    //})
+                  // TODO: find all connected nodes to this one
+                  //d.years[vars.year-vars.min_year].top_partners.forEach(function(e) {
+                  //  d3.select("#node_"+e._id).style("opacity", 1) 
+                  //})
 
-                    // Highlight Links
-                    d3.selectAll(".link").style("opacity", .1) 
-                    d3.selectAll(".source_"+d._id).style("opacity", 1) 
-                    d3.selectAll(".target_"+d._id).style("opacity", 1) 
+                  // Highlight Links
+                  d3.selectAll(".link").style("opacity", .1) 
+                  d3.selectAll(".source_"+d._id).style("opacity", 1) 
+                  d3.selectAll(".target_"+d._id).style("opacity", 1) 
 
+                })
+                .on("mouseleave",function(){
 
-                  })
-                  .on("mouseleave",function(){
+                  d3.selectAll(".node").style("opacity", 1)
+                  d3.selectAll(".link").style("opacity", .2)                  
+                });
 
-                    d3.selectAll(".node").style("opacity", 1)
-                    d3.selectAll(".link").style("opacity", .2)                  
-                  })
+            var node_exit = node.exit().remove("circle")
 
             link.attr("x1", function(d) { return x(d.source.x); })
                 .attr("y1", function(d) { return y(d.source.y); })
@@ -799,7 +806,7 @@ vistk.viz = function() {
             node.attr("cx", function(d) { return x(d.x); })
                 .attr("cy", function(d) { return y(d.y); });
 
-          });
+//          });
 
       }
 
@@ -1101,6 +1108,13 @@ vistk.viz = function() {
     return chart;
   };
 
+  chart.links = function(links) {
+    if (!arguments.length) return vars.links;
+    vars.links = links;
+    return chart;
+  };
+
+  // MISC
   chart.items = function(size) {
     if (!arguments.length) return vars.items;
     vars.items = size;

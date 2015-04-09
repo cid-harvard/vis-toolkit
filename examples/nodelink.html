@@ -9,7 +9,7 @@
 
 <script>
 
-d3.json("../data/product_space_hs4.json", function(error, products) {
+//d3.json("../data/product_space_hs4.json", function(error, products) {
 
   d3.json("../data/network_hs.json", function(graph) {
 
@@ -21,7 +21,8 @@ d3.json("../data/product_space_hs4.json", function(error, products) {
 
     visualization = vistk.viz()
       .data(graph.nodes)
-      .join(products.data, "id")
+      .links(graph.links)      
+ //     .join(products.data, "id")
       .type("nodelink")
       .container("#viz")
       .x_var("nb_products")
@@ -38,6 +39,6 @@ d3.json("../data/product_space_hs4.json", function(error, products) {
 
   });
 
-});
+//});
 
 </script>
