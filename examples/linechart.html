@@ -10,20 +10,41 @@
 <script src="../js/d3.js"></script>
 <script>
 
-d3.csv("../data/rankings.csv", function(error, data) {
+// d3.csv("../data/rankings.csv", function(error, data) {
 
-  // FLatten the data here
+d3.csv("../data/new_rankings.csv", function(error, data) {
+
+  dd = data
+  
+
+  var res = [];
+  // Flatten the data here
+  // Or do something to build the temporal data? Should it happen here?
+  data.forEach(function(d) {
+
+    for(var k in d) {
+
+      if(k != "Country") {
+
+        res.push({name: d.Country, year: k, rank: +d[k]})
+
+      }
+
+    }
+
+  })
 
   visualization = vistk.viz()
     .type("linechart")
     .container("#viz")
     .height(600)
     .width(900)
-    .data(data)
+    .data(res)
     .id("product")
-    .group("continent")
+    .group("category")
     .color("name")
     .title("Products")
+    .text("name") // abbrv
 //    .size("size")
 //    .time({var_time: "year", current_time: 2012})
 

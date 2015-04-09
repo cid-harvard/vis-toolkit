@@ -20,7 +20,7 @@ vistk.viz = function() {
     links: [],
     year: null,
     title: "",
-    solo: [],
+    focus: [],
     nesting: null,
     nesting_aggs: {},
     type: "table",
@@ -249,12 +249,17 @@ var svg = d3.select("body").append("svg")
             .text(function(d) { return d; })
             .on("mouseover", function(d, i) {
 
+              // TODO: what is below belongs to the focus interaction!
+              // Shoul be isolated with a proper interface
+              
               // Highlight the current row (which is a parent of the current cell)
               d3.select(this.parentNode)
                 .style("background-color", "#F3ED86");
           
             }).on("mouseout", function() {
 
+              // TODO: what is below belongs to the focus interaction!
+              
               // Reset highlight all the rows (not the cells)
               tbody.selectAll("tr")
                 .style("background-color", null)
@@ -425,7 +430,25 @@ var svg = d3.select("body").append("svg")
             .attr("height", function(d) { return d.dy; })
             .style("fill", function(d) {
              return d.children ? vars.color(d[vars.var_color]) : null; 
-           });
+            })
+            .on("mouseover", function(d, i) {
+
+              // TODO: what is below belongs to the focus interaction!
+              // Shoul be isolated with a proper interface
+              
+              // Highlight the current row (which is a parent of the current cell)
+              d3.select(this.parentNode)
+                .style("background-color", "#F3ED86");
+          
+            }).on("mouseout", function() {
+
+              // TODO: what is below belongs to the focus interaction!
+              
+              // Reset highlight all the rows (not the cells)
+              d3.select(this)
+                .style("background-color", null)
+
+            });
 
         cell.append("text")
             .attr("x", function(d) { return 10; })
@@ -811,6 +834,9 @@ var svg = d3.select("body").append("svg")
                 })
                 .on("mouseenter",function(d,i){ 
 
+                  // TODO: what is below belongs to the focus interaction!
+                  // Shoul be isolated with a proper interface
+
                   // Highlight nodes
                   d3.selectAll(".node").style("opacity", 0)    
                   d3.select(this).style("opacity", 1)
@@ -827,6 +853,9 @@ var svg = d3.select("body").append("svg")
 
                 })
                 .on("mouseleave",function(){
+
+                  // TODO: what is below belongs to the focus interaction!
+                  // Shoul be isolated with a proper interface
 
                   d3.selectAll(".node").style("opacity", 1)
                   d3.selectAll(".link").style("opacity", .2)                  
@@ -845,16 +874,15 @@ var svg = d3.select("body").append("svg")
 //          });
 
 
-
       } else if(vars.type == "linechart") {
 
         var parseDate = d3.time.format("%Y").parse;
 
         var x = d3.time.scale()
-            .range([0, vars.width]);
+            .range([0, vars.width-100]);
 
         var y = d3.scale.linear()
-            .range([0, vars.height]);
+            .range([0, vars.height-100]);
 
         var color = d3.scale.category10();
 
@@ -875,7 +903,6 @@ var svg = d3.select("body").append("svg")
             .x(function(d) { return x(d.date); })
             .y(function(d) { return y(d.rank); });
 
-
         // TODO: flatten the file
 
         color.domain(d3.keys(new_data[0]).filter(function(key) { return key !== "date"; }));
@@ -889,11 +916,11 @@ var svg = d3.select("body").append("svg")
         all_years = d3.set(new_data.map(function(d) { return d.year;})).values();
 
         // Find unique countrie
-        countries = d3.set(new_data.map(function(d) { return d.abbrv; })).values().map(function(c) {
+        countries = d3.set(new_data.map(function(d) { return d[vars.var_text]; })).values().map(function(c) {
           return {
             name: c,
             values: new_data.filter(function(d) {
-              return d.abbrv == c;
+              return d[vars.var_text] == c;
             }).map(function (d) {
               return {date: parseDate(d.year), rank: +d.rank, year: d.year};
             })
@@ -937,7 +964,7 @@ var svg = d3.select("body").append("svg")
             .text("ECI Rank");
 
         var country = vars.svg.selectAll(".country")
-            .data(new_data)
+            .data(countries)
           .enter()
             .append("g")
             .attr("class", "country");
@@ -1215,16 +1242,16 @@ var svg = d3.select("body").append("svg")
   };
 
 
-	chart.solo = function(x) {
-	  if (!arguments.length) return vars.solo;
+	chart.focus = function(x) {
+	  if (!arguments.length) return vars.focus;
 
 	  if(x instanceof Array) {
-	    vars.solo = x;
+	    vars.focus = x;
 	  } else {
-	    if(vars.solo.indexOf(x) > -1){
-	      vars.solo.splice(vars.solo.indexOf(x), 1)
+	    if(vars.focus.indexOf(x) > -1){
+	      vars.focus.splice(vars.focus.indexOf(x), 1)
 	    } else {
-	      vars.solo.push(x)
+	      vars.focus.push(x)
 	    }
 	  }
 
