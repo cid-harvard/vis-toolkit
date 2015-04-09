@@ -88,6 +88,7 @@ body {
   font: 10px sans-serif;
 }
 
+/* conflicts with scatterplot
 .axis path,
 .axis line {
   fill: none;
@@ -98,7 +99,7 @@ body {
 .x.axis path {
   display: none;
 }
-
+*/ 
 .line {
   fill: none;
   stroke: steelblue;

@@ -485,118 +485,118 @@ var svg = d3.select("body").append("svg")
             .attr("x", 500)
             .text(vars.current_time);
 
-          x.domain([0, d3.max(vars.data, function(d) { return d[vars.x_var]; })]).nice();
-          y.domain([0, d3.max(vars.data, function(d) { return d[vars.y_var]; })]).nice();
+        x.domain([0, d3.max(vars.data, function(d) { return d[vars.x_var]; })]).nice();
+        y.domain([0, d3.max(vars.data, function(d) { return d[vars.y_var]; })]).nice();
 
-          vars.svg.selectAll(".x.axis").data([new_data]).enter().append("g")
-              .attr("class", "x axis")
-              .attr("transform", "translate(0," + (vars.height-vars.margin.bottom-vars.margin.top) + ")")              
-            .append("text")
-              .attr("class", "label")
-              .attr("x", vars.width-vars.margin.left-vars.margin.right)
-              .attr("y", -6)
-              .style("text-anchor", "end")
-              .text(function(d) { return vars.x_var; })
+        vars.svg.selectAll(".x.axis").data([new_data]).enter().append("g")
+            .attr("class", "x axis")
+            .attr("transform", "translate(0," + (vars.height-vars.margin.bottom-vars.margin.top) + ")")              
+          .append("text")
+            .attr("class", "label")
+            .attr("x", vars.width-vars.margin.left-vars.margin.right)
+            .attr("y", -6)
+            .style("text-anchor", "end")
+            .text(function(d) { return vars.x_var; })
 
-          vars.svg.selectAll(".y.axis").data([new_data]).enter().append("g")
-              .attr("class", "y axis")
-              .attr("transform", "translate("+vars.margin.left+", 0)")              
-            .append("text")
-              .attr("class", "label")
-              .attr("transform", "rotate(-90)")
-              .attr("y", 6)
-              .attr("dy", ".71em")
-              .style("text-anchor", "end")
-              .text(function(d) { return vars.y_var; })
+        vars.svg.selectAll(".y.axis").data([new_data]).enter().append("g")
+            .attr("class", "y axis")
+            .attr("transform", "translate("+vars.margin.left+", 0)")              
+          .append("text")
+            .attr("class", "label")
+            .attr("transform", "rotate(-90)")
+            .attr("y", 6)
+            .attr("dy", ".71em")
+            .style("text-anchor", "end")
+            .text(function(d) { return vars.y_var; })
 
-          vars.svg.selectAll(".x.axis").call(xAxis)
-          vars.svg.selectAll(".y.axis").call(yAxis)
+        vars.svg.selectAll(".x.axis").call(xAxis)
+        vars.svg.selectAll(".y.axis").call(yAxis)
 
-          var gPoints = vars.svg.selectAll(".points")
-                          .data(new_data, function(d) { return d.name; });
+        var gPoints = vars.svg.selectAll(".points")
+                        .data(new_data, function(d) { return d.name; });
 
-          // Here we want to deal with aggregated datasets
-          if(vars.aggregate == vars.var_group) {
+        // Here we want to deal with aggregated datasets
+        if(vars.aggregate == vars.var_group) {
 
-            var gPoints_enter = gPoints.enter()
-                            .append("g")
-                            .attr("class", "points")
+          var gPoints_enter = gPoints.enter()
+                          .append("g")
+                          .attr("class", "points")
 
-            var dots = gPoints_enter.append("rect")
-              .attr("r", 5)
-              .attr("height", 10)
-              .attr("width", 10)
-              .style("fill", function(d) { return vars.color(d[vars.var_color]); })
+          var dots = gPoints_enter.append("rect")
+            .attr("r", 5)
+            .attr("height", 10)
+            .attr("width", 10)
+            .style("fill", function(d) { return vars.color(d[vars.var_color]); })
 
-            var labels = gPoints_enter.append("text")
-                .attr("x", 10)
-                .attr("y", 0)
-                .attr("dy", ".35em")
-                .style("text-anchor", "start")
-                .text(function(d) { return d[vars.var_text]; });
+          var labels = gPoints_enter.append("text")
+              .attr("x", 10)
+              .attr("y", 0)
+              .attr("dy", ".35em")
+              .style("text-anchor", "start")
+              .text(function(d) { return d[vars.var_text]; });
 
-            var gPoints_exit = gPoints.exit().style("opacity", .1);
+          var gPoints_exit = gPoints.exit().style("opacity", .1);
 
-            // Update all the remaining dots
-            gPoints.style("opacity", 1)    
+          // Update all the remaining dots
+          gPoints.style("opacity", 1)    
 
-            vars.svg.selectAll(".points")
-                            .transition()
-                            .attr("transform", function(d) {
-                              return "translate("+x(d[vars.x_var])+", "+y(d[vars.y_var])+")";
-                            })
+          vars.svg.selectAll(".points")
+                          .transition()
+                          .attr("transform", function(d) {
+                            return "translate("+x(d[vars.x_var])+", "+y(d[vars.y_var])+")";
+                          })
 
-          // Reg
-          } else { 
+        // Reg
+        } else { 
 
-            var gPoints_enter = gPoints.enter()
-                            .append("g")
-                            .attr("class", "points")
-                            .on("mouseenter",function(d, i) {
+          var gPoints_enter = gPoints.enter()
+                          .append("g")
+                          .attr("class", "points")
+                          .on("mouseenter",function(d, i) {
 
-                              dots.style("opacity", .1)
-                              labels.style("opacity", 0)          
+                            dots.style("opacity", .1)
+                            labels.style("opacity", 0)          
 
-                              d3.select(this).select("circle").style("opacity", 1)
-                              d3.select(this).select("text").style("opacity", 1)
-                            //  dragit.trajectory.display(d, i);
+                            d3.select(this).select("circle").style("opacity", 1)
+                            d3.select(this).select("text").style("opacity", 1)
+                          //  dragit.trajectory.display(d, i);
 
-                            })
-                            .on("mouseleave", function(d, i) {
+                          })
+                          .on("mouseleave", function(d, i) {
 
-                              dots.style("opacity", 1)
-                              labels.style("opacity", 1)     
-          //                    dragit.trajectory.remove(d, i)
-                            })
-                         //   .call(dragit.object.activate)
+                            dots.style("opacity", 1)
+                            labels.style("opacity", 1)     
+        //                    dragit.trajectory.remove(d, i)
+                          })
+                       //   .call(dragit.object.activate)
 
-            var dots = gPoints_enter.append("circle")
-              .attr("r", 5)
-              .attr("cx", 0)
-              .attr("cy", 0)
-  //            .style("fill", function(d) { return d.color; })
-              .style("fill", function(d) { return vars.color(d[vars.var_color]); })
+          var dots = gPoints_enter.append("circle")
+            .attr("r", 5)
+            .attr("cx", 0)
+            .attr("cy", 0)
+//            .style("fill", function(d) { return d.color; })
+            .style("fill", function(d) { return vars.color(d[vars.var_color]); })
 
 
-            var labels = gPoints_enter.append("text")
-                .attr("x", 10)
-                .attr("y", 0)
-                .attr("dy", ".35em")
-                .style("text-anchor", "start")
-                .text(function(d) { return d[vars.var_text]; });
+          var labels = gPoints_enter.append("text")
+              .attr("x", 10)
+              .attr("y", 0)
+              .attr("dy", ".35em")
+              .style("text-anchor", "start")
+              .text(function(d) { return d[vars.var_text]; });
 
-            var gPoints_exit = gPoints.exit().style("opacity", .1);
+          var gPoints_exit = gPoints.exit().style("opacity", .1);
 
-            // Update all the remaining dots
-            gPoints.style("opacity", 1)    
+          // Update all the remaining dots
+          gPoints.style("opacity", 1)    
 
-            vars.svg.selectAll(".points")
-                            .transition()
-                            .attr("transform", function(d) {
-                              return "translate("+x(d[vars.x_var])+", "+y(d[vars.y_var])+")";
-                            })
+          vars.svg.selectAll(".points")
+                          .transition()
+                          .attr("transform", function(d) {
+                            return "translate("+x(d[vars.x_var])+", "+y(d[vars.y_var])+")";
+                          })
 
-          }
+        }
 
       } else if(vars.type == "dotplot") {
 
