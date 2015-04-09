@@ -7,35 +7,6 @@
 <div id="viz"></div>
 <script>
 
-  var test_data = [{
-   "name": "flare",
-   "children": [
-    {
-     "name": "analytics",
-     "children": [
-      {
-       "name": "cluster",
-       "children": [
-        {"name": "AgglomerativeCluster", "size": 3938},
-        {"name": "CommunityStructure", "size": 3812},
-        {"name": "HierarchicalCluster", "size": 6714},
-        {"name": "MergeEdge", "size": 743}
-       ]
-      },
-      {
-       "name": "cluster",
-       "children": [
-        {"name": "AgglomerativeCluster", "size": 3938},
-        {"name": "CommunityStructure", "size": 3812},
-        {"name": "HierarchicalCluster", "size": 6714},
-        {"name": "MergeEdge", "size": 743}
-       ]
-      }
-    ]
-   }]
-  }];
-
-
 d3.json("../data/exports_2012.json", function(error, exports) {
 
   visualization = vistk.viz()
@@ -49,14 +20,11 @@ d3.json("../data/exports_2012.json", function(error, exports) {
     .color("name")
     .title("Products")
     .size("size")
-
     .time({var_time: "year", current_time: 2012})
-
 
   d3.select("#viz").call(visualization)
 
 })
 
 </script>
-
 </body>

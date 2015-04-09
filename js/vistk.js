@@ -73,7 +73,16 @@ vistk.viz = function() {
           .attr("width", vars.width)
           .attr("height", vars.height)
         .append("g")
-          .attr("transform", "translate(-.5,-.5)");
+          .attr("transform", "translate(" + vars.margin.left + "," + vars.margin.top + ")");
+/*
+var margin = {top: 20, right: 80, bottom: 30, left: 50},
+    width = 1060 - margin.left - margin.right,
+    height = 1000 - margin.top - margin.bottom;
+
+var svg = d3.select("body").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+*/
 
    //   vars.width = vars.width - vars.margin.left - vars.margin.right;
    //   vars.height = vars.height - vars.margin.top - vars.margin.bottom;
@@ -341,6 +350,35 @@ vistk.viz = function() {
 
       } else if(vars.type == "treemap") {
 
+        // THIS IS what the data should look like
+        var test_data = [{
+         "name": "flare",
+         "children": [
+          {
+           "name": "analytics",
+           "children": [
+            {
+             "name": "cluster",
+             "children": [
+              {"name": "AgglomerativeCluster", "size": 3938},
+              {"name": "CommunityStructure", "size": 3812},
+              {"name": "HierarchicalCluster", "size": 6714},
+              {"name": "MergeEdge", "size": 743}
+             ]
+            },
+            {
+             "name": "cluster",
+             "children": [
+              {"name": "AgglomerativeCluster", "size": 3938},
+              {"name": "CommunityStructure", "size": 3812},
+              {"name": "HierarchicalCluster", "size": 6714},
+              {"name": "MergeEdge", "size": 743}
+             ]
+            }
+          ]
+         }]
+        }];
+
         r = {}
         r.name = "root";
         groups = []
@@ -539,7 +577,6 @@ vistk.viz = function() {
 
       } else if(vars.type == "dotplot") {
 
-
         // Original scatterplot from http://bl.ocks.org/mbostock/3887118
 
          x = d3.scale.linear()
@@ -659,7 +696,6 @@ vistk.viz = function() {
                           .attr("transform", function(d, i) {
                             return "translate("+d.rank+", "+vars.height/2+")";
                           })
-
 
         } else {
 
@@ -808,7 +844,14 @@ vistk.viz = function() {
 
 //          });
 
-      }
+
+
+      } else if(vars.type == "linechart") {
+
+        alert(vars.type)
+
+
+      } 
 
       d3.select(vars.container).selectAll(".break").data([vars.id]).enter().append("p").attr("class", "break");
 
