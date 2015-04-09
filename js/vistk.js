@@ -1008,6 +1008,7 @@ var svg = d3.select("body").append("svg")
           console.log("Country selected", d)
           
           d3.selectAll("#"+d.name).classed("selected", !d3.selectAll("#"+d.name).classed("selected"));
+
         })
 
         vars.svg.select("svg").on("click", function(d) {

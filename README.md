@@ -42,8 +42,6 @@ Simply add the vistk JavaScript and CSS files.
  * Cross Browser Compatibility
  * Cross Device Compatibility
 
-
-
 ## Data Management (TODO: discuss with QUINN)
 
 ### Input Format
@@ -83,6 +81,9 @@ What to do with missing data over time?
 
 * Streaming data?
 
+* Custom format for charts
+ * e.g. `.total_bar({"prefix": "Export Value: $", "suffix": " USD", "format": ",f"})`
+
 ### States (TODO: discuss with QUINN)
 
 * Capture state (and enable slide shows), enable loading at a specific state
@@ -103,6 +104,20 @@ What to do with missing data over time?
 
 
 ## Roadmap
+
+* v0.1
+ * Fundamental visualizations
+ * Basic interactions: filter, aggregate, time update, focus
+ * Dev environment
+
+* v0.2
+ * Generic data format as input
+ * Couple of more visualizations
+ * Code testing and production format
+
+* v0.3
+ * States
+ * 
 
 * Re-create standard examples from d3
  * Treeemap ([with word wrap](http://bl.ocks.org/mundhradevang/1387786))
@@ -311,6 +326,25 @@ var chart = new vistk.Chart({
 .text("text")
 
 ```
+
+### Node link
+
+* Test with curved links http://bl.ocks.org/mbostock/4600693
+
+### Rankings
+
+* Generic headers to re-sort regardless the data type
+* Sticky headers
+* Automatic generate time slider (find time boudaries)
+* Auto generate list of filters (find unique classes)
+* Aggregation/nesting (create nesting of data (construct_nest function)
+* Custom filters (e.g. per capita, ..)
+
+* Flags http://atlas.cid.harvard.edu/media/img/icons/flag_ago.png
+* Communities http://atlas.cid.harvard.edu/media/img/icons/community_10.png
+
+* Show the rank?
+
 
 ## Update a chart
 
