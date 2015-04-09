@@ -24,38 +24,54 @@ Simply add the vistk JavaScript and CSS files.
 * Treemap ([Demo](http://cid-harvard.github.io/vis-toolkit/examples/treemap.html) | [Source](examples/treemap.html))
 * Scatterplot ([Demo](http://cid-harvard.github.io/vis-toolkit/examples/scatterplot.html) | [Source](examples/scatterplot.html))
 * Node-Link ([Demo](http://cid-harvard.github.io/vis-toolkit/examples/nodelink.html) | [Source](examples/nodelink.html))
+* Line Chart ([Demo](http://cid-harvard.github.io/vis-toolkit/examples/linechart.html) | [Source](examples/linechart.html))
+* Dot plot ([Demo](http://cid-harvard.github.io/vis-toolkit/examples/dotplot.html) | [Source](examples/dotplot.html))
 
 * Build your own graph environment
  * Using an editor http://ace.c9.io/#nav=about
  * Build your own grid
+ * Customize charts interactively
+ * Derive values?
 
 ## Tests
 
 * What should be tested?
 * Where should it be tested? Client or remove server?
 * Which dataset should be used for the tests?
+* Unit testings
+ * Cross Browser Compatibility
+ * Cross Device Compatibility
 
-## Input Format
+
+
+## Data Management (TODO: discuss with QUINN)
+
+### Input Format
 
 * Which format should be used as input?
+ * Most likely a flat file that can easily filtered
+ * Might be larger than a complex/nested structure, but easier to process
 * How to detect items? rows?
 * How to deal with trees?
+ * Again a flat file and then connecting/aggregating might do the job
+
 * Different types of datasets
  * **Items:** which are elements we want to visualize
  * **Properties:** which are the static properties of the items
  * **Attributes:** which are some none-static, non-universal properties
  * **Time-dependent:** attributes that change over time
+ * Some of the properties are made for the visualization (e.g. product space)
 
 Example with Colombia:
 * Departments are items http://54.172.130.22/api/departments/
 * International product space http://54.172.130.22/labs/data/atlas_international_product_space.json
 * Attributes http://54.172.130.22/api/products/?aggregation=2digit
 
-What to do when some attribuets are missing over time?
-
-* Some of the properties are made for the visualization (e.g. product space)
-
-## Data Management (TODO: discuss with QUINN)
+What to do with missing data over time?
+* Depends on the type of data
+ * Missing items
+ * Missing attributes
+ * Missing time points
 
 * Items should be loaded first, and ideally loaded only once
  * But for which level of details?..
@@ -67,13 +83,14 @@ What to do when some attribuets are missing over time?
 
 * Streaming data?
 
-## States (TODO: discuss with QUINN)
+### States (TODO: discuss with QUINN)
 
 * Capture state (and enable slide shows), enable loading at a specific state
  * Default states (similar to default config)
 
 * Internal state
  * How is this kept by the application?
+
 
 ## Howto create a new chart
 
@@ -113,9 +130,9 @@ What to do when some attribuets are missing over time?
  * Dev environment
  * Automate compilation
  * Testing (using Travis?)
- * Performances (included in unit testing?)
  * Sample datasets we will be using
  * Consistent input file format
+
 
 * Visual customization
  * Margin, padding, etc.
@@ -145,7 +162,6 @@ What to do when some attribuets are missing over time?
 * Able to create multiple instances of visualizations on the same page
  * And eventually coordinate them (e.g brushing one filters another one)
  * Should also share some similar attributes/properties
-
 
 * Customized visual design
  * Default CSS but should allow this to be overloaded
@@ -210,9 +226,6 @@ Storytelling
  * Or a specificly highlighted element (e.g. focus)
  * 
 
-Misc Considerations (TBD)
-* Cross Browser Compatibility
-* Cross Device Compatibility
 
 Template
 * See http://bost.ocks.org/mike/chart/
@@ -266,7 +279,7 @@ var chart = new vistk.Chart({
 * http://handsontable.com/demo/pagination.html#5
 * https://github.com/mleibman/SlickGrid
 
-### Tree_map
+### Treemap
 
 ```json
 .type("tree_map")
@@ -305,6 +318,18 @@ var chart = new vistk.Chart({
 vis.render()
 ```
 
+## Flexible chart creation
+
+```json
+vistk
+  .items([“group”, “products”]) 
+  .shape(“circle”)
+  .connect(“line”, function(a, b) { a.source.id == b.source.id })
+  .scale({“axis”: “x”, “type": “linear”, “x_var”: “population”})
+  .scale({“axis”: “y”, “type": “linear”, “y_var”: “gdp”})
+  .color({“category”, “color_var”: “group”})
+```
+
 # Refs
 
 ## Interactive environments
@@ -312,7 +337,6 @@ vis.render()
 * http://uwdata.github.io/voyager/#/
 
 ## Reusable toolkits
-
 
 * NVd3 - http://nvd3.org/ 
 * C3.js - http://c3js.org/ 
