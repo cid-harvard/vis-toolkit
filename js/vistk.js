@@ -848,10 +848,154 @@ var svg = d3.select("body").append("svg")
 
       } else if(vars.type == "linechart") {
 
-        alert(vars.type)
+        var parseDate = d3.time.format("%Y").parse;
 
+        var x = d3.time.scale()
+            .range([0, vars.width]);
+
+        var y = d3.scale.linear()
+            .range([0, vars.height]);
+
+        var color = d3.scale.category10();
+
+        var xAxis = d3.svg.axis()
+            .scale(x)
+            .orient("bottom");
+
+        var yAxis = d3.svg.axis()
+            .scale(y)
+            .orient("left");
+
+        // FIX FOR MISSING VALUES
+        // https://github.com/mbostock/d3/wiki/SVG-Shapes
+        var line = d3.svg.line()
+        // https://gist.github.com/mbostock/3035090
+            .defined(function(d) { return d.rank != null; })
+            .interpolate("basis")
+            .x(function(d) { return x(d.date); })
+            .y(function(d) { return y(d.rank); });
+
+
+        // TODO: flatten the file
+
+        color.domain(d3.keys(new_data[0]).filter(function(key) { return key !== "date"; }));
+
+        new_data.forEach(function(d) {
+          d.date = parseDate(d.year);
+        });
+
+        
+        var min_max_years = d3.extent(new_data, function(d) { return d.date; });
+        all_years = d3.set(new_data.map(function(d) { return d.year;})).values();
+
+        // Find unique countrie
+        countries = d3.set(new_data.map(function(d) { return d.abbrv; })).values().map(function(c) {
+          return {
+            name: c,
+            values: new_data.filter(function(d) {
+              return d.abbrv == c;
+            }).map(function (d) {
+              return {date: parseDate(d.year), rank: +d.rank, year: d.year};
+            })
+          };
+        })
+
+        // Make sure all countries and all ranks are there
+        countries.forEach(function(c) {
+          all_years.forEach(function(y) {
+            var is_year = false;
+            c.values.forEach(function(v) {
+              if(v.year == y)
+                is_year = true;
+            })
+            if(!is_year) {
+              c.values.push({date: parseDate(y), rank: null, year: y})
+            }
+          })
+        })
+
+        x.domain(min_max_years);
+
+        y.domain([
+          d3.min(countries, function(c) { return d3.min(c.values, function(v) { return v.rank; }); }),
+          d3.max(countries, function(c) { return d3.max(c.values, function(v) { return v.rank; }); })
+        ]);
+
+        vars.svg.append("g")
+            .attr("class", "x axis")
+            .attr("transform", "translate(0," + vars.height + ")")
+            .call(xAxis);
+
+        vars.svg.append("g")
+            .attr("class", "y axis")
+            .call(yAxis)
+          .append("text")
+            .attr("transform", "rotate(-90)")
+            .attr("y", 6)
+            .attr("dy", "-1.71em")
+            .style("text-anchor", "end")
+            .text("ECI Rank");
+
+        var country = vars.svg.selectAll(".country")
+            .data(new_data)
+          .enter()
+            .append("g")
+            .attr("class", "country");
+
+        country.append("path")
+            .attr("class", "country line")
+            .attr("d", function(d) {
+              console.log(d);
+             return line(d.values); })
+            .attr("id", function(d) { return d.name; })
+            .attr("class", "country line")
+            .style("stroke", function(d) { return color(d.name); });
+
+        country.append("text")
+            .datum(function(d) { 
+              d.values.sort(function(a, b) { return a.year > b.year;}); 
+              return {name: d.name, value: d.values[d.values.length - 1]}; 
+            })
+            .attr("transform", function(d) { return "translate(" + x(d.value.date) + "," + y(d.value.rank) + ")"; })
+            .attr("x", 3)
+            .attr("class", "country text")
+            .attr("dy", ".35em")
+            .attr("id", function(d) { return d.name; })
+            .text(function(d) { return d.name; })
+
+        vars.svg.selectAll(".country").on("mouseover", function(d) {
+
+                d3.selectAll(".line:not(.selected)").style("opacity", 0.1);
+                d3.selectAll(".text:not(.selected)").style("opacity", 0.1);
+
+                d3.selectAll("#"+d.name).style("opacity", 1);
+
+            })
+            .on("mouseout", function(d) {
+      //        if(d3.selectAll(".selected")[0].length == 0)
+                d3.selectAll(".country:not(.selected)").style("opacity", 1);
+
+            })
+
+        vars.svg.selectAll("text.country").on("click", function(d) {
+          console.log("Country selected", d)
+          
+          d3.selectAll("#"+d.name).classed("selected", !d3.selectAll("#"+d.name).classed("selected"));
+        })
+
+        vars.svg.select("svg").on("click", function(d) {
+          console.log("Removing all seelcted countries")
+
+          d3.selectAll(".selected").classed("selected", false);
+          d3.selectAll(".line:not(.selected)").style("opacity", 1);
+          d3.selectAll(".text:not(.selected)").style("opacity", 1);
+
+
+        })
 
       } 
+
+      // BUILDING THE UI elements
 
       d3.select(vars.container).selectAll(".break").data([vars.id]).enter().append("p").attr("class", "break");
 
