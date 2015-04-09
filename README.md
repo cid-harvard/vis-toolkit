@@ -16,7 +16,8 @@ Simply add the vistk JavaScript and CSS files.
 
 ### Dependencies
 
-* D3 (which version? latest one?)
+* D3, developped and tested with version `3.4.10`
+* Enventually some `topojson.js`, `queue.js` for the geomap
 
 ## Examples
 
@@ -28,7 +29,7 @@ Simply add the vistk JavaScript and CSS files.
 * Dot plot ([Demo](http://cid-harvard.github.io/vis-toolkit/examples/dotplot.html) | [Source](examples/dotplot.html))
 
 * Build your own graph environment
- * Using an editor http://ace.c9.io/#nav=about
+ * Using an editor (see existing rich text edit envs http://ace.c9.io/#nav=about)
  * Build your own grid
  * Customize charts interactively
  * Derive values?
@@ -127,7 +128,8 @@ What to do with missing data over time?
  * Google maps
  * Choropleth map (using geojson)
  * Some flow map or graph such as [pivotgraph](http://bl.ocks.org/mbostock/4343153)
- * Horizontal or vertical dot plot (https://github.com/marmelab/EventDrops)
+ 
+
  * Diverging bar charts http://bl.ocks.org/wpoely86/e285b8e4c7b84710e463
 
 * With utils
@@ -139,7 +141,7 @@ What to do with missing data over time?
 
 * Templating visualizations
  * Standard interface to create them
- * Export: svg, png, ..
+ * Export: svg, png, .. (see [rasterize](http://cburgmer.github.io/rasterizeHTML.js/))
 
 * Boilerplate code
  * Dev environment
@@ -167,7 +169,7 @@ What to do with missing data over time?
 * Visual manager 
 * Initialize components constructors
 * Use d3.dispatch and custom events for transimtions management
-
+ * Example of event dispatch http://bl.ocks.org/mbostock/5872848
 
 ## What it should achieve
 
@@ -324,11 +326,18 @@ var chart = new vistk.Chart({
 * https://github.com/yaph/d3-geomap/blob/master/src/coffee/choropleth.coffee
 * http://d3-geomap.github.io/map/choropleth/world/
 
+* Nice geo-maps https://www.pinterest.com/janwillemtulp/maps/
+
 ```json
 .type("geo_map")
 .text("text")
 
 ```
+### Dot plot
+
+* Horizontal or vertical dot plot (https://github.com/marmelab/EventDrops)
+* http://www.education-inequalities.org/indicators/mlevel1/countries/kyrgyzstan#?dimension=wealth_quintile&group=all&age_group=|mlevel1_3&year=|2009
+
 
 ### Node link
 
