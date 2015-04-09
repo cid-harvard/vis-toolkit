@@ -321,6 +321,9 @@ var chart = new vistk.Chart({
 
 ### Geo map
 
+* https://github.com/yaph/d3-geomap/blob/master/src/coffee/choropleth.coffee
+* http://d3-geomap.github.io/map/choropleth/world/
+
 ```json
 .type("geo_map")
 .text("text")

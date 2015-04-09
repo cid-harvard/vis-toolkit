@@ -721,11 +721,7 @@ var svg = d3.select("body").append("svg")
             })
             .style({"stroke": "black", "stroke-width": ".9px", "opacity": 1})
 
-
-          // TODO: filter the data or the current nodes?
-
         }            
-
 
         var gPoints_exit = gPoints.exit().style("opacity", .1);
 
@@ -1040,7 +1036,7 @@ var svg = d3.select("body").append("svg")
         })
 
         vars.svg.select("svg").on("click", function(d) {
-          console.log("Removing all seelcted countries")
+          console.log("Removing all selected countries")
 
           d3.selectAll(".selected").classed("selected", false);
           d3.selectAll(".line:not(.selected)").style("opacity", 1);
@@ -1049,7 +1045,12 @@ var svg = d3.select("body").append("svg")
 
         })
 
-      } 
+      } else if(vars.type == "geomap") {
+
+        alert(vars.type)
+
+
+      }
 
       // BUILDING THE UI elements
 
