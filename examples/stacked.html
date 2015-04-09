@@ -47,6 +47,7 @@ var yAxis = d3.svg.axis()
     .tickFormat(formatPercent);
 
 var area = d3.svg.area()
+    .interpolate('cardinal')
     .x(function(d) { return x(d.date); })
     .y0(function(d) { return y(d.y0); })
     .y1(function(d) { return y(d.y0 + d.y); });
@@ -60,18 +61,42 @@ var svg = d3.select("body").append("svg")
   .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-d3.tsv("../data/browsers.tsv", function(error, data) {
+d3.json("../data/exports_2012.json", function(error, exports) {
+
+  var parseDate = d3.time.format("%Y").parse;
+
+  console.log(exports.data);
+
+  // Find the number or years
+
+  unique_years = d3.set(exports.data.map(function(d) { return d.year;})).values();
+
+  data = [];
+
+  unique_years.forEach(function(d) {
+
+    a = {};
+
+    exports.data.filter(function(e) {
+      return e.year == d;
+    })
+    .map(function(e) {
+      a[e.abbrv] = e.share;
+//      return a;
+    })
+
+    a.date = parseDate(d);
+    data = data.concat(a);
+
+  })
+
   color.domain(d3.keys(data[0]).filter(function(key) { return key !== "date"; }));
 
-  data.forEach(function(d) {
-    d.date = parseDate(d.date);
-  });
-
-  var browsers = stack(color.domain().map(function(name) {
+  browsers = stack(color.domain().map(function(name) {
     return {
       name: name,
       values: data.map(function(d) {
-        return {date: d.date, y: d[name] / 100};
+        return {date: d.date, y: d[name]};
       })
     };
   }));
