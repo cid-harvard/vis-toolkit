@@ -1047,7 +1047,71 @@ var svg = d3.select("body").append("svg")
 
       } else if(vars.type == "geomap") {
 
-        alert(vars.type)
+        var projection = d3.geo.mercator()
+                        .translate([480, 300])
+                        .scale(100);
+
+        var path = d3.geo.path()
+            .projection(projection);
+
+        var tooltip = d3.select(vars.container).append("div")
+            .attr("class", "tooltip");
+
+        vars.gSvg = vars.svg
+            .call(d3.behavior.zoom()
+            .on("zoom", redraw))
+            .append("g");
+
+        function redraw() {
+            vars.gSvg.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+        }
+
+        queue()
+            .defer(d3.json, "../data/world-110m.json")
+            .defer(d3.tsv, "../data/world-country-names.tsv")
+            .await(ready);
+
+        function ready(error, world, names) {
+
+           countries = topojson.object(world, world.objects.countries).geometries,
+              neighbors = topojson.neighbors(world, countries),
+              i = -1,
+              n = countries.length;
+
+          countries.forEach(function(d) { 
+            d.name = names.filter(function(n) { return d.id == n.id; })[0].name; 
+          });
+
+        var country = vars.gSvg.selectAll(".country").data(countries);
+
+          country
+           .enter()
+            .insert("path")
+            .attr("class", "country")    
+              .attr("title", function(d,i) { return d.name; })
+              .attr("d", path)
+              .style("fill", function(d, i) { 
+                return vars.color(d.color = d3.max(neighbors[i], function(n) { 
+                  return countries[n].color; 
+                }) + 1 | 0); 
+              });
+
+            //Show/hide tooltip
+            country
+              .on("mousemove", function(d,i) {
+                var mouse = d3.mouse(vars.gSvg.node()).map( function(d) { return parseInt(d); } );
+
+                tooltip
+                  .classed("hidden", false)
+                  .attr("style", "left:"+(mouse[0]+25)+"px;top:"+mouse[1]+"px")
+                  .html(d.name)
+              })
+              .on("mouseout",  function(d,i) {
+                tooltip.classed("hidden", true)
+              });
+
+        }
+
 
 
       }
