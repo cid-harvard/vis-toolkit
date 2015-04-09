@@ -731,6 +731,8 @@ vistk.viz = function() {
               if(d.y > max_y)
                 max_y = d.y;
 
+              d.category = d._id.slice(0, 2);   
+
             })
 
             graph.links.forEach(function(d, i) {
@@ -752,20 +754,47 @@ vistk.viz = function() {
             var link = vars.svg.selectAll(".link")
                 .data(graph.links)
               .enter().append("line")
-                .attr("class", "link")
+                .attr("class", function(d) { 
+                  console.log(d)
+                  return "link source_"+d.source._id+" target_"+d.target._id;
+                })
                 .style("stroke-width", function(d) { return Math.sqrt(d.value); });
 
             var node = vars.svg.selectAll(".node")
                 .data(graph.nodes)
               .enter().append("circle")
                 .attr("class", "node")
+                .attr("id", function(d) { return "node_"+d._id; })
                 .attr("r", 5)
                 .style("fill", function(d) { return vars.color(d[vars.var_color]); })
+                 .on("mouseenter",function(d,i){ 
+
+                    // Highlight nodes
+                    d3.selectAll(".node").style("opacity", 0)    
+                    d3.select(this).style("opacity", 1)
+
+                    // TODO: find all connected nodes to this one
+                    //d.years[vars.year-vars.min_year].top_partners.forEach(function(e) {
+                    //  d3.select("#node_"+e._id).style("opacity", 1) 
+                    //})
+
+                    // Highlight Links
+                    d3.selectAll(".link").style("opacity", .1) 
+                    d3.selectAll(".source_"+d._id).style("opacity", 1) 
+                    d3.selectAll(".target_"+d._id).style("opacity", 1) 
+
+
+                  })
+                  .on("mouseleave",function(){
+
+                    d3.selectAll(".node").style("opacity", 1)
+                    d3.selectAll(".link").style("opacity", .2)                  
+                  })
 
             link.attr("x1", function(d) { return x(d.source.x); })
                 .attr("y1", function(d) { return y(d.source.y); })
                 .attr("x2", function(d) { return x(d.target.x); })
-                .attr("y2", function(d) { return y(d.target.y); });
+                .attr("y2", function(d) { return y(d.target.y); })
 
             node.attr("cx", function(d) { return x(d.x); })
                 .attr("cy", function(d) { return y(d.y); });
