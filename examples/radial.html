@@ -26,6 +26,12 @@
 <div id="viz"></div>
 <script>
 
+/* TODO
+
+  -Create a tree data structure from the node-link
+
+*/
+
 var browsed_nodes = [];
 
 function find_links_node(node_id) {
@@ -37,11 +43,13 @@ function find_links_node(node_id) {
   graph.links.forEach(function(d, i) {
 
     if((d.source.id == node_id) && (browsed_nodes.indexOf(d.source.id) < 0)) {
+      console.log(node_id, "is a match for source!")
       browsed_nodes.push(d.source.id);
       res.push(d.target);
     }
 
     if((d.target.id == node_id) && (browsed_nodes.indexOf(d.target.id) < 0)) {
+      console.log(node_id, "is a match for target!")
       browsed_nodes.push(d.target.id);
       res.push(d.source);
     }
@@ -86,16 +94,29 @@ d3.json("../data/network_hs.json", function(g) {
   })
 
   test_data = {};
-
   test_data.name = graph.nodes[0].id; 
 
+  // Create first round of children
   test_data.children = find_links_node(graph.nodes[0].id)
     
   test_data.children.forEach(function(d, i) {
+
     d.name = i;
     d.size = 0;
     
     d.children = find_links_node(d.id)
+
+    d.children.forEach(function(e, j) {
+
+      e.name = i;
+      e.size = 0;
+      
+      e.children = find_links_node(e.id)
+
+      console.log("e.children", e.children, e)
+
+
+    })
 
     console.log("THIS", d, d.id, d.children)
 

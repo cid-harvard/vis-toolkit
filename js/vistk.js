@@ -57,6 +57,8 @@ vistk.viz = function() {
     svg: null,
   }
 
+  vars.width = vars.width - vars.margin.left - vars.margin.right;
+  vars.height = vars.height - vars.margin.top - vars.margin.bottom;
 
  // vars.parent = d3.select(vars.container);
 
@@ -70,22 +72,10 @@ vistk.viz = function() {
     if(!vars.svg && vars.type != "table") {
      
       vars.svg = d3.select(vars.container).append("svg")
-          .attr("width", vars.width)
-          .attr("height", vars.height)
+        .attr("width", vars.width + vars.margin.left + vars.margin.right)
+        .attr("height", vars.height + vars.margin.top + vars.margin.bottom)
         .append("g")
           .attr("transform", "translate(" + vars.margin.left + "," + vars.margin.top + ")");
-/*
-var margin = {top: 20, right: 80, bottom: 30, left: 50},
-    width = 1060 - margin.left - margin.right,
-    height = 1000 - margin.top - margin.bottom;
-
-var svg = d3.select("body").append("svg")
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
-*/
-
-   //   vars.width = vars.width - vars.margin.left - vars.margin.right;
-   //   vars.height = vars.height - vars.margin.top - vars.margin.bottom;
 
     }
 
@@ -232,7 +222,7 @@ var svg = d3.select("body").append("svg")
             .on("click", function(header, i) {
 
               click_header(header);
-             // paint_zebra_rows(tbody.selectAll("tr.row"));
+              paint_zebra_rows(tbody.selectAll("tr.row"));
 
             });
 
@@ -339,12 +329,20 @@ var svg = d3.select("body").append("svg")
 
         }
 
+        function paint_zebra_rows(rows) {
+          rows.filter(function() {
+            return d3.select(this).style("display") != "none";
+          })
+            .classed("odd", function(d, i) { return (i % 2) == 0; });
+        }
+
         // If no column have been specified, take all columns
         // vars.columns = d3.keys(vars.data[0])
 
         // Basic dump of the data we have
         create_table(new_data)
 
+        paint_zebra_rows(tbody.selectAll("tr.row"));
         // Now update the table
 
         // ENTER

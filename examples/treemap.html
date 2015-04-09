@@ -9,6 +9,35 @@
 
 d3.json("../data/exports_2012.json", function(error, exports) {
 
+    xp = exports
+
+    exports.data.forEach(function(d) {
+        d.parent = d.community_id;
+    })
+
+    // create a name: node map
+    var dataMap = exports.data.reduce(function(map, node) {
+        map[node.name] = node;
+        return map;
+    }, {});
+
+    // create the tree array
+    treeData = [];
+
+    exports.data.forEach(function(node) {
+        var parent = dataMap[node.parent];
+        if (parent) {
+            // create child array if it doesn't exist
+            (parent.children || (parent.children = []))
+                // add node to child array
+                .push(node);
+        } else {
+            // parent is null or missing
+            treeData.push(node);
+        }
+    });
+
+
   visualization = vistk.viz()
     .type("treemap")
     .container("#viz")
