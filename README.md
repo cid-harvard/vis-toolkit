@@ -248,39 +248,10 @@ Template
 * See http://bost.ocks.org/mike/chart/
 * See http://bost.ocks.org/mike/chart/time-series-chart.js
 
-## Code Structure
-* build
-** vistk.css
-** vistk.js
-* examples - currently supported visualizations
-* src
-* test
-** treemapTest.html
-
 
 ## Create a chart
 
 We should be able to create a chart like that:
-
-```json
-var chart = new vistk.Chart({
-    data: datasource,
-    type: 'line',
-    x: 'x-var',
-    y: 'y-var',
-    color: 'type'
-});
-```
-
-```json
-.container("#viz")
-.height(height)
-.width(width)
-.data(data)
-.id("name")
-.year("year")
-.render()
-```
 
 * `.id()` tells which attribute can be used as unique idenfifier for the data
  * `.id("country")` the `country` variable is going to be used
@@ -323,8 +294,14 @@ var chart = new vistk.Chart({
 
 ### Geo map
 
+* http://techslides.com/demos/d3/d3-world-map-mouse-zoom.html
 * https://github.com/yaph/d3-geomap/blob/master/src/coffee/choropleth.coffee
 * http://d3-geomap.github.io/map/choropleth/world/
+
+* Click and zoom on country http://techslides.com/d3-world-maps-tooltips-zooming-and-queue
+ * http://stackoverflow.com/questions/14492284/center-a-map-in-d3-given-a-geojson-object
+ * http://techslides.com/responsive-d3-map-with-zoom-and-pan-limits
+ * Better projection http://bl.ocks.org/jasondavies/4188334
 
 * Nice geo-maps https://www.pinterest.com/janwillemtulp/maps/
 
@@ -357,6 +334,13 @@ var chart = new vistk.Chart({
 
 * Show the rank?
 
+### Other charts
+
+* Packing http://colinwhite.net/Packed%20Circle/index.html
+
+* Parallel coordinates
+* Bar chart
+*
 
 ## Update a chart
 
