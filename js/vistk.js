@@ -460,12 +460,11 @@ vistk.viz = function() {
                             .append("g")
                             .attr("class", "points")
 
-            var dots = gPoints_enter.append("circle")
+            var dots = gPoints_enter.append("rect")
               .attr("r", 5)
-              .attr("cx", 0)
-              .attr("cy", 0)
+              .attr("height", 10)
+              .attr("width", 10)
               .style("fill", function(d) { return vars.color(d[vars.var_color]); })
-
 
             var labels = gPoints_enter.append("text")
                 .attr("x", 10)
@@ -485,7 +484,7 @@ vistk.viz = function() {
                               return "translate("+x(d[vars.x_var])+", "+y(d[vars.y_var])+")";
                             })
 
-
+          // Reg
           } else { 
 
             var gPoints_enter = gPoints.enter()
