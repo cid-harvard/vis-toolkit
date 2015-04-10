@@ -18,7 +18,6 @@ vistk.viz = function() {
     var_group: null,
     data: [],
     links: [],
-    year: null,
     title: "",
     focus: [],
     nesting: null,
@@ -194,7 +193,7 @@ vistk.viz = function() {
           // Extra attribute that we manually added
           } else {
 
-            return vars.year;
+            return vars.var_year;
 
           }
           */
@@ -1189,13 +1188,16 @@ vistk.viz = function() {
             .append("label")
             .attr("class", "slider")
 
+        // Assuming we have continuous years
+        unique_years = d3.set(vars.data.map(function(d) { return d[vars.var_time];})).values();
+
         // TODO: find time range
         label_slider.append("input")
                       .attr("type", "range")
                       .attr("class", "slider-random")
-                      .property("min", 1995)
-                      .property("max", 2013)
-                      .property("value", 2013)
+                      .property("min", d3.min(unique_years))
+                      .property("max", d3.max(unique_years))
+                      .property("value", vars.current_time)
                       .attr("step", 1)
                       .on("input", function() {
                         vars.current_time = +this.value;
@@ -1256,12 +1258,6 @@ vistk.viz = function() {
   chart.id_var = function(x) {
     if (!arguments.length) return vars.id_var;
     vars.id_var = x;
-    return chart;
-  };
-
-  chart.year = function(x) {
-    if (!arguments.length) return vars.year;
-    vars.year = x;
     return chart;
   };
 
@@ -1407,6 +1403,18 @@ vistk.viz = function() {
     return chart;
   }; 
 
+  chart.y_scale = function(x) {
+    if (!arguments.length) return vars.y_scale;
+    vars.y_scale = x;
+    return chart;
+  }; 
+
+  chart.connect = function(x) {
+    if (!arguments.length) return vars.var_connect;
+    vars.var_connect = x;
+    return chart;
+  }; 
+
   // NODELINK
   chart.size = function(size) {
     if (!arguments.length) return vars.var_size;
@@ -1438,9 +1446,6 @@ vistk.viz = function() {
     vars.var_share = x;
     return chart;
   };
-
-	if(vars.dev)   
-		console.log("update", chart.year())
 
   return chart;
 }
