@@ -1,7 +1,7 @@
 var vistk = window.vistk || {};
 window.vistk = vistk;
 
-vistk.version = "0.0.0.1";
+vistk.version = "0.1";
 vistk.dev = true;
 vistk.utils = vistk.utils || {};
 
@@ -919,7 +919,7 @@ vistk.viz = function() {
 
         var xAxis = d3.svg.axis()
             .scale(x)
-            .orient("bottom");
+            .orient("top");
 
         var yAxis = d3.svg.axis()
             .scale(y)
@@ -935,13 +935,11 @@ vistk.viz = function() {
             .y(function(d) { return y(d.rank); });
 
         // TODO: flatten the file
-
         color.domain(d3.keys(new_data[0]).filter(function(key) { return key !== "date"; }));
 
         new_data.forEach(function(d) {
           d.date = parseDate(d.year);
         });
-
         
         var min_max_years = d3.extent(new_data, function(d) { return d.date; });
         all_years = d3.set(new_data.map(function(d) { return d.year;})).values();
@@ -979,10 +977,27 @@ vistk.viz = function() {
           d3.max(countries, function(c) { return d3.max(c.values, function(v) { return v.rank; }); })
         ]);
 
+        unique_years = d3.set(vars.data.map(function(d) { return d[vars.var_time];})).values();
+
+        function make_x_axis() {        
+            return d3.svg.axis()
+                .scale(x)
+                 .orient("bottom")
+                 .ticks(10)
+        }
+
+        vars.svg.append("g")
+            .attr("class", "x grid")
+            .attr("transform", "translate(0," + vars.height + ")")
+            .call(make_x_axis()
+            .tickSize(-vars.height, 0, 0)
+            .tickFormat(""));
+
         vars.svg.append("g")
             .attr("class", "x axis")
-            .attr("transform", "translate(0," + vars.height + ")")
+            .attr("transform", "translate(0," + 0 + ")")
             .call(xAxis);
+
 
         vars.svg.append("g")
             .attr("class", "y axis")
@@ -1048,7 +1063,6 @@ vistk.viz = function() {
           d3.selectAll(".selected").classed("selected", false);
           d3.selectAll(".line:not(.selected)").style("opacity", 1);
           d3.selectAll(".text:not(.selected)").style("opacity", 1);
-
 
         })
 

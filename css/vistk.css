@@ -79,6 +79,14 @@ body {
   font: 10px sans-serif;
 }
 
+.grid .tick {
+    stroke: lightgrey;
+    opacity: 0.7;
+}
+.grid path {
+      stroke-width: 0;
+}
+
 /* conflicts with scatterplot
 .axis path,
 .axis line {
@@ -113,4 +121,6 @@ text.country {
 text.selected {
   font-weight: 800;
 }
+
+
 
