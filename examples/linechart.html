@@ -26,7 +26,7 @@ d3.csv("../data/new_rankings.csv", function(error, data) {
 
       if(k != "Country") {
 
-        res.push({name: d.Country, year: k, rank: +d[k]})
+        res.push({name: d.Country, year: k, rank: +d[k], id: d.Country.replace(" ", "_")})
 
       }
 
@@ -40,7 +40,7 @@ d3.csv("../data/new_rankings.csv", function(error, data) {
     .height(600)
     .width(900)
     .data(res)
-    .id("product")
+    .id("id")
     .group("category")
     .color("name")
     .title("Products")

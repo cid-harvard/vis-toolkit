@@ -27,7 +27,7 @@ vistk.viz = function() {
     width: 1000,
     height: 600,
 
-    margin: {top: 20, right: 150, bottom: 30, left: 40},
+    margin: {top: 30, right: 150, bottom: 30, left: 40},
 
     var_text: "name",
 
@@ -930,7 +930,7 @@ vistk.viz = function() {
         var line = d3.svg.line()
         // https://gist.github.com/mbostock/3035090
             .defined(function(d) { return d.rank != null; })
-            .interpolate("basis")
+            .interpolate("monotone")
             .x(function(d) { return x(d.date); })
             .y(function(d) { return y(d.rank); });
 
@@ -947,6 +947,7 @@ vistk.viz = function() {
         // Find unique countrie
         countries = d3.set(new_data.map(function(d) { return d[vars.var_text]; })).values().map(function(c) {
           return {
+            id: c.replace(" ", "_"),
             name: c,
             values: new_data.filter(function(d) {
               return d[vars.var_text] == c;
@@ -977,7 +978,7 @@ vistk.viz = function() {
           d3.max(countries, function(c) { return d3.max(c.values, function(v) { return v.rank; }); })
         ]);
 
-        unique_years = d3.set(vars.data.map(function(d) { return d[vars.var_time];})).values();
+        //unique_years = d3.set(vars.data.map(function(d) { return d[vars.var_time];})).values();
 
         function make_x_axis() {        
             return d3.svg.axis()
@@ -995,9 +996,8 @@ vistk.viz = function() {
 
         vars.svg.append("g")
             .attr("class", "x axis")
-            .attr("transform", "translate(0," + 0 + ")")
+            .attr("transform", "translate(0," + -5 + ")")
             .call(xAxis);
-
 
         vars.svg.append("g")
             .attr("class", "y axis")
@@ -1018,30 +1018,32 @@ vistk.viz = function() {
         country.append("path")
             .attr("class", "country line")
             .attr("d", function(d) {
-              console.log(d);
-             return line(d.values); })
-            .attr("id", function(d) { return d.name; })
+              return line(d.values); 
+            })
+            .attr("id", function(d) {console.log(d); return d[vars.var_id]; })
             .attr("class", "country line")
-            .style("stroke", function(d) { return color(d.name); });
+            .style("stroke", function(d) { return color(d[vars.var_id]); });
 
         country.append("text")
             .datum(function(d) { 
               d.values.sort(function(a, b) { return a.year > b.year;}); 
-              return {name: d.name, value: d.values[d.values.length - 1]}; 
+              return {name: d.name, id: d[vars.var_id], value: d.values[d.values.length - 1]}; 
             })
             .attr("transform", function(d) { return "translate(" + x(d.value.date) + "," + y(d.value.rank) + ")"; })
             .attr("x", 3)
             .attr("class", "country text")
             .attr("dy", ".35em")
-            .attr("id", function(d) { return d.name; })
-            .text(function(d) { return d.name; })
+            .attr("id", function(d) { return d[vars.var_id]; })
+            .text(function(d) { 
+              console.log(d)
+              return d.name; })
 
         vars.svg.selectAll(".country").on("mouseover", function(d) {
 
                 d3.selectAll(".line:not(.selected)").style("opacity", 0.1);
                 d3.selectAll(".text:not(.selected)").style("opacity", 0.1);
 
-                d3.selectAll("#"+d.name).style("opacity", 1);
+                d3.selectAll("#"+d[vars.var_id]).style("opacity", 1);
 
             })
             .on("mouseout", function(d) {
@@ -1053,7 +1055,7 @@ vistk.viz = function() {
         vars.svg.selectAll("text.country").on("click", function(d) {
           console.log("Country selected", d)
           
-          d3.selectAll("#"+d.name).classed("selected", !d3.selectAll("#"+d.name).classed("selected"));
+          d3.selectAll("#"+d[vars.var_id]).classed("selected", !d3.selectAll("#"+d[vars.var_id]).classed("selected"));
 
         })
 
@@ -1139,7 +1141,7 @@ vistk.viz = function() {
 
       // BUILDING THE UI elements
 
-      d3.select(vars.container).selectAll(".break").data([vars.id]).enter().append("p").attr("class", "break");
+      d3.select(vars.container).selectAll(".break").data([vars.var_id]).enter().append("p").attr("class", "break");
 
       if(vars.var_group) {
 
@@ -1174,9 +1176,9 @@ vistk.viz = function() {
 
       }
 
-      if(typeof vars.id == "object") {
+      if(typeof vars.var_id == "object") {
 
-        var label_radios = d3.select(vars.container).selectAll(".aggregations").data(vars.id)
+        var label_radios = d3.select(vars.container).selectAll(".aggregations").data(vars.var_id)
           .enter()
             .append("label")
             .attr("class", "aggregations")
@@ -1207,7 +1209,7 @@ vistk.viz = function() {
 
       if(vars.var_time) {
 
-        var label_slider = d3.select(vars.container).selectAll(".slider").data([vars.id])
+        var label_slider = d3.select(vars.container).selectAll(".slider").data([vars.var_id])
           .enter()
             .append("label")
             .attr("class", "slider")
@@ -1231,7 +1233,7 @@ vistk.viz = function() {
 
       }
 
-      var label_loader = d3.select(vars.container).selectAll(".loader").data([vars.id])
+      var label_loader = d3.select(vars.container).selectAll(".loader").data([vars.var_id])
         .enter()
           .append("label")
           .attr("class", "loader")
@@ -1274,14 +1276,8 @@ vistk.viz = function() {
 
   // Public Variables
   chart.id = function(x) {
-    if (!arguments.length) return vars.id;
-    vars.id = x;
-    return chart;
-  };
-
-  chart.id_var = function(x) {
-    if (!arguments.length) return vars.id_var;
-    vars.id_var = x;
+    if (!arguments.length) return vars.var_id;
+    vars.var_id = x;
     return chart;
   };
 
