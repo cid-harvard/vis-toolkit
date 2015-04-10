@@ -68,18 +68,20 @@ vistk.viz = function() {
 	// Constructor
 	chart = function(selection) {	
 
-    if(!vars.svg && vars.type != "table") {
-     
-      vars.svg = d3.select(vars.container).append("svg")
-        .attr("width", vars.width + vars.margin.left + vars.margin.right)
-        .attr("height", vars.height + vars.margin.top + vars.margin.bottom)
-        .append("g")
-          .attr("transform", "translate(" + vars.margin.left + "," + vars.margin.top + ")");
+    if(!vars.svg) {
+       if(vars.type != "table") {
+       
+        vars.svg = d3.select(vars.container).append("svg")
+          .attr("width", vars.width + vars.margin.left + vars.margin.right)
+          .attr("height", vars.height + vars.margin.top + vars.margin.bottom)
+          .append("g")
+            .attr("transform", "translate(" + vars.margin.left + "," + vars.margin.top + ")");
 
-    } else {
+      } else {
+        // HTML Container for table
+        vars.svg = d3.select(vars.container).append("div").style({height: vars.height+"px", width: vars.width+"px", overflow: "scroll"})
 
-      vars.svg = d3.select(vars.container).append("div").style({height: vars.height+"px", width: vars.width+"px", overflow: "scroll"})
-
+      }
     }
 
     // Get a copy of the whole dataset
@@ -209,12 +211,14 @@ vistk.viz = function() {
 
           if(vars.debug) console.log("[create_table]");    
 
+          d3.selectAll("table").remove();
+
           var table = vars.svg.append("table"),
             thead = table.append("thead").attr("class", "thead");
             tbody = table.append("tbody");
 
           table.append("caption")
-            .html(vars.title);
+            .html(vars.title + "(" + vars.current_time + ")");
 
           thead.append("tr").selectAll("th")
             .data(vars.columns)
