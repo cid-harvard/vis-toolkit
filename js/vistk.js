@@ -91,6 +91,7 @@ vistk.viz = function() {
     }
 
     // Filter data by attribute
+    // TODO: not sure we should remove data, but add an attribute instead would better
     if(vars.filter.length > 0) {
       new_data = new_data.filter(function(d) {
           // We don't keep values that are not in the vars.filter array
@@ -510,7 +511,7 @@ vistk.viz = function() {
         vars.svg.selectAll(".y.axis").call(yAxis)
 
         var gPoints = vars.svg.selectAll(".points")
-                        .data(new_data, function(d) { return d.name; });
+                        .data(new_data, function(d, i) { return d.name + " " + i; });
 
         // Here we want to deal with aggregated datasets
         if(vars.aggregate == vars.var_group) {
@@ -852,13 +853,14 @@ vistk.viz = function() {
                   // Shoul be isolated with a proper interface
 
                   // Highlight nodes
-                  d3.selectAll(".node").style("opacity", 0)    
+                  d3.selectAll(".node").style("opacity", .1)    
                   d3.select(this).style("opacity", 1)
 
                   // Highlight Links
                   d3.selectAll(".link").style("opacity", .1);
                   
                   d3.selectAll(".source_"+d._id).each(function(e) {
+                    console.log(e)
                     d3.select("#node_"+e.target._id).style("opacity", 1) 
                   })
                   .style("opacity", 1)
@@ -882,7 +884,7 @@ vistk.viz = function() {
                     .style("stroke-width", function(d) { return 1; })
                 });
 
-            var node_exit = node.exit().remove("circle")
+            var node_exit = node.exit().style({opacity: .1})
 
             link.attr("x1", function(d) { return x(d.source.x); })
                 .attr("y1", function(d) { return y(d.source.y); })
