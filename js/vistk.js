@@ -22,7 +22,7 @@ vistk.viz = function() {
     focus: [],
     nesting: null,
     nesting_aggs: {},
-    type: "table",
+    type: "",
 
     width: 1000,
     height: 600,
@@ -75,6 +75,10 @@ vistk.viz = function() {
         .attr("height", vars.height + vars.margin.top + vars.margin.bottom)
         .append("g")
           .attr("transform", "translate(" + vars.margin.left + "," + vars.margin.top + ")");
+
+    } else {
+
+      vars.svg = d3.select(vars.container).append("div").style({height: vars.height+"px", width: vars.width+"px", overflow: "scroll"})
 
     }
 
@@ -152,12 +156,12 @@ vistk.viz = function() {
       if(vars.type == "undefined") {
 
         // Basic dump of the data we have
-        d3.select(vars.container).append("span")
+         vars.svg.append("span")
           .html(JSON.stringify(vars.data));
 
       } else if(vars.type == "table") {
 
-      d3.select(vars.container).select("table").remove();
+       vars.svg.select("table").remove();
 
       function row_data(row, i) {
 
@@ -205,7 +209,7 @@ vistk.viz = function() {
 
           if(vars.debug) console.log("[create_table]");    
 
-          var table = d3.select(vars.container).append("table"),
+          var table = vars.svg.append("table"),
             thead = table.append("thead").attr("class", "thead");
             tbody = table.append("tbody");
 
@@ -264,7 +268,7 @@ vistk.viz = function() {
           if(vars.debug) console.log("[sort_by]", header);
 
           vars.sort_by.column = header;
-          var is_sorted = vars.sort_by.is_sorted;
+          vars.sort_by.is_sorted = !vars.sort_by.is_sorted;
 /*
           if(vars.aggregate == 'continent') {
             vars.accessor_year = accessor_year_agg;
@@ -279,7 +283,7 @@ vistk.viz = function() {
 
             tbody.selectAll("tr").sort(function(a, b) {
               var ascending = d3.ascending(a[header], b[header]);
-              return is_sorted ? ascending : - ascending;
+              return vars.sort_by.is_sorted ? ascending : - ascending;
             });
 
           // For the others, we sort numerical values
@@ -291,7 +295,7 @@ vistk.viz = function() {
               b = vars.accessor_year(b)[header];
               var ascending =  a > b ? 1 : a == b ? 0 : -1;
 
-              return is_sorted ? ascending : - ascending;
+              return vars.sort_by.is_sorted ? ascending : - ascending;
             });
 
           }
