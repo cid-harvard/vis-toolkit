@@ -1,11 +1,13 @@
 # vis-toolkit
 
-* A simple, fast visualization toolkit based on D3 charts
+Yet another toolkit based on top of **D3**. Here are its singularities:
+
+* A simple, fast and extensible visualization rendering
+* Allows complex charts composition with nesting
 * Enables storytelling with step by step display and annotations
 * Allows transitions between charts using points
-* Extensible with a modular architecture to allow nested and connected charts
 
-The toolkit displays **items** (e.g. countries, products) for one or multiple **dimensions** (e.g. population, gdp) for one or multiple **time points**. It uses templates that are a superimposition of layers that reproduce standard charts (treemap, scatterplot). Within this template, each **item** is encoded using a graphica marks (e.g. circle, rectangle). 
+The core idea of the toolkit is to display **items** (e.g. countries, products) for one or multiple **dimensions** (e.g. population, gdp) for one or multiple **time points**. It uses templates that are a superimposition of layers that reproduce standard charts (treemap, scatterplot). Within this template, each **item** is encoded using a graphica marks (e.g. circle, rectangle).
 
 * From a user perspective, it is built around the following interactions: 
  * `.highlight()` highlights one single item of interest
@@ -13,12 +15,11 @@ The toolkit displays **items** (e.g. countries, products) for one or multiple **
  * `.selection()` selects a group of items
  * `.filter()` removes items based on a similar attribute (e.g. defined by a `.group()`)
  * `.aggregate()` groups items using a similar attribute
- * `.time()` changes time
-
+ * `.time()` changes the current time point
 
 ## Usage
 
-Simply add the vistk JavaScript and CSS files.
+Simply add the `vistk` JavaScript and CSS files.
 
 ```html
 <link href="vistk.css" rel="stylesheet">
@@ -27,7 +28,7 @@ Simply add the vistk JavaScript and CSS files.
 
 ### Dependencies
 
-* D3, developped and tested with version `3.4.10`
+* **D3** version `3.4.10` (not tested with other versions)
 * Enventually some `topojson.js`, `queue.js` for the geomap
 
 ## Examples
@@ -43,7 +44,7 @@ Simply add the vistk JavaScript and CSS files.
  * Using an editor (see existing rich text edit envs http://ace.c9.io/#nav=about)
  * Build your own grid
  * Customize charts interactively
- * Derive values?
+ * Derive values? E.g. active or not for the rca value
 
 ## Tests
 
@@ -53,6 +54,7 @@ Simply add the vistk JavaScript and CSS files.
 * Unit testings
  * Cross Browser Compatibility
  * Cross Device Compatibility
+ * Use strict mode https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Strict_mode
 
 ## Data Management (TODO: discuss with QUINN)
 
@@ -103,7 +105,6 @@ What to do with missing data over time?
 
 * Internal state
  * How is this kept by the application?
-
 
 ## Howto create a new chart
 
