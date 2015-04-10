@@ -5,6 +5,17 @@
 * Allows transitions between charts using points
 * Extensible with a modular architecture to allow nested and connected charts
 
+The toolkit displays **items** (e.g. countries, products) for one or multiple **dimensions** (e.g. population, gdp) for one or multiple **time points**. It uses templates that are a superimposition of layers that reproduce standard charts (treemap, scatterplot). Within this template, each **item** is encoded using a graphica marks (e.g. circle, rectangle). 
+
+* From a user perspective, it is built around the following interactions: 
+ * `.highlight()` highlights one single item of interest
+ * `.focus()` get details for a particular item
+ * `.selection()` selects a group of items
+ * `.filter()` removes items based on a similar attribute (e.g. defined by a `.group()`)
+ * `.aggregate()` groups items using a similar attribute
+ * `.time()` changes time
+
+
 ## Usage
 
 Simply add the vistk JavaScript and CSS files.
@@ -155,12 +166,7 @@ What to do with missing data over time?
  * Margin, padding, etc.
  * Number format. Font, font weight.
 
-* Interactions: 
- * `.focus` highlights one particular element
- * `.selection` selects a group of nodes
- * `.filter` 
- * `aggregate`
- * `time change`
+
 
 * UI elements for interaction
  * Either from the visualization itslef, or with auto-generated widgets
@@ -236,18 +242,19 @@ Storytelling
 * See also http://www.visualcinnamon.com/2014/12/using-data-storytelling-with-chord.html
 * Vertical scrolling support? [graph-scroll](http://1wheel.github.io/graph-scroll/)
 * See [Miso project](https://github.com/misoproject/storyboard)
-
-* Tentative
- * Use the grammar of graphics visual decomposition
- * First show the background
- * Or a specificly highlighted element (e.g. focus)
- * 
+* Step by step widget http://nbremer.github.io/urbanization/
+* Previous work on visual decomposition
 
 
 Template
 * See http://bost.ocks.org/mike/chart/
 * See http://bost.ocks.org/mike/chart/time-series-chart.js
 
+
+Annotations
+* Linear regression lines http://www.highcharts.com/demo/combo-regression/grid
+* Multiple layers (e.g. background with grid, ..)
+* 
 
 ## Create a chart
 
