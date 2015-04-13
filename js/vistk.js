@@ -930,7 +930,7 @@ vistk.viz = function() {
         var line = d3.svg.line()
         // https://gist.github.com/mbostock/3035090
             .defined(function(d) { return d.rank != null; })
-            .interpolate("monotone")
+            .interpolate("monotone") // https://github.com/mbostock/d3/wiki/SVG-Shapes
             .x(function(d) { return x(d.date); })
             .y(function(d) { return y(d.rank); });
 
@@ -980,6 +980,7 @@ vistk.viz = function() {
 
         //unique_years = d3.set(vars.data.map(function(d) { return d[vars.var_time];})).values();
 
+        // http://www.d3noob.org/2013/01/adding-grid-lines-to-d3js-graph.html
         function make_x_axis() {        
             return d3.svg.axis()
                 .scale(x)

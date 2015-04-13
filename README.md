@@ -67,6 +67,12 @@ Simply add the `vistk` JavaScript and CSS files.
 * How to deal with trees?
  * Again a flat file and then connecting/aggregating might do the job
 
+
+* Doc
+ * http://tenxer.github.io/xcharts/docs/#data
+ * http://tenxer.github.io/xcharts/docs/#custom-vis-types
+
+
 * Different types of datasets
  * **Items:** which are elements we want to visualize
  * **Properties:** which are the static properties of the items
@@ -229,8 +235,20 @@ What to do with missing data over time?
 Intresting reading on D3 modular/reusable
 
 * [Mike Bostock’s reusable D3](http://bost.ocks.org/mike/chart/)
+* Improved version https://javacrypt.wordpress.com/2012/12/15/improvements-to-d3s-reusable-component-pattern/
+* Closure https://developer.mozilla.org/en-US/docs/Web/JavaScript/Closures
+* http://bocoup.com/weblog/introducing-d3-chart/
 
 * https://blog.safaribooksonline.com/2013/07/11/reusable-d3-js-using-attrtween-transitions-and-mv/
+
+* http://backstopmedia.booktype.pro/developing-a-d3js-edge/reusable-bar-chart/
+* http://stackoverflow.com/questions/14665786/some-clarification-on-reusable-charts
+
+* JS design patterns http://shichuan.github.io/javascript-patterns/
+ * Most of the charts re-use the module design pattern 
+
+* http://bocoup.com/weblog/reusability-with-d3/
+* http://bocoup.com/weblog/introducing-d3-chart/
 
 Storytelling
 
@@ -285,6 +303,11 @@ We should be able to create a chart like that:
 })
 .text("name")
 ```
+
+Create a tree structure 
+* http://bl.ocks.org/d3noob/8329404
+* http://www.d3noob.org/2014/01/tree-diagrams-in-d3js_11.html
+* http://stackoverflow.com/questions/18017869/build-tree-array-from-flat-array-in-javascript
 
 ### Rankings
 
