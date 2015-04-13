@@ -8,7 +8,7 @@ vistk.utils = vistk.utils || {};
 vistk.viz = function() {
 
   // Parameters for the visualization
-  vars = {
+  var vars = {
 
     // PUBLIC (set by the user)
     container : "",
@@ -1074,7 +1074,7 @@ vistk.viz = function() {
 
         // http://techslides.com/demos/d3/d3-world-map-colors-tooltips.html
         var projection = d3.geo.mercator()
-                        .translate([480, 300])
+                        .translate([vars.width/2, vars.height/2])
                         .scale(100);
 
         var path = d3.geo.path()
@@ -1143,7 +1143,6 @@ vistk.viz = function() {
                 .on("mousemove", function(d,i) {
                   var mouse = d3.mouse(vars.gSvg.node()).map( function(d) { return parseInt(d); } );
 
-                  console.log(mouse, mouse[0]+25)
                   tooltip
                     .classed("hidden", false)
                     .attr("style", "left:"+(mouse[0]+25)+"px;top:"+mouse[1]+"px")
