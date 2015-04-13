@@ -11,19 +11,20 @@
 <div id="viz"></div>
 <script>
 
-d3.json("../data/exports_2012.json", function(error, exports) {
+d3.json("../data/partners_usa_2012_csay.json", function(error, partners) {
+
+ex = partners;
 
   visualization = vistk.viz()
     .type("geomap")
     .container("#viz")
     .height(600)
     .width(900)
-    .data(exports.data)
-    .id("product")
-    .group("group")
-    .color("name")
-    .title("Products")
-    .size("size")
+    .data(partners.data)
+    .id(["continent", "name"])
+    .group("continent")
+    .color("share")
+    .title("Maps of trade partners")
     .time({var_time: "year", current_time: 2012})
 
   d3.select("#viz").call(visualization)

@@ -24,12 +24,14 @@ vistk.viz = function() {
     nesting_aggs: {},
     type: "",
 
+    // Default values
     width: 1000,
     height: 600,
-
     margin: {top: 30, right: 150, bottom: 30, left: 40},
 
+    // Default var mapping
     var_text: "name",
+    var_color: null,
 
     // Interaction
     focus: [],
@@ -38,8 +40,6 @@ vistk.viz = function() {
     aggregate: [],
     time_current: 0,
 
-    // PRIVATE (set automatically)
-
     // TABLE
     columns: [],
     sort_by: {'column': 'name', 'asc': true},
@@ -47,12 +47,12 @@ vistk.viz = function() {
     // DOTPLOT
     x_scale: "linear",
 
-    var_color: null,
+
     color: d3.scale.category20c(),
 
     accessor_year: function(d) { return d; },
 
-    // Container
+    // SVG Container
     svg: null,
   }
 
@@ -1097,46 +1097,62 @@ vistk.viz = function() {
 
         function ready(error, world, names) {
 
-           countries = topojson.object(world, world.objects.countries).geometries,
+          countries = topojson.object(world, world.objects.countries).geometries,
               neighbors = topojson.neighbors(world, countries),
               i = -1,
               n = countries.length;
 
           countries.forEach(function(d) { 
-            d.name = names.filter(function(n) { return d.id == n.id; })[0].name; 
+
+            // Retrieve the country name based on its id
+            d._name = names.filter(function(n) { return d.id == n.id; })[0].name; 
+
+            // TODO: should merge on a more reliable join (e.g. 2-char)
+            d.data = new_data.filter(function(n) { return d._name == n.name; })[0];
+
           });
 
-        var country = vars.gSvg.selectAll(".country").data(countries);
+          // TODO: see above
+          countries = countries.filter(function(d) {
+            return typeof d.data != "undefined";
+          })
+
+          var country = vars.gSvg.selectAll(".country").data(countries);
+
+
+        vars.color = d3.scale.linear()
+            .domain([d3.min(new_data, function(d) { return d[vars.var_color]; }), d3.max(new_data, function(d) { return d[vars.var_color]; })])
+            .range(["red", "green"]);
+
 
           country
-           .enter()
-            .insert("path")
-            .attr("class", "country")    
-              .attr("title", function(d,i) { return d.name; })
-              .attr("d", path)
-              .style("fill", function(d, i) { 
-                return vars.color(d.color = d3.max(neighbors[i], function(n) { 
-                  return countries[n].color; 
-                }) + 1 | 0); 
-              });
+             .enter()
+              .insert("path")
+              .attr("class", "country")    
+                .attr("title", function(d,i) { 
+                  console.log(d)
+                  return d.data.share; })
+                .attr("d", path)
+                .style("fill", function(d, i) { 
+                  return vars.color(d.data[vars.var_color]);
+                });
 
-            //Show/hide tooltip
-            country
-              .on("mousemove", function(d,i) {
-                var mouse = d3.mouse(vars.gSvg.node()).map( function(d) { return parseInt(d); } );
+              //Show/hide tooltip
+              country
+                .on("mousemove", function(d,i) {
+                  var mouse = d3.mouse(vars.gSvg.node()).map( function(d) { return parseInt(d); } );
 
-                tooltip
-                  .classed("hidden", false)
-                  .attr("style", "left:"+(mouse[0]+25)+"px;top:"+mouse[1]+"px")
-                  .html(d.name)
-              })
-              .on("mouseout",  function(d,i) {
-                tooltip.classed("hidden", true)
-              });
+                  tooltip
+                    .classed("hidden", false)
+                    .attr("style", "left:"+(mouse[0]+25)+"px;top:"+mouse[1]+"px")
+                    .html(d._name);
 
-        }
+                })
+                .on("mouseout",  function(d,i) {
+                  tooltip.classed("hidden", true)
+                });
 
-
+          }
 
       }
 
