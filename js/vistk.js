@@ -978,7 +978,7 @@ vistk.viz = function() {
           d3.max(countries, function(c) { return d3.max(c.values, function(v) { return v.rank; }); })
         ]);
 
-        //unique_years = d3.set(vars.data.map(function(d) { return d[vars.var_time];})).values();
+        // unique_years = d3.set(vars.data.map(function(d) { return d[vars.var_time];})).values();
 
         // http://www.d3noob.org/2013/01/adding-grid-lines-to-d3js-graph.html
         function make_x_axis() {        
@@ -1117,28 +1117,27 @@ vistk.viz = function() {
             return typeof d.data != "undefined";
           })
 
+          // Update
           var country = vars.gSvg.selectAll(".country").data(countries);
 
-
-        vars.color = d3.scale.linear()
+          // We override the current color scale to make it linear
+          vars.color = d3.scale.linear()
             .domain([d3.min(new_data, function(d) { return d[vars.var_color]; }), d3.max(new_data, function(d) { return d[vars.var_color]; })])
             .range(["red", "green"]);
 
+          var country_enter = country.enter()
+                                .insert("path")
+                                .attr("class", "country")    
+                                  .attr("title", function(d,i) { 
+                                    return d.name; 
+                                  })
+                                  .attr("d", path)
+                                  .style("fill", function(d, i) { 
+                                    return vars.color(d.data[vars.var_color]);
+                                  });
 
-          country
-             .enter()
-              .insert("path")
-              .attr("class", "country")    
-                .attr("title", function(d,i) { 
-                  console.log(d)
-                  return d.data.share; })
-                .attr("d", path)
-                .style("fill", function(d, i) { 
-                  return vars.color(d.data[vars.var_color]);
-                });
-
-              //Show/hide tooltip
-              country
+          //Show/hide tooltip
+          country_enter
                 .on("mousemove", function(d,i) {
                   var mouse = d3.mouse(vars.gSvg.node()).map( function(d) { return parseInt(d); } );
 
@@ -1151,6 +1150,8 @@ vistk.viz = function() {
                 .on("mouseout",  function(d,i) {
                   tooltip.classed("hidden", true)
                 });
+
+          country_exit = country.exit().style({"display": "none"});
 
           }
 
