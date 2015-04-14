@@ -1,0 +1,66 @@
+<!doctype html>
+<meta charset="utf-8">
+<script src="../js/d3.js"></script>
+<script src="../js/vistk.js"></script>
+<link href="../css/vistk.css" rel="stylesheet">
+
+<style>
+.sparkline {
+  fill: none;
+  stroke: #000;
+  stroke-width: 0.5px;
+}
+.sparkcircle {
+  fill: #f00;
+  stroke: none;
+}
+</style>
+
+<body>
+
+<div id="viz"></div>
+
+<script>
+
+  // From http://www.tnoda.com/blog/2013-12-19
+
+  var width = 100;
+  var height = 25;
+  var x = d3.scale.linear().range([0, width - 2]);
+  var y = d3.scale.linear().range([height - 4, 0]);
+  var parseDate = d3.time.format("%b %d, %Y").parse;
+  var line = d3.svg.line()
+               .interpolate("basis")
+               .x(function(d) { return x(d.date); })
+               .y(function(d) { return y(d.close); });
+
+  function sparkline(elemId, data) {
+    data.forEach(function(d) {
+      d.date = parseDate(d.Date);
+      d.close = +d.Close;
+    });
+    x.domain(d3.extent(data, function(d) { return d.date; }));
+    y.domain(d3.extent(data, function(d) { return d.close; }));
+
+    var svg = d3.select(elemId)
+                .append('svg')
+                .attr('width', width)
+                .attr('height', height)
+                .append('g')
+                .attr('transform', 'translate(0, 2)');
+    svg.append('path')
+       .datum(data)
+       .attr('class', 'sparkline')
+       .attr('d', line);
+    svg.append('circle')
+       .attr('class', 'sparkcircle')
+       .attr('cx', x(data[0].date))
+       .attr('cy', y(data[0].close))
+       .attr('r', 1.5);  
+  }
+
+  d3.csv('../data/goog.csv', function(error, data) {
+    sparkline('#viz', data);
+  });
+
+</script>
