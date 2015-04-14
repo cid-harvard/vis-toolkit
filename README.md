@@ -28,8 +28,9 @@ Simply add the `vistk` JavaScript and CSS files.
 
 ### Dependencies
 
-* **D3** version `3.4.10` (not tested with other versions)
-* Enventually some `topojson.js`, `queue.js` for the geomap
+* **D3** version `3.4.10` (not tested with other versions, but no reason why not)
+* Enventually some `topojson.js`, `queue.js` dependencies for the geomap
+* Also relies on world shape files for maps -should be avoided
 
 ## Examples
 
@@ -292,6 +293,8 @@ We should be able to create a chart like that:
 
 * http://handsontable.com/demo/pagination.html#5
 * https://github.com/mleibman/SlickGrid
+
+* Efficient scrolling http://bl.ocks.org/jasondavies/3689677
 
 ### Treemap
 
