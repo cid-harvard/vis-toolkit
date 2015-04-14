@@ -57,6 +57,7 @@ vistk.viz = function() {
     svg: null,
   }
 
+
   vars.width = vars.width - vars.margin.left - vars.margin.right;
   vars.height = vars.height - vars.margin.top - vars.margin.bottom;
 
@@ -365,7 +366,7 @@ vistk.viz = function() {
 
         // ENTER
 
-        // REMOVE
+        // EXIT
 
         // UPDATE
 
@@ -411,12 +412,15 @@ vistk.viz = function() {
 
         var treemap = d3.layout.treemap()
             .padding(4)
+            .sticky(true)
             .size([vars.width, vars.height])
             .value(function(d) { return d[vars.var_size]; });
 
+        // PRE-UPDATE
         var cell = vars.svg.data([r]).selectAll("g")
             .data(treemap.nodes);
 
+        // ENTER
         var cell_enter = cell.enter().append("g")
             .attr("class", "cell")
             .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
@@ -425,8 +429,6 @@ vistk.viz = function() {
             .attr("width", function(d) { return d.dx; })
             .attr("height", function(d) { return d.dy; })
             .style("fill", function(d) {
-              if(d.children)
-                console.log(d);
               return d.children ? vars.color(d[vars.var_color]) : null; 
             })
             .on("mouseover", function(d, i) {
@@ -451,9 +453,10 @@ vistk.viz = function() {
             .text(function(d) { return d.children ? null : d[vars.var_text].slice(0, 3)+"..."; })
             // .call(wrap) // takes ages
 
+        // EXIT
         var cell_exit = cell.exit().remove();
 
-        // Update
+        // UPDATE
         cell.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
 
         cell.select("rect")
@@ -464,6 +467,8 @@ vistk.viz = function() {
                 console.log("color", d, vars.color(d[vars.var_color]));
               return d.children ? vars.color(d[vars.var_color]) : null; 
             })
+
+
       } else if(vars.type == "scatterplot") {
 
         // Original scatterplot from http://bl.ocks.org/mbostock/3887118
@@ -713,6 +718,7 @@ vistk.viz = function() {
                         .attr("class", "label")
                         .text(function(d) { return d[vars.var_text]; });
 
+        // 
         // TODO: dispatch focus event here and highlight nodes
         if(vars.focus.length > 0) {
 
@@ -1071,6 +1077,51 @@ vistk.viz = function() {
 
         })
 
+      } else if(vars.type == "sparkline") {
+
+        // From http://www.tnoda.com/blog/2013-12-19
+        var width = 100;
+        var height = 25;
+        var x = d3.scale.linear().range([0, width - 2]);
+        var y = d3.scale.linear().range([height - 4, 0]);
+        var parseDate = d3.time.format("%b %d, %Y").parse;
+        var line = d3.svg.line()
+                     .interpolate("basis")
+                     .x(function(d) { return x(d.date); })
+                     .y(function(d) { return y(d.close); });
+
+        function sparkline(elemId, data) {
+          data.forEach(function(d) {
+            d.date = parseDate(d.Date);
+            d.close = +d.Close;
+          });
+          
+          x.domain(d3.extent(data, function(d) { return d.date; }));
+          y.domain(d3.extent(data, function(d) { return d.close; }));
+
+          var svg = d3.select(elemId)
+                      .append('svg')
+                      .attr('width', width)
+                      .attr('height', height)
+                      .append('g')
+                      .attr('transform', 'translate(0, 2)');
+          svg.append('path')
+             .datum(data)
+             .attr('class', 'sparkline')
+             .attr('d', line);
+          svg.append('circle')
+             .attr('class', 'sparkcircle')
+             .attr('cx', x(data[0].date))
+             .attr('cy', y(data[0].close))
+             .attr('r', 1.5);  
+        }
+
+        d3.csv('../data/goog.csv', function(error, data) {
+          console.log(data)
+          sparkline('#viz', data);
+        });
+
+
       } else if(vars.type == "geomap") {
 
 
@@ -1296,8 +1347,9 @@ vistk.viz = function() {
           .append("label")
           .attr("class", "items")
 
-      label_litems.append("select")
+      label_litems2.append("select")
         .attr("id", "select_items")
+        .style("width", vars.width/2)
         .on("change", function(d, i) {
           // Focus on a sepecifc item
 
