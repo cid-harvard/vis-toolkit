@@ -49,6 +49,8 @@ vistk.viz = function() {
 
     dispatch: [],
 
+    ui: true,
+
     color: d3.scale.category20c(),
 
     accessor_year: function(d) { return d; },
@@ -1226,98 +1228,100 @@ vistk.viz = function() {
 
       }
 
-      // BUILDING THE UI elements
-      d3.select(vars.container).selectAll(".break").data([vars.var_id]).enter().append("p").attr("class", "break");
+        if(vars.ui) {
 
-      if(vars.var_group) {
+        // BUILDING THE UI elements
+        d3.select(vars.container).selectAll(".break").data([vars.var_id]).enter().append("p").attr("class", "break");
 
-        unique_categories = d3.set(vars.data.map(function(d) { return d[vars.var_group]; })).values();
+        if(vars.var_group) {
 
-        var label_checkboxes = d3.select(vars.container).selectAll("input").data(unique_categories)
-          .enter()
-            .append("label");
+          unique_categories = d3.set(vars.data.map(function(d) { return d[vars.var_group]; })).values();
 
-        label_checkboxes.append("input")
-            .attr("type", "checkbox")
-            .attr("value", function(d) { return d; })
-            .property("checked", false)
-            .on("change", function(d) { 
+          var label_checkboxes = d3.select(vars.container).selectAll("input").data(unique_categories)
+            .enter()
+              .append("label");
 
-              update_filters(this.value, this.checked);
-              /*
-              vars.data = vars.data.filter(function(e, j) {
-                console.log(e[vars.var_group], d)
-                return e[vars.var_group] == d;
+          label_checkboxes.append("input")
+              .attr("type", "checkbox")
+              .attr("value", function(d) { return d; })
+              .property("checked", false)
+              .on("change", function(d) { 
+
+                update_filters(this.value, this.checked);
+                /*
+                vars.data = vars.data.filter(function(e, j) {
+                  console.log(e[vars.var_group], d)
+                  return e[vars.var_group] == d;
+                })
+  */
+
+                d3.select("#viz").call(visualization);
               })
-*/
 
-              d3.select("#viz").call(visualization);
-            })
+          label_checkboxes.append("span")
+              .html(function(d) { 
+                var count = new_data.filter(function(e, j) { return e[vars.var_group] == d; }).length;
+                return d + " (" + count + ")";
+              })
 
-        label_checkboxes.append("span")
-            .html(function(d) { 
-              var count = new_data.filter(function(e, j) { return e[vars.var_group] == d; }).length;
-              return d + " (" + count + ")";
-            })
+        }
 
-      }
+        if(typeof vars.var_id == "object") {
 
-      if(typeof vars.var_id == "object") {
+          var label_radios = d3.select(vars.container).selectAll(".aggregations").data(vars.var_id)
+            .enter()
+              .append("label")
+              .attr("class", "aggregations")
 
-        var label_radios = d3.select(vars.container).selectAll(".aggregations").data(vars.var_id)
-          .enter()
-            .append("label")
-            .attr("class", "aggregations")
+          // TODO: find levels of aggregation
+          label_radios.append("input")
+                     .attr("type", "radio")
+                     .attr("id", "id")  
+                     .attr("value", function(d) { return d; })
+                     .attr("name", "radio-nest")
+                     .property("checked", true)
+                     .on("change", function(d) { 
 
-        // TODO: find levels of aggregation
-        label_radios.append("input")
-                   .attr("type", "radio")
-                   .attr("id", "id")  
-                   .attr("value", function(d) { return d; })
-                   .attr("name", "radio-nest")
-                   .property("checked", true)
-                   .on("change", function(d) { 
+                       vars.aggregate=d;
+                       d3.select("#viz").call(visualization);
 
-                     vars.aggregate=d;
-                     d3.select("#viz").call(visualization);
+                     });
 
-                   });
+          label_radios.append("span")
+              .html(function(d) { 
+  //              var count = vars.data.filter(function(e, j) { return e[vars.var_group] == d; }).length;
+                // TODO
+                var count = "";
+                return d + " (" + count + ")";
+              });
 
-        label_radios.append("span")
-            .html(function(d) { 
-//              var count = vars.data.filter(function(e, j) { return e[vars.var_group] == d; }).length;
-              // TODO
-              var count = "";
-              return d + " (" + count + ")";
-            });
+        }
 
-      }
+        if(vars.var_time) {
 
-      if(vars.var_time) {
+          var label_slider = d3.select(vars.container).selectAll(".slider").data([vars.var_id])
+            .enter()
+              .append("label")
+              .attr("class", "slider")
 
-        var label_slider = d3.select(vars.container).selectAll(".slider").data([vars.var_id])
-          .enter()
-            .append("label")
-            .attr("class", "slider")
+          // Assuming we have continuous years
+          unique_years = d3.set(vars.data.map(function(d) { return d[vars.var_time];})).values();
 
-        // Assuming we have continuous years
-        unique_years = d3.set(vars.data.map(function(d) { return d[vars.var_time];})).values();
+          // TODO: find time range
+          label_slider.append("input")
+                        .attr("type", "range")
+                        .attr("class", "slider-random")
+                        .property("min", d3.min(unique_years))
+                        .property("max", d3.max(unique_years))
+                        .property("value", vars.current_time)
+                        .attr("step", 1)
+                        .on("input", function() {
+                          vars.current_time = +this.value;
+                          d3.select("#viz").call(visualization);
+                        })
+                        .style("width", "100px")
 
-        // TODO: find time range
-        label_slider.append("input")
-                      .attr("type", "range")
-                      .attr("class", "slider-random")
-                      .property("min", d3.min(unique_years))
-                      .property("max", d3.max(unique_years))
-                      .property("value", vars.current_time)
-                      .attr("step", 1)
-                      .on("input", function() {
-                        vars.current_time = +this.value;
-                        d3.select("#viz").call(visualization);
-                      })
-                      .style("width", "100px")
-
-      }
+        }
 
 
 /* LOADING DATASETS
@@ -1364,6 +1368,8 @@ vistk.viz = function() {
         .append("option")
         .attr("value", function(d) { return d[vars.var_text]; })
         .html(function(d) { return d[vars.var_text]; })
+
+    }
 
       // d3.json("../data/exports_2012.json", function(error, data) {
 
@@ -1590,6 +1596,12 @@ vistk.viz = function() {
       params();
     });
 
+    return chart;
+  };
+
+  chart.ui = function(x) {
+    if (!arguments.length) return vars.ui;
+    vars.ui = x;
     return chart;
   };
 
