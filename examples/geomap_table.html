@@ -6,7 +6,6 @@
 <script src="../js/queue.v1.min.js"></script>
 <script src="../js/topojson.js"></script>
 
-
 <body>
 <div id="viz" style="float:left; width: 600px;"></div>
 <div id="table" style="float:right; width: 600px;"></div>
@@ -40,6 +39,9 @@ d3.json("../data/partners_usa_2012_csay.json", function(error, partners) {
     .time({var_time: "year", current_time: 1995})
     .title("Products")
     .color("community_name")
+    .onhighlight(function(d) {
+      console.log(d);   
+    })
 
   d3.select("#table").call(table)
 

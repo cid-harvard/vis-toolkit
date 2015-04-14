@@ -47,6 +47,7 @@ vistk.viz = function() {
     // DOTPLOT
     x_scale: "linear",
 
+    dispatch: [],
 
     color: d3.scale.category20c(),
 
@@ -58,6 +59,8 @@ vistk.viz = function() {
 
   vars.width = vars.width - vars.margin.left - vars.margin.right;
   vars.height = vars.height - vars.margin.top - vars.margin.bottom;
+
+  vars.dispatch = d3.dispatch("init", "end", "highlightOn", "highlightOut");
 
  // vars.parent = d3.select(vars.container);
 
@@ -207,6 +210,16 @@ vistk.viz = function() {
         });
       }
 
+      vars.dispatch.on("highlightOn", function(d) {
+        d3.select(d.parentNode)
+          .style("background-color", "#F3ED86");
+      });
+
+      vars.dispatch.on("highlightOut", function(d) {
+        tbody.selectAll("tr")
+          .style("background-color", null)
+      });
+
       function create_table(data) {
 
           if(vars.debug) console.log("[create_table]");    
@@ -246,23 +259,10 @@ vistk.viz = function() {
             .append("td")
             .text(function(d) { return d; })
             .on("mouseover", function(d, i) {
-
-              // TODO: what is below belongs to the focus interaction!
-              // Shoul be isolated with a proper interface
-              
-              // Highlight the current row (which is a parent of the current cell)
-              d3.select(this.parentNode)
-                .style("background-color", "#F3ED86");
-          
+              vars.dispatch.highlightOn(this);          
             }).on("mouseout", function() {
-
-              // TODO: what is below belongs to the focus interaction!
-              
-              // Reset highlight all the rows (not the cells)
-              tbody.selectAll("tr")
-                .style("background-color", null)
-
-            });
+              vars.dispatch.highlightOut();  
+            })
 
         }
 
@@ -786,7 +786,6 @@ vistk.viz = function() {
       } else if(vars.type == "nodelink") {
 
         // TODO
-        // -Use t 
 
         var force = d3.layout.force()
             .charge(-120)
@@ -1138,9 +1137,22 @@ vistk.viz = function() {
                                     return vars.color(d.data[vars.var_color]);
                                   });
 
+          vars.dispatch.on("highlightOn", function(d) {
+            console.log(d)
+          });
+
+          vars.dispatch.on("highlightOut", function(d) {
+            console.log(d)
+          });
+
           //Show/hide tooltip
           country_enter
+                .on("mouseenter", function(d, i) {
+                  vars.dispatch.highlightOn(d);
+                })
                 .on("mousemove", function(d,i) {
+
+
                   var mouse = d3.mouse(vars.gSvg.node()).map( function(d) { return parseInt(d); } );
 
                   tooltip
@@ -1150,6 +1162,7 @@ vistk.viz = function() {
 
                 })
                 .on("mouseout",  function(d,i) {
+                  vars.dispatch.highlightOut(d);                  
                   tooltip.classed("hidden", true)
                 });
 
@@ -1484,6 +1497,13 @@ vistk.viz = function() {
   chart.share = function(x) {
     if (!arguments.length) return vars.var_share;
     vars.var_share = x;
+    return chart;
+  };
+
+  // TODO: register those evens
+  chart.onhighlight = function(x) {
+    if (!arguments.length) return vars.onhighlight;
+    vars.onhighlight = x;
     return chart;
   };
 
