@@ -617,7 +617,6 @@ vistk.viz = function() {
       } else if(vars.type == "dotplot") {
 
         // Original scatterplot from http://bl.ocks.org/mbostock/3887118
-
          x = d3.scale.linear()
             .range([vars.margin.left, vars.width-vars.margin.left-vars.margin.right]);
 
@@ -691,27 +690,28 @@ vistk.viz = function() {
                         .attr("class", "points")
                         .on("mouseenter",function(d, i) {
 
-                          dots.style("opacity", .1)
-                          labels.style("opacity", 0)          
+                          gPoints.selectAll(".dot").style("opacity", .1)
+                          gPoints.selectAll(".label").style("opacity", 0)          
 
-                          d3.select(this).select("circle").style("opacity", 1)
-                          d3.select(this).select("text").style("opacity", 1)
+                          d3.select(this).select(".dot").style("opacity", 1)
+                          d3.select(this).select(".label").style("opacity", 1)
                         //  dragit.trajectory.display(d, i);
 
                         })
                         .on("mouseleave", function(d, i) {
 
-                          dots.style("opacity", 1)
-                          labels.style("opacity", 1)     
+                          gPoints.selectAll(".dot").style("opacity", 1)
+                          gPoints.selectAll(".label").style("opacity", 1)     
       //                    dragit.trajectory.remove(d, i)
                         })
                      //   .call(dragit.object.activate)
 
-        var dots = gPoints_enter.append("circle")
+        gPoints_enter.append("circle")
                         .attr("r", 5)
                         .attr("cx", 0)
                         .attr("cy", 0)
                         .style("opacity", .5)
+                        .attr("class", "dot")
                         .style("fill", function(d) { return "gray"; })
 
         var labels = gPoints_enter.append("text")
@@ -720,18 +720,21 @@ vistk.viz = function() {
                         .attr("dy", ".35em")
                         .style("text-anchor", "start")
                         .attr("transform", "rotate(-30)")
+                        .attr("class", "label")
                         .text(function(d) { return d[vars.var_text]; });
 
         // TODO: dispatch focus event here and highlight nodes
         if(vars.focus.length > 0) {
 
-          dots
+          var focus_points = gPoints
             .filter(function(d, i) {
               return i == vars.focus[0];
             })
+
+          focus_points.select(".dot")
             .style({"stroke": "black", "stroke-width": "3px", "opacity": 1})
 
-          labels
+          focus_points.select(".label")
             .filter(function(d, i) {
               return i == vars.focus[0];
             })
@@ -1183,7 +1186,6 @@ vistk.viz = function() {
       }
 
       // BUILDING THE UI elements
-
       d3.select(vars.container).selectAll(".break").data([vars.var_id]).enter().append("p").attr("class", "break");
 
       if(vars.var_group) {
@@ -1276,6 +1278,9 @@ vistk.viz = function() {
 
       }
 
+
+/* LOADING DATASETS
+
       var label_loader = d3.select(vars.container).selectAll(".loader").data([vars.var_id])
         .enter()
           .append("label")
@@ -1293,7 +1298,30 @@ vistk.viz = function() {
         .append("option")
         .attr("value", function(d) { return d; })
         .html(function(d) { return d; })
+*/
 
+
+      var label_litems = d3.select(vars.container).selectAll(".items").data([vars.var_id])
+        .enter()
+          .append("label")
+          .attr("class", "items")
+
+      label_litems.append("select")
+        .attr("id", "select_items")
+        .on("change", function(d, i) {
+          // Focus on a sepecifc item
+
+          var id_focus = new_data.map(function(d) {return d[vars.var_text]; }).indexOf(this.value);
+          visualization.focus(id_focus);
+
+          d3.select("#viz").call(visualization);
+        })
+        .selectAll("option")
+        .data(new_data)
+      .enter()
+        .append("option")
+        .attr("value", function(d) { return d[vars.var_text]; })
+        .html(function(d) { return d[vars.var_text]; })
 
       // d3.json("../data/exports_2012.json", function(error, data) {
 
