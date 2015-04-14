@@ -1,0 +1,72 @@
+<!doctype html>
+<meta charset="utf-8">
+<script src="../js/d3.js" charset="utf-8"></script>
+<script src="../js/vistk.js"></script>
+<link href="../css/vistk.css" rel="stylesheet">
+<body>
+<div id="viz"></div>
+
+<table width="100%">
+
+  <tr><td>                  </td><td>All departments (2013)</td><td>Value</td><td>Growth, Annual</td></tr>
+  <td>Total Exports         </td><td><div id="js-dotplot-gdp">Dotplot</div></td><td>Value</td><td>Growth</td></tr>
+  <tr><td colspan="2"><div id="js-treemap-exports">Treemap</div></td><td colspan="2">List</td></tr>
+
+</table>
+
+<script>
+
+
+d3.json("../data/exports_2012.json", function(error, exports) {
+
+    xp = exports
+
+    exports.data.forEach(function(d) {
+        d.parent = d.community_id;
+        d.group = d.code[0];
+    })
+
+    // create a name: node map
+    var dataMap = exports.data.reduce(function(map, node) {
+        map[node.name] = node;
+        return map;
+    }, {});
+
+    // create the tree array
+    treeData = [];
+
+    exports.data.forEach(function(node) {
+        var parent = dataMap[node.parent];
+        if (parent) {
+            // create child array if it doesn't exist
+            (parent.children || (parent.children = []))
+                // add node to child array
+                .push(node);
+        } else {
+            // parent is null or missing
+            treeData.push(node);
+        }
+    });
+
+  visualization = vistk.viz()
+    .type("treemap")
+    .container("#js-treemap-exports")
+    .height(300)
+    .width(400)
+    .data(exports.data)
+    .id("product")
+    .group("group")
+    .color("group")
+    .title("Products")
+    .size("size")
+    .text("name")
+    .time({var_time: "year", current_time: 2012})
+
+  d3.select("#viz").call(visualization)
+
+})
+s
+
+
+
+</script>
