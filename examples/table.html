@@ -13,6 +13,7 @@ d3.json("../data/exports_2012.json", function(error, exports) {
 
   visualization = vistk.viz()
     .type("table")
+    .width(800)
     .height(600)
     .container("#viz")
     .data(exports.data)

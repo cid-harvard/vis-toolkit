@@ -40,7 +40,7 @@ Simply add the `vistk` JavaScript and CSS files.
 
 * **D3** version `3.4.10` (not tested with other versions, but no reason why not)
 * Enventually some `topojson.js`, `queue.js` dependencies for the geomap
-* Also relies on world shape files for maps -should be avoided
+* Also relies on world shape files for maps -should be avoided in the future
 
 ## Examples
 
@@ -59,7 +59,6 @@ Simply add the `vistk` JavaScript and CSS files.
 
 ## Tests
 
-* What should be tested?
 * Where should it be tested? Client or remove server?
 * Which dataset should be used for the tests?
 * Unit testings
@@ -138,6 +137,29 @@ What to do with missing data over time?
 * What should be reused or not?
 * How to define the transitions to other apps?
 
+## Chart 
+
+* Data wrangling
+ * Temporal data structure
+ * Tree creation
+
+* Data processing
+ * Filter
+ * Aggregate
+ * Time update
+
+* Merging with other datasets
+ * Attributes (e.g. color)
+ * Structure for visualization (e.g. graph)
+
+* Create the visualization
+ * Layers
+ * Highlight
+ * Focus on element
+ * Show selection of elements
+ * Aggregation of elements
+ * Show filtered out data
+
 
 ## Roadmap
 
@@ -190,7 +212,6 @@ What to do with missing data over time?
 * Visual customization
  * Margin, padding, etc.
  * Number format. Font, font weight.
-
 
 
 * UI elements for interaction
@@ -249,7 +270,6 @@ What to do with missing data over time?
  * Multiple selections should be allowed
  * Automatically generated
  
-
 Intresting reading on D3 modular/reusable
 
 * [Mike Bostock’s reusable D3](http://bost.ocks.org/mike/chart/)
@@ -282,16 +302,15 @@ Storytelling
 * Step by step widget http://nbremer.github.io/urbanization/
 * Previous work on visual decomposition
 
-
 Template
 * See http://bost.ocks.org/mike/chart/
 * See http://bost.ocks.org/mike/chart/time-series-chart.js
 
 
+
 Annotations
 * Linear regression lines http://www.highcharts.com/demo/combo-regression/grid
 * Multiple layers (e.g. background with grid, ..)
-* 
 
 ## Create a chart
 
@@ -305,6 +324,7 @@ We should be able to create a chart like that:
 * `.time()` sets the current time variable and time point    
  * `.time({var_time: "year", current_time: 1995})`
 
+* `.type(type)` 
 
 ### Table
 
@@ -317,7 +337,7 @@ We should be able to create a chart like that:
 
 ```json
 .type("tree_map")
-.size("value")
+.size("value")	
 .color(function(d){
   return color(d);
 })
@@ -328,6 +348,9 @@ Create a tree structure
 * http://bl.ocks.org/d3noob/8329404
 * http://www.d3noob.org/2014/01/tree-diagrams-in-d3js_11.html
 * http://stackoverflow.com/questions/18017869/build-tree-array-from-flat-array-in-javascript
+
+Text wrap
+* http://bl.ocks.org/mbostock/7555321
 
 Other
 * Treeemap ([with word wrap](http://bl.ocks.org/mundhradevang/1387786))
@@ -391,10 +414,13 @@ Other
 ### Other charts
 
 * Packing http://colinwhite.net/Packed%20Circle/index.html
-
 * Parallel coordinates
 * Bar chart
-*
+
+Listing of charts
+* http://www.niceone.org/infodesignpatterns/index.php5#/patterns.php5
+
+TODO: investigate the charts genealogy/reusable componants
 
 ## Update a chart
 

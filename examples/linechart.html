@@ -26,12 +26,11 @@ d3.csv("../data/new_rankings.csv", function(error, data) {
 
       if(k != "Country") {
 
-        res.push({name: d.Country, year: k, rank: +d[k], id: d.Country.replace(" ", "_")})
+        res.push({name: d.Country, year: k, rank: +d[k], id: d.Country.replace(" ", "_"), category: +d[k]%5})
 
       }
 
     }
-
   })
 
   visualization = vistk.viz()
@@ -44,6 +43,7 @@ d3.csv("../data/new_rankings.csv", function(error, data) {
     .group("category")
     .color("name")
     .title("Products")
+    .group("category")
     .text("name") // abbrv
 //    .size("size")
 //    .time({var_time: "year", current_time: 2012})
