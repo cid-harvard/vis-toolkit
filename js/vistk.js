@@ -371,40 +371,12 @@ vistk.viz = function() {
 
       } else if(vars.type == "treemap") {
 
-        // THIS IS what the data should look like
-        var test_data = [{
-         "name": "flare",
-         "children": [
-          {
-           "name": "analytics",
-           "children": [
-            {
-             "name": "cluster",
-             "children": [
-              {"name": "AgglomerativeCluster", "size": 3938},
-              {"name": "CommunityStructure", "size": 3812},
-              {"name": "HierarchicalCluster", "size": 6714},
-              {"name": "MergeEdge", "size": 743}
-             ]
-            },
-            {
-             "name": "cluster",
-             "children": [
-              {"name": "AgglomerativeCluster", "size": 3938},
-              {"name": "CommunityStructure", "size": 3812},
-              {"name": "HierarchicalCluster", "size": 6714},
-              {"name": "MergeEdge", "size": 743}
-             ]
-            }
-          ]
-         }]
-        }];
-
         r = {}
         r.name = "root";
         groups = [];
 
-        a = new_data.map(function(d, i) {
+        // Creates the groups here
+        new_data.map(function(d, i) {
 
           if(typeof groups[d.code[0]] == "undefined") {
             console.log("new")
@@ -416,6 +388,9 @@ vistk.viz = function() {
 
         })
 
+
+        groups = groups.filter(function(n){ return n != undefined }); 
+        
         child = groups.map(function(d, i) {
 
           node = {};
@@ -436,21 +411,20 @@ vistk.viz = function() {
             .value(function(d) { return d[vars.var_size]; });
 
         var cell = vars.svg.data([r]).selectAll("g")
-            .data(treemap.nodes)
-          .enter().append("g")
+            .data(treemap.nodes);
+
+
+        var cell_enter = cell.enter().append("g")
             .attr("class", "cell")
             .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
 
-        cell.append("rect")
+        cell_enter.append("rect")
             .attr("width", function(d) { return d.dx; })
             .attr("height", function(d) { return d.dy; })
             .style("fill", function(d) {
               return d.children ? vars.color(d[vars.var_color]) : null; 
             })
             .on("mouseover", function(d, i) {
-
-              // TODO: what is below belongs to the focus interaction!
-              // Shoul be isolated with a proper interface
               
               // Highlight the current row (which is a parent of the current cell)
               d3.select(this.parentNode)
@@ -458,21 +432,28 @@ vistk.viz = function() {
           
             }).on("mouseout", function() {
 
-              // TODO: what is below belongs to the focus interaction!
-              
               // Reset highlight all the rows (not the cells)
               d3.select(this)
                 .style("background-color", null)
 
             });
 
-        cell.append("text")
+        cell_enter.append("text")
             .attr("x", function(d) { return 10; })
             .attr("y", function(d) { return 10; })
             .attr("dy", ".35em")
             .attr("text-anchor", "left")
             .text(function(d) { return d.children ? null : d[vars.var_text].slice(0, 3)+"..."; })
            // .call(wrap)
+
+        var cell_exit = cell.exit().remove();
+
+        // Update
+        cell.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+
+        cell.select("rect")
+            .attr("width", function(d) { return d.dx; })
+            .attr("height", function(d) { return d.dy; })
 
       } else if(vars.type == "scatterplot") {
 
@@ -1590,7 +1571,7 @@ function flattenYears(data) {
     return flat;
 }
 
-/* One way to wrap text.. 
+/* One way to wrap text.. but creates too many elements..
 http://bl.ocks.org/mbostock/7555321
 
 function wrap(text, width) {
