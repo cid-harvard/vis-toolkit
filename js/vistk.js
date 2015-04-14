@@ -8,7 +8,7 @@ vistk.utils = vistk.utils || {};
 vistk.viz = function() {
 
   // Parameters for the visualization
-  var vars = {
+  vars = {
 
     // PUBLIC (set by the user)
     container : "",
@@ -262,7 +262,17 @@ vistk.viz = function() {
               vars.dispatch.highlightOn(this);          
             }).on("mouseout", function() {
               vars.dispatch.highlightOut();  
-            })
+            }).on("click", function(d) {
+
+              var data = d3.select(this.parentNode).data()[0];
+              var index = vars.selections.indexOf(data);
+
+              if(index <0)
+                vars.selections.push(data);
+              else
+                vars.selections.splice(index, 1);
+
+            });
 
         }
 
@@ -1501,9 +1511,15 @@ vistk.viz = function() {
   };
 
   // TODO: register those evens
-  chart.onhighlight = function(x) {
-    if (!arguments.length) return vars.onhighlight;
-    vars.onhighlight = x;
+  chart.on = function(x, params) {
+    if (!arguments.length) return x;
+
+    // Trigger the corresponding event
+    vars.dispatch.on("highlightOn", function() { 
+      console.log("ONNN")
+      params();
+    });
+
     return chart;
   };
 

@@ -24,6 +24,10 @@ d3.json("../data/partners_usa_2012_csay.json", function(error, partners) {
     .color("share")
     .title("Maps of trade partners")
     .time({var_time: "year", current_time: 2012})
+    .on("highlightOn", function(d) {
+      // Highlight the other visualization
+       console.log("map", d);
+    })
 
   d3.select("#viz").call(visualization)
 
@@ -34,13 +38,14 @@ d3.json("../data/partners_usa_2012_csay.json", function(error, partners) {
     .data(partners.data)
     .columns(['continent', 'name', 'share', 'year'])
     .id(["community_name", "name"])
-    .group("community_name")
+    .group("continent")
     .text("name")
     .time({var_time: "year", current_time: 1995})
     .title("Products")
     .color("community_name")
-    .onhighlight(function(d) {
-      console.log(d);   
+    .on("highlightOn", function(d) {
+      // Highlight the other visualization
+       console.log("table", d);
     })
 
   d3.select("#table").call(table)
