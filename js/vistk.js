@@ -27,7 +27,7 @@ vistk.viz = function() {
     // Default values
     width: 1000,
     height: 600,
-    margin: {top: 30, right: 150, bottom: 30, left: 40},
+    margin: {top: 30, right: 20, bottom: 10, left: 30},
 
     // Default var mapping
     var_text: "name",
@@ -60,8 +60,6 @@ vistk.viz = function() {
   }
 
 
-  vars.width = vars.width - vars.margin.left - vars.margin.right;
-  vars.height = vars.height - vars.margin.top - vars.margin.bottom;
 
   vars.dispatch = d3.dispatch("init", "end", "highlightOn", "highlightOut");
 
@@ -73,6 +71,9 @@ vistk.viz = function() {
 
 	// Constructor
 	chart = function(selection) {	
+
+  vars.width = vars.width - vars.margin.left - vars.margin.right;
+  vars.height = vars.height - vars.margin.top - vars.margin.bottom;
 
     if(!vars.svg) {
        if(vars.type != "table") {
@@ -647,7 +648,7 @@ vistk.viz = function() {
             .orient("left");
 
         vars.svg.selectAll(".label").data(new_data).enter().append("text")
-            .attr("class", "year label")
+          //  .attr("class", "year label")
             .attr("text-anchor", "end");
 
         vars.svg.selectAll(".label")    

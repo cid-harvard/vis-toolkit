@@ -9,20 +9,13 @@
 <table width="100%">
 
 <tr><td>                  </td><td>All departments (2013)</td><td>Value</td><td>Growth, Annual</td></tr>
-<td>GDP                   </td><td><div id="js-dotplot-gdp">Dotplot</div></td><td>Value</td><td>Growth</td></tr>
-<tr><td>Income per Capita </td><td><div id="js-dotplot-income-capita">Dotplot</div></td><td>Value</td><td>Growth</td></tr>
-<tr><td>Population        </td><td><div id="js-dotplot-population">Dotplot</div></td><td>Value</td><td>Growth</td></tr>
+<td>GDP                   </td><td><div id="js-dotplot-gdp"></div></td><td>Value</td><td>Growth</td></tr>
+<tr><td>Income per Capita </td><td><div id="js-dotplot-income-capita"></div></td><td>Value</td><td>Growth</td></tr>
+<tr><td>Population        </td><td><div id="js-dotplot-population"></div></td><td>Value</td><td>Growth</td></tr>
 
 </table>
 
 <script>
-/*
-
-TODO
--Create instances of dotplots
--Create instances of sparklines
--Connect dot plots
--
 
 d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments) {
 
@@ -39,10 +32,12 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
 
   dep = departments;
 
-  visualization = vistk.viz()
+  dot_plot_gdp = vistk.viz()
     .type("dotplot")
-    .container("#viz")
+    .container("#js-dotplot-gdp")
     .data(departments)
+    .height(100)
+    .width(400)    
     .x_var("dept_pop")
     .x_scale("linear")
     .y_var(["dept_pop", "realgdp"]) //TODO: make it categorical
@@ -52,50 +47,48 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
     .connect("name")
     .focus(0)
     .time({var_time: "year", current_time: 2013})
+    .ui(false)
 
-  d3.select("#viz").call(visualization)
+  d3.select("#js-dotplot-gdp").call(dot_plot_gdp)
 
-  d3.select("#viz").append("select")
-    .attr("id", "select_x_var")
-    .on("change", function(d) {
-      vars.x_var = this.value;
-      d3.select("#viz").call(visualization)
-    })
-    .selectAll("option")
-    .data(d3.keys(dep[0]))
-  .enter()
-    .append("option")
-    .attr("value", function(d) { return d; })
-    .html(function(d) { return d; })
+  dotplot_income_capita = vistk.viz()
+    .type("dotplot")
+    .container("#js-dotplot-income-capita")
+    .data(departments)
+    .height(100)
+    .width(400)    
+    .x_var("dept_pop")
+    .x_scale("linear")
+    .y_var(["dept_pop", "realgdp"]) //TODO: make it categorical
+    .id("name")
+    .group("dept_name")
+    .text("dept_name")
+    .connect("name")
+    .focus(0)
+    .time({var_time: "year", current_time: 2013})
+    .ui(false)
 
-    var label_radios = d3.select("#viz").selectAll(".aggregations").data(["index", "linear"])
-      .enter()
-        .append("label")
-        .attr("class", "aggregations")
+  d3.select("#js-dotplot-income-capita").call(dotplot_income_capita)
 
-    // TODO: find levels of aggregation
-    label_radios.append("input")
-               .attr("type", "radio")
-               .attr("id", "id")  
-               .attr("value", function(d) { return d; })
-               .attr("name", "radio-nest")
-               .property("checked", true)
-               .on("change", function(d) { 
+  dotplot_population = vistk.viz()
+    .type("dotplot")
+    .container("#js-dotplot-population")
+    .data(departments)
+    .height(100)
+    .width(400)    
+    .x_var("dept_pop")
+    .x_scale("linear")
+    .y_var(["dept_pop", "realgdp"]) //TODO: make it categorical
+    .id("name")
+    .group("dept_name")
+    .text("dept_name")
+    .connect("name")
+    .focus(0)
+    .time({var_time: "year", current_time: 2013})
+    .ui(false)
 
-                  vars.x_scale = d;
-                  d3.select("#viz").call(visualization)
+  d3.select("#js-dotplot-population").call(dotplot_population)
 
-               });
-
-    label_radios.append("span")
-        .html(function(d) { 
-
-          return d ;
-        });
-
-});
-*/
-
-
+})
 
 </script>
