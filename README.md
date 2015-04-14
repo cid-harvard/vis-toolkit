@@ -14,12 +14,18 @@ Each item is put on the space based on its **dimensions** (e.g. population, gdp)
 Finally, items can be updated over **time**. It uses templates that are a superimposition of layers that reproduce standard charts (treemap, scatterplot). Within this template, each **item** is encoded using a graphica marks (e.g. circle, rectangle).
 
 Each visualization implements the following set of interactions: 
- * `.highlight()` highlights one single item of interest
- * `.focus()` get details for a particular item
- * `.selection()` selects a group of items
- * `.filter()` removes items based on a similar attribute (e.g. defined by a `.group()`)
- * `.aggregate()` groups items using a similar attribute
- * `.time()` changes the current time point
+
+* `.highlight()` highlights an item. Usually triggered by a `.mouseover` event. Only one item can be highlighted at a time.
+
+* `.focus()` is a more persistant form of highlight, triggered after a `click` event. Multiple elements can be focused at the same time. Another `click` allows the removal from the current set of focused items.
+
+* `.selection()` selects a group of items. Each selection can be differentiated from another one with a visual encoding, such as color.
+
+* `.filter()` removes items based on a similar attribute (e.g. defined by a `.group()`)
+
+* `.aggregate()` groups items using a similar attribute
+
+* `.time()` changes the current time point
 
 ## Usage
 
