@@ -13,6 +13,7 @@ d3.json("../data/exports_2012.json", function(error, exports) {
 
     exports.data.forEach(function(d) {
         d.parent = d.community_id;
+        d.group = d.code[0];
     })
 
     // create a name: node map
@@ -37,7 +38,6 @@ d3.json("../data/exports_2012.json", function(error, exports) {
         }
     });
 
-
   visualization = vistk.viz()
     .type("treemap")
     .container("#viz")
@@ -49,6 +49,7 @@ d3.json("../data/exports_2012.json", function(error, exports) {
     .color("name")
     .title("Products")
     .size("size")
+    .text("name")
     .time({var_time: "year", current_time: 2012})
 
   d3.select("#viz").call(visualization)

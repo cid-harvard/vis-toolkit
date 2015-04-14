@@ -402,17 +402,17 @@ vistk.viz = function() {
 
         r = {}
         r.name = "root";
-        groups = []
+        groups = [];
 
-        new_data.filter(function(d, i) { return d.world_trade > 1000000; }).map(function(d, i) {
+        a = new_data.map(function(d, i) {
 
-          if(typeof groups[data.attr_data[d.product_id].code[0]] == "undefined") {
+          if(typeof groups[d.code[0]] == "undefined") {
             console.log("new")
-            groups[data.attr_data[d.product_id].code[0]] = [];
+            groups[d.code[0]] = [];
           }
 
-          //groups[data.attr_data[d.product_id].code[0]]
-          //.push({name: d.product_id, size: d.world_trade, attr: data.attr_data[d.product_id], group: +data.attr_data[d.product_id].code[0], year: d.year});
+          groups[d.code[0]]
+           .push({name: d.name, size: d.value, attr: d.item_id, group: +d.code[0], year: d.year});
 
         })
 
@@ -422,7 +422,7 @@ vistk.viz = function() {
           node.name = i;
 
           node.children = d.map(function(e, j) {
-            return {name: e.attr.name, size: e.size, group: e.group, year: e.year}
+            return {name: e.name, size: e.size, group: e.group, year: e.year}
           })
 
           return node;
@@ -445,7 +445,7 @@ vistk.viz = function() {
             .attr("width", function(d) { return d.dx; })
             .attr("height", function(d) { return d.dy; })
             .style("fill", function(d) {
-             return d.children ? vars.color(d[vars.var_color]) : null; 
+              return d.children ? vars.color(d[vars.var_color]) : null; 
             })
             .on("mouseover", function(d, i) {
 
@@ -471,7 +471,7 @@ vistk.viz = function() {
             .attr("y", function(d) { return 10; })
             .attr("dy", ".35em")
             .attr("text-anchor", "left")
-            .text(function(d) { return d.children ? null : d[vars.var_text]; })
+            .text(function(d) { return d.children ? null : d[vars.var_text].slice(0, 3)+"..."; })
            // .call(wrap)
 
       } else if(vars.type == "scatterplot") {
