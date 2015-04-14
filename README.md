@@ -1,15 +1,19 @@
 # vis-toolkit
 
-Yet another toolkit based on top of **D3**. Here are its singularities:
+The **vis-toolkit** is yet another set of visualizations based on top of **D3**. Its goal is to provide access to simple, fast visualization rendering, that can easily be extended. Here are some other goals it aims to achieve:
 
-* A simple, fast and extensible visualization rendering
-* Allows complex charts composition with nesting
-* Enables storytelling with step by step display and annotations
-* Allows transitions between charts using points
+* To allow complex charts composition
+* To enables storytelling with step by step display and annotations
+* To seamlessly allow transitions between charts
 
-The core idea of the toolkit is to display **items** (e.g. countries, products) for one or multiple **dimensions** (e.g. population, gdp) for one or multiple **time points**. It uses templates that are a superimposition of layers that reproduce standard charts (treemap, scatterplot). Within this template, each **item** is encoded using a graphica marks (e.g. circle, rectangle).
+One of the fundamental design idea of the toolkit is to consider each element to display as **items** (e.g. countries, users of a social network). Those items are usually rows of a dataset and bound to graphical marks.
 
-* From a user perspective, it is built around the following interactions: 
+Each item is put on the space based on its **dimensions** (e.g. population, gdp) 
+
+
+Finally, items can be updated over **time**. It uses templates that are a superimposition of layers that reproduce standard charts (treemap, scatterplot). Within this template, each **item** is encoded using a graphica marks (e.g. circle, rectangle).
+
+Each visualization implements the following set of interactions: 
  * `.highlight()` highlights one single item of interest
  * `.focus()` get details for a particular item
  * `.selection()` selects a group of items
@@ -69,6 +73,14 @@ Simply add the `vistk` JavaScript and CSS files.
  * Again a flat file and then connecting/aggregating might do the job
 
 
+Types of visualizations
+* Flat list of items 
+ * Table, 
+* Tree data structure
+ * Treemap, radial tree
+* Time aggregation
+ * ..
+
 * Doc
  * http://tenxer.github.io/xcharts/docs/#data
  * http://tenxer.github.io/xcharts/docs/#custom-vis-types
@@ -87,13 +99,10 @@ Example with Colombia:
 * Attributes http://54.172.130.22/api/products/?aggregation=2digit
 
 What to do with missing data over time?
-* Depends on the type of data
+* Depends on the type of data and the type of visualizations. For instance, time-based visualizations are more likely to fail if missing data for time point
  * Missing items
  * Missing attributes
  * Missing time points
-
-* Items should be loaded first, and ideally loaded only once
- * But for which level of details?..
 
 * Then other properties, attributes, can be loaded on-demand and eventually be kept
  * How do we decide to get rid of some items/attributes/properties?
@@ -101,6 +110,7 @@ What to do with missing data over time?
 * Dynamically load data, lazy data loading
 
 * Streaming data?
+ * Some visualizations accumulate data, other only display most recent items
 
 * Custom format for charts
  * e.g. `.total_bar({"prefix": "Export Value: $", "suffix": " USD", "format": ",f"})`
@@ -125,22 +135,23 @@ What to do with missing data over time?
 
 ## Roadmap
 
-* v0.1
+* v0.1 Alpha (mid-April)
  * Fundamental visualizations
  * Basic interactions: filter, aggregate, time update, focus
  * Dev environment
 
-* v0.2
+* v0.2 Beta (mid-May)
  * Generic data format as input
  * Couple of more visualizations
  * Code testing and production format
 
 * v0.3
  * States
- * 
+ * Tested with API
+ * Included in a real website
 
 * Re-create standard examples from d3
- * Treeemap ([with word wrap](http://bl.ocks.org/mundhradevang/1387786))
+
  * Scatterplot http://bl.ocks.org/mbostock/3887118
  * Stacked graph http://bl.ocks.org/mbostock/4060954 and transition to [small multiples](http://bl.ocks.org/mbostock/9490516) and [here too](http://bl.ocks.org/mbostock/3885211)
  * Maps
@@ -311,6 +322,9 @@ Create a tree structure
 * http://bl.ocks.org/d3noob/8329404
 * http://www.d3noob.org/2014/01/tree-diagrams-in-d3js_11.html
 * http://stackoverflow.com/questions/18017869/build-tree-array-from-flat-array-in-javascript
+
+Other
+* Treeemap ([with word wrap](http://bl.ocks.org/mundhradevang/1387786))
 
 ### Rankings
 
