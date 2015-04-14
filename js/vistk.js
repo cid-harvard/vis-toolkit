@@ -371,6 +371,7 @@ vistk.viz = function() {
 
       } else if(vars.type == "treemap") {
 
+        // Create the root node
         r = {}
         r.name = "root";
         groups = [];
@@ -378,24 +379,26 @@ vistk.viz = function() {
         // Creates the groups here
         new_data.map(function(d, i) {
 
-          if(typeof groups[d.code[0]] == "undefined") {
-            console.log("new")
-            groups[d.code[0]] = [];
+          if(typeof groups[d[vars.var_group]] == "undefined") {
+            groups[d[vars.var_group]] = [];
           }
 
-          groups[d.code[0]]
-           .push({name: d.name, size: d.value, attr: d.item_id, group: +d.code[0], year: d.year});
+          groups[d[vars.var_group]]
+           .push({name: d.name, size: d.value, attr: d.item_id, group: +d[vars.var_group], year: d.year});
 
         })
 
-
+        // Make sure there is no empty elements
         groups = groups.filter(function(n){ return n != undefined }); 
         
-        child = groups.map(function(d, i) {
+        // Creates the parent nodes
+        parents = groups.map(function(d, i) {
 
           node = {};
           node.name = i;
+          node.group = d[0].group;
 
+          // Create the children nodes
           node.children = d.map(function(e, j) {
             return {name: e.name, size: e.size, group: e.group, year: e.year}
           })
@@ -403,7 +406,8 @@ vistk.viz = function() {
           return node;
         })
 
-        r.children = child;
+        // Add parents to the root
+        r.children = parents;
 
         var treemap = d3.layout.treemap()
             .padding(4)
@@ -413,7 +417,6 @@ vistk.viz = function() {
         var cell = vars.svg.data([r]).selectAll("g")
             .data(treemap.nodes);
 
-
         var cell_enter = cell.enter().append("g")
             .attr("class", "cell")
             .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
@@ -422,19 +425,21 @@ vistk.viz = function() {
             .attr("width", function(d) { return d.dx; })
             .attr("height", function(d) { return d.dy; })
             .style("fill", function(d) {
+              if(d.children)
+                console.log(d);
               return d.children ? vars.color(d[vars.var_color]) : null; 
             })
             .on("mouseover", function(d, i) {
               
               // Highlight the current row (which is a parent of the current cell)
-              d3.select(this.parentNode)
-                .style("background-color", "#F3ED86");
+              // d3.select(this)
+              //  .style("fill", "#F3ED86");
           
-            }).on("mouseout", function() {
+            }).on("mouseout", function(d) {
 
               // Reset highlight all the rows (not the cells)
-              d3.select(this)
-                .style("background-color", null)
+              //d3.select(this)
+              //  .style("fill", vars.color(d[vars.var_color]))
 
             });
 
@@ -444,7 +449,7 @@ vistk.viz = function() {
             .attr("dy", ".35em")
             .attr("text-anchor", "left")
             .text(function(d) { return d.children ? null : d[vars.var_text].slice(0, 3)+"..."; })
-           // .call(wrap)
+            // .call(wrap) // takes ages
 
         var cell_exit = cell.exit().remove();
 
@@ -454,7 +459,11 @@ vistk.viz = function() {
         cell.select("rect")
             .attr("width", function(d) { return d.dx; })
             .attr("height", function(d) { return d.dy; })
-
+            .style("fill", function(d) {
+              if(d.children)
+                console.log("color", d, vars.color(d[vars.var_color]));
+              return d.children ? vars.color(d[vars.var_color]) : null; 
+            })
       } else if(vars.type == "scatterplot") {
 
         // Original scatterplot from http://bl.ocks.org/mbostock/3887118
@@ -1571,8 +1580,8 @@ function flattenYears(data) {
     return flat;
 }
 
-/* One way to wrap text.. but creates too many elements..
-http://bl.ocks.org/mbostock/7555321
+// One way to wrap text.. but creates too many elements..
+// http://bl.ocks.org/mbostock/7555321
 
 function wrap(text, width) {
 
@@ -1601,4 +1610,3 @@ function wrap(text, width) {
     }
   });
 }
-*/
