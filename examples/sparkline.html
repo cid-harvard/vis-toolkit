@@ -1,0 +1,65 @@
+<!doctype html>
+<meta charset="utf-8">
+<script src="../js/d3.js"></script>
+<script src="../js/vistk.js"></script>
+<link href="../css/vistk.css" rel="stylesheet">
+
+<style>
+.sparkline {
+  fill: none;
+  stroke: #000;
+  stroke-width: 0.5px;
+}
+.sparkcircle {
+  fill: #f00;
+  stroke: none;
+}
+</style>
+
+<body>
+
+<div id="viz"></div>
+
+<script>
+
+
+d3.csv("../data/new_rankings.csv", function(error, data) {
+
+  dd = data
+  
+
+  var res = [];
+  // Flatten the data here
+  // Or do something to build the temporal data? Should it happen here?
+  data.forEach(function(d) {
+
+    for(var k in d) {
+
+      if(k != "Country") {
+
+        res.push({name: d.Country, year: k, rank: +d[k], id: d.Country.replace(" ", "_"), category: +d[k]%5})
+
+      }
+
+    }
+  })
+
+  visualization = vistk.viz()
+    .type("sparkline")
+    .container("#viz")
+    .height(100)
+    .width(300)
+    .data(res)
+    .id("id")
+    .group("category")
+    .color("name")
+    .title("Products")
+    .group("category")
+    .text("name");
+
+  d3.select("#viz").call(visualization)
+
+})
+
+
+</script>

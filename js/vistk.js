@@ -1099,20 +1099,21 @@ vistk.viz = function() {
           x.domain(d3.extent(data, function(d) { return d.date; }));
           y.domain(d3.extent(data, function(d) { return d.close; }));
 
-          var svg = d3.select(elemId)
-                      .append('svg')
-                      .attr('width', width)
-                      .attr('height', height)
-                      .append('g')
-                      .attr('transform', 'translate(0, 2)');
-          svg.append('path')
+          vars.svg.append('path')
              .datum(data)
              .attr('class', 'sparkline')
              .attr('d', line);
-          svg.append('circle')
-             .attr('class', 'sparkcircle')
+
+          vars.svg.append('circle')
+             .attr('class', 'start sparkcircle')
              .attr('cx', x(data[0].date))
              .attr('cy', y(data[0].close))
+             .attr('r', 1.5);  
+
+          vars.svg.append('circle')
+             .attr('class', 'end sparkcircle')
+             .attr('cx', x(data[data.length-1].date))
+             .attr('cy', y(data[data.length-1].close))
              .attr('r', 1.5);  
         }
 
@@ -1120,7 +1121,6 @@ vistk.viz = function() {
           console.log(data)
           sparkline('#viz', data);
         });
-
 
       } else if(vars.type == "geomap") {
 
@@ -1347,7 +1347,7 @@ vistk.viz = function() {
           .append("label")
           .attr("class", "items")
 
-      label_litems2.append("select")
+      label_litems.append("select")
         .attr("id", "select_items")
         .style("width", vars.width/2)
         .on("change", function(d, i) {
