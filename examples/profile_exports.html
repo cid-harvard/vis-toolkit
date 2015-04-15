@@ -4,6 +4,8 @@
 <script src="../js/vistk.js"></script>
 <link href="../css/vistk.css" rel="stylesheet">
 <link href="../css/profiles.css" rel="stylesheet">
+<script src="//use.typekit.net/jyw2gnb.js"></script>
+<script>try{Typekit.load();}catch(e){}</script>
 <body>
 <div id="viz"></div>
 
@@ -100,7 +102,7 @@ d3.json("../data/exports_2012.json", function(error, exports) {
         }
     });
 
-  visualization = vistk.viz()
+  treemap_export = vistk.viz()
     .type("treemap")
     .container("#js-treemap-exports")
     .height(300)
@@ -112,9 +114,10 @@ d3.json("../data/exports_2012.json", function(error, exports) {
     .size("size")
     .text("name")
     .time({var_time: "year", current_time: 2012})
-    .ui(false);
+    .ui(false)
+  //  .focus(1121)
 
-  d3.select("#viz").call(visualization)
+  d3.select("#viz").call(treemap_export)
 
   table_exports = vistk.viz()
     .type("table")
@@ -130,7 +133,11 @@ d3.json("../data/exports_2012.json", function(error, exports) {
     .title("Top Exports, all")
     .color("community_name")
     .on("highlightOn", function(d) {
-       console.log("root file table", d);
+       console.log("CUSTOM file table", d);
+
+      treemap_export.focus(1121)
+      d3.select("#js-table-exports").call(treemap_export)
+
     })
     .ui(false);
 
