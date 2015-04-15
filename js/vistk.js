@@ -216,6 +216,7 @@ vistk.viz = function() {
       }
 
       vars.dispatch.on("highlightOn", function(d) {
+        console.log("highlightOn", d)
         d3.select(d.parentNode)
           .style("background-color", "#F3ED86");
       });
@@ -615,6 +616,23 @@ vistk.viz = function() {
 
       } else if(vars.type == "dotplot") {
 
+        vars.dispatch.on("highlightOn", function(d) {
+
+          gPoints.selectAll(".dot").style("opacity", .1)
+          gPoints.selectAll(".dotsLabels").style("opacity", 0)
+          d3.select(d).select(".dot").style("opacity", 1)
+          d3.select(d).select(".dotsLabels").style("opacity", 1)
+        
+        });
+
+        vars.dispatch.on("highlightOut", function(d) {
+
+          gPoints.selectAll(".dot").style("opacity", 1)
+          gPoints.selectAll(".dotsLabels").style("opacity", 1)     
+
+        });
+
+
         // Original scatterplot from http://bl.ocks.org/mbostock/3887118
          x = d3.scale.linear()
             .range([vars.margin.left, vars.width-vars.margin.left-vars.margin.right]);
@@ -683,21 +701,11 @@ vistk.viz = function() {
         var gPoints_enter = gPoints.enter()
                         .append("g")
                         .attr("class", "points")
-                        .on("mouseenter",function(d, i) {
-
-                          gPoints.selectAll(".dot").style("opacity", .1)
-                          gPoints.selectAll(".dotsLabels").style("opacity", 0)          
-
-                          d3.select(this).select(".dot").style("opacity", 1)
-                          d3.select(this).select(".dotsLabels").style("opacity", 1)
-                        //  dragit.trajectory.display(d, i);
-
+                        .on("mouseover",function(d, i) {
+                          vars.dispatch.highlightOn(this);    
                         })
                         .on("mouseleave", function(d, i) {
-
-                          gPoints.selectAll(".dot").style("opacity", 1)
-                          gPoints.selectAll(".dotsLabels").style("opacity", 1)     
-      //                    dragit.trajectory.remove(d, i)
+                          vars.dispatch.highlightOut(this);    
                         })                        
                         .attr("transform", function(d, i) {
                           return "translate(0, "+vars.height/2+")";
