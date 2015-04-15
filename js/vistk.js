@@ -104,6 +104,16 @@ vistk.viz = function() {
 
     }
 
+    if(vars.focus.length > 0) {
+      new_data.forEach(function(d, i) {
+          if(i == vars.focus[0])
+            d.focus = true;
+          else
+            d.focus = false;
+        })
+    }
+
+
     // Filter data by attribute
     // TODO: not sure we should remove data, but add an attribute instead would better
     if(vars.filter.length > 0) {
@@ -112,7 +122,6 @@ vistk.viz = function() {
           return vars.filter.indexOf(d[vars.var_group]) > -1;
         })
     }
-
 
     // Aggregate data
     if(vars.aggregate == vars.var_group) {
@@ -406,7 +415,7 @@ vistk.viz = function() {
           }
 
           groups[d[vars.var_group]]
-           .push({name: d.name, size: d.value, attr: d.item_id, group: +d[vars.var_group], year: d.year});
+           .push({name: d.name, size: d.value, attr: d.item_id, group: +d[vars.var_group], year: d.year, id: i, focus: d.focus});
 
         })
 
@@ -422,7 +431,7 @@ vistk.viz = function() {
 
           // Create the children nodes
           node.children = d.map(function(e, j) {
-            return {name: e.name, size: e.size, group: e.group, year: e.year}
+            return {name: e.name, size: e.size, group: e.group, year: e.year, id: e.id, focus: e.focus}
           })
 
           return node;
@@ -452,7 +461,7 @@ vistk.viz = function() {
             .style("fill", function(d) {
               return d.children ? vars.color(d[vars.var_color]) : null; 
             })
-
+            .classed("focus", function(d) { return d.focus; })
 
         // TODO: persistant bug when hovering a cell
         cell
@@ -486,8 +495,6 @@ vistk.viz = function() {
             .attr("width", function(d) { return d.dx; })
             .attr("height", function(d) { return d.dy; })
             .style("fill", function(d) {
-              if(d.children)
-                console.log("color", d, vars.color(d[vars.var_color]));
               return d.children ? vars.color(d[vars.var_color]) : null; 
             })
 

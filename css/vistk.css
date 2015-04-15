@@ -40,6 +40,11 @@ text {
   font: 10px sans-serif;
 }
 
+.cell > .focus {
+  stroke: black;
+  stroke-width: 2.5px;
+  fill: yellow;
+}
 
 /* Scatterplot */
 
