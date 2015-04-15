@@ -9,8 +9,6 @@
 
 d3.json("../data/exports_2012.json", function(error, exports) {
 
-  console.log(exports)
-
   visualization = vistk.viz()
     .type("table")
     .width(800)
@@ -25,7 +23,7 @@ d3.json("../data/exports_2012.json", function(error, exports) {
     .title("Products")
     .color("community_name")
     .on("highlightOn", function(d) {
-       console.log("root file table", d);
+       console.log("CUSTOM file table", d);
     })
 
   d3.select("#viz").call(visualization)
@@ -33,5 +31,4 @@ d3.json("../data/exports_2012.json", function(error, exports) {
 })
 
 </script>
-
 </body>

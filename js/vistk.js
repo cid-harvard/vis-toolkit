@@ -61,8 +61,6 @@ vistk.viz = function() {
 
 
 
-  vars.dispatch = d3.dispatch("init", "end", "highlightOn", "highlightOut");
-
  // vars.parent = d3.select(vars.container);
 
   if (vars.dev) console.log("Init")
@@ -73,8 +71,16 @@ vistk.viz = function() {
   vars.width = vars.width - vars.margin.left - vars.margin.right;
   vars.height = vars.height - vars.margin.top - vars.margin.bottom;
 
+
+  console.log("BEFORE")    
+
+  vars.dispatch = d3.dispatch("init", "end", "highlightOn", "highlightOut");
+
 	// Constructor
 	chart = function(selection) {	
+
+  console.log("SELECTION")    
+
 
     if(!vars.svg) {
        if(vars.type != "table") {
@@ -1620,6 +1626,8 @@ vistk.viz = function() {
   // TODO: register those evens
   chart.on = function(x, params) {
     if (!arguments.length) return x;
+
+    console.log("Binding", x, params)
 
     // Trigger the corresponding event
     vars.dispatch.on("highlightOn", function() { 
