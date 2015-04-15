@@ -30,15 +30,13 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
 
   })
 
-  dep = departments;
-
   dot_plot_gdp = vistk.viz()
     .type("dotplot")
     .container("#js-dotplot-gdp")
     .data(departments)
     .height(100)
     .width(400)    
-    .x_var("dept_pop")
+    .x_var("realgdp")
     .x_scale("linear")
     .y_var(["dept_pop", "realgdp"]) //TODO: make it categorical
     .id("name")
@@ -57,9 +55,9 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
     .data(departments)
     .height(100)
     .width(400)    
-    .x_var("dept_pop")
+    .x_var("realgdp_percap")
     .x_scale("linear")
-    .y_var(["dept_pop", "realgdp"]) //TODO: make it categorical
+    //.y_var(["realgdp"]) //TODO: make it categorical
     .id("name")
     .group("dept_name")
     .text("dept_name")

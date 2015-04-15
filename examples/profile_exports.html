@@ -3,13 +3,22 @@
 <script src="../js/d3.js" charset="utf-8"></script>
 <script src="../js/vistk.js"></script>
 <link href="../css/vistk.css" rel="stylesheet">
+
+<style>
+
+circle .dot .focus {
+    fill: ;
+}
+
+</style>
+
 <body>
 <div id="viz"></div>
 
 <table width="100%">
 
   <tr><td>                  </td><td>All departments (2013)</td><td>Value</td><td>Growth, Annual</td></tr>
-  <td>Total Exports         </td><td><div id="js-dotplot-exports"></div></td><td>Value</td><td><div id="js-sparkline-exports"></div></td></tr>
+  <td>Total Exports         </td><td><div id="js-dotplot-exports"></div></td><td>USD $1.1B</td><td><div id="js-sparkline-exports"></div></td></tr>
   <tr><td colspan="2"><div id="js-treemap-exports"></div></td><td colspan="2"><div id="js-table-exports"></div></td></tr>
 
 </table>
@@ -107,8 +116,7 @@ d3.json("../data/exports_2012.json", function(error, exports) {
     .data(exports.data)
     .id("product")
     .group("group")
-    .color("group")
-    .title("Products")
+   // .color("group")
     .size("size")
     .text("name")
     .time({var_time: "year", current_time: 2012})
@@ -119,7 +127,7 @@ d3.json("../data/exports_2012.json", function(error, exports) {
   table_exports = vistk.viz()
     .type("table")
     .width(400)
-    .height(600)
+    .height(300)
     .container("#js-table-exports")
     .data(exports.data)
     .columns(['name'])
@@ -127,7 +135,7 @@ d3.json("../data/exports_2012.json", function(error, exports) {
     .group("community_name")
     .text("name")
     .time({var_time: "year", current_time: 2012})
-    .title("Products")
+    .title("Top Exports, all")
     .color("community_name")
     .on("highlightOn", function(d) {
        console.log("root file table", d);
