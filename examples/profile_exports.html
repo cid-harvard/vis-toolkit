@@ -115,7 +115,7 @@ d3.json("../data/exports_2012.json", function(error, exports) {
     .text("name")
     .time({var_time: "year", current_time: 2012})
     .ui(false)
-  //  .focus(1121)
+    .focus(1119)
 
   d3.select("#viz").call(treemap_export)
 
@@ -135,8 +135,8 @@ d3.json("../data/exports_2012.json", function(error, exports) {
     .on("highlightOn", function(d) {
        console.log("CUSTOM file table", d);
 
-      treemap_export.focus(1121)
-      d3.select("#js-table-exports").call(treemap_export)
+      treemap_export.focus(1122)
+      d3.select("#js-treemap-exports").call(treemap_export)
 
     })
     .ui(false);

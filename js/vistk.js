@@ -285,7 +285,7 @@ vistk.viz = function() {
             .enter()
             .append("td")
             .text(function(d) { return d; })
-            .on("mouseover", function(d, i) {
+            .on("mouseenter", function(d, i) {
               vars.evt.call("highlightOn", d);
 
 //              vars.dispatch.highlightOn(this);          
@@ -477,7 +477,6 @@ vistk.viz = function() {
             .style("fill", function(d) {
               return d.children ? vars.color(d[vars.var_color]) : null; 
             })
-            .classed("focus", function(d) { return d.focus; })
 
         // TODO: persistant bug when hovering a cell
         cell
@@ -486,7 +485,8 @@ vistk.viz = function() {
             vars.dispatch.highlightOn(this);
           }).on("mouseout", function(d) {
             vars.dispatch.highlightOut(this);
-          });
+          })
+
 
         cell_enter.append("text")
             .attr("x", function(d) { return 10; })
@@ -513,6 +513,10 @@ vistk.viz = function() {
             .style("fill", function(d) {
               return d.children ? vars.color(d[vars.var_color]) : null; 
             })
+            .classed("focus", function(d, i) {
+              if(d.focus)
+                alert(d.id)
+             return d.focus; })
 
 
       } else if(vars.type == "scatterplot") {
@@ -1405,7 +1409,7 @@ vistk.viz = function() {
           // Focus on a sepecifc item
 
           var id_focus = new_data.map(function(d) {return d[vars.var_text]; }).indexOf(this.value);
-          visualization.focus(id_focus);
+          visualization.focus(1);
 
           d3.select("#viz").call(visualization);
         })
@@ -1519,6 +1523,10 @@ vistk.viz = function() {
 	chart.focus = function(x) {
 	  if (!arguments.length) return vars.focus;
 
+    vars.focus = [x];
+
+/* Smart but should be done for selections
+
 	  if(x instanceof Array) {
 	    vars.focus = x;
 	  } else {
@@ -1528,7 +1536,7 @@ vistk.viz = function() {
 	      vars.focus.push(x)
 	    }
 	  }
-
+*/
 	  return chart;
 	};
 
