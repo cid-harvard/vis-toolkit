@@ -231,12 +231,12 @@ vistk.viz = function() {
 
        //   d3.selectAll("table").remove();
 
-          var table = vars.svg.append("table"),
+          var table = vars.svg.append("table").style("overflow-y", "scroll"),
             thead = table.append("thead").attr("class", "thead");
             tbody = table.append("tbody");
 
           table.append("caption")
-            .html(vars.title + "(" + vars.current_time + ")");
+            .html(vars.title + " (" + vars.current_time + ")");
 
           thead.append("tr").selectAll("th")
             .data(vars.columns)
@@ -642,6 +642,7 @@ vistk.viz = function() {
 
         var xAxis = d3.svg.axis()
             .scale(x)
+            .ticks(3)
             .orient("bottom");
 /*
         var yAxis = d3.svg.axis()
@@ -651,11 +652,6 @@ vistk.viz = function() {
         vars.svg.selectAll(".label").data(new_data).enter().append("text")
           //  .attr("class", "year label")
             .attr("text-anchor", "end");
-
-        vars.svg.selectAll(".label")    
-            .attr("y", 144)
-            .attr("x", 500)
-            .text(vars.current_time);
 
         vars.svg.selectAll(".x.axis").data([new_data]).enter().append("g")
             .attr("class", "x axis")
