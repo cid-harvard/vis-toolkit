@@ -55,11 +55,11 @@ vistk.viz = function() {
 
     accessor_year: function(d) { return d; },
 
+    evt: {register: function() {}, call: function() {}},  
+
     // SVG Container
     svg: null,
   }
-
-
 
  // vars.parent = d3.select(vars.container);
 
@@ -230,6 +230,12 @@ vistk.viz = function() {
         });
       }
 
+      vars.evt.register("highlightOn", function(d) {
+        console.log("REG highlightOn", d)
+        d3.select(d.parentNode)
+          .style("background-color", "#F3ED86");
+      })
+
       vars.dispatch.on("highlightOn", function(d) {
         console.log("highlightOn", d)
         d3.select(d.parentNode)
@@ -280,9 +286,13 @@ vistk.viz = function() {
             .append("td")
             .text(function(d) { return d; })
             .on("mouseover", function(d, i) {
-              vars.dispatch.highlightOn(this);          
-            }).on("mouseout", function() {
-              vars.dispatch.highlightOut();  
+              vars.evt.call("highlightOn", d);
+
+//              vars.dispatch.highlightOn(this);          
+            }).on("mouseout", function(d) {
+              vars.evt.call("highlightOut", d);
+
+  //            vars.dispatch.highlightOut();  
             }).on("click", function(d) {
 
               var data = d3.select(this.parentNode).data()[0];
@@ -1626,15 +1636,10 @@ vistk.viz = function() {
   // TODO: register those evens
   chart.on = function(x, params) {
     if (!arguments.length) return x;
-
-    console.log("Binding", x, params)
-
     // Trigger the corresponding event
-    vars.dispatch.on("highlightOn", function() { 
-      console.log("ONNN")
-      params();
+    vars.evt.register("highlightOn", function(d) { 
+      params(d);
     });
-
     return chart;
   };
 
@@ -1644,8 +1649,41 @@ vistk.viz = function() {
     return chart;
   };
 
+  vars.evt.register = function(evt, f, d) {
+
+    if(vars.dev) console.log("[register]", evt)
+
+    if(typeof evt == "string")
+      evt = [evt];
+
+    evt.forEach(function(e) {
+      if(typeof vars.evt[e] == "undefined")
+        vars.evt[e] = [];
+      
+      vars.evt[e].push([f,d]);
+    })
+  }
+
+  vars.evt.call = function(evt, a) {
+
+    if(vars.dev) console.log("[call]", evt, a)
+
+    if(typeof vars.evt[evt] == "undefined") {
+      if(vars.dev) console.warn("No callback for event", evt, a)
+      return;
+    }
+
+    vars.evt[evt].forEach(function(e) {
+      if(vars.dev) console.log("[calling evt]", e)
+      if(typeof(e[0]) != "undefined")
+        e[0](a)
+    });
+  }
+
   return chart;
 }
+
+
 
 // http://stackoverflow.com/questions/171251/how-can-i-merge-properties-of-two-javascript-objects-dynamically
 var merge = function() {
