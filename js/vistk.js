@@ -69,11 +69,12 @@ vistk.viz = function() {
 
 	if (!vars.data) vars.data = []
 
-	// Constructor
-	chart = function(selection) {	
 
   vars.width = vars.width - vars.margin.left - vars.margin.right;
   vars.height = vars.height - vars.margin.top - vars.margin.bottom;
+
+	// Constructor
+	chart = function(selection) {	
 
     if(!vars.svg) {
        if(vars.type != "table") {
@@ -617,12 +618,12 @@ vistk.viz = function() {
         // Original scatterplot from http://bl.ocks.org/mbostock/3887118
          x = d3.scale.linear()
             .range([vars.margin.left, vars.width-vars.margin.left-vars.margin.right]);
-
+/*
         var y = d3.scale.linear()
             .range([vars.height-vars.margin.top-vars.margin.bottom, vars.margin.top]);
-
+*/
         x.domain([0, d3.max(new_data, function(d) { return d[vars.x_var]; })]).nice();
-        y.domain([0, d3.max(new_data, function(d) { return d[vars.y_var]; })]).nice();
+//        y.domain([0, d3.max(new_data, function(d) { return d[vars.y_var]; })]).nice();
 
         if(vars.x_scale == "index") {
 
@@ -642,11 +643,11 @@ vistk.viz = function() {
         var xAxis = d3.svg.axis()
             .scale(x)
             .orient("bottom");
-
+/*
         var yAxis = d3.svg.axis()
             .scale(y)
             .orient("left");
-
+*/
         vars.svg.selectAll(".label").data(new_data).enter().append("text")
           //  .attr("class", "year label")
             .attr("text-anchor", "end");
@@ -658,14 +659,14 @@ vistk.viz = function() {
 
         vars.svg.selectAll(".x.axis").data([new_data]).enter().append("g")
             .attr("class", "x axis")
-            .attr("transform", "translate(0," + (vars.height-vars.margin.bottom-vars.margin.top) + ")")              
+            .attr("transform", "translate(0," + (vars.height/2) + ")")              
           .append("text")
             .attr("class", "label")
             .attr("x", vars.width-vars.margin.left-vars.margin.right)
             .attr("y", -6)
             .style("text-anchor", "end")
             .text(function(d) { return vars.x_var; })
-
+/*
         vars.svg.selectAll(".y.axis").data([new_data]).enter().append("g")
             .attr("class", "y axis")
             .attr("transform", "translate("+vars.margin.left+", 0)")              
@@ -676,9 +677,9 @@ vistk.viz = function() {
             .attr("dy", ".71em")
             .style("text-anchor", "end")
             .text(function(d) { return vars.y_var; })
-
+*/
         vars.svg.selectAll(".x.axis").call(xAxis)
-        vars.svg.selectAll(".y.axis").call(yAxis)
+//        vars.svg.selectAll(".y.axis").call(yAxis)
 
         var gPoints = vars.svg.selectAll(".points")
                         .data(new_data, function(d, i) { return d[vars.var_text]; });
@@ -712,13 +713,13 @@ vistk.viz = function() {
                         .attr("class", "dot")
                         .style("fill", function(d) { return "gray"; })
 
-        var labels = gPoints_enter.append("text")
+        gPoints_enter.append("text")
                         .attr("x", 10)
                         .attr("y", 0)
                         .attr("dy", ".35em")
                         .style("text-anchor", "start")
                         .attr("transform", "rotate(-30)")
-                        .attr("class", "label")
+                     //   .attr("class", "label")
                         .text(function(d) { return d[vars.var_text]; });
 
         // 
