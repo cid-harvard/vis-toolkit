@@ -377,6 +377,22 @@ vistk.viz = function() {
 
       } else if(vars.type == "treemap") {
 
+        vars.dispatch.on("highlightOn", function(d) {
+
+          d3.select(d).select("rect")
+            .style("fill", "#F3ED86");
+
+        });
+
+        vars.dispatch.on("highlightOut", function(d) {
+
+          // Reset highlight all the rows (not the cells)
+          d3.select(d).select("rect")
+            .style("fill", vars.color(d3.select(d).data()[0][vars.var_color])) 
+
+        });
+
+
         // Create the root node
         r = {}
         r.name = "root";
@@ -436,19 +452,16 @@ vistk.viz = function() {
             .style("fill", function(d) {
               return d.children ? vars.color(d[vars.var_color]) : null; 
             })
-            .on("mouseover", function(d, i) {
-              
-              // Highlight the current row (which is a parent of the current cell)
-              // d3.select(this)
-              //  .style("fill", "#F3ED86");
-          
-            }).on("mouseout", function(d) {
 
-              // Reset highlight all the rows (not the cells)
-              //d3.select(this)
-              //  .style("fill", vars.color(d[vars.var_color]))
 
-            });
+        // TODO: persistant bug when hovering a cell
+        cell
+          .filter(function(d) { return d.depth == 2})
+          .on("mouseenter", function(d, i) {            
+            vars.dispatch.highlightOn(this);
+          }).on("mouseout", function(d) {
+            vars.dispatch.highlightOut(this);
+          });
 
         cell_enter.append("text")
             .attr("x", function(d) { return 10; })
@@ -456,6 +469,11 @@ vistk.viz = function() {
             .attr("dy", ".35em")
             .attr("text-anchor", "left")
             .text(function(d) { return d.children ? null : d[vars.var_text].slice(0, 3)+"..."; })
+            .on("mouseenter", function(d, i) {                
+              vars.dispatch.highlightOn(this.parentNode)              
+            }).on("mouseout", function(d) {
+              vars.dispatch.highlightOut(this.parentNode)  
+            });            
             // .call(wrap) // takes ages
 
         // EXIT
