@@ -136,20 +136,20 @@ What to do with missing data over time?
 
 ## Chart 
 
-* Data wrangling
+1. Data wrangling
  * Temporal data structure
  * Tree creation
 
-* Data processing
+2. Data processing
  * Filter
  * Aggregate
  * Time update
 
-* Merging with other datasets
+3. Merging with other datasets
  * Attributes (e.g. color)
  * Structure for visualization (e.g. graph)
 
-* Create the visualization
+4. Create the visualization
  * Layers
  * Highlight
  * Focus on element
