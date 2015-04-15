@@ -135,7 +135,7 @@ d3.json("../data/exports_2012.json", function(error, exports) {
     .on("highlightOn", function(d) {
        console.log("CUSTOM file table", d);
 
-      treemap_export.focus(1122)
+      treemap_export.focus(Math.floor(1000*Math.random()))
       d3.select("#js-treemap-exports").call(treemap_export)
 
     })

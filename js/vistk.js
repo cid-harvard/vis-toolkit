@@ -513,11 +513,7 @@ vistk.viz = function() {
             .style("fill", function(d) {
               return d.children ? vars.color(d[vars.var_color]) : null; 
             })
-            .classed("focus", function(d, i) {
-              if(d.focus)
-                alert(d.id)
-             return d.focus; })
-
+            .classed("focus", function(d, i) { return d.focus; })
 
       } else if(vars.type == "scatterplot") {
 
@@ -661,16 +657,17 @@ vistk.viz = function() {
 
       } else if(vars.type == "dotplot") {
 
-        vars.dispatch.on("highlightOn", function(d) {
+        vars.evt.register("highlightOn", function(d) {
 
           gPoints.selectAll(".dot").style("opacity", .1)
           gPoints.selectAll(".dotsLabels").style("opacity", 0)
-          d3.select(d).select(".dot").style("opacity", 1)
-          d3.select(d).select(".dotsLabels").style("opacity", 1)
+
+          vars.svg.selectAll(".dot").filter(function(e, j) { return e === d; }).style("opacity", 1);
+          vars.svg.selectAll(".dotsLabels").filter(function(e, j) { return e === d; }).style("opacity", 1);
         
         });
 
-        vars.dispatch.on("highlightOut", function(d) {
+        vars.evt.register("highlightOut", function(d) {
 
           gPoints.selectAll(".dot").style("opacity", 1)
           gPoints.selectAll(".dotsLabels").style("opacity", 1)     
@@ -747,10 +744,10 @@ vistk.viz = function() {
                         .append("g")
                         .attr("class", "points")
                         .on("mouseover",function(d, i) {
-                          vars.dispatch.highlightOn(this);    
+                          vars.evt.call("highlightOn", d);
                         })
                         .on("mouseleave", function(d, i) {
-                          vars.dispatch.highlightOut(this);    
+                          vars.evt.call("highlightOut", d);
                         })                        
                         .attr("transform", function(d, i) {
                           return "translate(0, "+vars.height/2+")";
@@ -802,7 +799,7 @@ vistk.viz = function() {
         if(vars.x_scale == "index") {
 
           vars.svg.selectAll(".points")
-                          .transition().delay(2500).duration(1000)
+                          .transition()
                           .attr("transform", function(d, i) {
                             return "translate("+d.rank+", "+vars.height/2+")";
                           })
