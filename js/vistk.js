@@ -228,7 +228,7 @@ vistk.viz = function() {
 
           if(vars.debug) console.log("[create_table]");    
 
-          d3.selectAll("table").remove();
+       //   d3.selectAll("table").remove();
 
           var table = vars.svg.append("table"),
             thead = table.append("thead").attr("class", "thead");
@@ -1083,17 +1083,18 @@ vistk.viz = function() {
       } else if(vars.type == "sparkline") {
 
         // From http://www.tnoda.com/blog/2013-12-19
-        var width = 100;
-        var height = 25;
-        var x = d3.scale.linear().range([0, width - 2]);
-        var y = d3.scale.linear().range([height - 4, 0]);
+        var x = d3.scale.linear().range([0, vars.width - 2]);
+        var y = d3.scale.linear().range([vars.height - 4, 0]);
+
         var parseDate = d3.time.format("%b %d, %Y").parse;
+
         var line = d3.svg.line()
                      .interpolate("basis")
                      .x(function(d) { return x(d.date); })
                      .y(function(d) { return y(d.close); });
 
-        function sparkline(elemId, data) {
+        d3.csv('../data/goog.csv', function(error, data) {
+
           data.forEach(function(d) {
             d.date = parseDate(d.Date);
             d.close = +d.Close;
@@ -1102,8 +1103,8 @@ vistk.viz = function() {
           x.domain(d3.extent(data, function(d) { return d.date; }));
           y.domain(d3.extent(data, function(d) { return d.close; }));
 
-          vars.svg.append('path')
-             .datum(data)
+          vars.svg.selectAll(".sparkline").data([data]).enter().append('path')
+          //   .datum(data)
              .attr('class', 'sparkline')
              .attr('d', line);
 
@@ -1118,11 +1119,7 @@ vistk.viz = function() {
              .attr('cx', x(data[data.length-1].date))
              .attr('cy', y(data[data.length-1].close))
              .attr('r', 1.5);  
-        }
 
-        d3.csv('../data/goog.csv', function(error, data) {
-          console.log(data)
-          sparkline('#viz', data);
         });
 
       } else if(vars.type == "geomap") {
