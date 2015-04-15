@@ -1,0 +1,20 @@
+body {
+  font: 16px sans-serif;
+}
+
+circle .dot .focus {
+    fill: ;
+}
+
+.dotsLabels {
+    display: none;
+}
+
+.dotsLabels:hover {
+    display: visible;
+    color: red;
+}
+
+.label {
+    display: none;
+}
