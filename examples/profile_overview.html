@@ -9,9 +9,9 @@
 <table width="100%">
 
 <tr><td>                  </td><td>All departments (2013)</td><td>Value</td><td>Growth, Annual</td></tr>
-<td>GDP                   </td><td><div id="js-dotplot-gdp"></div></td><td>Value</td><td>Growth</td></tr>
-<tr><td>Income per Capita </td><td><div id="js-dotplot-income-capita"></div></td><td>Value</td><td>Growth</td></tr>
-<tr><td>Population        </td><td><div id="js-dotplot-population"></div></td><td>Value</td><td>Growth</td></tr>
+<td>GDP                   </td><td><div id="js-dotplot-gdp"></div></td><td>Value</td><td><div id="js-sparkline-gdp"></div></td></tr>
+<tr><td>Income per Capita </td><td><div id="js-dotplot-income-capita"></div></td><td>Value</td><td><div id="js-sparkline-income-capita"></div></td></tr>
+<tr><td>Population        </td><td><div id="js-dotplot-population"></div></td><td>Value</td><td><div id="js-sparkline-growth"></div></td></tr>
 
 </table>
 
@@ -89,6 +89,53 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
 
   d3.select("#js-dotplot-population").call(dotplot_population)
 
+  sparkline_gdp = vistk.viz()
+    .type("sparkline")
+    .container("#js-sparkline-gdp")
+    .height(100)
+    .width(300)
+   // .data(res)
+    .id("id")
+    .group("category")
+    .color("name")
+    .title("Products")
+    .group("category")
+    .ui(false)
+    .text("name");
+
+  d3.select("#js-sparkline-gdp").call(sparkline_gdp)
+
+  sparkline_income_capita = vistk.viz()
+    .type("sparkline")
+    .container("#js-sparkline-income-capita")
+    .height(100)
+    .width(300)
+   // .data(res)
+    .id("id")
+    .group("category")
+    .color("name")
+    .title("Products")
+    .group("category")
+    .ui(false)
+    .text("name");
+
+  d3.select("#js-sparkline-income-capita").call(sparkline_income_capita)
+
+  sparkline_growth = vistk.viz()
+    .type("sparkline")
+    .container("#js-sparkline-growth")
+    .height(100)
+    .width(300)
+   // .data(res)
+    .id("id")
+    .group("category")
+    .color("name")
+    .title("Products")
+    .group("category")
+    .ui(false)
+    .text("name");
+
+  d3.select("#js-sparkline-growth").call(sparkline_growth)
 })
 
 </script>
