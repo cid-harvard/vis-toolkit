@@ -686,19 +686,22 @@ vistk.viz = function() {
                         .on("mouseenter",function(d, i) {
 
                           gPoints.selectAll(".dot").style("opacity", .1)
-                          gPoints.selectAll(".label").style("opacity", 0)          
+                          gPoints.selectAll(".dotsLabels").style("opacity", 0)          
 
                           d3.select(this).select(".dot").style("opacity", 1)
-                          d3.select(this).select(".label").style("opacity", 1)
+                          d3.select(this).select(".dotsLabels").style("opacity", 1)
                         //  dragit.trajectory.display(d, i);
 
                         })
                         .on("mouseleave", function(d, i) {
 
                           gPoints.selectAll(".dot").style("opacity", 1)
-                          gPoints.selectAll(".label").style("opacity", 1)     
+                          gPoints.selectAll(".dotsLabels").style("opacity", 1)     
       //                    dragit.trajectory.remove(d, i)
-                        })
+                        })                        
+                        .attr("transform", function(d, i) {
+                          return "translate(0, "+vars.height/2+")";
+                        })                        
                      //   .call(dragit.object.activate)
 
         gPoints_enter.append("circle")
@@ -713,7 +716,7 @@ vistk.viz = function() {
                         .attr("x", 10)
                         .attr("y", 0)
                         .attr("dy", ".35em")
-                        .style("text-anchor", "start")
+                        .attr("class", "dotsLabels")
                         .attr("transform", "rotate(-30)")
                      //   .attr("class", "label")
                         .text(function(d) { return d[vars.var_text]; });
@@ -746,7 +749,7 @@ vistk.viz = function() {
         if(vars.x_scale == "index") {
 
           vars.svg.selectAll(".points")
-                          .transition()
+                          .transition().delay(2500).duration(1000)
                           .attr("transform", function(d, i) {
                             return "translate("+d.rank+", "+vars.height/2+")";
                           })
