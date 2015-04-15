@@ -9,13 +9,141 @@
 
 <table width="100%">
 
-  <tr><td>                  </td><td>All departments (2013)</td><td>Value</td><td>Growth, Annual</td></tr>
-  <td>Export complexity         </td><td><div id="js-dotplot-complexity">Dotplot</div></td><td>Value</td><td>Growth</td></tr>
-  <tr><td colspan="2"><div id="js-treemap-exports">List</div></td><td colspan="2">Product Space</td></tr>
+  <tr><td>                  </td><td>All departments (2013)</td><td>Value (2013)</td><td>Growth, Annual (2009 - 2013)</td></tr>
+  <td>Total Exports         </td><td><div id="js-dotplot-complexity"></div></td><td>0.3</td><td>Growth</td></tr>
+  <tr><td colspan="2">
+  	
+    <div id="js-dotplot-complexity">
+      <input name="story" value="step1" type="radio" checked>Step 1<br>
+      <input name="story" value="step2" type="radio" />Step 2<br>    
+      <input name="story" value="step3" type="radio" />Step 3<br>   
+    </div>
+
+  </td><td colspan="2">Product Space</td></tr>
 
 </table>
 
 <script>
 
+d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments) {
+
+  departments.forEach(function(d, i) {
+
+    d.dept_pop = +d.dept_pop;
+    d.year = +d.year;    
+    d.realgdp = +d.realgdp;
+    d.realgdp_percap = +d.realgdp_percap;    
+    d["sum(export_value)"] = +d["sum(export_value)"];
+    d["value_added"] = +d["value_added"];
+
+  })
+
+  dep = departments;
+
+  dotplot_complexity = vistk.viz()
+    .type("dotplot")
+    .container("#js-dotplot-complexity")
+    .data(departments)
+    .height(100)
+    .width(400)    
+    .x_var("dept_pop")
+    .x_scale("linear")
+    .y_var(["dept_pop", "realgdp"]) //TODO: make it categorical
+    .id("name")
+    .group("dept_name")
+    .text("dept_name")
+    .connect("name")
+    .focus(0)
+    .time({var_time: "year", current_time: 2013})
+    .ui(false)
+
+  d3.select("#js-dotplot-complexity").call(dotplot_complexity)
+
+  sparkline_exports = vistk.viz()
+    .type("sparkline")
+    .container("#js-sparkline-exports")
+    .height(100)
+    .width(200)
+   // .data(res)
+    .id("id")
+    .group("category")
+    .color("name")
+    .title("Products")
+    .group("category")
+    .ui(false)
+    .text("name");
+
+  d3.select("#js-sparkline-exports").call(sparkline_exports)
+
+})
+
+d3.json("../data/exports_2012.json", function(error, exports) {
+
+    xp = exports
+
+    exports.data.forEach(function(d) {
+        d.parent = d.community_id;
+        d.group = d.code[0];
+    })
+
+    // create a name: node map
+    var dataMap = exports.data.reduce(function(map, node) {
+        map[node.name] = node;
+        return map;
+    }, {});
+
+    // create the tree array
+    treeData = [];
+
+    exports.data.forEach(function(node) {
+        var parent = dataMap[node.parent];
+        if (parent) {
+            // create child array if it doesn't exist
+            (parent.children || (parent.children = []))
+                // add node to child array
+                .push(node);
+        } else {
+            // parent is null or missing
+            treeData.push(node);
+        }
+    });
+
+  visualization = vistk.viz()
+    .type("treemap")
+    .container("#js-treemap-exports")
+    .height(300)
+    .width(400)
+    .data(exports.data)
+    .id("product")
+    .group("group")
+   // .color("group")
+    .size("size")
+    .text("name")
+    .time({var_time: "year", current_time: 2012})
+    .ui(false);
+
+  d3.select("#viz").call(visualization)
+
+  table_exports = vistk.viz()
+    .type("table")
+    .width(400)
+    .height(300)
+    .container("#js-table-exports")
+    .data(exports.data)
+    .columns(['name'])
+    .id(["community_name", "name"])
+    .group("community_name")
+    .text("name")
+    .time({var_time: "year", current_time: 2012})
+    .title("Top Exports, all")
+    .color("community_name")
+    .on("highlightOn", function(d) {
+       console.log("root file table", d);
+    })
+    .ui(false);
+
+  d3.select("#js-table-exports").call(table_exports)
+
+})
 
 </script>
