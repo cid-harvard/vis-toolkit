@@ -1,17 +1,12 @@
 # vis-toolkit
 
-The **vis-toolkit** is yet another set of visualizations based on top of **D3**. Its goal is to provide access to simple, fast visualization rendering, that can easily be extended. Here are some other goals it aims to achieve:
+The **vis-toolkit** is a collection of visualizations using **D3**. Its goal is to provide access to fast visualization rendering, in as simple way that can easily be extended. It aims to:
 
-* To allow complex charts composition
-* To enables storytelling with step by step display and annotations
-* To seamlessly allow transitions between charts
+* Allow complex charts composition
+* Enable storytelling with step by step display and annotations
+* Provide transitions between charts in a generic and efficient way
 
-One of the fundamental design idea of the toolkit is to consider each element to display as **items** (e.g. countries, users of a social network). Those items are usually rows of a dataset and bound to graphical marks.
-
-Each item is put on the space based on its **dimensions** (e.g. population, gdp) 
-
-
-Finally, items can be updated over **time**. It uses templates that are a superimposition of layers that reproduce standard charts (treemap, scatterplot). Within this template, each **item** is encoded using a graphica marks (e.g. circle, rectangle).
+One of the fundamental design idea of the toolkit is to consider each element to display as **items** (e.g. countries, users of a social network). Those items are usually rows of a dataset and bound to graphical marks. Each item is put on the space based on its **dimensions** (e.g. population, gdp).Finally, items can be updated over **time**. It uses templates that are a superimposition of layers that reproduce standard charts (treemap, scatterplot). Within this template, each **item** is encoded using a graphica marks (e.g. circle, rectangle).
 
 Each visualization implements the following set of interactions: 
 
@@ -49,22 +44,24 @@ Simply add the `vistk` JavaScript and CSS files.
 * Scatterplot ([Demo](http://cid-harvard.github.io/vis-toolkit/examples/scatterplot.html) | [Source](examples/scatterplot.html))
 * Node-Link ([Demo](http://cid-harvard.github.io/vis-toolkit/examples/nodelink.html) | [Source](examples/nodelink.html))
 * Line Chart ([Demo](http://cid-harvard.github.io/vis-toolkit/examples/linechart.html) | [Source](examples/linechart.html))
+* Sparkline ([Demo](http://cid-harvard.github.io/vis-toolkit/examples/sparkline.html) | [Source](examples/sparkline.html))
 * Dot plot ([Demo](http://cid-harvard.github.io/vis-toolkit/examples/dotplot.html) | [Source](examples/dotplot.html))
+
+## Tests
+
+* Should provide a series of tests (client or server)
+* Using releveant datasets in terms of size, number of attributes, missing data, etc.
+* Unit testings
+ * Cross Browser Compatibility
+ * Cross Device Compatibility
+ * Use strict mode https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Strict_mode
+
 
 * Build your own graph environment
  * Using an editor (see existing rich text edit envs http://ace.c9.io/#nav=about)
  * Build your own grid
  * Customize charts interactively
  * Derive values? E.g. active or not for the rca value
-
-## Tests
-
-* Where should it be tested? Client or remove server?
-* Which dataset should be used for the tests?
-* Unit testings
- * Cross Browser Compatibility
- * Cross Device Compatibility
- * Use strict mode https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Strict_mode
 
 ## Data Management (TODO: discuss with QUINN)
 
