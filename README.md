@@ -75,13 +75,21 @@ Simply add the `vistk` JavaScript and CSS files.
  * Again a flat file and then connecting/aggregating might do the job
 
 
-Types of visualizations
 * Flat list of items 
  * Table, 
 * Tree data structure
  * Treemap, radial tree
-* Time aggregation
- * ..
+
+Time data
+
+* Used to draw one line of the Sparkline
+
+`{Date: "Dec 18, 2013", Close: "1084.75", date: Wed Dec 18 2013 00:00:00 GMT-0500 (EST), close: 1084.75}
+{Date: "Dec 17, 2013", Close: "1069.86", date: Tue Dec 17 2013 00:00:00 GMT-0500 (EST), close: 1069.86}
+`
+ * Time should have been parsed
+ * What about missing values?
+
 
 * Doc
  * http://tenxer.github.io/xcharts/docs/#data
@@ -254,7 +262,7 @@ What to do with missing data over time?
 * Text wrap for long names (see [d3plus word wrap](https://github.com/alexandersimoes/d3plus/wiki/Basic-Utilities#wordwrap))
  * Guaranty that exported SVG will be correct
  * Same with other export file formats
- * Customizable tooltips (d3plus.tooltip.create())
+ * Customizable tooltips (d3plus.tooltip.create()) http://bl.ocks.org/tgk/6044254
 
 * Callback once the loading is terminated
  * This is quite tricky as many things are pending
