@@ -10,8 +10,12 @@ vistk.viz = function() {
   if(typeof nb_viz == "undefined")
     nb_viz = 0;
 
+  global = {};
+
+  global.evt = [];
+
   // Parameters for the visualization
-  vars = {
+  var vars = {
     // PUBLIC (set by the user)
     container : "",
     dev : true,
@@ -841,9 +845,7 @@ vistk.viz = function() {
 
       } else if(vars.type == "nodelink") {
 
-
         vars.evt.register("highlightOn", function(d) {
-
 
           // Highlight nodes
           vars.svg.selectAll(".node").style("opacity", .1)    
@@ -853,13 +855,13 @@ vistk.viz = function() {
           vars.svg.selectAll(".link").style("opacity", .1);
           
           vars.svg.selectAll(".source_"+d._id).each(function(e) {
-            d3.select("#node_"+e.target._id).style("opacity", 1) 
+            vars.svg.select("#node_"+e.target._id).style("opacity", 1) 
           })
           .style("opacity", 1)
           .style("stroke-width", function(d) { return 3; });
 
           vars.svg.selectAll(".target_"+d._id).each(function(e) {
-            d3.select("#node_"+e.source._id).style("opacity", 1) 
+            vars.svg.select("#node_"+e.source._id).style("opacity", 1) 
           })
           .style("opacity", 1)
           .style("stroke-width", function(d) { return 3; })
@@ -1098,22 +1100,22 @@ vistk.viz = function() {
 
         vars.svg.selectAll(".country").on("mouseover", function(d) {
 
-                d3.selectAll(".line:not(.selected)").style("opacity", 0.1);
-                d3.selectAll(".text:not(.selected)").style("opacity", 0.1);
+                vars.svg.selectAll(".line:not(.selected)").style("opacity", 0.1);
+                vars.svg.selectAll(".text:not(.selected)").style("opacity", 0.1);
 
-                d3.selectAll("#"+d[vars.var_id]).style("opacity", 1);
+                vars.svg.selectAll("#"+d[vars.var_id]).style("opacity", 1);
 
             })
             .on("mouseout", function(d) {
       //        if(d3.selectAll(".selected")[0].length == 0)
-                d3.selectAll(".country:not(.selected)").style("opacity", 1);
+                vars.svg.selectAll(".country:not(.selected)").style("opacity", 1);
 
             })
 
         vars.svg.selectAll("text.country").on("click", function(d) {
           console.log("Country selected", d)
           
-          d3.selectAll("#"+d[vars.var_id]).classed("selected", !d3.selectAll("#"+d[vars.var_id]).classed("selected"));
+          vars.svg.selectAll("#"+d[vars.var_id]).classed("selected", !vars.svg.selectAll("#"+d[vars.var_id]).classed("selected"));
 
         })
 
@@ -1270,7 +1272,7 @@ vistk.viz = function() {
 
           unique_categories = d3.set(vars.data.map(function(d) { return d[vars.var_group]; })).values();
 
-          var label_checkboxes = d3.select(vars.container).selectAll("input").data(unique_categories)
+          var label_checkboxes = vars.svg.select(vars.container).selectAll("input").data(unique_categories)
             .enter()
               .append("label");
 
@@ -1647,10 +1649,10 @@ vistk.viz = function() {
       evt = [evt];
 
     evt.forEach(function(e) {
-      if(typeof vars.evt[e] == "undefined")
-        vars.evt[e] = [];
+      if(typeof global.evt[e] == "undefined")
+        global.evt[e] = [];
       
-      vars.evt[e].push([f,d]);
+      global.evt[e].push([f,d]);
     })
   }
 
@@ -1658,13 +1660,13 @@ vistk.viz = function() {
 
     if(vars.dev) console.log("[call]", evt, a)
 
-    if(typeof vars.evt[evt] == "undefined") {
+    if(typeof global.evt[evt] == "undefined") {
       if(vars.dev) console.warn("No callback for event", evt, a)
       return;
     }
 
-    vars.evt[evt].forEach(function(e) {
-      if(vars.dev) console.log("[calling evt]", e)
+    global.evt[evt].forEach(function(e) {
+      if(global.dev) console.log("[calling evt]", e)
       if(typeof(e[0]) != "undefined")
         e[0](a)
     });
