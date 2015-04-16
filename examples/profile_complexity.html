@@ -139,19 +139,19 @@ d3.json("../data/network_hs.json", function(graph) {
   d3.select("#js-product-space-complexity").call(product_space_complexity)
 
   d3.select("input[value='step0']").on("click", function() { 
-    vars.evt.call("highlightOut");
+    global.evt.call("highlightOut");
   });
 
   d3.select("input[value='step1']").on("click", function() { 
-    vars.evt.call("highlightOn", vars.data[Math.floor(vars.data.length*Math.random())]);
+    global.evt.call("highlightOn", graph.nodes[Math.floor(graph.nodes.length*Math.random())]);
   });
 
   d3.select("input[value='step2']").on("click", function() { 
-    vars.evt.call("highlightOn", vars.data[Math.floor(vars.data.length*Math.random())]);
+    global.evt.call("highlightOn", vars.data[Math.floor(vars.data.length*Math.random())]);
   });
 
   d3.select("input[value='step3']").on("click", function() { 
-    vars.evt.call("highlightOn", vars.data[Math.floor(vars.data.length*Math.random())]);
+    global.evt.call("highlightOn", vars.data[Math.floor(vars.data.length*Math.random())]);
   });
 
 })

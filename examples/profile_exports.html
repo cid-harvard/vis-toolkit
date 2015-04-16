@@ -11,7 +11,7 @@
 
 <table width="100%">
 
-  <tr><td>                  </td><td>All departments (2013)</td><td>Value</td><td>Growth, Annual</td></tr>
+  <tr><td>                  </td><td>All departments (2013)</td><td>Value (2013)</td><td>Growth, annual (2009-2013)</td></tr>
   <td>Total Exports         </td><td><div id="js-dotplot-exports"></div></td><td>USD $1.1B</td><td><div id="js-sparkline-exports"></div></td></tr>
   <tr><td colspan="2"><div id="js-treemap-exports"></div></td><td colspan="2"><div id="js-table-exports"></div></td></tr>
 
@@ -165,10 +165,10 @@ d3.json("../data/exports_2012.json", function(error, exports) {
     .time({var_time: "year", current_time: 2012})
     .title("Top Exports, all")
     .color("community_name")
-    .on("highlightOn", function(d) {
+    .on("highlightOn", function(d, i) {
        console.log("CUSTOM file table", d);
 
-      treemap_export.focus(Math.floor(1000*Math.random()))
+      treemap_export.focus(i)
       d3.select("#js-treemap-exports").call(treemap_export)
 
     })

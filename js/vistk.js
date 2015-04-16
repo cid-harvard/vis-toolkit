@@ -7,12 +7,11 @@ vistk.utils = vistk.utils || {};
 
 vistk.viz = function() {
 
-  if(typeof nb_viz == "undefined")
+  if(typeof nb_viz == "undefined") {
     nb_viz = 0;
-
-  global = {};
-
-  global.evt = [];
+    global = {};
+    global.evt = [];
+  }
 
   // Parameters for the visualization
   var vars = {
@@ -65,7 +64,11 @@ vistk.viz = function() {
 
     // SVG Container
     svg: null,
+
+    nb_viz: nb_viz
   }
+
+  nb_viz++;
 
  // vars.parent = d3.select(vars.container);
 
@@ -78,15 +81,10 @@ vistk.viz = function() {
   vars.height = vars.height - vars.margin.top - vars.margin.bottom;
 
 
-  console.log("BEFORE")    
-
   vars.dispatch = d3.dispatch("init", "end", "highlightOn", "highlightOut");
 
 	// Constructor
 	chart = function(selection) {	
-
-  console.log("SELECTION")    
-
 
     if(!vars.svg) {
        if(vars.type != "table") {
@@ -242,7 +240,6 @@ vistk.viz = function() {
       })
 
       vars.dispatch.on("highlightOn", function(d) {
-        console.log("highlightOn", d)
         d3.select(d.parentNode)
           .style("background-color", "#F3ED86");
       });
@@ -1638,6 +1635,12 @@ vistk.viz = function() {
   chart.ui = function(x) {
     if (!arguments.length) return vars.ui;
     vars.ui = x;
+    return chart;
+  };
+
+  chart.vars = function(x) {
+    if (!arguments.length) return vars;
+    vars = x;
     return chart;
   };
 
