@@ -1077,7 +1077,7 @@ vistk.viz = function() {
             .attr("d", function(d) {
               return line(d.values); 
             })
-            .attr("id", function(d) {console.log(d); return d[vars.var_id]; })
+            .attr("id", function(d) { return d[vars.var_id]; })
             .attr("class", "country line")
             .style("stroke", function(d) { return color(d[vars.var_id]); });
 
@@ -1091,9 +1091,7 @@ vistk.viz = function() {
             .attr("class", "country text")
             .attr("dy", ".35em")
             .attr("id", function(d) { return d[vars.var_id]; })
-            .text(function(d) { 
-              console.log(d)
-              return d.name; })
+            .text(function(d) { return d.name; })
 
         vars.svg.selectAll(".country").on("mouseover", function(d) {
 
@@ -1109,11 +1107,8 @@ vistk.viz = function() {
 
             })
 
-        vars.svg.selectAll("text.country").on("click", function(d) {
-          console.log("Country selected", d)
-          
+        vars.svg.selectAll("text.country").on("click", function(d) {          
           vars.svg.selectAll("#"+d[vars.var_id]).classed("selected", !vars.svg.selectAll("#"+d[vars.var_id]).classed("selected"));
-
         })
 
         vars.svg.select("svg").on("click", function(d) {
@@ -1646,7 +1641,7 @@ vistk.viz = function() {
 
   vars.evt.register = function(evt, f, d) {
 
-    if(vars.dev) console.log("[register]", evt)
+    if(vars.dev) console.log("[vars.evt.register]", evt)
 
     if(typeof evt == "string")
       evt = [evt];
@@ -1661,7 +1656,7 @@ vistk.viz = function() {
 
   vars.evt.call = function(evt, a) {
 
-    if(vars.dev) console.log("[call]", evt, a)
+    if(vars.dev) console.log("[vars.evt.call]", evt, a)
 
     if(typeof global.evt[evt] == "undefined") {
       if(vars.dev) console.warn("No callback for event", evt, a)

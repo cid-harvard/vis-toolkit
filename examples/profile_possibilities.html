@@ -11,7 +11,7 @@
 
   <tr><td colspan="2">Export possibilities</td></tr>
   <tr><td width="80%"><div id="js-product-space"></div></td><td>
-  <div id="js-table-products">
+  <div id="js-table-products"></div>
   </td></tr>
 
 </table>
@@ -25,6 +25,8 @@ d3.json("../data/network_hs.json", function(graph) {
     node.id = node._id.slice(2, 6);
     node.category = node._id.slice(0, 2);      
   });
+
+g = graph.nodes;
 
   visualization = vistk.viz()
     .data(graph.nodes)
@@ -46,6 +48,20 @@ d3.json("../data/network_hs.json", function(graph) {
 
   d3.select("#viz").call(visualization)
 
+  table_products = vistk.viz()
+    .type("table")
+    .width(400)
+    .height(300)
+    .container("#js-table-products")
+    .data(graph.nodes)
+    .columns(['_id', 'category'])
+    .id(["_id"])
+    .text("_id")
+    .time({var_time: "year", current_time: 2012})
+    .title("Top Exports, all")
+    .ui(false);
+
+  d3.select("#js-table-products").call(table_products)
 
   d3.select("input[value='step0']").on("click", function() { 
     vars.evt.call("highlightOut");

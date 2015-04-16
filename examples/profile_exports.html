@@ -166,10 +166,10 @@ d3.json("../data/exports_2012.json", function(error, exports) {
     .title("Top Exports, all")
     .color("community_name")
     .on("highlightOn", function(d, i) {
-       console.log("CUSTOM file table", d);
 
-      treemap_export.focus(i)
-      d3.select("#js-treemap-exports").call(treemap_export)
+      // We don't need that anymore with shared/global states
+      // treemap_export.focus(i)
+      // d3.select("#js-treemap-exports").call(treemap_export)
 
     })
     .ui(false);

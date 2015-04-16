@@ -123,7 +123,6 @@ d3.json("../data/network_hs.json", function(graph) {
     .links(graph.links)      
     .height(300)
     .width(400)
-//     .join(products.data, "id")
     .type("nodelink")
     .container("#js-product-space-complexity")
     .x_var("nb_products")
@@ -138,20 +137,21 @@ d3.json("../data/network_hs.json", function(graph) {
 
   d3.select("#js-product-space-complexity").call(product_space_complexity)
 
+  // Highlight random nodes
   d3.select("input[value='step0']").on("click", function() { 
-    global.evt.call("highlightOut");
+    product_space_complexity.vars().evt.call("highlightOut");
   });
 
   d3.select("input[value='step1']").on("click", function() { 
-    global.evt.call("highlightOn", graph.nodes[Math.floor(graph.nodes.length*Math.random())]);
+    product_space_complexity.vars().evt.call("highlightOn", product_space_complexity.data()[Math.floor(product_space_complexity.data().length*Math.random())]);
   });
 
   d3.select("input[value='step2']").on("click", function() { 
-    global.evt.call("highlightOn", vars.data[Math.floor(vars.data.length*Math.random())]);
+    product_space_complexity.vars().evt.call("highlightOn", product_space_complexity.data()[Math.floor(product_space_complexity.data().length*Math.random())]);
   });
 
   d3.select("input[value='step3']").on("click", function() { 
-    global.evt.call("highlightOn", vars.data[Math.floor(vars.data.length*Math.random())]);
+    product_space_complexity.vars().evt.call("highlightOn", product_space_complexity.data()[Math.floor(product_space_complexity.data().length*Math.random())]);
   });
 
 })
