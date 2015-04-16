@@ -7,9 +7,11 @@ vistk.utils = vistk.utils || {};
 
 vistk.viz = function() {
 
+  if(typeof nb_viz == "undefined")
+    nb_viz = 0;
+
   // Parameters for the visualization
   vars = {
-
     // PUBLIC (set by the user)
     container : "",
     dev : true,
@@ -102,7 +104,7 @@ vistk.viz = function() {
     new_data = vars.data;
 
     // Filter data by time
-    if(typeof vars.var_time != "undefined") {
+    if(typeof vars.var_time != "undefined" && typeof vars.current_time != "undefined") {
 
       new_data = new_data.filter(function(d) {
         return d[vars.var_time] == vars.current_time;
@@ -1136,41 +1138,30 @@ vistk.viz = function() {
         var x = d3.scale.linear().range([0, vars.width - 2]);
         var y = d3.scale.linear().range([vars.height - 4, 0]);
 
-        var parseDate = d3.time.format("%b %d, %Y").parse;
-
         var line = d3.svg.line()
                      .interpolate("basis")
-                     .x(function(d) { return x(d.date); })
-                     .y(function(d) { return y(d.close); });
+                     .x(function(d) { return x(d[vars.var_time]); })
+                     .y(function(d) { return y(d[vars.y_var]); });
+        
+        x.domain(d3.extent(new_data, function(d) { return d[vars.var_time]; }));
+        y.domain(d3.extent(new_data, function(d) { return d[vars.y_var]; }));
 
-        d3.csv('../data/goog.csv', function(error, data) {
+        vars.svg.selectAll(".sparkline").data([new_data]).enter().append('path')
+        //   .datum(data)
+           .attr('class', 'sparkline')
+           .attr('d', line);
 
-          data.forEach(function(d) {
-            d.date = parseDate(d.Date);
-            d.close = +d.Close;
-          });
-          
-          x.domain(d3.extent(data, function(d) { return d.date; }));
-          y.domain(d3.extent(data, function(d) { return d.close; }));
+        vars.svg.append('circle')
+           .attr('class', 'start sparkcircle')
+           .attr('cx', x(new_data[0][vars.var_time]))
+           .attr('cy', y(new_data[0][vars.y_var]))
+           .attr('r', 1.5);  
 
-          vars.svg.selectAll(".sparkline").data([data]).enter().append('path')
-          //   .datum(data)
-             .attr('class', 'sparkline')
-             .attr('d', line);
-
-          vars.svg.append('circle')
-             .attr('class', 'start sparkcircle')
-             .attr('cx', x(data[0].date))
-             .attr('cy', y(data[0].close))
-             .attr('r', 1.5);  
-
-          vars.svg.append('circle')
-             .attr('class', 'end sparkcircle')
-             .attr('cx', x(data[data.length-1].date))
-             .attr('cy', y(data[data.length-1].close))
-             .attr('r', 1.5);  
-
-        });
+        vars.svg.append('circle')
+           .attr('class', 'end sparkcircle')
+           .attr('cx', x(new_data[new_data.length-1][vars.var_time]))
+           .attr('cy', y(new_data[new_data.length-1][vars.y_var]))
+           .attr('r', 1.5);  
 
       } else if(vars.type == "geomap") {
 
