@@ -190,7 +190,7 @@ vistk.viz = function() {
 
        vars.svg.select("table").remove();
 
-      function row_data(row, i) {
+       function row_data(row, i) {
 
         // Creates an array first of the size of the desired rows
         // Then fills the array with the appropriate data
@@ -233,7 +233,6 @@ vistk.viz = function() {
       }
 
       vars.evt.register("highlightOn", function(d) {
-        console.log("REG highlightOn", d)
         d3.select(d.parentNode)
           .style("background-color", "#F3ED86");
       })
@@ -288,11 +287,11 @@ vistk.viz = function() {
             .append("td")
             .text(function(d) { return d; })
             .on("mouseenter", function(d, i) {
-              vars.evt.call("highlightOn", d);
+              vars.evt.call("highlightOn", d3.select(this.parentNode).data()[0]);
 
 //              vars.dispatch.highlightOn(this);          
             }).on("mouseout", function(d) {
-              vars.evt.call("highlightOut", d);
+              vars.evt.call("highlightOut", d3.select(this.parentNode).data()[0]);
 
   //            vars.dispatch.highlightOut();  
             }).on("click", function(d) {
@@ -404,21 +403,15 @@ vistk.viz = function() {
 
       } else if(vars.type == "treemap") {
 
-        vars.dispatch.on("highlightOn", function(d) {
-
-          d3.select(d).select("rect")
+        vars.evt.register("highlightOn", function(d) {
+          vars.svg.selectAll("rect").filter(function(e, j) { return e === d; })
             .style("fill", "#F3ED86");
-
         });
 
-        vars.dispatch.on("highlightOut", function(d) {
-
-          // Reset highlight all the rows (not the cells)
-          d3.select(d).select("rect")
-            .style("fill", vars.color(d3.select(d).data()[0][vars.var_color])) 
-
+        vars.evt.register("highlightOut", function(d) {
+          vars.svg.selectAll("rect").filter(function(e, j) { return e === d; })
+            .style("fill", vars.color(d[vars.var_color])) 
         });
-
 
         // Create the root node
         r = {}
@@ -483,12 +476,11 @@ vistk.viz = function() {
         // TODO: persistant bug when hovering a cell
         cell
           .filter(function(d) { return d.depth == 2})
-          .on("mouseenter", function(d, i) {            
-            vars.dispatch.highlightOn(this);
+          .on("mouseenter", function(d) {      
+            vars.evt.call("highlightOn", d);
           }).on("mouseout", function(d) {
-            vars.dispatch.highlightOut(this);
+            vars.evt.call("highlightOut", d);
           })
-
 
         cell_enter.append("text")
             .attr("x", function(d) { return 10; })
@@ -745,10 +737,10 @@ vistk.viz = function() {
         var gPoints_enter = gPoints.enter()
                         .append("g")
                         .attr("class", "points")
-                        .on("mouseover",function(d, i) {
+                        .on("mouseover",function(d) {
                           vars.evt.call("highlightOn", d);
                         })
-                        .on("mouseleave", function(d, i) {
+                        .on("mouseleave", function(d) {
                           vars.evt.call("highlightOut", d);
                         })                        
                         .attr("transform", function(d, i) {
