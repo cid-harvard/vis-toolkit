@@ -13,9 +13,10 @@
   <tr><td width="80%"><div id="js-product-space"></div></td><td>
 
     <div id="js-dotplot-complexity">
-      <input name="story" value="step1" type="radio" checked>Step 1<br>
+      <input name="story" value="step0" type="radio" checked/>Original graph<br>      
+      <input name="story" value="step1" type="radio" />Step 1<br>
       <input name="story" value="step2" type="radio" />Step 2<br>    
-      <input name="story" value="step3" type="radio" />Step 3<br>   
+      <input name="story" value="step3" type="radio" />Step 3<br>          
     </div>
   </td></tr>
 
@@ -55,16 +56,21 @@
     d3.select("#viz")
       .call(visualization)
 
+
+    d3.select("input[value='step0']").on("click", function() { 
+      vars.evt.call("highlightOut");
+    });
+
     d3.select("input[value='step1']").on("click", function() { 
-      console.log("step 1")
+      vars.evt.call("highlightOn", vars.data[Math.floor(vars.data.length*Math.random())]);
     });
 
     d3.select("input[value='step2']").on("click", function() { 
-      console.log("step 2")
+      vars.evt.call("highlightOn", vars.data[Math.floor(vars.data.length*Math.random())]);
     });
 
     d3.select("input[value='step3']").on("click", function() { 
-      console.log("step 3")
+      vars.evt.call("highlightOn", vars.data[Math.floor(vars.data.length*Math.random())]);
     });
 
   });
