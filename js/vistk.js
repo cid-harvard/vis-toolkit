@@ -849,7 +849,39 @@ vistk.viz = function() {
 
       } else if(vars.type == "nodelink") {
 
-        // TODO
+
+        vars.evt.register("highlightOn", function(d) {
+
+
+          // Highlight nodes
+          vars.svg.selectAll(".node").style("opacity", .1)    
+          vars.svg.selectAll(".node").filter(function(e, j) { return e === d; }).style("opacity", 1);
+
+          // Highlight Links
+          vars.svg.selectAll(".link").style("opacity", .1);
+          
+          vars.svg.selectAll(".source_"+d._id).each(function(e) {
+            d3.select("#node_"+e.target._id).style("opacity", 1) 
+          })
+          .style("opacity", 1)
+          .style("stroke-width", function(d) { return 3; });
+
+          vars.svg.selectAll(".target_"+d._id).each(function(e) {
+            d3.select("#node_"+e.source._id).style("opacity", 1) 
+          })
+          .style("opacity", 1)
+          .style("stroke-width", function(d) { return 3; })
+        });
+
+        vars.evt.register("highlightOut", function(d) {
+
+          vars.svg.selectAll(".node").style("opacity", 1)
+          vars.svg.selectAll(".link")
+            .style("opacity", .4)
+            .style("stroke-width", function(d) { return 1; })
+
+        });
+
 
         var force = d3.layout.force()
             .charge(-120)
@@ -918,41 +950,11 @@ vistk.viz = function() {
                 .style("fill", function(d) { 
                   return vars.color(d[vars.var_color]); 
                 })
-                .on("mouseenter",function(d,i){ 
-
-                  // TODO: what is below belongs to the focus interaction!
-                  // Shoul be isolated with a proper interface
-
-                  // Highlight nodes
-                  d3.selectAll(".node").style("opacity", .1)    
-                  d3.select(this).style("opacity", 1)
-
-                  // Highlight Links
-                  d3.selectAll(".link").style("opacity", .1);
-                  
-                  d3.selectAll(".source_"+d._id).each(function(e) {
-                    console.log(e)
-                    d3.select("#node_"+e.target._id).style("opacity", 1) 
-                  })
-                  .style("opacity", 1)
-                  .style("stroke-width", function(d) { return 3; });
-
-                  d3.selectAll(".target_"+d._id).each(function(e) {
-                    d3.select("#node_"+e.source._id).style("opacity", 1) 
-                  })
-                  .style("opacity", 1)
-                  .style("stroke-width", function(d) { return 3; })
-
+                .on("mouseenter",function(d){ 
+                  vars.evt.call("highlightOn", d);
                 })
-                .on("mouseleave",function(){
-
-                  // TODO: what is below belongs to the focus interaction!
-                  // Shoul be isolated with a proper interface
-
-                  d3.selectAll(".node").style("opacity", 1)
-                  d3.selectAll(".link")
-                    .style("opacity", .4)
-                    .style("stroke-width", function(d) { return 1; })
+                .on("mouseleave",function(d){
+                  vars.evt.call("highlightOut", d);
                 });
 
             var node_exit = node.exit().style({opacity: .1})
