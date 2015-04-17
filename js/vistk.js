@@ -835,7 +835,6 @@ vistk.viz = function() {
           vars.svg.selectAll(".node").style("opacity", .1)    
           vars.svg.selectAll(".node").filter(function(e, j) { return e === d; }).style("opacity", 1);
 
-
           // Highlight Links
           vars.svg.selectAll(".link").style("opacity", .1);
           
@@ -864,7 +863,7 @@ vistk.viz = function() {
           })
           .style("opacity", 1)
           .style("stroke-width", function(d) { return 3; })
-
+          // END FIX
 
         });
 
@@ -877,7 +876,6 @@ vistk.viz = function() {
 
         });
 
-
         var force = d3.layout.force()
             .charge(-120)
             .linkDistance(30)
@@ -885,7 +883,6 @@ vistk.viz = function() {
 
         var min_x = Infinity, max_x = 0;
         var min_y = Infinity, max_y = 0;
-
 
         vars.nodes.forEach(function(d, i) {
 
@@ -903,9 +900,11 @@ vistk.viz = function() {
 
           // Find the value in vars.data
           d.data = find_data_by_id(d.id);
-          // Join
 
-          d.category = d.id.slice(0, 1);   
+          if(typeof d.data == "undefined") {
+            d.data = {};
+            d.data.category = 0;
+          }
 
         })
 
@@ -948,7 +947,7 @@ vistk.viz = function() {
                 return 0;
             }) */
             .style("fill", function(d) { 
-              return vars.color(d[vars.var_color]); 
+              return vars.color(d.data[vars.var_color]); 
             })
             .on("mouseenter",function(d){ 
               vars.evt.call("highlightOn", d);
@@ -1292,7 +1291,7 @@ vistk.viz = function() {
 
         if(vars.var_group) {
 
-          unique_categories = d3.set(vars.data.map(function(d) { return d[vars.var_group]; })).values();
+          unique_categories = d3.set(new_data.map(function(d) { return d[vars.var_group]; })).values();
 
           var label_checkboxes = vars.svg.select(vars.container).selectAll("input").data(unique_categories)
             .enter()

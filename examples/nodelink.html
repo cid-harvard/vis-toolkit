@@ -4,39 +4,41 @@
 <script src="../js/vistk.js"></script>
 <link href="../css/vistk.css" rel="stylesheet">
 <body>
-
 <div id="viz"></div>
-
 <script>
 
 d3.json("../data/atlas_international_product_space.json", function(graph) {
 
-  //d3.json("../data/col_dept_exports_3.json", function(exports) {
+  d3.json("../data/col_dept_exports_3.json", function(exports) {
 
-    console.log()
-
-    // Data cleaning
-    graph.nodes.forEach(function(node){
-      //node.id = node._id.slice(2, 6);
-      node.category = node.id.slice(0, 2);      
+    // Adding a category attribute to the data
+    exports.forEach(function(node){
+      node.category = node.product_id.slice(0, 1);      
     });
 
     visualization = vistk.viz()
       .nodes(graph.nodes)
-      .links(graph.edges)      
+      .links(graph.edges)
+      .data(exports)
       .height(300)
       .width(400)
       .type("nodelink")
-      .container("#js-product-space")
-      .id("id")
+      .container("#viz")
+      .x_var("nb_products")
+      .y_var("avg_products")
+      .id("product_id")
       .group("category")
       .size("value")
       .time(2012)
       .color("category")
       .title("Product space")
+      .time({var_time: "year", current_time: 2008})
       .ui(true)
 
- // });
+    d3.select("#viz").call(visualization)
+
+  });
+
 });
 
 </script>

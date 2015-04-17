@@ -110,50 +110,57 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
 
 })
 
-d3.json("../data/network_hs.json", function(graph) {
+d3.json("../data/atlas_international_product_space.json", function(graph) {
 
-  // Data cleaning
-  graph.nodes.forEach(function(node){
-    node.id = node._id.slice(2, 6);
-    node.category = node._id.slice(0, 2);      
+  d3.json("../data/col_dept_exports_3.json", function(exports) {
+
+    console.log(exports)
+
+    // Adding a category attribute to the data
+    exports.forEach(function(node){
+      node.category = node.product_id.slice(0, 1);      
+    });
+
+    product_space_complexity = vistk.viz()
+      .nodes(graph.nodes)
+      .links(graph.edges)
+      .data(exports)
+      .height(300)
+      .width(400)
+      .type("nodelink")
+      .container("#js-product-space-complexity")
+      .x_var("nb_products")
+      .y_var("avg_products")
+      .id("product_id")
+      .group("category")
+      .size("value")
+      .time(2012)
+      .color("category")
+      .title("Product space")
+      .time({var_time: "year", current_time: 2008})
+      .ui(false)
+
+    d3.select("#js-product-space-complexity").call(product_space_complexity)
+
+    // Highlight random nodes
+    d3.select("input[value='step0']").on("click", function() { 
+      product_space_complexity.vars().evt.call("highlightOut");
+    });
+
+    d3.select("input[value='step1']").on("click", function() { 
+      product_space_complexity.vars().evt.call("highlightOn", product_space_complexity.data()[Math.floor(product_space_complexity.data().length*Math.random())]);
+    });
+
+    d3.select("input[value='step2']").on("click", function() { 
+      product_space_complexity.vars().evt.call("highlightOn", product_space_complexity.data()[Math.floor(product_space_complexity.data().length*Math.random())]);
+    });
+
+    d3.select("input[value='step3']").on("click", function() { 
+      product_space_complexity.vars().evt.call("highlightOn", product_space_complexity.data()[Math.floor(product_space_complexity.data().length*Math.random())]);
+    });
+
   });
 
-  product_space_complexity = vistk.viz()
-    .data(graph.nodes)
-    .links(graph.links)      
-    .height(300)
-    .width(400)
-    .type("nodelink")
-    .container("#js-product-space-complexity")
-    .x_var("nb_products")
-    .y_var("avg_products")
-    .id(["category", "id"])
-    .group("category")
-    .size("value")
-    .time(2012)
-    .color("category")
-    .title("Product space")
-    .ui(false)
-
-  d3.select("#js-product-space-complexity").call(product_space_complexity)
-
-  // Highlight random nodes
-  d3.select("input[value='step0']").on("click", function() { 
-    product_space_complexity.vars().evt.call("highlightOut");
-  });
-
-  d3.select("input[value='step1']").on("click", function() { 
-    product_space_complexity.vars().evt.call("highlightOn", product_space_complexity.data()[Math.floor(product_space_complexity.data().length*Math.random())]);
-  });
-
-  d3.select("input[value='step2']").on("click", function() { 
-    product_space_complexity.vars().evt.call("highlightOn", product_space_complexity.data()[Math.floor(product_space_complexity.data().length*Math.random())]);
-  });
-
-  d3.select("input[value='step3']").on("click", function() { 
-    product_space_complexity.vars().evt.call("highlightOn", product_space_complexity.data()[Math.floor(product_space_complexity.data().length*Math.random())]);
-  });
-
-})
+});
 
 </script>
