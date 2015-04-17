@@ -9,36 +9,34 @@
 
 <script>
 
-//d3.json("../data/product_space_hs4.json", function(error, products) {
+d3.json("../data/atlas_international_product_space.json", function(graph) {
 
-  d3.json("../data/network_hs.json", function(graph) {
+  //d3.json("../data/col_dept_exports_3.json", function(exports) {
+
+    console.log()
 
     // Data cleaning
     graph.nodes.forEach(function(node){
-      node.id = node._id.slice(2, 6);
-      node.category = node._id.slice(0, 2);      
+      //node.id = node._id.slice(2, 6);
+      node.category = node.id.slice(0, 2);      
     });
 
     visualization = vistk.viz()
-      .data(graph.nodes)
-      .links(graph.links)      
- //     .join(products.data, "id")
+      .nodes(graph.nodes)
+      .links(graph.edges)      
+      .height(300)
+      .width(400)
       .type("nodelink")
-      .container("#viz")
-      .x_var("nb_products")
-      .y_var("avg_products")
-      .id(["category", "id"])
+      .container("#js-product-space")
+      .id("id")
       .group("category")
       .size("value")
       .time(2012)
       .color("category")
       .title("Product space")
+      .ui(true)
 
-    d3.select("#viz")
-      .call(visualization)
-
-  });
-
-//});
+ // });
+});
 
 </script>

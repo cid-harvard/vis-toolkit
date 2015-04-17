@@ -851,14 +851,14 @@ vistk.viz = function() {
           // Highlight Links
           vars.svg.selectAll(".link").style("opacity", .1);
           
-          vars.svg.selectAll(".source_"+d._id).each(function(e) {
-            vars.svg.select("#node_"+e.target._id).style("opacity", 1) 
+          vars.svg.selectAll(".source_"+d.id).each(function(e) {
+            vars.svg.select("#node_"+e.target.id).style("opacity", 1) 
           })
           .style("opacity", 1)
           .style("stroke-width", function(d) { return 3; });
 
-          vars.svg.selectAll(".target_"+d._id).each(function(e) {
-            vars.svg.select("#node_"+e.source._id).style("opacity", 1) 
+          vars.svg.selectAll(".target_"+d.id).each(function(e) {
+            vars.svg.select("#node_"+e.source.id).style("opacity", 1) 
           })
           .style("opacity", 1)
           .style("stroke-width", function(d) { return 3; })
@@ -886,7 +886,7 @@ vistk.viz = function() {
             var min_x = Infinity, max_x = 0;
             var min_y = Infinity, max_y = 0;
 
-            vars.data.forEach(function(d, i) {
+            vars.nodes.forEach(function(d, i) {
 
            //   d.id = i;
 
@@ -913,8 +913,6 @@ vistk.viz = function() {
 
             })
 
-            v = vars.data;
-
             var x = d3.scale.linear()
                 .range([0, vars.width]);
 
@@ -928,17 +926,18 @@ vistk.viz = function() {
                 .data(vars.links)
               .enter().append("line")
                 .attr("class", function(d) {
-                  return "link source_"+d.source[vars.var_id]+" target_"+d.target[vars.var_id];
+                  console.log(d.source.id)
+                  return "link source_"+d.source.id+" target_"+d.target.id;
                 })
                 .style("stroke-width", function(d) { return Math.sqrt(d.value); })
                 .style("opacity", .4);
 
             var node = vars.svg.selectAll(".node")
-                .data(new_data, function(d) { return d._id});
+                .data(vars.nodes, function(d) { return d.id});
 
             var node_enter = node.enter().append("circle")
                 .attr("class", "node")
-                .attr("id", function(d) { return "node_"+d[vars.id]; })
+                .attr("id", function(d) { return "node_"+d.id; })
                 .attr("r", 5)
                 .style("fill", function(d) { 
                   return vars.color(d[vars.var_color]); 
@@ -1600,7 +1599,7 @@ vistk.viz = function() {
     return chart;
   };
 
-  chart.nodes = function(links) {
+  chart.nodes = function(nodes) {
     if (!arguments.length) return vars.nodes;
     vars.nodes = nodes;
     return chart;
@@ -1721,7 +1720,7 @@ function flattenYears(data) {
 
 
 function find_node_by_id(id) {
-  var res = vars.data.filter(function(d) {
+  var res = vars.nodes.filter(function(d) {
     return d.id == id;
   })[0];
 

@@ -18,65 +18,52 @@
 
 <script>
 
-d3.json("../data/network_hs.json", function(graph) {
+d3.json("../data/atlas_international_product_space.json", function(graph) {
 
-  // Data cleaning
-  graph.nodes.forEach(function(node){
-    node.id = node._id.slice(2, 6);
-    node.category = node._id.slice(0, 2);      
-  });
+  d3.json("../data/col_dept_exports_3.json", function(exports) {
 
-g = graph.nodes;
+    console.log(exports)
 
-  visualization = vistk.viz()
-    .data(graph.nodes)
-    .links(graph.links)      
-    .height(300)
-    .width(400)
-//     .join(products.data, "id")
-    .type("nodelink")
-    .container("#js-product-space")
-    .x_var("nb_products")
-    .y_var("avg_products")
-    .id(["category", "id"])
-    .group("category")
-    .size("value")
-    .time(2012)
-    .color("category")
-    .title("Product space")
-    .ui(false)
+    // Data cleaning
+    graph.nodes.forEach(function(node){
+      //node.id = node._id.slice(2, 6);
+      node.category = node.id.slice(0, 2);      
+    });
 
-  d3.select("#viz").call(visualization)
+    visualization = vistk.viz()
+      .nodes(graph.nodes)
+      .links(graph.edges)
+      .data(exports)
+      .height(300)
+      .width(400)
+      .type("nodelink")
+      .container("#js-product-space")
+      .x_var("nb_products")
+      .y_var("avg_products")
+      .id("product_id")
+      .group("category")
+      .size("value")
+      .time(2012)
+      .color("category")
+      .title("Product space")
+      .ui(false)
 
-  table_products = vistk.viz()
-    .type("table")
-    .width(400)
-    .height(300)
-    .container("#js-table-products")
-    .data(graph.nodes)
-    .columns(['_id', 'category'])
-    .id(["_id"])
-    .text("_id")
-    .time({var_time: "year", current_time: 2012})
-    .title("Top Exports, all")
-    .ui(false);
+    d3.select("#viz").call(visualization)
+/*
+    table_products = vistk.viz()
+      .type("table")
+      .width(400)
+      .height(300)
+      .container("#js-table-products")
+      .data(graph.nodes)
+      .columns(['id', 'category'])
+      .id(["id"])
+      .text("id")
+      .title("Top Exports, all")
+      .ui(false);
 
-  d3.select("#js-table-products").call(table_products)
-
-  d3.select("input[value='step0']").on("click", function() { 
-    vars.evt.call("highlightOut");
-  });
-
-  d3.select("input[value='step1']").on("click", function() { 
-    vars.evt.call("highlightOn", vars.data[Math.floor(vars.data.length*Math.random())]);
-  });
-
-  d3.select("input[value='step2']").on("click", function() { 
-    vars.evt.call("highlightOn", vars.data[Math.floor(vars.data.length*Math.random())]);
-  });
-
-  d3.select("input[value='step3']").on("click", function() { 
-    vars.evt.call("highlightOn", vars.data[Math.floor(vars.data.length*Math.random())]);
+    d3.select("#js-table-products").call(table_products);
+*/
   });
 
 });
