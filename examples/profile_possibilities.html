@@ -46,6 +46,7 @@ d3.json("../data/atlas_international_product_space.json", function(graph) {
       .time(2012)
       .color("category")
       .title("Product space")
+      .time({var_time: "year", current_time: 2008})
       .ui(false)
 
     d3.select("#viz").call(visualization)
