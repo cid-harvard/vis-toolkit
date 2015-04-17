@@ -14,7 +14,7 @@ vistk.viz = function() {
   }
 
   // Parameters for the visualization
-  var vars = {
+   vars = {
     // PUBLIC (set by the user)
     container : "",
     dev : true,
@@ -888,7 +888,7 @@ vistk.viz = function() {
 
             vars.data.forEach(function(d, i) {
 
-              d.id = i;
+           //   d.id = i;
 
               if(d.x < min_x)
                 min_x = d.x;
@@ -902,16 +902,18 @@ vistk.viz = function() {
               if(d.y > max_y)
                 max_y = d.y;
 
-              d.category = d._id.slice(0, 2);   
+       //       d.category = d[vars.var_id].slice(0, 2);   
 
             })
 
             vars.links.forEach(function(d, i) {
 
-              d.source = new_data[d.source];
-              d.target = new_data[d.target];
+              d.source = find_node_by_id(d.source);
+              d.target = find_node_by_id(d.target);
 
             })
+
+            v = vars.data;
 
             var x = d3.scale.linear()
                 .range([0, vars.width]);
@@ -925,8 +927,8 @@ vistk.viz = function() {
             var link = vars.svg.selectAll(".link")
                 .data(vars.links)
               .enter().append("line")
-                .attr("class", function(d) { 
-                  return "link source_"+d.source._id+" target_"+d.target._id;
+                .attr("class", function(d) {
+                  return "link source_"+d.source[vars.var_id]+" target_"+d.target[vars.var_id];
                 })
                 .style("stroke-width", function(d) { return Math.sqrt(d.value); })
                 .style("opacity", .4);
@@ -936,7 +938,7 @@ vistk.viz = function() {
 
             var node_enter = node.enter().append("circle")
                 .attr("class", "node")
-                .attr("id", function(d) { return "node_"+d._id; })
+                .attr("id", function(d) { return "node_"+d[vars.id]; })
                 .attr("r", 5)
                 .style("fill", function(d) { 
                   return vars.color(d[vars.var_color]); 
@@ -1598,6 +1600,12 @@ vistk.viz = function() {
     return chart;
   };
 
+  chart.nodes = function(links) {
+    if (!arguments.length) return vars.nodes;
+    vars.nodes = nodes;
+    return chart;
+  };
+
   // MISC
   chart.items = function(size) {
     if (!arguments.length) return vars.items;
@@ -1710,6 +1718,19 @@ function flattenYears(data) {
 
     return flat;
 }
+
+
+function find_node_by_id(id) {
+  var res = vars.data.filter(function(d) {
+    return d.id == id;
+  })[0];
+
+  if(typeof res == "undefined")
+    console.log("id not found", id)
+
+  return res;
+}
+
 
 // One way to wrap text.. but creates too many elements..
 // http://bl.ocks.org/mbostock/7555321
