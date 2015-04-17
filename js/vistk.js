@@ -14,7 +14,7 @@ vistk.viz = function() {
   }
 
   // Parameters for the visualization
-  var vars = {
+  vars = {
     // PUBLIC (set by the user)
     container : "",
     dev : true,
@@ -1671,6 +1671,13 @@ vistk.viz = function() {
   chart.vars = function(x) {
     if (!arguments.length) return vars;
     vars = x;
+    return chart;
+  };
+
+  // Generic parameters function
+  chart.params = function(x) {
+    if (!arguments.length) return vars;
+    vars = merge(vars, x);
     return chart;
   };
 
