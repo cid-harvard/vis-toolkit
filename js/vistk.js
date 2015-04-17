@@ -14,7 +14,7 @@ vistk.viz = function() {
   }
 
   // Parameters for the visualization
-   vars = {
+  var vars = {
     // PUBLIC (set by the user)
     container : "",
     dev : true,
@@ -235,77 +235,64 @@ vistk.viz = function() {
       }
 
       vars.evt.register("highlightOn", function(d) {
-        d3.select(d.parentNode)
+        vars.svg.selectAll("tr").filter(function(e, j) { return e === d; })
           .style("background-color", "#F3ED86");
       })
 
-      vars.dispatch.on("highlightOn", function(d) {
-        d3.select(d.parentNode)
-          .style("background-color", "#F3ED86");
-      });
-
-      vars.dispatch.on("highlightOut", function(d) {
+      vars.evt.register("highlightOut", function(d) {
         tbody.selectAll("tr")
           .style("background-color", null)
       });
 
       function create_table(data) {
 
-          if(vars.debug) console.log("[create_table]");    
+        if(vars.debug) console.log("[create_table]");    
 
-       //   d3.selectAll("table").remove();
+        var table = vars.svg.append("table").style("overflow-y", "scroll"),
+          thead = table.append("thead").attr("class", "thead");
+          tbody = table.append("tbody");
 
-          var table = vars.svg.append("table").style("overflow-y", "scroll"),
-            thead = table.append("thead").attr("class", "thead");
-            tbody = table.append("tbody");
+        table.append("caption")
+          .html(vars.title + " (" + vars.current_time + ")");
 
-          table.append("caption")
-            .html(vars.title + " (" + vars.current_time + ")");
+        thead.append("tr").selectAll("th")
+          .data(vars.columns)
+        .enter()
+          .append("th")
+          .text(function(d) { return d; })
+          .on("click", function(header, i) {
 
-          thead.append("tr").selectAll("th")
-            .data(vars.columns)
+            click_header(header);
+            paint_zebra_rows(tbody.selectAll("tr.row"));
+
+          });
+
+        var rows = tbody.selectAll("tr.row")
+          .data(data)
+        .enter()
+          .append("tr")
+          .attr("class", "row");
+
+        var cells = rows.selectAll("td")
+          .data(row_data)
           .enter()
-            .append("th")
-            .text(function(d) { return d; })
+          .append("td")
+          .text(function(d) { return d; })
+          .on("mouseover", function(d, i) {
+            vars.evt.call("highlightOn", d3.select(this.parentNode).data()[0]);     
+          }).on("mouseout", function(d) {
+            vars.evt.call("highlightOut", d3.select(this.parentNode).data()[0]); 
+          }).on("click", function(d) {
 
-            // Sorting function 
-            .on("click", function(header, i) {
+            var data = d3.select(this.parentNode).data()[0];
+            var index = vars.selections.indexOf(data);
 
-              click_header(header);
-              paint_zebra_rows(tbody.selectAll("tr.row"));
+            if(index <0)
+              vars.selections.push(data);
+            else
+              vars.selections.splice(index, 1);
 
-            });
-
-          var rows = tbody.selectAll("tr.row")
-            .data(data)
-          .enter()
-            .append("tr")
-            .attr("class", "row");
-
-          var cells = rows.selectAll("td")
-            .data(row_data)
-            .enter()
-            .append("td")
-            .text(function(d) { return d; })
-            .on("mouseenter", function(d, i) {
-              vars.evt.call("highlightOn", d3.select(this.parentNode).data()[0]);
-
-//              vars.dispatch.highlightOn(this);          
-            }).on("mouseout", function(d) {
-              vars.evt.call("highlightOut", d3.select(this.parentNode).data()[0]);
-
-  //            vars.dispatch.highlightOut();  
-            }).on("click", function(d) {
-
-              var data = d3.select(this.parentNode).data()[0];
-              var index = vars.selections.indexOf(data);
-
-              if(index <0)
-                vars.selections.push(data);
-              else
-                vars.selections.splice(index, 1);
-
-            });
+          });
 
         }
 
@@ -848,6 +835,7 @@ vistk.viz = function() {
           vars.svg.selectAll(".node").style("opacity", .1)    
           vars.svg.selectAll(".node").filter(function(e, j) { return e === d; }).style("opacity", 1);
 
+
           // Highlight Links
           vars.svg.selectAll(".link").style("opacity", .1);
           
@@ -862,6 +850,22 @@ vistk.viz = function() {
           })
           .style("opacity", 1)
           .style("stroke-width", function(d) { return 3; })
+
+          // TODO: quick fix to coordinate with a table
+          vars.svg.selectAll(".node").filter(function(e, j) { return e.data === d; }).style("opacity", 1);
+          vars.svg.selectAll(".source_"+d.product_id).each(function(e) {
+            vars.svg.select("#node_"+e.target.data.product_id).style("opacity", 1) 
+          })
+          .style("opacity", 1)
+          .style("stroke-width", function(d) { return 3; });
+
+          vars.svg.selectAll(".target_"+d.product_id).each(function(e) {
+            vars.svg.select("#node_"+e.source.data.product_id).style("opacity", 1) 
+          })
+          .style("opacity", 1)
+          .style("stroke-width", function(d) { return 3; })
+
+
         });
 
         vars.evt.register("highlightOut", function(d) {
@@ -1257,6 +1261,29 @@ vistk.viz = function() {
           }
 
       }
+
+      function find_node_by_id(id) {
+        var res = vars.nodes.filter(function(d) {
+          return d.id == id;
+        })[0];
+
+        if(typeof res == "undefined")
+          console.log("id not found", id)
+
+        return res;
+      }
+
+      function find_data_by_id(id) {
+        var res = new_data.filter(function(d) {
+          return d[vars.var_id] == +id;
+        })[0];
+
+        if(typeof res == "undefined")
+          console.log("Data id not found", id)
+
+        return res;
+      }
+
 
         if(vars.ui) {
 
@@ -1718,29 +1745,6 @@ function flattenYears(data) {
     });
 
     return flat;
-}
-
-
-function find_node_by_id(id) {
-  var res = vars.nodes.filter(function(d) {
-    return d.id == id;
-  })[0];
-
-  if(typeof res == "undefined")
-    console.log("id not found", id)
-
-  return res;
-}
-
-function find_data_by_id(id) {
-  var res = new_data.filter(function(d) {
-    return d[vars.var_id] == +id;
-  })[0];
-
-  if(typeof res == "undefined")
-    console.log("Data id not found", id)
-
-  return res;
 }
 
 

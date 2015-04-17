@@ -30,7 +30,7 @@ d3.json("../data/atlas_international_product_space.json", function(graph) {
       node.category = node.id.slice(0, 2);      
     });
 
-    visualization = vistk.viz()
+    product_space = vistk.viz()
       .nodes(graph.nodes)
       .links(graph.edges)
       .data(exports)
@@ -49,25 +49,23 @@ d3.json("../data/atlas_international_product_space.json", function(graph) {
       .time({var_time: "year", current_time: 2008})
       .ui(false)
 
-    d3.select("#viz").call(visualization)
-/*
+    d3.select("#viz").call(product_space)
+
     table_products = vistk.viz()
       .type("table")
       .width(400)
       .height(300)
       .container("#js-table-products")
-      .data(graph.nodes)
-      .columns(['id', 'category'])
-      .id(["id"])
-      .text("id")
-      .title("Top Exports, all")
+      .data(exports)
+      .columns(['product_id', 'export_value', 'export_rca'])
+      .id("product_id")
+      .title("Top Exports (2013), all")
       .ui(false);
 
     d3.select("#js-table-products").call(table_products);
-*/
+
   });
 
 });
-
 
 </script>
