@@ -1,24 +1,24 @@
 # vis-toolkit
 
-The **vis-toolkit** is a collection of visualizations using **D3**. Its goal is to provide access to fast visualization rendering, in as simple way that can easily be extended. It aims to:
+The **vis-toolkit** is a collection of visualization templates (line chart, treemap, etc.) using **D3**. Its goal is to provide access to fast visualization rendering, with a simple interface. In the future, it will aim to:
 
-* Allow complex charts composition
+* Allow complex charts composition using reusable components
 * Enable storytelling with step by step display and annotations
-* Provide transitions between charts in a generic and efficient way
+* Provide transitions between visualizations in a generic and efficient way
 
-One of the fundamental design idea of the toolkit is to consider each element to display as **items** (e.g. countries, users of a social network). Those items are usually rows of a dataset and bound to graphical marks. Each item is put on the space based on its **dimensions** (e.g. population, gdp).Finally, items can be updated over **time**. It uses templates that are a superimposition of layers that reproduce standard charts (treemap, scatterplot). Within this template, each **item** is encoded using a graphica marks (e.g. circle, rectangle).
+One of the fundamental design idea of the toolkit is to consider each element to display as **items** (e.g. countries, users of a social network). Those items are usually rows of a dataset. They will be bound to graphical marks, sometimes after some preprocessing (e.g. a line chart represents the same item, but over multiple time points). Each item is visually encoding using **dimensions** (e.g. population, gdp). Each item's dimensions can be updated over **time**.
 
-Each visualization implements the following set of interactions: 
+Each visualization should ideally implement the following set of interactions: 
 
 * `.highlight()` highlights an item. Usually triggered by a `.mouseover` event. Only one item can be highlighted at a time.
 
-* `.focus()` is a more persistant form of highlight, triggered after a `click` event. Multiple elements can be focused at the same time. Another `click` allows the removal from the current set of focused items.
+* `.focus()` is a more persistent form of highlight, triggered after a `click` event. Multiple elements can be focused at the same time. Another `click` allows the removal from the current set of focused items.
 
 * `.selection()` selects a group of items. Each selection can be differentiated from another one with a visual encoding, such as color.
 
 * `.filter()` removes items based on a similar attribute (e.g. defined by a `.group()`)
 
-* `.aggregate()` groups items using a similar attribute
+* `.aggregate()` groups items sharing an attribute
 
 * `.time()` changes the current time point
 
@@ -34,7 +34,7 @@ Simply add the `vistk` JavaScript and CSS files.
 ### Dependencies
 
 * **D3** version `3.4.10` (not tested with other versions, but no reason why not)
-* Enventually some `topojson.js`, `queue.js` dependencies for the geomap
+* Eventually some `topojson.js`, `queue.js` dependencies for the geomap
 * Also relies on world shape files for maps -should be avoided in the future
 
 ## Examples
@@ -302,7 +302,9 @@ Storytelling
 * Part of the visualization
 * See https://idl.cs.washington.edu/files/2014-Ellipsis-EuroVis.pdf
 * See also http://www.visualcinnamon.com/2014/12/using-data-storytelling-with-chord.html
-* Vertical scrolling support? [graph-scroll](http://1wheel.github.io/graph-scroll/)
+* Vertical scrolling support? 
+ * [graph-scroll](http://1wheel.github.io/graph-scroll/)
+ * Another use of graph scroll http://emeeks.github.io/gestaltdataviz/section4.html
 * See [Miso project](https://github.com/misoproject/storyboard)
 * Step by step widget http://nbremer.github.io/urbanization/
 * Previous work on visual decomposition
