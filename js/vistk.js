@@ -14,7 +14,7 @@ vistk.viz = function() {
   }
 
   // Parameters for the visualization
-  vars = {
+  var vars = {
     // PUBLIC (set by the user)
     container : "",
     dev : true,
@@ -393,12 +393,13 @@ vistk.viz = function() {
 
         vars.evt.register("highlightOn", function(d) {
           vars.svg.selectAll("rect").filter(function(e, j) { return e === d; })
-            .style("fill", "#F3ED86");
+            .classed("focus", true);
         });
 
         vars.evt.register("highlightOut", function(d) {
-          vars.svg.selectAll("rect").filter(function(e, j) { return e === d; })
-            .style("fill", vars.color(d[vars.var_color])) 
+          vars.svg.selectAll("rect")//.filter(function(e, j) { return e === d; })
+            .classed("focus", false);
+
         });
 
         // Create the root node
@@ -425,7 +426,7 @@ vistk.viz = function() {
         parents = groups.map(function(d, i) {
 
           node = {};
-          node.name = i;
+          node.name = d[0].name;
           node.group = d[0].group;
 
           // Create the children nodes
@@ -464,7 +465,7 @@ vistk.viz = function() {
         // TODO: persistant bug when hovering a cell
         cell
           .filter(function(d) { return d.depth == 2})
-          .on("mouseenter", function(d) {      
+          .on("mousemove", function(d) {      
             vars.evt.call("highlightOn", d);
           }).on("mouseout", function(d) {
             vars.evt.call("highlightOut", d);
@@ -475,13 +476,18 @@ vistk.viz = function() {
             .attr("y", function(d) { return 10; })
             .attr("dy", ".35em")
             .attr("text-anchor", "left")
-            .text(function(d) { return d.children ? null : d[vars.var_text].slice(0, 3)+"..."; })
+            .style("font-size", 15)
+            .text(function(d) { 
+              if(d.depth == 1)
+                return d.name;
+            //  return d.children ? null : d[vars.var_text].slice(0, 3)+"..."; 
+            })
             .on("mouseenter", function(d, i) {                
-              vars.dispatch.highlightOn(this.parentNode)              
+              vars.dispatch.highlightOn(d)              
             }).on("mouseout", function(d) {
-              vars.dispatch.highlightOut(this.parentNode)  
-            });            
-            // .call(wrap) // takes ages
+              vars.dispatch.highlightOut(d)  
+            })
+
 
         // EXIT
         var cell_exit = cell.exit().remove();
@@ -496,6 +502,10 @@ vistk.viz = function() {
               return d.children ? vars.color(d[vars.var_color]) : null; 
             })
             .classed("focus", function(d, i) { return d.focus; })
+
+        cell.select("text")
+            .call(wrap)
+
 
       } else if(vars.type == "scatterplot") {
 
