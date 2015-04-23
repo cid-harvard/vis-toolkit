@@ -11,59 +11,60 @@
 
   <tr><td colspan="2">Export possibilities</td></tr>
   <tr><td width="80%"><div id="js-product-space"></div></td><td>
-  <div id="js-table-products">
+  <div id="js-table-products"></div>
   </td></tr>
 
 </table>
 
 <script>
 
-d3.json("../data/network_hs.json", function(graph) {
+d3.json("../data/atlas_international_product_space.json", function(graph) {
 
-  // Data cleaning
-  graph.nodes.forEach(function(node){
-    node.id = node._id.slice(2, 6);
-    node.category = node._id.slice(0, 2);      
-  });
+  d3.json("../data/col_dept_exports_3.json", function(exports) {
 
-  visualization = vistk.viz()
-    .data(graph.nodes)
-    .links(graph.links)      
-    .height(300)
-    .width(400)
-//     .join(products.data, "id")
-    .type("nodelink")
-    .container("#js-product-space")
-    .x_var("nb_products")
-    .y_var("avg_products")
-    .id(["category", "id"])
-    .group("category")
-    .size("value")
-    .time(2012)
-    .color("category")
-    .title("Product space")
-    .ui(false)
+    console.log(exports)
 
-  d3.select("#viz").call(visualization)
+    // Adding a category attribute to the data
+    exports.forEach(function(node){
+      node.category = node.product_id.slice(0, 1);      
+    });
 
+    product_space = vistk.viz()
+      .nodes(graph.nodes)
+      .links(graph.edges)
+      .data(exports)
+      .height(300)
+      .width(400)
+      .type("nodelink")
+      .container("#js-product-space")
+      .x_var("nb_products")
+      .y_var("avg_products")
+      .id("product_id")
+      .group("category")
+      .size("value")
+      .time(2012)
+      .color("category")
+      .title("Product space")
+      .time({var_time: "year", current_time: 2008})
+      .ui(false)
 
-  d3.select("input[value='step0']").on("click", function() { 
-    vars.evt.call("highlightOut");
-  });
+    d3.select("#viz").call(product_space)
 
-  d3.select("input[value='step1']").on("click", function() { 
-    vars.evt.call("highlightOn", vars.data[Math.floor(vars.data.length*Math.random())]);
-  });
+    table_products = vistk.viz()
+      .type("table")
+      .width(400)
+      .height(300)
+      .container("#js-table-products")
+      .data(exports)
+      .columns(['product_id', 'export_value', 'export_rca'])
+      .id("product_id")
+      .title("Top Exports (2013), all")
+      .ui(false);
 
-  d3.select("input[value='step2']").on("click", function() { 
-    vars.evt.call("highlightOn", vars.data[Math.floor(vars.data.length*Math.random())]);
-  });
+    d3.select("#js-table-products").call(table_products);
 
-  d3.select("input[value='step3']").on("click", function() { 
-    vars.evt.call("highlightOn", vars.data[Math.floor(vars.data.length*Math.random())]);
   });
 
 });
-
 
 </script>
