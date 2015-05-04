@@ -1,6 +1,6 @@
 # vis-toolkit
 
-The **vis-toolkit** is a collection of visualization templates (line chart, treemap, etc.) using **D3**. Its goal is to provide access to fast visualization rendering, with a simple interface. In the future, it will aim to:
+The **vis-toolkit** is a collection of visualization templates (line chart, treemap, etc.) using **D3**. Its goal is to render visualizations quickly, with a simple interface that can be used across various templates. Right now the goal it to make those charts work, In the future, goals will be cleaning code and make it faster, and also to:
 
 * Allow complex charts composition using reusable components
 * Enable storytelling with step by step display and annotations
@@ -8,7 +8,7 @@ The **vis-toolkit** is a collection of visualization templates (line chart, tree
 
 One of the fundamental design idea of the toolkit is to consider each element to display as **items** (e.g. countries, users of a social network). Those items are usually rows of a dataset. They will be bound to graphical marks, sometimes after some preprocessing (e.g. a line chart represents the same item, but over multiple time points). Each item is visually encoding using **dimensions** (e.g. population, gdp). Each item's dimensions can be updated over **time**.
 
-Each visualization should ideally implement the following set of interactions: 
+Each visualization should implement the following set of interactions: 
 
 * `.highlight()` highlights an item. Usually triggered by a `.mouseover` event. Only one item can be highlighted at a time.
 
@@ -24,7 +24,7 @@ Each visualization should ideally implement the following set of interactions:
 
 ## Usage
 
-Simply add the `vistk` JavaScript and CSS files.
+Simply add the `vistk` JavaScript and CSS files as below:
 
 ```html
 <link href="vistk.css" rel="stylesheet">
@@ -35,7 +35,7 @@ Simply add the `vistk` JavaScript and CSS files.
 
 * **D3** version `3.4.10` (not tested with other versions, but no reason why not)
 * Eventually some `topojson.js`, `queue.js` dependencies for the geomap
-* Also relies on world shape files for maps -should be avoided in the future
+* Also relies on world shape files for maps (should be avoided in the future?)
 
 ## Examples
 
@@ -51,6 +51,7 @@ Simply add the `vistk` JavaScript and CSS files.
 
 * Should provide a series of tests (client or server)
 * Using releveant datasets in terms of size, number of attributes, missing data, etc.
+ * http://jonsadka.com/blog/how-to-create-live-updating-and-flexible-d3-line-charts-using-pseudo-data/
 * Unit testings
  * Cross Browser Compatibility
  * Cross Device Compatibility
@@ -313,8 +314,6 @@ Template
 * See http://bost.ocks.org/mike/chart/
 * See http://bost.ocks.org/mike/chart/time-series-chart.js
 
-
-
 Annotations
 * Linear regression lines http://www.highcharts.com/demo/combo-regression/grid
 * Multiple layers (e.g. background with grid, ..)
@@ -337,6 +336,8 @@ We should be able to create a chart like that:
 
 * http://handsontable.com/demo/pagination.html#5
 * https://github.com/mleibman/SlickGrid
+
+* Efficient DOM handling http://nexts.github.io/Clusterize.js/
 
 * Efficient scrolling http://bl.ocks.org/jasondavies/3689677
 
@@ -404,6 +405,8 @@ Other
 
 * Test with curved links http://bl.ocks.org/mbostock/4600693
 
+*
+
 ### Rankings
 
 * Generic headers to re-sort regardless the data type
@@ -451,12 +454,14 @@ vistk
 
 ## Interactive environments
 
-* http://uwdata.github.io/voyager/#/
+* Automatic generation of charts http://uwdata.github.io/voyager/#/
 
-## Reusable toolkits
+## Existing D3 toolkits
 
 * NVd3 - http://nvd3.org/ 
 * C3.js - http://c3js.org/ 
 * xCharts - http://tenxer.github.io/xcharts/ 
 * Rickshaw - http://code.shutterstock.com/rickshaw/
 * https://github.com/ndarville/d3-charts
+
+* Re-use the charts designs https://github.com/trifacta/vega
