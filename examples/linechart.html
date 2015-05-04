@@ -12,7 +12,7 @@
 
 // d3.csv("../data/rankings.csv", function(error, data) {
 
-d3.csv("../data/new_rankings.csv", function(error, data) {
+d3.csv("../data/new_rankings2.csv", function(error, data) {
 
   dd = data
   
@@ -44,7 +44,8 @@ d3.csv("../data/new_rankings.csv", function(error, data) {
     .color("name")
     .title("Products")
     .group("category")
-    .text("name") // abbrv
+    .text("name")
+    .selection(["Japan", "Switzerland", "Germany", "South Korea", "Finland", "United Kingdom", "United States", "France", "Italy", "China", "Mexico", "Spain"])
 //    .size("size")
 //    .time({var_time: "year", current_time: 2012})
 

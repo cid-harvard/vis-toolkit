@@ -1086,7 +1086,16 @@ vistk.viz = function() {
             .data(countries)
           .enter()
             .append("g")
-            .attr("class", "country");
+            .attr("class", function(d) {
+             
+              if(vars.selection.indexOf(d.name) < 0)
+                return "country";
+              else {
+                console.log(d.name)
+                return "country selected";
+              }
+
+            })
 
         country.append("path")
             .attr("class", "country line")
@@ -1094,7 +1103,16 @@ vistk.viz = function() {
               return line(d.values); 
             })
             .attr("id", function(d) { return d[vars.var_id]; })
-            .attr("class", "country line")
+            .attr("class", function(d) {
+             
+              if(vars.selection.indexOf(d.name) < 0)
+                return "country line";
+              else {
+                console.log(d.name)
+                return "country line selected";
+              }
+
+            })
             .style("stroke", function(d) { return color(d[vars.var_id]); });
 
         country.append("text")
@@ -1104,31 +1122,38 @@ vistk.viz = function() {
             })
             .attr("transform", function(d) { return "translate(" + x(d.value.date) + "," + y(d.value.rank) + ")"; })
             .attr("x", 3)
-            .attr("class", "country text")
+            .attr("class", function(d) {
+             
+              if(vars.selection.indexOf(d.name) < 0)
+                return "country text";
+              else {
+                console.log(d.name)
+                return "country text selected";
+              }
+
+            })
             .attr("dy", ".35em")
             .attr("id", function(d) { return d[vars.var_id]; })
             .text(function(d) { return d.name; })
 
         vars.svg.selectAll(".country").on("mouseover", function(d) {
 
-                vars.svg.selectAll(".line:not(.selected)").style("opacity", 0.1);
-                vars.svg.selectAll(".text:not(.selected)").style("opacity", 0.1);
+                vars.svg.selectAll(".line:not(.selected)").style("opacity", 0.2);
+                vars.svg.selectAll(".text:not(.selected)").style("opacity", 0.2);
 
                 vars.svg.selectAll("#"+d[vars.var_id]).style("opacity", 1);
 
             })
             .on("mouseout", function(d) {
-      //        if(d3.selectAll(".selected")[0].length == 0)
-                vars.svg.selectAll(".country:not(.selected)").style("opacity", 1);
 
-            })
+                vars.svg.selectAll(".country:not(.selected)").style("opacity", 1);
+            });
 
         vars.svg.selectAll("text.country").on("click", function(d) {          
           vars.svg.selectAll("#"+d[vars.var_id]).classed("selected", !vars.svg.selectAll("#"+d[vars.var_id]).classed("selected"));
         })
 
         vars.svg.select("svg").on("click", function(d) {
-          console.log("Removing all selected countries")
 
           d3.selectAll(".selected").classed("selected", false);
           d3.selectAll(".line:not(.selected)").style("opacity", 1);
@@ -1688,6 +1713,13 @@ vistk.viz = function() {
   chart.params = function(x) {
     if (!arguments.length) return vars;
     vars = merge(vars, x);
+    return chart;
+  };
+
+  // Pre-selected list of items by id
+  chart.selection = function(selection) {
+    if (!arguments.length) return vars.selection;
+    vars.selection = selection;
     return chart;
   };
 
