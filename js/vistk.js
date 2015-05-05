@@ -1091,7 +1091,6 @@ vistk.viz = function() {
               if(vars.selection.indexOf(d.name) < 0)
                 return "country";
               else {
-                console.log(d.name)
                 return "country selected";
               }
 
@@ -1108,7 +1107,6 @@ vistk.viz = function() {
               if(vars.selection.indexOf(d.name) < 0)
                 return "country line";
               else {
-                console.log(d.name)
                 return "country line selected";
               }
 
@@ -1127,7 +1125,6 @@ vistk.viz = function() {
               if(vars.selection.indexOf(d.name) < 0)
                 return "country text";
               else {
-                console.log(d.name)
                 return "country text selected";
               }
 
