@@ -60,7 +60,7 @@ vistk.viz = function() {
 
     accessor_year: function(d) { return d; },
 
-    evt: {register: function() {}, call: function() {}},  
+    evt: {register: function() {}, call: function() {}},
 
     // SVG Container
     svg: null,
@@ -84,11 +84,11 @@ vistk.viz = function() {
   vars.dispatch = d3.dispatch("init", "end", "highlightOn", "highlightOut");
 
 	// Constructor
-	chart = function(selection) {	
+	chart = function(selection) {
 
     if(!vars.svg) {
        if(vars.type != "table") {
-       
+
         vars.svg = d3.select(vars.container).append("svg")
           .attr("width", vars.width + vars.margin.left + vars.margin.right)
           .attr("height", vars.height + vars.margin.top + vars.margin.bottom)
@@ -143,7 +143,7 @@ vistk.viz = function() {
       // Also for time or none-time attributes
 
       nested_data = d3.nest()
-        .key(function(d) { 
+        .key(function(d) {
           return d[vars.var_group];
         })
         .rollup(function(leaves) {
@@ -174,14 +174,14 @@ vistk.viz = function() {
 
           return aggregation;
         })
-        .entries(new_data);      
+        .entries(new_data);
 
       // Transform key/value into values tab only
       new_data = nested_data.map(function(d) { return d.values});
     }
 
     selection.each(function() {
-    
+
       if(vars.type == "undefined") {
 
         // Basic dump of the data we have
@@ -198,14 +198,14 @@ vistk.viz = function() {
         // Then fills the array with the appropriate data
         // Applies some formatting depending on the index of the column
         return vars.columns.map(function(column, i) {
-          
+
           // console.log( vars.accessor_year(row)[vars.columns[i]], i, vars.columns, row["group"], row[vars.columns[i]])
 
-           return row[column];      
+           return row[column];
 /*
           if(i==0 || i==1) {
 
-            return row[column];      
+            return row[column];
 
            } else if(i == 4) {
 
@@ -213,7 +213,7 @@ vistk.viz = function() {
             var population = vars.accessor_year(row)[vars.columns[i]];
 
             return d3.format(",")(population);//+d3.formatPrefix(million_scale).symbol;
-          
+
            } else if(i == 3) {
 
             return parseFloat(vars.accessor_year(row)[vars.columns[i]]).toFixed(1);
@@ -223,7 +223,7 @@ vistk.viz = function() {
             var gdp = vars.accessor_year(row)[vars.columns[i]];
             var million_scale = 1000000000;
             return d3.round(d3.formatPrefix(million_scale, 1).scale(gdp), 1)+d3.formatPrefix(million_scale).symbol;
-          
+
           // Extra attribute that we manually added
           } else {
 
@@ -246,7 +246,7 @@ vistk.viz = function() {
 
       function create_table(data) {
 
-        if(vars.debug) console.log("[create_table]");    
+        if(vars.debug) console.log("[create_table]");
 
         var table = vars.svg.append("table").style("overflow-y", "scroll"),
           thead = table.append("thead").attr("class", "thead");
@@ -279,9 +279,9 @@ vistk.viz = function() {
           .append("td")
           .text(function(d) { return d; })
           .on("mouseover", function(d, i) {
-            vars.evt.call("highlightOn", d3.select(this.parentNode).data()[0]);     
+            vars.evt.call("highlightOn", d3.select(this.parentNode).data()[0]);
           }).on("mouseout", function(d) {
-            vars.evt.call("highlightOut", d3.select(this.parentNode).data()[0]); 
+            vars.evt.call("highlightOut", d3.select(this.parentNode).data()[0]);
           }).on("click", function(d) {
 
             var data = d3.select(this.parentNode).data()[0];
@@ -420,8 +420,8 @@ vistk.viz = function() {
         })
 
         // Make sure there is no empty elements
-        groups = groups.filter(function(n){ return n != undefined }); 
-        
+        groups = groups.filter(function(n){ return n != undefined });
+
         // Creates the parent nodes
         parents = groups.map(function(d, i) {
 
@@ -459,13 +459,13 @@ vistk.viz = function() {
             .attr("width", function(d) { return d.dx; })
             .attr("height", function(d) { return d.dy; })
             .style("fill", function(d) {
-              return d.children ? vars.color(d[vars.var_color]) : null; 
+              return d.children ? vars.color(d[vars.var_color]) : null;
             })
 
         // TODO: persistant bug when hovering a cell
         cell
           .filter(function(d) { return d.depth == 2})
-          .on("mousemove", function(d) {      
+          .on("mousemove", function(d) {
             vars.evt.call("highlightOn", d);
           }).on("mouseout", function(d) {
             vars.evt.call("highlightOut", d);
@@ -477,15 +477,15 @@ vistk.viz = function() {
             .attr("dy", ".35em")
             .attr("text-anchor", "left")
             .style("font-size", 15)
-            .text(function(d) { 
+            .text(function(d) {
               if(d.depth == 1)
                 return d.name;
-            //  return d.children ? null : d[vars.var_text].slice(0, 3)+"..."; 
+            //  return d.children ? null : d[vars.var_text].slice(0, 3)+"...";
             })
-            .on("mouseenter", function(d, i) {                
-              vars.dispatch.highlightOn(d)              
+            .on("mouseenter", function(d, i) {
+              vars.dispatch.highlightOn(d)
             }).on("mouseout", function(d) {
-              vars.dispatch.highlightOut(d)  
+              vars.dispatch.highlightOut(d)
             })
 
 
@@ -499,7 +499,7 @@ vistk.viz = function() {
             .attr("width", function(d) { return d.dx; })
             .attr("height", function(d) { return d.dy; })
             .style("fill", function(d) {
-              return d.children ? vars.color(d[vars.var_color]) : null; 
+              return d.children ? vars.color(d[vars.var_color]) : null;
             })
             .classed("focus", function(d, i) { return d.focus; })
 
@@ -529,7 +529,7 @@ vistk.viz = function() {
             .attr("class", "year label")
             .attr("text-anchor", "end");
 
-        vars.svg.selectAll(".label")    
+        vars.svg.selectAll(".label")
             .attr("y", 124)
             .attr("x", 500)
             .text(vars.current_time);
@@ -539,7 +539,7 @@ vistk.viz = function() {
 
         vars.svg.selectAll(".x.axis").data([new_data]).enter().append("g")
             .attr("class", "x axis")
-            .attr("transform", "translate(0," + (vars.height-vars.margin.bottom-vars.margin.top) + ")")              
+            .attr("transform", "translate(0," + (vars.height-vars.margin.bottom-vars.margin.top) + ")")
           .append("text")
             .attr("class", "label")
             .attr("x", vars.width-vars.margin.left-vars.margin.right)
@@ -549,7 +549,7 @@ vistk.viz = function() {
 
         vars.svg.selectAll(".y.axis").data([new_data]).enter().append("g")
             .attr("class", "y axis")
-            .attr("transform", "translate("+vars.margin.left+", 0)")              
+            .attr("transform", "translate("+vars.margin.left+", 0)")
           .append("text")
             .attr("class", "label")
             .attr("transform", "rotate(-90)")
@@ -587,7 +587,7 @@ vistk.viz = function() {
           var gPoints_exit = gPoints.exit().style("opacity", .1);
 
           // Update all the remaining dots
-          gPoints.style("opacity", 1)    
+          gPoints.style("opacity", 1)
 
           vars.svg.selectAll(".points")
                           .transition()
@@ -596,7 +596,7 @@ vistk.viz = function() {
                           })
 
         // Reg
-        } else { 
+        } else {
 
           var gPoints_enter = gPoints.enter()
                           .append("g")
@@ -604,7 +604,7 @@ vistk.viz = function() {
                           .on("mouseenter",function(d, i) {
 
                             dots.style("opacity", .1)
-                            labels.style("opacity", 0)          
+                            labels.style("opacity", 0)
 
                             d3.select(this).select("circle").style("opacity", 1)
                             d3.select(this).select("text").style("opacity", 1)
@@ -614,7 +614,7 @@ vistk.viz = function() {
                           .on("mouseleave", function(d, i) {
 
                             dots.style("opacity", 1)
-                            labels.style("opacity", 1)     
+                            labels.style("opacity", 1)
         //                    dragit.trajectory.remove(d, i)
                           })
                        //   .call(dragit.object.activate)
@@ -637,7 +637,7 @@ vistk.viz = function() {
           var gPoints_exit = gPoints.exit().style("opacity", .1);
 
           // Update all the remaining dots
-          gPoints.style("opacity", 1)    
+          gPoints.style("opacity", 1)
 
           vars.svg.selectAll(".points")
                           .transition()
@@ -652,17 +652,17 @@ vistk.viz = function() {
         vars.evt.register("highlightOn", function(d) {
 
           gPoints.selectAll(".dot").style("opacity", .1)
-          gPoints.selectAll(".dotsLabels").style("opacity", 0)
+          gPoints.selectAll(".dot__label").style("opacity", 0)
 
           vars.svg.selectAll(".dot").filter(function(e, j) { return e === d; }).style("opacity", 1);
-          vars.svg.selectAll(".dotsLabels").filter(function(e, j) { return e === d; }).style("opacity", 1);
-        
+          vars.svg.selectAll(".dot__label").filter(function(e, j) { return e === d; }).style("opacity", 1);
+
         });
 
         vars.evt.register("highlightOut", function(d) {
 
           gPoints.selectAll(".dot").style("opacity", 1)
-          gPoints.selectAll(".dotsLabels").style("opacity", 1)     
+          gPoints.selectAll(".dot__label").style("opacity", 1)
 
         });
 
@@ -690,7 +690,7 @@ vistk.viz = function() {
               d.rank = x(i);
             })
 
-        } 
+        }
 
         var xAxis = d3.svg.axis()
             .scale(x)
@@ -707,7 +707,7 @@ vistk.viz = function() {
 
         vars.svg.selectAll(".x.axis").data([new_data]).enter().append("g")
             .attr("class", "x axis")
-            .attr("transform", "translate(0," + (vars.height/2) + ")")              
+            .attr("transform", "translate(0," + (vars.height/2) + ")")
           .append("text")
             .attr("class", "label")
             .attr("x", vars.width-vars.margin.left-vars.margin.right)
@@ -717,7 +717,7 @@ vistk.viz = function() {
 /*
         vars.svg.selectAll(".y.axis").data([new_data]).enter().append("g")
             .attr("class", "y axis")
-            .attr("transform", "translate("+vars.margin.left+", 0)")              
+            .attr("transform", "translate("+vars.margin.left+", 0)")
           .append("text")
             .attr("class", "label")
             .attr("transform", "rotate(-90)")
@@ -740,10 +740,10 @@ vistk.viz = function() {
                         })
                         .on("mouseleave", function(d) {
                           vars.evt.call("highlightOut", d);
-                        })                        
+                        })
                         .attr("transform", function(d, i) {
                           return "translate(0, "+vars.height/2+")";
-                        })                        
+                        })
                      //   .call(dragit.object.activate)
 
         gPoints_enter.append("circle")
@@ -758,12 +758,12 @@ vistk.viz = function() {
                         .attr("x", 10)
                         .attr("y", 0)
                         .attr("dy", ".35em")
-                        .attr("class", "dotsLabels")
+                        .attr("class", "dot__label")
                         .attr("transform", "rotate(-30)")
                      //   .attr("class", "label")
                         .text(function(d) { return d[vars.var_text]; });
 
-        // 
+        //
         // TODO: dispatch focus event here and highlight nodes
         if(vars.focus.length > 0) {
 
@@ -781,12 +781,12 @@ vistk.viz = function() {
             })
             .style({"stroke": "black", "stroke-width": ".9px", "opacity": 1})
 
-        }            
+        }
 
         var gPoints_exit = gPoints.exit().style("opacity", .1);
 
         // Update all the remaining dots
-        gPoints.style("opacity", 1)    
+        gPoints.style("opacity", 1)
 
         if(vars.x_scale == "index") {
 
@@ -808,7 +808,7 @@ vistk.viz = function() {
       } else if(vars.type == "piechart") {
 
         var r = vars.width/6;
-        
+
         var color = d3.scale.category20c();
 
         vis = d3.select(vars.container)
@@ -816,7 +816,7 @@ vistk.viz = function() {
                   .enter()
                     .append("g")
                     .attr("transform", "translate(" + vars.width/2 + "," + vars.height/2 + ")");
-        
+
         var pie = d3.layout.pie().value(function(d){ return 1; }); // equal share
 
         // declare an arc generator function
@@ -828,7 +828,7 @@ vistk.viz = function() {
                     .enter()
                       .append("svg:g")
                       .attr("class", "slice");
-        
+
         arcs.append("svg:path")
             .attr("fill", function(d, i){
               return color(i);
@@ -842,20 +842,20 @@ vistk.viz = function() {
         vars.evt.register("highlightOn", function(d) {
 
           // Highlight nodes
-          vars.svg.selectAll(".node").style("opacity", .1)    
+          vars.svg.selectAll(".node").style("opacity", .1)
           vars.svg.selectAll(".node").filter(function(e, j) { return e === d; }).style("opacity", 1);
 
           // Highlight Links
           vars.svg.selectAll(".link").style("opacity", .1);
-          
+
           vars.svg.selectAll(".source_"+d.id).each(function(e) {
-            vars.svg.select("#node_"+e.target.id).style("opacity", 1) 
+            vars.svg.select("#node_"+e.target.id).style("opacity", 1)
           })
           .style("opacity", 1)
           .style("stroke-width", function(d) { return 3; });
 
           vars.svg.selectAll(".target_"+d.id).each(function(e) {
-            vars.svg.select("#node_"+e.source.id).style("opacity", 1) 
+            vars.svg.select("#node_"+e.source.id).style("opacity", 1)
           })
           .style("opacity", 1)
           .style("stroke-width", function(d) { return 3; })
@@ -863,13 +863,13 @@ vistk.viz = function() {
           // TODO: quick fix to coordinate with a table
           vars.svg.selectAll(".node").filter(function(e, j) { return e.data === d; }).style("opacity", 1);
           vars.svg.selectAll(".source_"+d.product_id).each(function(e) {
-            vars.svg.select("#node_"+e.target.data.product_id).style("opacity", 1) 
+            vars.svg.select("#node_"+e.target.data.product_id).style("opacity", 1)
           })
           .style("opacity", 1)
           .style("stroke-width", function(d) { return 3; });
 
           vars.svg.selectAll(".target_"+d.product_id).each(function(e) {
-            vars.svg.select("#node_"+e.source.data.product_id).style("opacity", 1) 
+            vars.svg.select("#node_"+e.source.data.product_id).style("opacity", 1)
           })
           .style("opacity", 1)
           .style("stroke-width", function(d) { return 3; })
@@ -950,16 +950,16 @@ vistk.viz = function() {
             .attr("class", "node")
             .attr("id", function(d) { return "node_"+d.id; })
             .attr("r", 5)
-           /* .attr("r", function(d) { 
+           /* .attr("r", function(d) {
               if(typeof d.data != "undefined")
                 return Math.max(0, d.data["cog"]*10);
               else
                 return 0;
             }) */
-            .style("fill", function(d) { 
-              return vars.color(d.data[vars.var_color]); 
+            .style("fill", function(d) {
+              return vars.color(d.data[vars.var_color]);
             })
-            .on("mouseenter",function(d){ 
+            .on("mouseenter",function(d){
               vars.evt.call("highlightOn", d);
             })
             .on("mouseleave",function(d){
@@ -1012,7 +1012,7 @@ vistk.viz = function() {
         new_data.forEach(function(d) {
           d.date = parseDate(d.year);
         });
-        
+
         var min_max_years = d3.extent(new_data, function(d) { return d.date; });
         all_years = d3.set(new_data.map(function(d) { return d.year;})).values();
 
@@ -1053,7 +1053,7 @@ vistk.viz = function() {
         // unique_years = d3.set(vars.data.map(function(d) { return d[vars.var_time];})).values();
 
         // http://www.d3noob.org/2013/01/adding-grid-lines-to-d3js-graph.html
-        function make_x_axis() {        
+        function make_x_axis() {
             return d3.svg.axis()
                 .scale(x)
                  .orient("bottom")
@@ -1091,16 +1091,16 @@ vistk.viz = function() {
         country.append("path")
             .attr("class", "country line")
             .attr("d", function(d) {
-              return line(d.values); 
+              return line(d.values);
             })
             .attr("id", function(d) { return d[vars.var_id]; })
             .attr("class", "country line")
             .style("stroke", function(d) { return color(d[vars.var_id]); });
 
         country.append("text")
-            .datum(function(d) { 
-              d.values.sort(function(a, b) { return a.year > b.year;}); 
-              return {name: d.name, id: d[vars.var_id], value: d.values[d.values.length - 1]}; 
+            .datum(function(d) {
+              d.values.sort(function(a, b) { return a.year > b.year;});
+              return {name: d.name, id: d[vars.var_id], value: d.values[d.values.length - 1]};
             })
             .attr("transform", function(d) { return "translate(" + x(d.value.date) + "," + y(d.value.rank) + ")"; })
             .attr("x", 3)
@@ -1123,7 +1123,7 @@ vistk.viz = function() {
 
             })
 
-        vars.svg.selectAll("text.country").on("click", function(d) {          
+        vars.svg.selectAll("text.country").on("click", function(d) {
           vars.svg.selectAll("#"+d[vars.var_id]).classed("selected", !vars.svg.selectAll("#"+d[vars.var_id]).classed("selected"));
         })
 
@@ -1146,7 +1146,7 @@ vistk.viz = function() {
                      .interpolate("basis")
                      .x(function(d) { return x(d[vars.var_time]); })
                      .y(function(d) { return y(d[vars.y_var]); });
-        
+
         x.domain(d3.extent(new_data, function(d) { return d[vars.var_time]; }));
         y.domain(d3.extent(new_data, function(d) { return d[vars.y_var]; }));
 
@@ -1159,13 +1159,13 @@ vistk.viz = function() {
            .attr('class', 'start sparkcircle')
            .attr('cx', x(new_data[0][vars.var_time]))
            .attr('cy', y(new_data[0][vars.y_var]))
-           .attr('r', 1.5);  
+           .attr('r', 1.5);
 
         vars.svg.append('circle')
            .attr('class', 'end sparkcircle')
            .attr('cx', x(new_data[new_data.length-1][vars.var_time]))
            .attr('cy', y(new_data[new_data.length-1][vars.y_var]))
-           .attr('r', 1.5);  
+           .attr('r', 1.5);
 
       } else if(vars.type == "geomap") {
 
@@ -1202,10 +1202,10 @@ vistk.viz = function() {
               i = -1,
               n = countries.length;
 
-          countries.forEach(function(d) { 
+          countries.forEach(function(d) {
 
             // Retrieve the country name based on its id
-            d._name = names.filter(function(n) { return d.id == n.id; })[0].name; 
+            d._name = names.filter(function(n) { return d.id == n.id; })[0].name;
 
             // TODO: should merge on a more reliable join (e.g. 2-char)
             d.data = new_data.filter(function(n) { return d._name == n.name; })[0];
@@ -1227,12 +1227,12 @@ vistk.viz = function() {
 
           var country_enter = country.enter()
                                 .insert("path")
-                                .attr("class", "country")    
-                                  .attr("title", function(d,i) { 
-                                    return d.name; 
+                                .attr("class", "country")
+                                  .attr("title", function(d,i) {
+                                    return d.name;
                                   })
                                   .attr("d", path)
-                                  .style("fill", function(d, i) { 
+                                  .style("fill", function(d, i) {
                                     return vars.color(d.data[vars.var_color]);
                                   });
 
@@ -1261,7 +1261,7 @@ vistk.viz = function() {
 
                 })
                 .on("mouseout",  function(d,i) {
-                  vars.dispatch.highlightOut(d);                  
+                  vars.dispatch.highlightOut(d);
                   tooltip.classed("hidden", true)
                 });
 
@@ -1311,7 +1311,7 @@ vistk.viz = function() {
               .attr("type", "checkbox")
               .attr("value", function(d) { return d; })
               .property("checked", false)
-              .on("change", function(d) { 
+              .on("change", function(d) {
 
                 update_filters(this.value, this.checked);
                 /*
@@ -1325,7 +1325,7 @@ vistk.viz = function() {
               })
 
           label_checkboxes.append("span")
-              .html(function(d) { 
+              .html(function(d) {
                 var count = new_data.filter(function(e, j) { return e[vars.var_group] == d; }).length;
                 return d + " (" + count + ")";
               })
@@ -1342,11 +1342,11 @@ vistk.viz = function() {
           // TODO: find levels of aggregation
           label_radios.append("input")
                      .attr("type", "radio")
-                     .attr("id", "id")  
+                     .attr("id", "id")
                      .attr("value", function(d) { return d; })
                      .attr("name", "radio-nest")
                      .property("checked", true)
-                     .on("change", function(d) { 
+                     .on("change", function(d) {
 
                        vars.aggregate=d;
                        d3.select("#viz").call(visualization);
@@ -1354,7 +1354,7 @@ vistk.viz = function() {
                      });
 
           label_radios.append("span")
-              .html(function(d) { 
+              .html(function(d) {
   //              var count = vars.data.filter(function(e, j) { return e[vars.var_group] == d; }).length;
                 // TODO
                 var count = "";
@@ -1441,7 +1441,7 @@ vistk.viz = function() {
 
 
      function update_filters(value, add) {
-        if(vars.dev) console.log("[update_filters]", value);  
+        if(vars.dev) console.log("[update_filters]", value);
         // If we add a new value to filter
         if(add) {
           if(vars.filter.indexOf(value) < 0) {
@@ -1610,19 +1610,19 @@ vistk.viz = function() {
     if (!arguments.length) return vars.x_scale;
     vars.x_scale = x;
     return chart;
-  }; 
+  };
 
   chart.y_scale = function(x) {
     if (!arguments.length) return vars.y_scale;
     vars.y_scale = x;
     return chart;
-  }; 
+  };
 
   chart.connect = function(x) {
     if (!arguments.length) return vars.var_connect;
     vars.var_connect = x;
     return chart;
-  }; 
+  };
 
   // NODELINK
   chart.size = function(size) {
@@ -1666,7 +1666,7 @@ vistk.viz = function() {
   chart.on = function(x, params) {
     if (!arguments.length) return x;
     // Trigger the corresponding event
-    vars.evt.register("highlightOn", function(d) { 
+    vars.evt.register("highlightOn", function(d) {
       params(d);
     });
     return chart;
@@ -1701,7 +1701,7 @@ vistk.viz = function() {
     evt.forEach(function(e) {
       if(typeof global.evt[e] == "undefined")
         global.evt[e] = [];
-      
+
       global.evt[e].push([f,d]);
     })
   }
