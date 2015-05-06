@@ -28,7 +28,8 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
       x_var: 'dept_pop',
       x_scale: 'linear',
       y_var: ['dept_pop', 'realgdp'],
-      x_text: null
+      x_text: null,
+      x_ticks: 10
     })
     .id("name")
     .group("dept_name")

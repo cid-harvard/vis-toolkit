@@ -51,6 +51,7 @@ vistk.viz = function() {
 
     // DOTPLOT
     x_scale: "linear",
+    x_ticks: 5,
 
     dispatch: [],
 
@@ -621,9 +622,7 @@ vistk.viz = function() {
             .attr("r", 5)
             .attr("cx", 0)
             .attr("cy", 0)
-//            .style("fill", function(d) { return d.color; })
             .style("fill", function(d) { return vars.color(d[vars.var_color]); })
-
 
           var labels = gPoints_enter.append("text")
               .attr("x", 10)
@@ -686,14 +685,17 @@ vistk.viz = function() {
 
         var xAxis = d3.svg.axis()
             .scale(x)
-            .ticks(3)
+            .ticks(vars.nb_ticks)
             .orient("bottom");
 
-        vars.svg.selectAll(".label").data(new_data).enter().append("text")
-          //  .attr("class", "year label")
+        vars.svg.selectAll(".label").data(new_data)
+          .enter()
+            .append("text")
             .attr("text-anchor", "end");
 
-        vars.svg.selectAll(".x.axis").data([new_data]).enter().append("g")
+        vars.svg.selectAll(".x.axis").data([new_data])
+          .enter()
+            .append("g")
             .attr("class", "x axis")
             .attr("transform", "translate(0," + (vars.height/2) + ")")              
           .append("text")
@@ -708,7 +710,7 @@ vistk.viz = function() {
                 return '';
             })
 
-        vars.svg.selectAll(".x.axis").call(xAxis)
+        vars.svg.selectAll(".x.axis").transition().call(xAxis)
 
         var gPoints = vars.svg.selectAll(".points")
                         .data(new_data, function(d, i) { return d[vars.var_text]; });
@@ -723,7 +725,7 @@ vistk.viz = function() {
                           vars.evt.call("highlightOut", d);
                         })                        
                         .attr("transform", function(d, i) {
-                          return "translate(0, "+vars.height/2+")";
+                          return "translate("+ vars.margin.left +", "+vars.height/2+")";
                         })                        
 
         gPoints_enter.append("circle")
@@ -743,7 +745,6 @@ vistk.viz = function() {
                         .text(function(d) { return d[vars.var_text]; });
 
       
-
         var gPoints_exit = gPoints.exit().style("opacity", .1);
 
         // Update all the remaining dots
@@ -752,7 +753,7 @@ vistk.viz = function() {
         if(vars.x_scale == "index") {
 
           vars.svg.selectAll(".points")
-                          .transition()
+                          .transition().delay(function(d, i) { return i / vars.data.length * 100; }).duration(1000)
                           .attr("transform", function(d, i) {
                             return "translate("+d.rank+", "+vars.height/2+")";
                           })
@@ -760,16 +761,17 @@ vistk.viz = function() {
         } else {
 
           vars.svg.selectAll(".points")
-                          .transition()
+                          .transition().delay(function(d, i) { return i / vars.data.length * 100; }).duration(1000)
                           .attr("transform", function(d) {
                             return "translate("+x(d[vars.x_var])+", "+vars.height/2+")";
                           })
         }
 
+/*      // For some reasons hides the labels
         if(typeof vars.highlight.length != undefined) {
           vars.evt.call("highlightOn", vars.data[vars.highlight]);
         }
-
+*/
         // TODO: dispatch focus event here and highlight nodes
         if(vars.focus.length > 0) {
 
