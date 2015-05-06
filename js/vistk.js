@@ -14,7 +14,7 @@ vistk.viz = function() {
   }
 
   // Parameters for the visualization
-  var vars = {
+  vars = {
     // PUBLIC (set by the user)
     container : "",
     dev : true,
@@ -123,7 +123,6 @@ vistk.viz = function() {
         })
     }
 
-
     // Filter data by attribute
     // TODO: not sure we should remove data, but add an attribute instead would better
     if(vars.filter.length > 0) {
@@ -141,7 +140,6 @@ vistk.viz = function() {
       // Do the nesting
       // Should make sure it works for a generc dataset
       // Also for time or none-time attributes
-
       nested_data = d3.nest()
         .key(function(d) { 
           return d[vars.var_group];
@@ -666,16 +664,10 @@ vistk.viz = function() {
 
         });
 
-
-        // Original scatterplot from http://bl.ocks.org/mbostock/3887118
-         x = d3.scale.linear()
+        var x = d3.scale.linear()
             .range([vars.margin.left, vars.width-vars.margin.left-vars.margin.right]);
-/*
-        var y = d3.scale.linear()
-            .range([vars.height-vars.margin.top-vars.margin.bottom, vars.margin.top]);
-*/
+
         x.domain([0, d3.max(new_data, function(d) { return d[vars.x_var]; })]).nice();
-//        y.domain([0, d3.max(new_data, function(d) { return d[vars.y_var]; })]).nice();
 
         if(vars.x_scale == "index") {
 
@@ -696,11 +688,7 @@ vistk.viz = function() {
             .scale(x)
             .ticks(3)
             .orient("bottom");
-/*
-        var yAxis = d3.svg.axis()
-            .scale(y)
-            .orient("left");
-*/
+
         vars.svg.selectAll(".label").data(new_data).enter().append("text")
           //  .attr("class", "year label")
             .attr("text-anchor", "end");
@@ -713,21 +701,14 @@ vistk.viz = function() {
             .attr("x", vars.width-vars.margin.left-vars.margin.right)
             .attr("y", -6)
             .style("text-anchor", "end")
-            .text(function(d) { return vars.x_var; })
-/*
-        vars.svg.selectAll(".y.axis").data([new_data]).enter().append("g")
-            .attr("class", "y axis")
-            .attr("transform", "translate("+vars.margin.left+", 0)")              
-          .append("text")
-            .attr("class", "label")
-            .attr("transform", "rotate(-90)")
-            .attr("y", 6)
-            .attr("dy", ".71em")
-            .style("text-anchor", "end")
-            .text(function(d) { return vars.y_var; })
-*/
+            .text(function(d) { 
+              if(typeof vars.x_text != undefined && vars.x_text != null)
+                return vars.x_var;
+              else
+                return '';
+            })
+
         vars.svg.selectAll(".x.axis").call(xAxis)
-//        vars.svg.selectAll(".y.axis").call(yAxis)
 
         var gPoints = vars.svg.selectAll(".points")
                         .data(new_data, function(d, i) { return d[vars.var_text]; });
@@ -744,7 +725,6 @@ vistk.viz = function() {
                         .attr("transform", function(d, i) {
                           return "translate(0, "+vars.height/2+")";
                         })                        
-                     //   .call(dragit.object.activate)
 
         gPoints_enter.append("circle")
                         .attr("r", 5)
@@ -760,28 +740,9 @@ vistk.viz = function() {
                         .attr("dy", ".35em")
                         .attr("class", "dotsLabels")
                         .attr("transform", "rotate(-30)")
-                     //   .attr("class", "label")
                         .text(function(d) { return d[vars.var_text]; });
 
-        // 
-        // TODO: dispatch focus event here and highlight nodes
-        if(vars.focus.length > 0) {
-
-          var focus_points = gPoints
-            .filter(function(d, i) {
-              return i == vars.focus[0];
-            })
-
-          focus_points.select(".dot")
-            .style({"stroke": "black", "stroke-width": "3px", "opacity": 1})
-
-          focus_points.select(".label")
-            .filter(function(d, i) {
-              return i == vars.focus[0];
-            })
-            .style({"stroke": "black", "stroke-width": ".9px", "opacity": 1})
-
-        }            
+      
 
         var gPoints_exit = gPoints.exit().style("opacity", .1);
 
@@ -803,6 +764,29 @@ vistk.viz = function() {
                           .attr("transform", function(d) {
                             return "translate("+x(d[vars.x_var])+", "+vars.height/2+")";
                           })
+        }
+
+        if(typeof vars.highlight.length != undefined) {
+          vars.evt.call("highlightOn", vars.data[vars.highlight]);
+        }
+
+        // TODO: dispatch focus event here and highlight nodes
+        if(vars.focus.length > 0) {
+
+          var focus_points = gPoints
+            .filter(function(d, i) {
+              return i == vars.focus[0];
+            })
+
+          focus_points.select(".dot")
+            .style({"stroke": "black", "stroke-width": "3px", "opacity": 1})
+
+          focus_points.select(".label")
+            .filter(function(d, i) {
+              return i == vars.focus[0];
+            })
+            .style({"stroke": "black", "stroke-width": ".9px", "opacity": 1})
+
         }
 
       } else if(vars.type == "piechart") {
@@ -1556,27 +1540,6 @@ vistk.viz = function() {
     return chart;
   };
 
-
-	chart.focus = function(x) {
-	  if (!arguments.length) return vars.focus;
-
-    vars.focus = [x];
-
-/* Smart but should be done for selections
-
-	  if(x instanceof Array) {
-	    vars.focus = x;
-	  } else {
-	    if(vars.focus.indexOf(x) > -1){
-	      vars.focus.splice(vars.focus.indexOf(x), 1)
-	    } else {
-	      vars.focus.push(x)
-	    }
-	  }
-*/
-	  return chart;
-	};
-
   chart.group = function(x) {
     if (!arguments.length) return vars.var_group;
     vars.var_group = x;
@@ -1713,10 +1676,39 @@ vistk.viz = function() {
     return chart;
   };
 
+  // Mouse hover
+  chart.focus = function(x) {
+    if (!arguments.length) return vars.focus;
+
+    vars.focus = [x];
+
+/* Smart but should be done for selections
+
+    if(x instanceof Array) {
+      vars.focus = x;
+    } else {
+      if(vars.focus.indexOf(x) > -1){
+        vars.focus.splice(vars.focus.indexOf(x), 1)
+      } else {
+        vars.focus.push(x)
+      }
+    }
+*/
+    return chart;
+  };
+
+
   // Pre-selected list of items by id
   chart.selection = function(selection) {
     if (!arguments.length) return vars.selection;
     vars.selection = selection;
+    return chart;
+  };
+
+  // Mouse click
+  chart.highlight = function(highlight) {
+    if (!arguments.length) return vars.highlight;
+    vars.highlight = highlight;
     return chart;
   };
 
