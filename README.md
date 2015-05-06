@@ -10,7 +10,7 @@ One of the fundamental design idea of the toolkit is to consider each element to
 
 Each visualization should implement the following set of interactions: 
 
-* `.highlight()` highlights an item. Usually triggered by a `.mouseover` event. Only one item can be highlighted at a time.
+* `.highlight()` highlights an item like if a `mouseover` event had been triggered on the item. Only one item can be highlighted at a time. Highlight is removed once a `mouseout` event is triggered or another `mouseover` event
 
 * `.focus()` is a more persistent form of highlight, triggered after a `click` event. Multiple elements can be focused at the same time. Another `click` allows the removal from the current set of focused items.
 
@@ -126,15 +126,8 @@ What to do with missing data over time?
 * Custom format for charts
  * e.g. `.total_bar({"prefix": "Export Value: $", "suffix": " USD", "format": ",f"})`
 
-### States (TODO: discuss with QUINN)
 
-* Capture state (and enable slide shows), enable loading at a specific state
- * Default states (similar to default config)
-
-* Internal state
- * How is this kept by the application?
-
-## Howto create a new chart
+## How to create a new chart
 
 * What is the interface? Options are:
  * Object inheritance
@@ -148,6 +141,7 @@ What to do with missing data over time?
 1. Data wrangling
  * Temporal data structure
  * Tree creation
+ * 
 
 2. Data processing
  * Filter
@@ -166,7 +160,6 @@ What to do with missing data over time?
  * Aggregation of elements
  * Show filtered out data
 
-
 ## Roadmap
 
 * v0.1 Alpha (mid-April)
@@ -177,22 +170,25 @@ What to do with missing data over time?
 * v0.2 Beta (mid-May)
  * Generic data format as input
  * Couple of more visualizations
- * Code testing and production format
+ * Code testing and production deployement
 
 * v0.3
  * States
- * Tested with API
+ * Fully tested with API
  * Included in a real website
 
-* Re-create standard examples from d3
+## Visualizations
 
- * Scatterplot http://bl.ocks.org/mbostock/3887118
- * Stacked graph http://bl.ocks.org/mbostock/4060954 and transition to [small multiples](http://bl.ocks.org/mbostock/9490516) and [here too](http://bl.ocks.org/mbostock/3885211)
- * Maps
- * Google maps
- * Choropleth map (using geojson)
- * Some flow map or graph such as [pivotgraph](http://bl.ocks.org/mbostock/4343153)
+* Stacked graph http://bl.ocks.org/mbostock/4060954 and transition to [small multiples](http://bl.ocks.org/mbostock/9490516) and [here too](http://bl.ocks.org/mbostock/3885211)
  
+* Circles maps http://bl.ocks.org/curran/752b97cef3f880a813ab
+
+
+* Choropleth map (using geojson)
+* Some flow map or graph such as [pivotgraph](http://bl.ocks.org/mbostock/4343153)
+
+ * Rings
+  * http://bl.ocks.org/bansaghi/e490c7c238a67a77996d 
 
  * Diverging bar charts http://bl.ocks.org/wpoely86/e285b8e4c7b84710e463
 
@@ -209,6 +205,7 @@ What to do with missing data over time?
 
 * Boilerplate code
  * Dev environment
+ * Teaching / demos / snippets http://tributary.io/inlet/4653053
  * Automate compilation
  * Testing (using Travis?)
  * Sample datasets we will be using
@@ -326,6 +323,9 @@ We should be able to create a chart like that:
  * `.id("country")` the `country` variable is going to be used
  * `.id(["continent", "country"])` the `country` is still the id, but `continent` may be used as a natural hierarchy
 
+* http://trifacta.github.io/vega/editor/ loads the data with a specific variable for each dataset
+ *  "data": [{"name": "jobs"}, "url": "data/jobs.json"}]
+ * 
 
 * `.time()` sets the current time variable and time point    
  * `.time({var_time: "year", current_time: 1995})`
@@ -373,9 +373,7 @@ Other
 
 ### Line chart
 
-```json
-.type("rankings")
-```
+* 
 
 ### Geo map
 
@@ -395,17 +393,30 @@ Other
 .text("text")
 
 ```
+
+### Scatterplot
+
+* Scatterplot http://bl.ocks.org/mbostock/3887118
+
+
 ### Dot plot
 
 * Horizontal or vertical dot plot (https://github.com/marmelab/EventDrops)
 * http://www.education-inequalities.org/indicators/mlevel1/countries/kyrgyzstan#?dimension=wealth_quintile&group=all&age_group=|mlevel1_3&year=|2009
 
 
+### Matrix
+
+* http://bost.ocks.org/mike/miserables/
+
+### Scatterplot Matrix
+
+* http://bl.ocks.org/mbostock/4063663
+
 ### Node link
 
 * Test with curved links http://bl.ocks.org/mbostock/4600693
 
-*
 
 ### Rankings
 
@@ -425,6 +436,7 @@ Other
 
 * Packing http://colinwhite.net/Packed%20Circle/index.html
 * Parallel coordinates
+ * http://bl.ocks.org/syntagmatic/42d5b54c5cfe002e7dd8
 * Bar chart
 
 Listing of charts
@@ -462,6 +474,6 @@ vistk
 * C3.js - http://c3js.org/ 
 * xCharts - http://tenxer.github.io/xcharts/ 
 * Rickshaw - http://code.shutterstock.com/rickshaw/
-* https://github.com/ndarville/d3-charts
-
-* Re-use the charts designs https://github.com/trifacta/vega
+* D3 Charts - https://github.com/ndarville/d3-charts
+* Metrics Graphics - http://metricsgraphicsjs.org/interactive-demo.htm
+* Vega - https://github.com/trifacta/vega
