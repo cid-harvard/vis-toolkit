@@ -8,30 +8,53 @@
 
 <script>
 
-  // Generate several datasets
-  // Random
-  // Symetric dataset
-  // Unequal
-  // Outlier
-  // Bimodal distribution
+  // TODO (types of randomness)
+  // [X] Random
+  // [X] Normal distribution
+  // [ ] Symetric dataset
+  // [ ] Unequal
+  // [ ] Outlier
+  // [ ] Bimodal distribution
 
-  // Change shape
+  // Normal distribution
+  var min = 0,
+      max = 80000,
+      stddev = 12000,
+      bins = 18,
+      generator = (function() {
+          var gen = d3.random.normal(max/2, stddev);
+          return function() {
+              return ~~Math.max(min, Math.min(gen(), max));
+          }
+      }());
+
+  // Generate dataset
   var data = d3.range(100).map(function(d) {
-    return {x_random: Math.random(), y_random: Math.random()}
+    return {
+      x_random: Math.random(), 
+      y_random: Math.random(),
+      x_normal: generator(),
+      y_normal: generator()      
+    }
   });
 
   visualization = vistk.viz()
     .type("scatterplot")
     .container("#viz")
     .data(data)
-    .x_var("x_random")
-    .y_var("y_random")
+    .x_var("x_normal")
+    .y_var("y_normal")
 //    .id(["community_name", "name"])
 //    .group("community_name")
     .text("id")
 //    .time({var_time: "year", current_time: 1995})
-    .title("Testing Table")
-    .color("community_name")
+    .title("Random data points")
+//    .color("category")
+
+//  visualization.story([
+//    {step: 0, params: {data: random}, title: "Step 0"},
+//    {step: 1, params: {}, title: "Step 1"},
+//  ])
 
   d3.select("#viz").call(visualization)
 
@@ -44,13 +67,12 @@
               return {x_random: Math.random(), y_random: Math.random()}
             });
 
-            visualization.data(data);
+            visualization.data(data)
+              .x_var("x_random")
+              .y_var("y_random");
 
             d3.select("#viz").call(visualization);
           })
          .html("Randomize")
-
-
-
 
 </script>
