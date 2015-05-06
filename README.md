@@ -65,14 +65,16 @@ Composite examples (using coordinated views)
  * Cross Device Compatibility
  * Use strict mode https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Strict_mode
 
-
 * Build your own graph environment
- * Using an editor (see existing rich text edit envs http://ace.c9.io/#nav=about)
+ * Using an editor 
+  * Rich text edit envs http://ace.c9.io/#nav=about
+  * http://trifacta.github.io/vega/editor/index.html?spec=barley
+  * Tributaryo
  * Build your own grid
  * Customize charts interactively
  * Derive values? E.g. active or not for the rca value
 
-## Data Management (TODO: discuss with QUINN)
+## Data Management
 
 ### Input Format
 
@@ -83,6 +85,7 @@ Composite examples (using coordinated views)
 * How to deal with trees?
  * Again a flat file and then connecting/aggregating might do the job
 
+* Look at data transform options https://github.com/trifacta/vega/wiki/Data-Transforms
 
 * Flat list of items 
  * Table, 
@@ -171,7 +174,14 @@ What to do with missing data over time?
 
 ## UI widgets
 
+Data-driven UI widgets
+* Filter
+* Aggregate
+* Time update
 
+Other widgets based on visualization's parameters
+* Change the type of scale (absolute vs relative)
+* ..
 
 ## Roadmap
 
@@ -332,6 +342,7 @@ Template
 Annotations
 * Linear regression lines http://www.highcharts.com/demo/combo-regression/grid
 * Multiple layers (e.g. background with grid, ..)
+* Markers http://metricsgraphicsjs.org/interactive-demo.htm
 
 ## Create a chart
 
@@ -456,11 +467,11 @@ Other
 * Parallel coordinates
  * http://bl.ocks.org/syntagmatic/42d5b54c5cfe002e7dd8
 * Bar chart
+* Dot chart http://bl.ocks.org/nrabinowitz/2034281
 
 Listing of charts
 * http://www.niceone.org/infodesignpatterns/index.php5#/patterns.php5
 
-TODO: investigate the charts genealogy/reusable componants
 
 ## Update a chart
 
@@ -495,3 +506,4 @@ vistk
 * D3 Charts - https://github.com/ndarville/d3-charts
 * Metrics Graphics - http://metricsgraphicsjs.org/interactive-demo.htm
 * Vega - https://github.com/trifacta/vega
+* Visible - http://visible.io/examples.html
