@@ -1066,7 +1066,7 @@ vistk.viz = function() {
             .attr("y", 6)
             .attr("dy", "-1.71em")
             .style("text-anchor", "end")
-            .text("ECI Rank");
+            .text(vars.y_text);
 
         var country = vars.svg.selectAll(".country")
             .data(countries)

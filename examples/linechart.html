@@ -10,24 +10,15 @@
 <script src="../js/d3.js"></script>
 <script>
 
-// d3.csv("../data/rankings.csv", function(error, data) {
-
 d3.csv("../data/new_rankings2.csv", function(error, data) {
 
-  dd = data
-  
-
   var res = [];
-  // Flatten the data here
-  // Or do something to build the temporal data? Should it happen here?
+
   data.forEach(function(d) {
 
     for(var k in d) {
-
       if(k != "Country") {
-
         res.push({name: d.Country, year: k, rank: +d[k], id: d.Country.replace(" ", "_"), category: +d[k]%5})
-
       }
 
     }
@@ -45,15 +36,16 @@ d3.csv("../data/new_rankings2.csv", function(error, data) {
     .title("Products")
     .group("category")
     .text("name")
-    .selection(["Japan", "Switzerland", "Germany", "South Korea", "Finland", "United Kingdom", "United States", "France", "Italy", "China", "Mexico", "Spain"])
+    .params({
+      y_text: "ECI Rank"
+    })
+    .selection(["Japan", "Switzerland", "Germany", "South Korea", "Finland", "United Kingdom", "United States", "France", "Italy", "China", "Mexico", "Spain"]);
 //    .size("size")
 //    .time({var_time: "year", current_time: 2012})
 
-  d3.select("#viz").call(visualization)
+  d3.select("#viz").call(visualization);
 
 })
-
-
 
 </script>
 </body>
