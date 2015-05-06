@@ -46,6 +46,14 @@ Simply add the `vistk` JavaScript and CSS files as below:
 * Line Chart ([Demo](http://cid-harvard.github.io/vis-toolkit/examples/linechart.html) | [Source](examples/linechart.html))
 * Sparkline ([Demo](http://cid-harvard.github.io/vis-toolkit/examples/sparkline.html) | [Source](examples/sparkline.html))
 * Dot plot ([Demo](http://cid-harvard.github.io/vis-toolkit/examples/dotplot.html) | [Source](examples/dotplot.html))
+* Geo Map ([Demo](http://cid-harvard.github.io/vis-toolkit/examples/geomap.html) | [Source](examples/geomap.html))
+
+Composite examples (using coordinated views)
+
+* Profile overview ([Demo](http://cid-harvard.github.io/vis-toolkit/examples/profile_overview.html)
+* Profile complexity ([Demo](http://cid-harvard.github.io/vis-toolkit/examples/profile_complexity.html)
+* Profile exports ([Demo](http://cid-harvard.github.io/vis-toolkit/examples/profile_exports.html)
+* Profile possibilities ([Demo](http://cid-harvard.github.io/vis-toolkit/examples/profile_possibilities.html )
 
 ## Tests
 
@@ -91,11 +99,9 @@ Time data
  * Time should have been parsed
  * What about missing values?
 
-
 * Doc
  * http://tenxer.github.io/xcharts/docs/#data
  * http://tenxer.github.io/xcharts/docs/#custom-vis-types
-
 
 * Different types of datasets
  * **Items:** which are elements we want to visualize
@@ -114,6 +120,9 @@ What to do with missing data over time?
  * Missing items
  * Missing attributes
  * Missing time points
+
+ * https://github.com/mozilla/metrics-graphics/blob/34e56c4a387940c3e5e58a458062389a8110c4e5/src/js/misc/process.js#L93
+
 
 * Then other properties, attributes, can be loaded on-demand and eventually be kept
  * How do we decide to get rid of some items/attributes/properties?
@@ -139,9 +148,9 @@ What to do with missing data over time?
 ## Chart 
 
 1. Data wrangling
+ * Standard structure
  * Temporal data structure
  * Tree creation
- * 
 
 2. Data processing
  * Filter
@@ -159,6 +168,10 @@ What to do with missing data over time?
  * Show selection of elements
  * Aggregation of elements
  * Show filtered out data
+
+## UI widgets
+
+
 
 ## Roadmap
 
@@ -178,6 +191,11 @@ What to do with missing data over time?
  * Included in a real website
 
 ## Visualizations
+
+### Lists of visualizations
+
+* http://annkemery.com/essentials/
+* d3js.org
 
 * Stacked graph http://bl.ocks.org/mbostock/4060954 and transition to [small multiples](http://bl.ocks.org/mbostock/9490516) and [here too](http://bl.ocks.org/mbostock/3885211)
  
