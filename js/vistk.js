@@ -988,7 +988,7 @@ vistk.viz = function() {
         var line = d3.svg.line()
         // https://gist.github.com/mbostock/3035090
             .defined(function(d) { return d.rank != null; })
-            .interpolate("monotone") // https://github.com/mbostock/d3/wiki/SVG-Shapes
+            .interpolate("monotone")
             .x(function(d) { return x(d.date); })
             .y(function(d) { return y(d.rank); });
 
@@ -1073,7 +1073,8 @@ vistk.viz = function() {
           .enter()
             .append("g")
             .attr("class", function(d) {
-             
+            
+              // TODO: include class for highlight            
               if(vars.selection.indexOf(d.name) < 0)
                 return "country";
               else {
@@ -1090,6 +1091,7 @@ vistk.viz = function() {
             .attr("id", function(d) { return d[vars.var_id]; })
             .attr("class", function(d) {
              
+              // TODO: include class for highlight
               if(vars.selection.indexOf(d.name) < 0)
                 return "country line";
               else {
@@ -1126,14 +1128,25 @@ vistk.viz = function() {
 
                 vars.svg.selectAll("#"+d[vars.var_id]).style("opacity", 1);
 
+                // Highlight
+                vars.svg.selectAll(".line").filter(function(e, j) { return e === d; }).style("stroke-width", 3);
+                vars.svg.selectAll(".text").filter(function(e, j) { return e === d; }).style("text-decoration", "underline");
+
             })
             .on("mouseout", function(d) {
 
                 vars.svg.selectAll(".country:not(.selected)").style("opacity", 1);
+
+                // Highlight
+                vars.svg.selectAll(".line").filter(function(e, j) { return e === d; }).style("stroke-width", 1);
+                vars.svg.selectAll(".text").filter(function(e, j) { return e === d; }).style("text-decoration", "none");
+
             });
 
-        vars.svg.selectAll("text.country").on("click", function(d) {          
-          vars.svg.selectAll("#"+d[vars.var_id]).classed("selected", !vars.svg.selectAll("#"+d[vars.var_id]).classed("selected"));
+        vars.svg.selectAll("text.country").on("click", function(d) {
+
+          vars.svg.selectAll("#"+d[vars.var_id])
+                  .classed("selected", !vars.svg.selectAll("#"+d[vars.var_id]).classed("selected"));
         })
 
         vars.svg.select("svg").on("click", function(d) {
