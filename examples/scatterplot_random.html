@@ -1,0 +1,56 @@
+<!doctype html>
+<meta charset="utf-8">
+<script src="../js/d3.js"></script>
+<script src="../js/vistk.js"></script>
+<link href="../css/vistk.css" rel="stylesheet">
+<body>
+<div id="viz"></div>
+
+<script>
+
+  // Generate several datasets
+  // Random
+  // Symetric dataset
+  // Unequal
+  // Outlier
+  // Bimodal distribution
+
+  // Change shape
+  var data = d3.range(100).map(function(d) {
+    return {x_random: Math.random(), y_random: Math.random()}
+  });
+
+  visualization = vistk.viz()
+    .type("scatterplot")
+    .container("#viz")
+    .data(data)
+    .x_var("x_random")
+    .y_var("y_random")
+//    .id(["community_name", "name"])
+//    .group("community_name")
+    .text("id")
+//    .time({var_time: "year", current_time: 1995})
+    .title("Testing Table")
+    .color("community_name")
+
+  d3.select("#viz").call(visualization)
+
+  // Regenerate random points
+  d3.select("#viz").append("button")
+         .attr("type", "button")
+         .on("click", function() {
+
+            var data = d3.range(100).map(function(d) {
+              return {x_random: Math.random(), y_random: Math.random()}
+            });
+
+            visualization.data(data);
+
+            d3.select("#viz").call(visualization);
+          })
+         .html("Randomize")
+
+
+
+
+</script>
