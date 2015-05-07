@@ -14,15 +14,14 @@ Each visualization should implement the following set of interactions:
 
 * `.highlight()` highlights an item like if a `mouseover` event had been triggered on the item. Only one item can be highlighted at a time. Highlight is removed once a `mouseout` event is triggered or another `mouseover` event
 
-* `.focus()` is a more persistent form of highlight, triggered after a `click` event. Multiple elements can be focused at the same time. Another `click` allows the removal from the current set of focused items.
-
-* `.selection()` selects a group of items. Each selection can be differentiated from another one with a visual encoding, such as color.
+* `.selection()` is a more persistent form of highlight, triggered after a `click` event. Multiple elements can be focused at the same time. Another `click` allows the removal from the current set of focused items.
 
 * `.filter()` removes items based on a similar attribute (e.g. defined by a `.group()`)
 
 * `.aggregate()` groups items sharing an attribute
 
 * `.time()` changes the current time point
+
 
 ## Usage
 
@@ -32,6 +31,8 @@ Simply add the `vistk` JavaScript and CSS files as below:
 <link href="vistk.css" rel="stylesheet">
 <script src="vistk.js"></script>
 ```
+
+Look a the [various examples](http://cid-harvard.github.io/vis-toolkit/examples/) for more details on using the toolkit.
 
 ### Dependencies
 
@@ -56,25 +57,6 @@ Composite examples (using coordinated views)
 * Profile complexity ([Demo](http://cid-harvard.github.io/vis-toolkit/examples/profile_complexity.html)
 * Profile exports ([Demo](http://cid-harvard.github.io/vis-toolkit/examples/profile_exports.html)
 * Profile possibilities ([Demo](http://cid-harvard.github.io/vis-toolkit/examples/profile_possibilities.html )
-
-## Tests
-
-* Should provide a series of tests (client or server)
-* Using releveant datasets in terms of size, number of attributes, missing data, etc.
- * http://jonsadka.com/blog/how-to-create-live-updating-and-flexible-d3-line-charts-using-pseudo-data/
-* Unit testings
- * Cross Browser Compatibility
- * Cross Device Compatibility
- * Use strict mode https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Strict_mode
-
-* Build your own graph environment
- * Using an editor 
-  * Rich text edit envs http://ace.c9.io/#nav=about
-  * http://trifacta.github.io/vega/editor/index.html?spec=barley
-  * Teaching / demos / snippets http://tributary.io/inlet/4653053
- * Build your own grid
- * Customize charts interactively
- * Derive values? E.g. active or not for the rca value
 
 ## Data Management
 
@@ -179,68 +161,21 @@ Data-driven UI widgets
 * Aggregate
 * Time update
 
-Other widgets based on visualization's parameters
-* Change the type of scale (absolute vs relative)
-* ..
+* Show highlighted element
+* Show selected elements + reset
 
-* Either from the visualization itslef, or with auto-generated widgets
+* Charts options such as to change the type of scale (absolute vs relative)
+
+* Either from the visualization itself, or with auto-generated widgets
 * Binding with external buttons/widgets
 
 
-## Roadmap
-
-* v0.1 Alpha (mid-April)
- * Fundamental visualizations
- * Basic interactions: filter, aggregate, time update, focus
- * Dev environment
-
-* v0.2 Beta (mid-May)
- * Generic data format as input
- * Couple of more visualizations
- * Code testing and production deployement
-
-* v0.3
- * States
- * Fully tested with API
- * Included in a real website
-
-
-
-## Visualizations
-
-### Lists of visualizations
-
-* http://annkemery.com/essentials/
-* d3js.org
-
-* Stacked graph http://bl.ocks.org/mbostock/4060954 and transition to [small multiples](http://bl.ocks.org/mbostock/9490516) and [here too](http://bl.ocks.org/mbostock/3885211)
- 
-* Choropleth map (using geojson)
-* Some flow map or graph such as [pivotgraph](http://bl.ocks.org/mbostock/4343153)
-
- * Rings
-  * http://bl.ocks.org/bansaghi/e490c7c238a67a77996d 
-
- * Diverging bar charts http://bl.ocks.org/wpoely86/e285b8e4c7b84710e463
-
-
-* Templating visualizations
- * Standard interface to create them
- * Export: svg, png, .. (see [rasterize](http://cburgmer.github.io/rasterizeHTML.js/))
-
-* Boilerplate code
- * Dev environment
-
- * Automate compilation
- * Testing (using Travis?)
- * Sample datasets we will be using
- * Consistent input file format
-
-
-
-### Utils for visualization
+## Utils for visualization
 
 * http://bl.ocks.org/dbuezas/9306799
+
+* Infer data type from data http://uwdata.github.io/datalib/
+* https://github.com/alexandersimoes/d3plus/wiki/Utilities
 
 * Visual manager 
 * Initialize components constructors
@@ -257,10 +192,9 @@ Labels
 * http://bl.ocks.org/dbuezas/9306799
 
 
-
 Legends
  * Color scale / legend (should contain the min/max values and min/max color range)
-
+ * Should take the visual mapping as input and automatically generate it
 
 ## Customization
 
@@ -269,7 +203,193 @@ Legends
 
 Mostly done using the `.params()` helper
 
-## What it should achieve
+
+
+## Visualizations
+
+Below is the list of currently implemented visualizations and list of upcoming ones.
+
+### Table
+
+* Countries table ([Demo](http://cid-harvard.github.io/vis-toolkit/examples/table.html) | [Source](examples/table.html))
+
+* Using pagination http://handsontable.com/demo/pagination.html#5
+* https://github.com/mleibman/SlickGrid
+
+* Efficient DOM handling do progressively display a lot of elements http://nexts.github.io/Clusterize.js/
+
+* Another efficient way of scrolling rows http://bl.ocks.org/jasondavies/3689677
+
+
+### Rankings
+
+Instance of a table, plus some ordering features:
+
+* Generic headers to re-sort regardless the data type
+* Sticky headers
+* Automatic generate time slider (find time boudaries)
+* Auto generate list of filters (find unique classes)
+* Aggregation/nesting (create nesting of data (construct_nest function)
+* Custom filters (e.g. per capita, ..)
+
+* Flags http://atlas.cid.harvard.edu/media/img/icons/flag_ago.png
+* Communities http://atlas.cid.harvard.edu/media/img/icons/community_10.png
+
+* Show the rank?
+
+
+
+### Treemap
+
+
+Requires a tree structure 
+* http://bl.ocks.org/d3noob/8329404
+* http://www.d3noob.org/2014/01/tree-diagrams-in-d3js_11.html
+* http://stackoverflow.com/questions/18017869/build-tree-array-from-flat-array-in-javascript
+
+Text wrap
+* Done using HTML elements http://bl.ocks.org/mbostock/7555321
+* Another treeemap with word wrap http://bl.ocks.org/mundhradevang/1387786
+
+
+
+
+### Line chart
+
+* [Line Chart with countries](http://cid-harvard.github.io/vis-toolkit/examples/linechart.html) | [Source](examples/linechart.html))
+
+
+
+### Geo map
+
+* http://techslides.com/demos/d3/d3-world-map-mouse-zoom.html
+* https://github.com/yaph/d3-geomap/blob/master/src/coffee/choropleth.coffee
+* http://d3-geomap.github.io/map/choropleth/world/
+
+* Click and zoom on country http://techslides.com/d3-world-maps-tooltips-zooming-and-queue
+ * http://stackoverflow.com/questions/14492284/center-a-map-in-d3-given-a-geojson-object
+ * http://techslides.com/responsive-d3-map-with-zoom-and-pan-limits
+ * Better projection http://bl.ocks.org/jasondavies/4188334
+
+* Nice geo-maps https://www.pinterest.com/janwillemtulp/maps/
+
+* Circles maps http://bl.ocks.org/curran/752b97cef3f880a813ab
+
+* Choropleth map (using geojson)
+* Some flow map or graph such as [pivotgraph](http://bl.ocks.org/mbostock/4343153)
+
+
+### Scatterplot
+
+* Scatterplot http://bl.ocks.org/mbostock/3887118
+
+
+### Dot plot
+
+* Horizontal or vertical dot plot (https://github.com/marmelab/EventDrops)
+* http://www.education-inequalities.org/indicators/mlevel1/countries/kyrgyzstan#?dimension=wealth_quintile&group=all&age_group=|mlevel1_3&year=|2009
+
+
+### Matrix
+
+* http://bost.ocks.org/mike/miserables/
+
+
+### Scatterplot Matrix
+
+* http://bl.ocks.org/mbostock/4063663
+
+
+### Node link
+
+* Node-Link ([Demo](http://cid-harvard.github.io/vis-toolkit/examples/nodelink.html) | [Source](examples/nodelink.html))
+
+* Test with curved links http://bl.ocks.org/mbostock/4600693
+
+* Rings
+  * http://bl.ocks.org/bansaghi/e490c7c238a67a77996d 
+
+### Bar chart
+
+* http://bl.ocks.org/mbostock/3885304
+
+* Diverging bar charts http://bl.ocks.org/wpoely86/e285b8e4c7b84710e463
+
+#### Histogram
+
+Just some kind of bar chart combined with a binning function
+
+* Histogram with line chart overlay
+
+
+### Stacked Graph
+
+* Stacked graph http://bl.ocks.org/mbostock/4060954 
+
+* Transition to [small multiples](http://bl.ocks.org/mbostock/9490516) and [here too](http://bl.ocks.org/mbostock/3885211)
+
+
+
+### Other charts
+
+* Packing http://colinwhite.net/Packed%20Circle/index.html
+
+* Parallel coordinates
+ * http://bl.ocks.org/syntagmatic/42d5b54c5cfe002e7dd8
+
+* Dot chart http://bl.ocks.org/nrabinowitz/2034281
+
+Listing of charts
+* http://www.niceone.org/infodesignpatterns/index.php5#/patterns.php5
+* http://annkemery.com/essentials/
+* http://www.d3js.org/
+
+
+
+
+## Roadmap
+
+* v0.1 Alpha
+ * Fundamental visualizations
+ * Basic interactions: filter, aggregate, time update, focus
+ * Dev environment
+
+* v0.2 Beta
+ * Generic data format as input
+ * Couple of more visualizations
+ * Code testing and production deployement
+
+* v0.3
+ * States
+ * Fully tested with API
+ * Included in a real website
+
+* Tests
+ * Should provide a series of tests (client or server)
+ * Using releveant datasets in terms of size, number of attributes, missing data, etc.
+  * http://jonsadka.com/blog/how-to-create-live-updating-and-flexible-d3-line-charts-using-pseudo-data/
+ * Unit testings
+  * Cross Browser Compatibility
+  * Cross Device Compatibility
+  * Use strict mode https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Strict_mode
+
+* Build your own graph environment
+ * Using an editor 
+  * Rich text edit envs http://ace.c9.io/#nav=about
+  * http://trifacta.github.io/vega/editor/index.html?spec=barley
+  * Teaching / demos / snippets http://tributary.io/inlet/4653053
+ * Build your own grid
+ * Customize charts interactively
+ * Derive values? E.g. active or not for the rca value
+
+* Misc
+ * Automate compilation
+ * Testing (using Travis?)
+ * Sample datasets we will be using
+ * Consistent input file format
+ * Possibility to customize rendering: svg, png, .. (see [rasterize](http://cburgmer.github.io/rasterizeHTML.js/))
+
+
 
 * Should be fast (e.g. only requires attributes to be loaded once)
  * More importantly: we should be able to measure the performances
@@ -307,7 +427,7 @@ Mostly done using the `.params()` helper
  * Multiple selections should be allowed
  * Automatically generated
  
-Intresting reading on D3 modular/reusable
+Interesting reading on D3 modular/reusable
 
 * [Mike Bostock’s reusable D3](http://bost.ocks.org/mike/chart/)
 * Improved version https://javacrypt.wordpress.com/2012/12/15/improvements-to-d3s-reusable-component-pattern/
@@ -329,7 +449,7 @@ Storytelling
 
 * Show one step at a time
  * Use delays and duration
- * Controled by external widgets
+ * Controlled by external widgets
 * Wireframe, then color mapping, then ...
 * Part of the visualization
 * See https://idl.cs.washington.edu/files/2014-Ellipsis-EuroVis.pdf
@@ -346,124 +466,7 @@ Template
 * See http://bost.ocks.org/mike/chart/time-series-chart.js
 
 
-
-## Visualizations
-
-
-### Table
-
-* Countries table ([Demo](http://cid-harvard.github.io/vis-toolkit/examples/table.html) | [Source](examples/table.html))
-
-* Using pagination http://handsontable.com/demo/pagination.html#5
-* https://github.com/mleibman/SlickGrid
-
-* Efficient DOM handling do progressively display a lot of elements http://nexts.github.io/Clusterize.js/
-
-* Another efficient way of scrolling rows http://bl.ocks.org/jasondavies/3689677
-
-
-### Treemap
-
-
-Requires a tree structure 
-* http://bl.ocks.org/d3noob/8329404
-* http://www.d3noob.org/2014/01/tree-diagrams-in-d3js_11.html
-* http://stackoverflow.com/questions/18017869/build-tree-array-from-flat-array-in-javascript
-
-Text wrap
-* Done using HTML elements http://bl.ocks.org/mbostock/7555321
-* Another treeemap with word wrap http://bl.ocks.org/mundhradevang/1387786
-
-
-
-### Rankings
-
-```json
-.type("rankings")
-.cols(["A", "B", "C"])
-.order()
-```
-
-
-
-### Line chart
-
-* 
-
-### Geo map
-
-* http://techslides.com/demos/d3/d3-world-map-mouse-zoom.html
-* https://github.com/yaph/d3-geomap/blob/master/src/coffee/choropleth.coffee
-* http://d3-geomap.github.io/map/choropleth/world/
-
-* Click and zoom on country http://techslides.com/d3-world-maps-tooltips-zooming-and-queue
- * http://stackoverflow.com/questions/14492284/center-a-map-in-d3-given-a-geojson-object
- * http://techslides.com/responsive-d3-map-with-zoom-and-pan-limits
- * Better projection http://bl.ocks.org/jasondavies/4188334
-
-* Nice geo-maps https://www.pinterest.com/janwillemtulp/maps/
-
-* Circles maps http://bl.ocks.org/curran/752b97cef3f880a813ab
-
-
-### Scatterplot
-
-* Scatterplot http://bl.ocks.org/mbostock/3887118
-
-
-### Dot plot
-
-* Horizontal or vertical dot plot (https://github.com/marmelab/EventDrops)
-* http://www.education-inequalities.org/indicators/mlevel1/countries/kyrgyzstan#?dimension=wealth_quintile&group=all&age_group=|mlevel1_3&year=|2009
-
-
-### Matrix
-
-* http://bost.ocks.org/mike/miserables/
-
-### Scatterplot Matrix
-
-* http://bl.ocks.org/mbostock/4063663
-
-
-### Node link
-
-* Test with curved links http://bl.ocks.org/mbostock/4600693
-
-
-### Rankings
-
-* Generic headers to re-sort regardless the data type
-* Sticky headers
-* Automatic generate time slider (find time boudaries)
-* Auto generate list of filters (find unique classes)
-* Aggregation/nesting (create nesting of data (construct_nest function)
-* Custom filters (e.g. per capita, ..)
-
-* Flags http://atlas.cid.harvard.edu/media/img/icons/flag_ago.png
-* Communities http://atlas.cid.harvard.edu/media/img/icons/community_10.png
-
-* Show the rank?
-
-
-### Bar chart
-
-### Histogram
-
-* Histogram with line chart overlay
-
-### Other charts
-
-* Packing http://colinwhite.net/Packed%20Circle/index.html
-* Parallel coordinates
- * http://bl.ocks.org/syntagmatic/42d5b54c5cfe002e7dd8
-* Dot chart http://bl.ocks.org/nrabinowitz/2034281
-
-Listing of charts
-* http://www.niceone.org/infodesignpatterns/index.php5#/patterns.php5
-
-
-# Refs
+# Refs / External Resources
 
 ## Interactive environments
 
