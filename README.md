@@ -1,12 +1,14 @@
 # vis-toolkit
 
-The **vis-toolkit** is a collection of visualization templates (line chart, treemap, etc.) using **D3**. Its goal is to render visualizations quickly, with a simple interface that can be used across various templates. Right now the goal it to make those charts work, In the future, goals will be cleaning code and make it faster, and also to:
+The **vis-toolkit** is a collection of visualization templates (line chart, treemap, etc.) using **D3**. Its goal is to render visualizations quickly, with a simple interface that can be used across various templates. Right now the goal it to make those charts work. In the future, goals will be cleaning code and make it faster, and also to:
 
 * Allow complex charts composition using reusable components
 * Enable storytelling with step by step display and annotations
 * Provide transitions between visualizations in a generic and efficient way
 
-One of the fundamental design idea of the toolkit is to consider each element to display as **items** (e.g. countries, users of a social network). Those items are usually rows of a dataset. They will be bound to graphical marks, sometimes after some preprocessing (e.g. a line chart represents the same item, but over multiple time points). Each item is visually encoding using **dimensions** (e.g. population, gdp). Each item's dimensions can be updated over **time**.
+One of the fundamental design idea of the toolkit is to consider each element to display as **items** (e.g. countries, products). Items are usually rows of a dataset, and their properties the columns or **dimensions** (e.g. population, gdp), which can be updated over time. Items will be bound to graphical marks, sometimes after some preprocessing (e.g. a line chart represents the same item, but over multiple time points). And the graphical marks properties encode the dimensions. Each item's dimensions can be updated over **time** and consequently updates the graphical mark and its properties.
+
+##
 
 Each visualization should implement the following set of interactions: 
 
@@ -69,7 +71,7 @@ Composite examples (using coordinated views)
  * Using an editor 
   * Rich text edit envs http://ace.c9.io/#nav=about
   * http://trifacta.github.io/vega/editor/index.html?spec=barley
-  * Tributaryo
+  * Teaching / demos / snippets http://tributary.io/inlet/4653053
  * Build your own grid
  * Customize charts interactively
  * Derive values? E.g. active or not for the rca value
@@ -126,14 +128,9 @@ What to do with missing data over time?
 
  * https://github.com/mozilla/metrics-graphics/blob/34e56c4a387940c3e5e58a458062389a8110c4e5/src/js/misc/process.js#L93
 
-
 * Then other properties, attributes, can be loaded on-demand and eventually be kept
  * How do we decide to get rid of some items/attributes/properties?
 
-* Dynamically load data, lazy data loading
-
-* Streaming data?
- * Some visualizations accumulate data, other only display most recent items
 
 * Custom format for charts
  * e.g. `.total_bar({"prefix": "Export Value: $", "suffix": " USD", "format": ",f"})`
@@ -147,6 +144,7 @@ What to do with missing data over time?
  * Implement a specific interface (à la d3plus)
 * What should be reused or not?
 * How to define the transitions to other apps?
+
 
 ## Chart 
 
@@ -172,6 +170,8 @@ What to do with missing data over time?
  * Aggregation of elements
  * Show filtered out data
 
+
+
 ## UI widgets
 
 Data-driven UI widgets
@@ -182,6 +182,10 @@ Data-driven UI widgets
 Other widgets based on visualization's parameters
 * Change the type of scale (absolute vs relative)
 * ..
+
+* Either from the visualization itslef, or with auto-generated widgets
+* Binding with external buttons/widgets
+
 
 ## Roadmap
 
@@ -200,6 +204,8 @@ Other widgets based on visualization's parameters
  * Fully tested with API
  * Included in a real website
 
+
+
 ## Visualizations
 
 ### Lists of visualizations
@@ -209,9 +215,6 @@ Other widgets based on visualization's parameters
 
 * Stacked graph http://bl.ocks.org/mbostock/4060954 and transition to [small multiples](http://bl.ocks.org/mbostock/9490516) and [here too](http://bl.ocks.org/mbostock/3885211)
  
-* Circles maps http://bl.ocks.org/curran/752b97cef3f880a813ab
-
-
 * Choropleth map (using geojson)
 * Some flow map or graph such as [pivotgraph](http://bl.ocks.org/mbostock/4343153)
 
@@ -220,12 +223,6 @@ Other widgets based on visualization's parameters
 
  * Diverging bar charts http://bl.ocks.org/wpoely86/e285b8e4c7b84710e463
 
-* With utils
- * Labels http://bl.ocks.org/dbuezas/9306799
- * Color scale / legend (should contain the min/max values and min/max color range)
- * Time slider
- * Filters button
- * Title
 
 * Templating visualizations
  * Standard interface to create them
@@ -233,26 +230,44 @@ Other widgets based on visualization's parameters
 
 * Boilerplate code
  * Dev environment
- * Teaching / demos / snippets http://tributary.io/inlet/4653053
+
  * Automate compilation
  * Testing (using Travis?)
  * Sample datasets we will be using
  * Consistent input file format
 
 
-* Visual customization
- * Margin, padding, etc.
- * Number format. Font, font weight.
 
+### Utils for visualization
 
-* UI elements for interaction
- * Either from the visualization itslef, or with auto-generated widgets
- * Binding with external buttons/widgets
+* http://bl.ocks.org/dbuezas/9306799
 
 * Visual manager 
 * Initialize components constructors
 * Use d3.dispatch and custom events for transimtions management
  * Example of event dispatch http://bl.ocks.org/mbostock/5872848
+
+
+Annotations
+* Linear regression lines http://www.highcharts.com/demo/combo-regression/grid
+* Multiple layers (e.g. background with grid, ..)
+* Markers http://metricsgraphicsjs.org/interactive-demo.htm
+
+Labels
+* http://bl.ocks.org/dbuezas/9306799
+
+
+
+Legends
+ * Color scale / legend (should contain the min/max values and min/max color range)
+
+
+## Customization
+
+* Margin, padding, etc.
+* Number format. Font, font weight.
+
+Mostly done using the `.params()` helper
 
 ## What it should achieve
 
@@ -268,22 +283,13 @@ Other widgets based on visualization's parameters
 
 * Default values should be coherent
  * Default parameters
- * Especially when transitionning
+ * Especially when transitioning
  * Enable minimal set of parameters to begin with
-
-* Extensible to add new functionalities
- * New charts
- * New utils functions
- * New components (parts of the chart)
 
 * Make sure it works for all types of data
  * But should make sure an input format has been defined
  * Dealing/robust even with missing data
  * Should be visually reflected too
-
-* Animation but carefully used
- * Should we use object consistancy to transform them? http://bost.ocks.org/mike/constancy/
- * Using points for transition?
 
 * Text wrap for long names (see [d3plus word wrap](https://github.com/alexandersimoes/d3plus/wiki/Basic-Utilities#wordwrap))
  * Guaranty that exported SVG will be correct
@@ -339,58 +345,36 @@ Template
 * See http://bost.ocks.org/mike/chart/
 * See http://bost.ocks.org/mike/chart/time-series-chart.js
 
-Annotations
-* Linear regression lines http://www.highcharts.com/demo/combo-regression/grid
-* Multiple layers (e.g. background with grid, ..)
-* Markers http://metricsgraphicsjs.org/interactive-demo.htm
 
-## Create a chart
 
-We should be able to create a chart like that:
+## Visualizations
 
-* `.id()` tells which attribute can be used as unique idenfifier for the data
- * `.id("country")` the `country` variable is going to be used
- * `.id(["continent", "country"])` the `country` is still the id, but `continent` may be used as a natural hierarchy
-
-* http://trifacta.github.io/vega/editor/ loads the data with a specific variable for each dataset
- *  "data": [{"name": "jobs"}, "url": "data/jobs.json"}]
- * 
-
-* `.time()` sets the current time variable and time point    
- * `.time({var_time: "year", current_time: 1995})`
-
-* `.type(type)` 
 
 ### Table
 
-* http://handsontable.com/demo/pagination.html#5
+* Countries table ([Demo](http://cid-harvard.github.io/vis-toolkit/examples/table.html) | [Source](examples/table.html))
+
+* Using pagination http://handsontable.com/demo/pagination.html#5
 * https://github.com/mleibman/SlickGrid
 
-* Efficient DOM handling http://nexts.github.io/Clusterize.js/
+* Efficient DOM handling do progressively display a lot of elements http://nexts.github.io/Clusterize.js/
 
-* Efficient scrolling http://bl.ocks.org/jasondavies/3689677
+* Another efficient way of scrolling rows http://bl.ocks.org/jasondavies/3689677
+
 
 ### Treemap
 
-```json
-.type("tree_map")
-.size("value")	
-.color(function(d){
-  return color(d);
-})
-.text("name")
-```
 
-Create a tree structure 
+Requires a tree structure 
 * http://bl.ocks.org/d3noob/8329404
 * http://www.d3noob.org/2014/01/tree-diagrams-in-d3js_11.html
 * http://stackoverflow.com/questions/18017869/build-tree-array-from-flat-array-in-javascript
 
 Text wrap
-* http://bl.ocks.org/mbostock/7555321
+* Done using HTML elements http://bl.ocks.org/mbostock/7555321
+* Another treeemap with word wrap http://bl.ocks.org/mundhradevang/1387786
 
-Other
-* Treeemap ([with word wrap](http://bl.ocks.org/mundhradevang/1387786))
+
 
 ### Rankings
 
@@ -399,6 +383,8 @@ Other
 .cols(["A", "B", "C"])
 .order()
 ```
+
+
 
 ### Line chart
 
@@ -417,11 +403,8 @@ Other
 
 * Nice geo-maps https://www.pinterest.com/janwillemtulp/maps/
 
-```json
-.type("geo_map")
-.text("text")
+* Circles maps http://bl.ocks.org/curran/752b97cef3f880a813ab
 
-```
 
 ### Scatterplot
 
@@ -442,6 +425,7 @@ Other
 
 * http://bl.ocks.org/mbostock/4063663
 
+
 ### Node link
 
 * Test with curved links http://bl.ocks.org/mbostock/4600693
@@ -461,41 +445,30 @@ Other
 
 * Show the rank?
 
+
+### Bar chart
+
+### Histogram
+
+* Histogram with line chart overlay
+
 ### Other charts
 
 * Packing http://colinwhite.net/Packed%20Circle/index.html
 * Parallel coordinates
  * http://bl.ocks.org/syntagmatic/42d5b54c5cfe002e7dd8
-* Bar chart
 * Dot chart http://bl.ocks.org/nrabinowitz/2034281
 
 Listing of charts
 * http://www.niceone.org/infodesignpatterns/index.php5#/patterns.php5
 
 
-## Update a chart
-
-```json
-vis.render()
-```
-
-## Flexible chart creation
-
-```json
-vistk
-  .items([“group”, “products”]) 
-  .shape(“circle”)
-  .connect(“line”, function(a, b) { a.source.id == b.source.id })
-  .scale({“axis”: “x”, “type": “linear”, “x_var”: “population”})
-  .scale({“axis”: “y”, “type": “linear”, “y_var”: “gdp”})
-  .color({“category”, “color_var”: “group”})
-```
-
 # Refs
 
 ## Interactive environments
 
 * Automatic generation of charts http://uwdata.github.io/voyager/#/
+* https://vnijs.shinyapps.io/marketing/?SSUID=905c430fe9e124989ee1a1c8557041d5
 
 ## Existing D3 toolkits
 
