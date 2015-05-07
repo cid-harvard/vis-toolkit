@@ -142,7 +142,7 @@ vistk.viz = function() {
       // Should make sure it works for a generc dataset
       // Also for time or none-time attributes
       nested_data = d3.nest()
-        .key(function(d) { 
+        .key(function(d) {
           return d[vars.var_group];
         })
         .rollup(function(leaves) {
@@ -173,14 +173,14 @@ vistk.viz = function() {
 
           return aggregation;
         })
-        .entries(new_data);      
+        .entries(new_data);
 
       // Transform key/value into values tab only
       new_data = nested_data.map(function(d) { return d.values});
     }
 
     selection.each(function() {
-    
+
       if(vars.type == "undefined") {
 
         // Basic dump of the data we have
@@ -649,17 +649,17 @@ vistk.viz = function() {
         vars.evt.register("highlightOn", function(d) {
 
           gPoints.selectAll(".dot").style("opacity", .1)
-          gPoints.selectAll(".dotsLabels").style("opacity", 0)
+          gPoints.selectAll(".dot__label").style("opacity", 0)
 
           vars.svg.selectAll(".dot").filter(function(e, j) { return e === d; }).style("opacity", 1);
-          vars.svg.selectAll(".dotsLabels").filter(function(e, j) { return e === d; }).style("opacity", 1);
+          vars.svg.selectAll(".dot__label").filter(function(e, j) { return e === d; }).style("opacity", 1);
         
         });
 
         vars.evt.register("highlightOut", function(d) {
 
           gPoints.selectAll(".dot").style("opacity", 1)
-          gPoints.selectAll(".dotsLabels").style("opacity", 1)     
+          gPoints.selectAll(".dot__label").style("opacity", 1)     
 
         });
 
@@ -740,7 +740,7 @@ vistk.viz = function() {
                         .attr("x", 10)
                         .attr("y", 0)
                         .attr("dy", ".35em")
-                        .attr("class", "dotsLabels")
+                        .attr("class", "dot__label")
                         .attr("transform", "rotate(-30)")
                         .text(function(d) { return d[vars.var_text]; });
 
