@@ -6,11 +6,11 @@ circle .dot .focus {
     fill: ;
 }
 
-.dotsLabels {
+.dots__labels {
     display: none;
 }
 
-.dotsLabels:hover {
+.dots__labels:hover {
     display: visible;
     color: red;
 }

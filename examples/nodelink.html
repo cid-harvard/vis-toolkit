@@ -32,6 +32,7 @@ d3.json("../data/atlas_international_product_space.json", function(graph) {
       .size("value")
       .time(2012)
       .color("category")
+      .text("product_id")
       .title("Product space")
       .time({var_time: "year", current_time: 2008})
       .ui(true)

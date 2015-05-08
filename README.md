@@ -203,6 +203,8 @@ Legends
 
 Mostly done using the `.params()` helper
 
+* Customized visual design
+ * Default CSS but should allow this to be overloaded
 
 
 ## Visualizations
@@ -252,15 +254,28 @@ Text wrap
 * Another treeemap with word wrap http://bl.ocks.org/mundhradevang/1387786
 
 
-
-
 ### Line chart
 
 * [Line Chart with countries](http://cid-harvard.github.io/vis-toolkit/examples/linechart.html) | [Source](examples/linechart.html))
 
+* Should have bins for each time point (as an option)
 
+
+#### Sparkline
+
+Line chart without any decoration (e.g. axis, ..) and that primarily show one item at a time.
+
+* Sparkline ([Demo](http://cid-harvard.github.io/vis-toolkit/examples/sparkline.html) | [Source](examples/sparkline.html))
+
+* Should be able to display two or more items (as comparison)
+
+* Example using angular.js http://bl.ocks.org/enjalot/6457608
 
 ### Geo map
+
+Map of countries that can be colored and labeled.
+
+* Geo Map ([Demo](http://cid-harvard.github.io/vis-toolkit/examples/geomap.html) | [Source](examples/geomap.html))
 
 * http://techslides.com/demos/d3/d3-world-map-mouse-zoom.html
 * https://github.com/yaph/d3-geomap/blob/master/src/coffee/choropleth.coffee
@@ -284,18 +299,28 @@ Text wrap
 * Scatterplot http://bl.ocks.org/mbostock/3887118
 
 
-### Dot plot
+#### Dot plot
+
+Horizontal scatterplot without a Y-axis:
 
 * Horizontal or vertical dot plot (https://github.com/marmelab/EventDrops)
 * http://www.education-inequalities.org/indicators/mlevel1/countries/kyrgyzstan#?dimension=wealth_quintile&group=all&age_group=|mlevel1_3&year=|2009
 
+* Dot chart http://bl.ocks.org/nrabinowitz/2034281
+
+
+#### Bubble plot 
 
 ### Matrix
+
+An array with rows and columns.
 
 * http://bost.ocks.org/mike/miserables/
 
 
 ### Scatterplot Matrix
+
+Combination of a matrix with nested scatterplots within each cell. The matrix being the cross product of the dimensions to represent.
 
 * http://bl.ocks.org/mbostock/4063663
 
@@ -309,11 +334,15 @@ Text wrap
 * Rings
   * http://bl.ocks.org/bansaghi/e490c7c238a67a77996d 
 
+* Self-organized Packing http://colinwhite.net/Packed%20Circle/index.html
+
+
 ### Bar chart
 
 * http://bl.ocks.org/mbostock/3885304
 
 * Diverging bar charts http://bl.ocks.org/wpoely86/e285b8e4c7b84710e463
+
 
 #### Histogram
 
@@ -324,27 +353,25 @@ Just some kind of bar chart combined with a binning function
 
 ### Stacked Graph
 
+Area chart with stacked shapes on top of each other (the previous layer being the Y-offset for the next layer).
+
 * Stacked graph http://bl.ocks.org/mbostock/4060954 
 
 * Transition to [small multiples](http://bl.ocks.org/mbostock/9490516) and [here too](http://bl.ocks.org/mbostock/3885211)
 
 
+### Parallel Coordinates
+
+* Parallel coordinates http://bl.ocks.org/syntagmatic/42d5b54c5cfe002e7dd8
+
+
 
 ### Other charts
-
-* Packing http://colinwhite.net/Packed%20Circle/index.html
-
-* Parallel coordinates
- * http://bl.ocks.org/syntagmatic/42d5b54c5cfe002e7dd8
-
-* Dot chart http://bl.ocks.org/nrabinowitz/2034281
 
 Listing of charts
 * http://www.niceone.org/infodesignpatterns/index.php5#/patterns.php5
 * http://annkemery.com/essentials/
 * http://www.d3js.org/
-
-
 
 
 ## Roadmap
@@ -389,17 +416,12 @@ Listing of charts
  * Consistent input file format
  * Possibility to customize rendering: svg, png, .. (see [rasterize](http://cburgmer.github.io/rasterizeHTML.js/))
 
-
-
 * Should be fast (e.g. only requires attributes to be loaded once)
  * More importantly: we should be able to measure the performances
  * Benchmark with other toolkits for similar visualizations
 * Able to create multiple instances of visualizations on the same page
  * And eventually coordinate them (e.g brushing one filters another one)
  * Should also share some similar attributes/properties
-
-* Customized visual design
- * Default CSS but should allow this to be overloaded
 
 * Default values should be coherent
  * Default parameters

@@ -30,7 +30,7 @@ d3.csv("../data/new_rankings2.csv", function(error, data) {
     .height(600)
     .width(900)
     .data(res)
-    .id("id")
+    .id(["id"]) // Should be ["continent", "id"] to allow aggregation
     .group("category")
     .color("name")
     .title("Products")
@@ -40,8 +40,6 @@ d3.csv("../data/new_rankings2.csv", function(error, data) {
       y_text: "ECI Rank"
     })
     .selection(["Japan", "Switzerland", "Germany", "South Korea", "Finland", "United Kingdom", "United States", "France", "Italy", "China", "Mexico", "Spain"]);
-//    .size("size")
-//    .time({var_time: "year", current_time: 2012})
 
   d3.select("#viz").call(visualization);
 

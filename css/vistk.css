@@ -161,6 +161,39 @@ div.tooltip {
 
 /* Dot plot */
 
+.dot__circle {
+  fill: "gray";
+  opacity: ".5";
+}
 
+.dot__circle.selected {
+  stroke": "black";
+  stroke-width: "3px";
+  opacity: 1
+}
 
+.dot__circle:not(.selected) {
+  stroke: "black";
+  stroke-width: ".9px";
+  opacity: 1;
+}
 
+.dot__circle.highlighted {
+  opacity: .1;
+}
+
+.dot__circle:not(.highlighted) {
+  opacity: .1;
+}
+
+.dot__label:not(.highlighted) {
+  text-decoration: none;
+}
+
+.dot__label.highlighted {
+  text-decoration: "underline";
+}
+
+.points {
+  opacity: 1;
+}
