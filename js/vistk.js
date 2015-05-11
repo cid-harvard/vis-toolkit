@@ -508,7 +508,7 @@ vistk.viz = function() {
 
 //          vars.svg.selectAll("rect").filter(function(e, j) { return e === d; })
 //                      .classed("focus", true);
-              
+          
           dots.style("opacity", .1)
           labels.style("opacity", 0)          
 
@@ -585,7 +585,6 @@ vistk.viz = function() {
                           .append("g")
                           .attr("class", "points")
 
-
           var dots = gPoints_enter.append("rect")
             .attr("r", 5)
             .attr("height", 10)
@@ -615,10 +614,10 @@ vistk.viz = function() {
           var gPoints_enter = gPoints.enter()
                           .append("g")
                           .attr("class", "points")
-                          .on("mouseenter", function(d, i) {                
-                            vars.dispatch.highlightOn(d)              
+                          .on("mouseenter", function(d, i) {   
+                            vars.evt.call("highlightOn", d);              
                           }).on("mouseout", function(d) {
-                            vars.dispatch.highlightOut(d)  
+                            vars.evt.call("highlightOut", d);  
                           });
 
           var dots = gPoints_enter.append("circle")
@@ -1761,7 +1760,7 @@ vistk.viz = function() {
   return chart;
 }
 
-
+// UTIS FUNCTIONS
 
 // http://stackoverflow.com/questions/171251/how-can-i-merge-properties-of-two-javascript-objects-dynamically
 var merge = function() {
