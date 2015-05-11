@@ -466,7 +466,7 @@ vistk.viz = function() {
               return d.children ? vars.color(d[vars.var_color]) : null; 
             })
 
-        // TODO: persistant bug when hovering a cell
+        // TODO: persistent bug when hovering a cell
         cell
           .filter(function(d) { return d.depth == 2})
           .on("mousemove", function(d) {      
@@ -523,11 +523,7 @@ vistk.viz = function() {
         });
 
         vars.evt.register("highlightOut", function(d) {
-
-          vars.data.forEach(function(e) {
-              d.__highlight = false;
-          })
-
+          vars.data.forEach(function(e) { d.__highlight = false; })
         });
 
         var x = d3.scale.linear()
@@ -544,7 +540,9 @@ vistk.viz = function() {
             .scale(y)
             .orient("left");
 
-        vars.svg.selectAll(".label").data(new_data).enter().append("text")
+        vars.svg.selectAll(".label").data(new_data)
+          .enter()
+            .append("text")
             .attr("class", "year label")
             .attr("text-anchor", "end");
 
@@ -557,7 +555,9 @@ vistk.viz = function() {
         x.domain([0, d3.max(vars.data, function(d) { return d[vars.x_var]; })]).nice();
         y.domain([0, d3.max(vars.data, function(d) { return d[vars.y_var]; })]).nice();
 
-        vars.svg.selectAll(".x.axis").data([new_data]).enter().append("g")
+        vars.svg.selectAll(".x.axis").data([new_data])
+          .enter()
+            .append("g")
             .attr("class", "x axis")
             .attr("transform", "translate(0," + (vars.height-vars.margin.bottom-vars.margin.top) + ")")              
           .append("text")
@@ -578,8 +578,8 @@ vistk.viz = function() {
             .style("text-anchor", "end")
             .text(function(d) { return vars.y_var; })
 
-        vars.svg.selectAll(".x.axis").call(xAxis)
-        vars.svg.selectAll(".y.axis").call(yAxis)
+        vars.svg.selectAll(".x.axis").call(xAxis);
+        vars.svg.selectAll(".y.axis").call(yAxis);
 
         var gPoints = vars.svg.selectAll(".points")
                         .data(new_data, function(d, i) { return d.name + " " + i; });
@@ -587,7 +587,8 @@ vistk.viz = function() {
         // Here we want to deal with aggregated datasets
         if(vars.aggregate == vars.var_group) {
 
-          var gPoints_enter = gPoints.selectAll(".points").enter()
+          var gPoints_enter = gPoints.selectAll(".points")
+                        .enter()
                           .append("g")
                           .attr("class", "points")
 
@@ -609,21 +610,26 @@ vistk.viz = function() {
           // Update all the remaining dots
           gPoints.style("opacity", 1)    
 
-          vars.svg.selectAll(".points")
-                          .transition()
-                          .attr("transform", function(d) {
-                            return "translate("+x(d[vars.x_var])+", "+y(d[vars.y_var])+")";
-                          })
+          gPoints
+              .transition()
+              .attr("transform", function(d) {
+                return "translate("+x(d[vars.x_var])+", "+y(d[vars.y_var])+")";
+              })
 
         } else { 
 
+          // ENTER
           var gPoints_enter = gPoints.enter()
-                          .append("g")
+                        .append("g")
                           .attr("class", "points")
-                          .on("mouseenter", function(d, i) {   
-                            vars.evt.call("highlightOn", d);              
-                          }).on("mouseout", function(d) {
-                            vars.evt.call("highlightOut", d);  
+                          .on("mouseenter", function(d, i) {
+                            vars.evt.call("highlightOn", d);
+                          })
+                          .on("mouseout", function(d) {
+                            vars.evt.call("highlightOut", d);
+                          })
+                          .on("click", function(d) {
+                            vars.evt.call("clicked", d);
                           });
 
           var dots = gPoints_enter.append("circle")
@@ -632,10 +638,6 @@ vistk.viz = function() {
             .attr("cy", 0)
             .style("fill", function(d) { return vars.color(d[vars.var_color]); })
 
-
-          // TODO: check if any element has been selected
-          // .classed("focus", true);
-
           var labels = gPoints_enter.append("text")
               .attr("x", 10)
               .attr("y", 0)
@@ -643,21 +645,32 @@ vistk.viz = function() {
               .style("text-anchor", "start")
               .text(function(d) { return d[vars.var_text]; });
 
+          // EXIT
           var gPoints_exit = gPoints.exit().style("opacity", .1);
 
-          // Update all the remaining dots
-          gPoints.style("opacity", function(d) {
-              if(d.__highlight)
-                return 1;
-              else
-                return .1;
-            })  
+          // UPDATE
+          if(vars.data.filter(function(d) { return d.__highlight;}).length > 0) {
 
-          vars.svg.selectAll(".points")
-                          .transition()
-                          .attr("transform", function(d) {
-                            return "translate("+x(d[vars.x_var])+", "+y(d[vars.y_var])+")";
-                          })
+            // Update all the remaining dots
+            gPoints.style("opacity", function(d) {
+              console.log(d.__highlight)
+                if(d.__highlight)
+                  return 1;
+                else
+                  return .1;
+              })              
+
+          } else {
+
+            gPoints.style("opacity", 1)
+          
+          }
+
+          gPoints
+            .transition()
+            .attr("transform", function(d) {
+              return "translate("+x(d[vars.x_var])+", "+y(d[vars.y_var])+")";
+            })
         }
 
       } else if(vars.type == "dotplot") {
