@@ -991,6 +991,29 @@ vistk.viz = function() {
 
       } else if(vars.type == "linechart") {
 
+        vars.evt.register("highlightOn", function(d) {
+
+          vars.svg.selectAll(".line:not(.selected)").style("opacity", 0.2);
+          vars.svg.selectAll(".text:not(.selected)").style("opacity", 0.2);
+
+          vars.svg.selectAll("#"+d[vars.var_id]).style("opacity", 1);
+
+          // Highlight
+          vars.svg.selectAll(".line").filter(function(e, j) { return e === d; }).style("stroke-width", 3);
+          vars.svg.selectAll(".text").filter(function(e, j) { return e === d; }).style("text-decoration", "underline");
+
+        })
+
+        vars.evt.register("highlightOut", function(d) {
+
+          vars.svg.selectAll(".country:not(.selected)").style("opacity", 1);
+
+          // Highlight
+          vars.svg.selectAll(".line").filter(function(e, j) { return e === d; }).style("stroke-width", 1);
+          vars.svg.selectAll(".text").filter(function(e, j) { return e === d; }).style("text-decoration", "none");
+
+        })
+
         var parseDate = d3.time.format("%Y").parse;
 
         var x = d3.time.scale()
@@ -999,7 +1022,6 @@ vistk.viz = function() {
         var y = d3.scale.linear()
             .range([0, vars.height-100]);
 
-      
         var xAxis = d3.svg.axis()
             .scale(x)
             .orient("top");
@@ -1017,7 +1039,7 @@ vistk.viz = function() {
             .x(function(d) { return x(d.date); })
             .y(function(d) { return y(d.rank); });
 
-        // TODO: flatten the file
+        // TODO: fix that!
         vars.color.domain(d3.keys(new_data[0]).filter(function(key) { return key !== "date"; }));
 
         new_data.forEach(function(d) {
@@ -1028,7 +1050,7 @@ vistk.viz = function() {
 
         all_years = d3.set(new_data.map(function(d) { return d.year;})).values();
 
-        // Find unique countries
+        // Find unique countries and create ids
         countries = d3.set(new_data.map(function(d) { return d[vars.var_text]; })).values().map(function(c) {
           return {
             id: c.replace(" ", "_"),
@@ -1065,13 +1087,15 @@ vistk.viz = function() {
         ]);
 
         // unique_years = d3.set(vars.data.map(function(d) { return d[vars.var_time];})).values();
+
+        // Create the background grid
         // http://www.d3noob.org/2013/01/adding-grid-lines-to-d3js-graph.html
 
         function make_x_axis() {        
             return d3.svg.axis()
                 .scale(x)
                  .orient("bottom")
-                 .ticks(10)
+                 .ticks(10);
         }
 
         vars.svg.append("g")
@@ -1109,7 +1133,7 @@ vistk.viz = function() {
                 return "country selected";
               }
 
-            })
+            });
 
         country.append("path")
             .attr("class", "country line")
@@ -1122,9 +1146,8 @@ vistk.viz = function() {
               // TODO: include class for highlight
               if(vars.selection.indexOf(d.name) < 0)
                 return "country line";
-              else {
+              else
                 return "country line selected";
-              }
 
             })
             .style("stroke", function(d) { return vars.color(d[vars.var_color]); });
@@ -1152,25 +1175,10 @@ vistk.viz = function() {
             .text(function(d) { return d[vars.var_text]; })
 
             vars.svg.selectAll(".country").on("mouseover", function(d) {
-
-              vars.svg.selectAll(".line:not(.selected)").style("opacity", 0.2);
-              vars.svg.selectAll(".text:not(.selected)").style("opacity", 0.2);
-
-              vars.svg.selectAll("#"+d[vars.var_id]).style("opacity", 1);
-
-              // Highlight
-              vars.svg.selectAll(".line").filter(function(e, j) { return e === d; }).style("stroke-width", 3);
-              vars.svg.selectAll(".text").filter(function(e, j) { return e === d; }).style("text-decoration", "underline");
-
+              vars.evt.call("highlightOn", d);
             })
             .on("mouseout", function(d) {
-
-                vars.svg.selectAll(".country:not(.selected)").style("opacity", 1);
-
-                // Highlight
-                vars.svg.selectAll(".line").filter(function(e, j) { return e === d; }).style("stroke-width", 1);
-                vars.svg.selectAll(".text").filter(function(e, j) { return e === d; }).style("text-decoration", "none");
-
+              vars.evt.call("highlightOut", d);
             });
 
         vars.svg.selectAll("text.country").on("click", function(d) {
