@@ -175,6 +175,7 @@ Data-driven UI widgets
 * http://bl.ocks.org/dbuezas/9306799
 
 * Infer data type from data http://uwdata.github.io/datalib/
+* http://www.macwright.org/simple-statistics/
 * https://github.com/alexandersimoes/d3plus/wiki/Utilities
 
 * Visual manager 
@@ -218,10 +219,16 @@ Below is the list of currently implemented visualizations and list of upcoming o
 * Using pagination http://handsontable.com/demo/pagination.html#5
 * https://github.com/mleibman/SlickGrid
 
+
+
 * Efficient DOM handling do progressively display a lot of elements http://nexts.github.io/Clusterize.js/
 
 * Another efficient way of scrolling rows http://bl.ocks.org/jasondavies/3689677
 
+
+Readings
+
+* http://vis4.net/blog/posts/making-html-tables-in-d3-doesnt-need-to-be-a-pain/
 
 ### Rankings
 
