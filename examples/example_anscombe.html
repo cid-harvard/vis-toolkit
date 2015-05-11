@@ -11,11 +11,10 @@
   // TODO
   // [X] Load Anscombe dataset
   // [ ] Derive descriptive statistics
-  // [ ] Init 4 tables
-  // [ ] Init 4 scatterplots
+  // [X] Init 4 tables
+  // [X] Init 4 scatterplots
   // [ ] Customize tables (zebra, headers, ..)
   // [ ] Connect the charts
-
 
 d3.csv("../data/anscombe.csv", function(graph) {
 
@@ -32,19 +31,41 @@ d3.csv("../data/anscombe.csv", function(graph) {
   descriptive = []
 
   // Find unique categories
+  var groups = d3.set(data.map(function(d) { return d["Group"]; })).values();
 
-  visualization = vistk.viz()
-    .type("table")
-    .width(800)
-    .height(600)
-    .container("#viz")
-    .data(data)
-    .columns(['Group', 'x', 'y'])
-//    .id(["community_name", "name"])
-    .group('Group')
-    .title("Raw Data")
+  groups.forEach(function(d) {
 
-  d3.select("#viz").call(visualization)
+    // Create a table
+    var t = vistk.viz()
+      .type("table")
+      .width(800)
+      .height(300)
+      .container("#viz")
+      .data(data.filter(function(e) { return e["Group"] == d; }))
+      .columns(['Group', 'x', 'y'])
+      .group('Group')
+      .title("Raw Data")
+      .ui(false)
+
+    d3.select("#viz").call(t)
+
+    // Create a scatterplot
+    var v = vistk.viz()
+      .type("scatterplot")
+      .container("#viz")
+      .width(200)
+      .height(150)
+      .data(data.filter(function(e) { return e["Group"] == d; }))
+      .x_var("x")
+      .y_var("y")
+      .id(["continent", "country"])
+      .group("continent")
+      .color("continent")
+      .ui(false)
+
+    d3.select("#viz").call(v)
+
+  })
 
 })
 
