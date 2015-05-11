@@ -1316,7 +1316,6 @@ vistk.viz = function() {
           country_exit = country.exit().style({"display": "none"});
 
           }
-
       }
 
       function find_node_by_id(id) {
@@ -1344,15 +1343,19 @@ vistk.viz = function() {
       if(vars.ui) {
 
         // BUILDING THE UI elements
-        d3.select(vars.container).selectAll(".break").data([vars.var_id]).enter().append("p").attr("class", "break");
+        d3.select(vars.container).selectAll(".break").data([vars.var_id])
+          .enter()
+            .append("p")
+            .attr("class", "break");
 
         if(vars.var_group) {
 
           unique_categories = d3.set(new_data.map(function(d) { return d[vars.var_group]; })).values();
 
-          var label_checkboxes = vars.svg.select(vars.container).selectAll("input").data(unique_categories)
+          label_checkboxes = d3.select(vars.container).selectAll(".checkboxes").data(unique_categories)
             .enter()
-              .append("label");
+              .append("label")
+              .attr("class", "checkboxes")
 
           label_checkboxes.append("input")
               .attr("type", "checkbox")
