@@ -504,6 +504,26 @@ vistk.viz = function() {
 
       } else if(vars.type == "scatterplot") {
 
+        vars.evt.register("highlightOn", function(d) {
+
+//          vars.svg.selectAll("rect").filter(function(e, j) { return e === d; })
+//                      .classed("focus", true);
+              
+          dots.style("opacity", .1)
+          labels.style("opacity", 0)          
+
+          d3.select(this).select("circle").style("opacity", 1)
+          d3.select(this).select("text").style("opacity", 1)
+        
+        });
+
+        vars.evt.register("highlightOut", function(d) {
+
+          dots.style("opacity", 1)
+          labels.style("opacity", 1)     
+
+        });
+
         var x = d3.scale.linear()
             .range([vars.margin.left, vars.width-vars.margin.left-vars.margin.right]);
 
@@ -522,7 +542,8 @@ vistk.viz = function() {
             .attr("class", "year label")
             .attr("text-anchor", "end");
 
-        vars.svg.selectAll(".label")    
+        // Backgroun year label
+        vars.svg.selectAll(".label")
             .attr("y", 124)
             .attr("x", 500)
             .text(vars.current_time);
@@ -560,9 +581,10 @@ vistk.viz = function() {
         // Here we want to deal with aggregated datasets
         if(vars.aggregate == vars.var_group) {
 
-          var gPoints_enter = gPoints.enter()
+          var gPoints_enter = gPoints.selectAll(".points").enter()
                           .append("g")
                           .attr("class", "points")
+
 
           var dots = gPoints_enter.append("rect")
             .attr("r", 5)
@@ -593,20 +615,10 @@ vistk.viz = function() {
           var gPoints_enter = gPoints.enter()
                           .append("g")
                           .attr("class", "points")
-                          .on("mouseenter",function(d, i) {
-
-                            dots.style("opacity", .1)
-                            labels.style("opacity", 0)          
-
-                            d3.select(this).select("circle").style("opacity", 1)
-                            d3.select(this).select("text").style("opacity", 1)
-
-                          })
-                          .on("mouseleave", function(d, i) {
-
-                            dots.style("opacity", 1)
-                            labels.style("opacity", 1)     
-
+                          .on("mouseenter", function(d, i) {                
+                            vars.dispatch.highlightOn(d)              
+                          }).on("mouseout", function(d) {
+                            vars.dispatch.highlightOut(d)  
                           });
 
           var dots = gPoints_enter.append("circle")
