@@ -30,9 +30,9 @@ d3.csv("../data/new_rankings2.csv", function(error, data) {
     .height(600)
     .width(900)
     .data(res)
-    .id(["id"]) // Should be ["continent", "id"] to allow aggregation
+    .id(["id"]) // Should be ["continent", "id"] to allow aggregation and filtering
     .group("category")
-    .color("name")
+    .color("id")
     .title("Products")
     .group("category")
     .text("name")

@@ -862,16 +862,16 @@ vistk.viz = function() {
           vars.svg.selectAll(".link").style("opacity", .1);
           
           vars.svg.selectAll(".source_"+d.id).each(function(e) {
-            vars.svg.select("#node_"+e.target.id).style("opacity", 1) 
-          })
-              .style("opacity", 1)
-              .style("stroke-width", function(d) { return 3; });
+              vars.svg.select("#node_"+e.target.id).style("opacity", 1) 
+            })
+            .style("opacity", 1)
+            .style("stroke-width", function(d) { return 3; });
 
           vars.svg.selectAll(".target_"+d.id).each(function(e) {
             vars.svg.select("#node_"+e.source.id).style("opacity", 1) 
           })
-              .style("opacity", 1)
-              .style("stroke-width", function(d) { return 3; })
+          .style("opacity", 1)
+          .style("stroke-width", function(d) { return 3; })
 
           // TODO: quick fix to coordinate with a table
           vars.svg.selectAll(".node").filter(function(e, j) { return e.data === d; }).style("opacity", 1);
@@ -989,7 +989,6 @@ vistk.viz = function() {
         node.attr("cx", function(d) { return x(d.x); })
             .attr("cy", function(d) { return y(d.y); });
 
-
       } else if(vars.type == "linechart") {
 
         var parseDate = d3.time.format("%Y").parse;
@@ -1000,8 +999,7 @@ vistk.viz = function() {
         var y = d3.scale.linear()
             .range([0, vars.height-100]);
 
-        var color = d3.scale.category10();
-
+      
         var xAxis = d3.svg.axis()
             .scale(x)
             .orient("top");
@@ -1020,16 +1018,17 @@ vistk.viz = function() {
             .y(function(d) { return y(d.rank); });
 
         // TODO: flatten the file
-        color.domain(d3.keys(new_data[0]).filter(function(key) { return key !== "date"; }));
+        vars.color.domain(d3.keys(new_data[0]).filter(function(key) { return key !== "date"; }));
 
         new_data.forEach(function(d) {
           d.date = parseDate(d.year);
         });
         
         var min_max_years = d3.extent(new_data, function(d) { return d.date; });
+
         all_years = d3.set(new_data.map(function(d) { return d.year;})).values();
 
-        // Find unique countrie
+        // Find unique countries
         countries = d3.set(new_data.map(function(d) { return d[vars.var_text]; })).values().map(function(c) {
           return {
             id: c.replace(" ", "_"),
@@ -1044,6 +1043,7 @@ vistk.viz = function() {
 
         // Make sure all countries and all ranks are there
         countries.forEach(function(c) {
+
           all_years.forEach(function(y) {
             var is_year = false;
             c.values.forEach(function(v) {
@@ -1053,8 +1053,9 @@ vistk.viz = function() {
             if(!is_year) {
               c.values.push({date: parseDate(y), rank: null, year: y})
             }
-          })
-        })
+          });
+
+        });
 
         x.domain(min_max_years);
 
@@ -1100,7 +1101,7 @@ vistk.viz = function() {
           .enter()
             .append("g")
             .attr("class", function(d) {
-            
+
               // TODO: include class for highlight            
               if(vars.selection.indexOf(d.name) < 0)
                 return "country";
@@ -1126,14 +1127,16 @@ vistk.viz = function() {
               }
 
             })
-            .style("stroke", function(d) { return color(d[vars.var_id]); });
+            .style("stroke", function(d) { return vars.color(d[vars.var_color]); });
 
         country.append("text")
             .datum(function(d) { 
               d.values.sort(function(a, b) { return a.year > b.year;}); 
               return {name: d.name, id: d[vars.var_id], value: d.values[d.values.length - 1]}; 
             })
-            .attr("transform", function(d) { return "translate(" + x(d.value.date) + "," + y(d.value.rank) + ")"; })
+            .attr("transform", function(d) { 
+              return "translate(" + x(d.value.date) + "," + y(d.value.rank) + ")"; 
+            })
             .attr("x", 3)
             .attr("class", function(d) {
              
@@ -1146,7 +1149,7 @@ vistk.viz = function() {
             })
             .attr("dy", ".35em")
             .attr("id", function(d) { return d[vars.var_id]; })
-            .text(function(d) { return d.name; })
+            .text(function(d) { return d[vars.var_text]; })
 
             vars.svg.selectAll(".country").on("mouseover", function(d) {
 
@@ -1174,6 +1177,7 @@ vistk.viz = function() {
 
           vars.svg.selectAll("#"+d[vars.var_id])
                   .classed("selected", !vars.svg.selectAll("#"+d[vars.var_id]).classed("selected"));
+
         })
 
         vars.svg.select("svg").on("click", function(d) {
@@ -1462,7 +1466,7 @@ vistk.viz = function() {
         .html(function(d) { return d; })
 */
 
-
+      // Highlight 
       var label_litems = d3.select(vars.container).selectAll(".items").data([vars.var_id])
         .enter()
           .append("label")
