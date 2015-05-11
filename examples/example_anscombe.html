@@ -9,11 +9,43 @@
 <script>
 
   // TODO
-  // [ ] Load Anscombe dataset
+  // [X] Load Anscombe dataset
   // [ ] Derive descriptive statistics
   // [ ] Init 4 tables
   // [ ] Init 4 scatterplots
   // [ ] Customize tables (zebra, headers, ..)
   // [ ] Connect the charts
+
+
+d3.csv("../data/anscombe.csv", function(graph) {
+
+  data = [];
+
+  graph.forEach(function(d) {
+    
+    d["x"] = +d["x"];
+    d["y"] = +d["y"];
+
+    data.push(d)
+  })
+
+  descriptive = []
+
+  // Find unique categories
+
+  visualization = vistk.viz()
+    .type("table")
+    .width(800)
+    .height(600)
+    .container("#viz")
+    .data(data)
+    .columns(['Group', 'x', 'y'])
+//    .id(["community_name", "name"])
+    .group('Group')
+    .title("Raw Data")
+
+  d3.select("#viz").call(visualization)
+
+})
 
 </script>
