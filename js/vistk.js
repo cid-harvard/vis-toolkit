@@ -29,21 +29,21 @@ vistk.viz = function() {
     nesting_aggs: {},
     type: "",
 
-    // Default values
+    // Default dimensions
     width: 1000,
     height: 600,
     margin: {top: 30, right: 20, bottom: 10, left: 30},
 
-    // Default var mapping
+    // Default Variables mapping
     var_text: "name",
     var_color: null,
 
     // Interaction
-    focus: [],
-    selections: [],
+    highlight: [],
+    selection: [],
     filter: [],
     aggregate: [],
-    time_current: 0,
+    current_time: null,
 
     // TABLE
     columns: [],
@@ -53,14 +53,15 @@ vistk.viz = function() {
     x_scale: "linear",
     x_ticks: 5,
 
-    dispatch: [],
-
+    // Automatically generate UI elements
     ui: true,
 
+    // Color scale
     color: d3.scale.category20c(),
 
     accessor_year: function(d) { return d; },
 
+    dispatch: [],
     evt: {register: function() {}, call: function() {}},  
 
     // SVG Container
@@ -73,7 +74,7 @@ vistk.viz = function() {
 
   if (vars.dev) console.log("Init")
 
-	if (!vars.data) vars.data = []
+  if (!vars.data) vars.data = []
 
   // Calculate new dimensions based on margins
   vars.width = vars.width - vars.margin.left - vars.margin.right;
@@ -113,22 +114,27 @@ vistk.viz = function() {
 
     }
 
+    // Init
     if(vars.focus.length > 0) {
+      
       new_data.forEach(function(d, i) {
           if(i == vars.focus[0])
             d.focus = true;
           else
             d.focus = false;
+
         })
     }
 
     // Filter data by attribute
     // TODO: not sure we should remove data, but add an attribute instead would better
     if(vars.filter.length > 0) {
+
       new_data = new_data.filter(function(d) {
           // We don't keep values that are not in the vars.filter array
           return vars.filter.indexOf(d[vars.var_group]) > -1;
         })
+    
     }
 
     // Aggregate data
@@ -232,8 +238,9 @@ vistk.viz = function() {
       }
 
       vars.evt.register("highlightOn", function(d) {
-        vars.svg.selectAll("tr").filter(function(e, j) { return e === d; })
-          .style("background-color", "#F3ED86");
+        vars.svg.selectAll("tr")
+                .filter(function(e, j) { return e === d; })
+                .style("background-color", "#F3ED86");
       })
 
       vars.evt.register("highlightOut", function(d) {
@@ -272,7 +279,7 @@ vistk.viz = function() {
 
         var cells = rows.selectAll("td")
           .data(row_data)
-          .enter()
+        .enter()
           .append("td")
           .text(function(d) { return d; })
           .on("mouseover", function(d, i) {
@@ -389,14 +396,14 @@ vistk.viz = function() {
       } else if(vars.type == "treemap") {
 
         vars.evt.register("highlightOn", function(d) {
-          vars.svg.selectAll("rect").filter(function(e, j) { return e === d; })
+          vars.svg.selectAll("rect")
+            .filter(function(e, j) { return e === d; })
             .classed("focus", true);
         });
 
         vars.evt.register("highlightOut", function(d) {
-          vars.svg.selectAll("rect")//.filter(function(e, j) { return e === d; })
+          vars.svg.selectAll("rect")
             .classed("focus", false);
-
         });
 
         // Create the root node
@@ -506,21 +513,20 @@ vistk.viz = function() {
 
         vars.evt.register("highlightOn", function(d) {
 
-//          vars.svg.selectAll("rect").filter(function(e, j) { return e === d; })
-//                      .classed("focus", true);
-          
-          dots.style("opacity", .1)
-          labels.style("opacity", 0)          
+          vars.data.forEach(function(e) {
+            if(d === e)
+              e.__highlight = true;
+            else
+              e.__highlight = false;
+          })
 
-          d3.select(this).select("circle").style("opacity", 1)
-          d3.select(this).select("text").style("opacity", 1)
-        
         });
 
         vars.evt.register("highlightOut", function(d) {
 
-          dots.style("opacity", 1)
-          labels.style("opacity", 1)     
+          vars.data.forEach(function(e) {
+              d.__highlight = false;
+          })
 
         });
 
@@ -542,7 +548,7 @@ vistk.viz = function() {
             .attr("class", "year label")
             .attr("text-anchor", "end");
 
-        // Backgroun year label
+        // Background year label
         vars.svg.selectAll(".label")
             .attr("y", 124)
             .attr("x", 500)
@@ -626,6 +632,10 @@ vistk.viz = function() {
             .attr("cy", 0)
             .style("fill", function(d) { return vars.color(d[vars.var_color]); })
 
+
+          // TODO: check if any element has been selected
+          // .classed("focus", true);
+
           var labels = gPoints_enter.append("text")
               .attr("x", 10)
               .attr("y", 0)
@@ -636,19 +646,25 @@ vistk.viz = function() {
           var gPoints_exit = gPoints.exit().style("opacity", .1);
 
           // Update all the remaining dots
-          gPoints.style("opacity", 1)    
+          gPoints.style("opacity", function(d) {
+              if(d.__highlight)
+                return 1;
+              else
+                return .1;
+            })  
 
           vars.svg.selectAll(".points")
                           .transition()
                           .attr("transform", function(d) {
                             return "translate("+x(d[vars.x_var])+", "+y(d[vars.y_var])+")";
                           })
-
         }
 
       } else if(vars.type == "dotplot") {
 
         vars.evt.register("highlightOn", function(d) {
+
+          // Go through the data
 
           // Reset highlighted styles
           gPoints.selectAll(".dot__circle").classed("highlighted", function(e, j) { return e === d; });
