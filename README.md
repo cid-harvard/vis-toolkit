@@ -8,8 +8,6 @@ The **vis-toolkit** is a collection of visualization templates (line chart, tree
 
 One of the fundamental design idea of the toolkit is to consider each element to display as **items** (e.g. countries, products). Items are usually rows of a dataset, and their properties the columns or **dimensions** (e.g. population, gdp), which can be updated over time. Items will be bound to graphical marks, sometimes after some preprocessing (e.g. a line chart represents the same item, but over multiple time points). And the graphical marks properties encode the dimensions. Each item's dimensions can be updated over **time** and consequently updates the graphical mark and its properties.
 
-##
-
 Each visualization should implement the following set of interactions: 
 
 * `.highlight()` highlights an item like if a `mouseover` event had been triggered on the item. Only one item can be highlighted at a time. Highlight is removed once a `mouseout` event is triggered or another `mouseover` event
@@ -58,16 +56,14 @@ Composite examples (using coordinated views)
 * Profile exports ([Demo](http://cid-harvard.github.io/vis-toolkit/examples/profile_exports.html)
 * Profile possibilities ([Demo](http://cid-harvard.github.io/vis-toolkit/examples/profile_possibilities.html )
 
+Re-creation of standard examples
+
+* Anscombe quartet ([Demo](http://cid-harvard.github.io/vis-toolkit/examples/anscombe.html)
+
+
 ## Data Management
 
 ### Input Format
-
-* Which format should be used as input?
- * Most likely a flat file that can easily filtered
- * Might be larger than a complex/nested structure, but easier to process
-* How to detect items? rows?
-* How to deal with trees?
- * Again a flat file and then connecting/aggregating might do the job
 
 * Look at data transform options https://github.com/trifacta/vega/wiki/Data-Transforms
 
@@ -78,11 +74,7 @@ Composite examples (using coordinated views)
 
 Time data
 
-* Used to draw one line of the Sparkline
 
-`{Date: "Dec 18, 2013", Close: "1084.75", date: Wed Dec 18 2013 00:00:00 GMT-0500 (EST), close: 1084.75}
-{Date: "Dec 17, 2013", Close: "1069.86", date: Tue Dec 17 2013 00:00:00 GMT-0500 (EST), close: 1069.86}
-`
  * Time should have been parsed
  * What about missing values?
 
@@ -338,11 +330,11 @@ Combination of a matrix with nested scatterplots within each cell. The matrix be
 
 * Test with curved links http://bl.ocks.org/mbostock/4600693
 
-* Rings
-  * http://bl.ocks.org/bansaghi/e490c7c238a67a77996d 
+* Rings http://bl.ocks.org/bansaghi/e490c7c238a67a77996d 
 
 * Self-organized Packing http://colinwhite.net/Packed%20Circle/index.html
 
+ * Zoom to bounding box http://bl.ocks.org/mbostock/4699541
 
 ### Bar chart
 
@@ -372,7 +364,6 @@ Area chart with stacked shapes on top of each other (the previous layer being th
 * Parallel coordinates http://bl.ocks.org/syntagmatic/42d5b54c5cfe002e7dd8
 
 
-
 ### Other charts
 
 Listing of charts
@@ -391,7 +382,7 @@ Listing of charts
 * v0.2 Beta
  * Generic data format as input
  * Couple of more visualizations
- * Code testing and production deployement
+ * Code testing and production deployment
 
 * v0.3
  * States

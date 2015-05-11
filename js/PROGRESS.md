@@ -37,12 +37,17 @@ Ex. data structure for sparklines
 [ ] Hightlight
 [ ] Selection
 
+[ ] Show bins
+[ ] Combine with another sparkline
+[ ] Grid lines / decorations
+
 ## Nodelink / Product space graph
 
 [ ] Data wrangling
 
 [ ] Hightlight
 [ ] Selection
+[ ] Zoom to bounding box
 
 ## GeoMap
 
@@ -50,6 +55,8 @@ Ex. data structure for sparklines
 
 [X] World
 [ ] Colombia
+
+[ ] Zoom to bounding box
 
 ## Stacked Graph
 
@@ -74,4 +81,10 @@ Ex. data structure for sparklines
 
 # Storytelling
 
- * Stepper
+* Stepper
+
+# Annotations
+
+# UI elements
+
+* Generate
