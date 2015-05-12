@@ -50,7 +50,13 @@ vistk.viz = function() {
     sort_by: {'column': 'name', 'asc': true},
 
     // DOTPLOT
-    x_scale: "linear",
+    x_type: "linear",
+    x_scale: null,
+    x_ticks: 5,
+
+    // SCATTERPLOT (INCLUDES DOTPLOT)
+    y_type: "linear",
+    y_scale: null,
     x_ticks: 5,
 
     // Automatically generate UI elements
@@ -721,7 +727,7 @@ vistk.viz = function() {
         // Init the x scale
         var x = null;
 
-        if(vars.x_scale == "index") {
+        if(vars.x_type == "index") {
 
           x = d3.scale.ordinal()
                 .domain(d3.range(new_data.length))
@@ -811,7 +817,7 @@ vistk.viz = function() {
                               .attr("class", "dot__circle");
 
               break;
-              
+
             case "diamond":
 
              gPoints_enter.append("rect")
@@ -846,7 +852,7 @@ vistk.viz = function() {
 
         var gPoints_exit = gPoints.exit().style("opacity", .1);
 
-        if(vars.x_scale == "index") {
+        if(vars.x_type == "index") {
 
           vars.svg.selectAll(".points")
                           .transition().delay(function(d, i) { return i / vars.data.length * 100; }).duration(1000)
@@ -1410,6 +1416,10 @@ vistk.viz = function() {
           country_exit = country.exit().style({"display": "none"});
 
           }
+     
+
+      } else {
+
       }
 
       function find_node_by_id(id) {
@@ -1755,9 +1765,9 @@ vistk.viz = function() {
   };
 
   // DOTPLOT
-  chart.x_scale = function(x) {
-    if (!arguments.length) return vars.x_scale;
-    vars.x_scale = x;
+  chart.x_type = function(x) {
+    if (!arguments.length) return vars.x_type;
+    vars.x_type = x;
     return chart;
   }; 
 
