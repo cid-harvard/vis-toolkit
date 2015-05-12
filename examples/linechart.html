@@ -37,7 +37,9 @@ d3.csv("../data/new_rankings2.csv", function(error, data) {
     .group("category")
     .text("name")
     .params({
-      y_text: "ECI Rank"
+      y_text: "ECI Rank",
+      var_time: "date",
+      var_y: "rank"
     })
     .selection(["Japan", "Switzerland", "Germany", "South Korea", "Finland", "United Kingdom", "United States", "France", "Italy", "China", "Mexico", "Spain"])
     .highlight("France");

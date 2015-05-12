@@ -25,8 +25,10 @@ d3.json("../data/atlas_international_product_space.json", function(graph) {
       .width(400)
       .type("nodelink")
       .container("#viz")
-      .x_var("nb_products")
-      .y_var("avg_products")
+      .params({
+        var_x: 'nb_products',
+        var_y: 'avg_products'
+      })      
       .id("product_id")
       .group("category")
       .size("value")

@@ -25,7 +25,7 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
     .container('#viz')
     .data(departments)
     .params({
-      x_var: 'dept_pop',
+      var_x: 'dept_pop',
       x_scale: 'linear',
       y_var: ['dept_pop', 'realgdp'],
       x_text: null,
@@ -42,11 +42,11 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
 
   // Additional options below
   d3.select("#viz").append("select")
-    .attr("id", "select_x_var")
+    .attr("id", "select_var_x")
     .on("change", function(d) {
 
       visualization.params({
-        x_var: this.value
+        var_x: this.value
       })
       d3.select("#viz").call(visualization)
 

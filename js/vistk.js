@@ -158,12 +158,12 @@ vistk.viz = function() {
 
           aggregation[vars.var_group] = leaves[0][vars.var_group];
 
-          aggregation[vars.x_var] = d3.mean(leaves, function(d) {
-            return d[vars.x_var];
+          aggregation[vars.var_x] = d3.mean(leaves, function(d) {
+            return d[vars.var_x];
           });
 
-          aggregation[vars.y_var] = d3.mean(leaves, function(d) {
-              return d[vars.y_var];
+          aggregation[vars.var_y] = d3.mean(leaves, function(d) {
+              return d[vars.var_y];
             })
 
           vars.columns.forEach(function(c) {
@@ -284,17 +284,19 @@ vistk.viz = function() {
           .text(function(d) { return d; })
           .on("mouseover", function(d, i) {
             vars.evt.call("highlightOn", d3.select(this.parentNode).data()[0]);     
-          }).on("mouseout", function(d) {
+          })
+          .on("mouseout", function(d) {
             vars.evt.call("highlightOut", d3.select(this.parentNode).data()[0]); 
-          }).on("click", function(d) {
+          })
+          .on("click", function(d) {
 
             var data = d3.select(this.parentNode).data()[0];
-            var index = vars.selections.indexOf(data);
+            var index = vars.selection.indexOf(data);
 
             if(index <0)
-              vars.selections.push(data);
+              vars.selection.push(data);
             else
-              vars.selections.splice(index, 1);
+              vars.selection.splice(index, 1);
 
           });
 
@@ -552,8 +554,8 @@ vistk.viz = function() {
             .attr("x", 500)
             .text(vars.current_time);
 
-        x.domain([0, d3.max(vars.data, function(d) { return d[vars.x_var]; })]).nice();
-        y.domain([0, d3.max(vars.data, function(d) { return d[vars.y_var]; })]).nice();
+        x.domain([0, d3.max(vars.data, function(d) { return d[vars.var_x]; })]).nice();
+        y.domain([0, d3.max(vars.data, function(d) { return d[vars.var_y]; })]).nice();
 
         vars.svg.selectAll(".x.axis").data([new_data])
           .enter()
@@ -565,7 +567,7 @@ vistk.viz = function() {
             .attr("x", vars.width-vars.margin.left-vars.margin.right)
             .attr("y", -6)
             .style("text-anchor", "end")
-            .text(function(d) { return vars.x_var; })
+            .text(function(d) { return vars.var_x; })
 
         vars.svg.selectAll(".y.axis").data([new_data]).enter().append("g")
             .attr("class", "y axis")
@@ -576,7 +578,7 @@ vistk.viz = function() {
             .attr("y", 6)
             .attr("dy", ".71em")
             .style("text-anchor", "end")
-            .text(function(d) { return vars.y_var; })
+            .text(function(d) { return vars.var_y; })
 
         vars.svg.selectAll(".x.axis").call(xAxis);
         vars.svg.selectAll(".y.axis").call(yAxis);
@@ -613,7 +615,7 @@ vistk.viz = function() {
           gPoints
               .transition()
               .attr("transform", function(d) {
-                return "translate("+x(d[vars.x_var])+", "+y(d[vars.y_var])+")";
+                return "translate("+x(d[vars.var_x])+", "+y(d[vars.var_y])+")";
               })
 
         } else { 
@@ -669,7 +671,7 @@ vistk.viz = function() {
           gPoints
             .transition()
             .attr("transform", function(d) {
-              return "translate("+x(d[vars.x_var])+", "+y(d[vars.y_var])+")";
+              return "translate("+x(d[vars.var_x])+", "+y(d[vars.var_y])+")";
             })
         }
 
@@ -677,7 +679,6 @@ vistk.viz = function() {
 
         vars.evt.register("highlightOn", function(d) {
 
-          // Reset highlighted styles
           gPoints.selectAll(".dot__circle").classed("highlighted", function(e, j) { return e === d; });
           gPoints.selectAll(".dot__label").classed("highlighted", function(e, j) { return e === d; });
         
@@ -700,7 +701,7 @@ vistk.viz = function() {
                 .rangeBands([vars.margin.left, vars.width-vars.margin.left-vars.margin.right]);
 
           new_data.sort(function ascendingKey(a, b) {
-            return d3.ascending(a[vars.x_var], b[vars.x_var]);
+            return d3.ascending(a[vars.var_x], b[vars.var_x]);
           })
           .forEach(function(d, i) {
             d.rank = x(i);
@@ -710,7 +711,7 @@ vistk.viz = function() {
 
           x = d3.scale.linear()
               .range([vars.margin.left, vars.width-vars.margin.left-vars.margin.right])
-              .domain([0, d3.max(new_data, function(d) { return d[vars.x_var]; })]).nice();
+              .domain([0, d3.max(new_data, function(d) { return d[vars.var_x]; })]).nice();
         
         }
 
@@ -736,7 +737,7 @@ vistk.viz = function() {
             .style("text-anchor", "end")
             .text(function(d) { 
               if(typeof vars.x_text != undefined && vars.x_text != null)
-                return vars.x_var;
+                return vars.var_x;
               else
                 return '';
             })
@@ -749,15 +750,25 @@ vistk.viz = function() {
         var gPoints_enter = gPoints.enter()
                         .append("g")
                         .attr("class", "points")
+                        .attr("transform", function(d, i) {
+                          return "translate("+ vars.margin.left +", "+vars.height/2+")";
+                        })
                         .on("mouseover",function(d) {
                           vars.evt.call("highlightOn", d);
                         })
                         .on("mouseleave", function(d) {
                           vars.evt.call("highlightOut", d);
-                        })                        
-                        .attr("transform", function(d, i) {
-                          return "translate("+ vars.margin.left +", "+vars.height/2+")";
-                        })                        
+                        })
+                        .on("click", function(d) {
+
+                          var index = vars.selection.indexOf(d);
+
+                          if(index <0)
+                            vars.selection.push(data);
+                          else
+                            vars.selection.splice(index, 1);
+
+                        })
 
         gPoints_enter.append("circle")
                         .attr("r", 5)
@@ -788,7 +799,7 @@ vistk.viz = function() {
           vars.svg.selectAll(".points")
                           .transition().delay(function(d, i) { return i / vars.data.length * 100; }).duration(1000)
                           .attr("transform", function(d) {
-                            return "translate("+x(d[vars.x_var])+", "+vars.height/2+")";
+                            return "translate("+x(d[vars.var_x])+", "+vars.height/2+")";
                           })
         }
 
@@ -1034,17 +1045,17 @@ vistk.viz = function() {
         // https://gist.github.com/mbostock/3035090
             .defined(function(d) { return d.rank != null; })
             .interpolate("monotone")
-            .x(function(d) { return x(d.date); })
+            .x(function(d) { return x(d[vars.var_time]); })
             .y(function(d) { return y(d.rank); });
 
         // TODO: fix that!
         vars.color.domain(d3.keys(new_data[0]).filter(function(key) { return key !== "date"; }));
 
         new_data.forEach(function(d) {
-          d.date = parseDate(d.year);
+          d[vars.var_time] = parseDate(d.year);
         });
         
-        var min_max_years = d3.extent(new_data, function(d) { return d.date; });
+        var min_max_years = d3.extent(new_data, function(d) { return d[vars.var_time]; });
 
         all_years = d3.set(new_data.map(function(d) { return d.year;})).values();
 
@@ -1162,7 +1173,7 @@ vistk.viz = function() {
               return {name: d.name, id: d[vars.var_id], value: d.values[d.values.length - 1]}; 
             })
             .attr("transform", function(d) { 
-              return "translate(" + x(d.value.date) + "," + y(d.value.rank) + ")"; 
+              return "translate(" + x(d.value[vars.var_time]) + "," + y(d.value.rank) + ")"; 
             })
             .attr("x", 3)
             .attr("class", function(d) {
@@ -1212,10 +1223,10 @@ vistk.viz = function() {
         var line = d3.svg.line()
                      .interpolate("basis")
                      .x(function(d) { return x(d[vars.var_time]); })
-                     .y(function(d) { return y(d[vars.y_var]); });
+                     .y(function(d) { return y(d[vars.var_y]); });
         
         x.domain(d3.extent(new_data, function(d) { return d[vars.var_time]; }));
-        y.domain(d3.extent(new_data, function(d) { return d[vars.y_var]; }));
+        y.domain(d3.extent(new_data, function(d) { return d[vars.var_y]; }));
 
         vars.svg.selectAll(".sparkline").data([new_data])
           .enter().append('path')
@@ -1226,13 +1237,13 @@ vistk.viz = function() {
         vars.svg.append('circle')
            .attr('class', 'start sparkcircle')
            .attr('cx', x(new_data[0][vars.var_time]))
-           .attr('cy', y(new_data[0][vars.y_var]))
+           .attr('cy', y(new_data[0][vars.var_y]))
            .attr('r', 1.5);  
 
         vars.svg.append('circle')
            .attr('class', 'end sparkcircle')
            .attr('cx', x(new_data[new_data.length-1][vars.var_time]))
-           .attr('cy', y(new_data[new_data.length-1][vars.y_var]))
+           .attr('cy', y(new_data[new_data.length-1][vars.var_y]))
            .attr('r', 1.5);  
 
       } else if(vars.type == "geomap") {
@@ -1468,9 +1479,9 @@ vistk.viz = function() {
           .attr("class", "loader")
 
       label_loader.append("select")
-        .attr("id", "select_x_var")
+        .attr("id", "select_var_x")
         .on("change", function(d) {
-          vars.x_var = this.value;
+          vars.var_x = this.value;
           ds.update(vars.current_view);
         })
         .selectAll("option")
@@ -1512,6 +1523,7 @@ vistk.viz = function() {
              .on("click", function() {
 
                 vars.svg.selectAll(".selected").classed("selected", false);
+                vars.selection = [];
                 d3.select("#viz").call(visualization);
 
               })
@@ -1523,6 +1535,7 @@ vistk.viz = function() {
              .on("click", function() {
 
                 vars.svg.selectAll(".highlighted").classed("highlighted", false);
+                vars.highlight = [];                
                 d3.select("#viz").call(visualization);
 
               })
@@ -1665,15 +1678,15 @@ vistk.viz = function() {
   };
 
   // SCATTERPLOT
-  chart.x_var = function(x) {
-    if (!arguments.length) return vars.x_var;
-    vars.x_var = x;
+  chart.var_x = function(x) {
+    if (!arguments.length) return vars.var_x;
+    vars.var_x = x;
     return chart;
   };
 
-  chart.y_var = function(y) {
-    if (!arguments.length) return vars.y_var;
-    vars.y_var = y;
+  chart.var_y = function(y) {
+    if (!arguments.length) return vars.var_y;
+    vars.var_y = y;
     return chart;
   };
 
@@ -1769,7 +1782,7 @@ vistk.viz = function() {
 
     vars.focus = [x];
 
-/* Smart but should be done for selections
+/* Smart but should be done for selection
 
     if(x instanceof Array) {
       vars.focus = x;

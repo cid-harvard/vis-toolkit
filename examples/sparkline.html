@@ -25,7 +25,7 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
   var parseDate = d3.time.format("%Y").parse;
 
   var res = [];
-  
+
   // Flatten the data here
   // Or do something to build the temporal data? Should it happen here?
   departments.forEach(function(d) {
@@ -42,7 +42,7 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
     .width(300)
     .data(res)
     .id("id")
-    .y_var("realgdp")
+    .var_y("realgdp")
     .group("category")
     .color("name")
     .title("Products")
@@ -54,6 +54,5 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
   d3.select("#viz").call(visualization)
 
 })
-
 
 </script>

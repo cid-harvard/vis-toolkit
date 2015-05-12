@@ -178,7 +178,7 @@ div.tooltip {
   opacity: 1;
 }
 
-.dot__circle.highlighted {
+.dot__circle .highlighted {
   opacity: .1;
 }
 
@@ -191,7 +191,7 @@ div.tooltip {
 }
 
 .dot__label.highlighted {
-  text-decoration: "underline";
+  text-decoration: underline;
 }
 
 .points {
