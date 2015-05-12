@@ -1499,6 +1499,17 @@ vistk.viz = function() {
         .attr("value", function(d) { return d[vars.var_text]; })
         .html(function(d) { return d[vars.var_text]; })
 
+      d3.select(vars.container).selectAll(".unselectAll").data([vars.var_id]).enter().append("button")
+             .attr("type", "button")
+             .attr("class", "unselectAll")
+             .on("click", function() {
+
+                vars.svg.selectAll(".selected").classed("selected", false);
+                d3.select("#viz").call(visualization);
+
+              })
+             .html("Unselect All")
+
     }
 
       // d3.json("../data/exports_2012.json", function(error, data) {
