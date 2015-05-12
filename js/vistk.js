@@ -787,12 +787,29 @@ vistk.viz = function() {
                           vars.evt.call("highlightOut", d);
                         })
 
-        gPoints_enter.append("circle")
-                        .attr("r", 5)
-                        .attr("cx", 0)
-                        .attr("cy", 0)
-                        .attr("class", "dot__circle")
+        if(typeof vars.mark != "undefined") 
 
+          switch(vars.mark.type) {
+
+            case "circle":
+ 
+              gPoints_enter.append("circle")
+                              .attr("r", 5)
+                              .attr("cx", 0)
+                              .attr("cy", 0)
+                              .attr("class", "dot__circle");
+
+            case "rect":
+ 
+             gPoints_enter.append("rect")
+                              .attr("height", vars.mark.height)
+                              .attr("width", vars.mark.width)                              
+                              .attr("x", -vars.mark.width/2)
+                              .attr("y", -vars.mark.height/2)
+                              .attr("class", "dot__circle");
+
+          }
+ 
         gPoints_enter.append("text")
                         .attr("x", 10)
                         .attr("y", 0)

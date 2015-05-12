@@ -161,29 +161,34 @@ div.tooltip {
 
 /* Dot plot */
 
-.dot__circle {
-  fill: "gray";
+circle.dot__circle {
+  fill: gray;
   opacity: ".5";
 }
 
-.dot__circle.selected {
-  stroke": "black";
+circle.dot__circle.selected {
+  stroke": black;
   stroke-width: "3px";
   opacity: 1
 }
 
-.dot__circle:not(.selected) {
-  stroke: "black";
+circle.dot__circle:not(.selected) {
+  stroke: black;
   stroke-width: ".9px";
   opacity: 1;
 }
 
-.dot__circle .highlighted {
+circle.dot__circle .highlighted {
   opacity: .1;
 }
 
-.dot__circle:not(.highlighted) {
+circle.dot__circle:not(.highlighted) {
   opacity: .1;
+}
+
+rect.dot__circle {
+  fill: gray;
+  opacity: ".5";
 }
 
 .dot__label:not(.highlighted) {
