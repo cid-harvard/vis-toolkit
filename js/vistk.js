@@ -81,7 +81,7 @@ vistk.viz = function() {
   vars.height = vars.height - vars.margin.top - vars.margin.bottom;
 
   // Events 
-  vars.dispatch = d3.dispatch("init", "end", "highlightOn", "highlightOut");
+  vars.dispatch = d3.dispatch("init", "end", "highlightOn", "highlightOut", "click");
 
 	// Constructor
 	chart = function(selection) {	
@@ -515,6 +515,9 @@ vistk.viz = function() {
 
         vars.evt.register("highlightOn", function(d) {
 
+          gPoints.selectAll(".dot__circle").classed("highlighted", function(e, j) { return e === d; });
+          gPoints.selectAll(".dot__label").classed("highlighted", function(e, j) { return e === d; });
+
           vars.data.forEach(function(e) {
             if(d === e)
               e.__highlight = true;
@@ -638,12 +641,14 @@ vistk.viz = function() {
               .attr("r", 5)
               .attr("cx", 0)
               .attr("cy", 0)
+              .attr("class", "dot__circle")
               .style("fill", function(d) { return vars.color(d[vars.var_color]); })
 
           var labels = gPoints_enter.append("text")
               .attr("x", 10)
               .attr("y", 0)
               .attr("dy", ".35em")
+              .attr("class", "dot__label")              
               .style("text-anchor", "start")
               .text(function(d) { return d[vars.var_text]; });
 
@@ -690,6 +695,16 @@ vistk.viz = function() {
           gPoints.selectAll(".dot__label").classed("highlighted", false);
 
         });
+
+        vars.evt.register("selection", function(d) {
+
+          var clicked_node = d3.selectAll(".dot__circle")
+            .filter(function(e, j) { return e === d; })
+
+          clicked_node.classed("selected", !clicked_node.classed("selected"));
+
+        });
+
 
         // Init the x scale
         var x = null;
@@ -759,16 +774,6 @@ vistk.viz = function() {
                         .on("mouseleave", function(d) {
                           vars.evt.call("highlightOut", d);
                         })
-                        .on("click", function(d) {
-
-                          var index = vars.selection.indexOf(d);
-
-                          if(index <0)
-                            vars.selection.push(data);
-                          else
-                            vars.selection.splice(index, 1);
-
-                        })
 
         gPoints_enter.append("circle")
                         .attr("r", 5)
@@ -782,7 +787,18 @@ vistk.viz = function() {
                         .attr("dy", ".35em")
                         .attr("class", "dot__label")
                         .attr("transform", "rotate(-30)")
-                        .text(function(d) { return d[vars.var_text]; });
+                        .text(function(d) { return d[vars.var_text]; })
+                        .on("click", function(d) {
+                           vars.evt.call("selection", d);
+                          /*
+                          var index = vars.selection.indexOf(d);
+
+                          if(index <0)
+                            vars.selection.push(d);
+                          else
+                            vars.selection.splice(index, 1);
+                          */
+                        })
 
         var gPoints_exit = gPoints.exit().style("opacity", .1);
 
@@ -1007,7 +1023,6 @@ vistk.viz = function() {
 
           vars.svg.selectAll("#"+d[vars.var_id]).style("opacity", 1);
 
-          // Highlight
           vars.svg.selectAll(".line").filter(function(e, j) { return e === d; }).style("stroke-width", 3);
           vars.svg.selectAll(".text").filter(function(e, j) { return e === d; }).style("text-decoration", "underline");
 
@@ -1017,11 +1032,17 @@ vistk.viz = function() {
 
           vars.svg.selectAll(".country:not(.selected)").style("opacity", 1);
 
-          // Highlight
           vars.svg.selectAll(".line").filter(function(e, j) { return e === d; }).style("stroke-width", 1);
           vars.svg.selectAll(".text").filter(function(e, j) { return e === d; }).style("text-decoration", "none");
 
         })
+
+        vars.evt.register("selection", function(d) {
+
+          vars.svg.selectAll("#"+d[vars.var_id])
+                  .classed("selected", !vars.svg.selectAll("#"+d[vars.var_id]).classed("selected"));
+
+        });
 
         var parseDate = d3.time.format("%Y").parse;
 
@@ -1201,11 +1222,10 @@ vistk.viz = function() {
 
         vars.svg.selectAll("text.country").on("click", function(d) {
 
-          vars.svg.selectAll("#"+d[vars.var_id])
-                  .classed("selected", !vars.svg.selectAll("#"+d[vars.var_id]).classed("selected"));
+          vars.evt.call("selection", d);
 
         })
-
+/*
         vars.svg.select("svg").on("click", function(d) {
 
           d3.selectAll(".selected").classed("selected", false);
@@ -1213,7 +1233,7 @@ vistk.viz = function() {
           d3.selectAll(".text:not(.selected)").style("opacity", 1);
 
         })
-
+*/
       } else if(vars.type == "sparkline") {
 
         // From http://www.tnoda.com/blog/2013-12-19
