@@ -633,10 +633,10 @@ vistk.viz = function() {
                           });
 
           var dots = gPoints_enter.append("circle")
-            .attr("r", 5)
-            .attr("cx", 0)
-            .attr("cy", 0)
-            .style("fill", function(d) { return vars.color(d[vars.var_color]); })
+              .attr("r", 5)
+              .attr("cx", 0)
+              .attr("cy", 0)
+              .style("fill", function(d) { return vars.color(d[vars.var_color]); })
 
           var labels = gPoints_enter.append("text")
               .attr("x", 10)
@@ -676,8 +676,6 @@ vistk.viz = function() {
       } else if(vars.type == "dotplot") {
 
         vars.evt.register("highlightOn", function(d) {
-
-          // Go through the data
 
           // Reset highlighted styles
           gPoints.selectAll(".dot__circle").classed("highlighted", function(e, j) { return e === d; });
@@ -1126,12 +1124,15 @@ vistk.viz = function() {
             .append("g")
             .attr("class", function(d) {
 
-              // TODO: include class for highlight            
-              if(vars.selection.indexOf(d.name) < 0)
-                return "country";
-              else {
-                return "country selected";
-              }
+              var c = "country";
+
+              if(vars.selection.indexOf(d.name) >= 0)
+                c += " selected";
+
+              if(vars.highlight.indexOf(d.name) >= 0)
+                c += " highlighted";
+
+              return c;
 
             });
 
@@ -1142,13 +1143,16 @@ vistk.viz = function() {
             })
             .attr("id", function(d) { return d[vars.var_id]; })
             .attr("class", function(d) {
-             
-              // TODO: include class for highlight
-              if(vars.selection.indexOf(d.name) < 0)
-                return "country line";
-              else
-                return "country line selected";
 
+              var c = "country line";
+
+              if(vars.selection.indexOf(d.name) >= 0)
+                c += " selected";
+
+              if(vars.highlight.indexOf(d.name) >= 0)
+                c += " highlighted";
+
+              return c;
             })
             .style("stroke", function(d) { return vars.color(d[vars.var_color]); });
 
@@ -1162,13 +1166,16 @@ vistk.viz = function() {
             })
             .attr("x", 3)
             .attr("class", function(d) {
-             
-              if(vars.selection.indexOf(d.name) < 0)
-                return "country text";
-              else {
-                return "country text selected";
-              }
 
+              var c = "country text";
+
+              if(vars.selection.indexOf(d.name) >= 0)
+                c += " selected";
+
+              if(vars.highlight.indexOf(d.name) >= 0)
+                c += " highlighted";
+
+              return c;
             })
             .attr("dy", ".35em")
             .attr("id", function(d) { return d[vars.var_id]; })
@@ -1499,16 +1506,27 @@ vistk.viz = function() {
         .attr("value", function(d) { return d[vars.var_text]; })
         .html(function(d) { return d[vars.var_text]; })
 
-      d3.select(vars.container).selectAll(".unselectAll").data([vars.var_id]).enter().append("button")
+      d3.select(vars.container).selectAll(".clearSelection").data([vars.var_id]).enter().append("button")
              .attr("type", "button")
-             .attr("class", "unselectAll")
+             .attr("class", "clearSelection")
              .on("click", function() {
 
                 vars.svg.selectAll(".selected").classed("selected", false);
                 d3.select("#viz").call(visualization);
 
               })
-             .html("Unselect All")
+             .html("Clear selection")
+
+      d3.select(vars.container).selectAll(".clearHighlight").data([vars.var_id]).enter().append("button")
+             .attr("type", "button")
+             .attr("class", "clearHighlight")
+             .on("click", function() {
+
+                vars.svg.selectAll(".highlighted").classed("highlighted", false);
+                d3.select("#viz").call(visualization);
+
+              })
+             .html("Clear highlight")
 
     }
 

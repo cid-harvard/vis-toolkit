@@ -39,7 +39,8 @@ d3.csv("../data/new_rankings2.csv", function(error, data) {
     .params({
       y_text: "ECI Rank"
     })
-    .selection(["Japan", "Switzerland", "Germany", "South Korea", "Finland", "United Kingdom", "United States", "France", "Italy", "China", "Mexico", "Spain"]);
+    .selection(["Japan", "Switzerland", "Germany", "South Korea", "Finland", "United Kingdom", "United States", "France", "Italy", "China", "Mexico", "Spain"])
+    .highlight("France");
 
   d3.select("#viz").call(visualization);
 
