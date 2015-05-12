@@ -23,7 +23,7 @@ vistk.viz = function() {
     var_group: null,
     data: [],
     links: [],
-    title: "",
+    title: null,
     focus: [],
     nesting: null,
     nesting_aggs: {},
@@ -56,8 +56,12 @@ vistk.viz = function() {
     // Automatically generate UI elements
     ui: true,
 
-    // Color scale
+    // Type of graphical marks
+    // TODO
+
+    // Graphical properties for graphical marks
     color: d3.scale.category20c(),
+    size: d3.scale.linear(),
 
     accessor_year: function(d) { return d; },
 
@@ -81,7 +85,7 @@ vistk.viz = function() {
   vars.height = vars.height - vars.margin.top - vars.margin.bottom;
 
   // Events 
-  vars.dispatch = d3.dispatch("init", "end", "highlightOn", "highlightOut", "click");
+  vars.dispatch = d3.dispatch("init", "end", "highlightOn", "highlightOut", "selection");
 
 	// Constructor
 	chart = function(selection) {	
@@ -256,8 +260,16 @@ vistk.viz = function() {
           thead = table.append("thead").attr("class", "thead");
           tbody = table.append("tbody");
 
-        table.append("caption")
-          .html(vars.title + " (" + vars.current_time + ")");
+        if(vars.title != null) {
+
+          var title = vars.title;
+
+          if(typeof vars.current_time != "undefined")
+            title += " (" + vars.current_time + ")";
+
+          table.append("caption")
+            .html(title);
+        }
 
         thead.append("tr").selectAll("th")
           .data(vars.columns)
