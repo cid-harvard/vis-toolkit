@@ -64,6 +64,7 @@ Ex. data structure for sparklines
 
 [ ] Hightlight
 [ ] Selection
+[ ] Filter for a specific time range
 
 ## Scatterplot / feasibility
 
@@ -71,6 +72,17 @@ Ex. data structure for sparklines
 
 [ ] Hightlight
 [ ] Selection
+[ ] Aggregation
+[ ] Filter
+
+## Line chart
+
+[ ] Custom color scales
+
+[ ] Hightlight
+[ ] Selection
+[ ] Aggregation
+[ ] Time filter by range
 
 ##  Sparkline
 
@@ -78,6 +90,8 @@ Ex. data structure for sparklines
 
 [ ] Hightlight
 [ ] Selection
+[ ] Aggregation
+[ ] Filter
 
 # Storytelling
 
