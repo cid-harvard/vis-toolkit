@@ -113,8 +113,9 @@ vistk.viz = function() {
     new_data = vars.data;
 
     // Filter data by time
-    if(typeof vars.var_time != "undefined" && typeof vars.current_time != "undefined") {
+    if(typeof vars.var_time != "undefined" && vars.current_time != null) {
 
+      console.log("[time.filter]", vars.var_time, vars.current_time)
       new_data = new_data.filter(function(d) {
         return d[vars.var_time] == vars.current_time;
       })
@@ -138,9 +139,9 @@ vistk.viz = function() {
     if(vars.filter.length > 0) {
 
       new_data = new_data.filter(function(d) {
-          // We don't keep values that are not in the vars.filter array
-          return vars.filter.indexOf(d[vars.var_group]) > -1;
-        })
+        // We don't keep values that are not in the vars.filter array
+        return vars.filter.indexOf(d[vars.var_group]) > -1;
+      })
     
     }
 
@@ -1092,20 +1093,21 @@ vistk.viz = function() {
 
         });
 
+        // TODO: Put into the format parameters
         var parseDate = d3.time.format("%Y").parse;
 
-        var x = d3.time.scale()
+        vars.x_scale = d3.time.scale()
             .range([0, vars.width-100]);
 
-        var y = d3.scale.linear()
+        vars.y_scale = d3.scale.linear()
             .range([0, vars.height-100]);
 
         var xAxis = d3.svg.axis()
-            .scale(x)
+            .scale(vars.x_scale)
             .orient("top");
 
         var yAxis = d3.svg.axis()
-            .scale(y)
+            .scale(vars.y_scale)
             .orient("left");
 
         // FIX FOR MISSING VALUES
@@ -1114,10 +1116,10 @@ vistk.viz = function() {
         // https://gist.github.com/mbostock/3035090
             .defined(function(d) { return d.rank != null; })
             .interpolate("monotone")
-            .x(function(d) { return x(d[vars.var_time]); })
-            .y(function(d) { return y(d.rank); });
+            .x(function(d) { return vars.x_scale(d[vars.var_time]); })
+            .y(function(d) { return vars.y_scale(d.rank); });
 
-        // TODO: fix that!
+        // TODO: fix the color scale
         vars.color.domain(d3.keys(new_data[0]).filter(function(key) { return key !== "date"; }));
 
         new_data.forEach(function(d) {
@@ -1157,9 +1159,9 @@ vistk.viz = function() {
 
         });
 
-        x.domain(min_max_years);
+        vars.x_scale.domain(min_max_years);
 
-        y.domain([
+        vars.y_scale.domain([
           d3.min(countries, function(c) { return d3.min(c.values, function(v) { return v.rank; }); }),
           d3.max(countries, function(c) { return d3.max(c.values, function(v) { return v.rank; }); })
         ]);
@@ -1171,7 +1173,7 @@ vistk.viz = function() {
 
         function make_x_axis() {        
             return d3.svg.axis()
-                .scale(x)
+                .scale(vars.x_scale)
                  .orient("bottom")
                  .ticks(10);
         }
@@ -1242,7 +1244,7 @@ vistk.viz = function() {
               return {name: d.name, id: d[vars.var_id], value: d.values[d.values.length - 1]}; 
             })
             .attr("transform", function(d) { 
-              return "translate(" + x(d.value[vars.var_time]) + "," + y(d.value.rank) + ")"; 
+              return "translate(" + vars.x_scale(d.value[vars.var_time]) + "," + vars.y_scale(d.value.rank) + ")"; 
             })
             .attr("x", 3)
             .attr("class", function(d) {

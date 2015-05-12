@@ -18,7 +18,7 @@ d3.csv("../data/new_rankings2.csv", function(error, data) {
 
     for(var k in d) {
       if(k != "Country") {
-        res.push({name: d.Country, year: k, rank: +d[k], id: d.Country.replace(" ", "_"), category: +d[k]%5})
+        res.push({name: d.Country, year: k, rank: +d[k], id: d.Country.replace(" ", "_"), category: d[k]%5 + ""})
       }
 
     }
