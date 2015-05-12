@@ -144,22 +144,6 @@ What to do with missing data over time?
 
 
 
-## UI widgets
-
-Data-driven UI widgets
-* Filter
-* Aggregate
-* Time update
-
-* Show highlighted element
-* Show selected elements + reset
-
-* Charts options such as to change the type of scale (absolute vs relative)
-
-* Either from the visualization itself, or with auto-generated widgets
-* Binding with external buttons/widgets
-
-
 ## Utils for visualization
 
 * http://bl.ocks.org/dbuezas/9306799
@@ -177,7 +161,7 @@ Data-driven UI widgets
 Annotations
 * Linear regression lines http://www.highcharts.com/demo/combo-regression/grid
 * Multiple layers (e.g. background with grid, ..)
-* Markers http://metricsgraphicsjs.org/interactive-demo.htm
+* Markers http://metricsgraphicsjs.org/interactive-demo.htm and http://metricsgraphicsjs.org/examples.htm#annotations
 
 Labels
 * http://bl.ocks.org/dbuezas/9306799
@@ -235,7 +219,6 @@ Instance of a table, plus some ordering features:
 * Communities http://atlas.cid.harvard.edu/media/img/icons/community_10.png
 
 * Show the rank?
-
 
 
 ### Treemap
@@ -451,7 +434,7 @@ Interesting reading on D3 modular/reusable
 * [Mike Bostock’s reusable D3](http://bost.ocks.org/mike/chart/)
 * Improved version https://javacrypt.wordpress.com/2012/12/15/improvements-to-d3s-reusable-component-pattern/
 * Closure https://developer.mozilla.org/en-US/docs/Web/JavaScript/Closures
-* http://bocoup.com/weblog/introducing-d3-chart/
+
 
 * https://blog.safaribooksonline.com/2013/07/11/reusable-d3-js-using-attrtween-transitions-and-mv/
 
@@ -495,7 +478,13 @@ Template
 
 ## Existing D3 toolkits
 
-* NVd3 - http://nvd3.org/ 
+* [NVd3](http://nvd3.org/) 
+ * Some reusable components like `axis` with `http://tenxer.github.io/xcharts/`
+ * Utils functions `nv.utils.defaultColor()`
+
+* [d3.chart](http://bocoup.com/weblog/introducing-d3-chart/)
+ * 
+
 * C3.js - http://c3js.org/ 
 * xCharts - http://tenxer.github.io/xcharts/ 
 * Rickshaw - http://code.shutterstock.com/rickshaw/
