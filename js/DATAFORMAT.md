@@ -16,7 +16,7 @@
 
 TODO
 * Line chart contains a mechanism to make sure there is no missing data
-
+* Requires a function that flattens a file into the corret format
 
 ## Items per year (Dot plot, ScatterPlot)
 

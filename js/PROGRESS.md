@@ -1,12 +1,16 @@
 # Foundations
 
+[ ] TODO
+[X] DONE
+[-] Parially DONE
+[N] Not relevant
+
+## Data-related stuff
+
 [ ] Data management
 [ ] Data wrangling functions
 [ ] Extract common functionalities
-[ ] Dealine with missing data
- 
-Ex. data structure for sparklines
-// {name: d.dept_name, year: parseDate(d.year), realgdp: d.realgdp}
+[ ] Dealing with missing data
 
 ## Interactions
 
@@ -79,10 +83,10 @@ Ex. data structure for sparklines
 
 [ ] Custom color scales
 
-[ ] Hightlight
-[ ] Selection
+[X] Hightlight (but does not work when loading the page)
+[X] Selection
 [ ] Aggregation
-[ ] Time filter by range
+[-] Time filter by range
 
 ##  Sparkline
 
@@ -95,10 +99,27 @@ Ex. data structure for sparklines
 
 # Storytelling
 
-* Stepper
+[ ] Stepper
+[ ] Queuing
 
 # Annotations
 
+* Combining multiple charts together?
+
 # UI elements
 
-* Generate
+* Data-driven UI elements
+* Connect with the chart
+
+* Filter
+* Aggregate
+* Time update
+
+* Show highlighted element
+* Show selected elements + reset
+
+* Charts options such as to change the type of scale (absolute vs relative)
+
+* Either from the visualization itself, or with auto-generated widgets
+* Binding with external buttons/widgets
+
