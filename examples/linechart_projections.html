@@ -1,0 +1,46 @@
+<!doctype html>
+<meta charset="utf-8">
+<script src="../js/d3.js"></script>
+<script src="../js/vistk.js"></script>
+<link href="../css/vistk.css" rel="stylesheet">
+<body>
+<div id="viz"></div>
+<body>
+
+<script src="../js/d3.js"></script>
+<script>
+
+d3.csv("../data/atlas_growth_projections_2023.csv", function(error, data) {
+
+  dd = data
+  
+  var res = [];
+  
+  // This is what the result should look like
+  // {name: d.Country, year: k, rank: +d[k], id: d.Country.replace(" ", "_"), category: +d[k]%5})
+
+  // TODO
+  // [ ] Format the data properly
+  // [ ] Merge with previous ranking datasets
+  // [ ] Show uncertain data (e.g. growth projections) in a different way (e.g. dashed line)
+
+  visualization = vistk.viz()
+    .type("linechart")
+    .container("#viz")
+    .height(600)
+    .width(900)
+    .data(res)
+    .id("id")
+    .group("category")
+    .color("name")
+    .title("Products")
+    .group("category")
+    .text("name")
+
+  d3.select("#viz").call(visualization)
+
+})
+
+</script>
+</body>
+</html>
