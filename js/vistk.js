@@ -62,9 +62,6 @@ vistk.viz = function() {
     // Automatically generate UI elements
     ui: true,
 
-    // Type of graphical marks
-    // TODO
-
     // Graphical properties for graphical marks
     color: d3.scale.category20c(),
     size: d3.scale.linear(),
@@ -536,6 +533,7 @@ vistk.viz = function() {
           gPoints.selectAll(".dot__circle").classed("highlighted", function(e, j) { return e === d; });
           gPoints.selectAll(".dot__label").classed("highlighted", function(e, j) { return e === d; });
 
+          // Tentative of data driven selection update
           vars.data.forEach(function(e) {
             if(d === e)
               e.__highlight = true;
@@ -546,21 +544,25 @@ vistk.viz = function() {
         });
 
         vars.evt.register("highlightOut", function(d) {
+
+          gPoints.selectAll(".dot__circle").classed("highlighted", false);
+          gPoints.selectAll(".dot__label").classed("highlighted", false);
+
           vars.data.forEach(function(e) { d.__highlight = false; })
         });
 
-        var x = d3.scale.linear()
+        vars.x_scale = d3.scale.linear()
             .range([vars.margin.left, vars.width-vars.margin.left-vars.margin.right]);
 
-        var y = d3.scale.linear()
+        vars.y_scale = d3.scale.linear()
             .range([vars.height-vars.margin.top-vars.margin.bottom, vars.margin.top]);
 
         var xAxis = d3.svg.axis()
-            .scale(x)
+            .scale(vars.x_scale)
             .orient("bottom");
 
         var yAxis = d3.svg.axis()
-            .scale(y)
+            .scale(vars.y_scale)
             .orient("left");
 
         vars.svg.selectAll(".label").data(new_data)
@@ -575,8 +577,8 @@ vistk.viz = function() {
             .attr("x", 500)
             .text(vars.current_time);
 
-        x.domain([0, d3.max(vars.data, function(d) { return d[vars.var_x]; })]).nice();
-        y.domain([0, d3.max(vars.data, function(d) { return d[vars.var_y]; })]).nice();
+        vars.x_scale.domain([0, d3.max(vars.data, function(d) { return d[vars.var_x]; })]).nice();
+        vars.y_scale.domain([0, d3.max(vars.data, function(d) { return d[vars.var_y]; })]).nice();
 
         vars.svg.selectAll(".x.axis").data([new_data])
           .enter()
@@ -636,7 +638,7 @@ vistk.viz = function() {
           gPoints
               .transition()
               .attr("transform", function(d) {
-                return "translate("+x(d[vars.var_x])+", "+y(d[vars.var_y])+")";
+                return "translate(" + vars.x_scale(d[vars.var_x])+", " + vars.y_scale(d[vars.var_y]) + ")";
               })
 
         } else { 
@@ -694,7 +696,7 @@ vistk.viz = function() {
           gPoints
             .transition()
             .attr("transform", function(d) {
-              return "translate("+x(d[vars.var_x])+", "+y(d[vars.var_y])+")";
+              return "translate(" + vars.x_scale(d[vars.var_x]) + ", " + vars.y_scale(d[vars.var_y]) + ")";
             })
         }
 
@@ -723,13 +725,9 @@ vistk.viz = function() {
 
         });
 
-
-        // Init the x scale
-        var x = null;
-
         if(vars.x_type == "index") {
 
-          x = d3.scale.ordinal()
+          vars.x_scale = d3.scale.ordinal()
                 .domain(d3.range(new_data.length))
                 .rangeBands([vars.margin.left, vars.width-vars.margin.left-vars.margin.right]);
 
@@ -737,19 +735,19 @@ vistk.viz = function() {
             return d3.ascending(a[vars.var_x], b[vars.var_x]);
           })
           .forEach(function(d, i) {
-            d.rank = x(i);
+            d.rank = vars.x_scale(i);
           });
 
         } else {
 
-          x = d3.scale.linear()
+          vars.x_scale = d3.scale.linear()
               .range([vars.margin.left, vars.width-vars.margin.left-vars.margin.right])
               .domain([0, d3.max(new_data, function(d) { return d[vars.var_x]; })]).nice();
         
         }
 
         var xAxis = d3.svg.axis()
-            .scale(x)
+            .scale(vars.x_scale)
             .ticks(vars.nb_ticks)
             .orient("bottom");
 
@@ -865,7 +863,7 @@ vistk.viz = function() {
           vars.svg.selectAll(".points")
                           .transition().delay(function(d, i) { return i / vars.data.length * 100; }).duration(1000)
                           .attr("transform", function(d) {
-                            return "translate("+x(d[vars.var_x])+", "+vars.height/2+")";
+                            return "translate(" + vars.x_scale(d[vars.var_x]) + ", " + vars.height/2 + ")";
                           })
         }
 

@@ -77,7 +77,7 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
                .property("checked", true)
                .on("change", function(d) { 
                   visualization.params({
-                    x_scale: d
+                    x_type: d
                   })
                   d3.select("#viz").call(visualization)
                });
