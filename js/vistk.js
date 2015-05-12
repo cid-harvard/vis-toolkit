@@ -799,6 +799,8 @@ vistk.viz = function() {
                               .attr("cy", 0)
                               .attr("class", "dot__circle");
 
+              break;
+
             case "rect":
  
              gPoints_enter.append("rect")
@@ -808,6 +810,19 @@ vistk.viz = function() {
                               .attr("y", -vars.mark.height/2)
                               .attr("class", "dot__circle");
 
+              break;
+              
+            case "diamond":
+
+             gPoints_enter.append("rect")
+                              .attr("height", vars.mark.height)
+                              .attr("width", vars.mark.width)                              
+                              .attr("x", -vars.mark.width/2)
+                              .attr("y", -vars.mark.height/2)
+                              .attr("class", "dot__circle")
+                              .attr("transform", "rotate(45)")
+
+              break;
           }
  
         gPoints_enter.append("text")

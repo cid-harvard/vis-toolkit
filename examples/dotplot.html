@@ -31,7 +31,7 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
       x_text: null,
       x_ticks: 10,
       mark: {
-        type: "rect",
+        type: "diamond",
         width: 10,
         height: 10
       }
@@ -84,7 +84,6 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
 
     label_radios.append("span")
         .html(function(d) { 
-
           return d ;
         });
 
