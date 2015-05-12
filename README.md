@@ -14,12 +14,15 @@ Each visualization should implement the following set of interactions:
 
 * `.selection()` is a more persistent form of highlight, triggered after a `click` event. Multiple elements can be focused at the same time. Another `click` allows the removal from the current set of focused items.
 
-* `.filter()` removes items based on a similar attribute (e.g. defined by a `.group()`)
+The above selections do not change the data. The ones below do but do not add any:
 
-* `.aggregate()` groups items sharing an attribute
+* `.filter()` removes items based on a similar attribute (e.g. defined by a `.group()`)
 
 * `.time()` changes the current time point
 
+Finally, the ones below add new data (usually derived from existing data):
+
+* `.aggregate()` groups items sharing an attribute
 
 ## Usage
 
@@ -59,7 +62,8 @@ Composite examples (using coordinated views)
 Re-creation of standard examples
 
 * Anscombe quartet ([Demo](http://cid-harvard.github.io/vis-toolkit/examples/anscombe.html)
-
+* Gapminder
+* 
 
 ## Data Management
 
@@ -71,12 +75,6 @@ Re-creation of standard examples
  * Table, 
 * Tree data structure
  * Treemap, radial tree
-
-Time data
-
-
- * Time should have been parsed
- * What about missing values?
 
 * Doc
  * http://tenxer.github.io/xcharts/docs/#data
@@ -292,6 +290,7 @@ Map of countries that can be colored and labeled.
 * Choropleth map (using geojson)
 * Some flow map or graph such as [pivotgraph](http://bl.ocks.org/mbostock/4343153)
 
+* Hex tiles http://blog.apps.npr.org/2015/05/11/hex-tile-maps.html
 
 ### Scatterplot
 
@@ -480,6 +479,7 @@ Storytelling
 * See [Miso project](https://github.com/misoproject/storyboard)
 * Step by step widget http://nbremer.github.io/urbanization/
 * Previous work on visual decomposition
+* Allow click on text to update the chart http://square.github.io/crossfilter/
 
 Template
 * See http://bost.ocks.org/mike/chart/
