@@ -1,4 +1,4 @@
-# Foundations
+# Internal Data Format
 
 
 ## Time series (Line Chart, Sparkline)
@@ -7,15 +7,21 @@
 * Each data items has multiple time points
 * Years have a specific format e.g. `var parseDate = d3.time.format("%Y").parse`
 
+
 ```json
-  {Date: "Dec 18, 2013", Close: "1084.75", date: Wed Dec 18 2013 00:00:00 GMT-0500 (EST), close: 1084.75},
-  {Date: "Dec 17, 2013", Close: "1069.86", date: Tue Dec 17 2013 00:00:00 GMT-0500 (EST), close: 1069.86}
+  {
+    Date: "Dec 18, 2013", Close: "1084.75", date: Wed Dec 18 2013 00:00:00 GMT-0500 (EST), close: 1084.75
+  }
 ```
 
-## Items per year (Dot plot)
+TODO
+* Line chart contains a mechanism to make sure there is no missing data
 
-* Each item and its properties are displayed
-* Years are 
+
+## Items per year (Dot plot, ScatterPlot)
+
+* Each item and its properties are in the object
+* Objects are duplicated for each year
 
 ```json
   {
@@ -26,30 +32,37 @@
   }
 ```
 
+TODO
+* Split the object in two: dictionnary of items, and time-changing values
+
 ## Tree structure (Treemap)
 
 * Right now is being done internally
+* Each children has a reference to its children and parent
 
 ```json
   {
     area: 200332.1437138461
     children: [
-  
-      {area: 123,
-      depth
+      {
+        area: 123,
+        depth: 2
       }
-    ]
-    depth: 1
-    group: 8
-    name: "Unwrought tin"
-    parent: Object
-    value: 464478170740.7
-    x: 558
-    y: 4
-    z: true
+    ],
+    depth: 1,
+    group: 8,
+    name: "Unwrought tin",
+    parent: Object,
+    value: 464478170740.7,
+    x: 558,
+    y: 4,
+    z: true,
   }
 ```
 
+TODO
+* Automate the nesting for the treemap
+* Add links to parents
 
 ## Others
 
