@@ -1,0 +1,39 @@
+<!doctype html>
+<meta charset="utf-8">
+<script src="../js/d3.js"></script>
+<script src="../js/vistk.js"></script>
+<link href="../css/vistk.css" rel="stylesheet">
+<body>
+<div id="viz"></div>
+<script>
+
+// TODO
+// [ ] Create fake data for the table to be screen filling
+// [ ] Create some nested charts within each cell
+
+  // Generate dataset
+  var data = d3.range(100*Math.random());
+
+  visualization = vistk.viz()
+    .type("grid")
+    .width(800)
+    .height(600)
+    .container("#viz")
+    .data(data)
+    .columns(['a', 'b', 'c'])
+    .params({
+      mark: {
+        type: "rect",
+        width: 10,
+        height: 10
+      }
+      // For each mark, do something different
+
+      // In that case we want to create a scatterplot
+    });
+
+  d3.select("#viz").call(visualization);
+
+
+</script>
+</body>
