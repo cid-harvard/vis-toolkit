@@ -53,11 +53,13 @@ vistk.viz = function() {
     x_type: "linear",
     x_scale: null,
     x_ticks: 5,
+    x_axis: null,
 
     // SCATTERPLOT (INCLUDES DOTPLOT)
     y_type: "linear",
     y_scale: null,
-    x_ticks: 5,
+    y_ticks: 5,
+    y_axis: null,
 
     // Automatically generate UI elements
     ui: true,
@@ -558,11 +560,11 @@ vistk.viz = function() {
         vars.y_scale = d3.scale.linear()
             .range([vars.height-vars.margin.top-vars.margin.bottom, vars.margin.top]);
 
-        var xAxis = d3.svg.axis()
+        vars.x_axis = d3.svg.axis()
             .scale(vars.x_scale)
             .orient("bottom");
 
-        var yAxis = d3.svg.axis()
+        vars.y_axis = d3.svg.axis()
             .scale(vars.y_scale)
             .orient("left");
 
@@ -604,8 +606,8 @@ vistk.viz = function() {
             .style("text-anchor", "end")
             .text(function(d) { return vars.var_y; })
 
-        vars.svg.selectAll(".x.axis").call(xAxis);
-        vars.svg.selectAll(".y.axis").call(yAxis);
+        vars.svg.selectAll(".x.axis").call(vars.x_axis);
+        vars.svg.selectAll(".y.axis").call(vars.y_axis);
 
         var gPoints = vars.svg.selectAll(".points")
                         .data(new_data, function(d, i) { return d.name + " " + i; });
@@ -747,7 +749,7 @@ vistk.viz = function() {
         
         }
 
-        var xAxis = d3.svg.axis()
+        vars.x_axis = d3.svg.axis()
             .scale(vars.x_scale)
             .ticks(vars.nb_ticks)
             .orient("bottom");
@@ -774,7 +776,7 @@ vistk.viz = function() {
                 return '';
             })
 
-        vars.svg.selectAll(".x.axis").transition().call(xAxis)
+        vars.svg.selectAll(".x.axis").transition().call(vars.x_axis)
 
         var gPoints = vars.svg.selectAll(".points")
                         .data(new_data, function(d, i) { return d[vars.var_text]; });
@@ -792,7 +794,7 @@ vistk.viz = function() {
                           vars.evt.call("highlightOut", d);
                         })
 
-        if(typeof vars.mark != "undefined") 
+        if(typeof vars.mark != "undefined") {
 
           switch(vars.mark.type) {
 
@@ -829,6 +831,8 @@ vistk.viz = function() {
 
               break;
           }
+
+        }
  
         gPoints_enter.append("text")
                         .attr("x", 10)
@@ -1102,11 +1106,11 @@ vistk.viz = function() {
         vars.y_scale = d3.scale.linear()
             .range([0, vars.height-100]);
 
-        var xAxis = d3.svg.axis()
+        vars.x_axis = d3.svg.axis()
             .scale(vars.x_scale)
             .orient("top");
 
-        var yAxis = d3.svg.axis()
+        vars.y_axis = d3.svg.axis()
             .scale(vars.y_scale)
             .orient("left");
 
@@ -1188,11 +1192,11 @@ vistk.viz = function() {
         vars.svg.append("g")
             .attr("class", "x axis")
             .attr("transform", "translate(0," + -5 + ")")
-            .call(xAxis);
+            .call(vars.x_axis);
 
         vars.svg.append("g")
             .attr("class", "y axis")
-            .call(yAxis)
+            .call(vars.y_axis)
           .append("text")
             .attr("transform", "rotate(-90)")
             .attr("y", 6)
