@@ -1,0 +1,36 @@
+<!doctype html>
+<meta charset="utf-8">
+<script src="../js/d3.js"></script>
+<script src="../js/vistk.js"></script>
+<link href="../css/vistk.css" rel="stylesheet">
+<body>
+<div id="viz"></div>
+<script>
+
+// TODO
+// [ ] Create fake data for the table to be screen filling
+// [ ] Create some nested charts within each cell
+
+d3.json("../data/exports_2012.json", function(error, exports) {
+
+  visualization = vistk.viz()
+    .type("table")
+    .width(800)
+    .height(600)
+    .container("#viz")
+    .data([{a:1, b:1, c:1}, {a:1, b:1, c:1}, {a:1, b:1, c:1}])
+    .columns(['a', 'b', 'c'])
+    .params({
+      mark: function(m) {
+      
+      // For each mark, do something different
+
+      // In that case we want to create a scatterplot
+    }})
+
+  d3.select("#viz").call(visualization)
+
+})
+
+</script>
+</body>
