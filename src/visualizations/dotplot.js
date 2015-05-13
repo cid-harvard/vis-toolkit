@@ -1,4 +1,4 @@
-case "dotplot":
+      case "dotplot":
 
         vars.evt.register("highlightOn", function(d) {
 
@@ -16,10 +16,10 @@ case "dotplot":
 
         vars.evt.register("selection", function(d) {
 
-          var clicked_node = d3.selectAll(".dot__circle")
+          var selected_node = d3.selectAll(".dot__circle")
             .filter(function(e, j) { return e === d; })
 
-          clicked_node.classed("selected", !clicked_node.classed("selected"));
+          selected_node.classed("selected", !selected_node.classed("selected"));
 
         });
 
@@ -69,7 +69,7 @@ case "dotplot":
                 return vars.var_x;
               else
                 return '';
-            })
+            });
 
         vars.svg.selectAll(".x.axis").transition().call(vars.x_axis)
 
@@ -80,7 +80,7 @@ case "dotplot":
                         .append("g")
                         .attr("class", "points")
                         .attr("transform", function(d, i) {
-                          return "translate("+ vars.margin.left +", "+vars.height/2+")";
+                          return "translate(" + vars.margin.left + ", " + vars.height/2 + ")";
                         })
                         .on("mouseover",function(d) {
                           vars.evt.call("highlightOn", d);
@@ -88,6 +88,17 @@ case "dotplot":
                         .on("mouseleave", function(d) {
                           vars.evt.call("highlightOut", d);
                         })
+                        .on("click", function(d) {
+                           vars.evt.call("selection", d);
+                          /*
+                          var index = vars.selection.indexOf(d);
+
+                          if(index <0)
+                            vars.selection.push(d);
+                          else
+                            vars.selection.splice(index, 1);
+                          */
+                        });
 
         if(typeof vars.mark != "undefined") {
 
@@ -136,42 +147,25 @@ case "dotplot":
                         .attr("class", "dot__label")
                         .attr("transform", "rotate(-30)")
                         .text(function(d) { return d[vars.var_text]; })
-                        .on("click", function(d) {
-                           vars.evt.call("selection", d);
-                          /*
-                          var index = vars.selection.indexOf(d);
 
-                          if(index <0)
-                            vars.selection.push(d);
-                          else
-                            vars.selection.splice(index, 1);
-                          */
-                        })
 
         var gPoints_exit = gPoints.exit().style("opacity", .1);
 
-        if(vars.x_type == "index") {
-
-          vars.svg.selectAll(".points")
-                          .transition().delay(function(d, i) { return i / vars.data.length * 100; }).duration(1000)
-                          .attr("transform", function(d, i) {
+        vars.svg.selectAll(".points")
+                        .transition().delay(function(d, i) { return i / vars.data.length * 100; }).duration(1000)
+                        .attr("transform", function(d, i) {
+                          if(vars.x_type == "index")
                             return "translate("+d.rank+", "+vars.height/2+")";
-                          })
-
-        } else {
-
-          vars.svg.selectAll(".points")
-                          .transition().delay(function(d, i) { return i / vars.data.length * 100; }).duration(1000)
-                          .attr("transform", function(d) {
+                          else
                             return "translate(" + vars.x_scale(d[vars.var_x]) + ", " + vars.height/2 + ")";
-                          })
-        }
+                        })
 
 /*      // For some reasons hides the labels
         if(typeof vars.highlight.length != undefined) {
           vars.evt.call("highlightOn", vars.data[vars.highlight]);
         }
 */
+        // If init, then dispatch those events
         // TODO: dispatch focus event here and highlight nodes
         if(vars.selection.length > 0) {
 
