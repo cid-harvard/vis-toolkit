@@ -1,8 +1,5 @@
 
-	// Constructor
-	chart = function(selection) {
-
-
+  chart = function(selection) {
 
     if(!vars.svg) {
        if(vars.type != "table") {

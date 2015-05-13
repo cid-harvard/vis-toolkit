@@ -1,5 +1,5 @@
 
-  if(typeof nb_viz == "undefined") {
+  if(typeof nb_viz === "undefined") {
     nb_viz = 0;
     global = {};
     global.evt = [];
@@ -69,46 +69,47 @@
     svg: null,
 
     nb_viz: nb_viz
-  }
+  };
 
-  
   vars.evt.register = function(evt, f, d) {
 
-    if(vars.dev) console.log("[vars.evt.register]", evt)
+    if(vars.dev) { console.log("[vars.evt.register]", evt); }
 
-    if(typeof evt == "string")
+    if(typeof evt === "string") {
       evt = [evt];
+    }
 
     evt.forEach(function(e) {
-      if(typeof global.evt[e] == "undefined")
+      if(typeof global.evt[e] == "undefined") {
         global.evt[e] = [];
+      }
       
       global.evt[e].push([f,d]);
-    })
-  }
+    });
+  };
 
   vars.evt.call = function(evt, a) {
 
-    if(vars.dev) console.log("[vars.evt.call]", evt, a)
+    if(vars.dev) console.log("[vars.evt.call]", evt, a);
 
-    if(typeof global.evt[evt] == "undefined") {
-      if(vars.dev) console.warn("No callback for event", evt, a)
+    if(typeof global.evt[evt] === "undefined") {
+      if(vars.dev) console.warn("No callback for event", evt, a);
       return;
     }
 
     global.evt[evt].forEach(function(e) {
-      if(global.dev) console.log("[calling evt]", e)
+      if(global.dev) console.log("[calling evt]", e);
       if(typeof(e[0]) != "undefined")
-        e[0](a)
+        e[0](a);
     });
-  }
+  };
   
 
   nb_viz++;
 
-  if (vars.dev) console.log("Init")
+  if (vars.dev) console.log("Init");
 
-  if (!vars.data) vars.data = []
+  if (!vars.data) vars.data = [];
 
   // Calculate new dimensions based on margins
   vars.width = vars.width - vars.margin.left - vars.margin.right;
