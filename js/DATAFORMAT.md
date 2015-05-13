@@ -17,11 +17,13 @@
 TODO
 * Line chart contains a mechanism to make sure there is no missing data
 * Requires a function that flattens a file into the corret format
+* How to 
 
-## Items per year (Dot plot, ScatterPlot)
+## Items per year (Dot plot, ScatterPlot, Table)
 
 * Each item and its properties are in the object
 * Objects are duplicated for each year
+* Code as id to exerternal reference
 
 ```json
   {
