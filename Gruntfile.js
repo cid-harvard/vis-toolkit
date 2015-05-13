@@ -7,7 +7,7 @@ module.exports = function(grunt) {
         separator: '\n',
       },
       build: {
-        src: ['src/start.js', 'src/core.js', 'src/end.js'],
+        src: ['src/start.js', 'src/core.js', 'src/utils.js', 'src/end.js'],
         dest: 'build/vistk.js',
       },
     },

@@ -1,12 +1,4 @@
 
-
-
-
-
-
-  return chart;
-}
-
 // TODO: add accessor as argument and var_time
 vistk.utils.flatten_years = function(data) {
     var flat = [];
