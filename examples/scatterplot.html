@@ -1,7 +1,7 @@
 <!doctype html>
 <meta charset="utf-8">
 <script src="../js/d3.js"></script>
-<script src="../js/vistk.js"></script>
+<script src="../build/vistk.js"></script>
 <link href="../css/vistk.css" rel="stylesheet">
 <body>
 <div id="viz"></div>
@@ -10,7 +10,7 @@
 
 d3.json("../data/diversification_ubiquity_hs4_1995_2012.json", function(error, countries) {
 
-  flat_years = flattenYears(countries);
+  flat_years = vistk.utils.flatten_years(countries);
 
   visualization = vistk.viz()
     .type("scatterplot")

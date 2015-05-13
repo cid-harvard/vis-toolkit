@@ -69,3 +69,39 @@ function wrap(text, width) {
     }
   });
 }
+
+function find_node_by_id(id) {
+  var res = vars.nodes.filter(function(d) {
+    return d.id == id;
+  })[0];
+
+  if(typeof res == "undefined")
+    console.log("id not found", id)
+
+  return res;
+}
+
+function find_data_by_id(id) {
+  var res = new_data.filter(function(d) {
+    return d[vars.var_id] == +id;
+  })[0];
+
+  if(typeof res == "undefined")
+    console.log("Data id not found", id)
+
+  return res;
+}
+
+function update_filters(value, add) {
+  if(vars.dev) console.log("[update_filters]", value);  
+  // If we add a new value to filter
+  if(add) {
+    if(vars.filter.indexOf(value) < 0) {
+      vars.filter.push(value)
+    }
+  } else {
+    var index = vars.filter.indexOf(value)
+    if(index > -1)
+      vars.filter.splice(index, 1);
+  }
+}
