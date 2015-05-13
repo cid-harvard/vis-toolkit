@@ -3,7 +3,7 @@ window.vistk = vistk;
 
 vistk.version = "0.1";
 vistk.dev = true;
-vistk.utils = vistk.utils || {};
+vistk.utils = {};
 
 vistk.viz = function() {
 
@@ -1116,7 +1116,7 @@ vistk.viz = function() {
 
         // FIX FOR MISSING VALUES
         // https://github.com/mbostock/d3/wiki/SVG-Shapes
-        var line = d3.svg.line()
+        vars.svg_line = d3.svg.line()
         // https://gist.github.com/mbostock/3035090
             .defined(function(d) { return d.rank != null; })
             .interpolate("monotone")
@@ -1225,7 +1225,7 @@ vistk.viz = function() {
         country.append("path")
             .attr("class", "country line")
             .attr("d", function(d) {
-              return line(d.values); 
+              return vars.svg_line(d.values); 
             })
             .attr("id", function(d) { return d[vars.var_id]; })
             .attr("class", function(d) {
@@ -1985,7 +1985,34 @@ vistk.viz = function() {
     });
   }
 
+
+
+
+
+
   return chart;
+}
+
+// TODO: add accessor as argument and var_time
+vistk.utils.flatten_years = function(data) {
+    var flat = [];
+
+    //for each country
+    data.forEach(function(root) {
+      
+        //for each year in each country
+        root.years.forEach(function(year) {
+            //extend the year object with the common properties stored just once in the country object
+
+          var current_year = merge(root, year);
+          delete current_year.years;
+
+            //add it to the final flat array
+            flat.push(current_year);
+        })
+    });
+
+    return flat;
 }
 
 // UTIS FUNCTIONS
@@ -2005,27 +2032,6 @@ var merge = function() {
     }
     return obj;
 };
-
-function flattenYears(data) {
-    var flat = [];
-
-    //for each country
-    data.forEach(function(root) {
-        //for each year in each country
-        root.years.forEach(function(year) {
-            //extend the year object with the common properties stored just once in the country object
-
-          var current_year = merge(root, year);
-          delete current_year.years;
-
-            //add it to the final flat array
-            flat.push(current_year);
-        })
-    });
-
-    return flat;
-}
-
 
 // One way to wrap text.. but creates too many elements..
 // http://bl.ocks.org/mbostock/7555321
