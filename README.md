@@ -274,6 +274,9 @@ Map of countries that can be colored and labeled.
 * Some flow map or graph such as [pivotgraph](http://bl.ocks.org/mbostock/4343153)
 
 * Hex tiles http://blog.apps.npr.org/2015/05/11/hex-tile-maps.html
+* http://prooffreaderplus.blogspot.ca/2015/05/lets-include-europe-in-great-grid-map.html
+* http://www.redblobgames.com/grids/hexagons/#rings
+* Hex to shape transition http://www.bloomberg.com/graphics/2015-uk-election/#0
 
 ### Scatterplot
 
