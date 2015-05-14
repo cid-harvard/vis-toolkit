@@ -1,6 +1,5 @@
       case 'table':
 
-
        vars.svg.select("table").remove();
 
        function row_data(row, i) {
@@ -68,8 +67,9 @@
 
           var title = vars.title;
 
-          if(typeof vars.current_time != "undefined")
+          if(typeof vars.current_time !== "undefined") {
             title += " (" + vars.current_time + ")";
+          }
 
           table.append("caption")
             .html(title);

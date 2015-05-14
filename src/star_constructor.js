@@ -2,7 +2,7 @@
   chart = function(selection) {
 
     if(!vars.svg) {
-       if(vars.type != "table") {
+       if(vars.type !== "table") {
        
         vars.svg = d3.select(vars.container).append("svg")
           .attr("width", vars.width + vars.margin.left + vars.margin.right)
@@ -12,7 +12,7 @@
 
       } else {
         // HTML Container for table
-        vars.svg = d3.select(vars.container).append("div").style({height: vars.height+"px", width: vars.width+"px", overflow: "scroll"})
+        vars.svg = d3.select(vars.container).append("div").style({height: vars.height+"px", width: vars.width+"px", overflow: "scroll"});
 
       }
     }
@@ -21,12 +21,13 @@
     new_data = vars.data;
 
     // Filter data by time
-    if(typeof vars.var_time != "undefined" && vars.current_time != null) {
+    if(typeof vars.var_time !== "undefined" && vars.current_time != null) {
 
-      console.log("[time.filter]", vars.var_time, vars.current_time)
+      console.log("[time.filter]", vars.var_time, vars.current_time);
+
       new_data = new_data.filter(function(d) {
-        return d[vars.var_time] == vars.current_time;
-      })
+        return d[vars.var_time] === vars.current_time;
+      });
 
     }
 
@@ -34,12 +35,12 @@
     if(vars.focus.length > 0) {
       
       new_data.forEach(function(d, i) {
-          if(i == vars.focus[0])
+          if(i === vars.focus[0]) {
             d.focus = true;
-          else
+          } else {
             d.focus = false;
-
-        })
+          }
+        });
     }
 
     // Filter data by attribute
@@ -49,7 +50,7 @@
       new_data = new_data.filter(function(d) {
         // We don't keep values that are not in the vars.filter array
         return vars.filter.indexOf(d[vars.var_group]) > -1;
-      })
+      });
     
     }
 
@@ -83,7 +84,7 @@
             })
 
           vars.columns.forEach(function(c) {
-            if(c == vars.var_text || c == vars.var_group)
+            if(c === vars.var_text || c === vars.var_group)
               return;
 
             aggregation[c] = d3.mean(leaves, function(d) {
