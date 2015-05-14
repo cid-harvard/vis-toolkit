@@ -148,7 +148,6 @@
                         .attr("transform", "rotate(-30)")
                         .text(function(d) { return d[vars.var_text]; })
 
-
         var gPoints_exit = gPoints.exit().style("opacity", .1);
 
         vars.svg.selectAll(".points")

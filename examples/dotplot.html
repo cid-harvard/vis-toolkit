@@ -45,6 +45,13 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
 
   d3.select("#viz").call(visualization)
 
+  // Ideally, the options below should be specified in a config file
+  var options = {
+    var_x: ["index", "linear"],
+    var_x_type: "",
+    var_highlight: d3.keys(departments[0])
+  }
+
   // Additional options below
   d3.select("#viz").append("select")
     .attr("id", "select_var_x")
