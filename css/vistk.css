@@ -170,6 +170,7 @@ circle.dot__circle.selected {
   stroke": black;
   stroke-width: "3px";
   opacity: 1
+
 }
 
 circle.dot__circle:not(.selected) {
@@ -178,11 +179,12 @@ circle.dot__circle:not(.selected) {
   opacity: 1;
 }
 
-circle.dot__circle .highlighted {
-  opacity: .1;
+.dot__circle.highlighted {
+  opacity: 1;
+  fill: orange;
 }
 
-circle.dot__circle:not(.highlighted) {
+.dot__circle:not(.highlighted) {
   opacity: .1;
 }
 
