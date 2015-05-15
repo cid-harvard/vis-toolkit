@@ -1,5 +1,15 @@
-
       case "sparkline":
+
+        var new_data = [];
+
+        // Flatten the data here
+        // Or do something to build the temporal data? Should it happen here?
+        vars.data.forEach(function(d) {
+
+          if(d.dept_name == "Antioquia")
+            new_data.push({name: d.dept_name, year: vars.time.parse(d.year), realgdp: d.realgdp})
+
+        })
 
         // From http://www.tnoda.com/blog/2013-12-19
         var x = d3.scale.linear().range([0, vars.width - 2]);
@@ -30,6 +40,5 @@
            .attr('cx', x(new_data[new_data.length-1][vars.var_time]))
            .attr('cy', y(new_data[new_data.length-1][vars.var_y]))
            .attr('r', 1.5);  
-
 
         break;
