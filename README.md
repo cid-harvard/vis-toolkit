@@ -268,6 +268,8 @@ Map of countries that can be colored and labeled.
 
 * Nice geo-maps https://www.pinterest.com/janwillemtulp/maps/
 
+* Geo map and graph overlays http://labs.densitydesign.org/rainscapes/california.html?utm_campaign=Social%20Medias&utm_content=14784003&utm_medium=social&utm_source=twitter
+
 * Circles maps http://bl.ocks.org/curran/752b97cef3f880a813ab
 
 * Choropleth map (using geojson)
@@ -301,6 +303,7 @@ An array with rows and columns.
 
 * http://bost.ocks.org/mike/miserables/
 
+* Simple table http://bl.ocks.org/shawnbot/1726790
 
 ### Scatterplot Matrix
 
@@ -462,6 +465,7 @@ Storytelling
 * Vertical scrolling support? 
  * [graph-scroll](http://1wheel.github.io/graph-scroll/)
  * Another use of graph scroll http://emeeks.github.io/gestaltdataviz/section4.html
+ * http://mkfreeman.github.io/scrollytelling/#/
 * See [Miso project](https://github.com/misoproject/storyboard)
 * Step by step widget http://nbremer.github.io/urbanization/
 * Previous work on visual decomposition
@@ -489,9 +493,14 @@ Template
  * 
 
 * C3.js - http://c3js.org/ 
+ * Configuration file https://github.com/masayuki0812/c3/blob/master/src/config.js
 * xCharts - http://tenxer.github.io/xcharts/ 
 * Rickshaw - http://code.shutterstock.com/rickshaw/
 * D3 Charts - https://github.com/ndarville/d3-charts
 * Metrics Graphics - http://metricsgraphicsjs.org/interactive-demo.htm
 * Vega - https://github.com/trifacta/vega
 * Visible - http://visible.io/examples.html
+
+## Misc
+
+* http://webpack.github.io/
