@@ -100,6 +100,11 @@
                           */
                         });
 
+        gPoints_enter.call()
+        // Create a graphical mark
+
+        // Append it to the current group
+
         if(typeof vars.mark != "undefined") {
 
           switch(vars.mark.type) {

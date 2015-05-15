@@ -17,8 +17,9 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
     d.realgdp_percap = +d.realgdp_percap;    
     d["sum(export_value)"] = +d["sum(export_value)"];
     d["value_added"] = +d["value_added"];
+  });
 
-  })
+  var ui_options = [];
 
   visualization = vistk.viz()
     .params({
@@ -26,7 +27,7 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
       data: departments,
       container: '#viz',
       var_x: 'dept_pop',
-      x_scale: 'linear',
+      x_type: 'linear',
       var_y: ['dept_pop', 'realgdp'],
       x_text: null,
       x_ticks: 10,
@@ -47,10 +48,9 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
       var_text: "dept_name", 
       selection: [0],
       highlight: [0] 
-    })
+    });
 
   d3.select("#viz").call(visualization);
-
 });
 
 </script>

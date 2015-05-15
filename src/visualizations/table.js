@@ -48,19 +48,19 @@
         vars.svg.selectAll("tr")
                 .filter(function(e, j) { return e === d; })
                 .style("background-color", "#F3ED86");
-      })
+      });
 
       vars.evt.register("highlightOut", function(d) {
         tbody.selectAll("tr")
-          .style("background-color", null)
+          .style("background-color", null);
       });
 
       function create_table(data) {
 
-        if(vars.debug) console.log("[create_table]");    
+        if(vars.debug) { console.log("[create_table]"); }
 
         var table = vars.svg.append("table").style("overflow-y", "scroll"),
-          thead = table.append("thead").attr("class", "thead");
+          thead = table.append("thead").attr("class", "thead"),
           tbody = table.append("tbody");
 
         if(vars.title != null) {
@@ -204,11 +204,5 @@
 
         paint_zebra_rows(tbody.selectAll("tr.row"));
         // Now update the table
-
-        // ENTER
-
-        // EXIT
-
-        // UPDATE
 
         break;
