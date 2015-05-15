@@ -55,7 +55,7 @@
     }
 
     // Aggregate data
-    if(vars.aggregate == vars.var_group) {
+    if(vars.aggregate === vars.var_group) {
 
       accessor_year = vars.accessor_year;
 
@@ -80,24 +80,25 @@
           });
 
           aggregation[vars.var_y] = d3.mean(leaves, function(d) {
-              return d[vars.var_y];
-            })
+            return d[vars.var_y];
+          });
 
           vars.columns.forEach(function(c) {
-            if(c === vars.var_text || c === vars.var_group)
+            if(c === vars.var_text || c === vars.var_group) {
               return;
+            }
 
             aggregation[c] = d3.mean(leaves, function(d) {
               return d[c];
-            })
-          })
+            });
+          });
 
           return aggregation;
         })
         .entries(new_data);
 
       // Transform key/value into values tab only
-      new_data = nested_data.map(function(d) { return d.values});
+      new_data = nested_data.map(function(d) { return d.values; });
     }
 
     selection.each(function() {
