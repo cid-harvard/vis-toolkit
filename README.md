@@ -483,6 +483,8 @@ Template
 * See http://bost.ocks.org/mike/chart/
 * See http://bost.ocks.org/mike/chart/time-series-chart.js
 
+* Chart types
+ * http://www.excelcharts.com/blog/classification-chart-types/
 
 # Refs / External Resources
 
@@ -514,6 +516,8 @@ Template
 * http://webpack.github.io/
 * http://square.github.io/crossfilter/
 * http://sigfried.github.io/supergroup/
+
+* Show uncertainty - http://www.velir.com/blog/index.php/2013/07/11/visualizing-data-uncertainty-an-experiment-with-d3-js/
 
 ### Using other libs
 

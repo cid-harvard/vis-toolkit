@@ -3,7 +3,12 @@ body {
 }
 
 circle .dot .focus {
-    fill: ;
+    fill: #EBE6E3;
+}
+
+.dot__circle .highlighted {
+    fill: #EBE6E3;
+    opacity: 1;
 }
 
 .dots__labels {
@@ -12,7 +17,7 @@ circle .dot .focus {
 
 .dots__labels:hover {
     display: visible;
-    color: red;
+    color: #EBE6E3;
 }
 
 .label {
