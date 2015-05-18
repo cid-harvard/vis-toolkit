@@ -36,7 +36,16 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
     .group("category")
     .ui(false)
     .params({
-      time: {var_time: "year", parse: parse_year}
+      time: {
+        var_time: "year", 
+        parse: parse_year,
+      },
+      mark: {
+        type: 'diamond',
+        width: 10,
+        height: 10
+      },
+      interpolate: "linear"
     })
     .text("name");
 
