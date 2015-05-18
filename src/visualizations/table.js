@@ -60,8 +60,8 @@
         if(vars.debug) { console.log("[create_table]"); }
 
         var table = vars.svg.append("table").style("overflow-y", "scroll"),
-          thead = table.append("thead").attr("class", "thead"),
-          tbody = table.append("tbody");
+          thead = table.append("thead").attr("class", "thead");
+        tbody = table.append("tbody");
 
         if(vars.title != null) {
 
@@ -202,7 +202,7 @@
         // vars.columns = d3.keys(vars.data[0])
 
         // Basic dump of the data we have
-        create_table(new_data);
+        create_table(vars.new_data);
 
         paint_zebra_rows(tbody.selectAll("tr.row"));
         // Now update the table

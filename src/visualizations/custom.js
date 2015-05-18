@@ -6,7 +6,7 @@
 
         // Bind data to groups
         var gPoints = vars.svg.selectAll(".points")
-                  .data(new_data, function(d, i) { return d[vars.var_text]; });
+                  .data(vars.new_data, function(d, i) { return d[vars.var_text]; });
 
 
         var gPoints_enter = gPoints.enter()

@@ -150,7 +150,7 @@ function find_node_by_id(id) {
 }
 
 function find_data_by_id(id) {
-  var res = new_data.filter(function(d) {
+  var res = vars.new_data.filter(function(d) {
     return d[vars.var_id] == +id;
   })[0];
 

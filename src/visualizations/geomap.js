@@ -1,4 +1,3 @@
-
       case "geomap":
 
         // http://techslides.com/demos/d3/d3-world-map-colors-tooltips.html
@@ -39,7 +38,7 @@
             d._name = names.filter(function(n) { return d.id == n.id; })[0].name; 
 
             // TODO: should merge on a more reliable join (e.g. 2-char)
-            d.data = new_data.filter(function(n) { return d._name == n.name; })[0];
+            d.data = vars.new_data.filter(function(n) { return d._name == n.name; })[0];
 
           });
 
@@ -53,7 +52,7 @@
 
           // We override the current color scale to make it linear
           vars.color = d3.scale.linear()
-            .domain([d3.min(new_data, function(d) { return d[vars.var_color]; }), d3.max(new_data, function(d) { return d[vars.var_color]; })])
+            .domain([d3.min(vars.new_data, function(d) { return d[vars.var_color]; }), d3.max(vars.new_data, function(d) { return d[vars.var_color]; })])
             .range(["red", "green"]);
 
           var country_enter = country.enter()

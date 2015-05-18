@@ -9,7 +9,7 @@
         var color = d3.scale.category20c();
 
         vis = d3.select(vars.container)
-                    .data(new_data)
+                    .data(vars.new_data)
                   .enter()
                     .append("g")
                     .attr("transform", "translate(" + vars.width/2 + "," + vars.height/2 + ")");

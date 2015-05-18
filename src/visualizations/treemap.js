@@ -17,7 +17,7 @@
         groups = [];
 
         // Creates the groups here
-        new_data.map(function(d, i) {
+        vars.new_data.map(function(d, i) {
 
           if(typeof groups[d[vars.var_group]] == "undefined") {
             groups[d[vars.var_group]] = [];
