@@ -1,7 +1,7 @@
 <!doctype html>
 <meta charset="utf-8">
 <script src="../js/d3.js"></script>
-<script src="../js/vistk.js"></script>
+<script src="../build/vistk.js"></script>
 <link href="../css/vistk.css" rel="stylesheet">
 <script src="../js/queue.v1.min.js"></script>
 <script src="../js/topojson.js"></script>
@@ -25,7 +25,9 @@ ex = partners;
     .group("continent")
     .color("share")
     .title("Maps of trade partners")
-    .time({var_time: "year", current_time: 2012})
+    .params({
+      time: {var_time: "year", current_time: 2012}
+    })
 
   d3.select("#viz").call(visualization)
 

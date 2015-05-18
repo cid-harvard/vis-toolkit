@@ -110,8 +110,6 @@
   
   nb_viz++;
 
-  if (vars.dev) { console.log("Init"); }
-
   if (!vars.data) { vars.data = []; }
 
   // Calculate new dimensions based on margins
