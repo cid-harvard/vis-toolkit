@@ -149,6 +149,7 @@ What to do with missing data over time?
 * http://bl.ocks.org/dbuezas/9306799
 
 * Infer data type from data http://uwdata.github.io/datalib/
+* Simple stats https://github.com/jstat/jstat
 * http://www.macwright.org/simple-statistics/
 * https://github.com/alexandersimoes/d3plus/wiki/Utilities
 
@@ -303,7 +304,7 @@ An array with rows and columns.
 
 * http://bost.ocks.org/mike/miserables/
 
-* Simple table http://bl.ocks.org/shawnbot/1726790
+* Simple HTML as a table + sparklines http://bl.ocks.org/shawnbot/1726790
 
 ### Scatterplot Matrix
 
@@ -331,12 +332,13 @@ Combination of a matrix with nested scatterplots within each cell. The matrix be
 * Diverging bar charts http://bl.ocks.org/wpoely86/e285b8e4c7b84710e463
 
 
-#### Histogram
+#### Histogram / Distribution
 
 Just some kind of bar chart combined with a binning function
 
 * Histogram with line chart overlay
 
+* Box plot http://bl.ocks.org/mbostock/4061502
 
 ### Stacked Graph
 
@@ -359,6 +361,11 @@ Listing of charts
 * http://annkemery.com/essentials/
 * http://www.d3js.org/
 
+* Using rectangles and height http://www.economist.com/news/finance-and-economics/21601568-new-data-suggest-chinese-economy-bigger-previously-thought-dragon
+
+* Aligned line chart http://www.lesechos.fr/infographie/2014-07-06-emploi-salaires/emplois.html
+
+* Grids http://www.d3noob.org/2013/01/adding-grid-lines-to-d3js-graph.html
 
 ## Roadmap
 
@@ -390,6 +397,7 @@ Listing of charts
  * Using an editor 
   * Rich text edit envs http://ace.c9.io/#nav=about
   * http://trifacta.github.io/vega/editor/index.html?spec=barley
+  * Example using Vega http://bl.ocks.org/timelyportfolio/5342818
   * Teaching / demos / snippets http://tributary.io/inlet/4653053
  * Build your own grid
  * Customize charts interactively
@@ -469,7 +477,7 @@ Storytelling
 * See [Miso project](https://github.com/misoproject/storyboard)
 * Step by step widget http://nbremer.github.io/urbanization/
 * Previous work on visual decomposition
-* Allow click on text to update the chart http://square.github.io/crossfilter/
+
 
 Template
 * See http://bost.ocks.org/mike/chart/
@@ -504,3 +512,9 @@ Template
 ## Misc
 
 * http://webpack.github.io/
+* http://square.github.io/crossfilter/
+* http://sigfried.github.io/supergroup/
+
+### Using other libs
+
+* https://github.com/wbkd/d3-extended
