@@ -50,25 +50,25 @@
         vars.x_axis = d3.svg.axis()
             .scale(vars.x_scale)
             .ticks(vars.x_ticks)
+            // Fix to get max value
+            .tickValues([0, d3.max(new_data, function(d) { return d[vars.var_x]; })])
+            .tickFormat(function(d) { return vars.x_format(d); })
             .orient("bottom");
 
         vars.svg.selectAll(".x.axis").data([new_data])
           .enter()
             .append("g")
             .attr("class", "x axis")
-            .attr("transform", "translate(0," + (vars.height/2) + ")")              
+            .attr("transform", "translate(0," + (vars.height/2) + ")")
           .append("text")
             .attr("class", "label")
             .attr("x", vars.width-vars.margin.left-vars.margin.right)
             .attr("y", -6)
-            .style("text-anchor", "end")
-            .text(function(d) { 
-              if(typeof vars.x_text !== "undefined" && vars.x_text !== null) {
-                return vars.var_x;
-              } else {
-                return '';
-              }
-            });
+            .style({
+              "text-anchor": "end",
+              "display": function(d) { return typeof vars.x_text !== "undefined" && vars.x_text !== null }
+            })
+            .text(vars.var_x);
 
         vars.svg.selectAll(".x.axis").transition().duration(vars.duration).call(vars.x_axis);
 
