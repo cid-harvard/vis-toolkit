@@ -50,7 +50,7 @@
         vars.x_axis = d3.svg.axis()
             .scale(vars.x_scale)
             .ticks(vars.x_ticks)
-            // Fix to get max value
+            // Quick fix to get max value
             .tickValues([0, d3.max(new_data, function(d) { return d[vars.var_x]; })])
             .tickFormat(function(d) { return vars.x_format(d); })
             .orient("bottom");
@@ -72,12 +72,12 @@
 
         vars.svg.selectAll(".x.axis").transition().duration(vars.duration).call(vars.x_axis);
 
-        var gPoints = vars.svg.selectAll(".points")
+        var gPoints = vars.svg.selectAll(".mark__group")
                         .data(new_data, function(d, i) { return d[vars.var_text]; });
 
         var gPoints_enter = gPoints.enter()
                         .append("g")
-                        .attr("class", "points")
+                        .attr("class", "mark__group")
                         .attr("transform", function(d, i) {
                           return "translate(" + vars.margin.left + ", " + vars.height/2 + ")";
                         })
@@ -112,11 +112,11 @@
 
         var gPoints_exit = gPoints.exit().style("opacity", 0.1);
 
-        vars.svg.selectAll(".points")
+        vars.svg.selectAll(".mark__group")
                         .transition().delay(function(d, i) { return i / vars.data.length * 100; }).duration(vars.duration)
                         .attr("transform", function(d, i) {
                           if(vars.x_type === "index") {
-                            return "translate(" + d.rank + ", " + vars.height/2 + ")";
+                            return "translate(" + d[vars.var_x] + ", " + vars.height/2 + ")";
                           } else {
                             return "translate(" + vars.x_scale(d[vars.var_x]) + ", " + vars.height/2 + ")";
                           }
