@@ -118,3 +118,4 @@
 
   // Events 
   vars.dispatch = d3.dispatch("init", "end", "highlightOn", "highlightOut", "selection");
+  

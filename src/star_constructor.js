@@ -1,6 +1,6 @@
-
   chart = function(selection) {
 
+    // Create the top level element conaining the visualization
     if(!vars.svg) {
        if(vars.type !== "table") {
        
@@ -104,6 +104,7 @@
     selection.each(function() {
 
       switch(vars.type) {
+
 
         case 'undefined':
 

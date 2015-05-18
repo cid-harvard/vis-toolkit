@@ -1,5 +1,7 @@
-
       case "linechart":
+
+        // FIX
+        new_data = vars.data;
 
         vars.evt.register("highlightOn", function(d) {
 
@@ -103,9 +105,6 @@
         ]);
 
         // unique_years = d3.set(vars.data.map(function(d) { return d[vars.var_time];})).values();
-
-        // Create the background grid
-        // http://www.d3noob.org/2013/01/adding-grid-lines-to-d3js-graph.html
 
         function make_x_axis() {        
             return d3.svg.axis()

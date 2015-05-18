@@ -1,4 +1,3 @@
-
       case "scatterplot":
 
         vars.evt.register("highlightOn", function(d) {
@@ -162,7 +161,7 @@
 
           } else {
 
-            gPoints.style("opacity", 1)
+            gPoints.style("opacity", 1);
           
           }
 
@@ -172,6 +171,5 @@
               return "translate(" + vars.x_scale(d[vars.var_x]) + ", " + vars.y_scale(d[vars.var_y]) + ")";
             })
         }
-
 
         break;
