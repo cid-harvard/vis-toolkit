@@ -9,9 +9,12 @@
 
 
 ```json
-  {
-    Date: "Dec 18, 2013", Close: "1084.75", date: Wed Dec 18 2013 00:00:00 GMT-0500 (EST), close: 1084.75
-  }
+  [
+    name: GOOG,
+    values: [{
+      Date: "Dec 18, 2013", Close: "1084.75", date: Wed Dec 18 2013 00:00:00 GMT-0500 (EST), close: 1084.75
+    }]
+  }]
 ```
 
 TODO

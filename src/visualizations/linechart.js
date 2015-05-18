@@ -1,8 +1,5 @@
       case "linechart":
 
-        // FIX
-        new_data = vars.data;
-
         vars.evt.register("highlightOn", function(d) {
 
           vars.svg.selectAll(".line:not(.selected)").style("opacity", 0.2);
@@ -56,20 +53,22 @@
             .y(function(d) { return vars.y_scale(d[vars.var_y]); });
 
         // TODO: fix the color scale
-        vars.color.domain(d3.keys(new_data[0]).filter(function(key) { return key !== "date"; }));
+        vars.color.domain(d3.keys(vars.new_data[0]).filter(function(key) { return key !== "date"; }));
 
-        new_data.forEach(function(d) {
+        vars.new_data.forEach(function(d) {
           d[vars.var_time] = vars.time.parse(d.year);
         });
 
-        all_years = d3.set(new_data.map(function(d) { return d.year;})).values();
+        all_years = d3.set(vars.new_data.map(function(d) { return d.year;})).values();
+
+        var unique_countries = d3.set(vars.new_data.map(function(d) { return d[vars.var_text]; })).values();
 
         // Find unique countries and create ids
-        countries = d3.set(new_data.map(function(d) { return d[vars.var_text]; })).values().map(function(c) {
+        countries = unique_countries.map(function(c) {
           return {
             id: c.replace(" ", "_"),
             name: c,
-            values: new_data.filter(function(d) {
+            values: vars.new_data.filter(function(d) {
               return d[vars.var_text] == c;
             }).map(function (d) {
               return {date: vars.time.parse(d.year), rank: +d.rank, year: d.year};
@@ -93,7 +92,7 @@
 
         });
 
-        vars.x_scale.domain(d3.extent(new_data, function(d) { return d[vars.var_time]; }));
+        vars.x_scale.domain(d3.extent(vars.new_data, function(d) { return d[vars.var_time]; }));
 
         vars.y_scale.domain([
           d3.min(countries, function(c) { return d3.min(c.values, function(v) { return v[vars.var_y]; }); }),

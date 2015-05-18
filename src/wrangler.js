@@ -1,12 +1,12 @@
     // Get a copy of the whole dataset
-    new_data = vars.data;
+    vars.new_data = vars.data;
 
     // Filter data by time
     if(typeof vars.var_time !== "undefined" && vars.current_time != null) {
 
       console.log("[time.filter]", vars.var_time, vars.current_time);
 
-      new_data = new_data.filter(function(d) {
+      vars.new_data = vars.new_data.filter(function(d) {
         return d[vars.var_time] === vars.current_time;
       });
 
@@ -15,7 +15,7 @@
     // Init
     if(vars.focus.length > 0) {
       
-      new_data.forEach(function(d, i) {
+      vars.new_data.forEach(function(d, i) {
           if(i === vars.focus[0]) {
             d.focus = true;
           } else {
@@ -28,7 +28,7 @@
     // TODO: not sure we should remove data, but add an attribute instead would better
     if(vars.filter.length > 0) {
 
-      new_data = new_data.filter(function(d) {
+      vars.new_data = vars.new_data.filter(function(d) {
         // We don't keep values that are not in the vars.filter array
         return vars.filter.indexOf(d[vars.var_group]) > -1;
       });
@@ -76,10 +76,10 @@
 
           return aggregation;
         })
-        .entries(new_data);
+        .entries(vars.new_data);
 
       // Transform key/value into values tab only
-      new_data = nested_data.map(function(d) { return d.values; });
+      vars.new_data = nested_data.map(function(d) { return d.values; });
     }
 
     selection.each(function() {

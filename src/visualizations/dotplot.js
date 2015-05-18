@@ -123,7 +123,7 @@
                         });
 
         // For some reasons hides the labels
-        if(typeof vars.highlight.length != undefined) {
+        if(typeof vars.highlight.length !== undefined) {
           vars.evt.call("highlightOn", vars.data[vars.highlight]);
         }
 
