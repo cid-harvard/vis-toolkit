@@ -1,0 +1,63 @@
+<!doctype html>
+<meta charset="utf-8">
+<script src="../js/d3.js" charset="utf-8"></script>
+<script src="../build/vistk.js"></script>
+<link href="../css/vistk.css" rel="stylesheet">
+<body>
+<div id="viz"></div>
+<script>
+
+d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments) {
+
+  departments.forEach(function(d, i) {
+    d.dept_pop = +d.dept_pop;
+    d.year = +d.year;
+    d.realgdp = +d.realgdp;
+    d.realgdp_percap = +d.realgdp_percap;    
+    d["sum(export_value)"] = +d["sum(export_value)"];
+    d["value_added"] = +d["value_added"];
+  });
+
+  var ui_options = [];
+
+  visualization = vistk.viz()
+    .params({
+      type: 'dotplot',      
+      data: departments,
+      container: '#viz',
+      var_x: 'dept_pop',
+      x_type: 'linear',
+      var_y: ['dept_pop', 'realgdp'],
+      x_text: null,
+      x_ticks: 10,
+      x_format: function(d) { return '$' + d3.format(".2s")(d); },
+      mark: {
+        type: 'diamond',
+        width: 10,
+        height: 10
+      },
+      time: {
+        var_time: 'year', 
+        current_time: 2013
+      },
+      ui: {
+        default: true,
+        options: ui_options
+      },
+      id: "name",
+      var_text: "dept_name", 
+      selection: [0],
+      highlight: [0] 
+    });
+
+  d3.select("#viz").call(visualization);
+
+  // TODO
+  // [ ] Calculate the average for the departments
+  // [ ] Display as an overlay to the current line chart
+  // [ ] Use a different visual encoding (e.g. dashed lines - - - - )
+
+
+});
+
+</script>
