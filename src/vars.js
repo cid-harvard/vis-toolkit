@@ -108,7 +108,6 @@
     });
   };
   
-
   nb_viz++;
 
   if (vars.dev) { console.log("Init"); }

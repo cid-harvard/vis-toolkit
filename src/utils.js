@@ -55,7 +55,14 @@ vistk.utils.add_connection = function(d, i) {
     }
 
   }
+}
 
+
+vistk.utils.make_x_axis = function() {        
+    return d3.svg.axis()
+        .scale(vars.x_scale)
+         .orient("bottom")
+         .ticks(10);
 }
 
 // TODO: add accessor as argument and var_time

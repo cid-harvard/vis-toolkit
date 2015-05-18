@@ -39,7 +39,10 @@ d3.csv("../data/new_rankings2.csv", function(error, data) {
     .params({
       y_text: "ECI Rank",
       var_time: "date",
-      var_y: "rank"
+      var_y: "rank",
+      time: {
+        parse: d3.time.format("%Y").parse
+      }
     })
     .selection(["Japan", "Switzerland", "Germany", "South Korea", "Finland", "United Kingdom", "United States", "France", "Italy", "China", "Mexico", "Spain"])
     .highlight("France");

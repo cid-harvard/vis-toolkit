@@ -31,9 +31,6 @@
 
         });
 
-        // TODO: Put into the format parameters
-        var parseDate = d3.time.format("%Y").parse;
-
         vars.x_scale = d3.time.scale()
             .range([0, vars.width-100]);
 
@@ -48,23 +45,22 @@
             .scale(vars.y_scale)
             .orient("left");
 
+        // TODO: use the connection mark instead of the line
         // FIX FOR MISSING VALUES
         // https://github.com/mbostock/d3/wiki/SVG-Shapes
         vars.svg_line = d3.svg.line()
         // https://gist.github.com/mbostock/3035090
-            .defined(function(d) { return d.rank != null; })
+            .defined(function(d) { return d[vars.var_y] != null; })
             .interpolate(vars.interpolate)
             .x(function(d) { return vars.x_scale(d[vars.var_time]); })
-            .y(function(d) { return vars.y_scale(d.rank); });
+            .y(function(d) { return vars.y_scale(d[vars.var_y]); });
 
         // TODO: fix the color scale
         vars.color.domain(d3.keys(new_data[0]).filter(function(key) { return key !== "date"; }));
 
         new_data.forEach(function(d) {
-          d[vars.var_time] = parseDate(d.year);
+          d[vars.var_time] = vars.time.parse(d.year);
         });
-        
-        var min_max_years = d3.extent(new_data, function(d) { return d[vars.var_time]; });
 
         all_years = d3.set(new_data.map(function(d) { return d.year;})).values();
 
@@ -76,7 +72,7 @@
             values: new_data.filter(function(d) {
               return d[vars.var_text] == c;
             }).map(function (d) {
-              return {date: parseDate(d.year), rank: +d.rank, year: d.year};
+              return {date: vars.time.parse(d.year), rank: +d.rank, year: d.year};
             })
           };
         })
@@ -91,32 +87,24 @@
                 is_year = true;
             })
             if(!is_year) {
-              c.values.push({date: parseDate(y), rank: null, year: y})
+              c.values.push({date: vars.time.parse(y), rank: null, year: y})
             }
           });
 
         });
 
-        vars.x_scale.domain(min_max_years);
+        vars.x_scale.domain(d3.extent(new_data, function(d) { return d[vars.var_time]; }));
 
         vars.y_scale.domain([
-          d3.min(countries, function(c) { return d3.min(c.values, function(v) { return v.rank; }); }),
-          d3.max(countries, function(c) { return d3.max(c.values, function(v) { return v.rank; }); })
+          d3.min(countries, function(c) { return d3.min(c.values, function(v) { return v[vars.var_y]; }); }),
+          d3.max(countries, function(c) { return d3.max(c.values, function(v) { return v[vars.var_y]; }); })
         ]);
 
         // unique_years = d3.set(vars.data.map(function(d) { return d[vars.var_time];})).values();
-
-        function make_x_axis() {        
-            return d3.svg.axis()
-                .scale(vars.x_scale)
-                 .orient("bottom")
-                 .ticks(10);
-        }
-
         vars.svg.append("g")
             .attr("class", "x grid")
             .attr("transform", "translate(0," + vars.height + ")")
-            .call(make_x_axis()
+            .call(vistk.utils.make_x_axis()
             .tickSize(-vars.height, 0, 0)
             .tickFormat(""));
 
@@ -198,17 +186,15 @@
             .attr("id", function(d) { return d[vars.var_id]; })
             .text(function(d) { return d[vars.var_text]; })
 
-            vars.svg.selectAll(".country").on("mouseover", function(d) {
-              vars.evt.call("highlightOn", d);
-            })
-            .on("mouseout", function(d) {
-              vars.evt.call("highlightOut", d);
-            });
+        vars.svg.selectAll(".country").on("mouseover", function(d) {
+          vars.evt.call("highlightOn", d);
+        })
+        .on("mouseout", function(d) {
+          vars.evt.call("highlightOut", d);
+        });
 
         vars.svg.selectAll("text.country").on("click", function(d) {
-
           vars.evt.call("selection", d);
-
         })
 /*
         vars.svg.select("svg").on("click", function(d) {
@@ -219,6 +205,5 @@
 
         })
 */
-
 
         break;
