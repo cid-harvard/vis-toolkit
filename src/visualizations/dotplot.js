@@ -23,16 +23,13 @@
 
         });
 
-        // For some reason the new_data is empty
-        new_data = vars.data;
-
         if(vars.x_type === "index") {
 
           vars.x_scale = d3.scale.ordinal()
-                .domain(d3.range(new_data.length))
+                .domain(d3.range(vars.new_data.length))
                 .rangeBands([vars.margin.left, vars.width - vars.margin.left - vars.margin.right]);
 
-          new_data.sort(function ascendingKey(a, b) {
+          vars.new_data.sort(function ascendingKey(a, b) {
             return d3.ascending(a[vars.var_x], b[vars.var_x]);
           })
           .forEach(function(d, i) {
@@ -43,7 +40,7 @@
 
           vars.x_scale = d3.scale.linear()
               .range([vars.margin.left, vars.width-vars.margin.left-vars.margin.right])
-              .domain([0, d3.max(new_data, function(d) { return d[vars.var_x]; })]).nice();
+              .domain([0, d3.max(vars.new_data, function(d) { return d[vars.var_x]; })]).nice();
         
         }
 
@@ -51,11 +48,11 @@
             .scale(vars.x_scale)
             .ticks(vars.x_ticks)
             // Quick fix to get max value
-            .tickValues([0, d3.max(new_data, function(d) { return d[vars.var_x]; })])
+            .tickValues([0, d3.max(vars.new_data, function(d) { return d[vars.var_x]; })])
             .tickFormat(function(d) { return vars.x_format(d); })
             .orient("bottom");
 
-        vars.svg.selectAll(".x.axis").data([new_data])
+        vars.svg.selectAll(".x.axis").data([vars.new_data])
           .enter()
             .append("g")
             .attr("class", "x axis")
@@ -73,7 +70,7 @@
         vars.svg.selectAll(".x.axis").transition().duration(vars.duration).call(vars.x_axis);
 
         var gPoints = vars.svg.selectAll(".mark__group")
-                        .data(new_data, function(d, i) { return d[vars.var_text]; });
+                        .data(vars.new_data, function(d, i) { return i; });
 
         var gPoints_enter = gPoints.enter()
                         .append("g")
@@ -122,10 +119,7 @@
                           }
                         });
 
-        // For some reasons hides the labels
-        if(typeof vars.highlight.length !== undefined) {
-          vars.evt.call("highlightOn", vars.data[vars.highlight]);
-        }
+
 
         // If init, then dispatch those events
         // TODO: dispatch focus event here and highlight nodes
@@ -146,5 +140,12 @@
             .classed("selected", true);
 
         }
+
+        if(typeof vars.highlight.length !== undefined) {
+          vars.evt.call("highlightOn", vars.new_data[vars.highlight]);
+        }
+
+
+
 
         break;        
