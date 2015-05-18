@@ -99,20 +99,21 @@
           .append("td")
           .text(function(d) { return d; })
           .on("mouseover", function(d, i) {
-            vars.evt.call("highlightOn", d3.select(this.parentNode).data()[0]);     
+            vars.evt.call("highlightOn", d3.select(this.parentNode).data()[0]);
           })
           .on("mouseout", function(d) {
-            vars.evt.call("highlightOut", d3.select(this.parentNode).data()[0]); 
+            vars.evt.call("highlightOut", d3.select(this.parentNode).data()[0]);
           })
           .on("click", function(d) {
 
             var data = d3.select(this.parentNode).data()[0];
             var index = vars.selection.indexOf(data);
 
-            if(index <0)
+            if(index <0) {
               vars.selection.push(data);
-            else
+            } else {
               vars.selection.splice(index, 1);
+            }
 
           });
 
@@ -135,7 +136,7 @@
           d3.select(".thead").selectAll("th").attr("id", null);
 
           // For those specific columns, we are sorting strings
-          if (header == "continent" || header == "name") {
+          if (header === "continent" || header === "name") {
 
             tbody.selectAll("tr").sort(function(a, b) {
               var ascending = d3.ascending(a[header], b[header]);
@@ -149,7 +150,7 @@
 
               a = vars.accessor_year(a)[header];
               b = vars.accessor_year(b)[header];
-              var ascending =  a > b ? 1 : a == b ? 0 : -1;
+              var ascending =  a > b ? 1 : a === b ? 0 : -1;
 
               return vars.sort_by.is_sorted ? ascending : - ascending;
             });
@@ -161,28 +162,29 @@
         function click_header(header) {
 
           var this_node = d3.selectAll("th").filter(function(d) {
-              return d == header;
-            })
+              return d === header;
+            });
 
-          var is_sorted = (this_node.attr("class") == "sorted");
+          var is_sorted = (this_node.attr("class") === "sorted");
 
           d3.selectAll("th").text(function(d) {
             return d.replace("▴", "");
-          })
+          });
+
           d3.selectAll("th").text(function(d) {
             return d.replace("▾", "");
-          })
+          });
 
           if(!is_sorted) {
             this_node.classed("sorted", true)
-            this_node.text(this_node.text()+"▾")
+                      .text(this_node.text()+"▾");
           }
           else {
             this_node.classed("sorted", false)
-            this_node.text(this_node.text()+"▴")
+                     .text(this_node.text()+"▴");
           }
 
-          if(vars.debug) console.log("[click_header]", is_sorted)
+          if(vars.dev) { console.log("[click_header]", is_sorted); }
 
          // vars.sort_by.is_sorted = !vars.sort_by.is_sorted;
           sort_by(header);
@@ -193,14 +195,14 @@
           rows.filter(function() {
             return d3.select(this).style("display") != "none";
           })
-            .classed("odd", function(d, i) { return (i % 2) == 0; });
+            .classed("odd", function(d, i) { return (i % 2) === 0; });
         }
 
         // If no column have been specified, take all columns
         // vars.columns = d3.keys(vars.data[0])
 
         // Basic dump of the data we have
-        create_table(new_data)
+        create_table(new_data);
 
         paint_zebra_rows(tbody.selectAll("tr.row"));
         // Now update the table
