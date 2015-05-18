@@ -1,5 +1,17 @@
       case "sparkline":
 
+        vars.new_data = [];
+
+        // Flatten the data here
+        // Or do something to build the temporal data? Should it happen here?
+        vars.data.forEach(function(d) {
+
+          if(d.dept_name === "Antioquia") {
+            vars.new_data.push({name: d.dept_name, year: vars.time.parse(d.year), realgdp: d.realgdp});
+          }
+
+        });
+
         vars.x_scale = d3.scale.linear().range([0, vars.width - 2]);
         vars.y_scale = d3.scale.linear().range([vars.height - 4, 0]);
 
@@ -21,7 +33,6 @@
         var gPoints = vars.svg.selectAll(".points")
                         .data(vars.new_data, function(d, i) {console.log(d); return i; });
 
-        // Groups for the graphical marksw
         var gPoints_enter = gPoints.enter()
                         .append("g")
                         .filter(function(d, i) {
@@ -32,12 +43,11 @@
                           return "translate(" + vars.x_scale(d[vars.time.var_time]) + ", " + vars.y_scale(d[vars.var_y]) + ")";
                         });
 
-        // Add graphical mark
+        // Add a graphical mark
         gPoints_enter.each(vistk.utils.add_mark);
 
-        // UPDATE
         vars.svg.selectAll(".points")
-                        .transition()
+                        .transition().delay(function(d, i) { return i / vars.data.length * 100; })
                         .duration(vars.duration)
                         .attr("transform", function(d, i) {
                           return "translate(" + vars.x_scale(d[vars.time.var_time]) + ", " + vars.y_scale(d[vars.var_y]) + ")";

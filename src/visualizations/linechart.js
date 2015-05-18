@@ -55,43 +55,6 @@
         // TODO: fix the color scale
         vars.color.domain(d3.keys(vars.new_data[0]).filter(function(key) { return key !== "date"; }));
 
-        vars.new_data.forEach(function(d) {
-          d[vars.var_time] = vars.time.parse(d.year);
-        });
-
-        all_years = d3.set(vars.new_data.map(function(d) { return d.year;})).values();
-
-        var unique_countries = d3.set(vars.new_data.map(function(d) { return d[vars.var_text]; })).values();
-
-        // Find unique countries and create ids
-        countries = unique_countries.map(function(c) {
-          return {
-            id: c.replace(" ", "_"),
-            name: c,
-            values: vars.new_data.filter(function(d) {
-              return d[vars.var_text] == c;
-            }).map(function (d) {
-              return {date: vars.time.parse(d.year), rank: +d.rank, year: d.year};
-            })
-          };
-        })
-
-        // Make sure all countries and all ranks are there
-        countries.forEach(function(c) {
-
-          all_years.forEach(function(y) {
-            var is_year = false;
-            c.values.forEach(function(v) {
-              if(v.year == y)
-                is_year = true;
-            })
-            if(!is_year) {
-              c.values.push({date: vars.time.parse(y), rank: null, year: y})
-            }
-          });
-
-        });
-
         vars.x_scale.domain(d3.extent(vars.new_data, function(d) { return d[vars.var_time]; }));
 
         vars.y_scale.domain([
@@ -99,7 +62,6 @@
           d3.max(countries, function(c) { return d3.max(c.values, function(v) { return v[vars.var_y]; }); })
         ]);
 
-        // unique_years = d3.set(vars.data.map(function(d) { return d[vars.var_time];})).values();
         vars.svg.append("g")
             .attr("class", "x grid")
             .attr("transform", "translate(0," + vars.height + ")")
@@ -137,7 +99,6 @@
                 c += " highlighted";
 
               return c;
-
             });
 
         country.append("path")
@@ -204,5 +165,4 @@
 
         })
 */
-
         break;
