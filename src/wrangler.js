@@ -1,4 +1,3 @@
-
     // Get a copy of the whole dataset
     new_data = vars.data;
 
@@ -86,7 +85,6 @@
     selection.each(function() {
 
       switch(vars.type) {
-
 
         case 'undefined':
 
