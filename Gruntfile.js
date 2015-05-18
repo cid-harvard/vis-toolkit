@@ -7,16 +7,16 @@ module.exports = function(grunt) {
         separator: '\n',
       },
       build: {
-        src: ['src/start.js', 'src/vars.js', 'src/star_constructor.js', 'src/visualizations/table.js', 'src/visualizations/treemap.js', 'src/visualizations/scatterplot.js', 'src/visualizations/sparkline.js', 'src/visualizations/geomap.js', 'src/visualizations/linechart.js', 'src/visualizations/nodelink.js', 'src/visualizations/dotplot.js', 'src/ui.js', 'src/getterssetters.js', 'src/end_constructor.js', 'src/utils.js', 'src/end.js'],
+        src: ['src/start.js', 'src/vars.js', 'src/star_constructor.js', 'src/wrangler.js', 'src/visualizations/table.js', 'src/visualizations/treemap.js', 'src/visualizations/scatterplot.js', 'src/visualizations/sparkline.js', 'src/visualizations/geomap.js', 'src/visualizations/linechart.js', 'src/visualizations/nodelink.js', 'src/visualizations/dotplot.js', 'src/ui.js', 'src/getterssetters.js', 'src/end_constructor.js', 'src/utils.js', 'src/end.js'],
         dest: 'build/vistk.js',
       },
     },
     jshint: {
       files: ['Gruntfile.js', 'build/vistk.js'],
    
-      beforeconcat: ['src/start.js', 'src/vars.js', 'src/star_constructor.js', 'src/visualizations/table.js', 'src/visualizations/treemap.js', 'src/visualizations/scatterplot.js', 'src/visualizations/sparkline.js', 'src/visualizations/geomap.js', 'src/visualizations/linechart.js', 'src/visualizations/nodelink.js', 'src/visualizations/dotplot.js', 'src/ui.js', 'src/getterssetters.js', 'src/end_constructor.js', 'src/utils.js', 'src/end.js'],
+      beforeconcat: ['build/vistk.js'],
       afterconcat: ['build/vistk.js'],
-      
+
       options: {
        jshintrc: true
       }
