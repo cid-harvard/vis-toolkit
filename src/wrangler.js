@@ -2,12 +2,12 @@
     vars.new_data = vars.data;
 
     // Filter data by time
-    if(typeof vars.var_time !== "undefined" && vars.current_time != null) {
+    if(typeof vars.time.current_time !== "undefined" && vars.time.current_time != null) {
 
-      console.log("[time.filter]", vars.var_time, vars.current_time);
+      console.log("[time.filter]", vars.time.var_time, vars.time.current_time);
 
       vars.new_data = vars.new_data.filter(function(d) {
-        return d[vars.var_time] === vars.current_time;
+        return d[vars.time.var_time] === vars.time.current_time;
       });
 
     }
@@ -123,6 +123,24 @@
 
     }
 
+    if(vars.type == "sparkline") {
+
+
+      vars.new_data = [];
+
+      // Flatten the data here
+      // Or do something to build the temporal data? Should it happen here?
+      vars.data.forEach(function(d) {
+
+        if(d.dept_name === "Antioquia") {
+          vars.new_data.push({name: d.dept_name, year: vars.time.parse(d.year), realgdp: d.realgdp});
+        }
+
+      });
+
+
+    }
+ 
     selection.each(function() {
 
       switch(vars.type) {
