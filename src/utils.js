@@ -1,3 +1,46 @@
+vistk.utils.add_mark = function(d, i) {
+
+  if(typeof vars.mark != "undefined") {
+
+    switch(vars.mark.type) {
+
+      case "circle":
+
+        d3.select(this).append("circle")
+                        .attr("r", 5)
+                        .attr("cx", 0)
+                        .attr("cy", 0)
+                        .attr("class", "dot__circle");
+
+        break;
+
+      case "rect":
+
+       d3.select(this).append("rect")
+                        .attr("height", vars.mark.height)
+                        .attr("width", vars.mark.width)                              
+                        .attr("x", -vars.mark.width/2)
+                        .attr("y", -vars.mark.height/2)
+                        .attr("class", "dot__circle");
+
+        break;
+
+      case "diamond":
+
+       d3.select(this).append("rect")
+                        .attr("height", vars.mark.height)
+                        .attr("width", vars.mark.width)                              
+                        .attr("x", -vars.mark.width/2)
+                        .attr("y", -vars.mark.height/2)
+                        .attr("class", "dot__circle")
+                        .attr("transform", "rotate(45)")
+
+        break;
+    }
+
+  }
+
+}
 
 // TODO: add accessor as argument and var_time
 vistk.utils.flatten_years = function(data) {

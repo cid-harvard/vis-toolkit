@@ -17,17 +17,20 @@
         vars.evt.register("selection", function(d) {
 
           var selected_node = d3.selectAll(".dot__circle")
-            .filter(function(e, j) { return e === d; })
+            .filter(function(e, j) { return e === d; });
 
           selected_node.classed("selected", !selected_node.classed("selected"));
 
         });
 
+        // For some reason the new_data is empty
+        new_data = vars.data
+
         if(vars.x_type == "index") {
 
           vars.x_scale = d3.scale.ordinal()
                 .domain(d3.range(new_data.length))
-                .rangeBands([vars.margin.left, vars.width-vars.margin.left-vars.margin.right]);
+                .rangeBands([vars.margin.left, vars.width - vars.margin.left - vars.margin.right]);
 
           new_data.sort(function ascendingKey(a, b) {
             return d3.ascending(a[vars.var_x], b[vars.var_x]);
@@ -46,13 +49,8 @@
 
         vars.x_axis = d3.svg.axis()
             .scale(vars.x_scale)
-            .ticks(vars.nb_ticks)
+            .ticks(vars.x_ticks)
             .orient("bottom");
-
-        vars.svg.selectAll(".label").data(new_data)
-          .enter()
-            .append("text")
-            .attr("text-anchor", "end");
 
         vars.svg.selectAll(".x.axis").data([new_data])
           .enter()
@@ -100,51 +98,9 @@
                           */
                         });
 
-        gPoints_enter.call()
-        // Create a graphical mark
+        // Add a graphical mark
+        gPoints_enter.each(vistk.utils.add_mark)
 
-        // Append it to the current group
-
-        if(typeof vars.mark != "undefined") {
-
-          switch(vars.mark.type) {
-
-            case "circle":
- 
-              gPoints_enter.append("circle")
-                              .attr("r", 5)
-                              .attr("cx", 0)
-                              .attr("cy", 0)
-                              .attr("class", "dot__circle");
-
-              break;
-
-            case "rect":
- 
-             gPoints_enter.append("rect")
-                              .attr("height", vars.mark.height)
-                              .attr("width", vars.mark.width)                              
-                              .attr("x", -vars.mark.width/2)
-                              .attr("y", -vars.mark.height/2)
-                              .attr("class", "dot__circle");
-
-              break;
-
-            case "diamond":
-
-             gPoints_enter.append("rect")
-                              .attr("height", vars.mark.height)
-                              .attr("width", vars.mark.width)                              
-                              .attr("x", -vars.mark.width/2)
-                              .attr("y", -vars.mark.height/2)
-                              .attr("class", "dot__circle")
-                              .attr("transform", "rotate(45)")
-
-              break;
-          }
-
-        }
- 
         gPoints_enter.append("text")
                         .attr("x", 10)
                         .attr("y", 0)
