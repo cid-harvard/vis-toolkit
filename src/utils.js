@@ -1,41 +1,57 @@
 vistk.utils.add_mark = function(d, i) {
 
-  if(typeof vars.mark != "undefined") {
+  if(typeof vars.mark === "undefined") {
+    vars.mark = {};
+    vars.mark.type = "circle";
+  }
 
-    switch(vars.mark.type) {
+  switch(vars.mark.type) {
 
-      case "circle":
+    case "circle":
 
-        d3.select(this).append("circle")
-                        .attr("r", 5)
-                        .attr("cx", 0)
-                        .attr("cy", 0)
-                        .attr("class", "dot__circle");
+      d3.select(this).append("circle")
+                      .attr("r", 5)
+                      .attr("cx", 0)
+                      .attr("cy", 0)
+                      .attr("class", "dot__circle");
 
-        break;
+      break;
 
-      case "rect":
+    case "rect":
 
-       d3.select(this).append("rect")
-                        .attr("height", vars.mark.height)
-                        .attr("width", vars.mark.width)                              
-                        .attr("x", -vars.mark.width/2)
-                        .attr("y", -vars.mark.height/2)
-                        .attr("class", "dot__circle");
+     d3.select(this).append("rect")
+                      .attr("height", vars.mark.height)
+                      .attr("width", vars.mark.width)                              
+                      .attr("x", -vars.mark.width/2)
+                      .attr("y", -vars.mark.height/2)
+                      .attr("class", "dot__circle");
 
-        break;
+      break;
 
-      case "diamond":
+    case "diamond":
 
-       d3.select(this).append("rect")
-                        .attr("height", vars.mark.height)
-                        .attr("width", vars.mark.width)                              
-                        .attr("x", -vars.mark.width/2)
-                        .attr("y", -vars.mark.height/2)
-                        .attr("class", "dot__circle")
-                        .attr("transform", "rotate(45)")
+     d3.select(this).append("rect")
+                      .attr("height", vars.mark.height)
+                      .attr("width", vars.mark.width)                              
+                      .attr("x", -vars.mark.width/2)
+                      .attr("y", -vars.mark.height/2)
+                      .attr("class", "dot__circle")
+                      .attr("transform", "rotate(45)")
 
-        break;
+      break;
+  }
+
+}
+
+vistk.utils.add_connection = function(d, i) {
+
+  if(typeof vars.connection != "undefined") {
+
+    switch(vars.connection.type) {
+
+      case "line":
+
+      break;
     }
 
   }

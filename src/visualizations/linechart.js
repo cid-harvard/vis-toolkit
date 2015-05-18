@@ -53,7 +53,7 @@
         vars.svg_line = d3.svg.line()
         // https://gist.github.com/mbostock/3035090
             .defined(function(d) { return d.rank != null; })
-            .interpolate("monotone")
+            .interpolate(vars.interpolate)
             .x(function(d) { return vars.x_scale(d[vars.var_time]); })
             .y(function(d) { return vars.y_scale(d.rank); });
 

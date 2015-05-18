@@ -46,6 +46,7 @@
     x_scale: null,
     x_ticks: 5,
     x_axis: null,
+    x_format: function(d) { return d; },
 
     // SCATTERPLOT (INCLUDES DOTPLOT)
     y_type: "linear",
@@ -68,6 +69,7 @@
     // SVG Container
     svg: null,
     duration: 1000,
+    interpolate: "monotone",
 
     nb_viz: nb_viz
   };
