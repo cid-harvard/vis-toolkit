@@ -43,6 +43,16 @@
 [ ] Hightlight
 [ ] Selection
 
+## Line chart
+
+[ ] Custom color scales
+
+[X] Hightlight (but does not work when loading the page)
+[X] Selection
+[ ] Aggregation
+[-] Time filter by range
+[ ] Show current time
+
 ## Sparklines
 
 [ ] Data wrangling
@@ -53,6 +63,7 @@
 [ ] Show bins
 [ ] Combine with another sparkline
 [ ] Grid lines / decorations
+
 
 ## Nodelink / Product space graph
 
@@ -88,15 +99,6 @@
 [ ] Aggregation
 [ ] Filter
 
-## Line chart
-
-[ ] Custom color scales
-
-[X] Hightlight (but does not work when loading the page)
-[X] Selection
-[ ] Aggregation
-[-] Time filter by range
-[ ] Show current time
 
 ##  Sparkline
 
