@@ -1,5 +1,3 @@
-
-        
       }
 
       if(vars.ui) {
@@ -12,7 +10,7 @@
 
         if(vars.var_group) {
 
-          unique_categories = d3.set(new_data.map(function(d) { return d[vars.var_group]; })).values();
+          unique_categories = d3.set(vars.new_data.map(function(d) { return d[vars.var_group]; })).values();
 
           label_checkboxes = d3.select(vars.container).selectAll(".checkboxes").data(unique_categories)
             .enter()
@@ -39,7 +37,7 @@
 
           label_checkboxes.append("span")
               .html(function(d) { 
-                var count = new_data.filter(function(e, j) { return e[vars.var_group] == d; }).length;
+                var count = vars.new_data.filter(function(e, j) { return e[vars.var_group] == d; }).length;
                 return d + " (" + count + ")";
               })
 
@@ -98,7 +96,7 @@
                           vars.current_time = +this.value;
                           d3.select("#viz").call(visualization);
                         })
-                        .style("width", "100px")
+                        .style("width", "100px");
 
         }
 
@@ -149,7 +147,6 @@
               return d ;
             });
 
-
      }
 
       // Highlight 
@@ -164,18 +161,18 @@
         .on("change", function(d, i) {
 
           // Focus on a sepecifc item
-          var id_focus = new_data.map(function(d) {return d[vars.var_text]; }).indexOf(this.value);
+          var id_focus = vars.new_data.map(function(d) {return d[vars.var_text]; }).indexOf(this.value);
           visualization.focus(1);
 
           d3.select("#viz").call(visualization);
 
         })
         .selectAll("option")
-        .data(new_data)
+        .data(vars.new_data)
       .enter()
         .append("option")
         .attr("value", function(d) { return d[vars.var_text]; })
-        .html(function(d) { return d[vars.var_text]; })
+        .html(function(d) { return d[vars.var_text]; });
 
       d3.select(vars.container).selectAll(".clearSelection").data([vars.var_id]).enter().append("button")
              .attr("type", "button")
@@ -187,7 +184,7 @@
                 d3.select("#viz").call(visualization);
 
               })
-             .html("Clear selection")
+             .html("Clear selection");
 
       d3.select(vars.container).selectAll(".clearHighlight").data([vars.var_id]).enter().append("button")
              .attr("type", "button")
@@ -199,12 +196,11 @@
                 d3.select("#viz").call(visualization);
 
               })
-             .html("Clear highlight")
+             .html("Clear highlight");
 
     }
 
-	});
-
+  });
 }
 
 

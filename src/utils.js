@@ -13,8 +13,8 @@ vistk.utils.add_mark = function(d, i) {
                       .attr("r", 5)
                       .attr("cx", 0)
                       .attr("cy", 0)
-                      .attr("class", "dot__circle");
-
+                      .attr("class", "dot__circle")
+                      .style("fill", function(d) { return vars.color(d[vars.var_color]); });
       break;
 
     case "rect":
@@ -24,7 +24,8 @@ vistk.utils.add_mark = function(d, i) {
                       .attr("width", vars.mark.width)                              
                       .attr("x", -vars.mark.width/2)
                       .attr("y", -vars.mark.height/2)
-                      .attr("class", "dot__circle");
+                      .attr("class", "dot__circle")
+                      .style("fill", function(d) { return vars.color(d[vars.var_color]); });
 
       break;
 
@@ -37,6 +38,7 @@ vistk.utils.add_mark = function(d, i) {
                       .attr("y", -vars.mark.height/2)
                       .attr("class", "dot__circle")
                       .attr("transform", "rotate(45)")
+                      .style("fill", function(d) { return vars.color(d[vars.var_color]); });
 
       break;
   }

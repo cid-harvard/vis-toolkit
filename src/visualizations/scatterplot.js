@@ -37,7 +37,7 @@
             .scale(vars.y_scale)
             .orient("left");
 
-        vars.svg.selectAll(".label").data(new_data)
+        vars.svg.selectAll(".label").data(vars.new_data)
           .enter()
             .append("text")
             .attr("class", "year label")
@@ -52,7 +52,7 @@
         vars.x_scale.domain([0, d3.max(vars.data, function(d) { return d[vars.var_x]; })]).nice();
         vars.y_scale.domain([0, d3.max(vars.data, function(d) { return d[vars.var_y]; })]).nice();
 
-        vars.svg.selectAll(".x.axis").data([new_data])
+        vars.svg.selectAll(".x.axis").data([vars.new_data])
           .enter()
             .append("g")
             .attr("class", "x axis")
@@ -64,7 +64,7 @@
             .style("text-anchor", "end")
             .text(function(d) { return vars.var_x; })
 
-        vars.svg.selectAll(".y.axis").data([new_data]).enter().append("g")
+        vars.svg.selectAll(".y.axis").data([vars.new_data]).enter().append("g")
             .attr("class", "y axis")
             .attr("transform", "translate("+vars.margin.left+", 0)")              
           .append("text")
@@ -79,9 +79,12 @@
         vars.svg.selectAll(".y.axis").call(vars.y_axis);
 
         var gPoints = vars.svg.selectAll(".points")
-                        .data(new_data, function(d, i) { return d.name + " " + i; });
+                        .data(vars.new_data, function(d, i) { return d.name + " " + i; });
 
         // Here we want to deal with aggregated datasets
+        // TODO
+        // [ ] Use gPoints_enter.each(vistk.utils.add_mark);
+        // [ ] Animated transition with the non-aggregated points
         if(vars.aggregate == vars.var_group) {
 
           var gPoints_enter = gPoints.selectAll(".points")
@@ -129,12 +132,7 @@
                             vars.evt.call("clicked", d);
                           });
 
-          var dots = gPoints_enter.append("circle")
-              .attr("r", 5)
-              .attr("cx", 0)
-              .attr("cy", 0)
-              .attr("class", "dot__circle")
-              .style("fill", function(d) { return vars.color(d[vars.var_color]); })
+        gPoints_enter.each(vistk.utils.add_mark);
 
           var labels = gPoints_enter.append("text")
               .attr("x", 10)
