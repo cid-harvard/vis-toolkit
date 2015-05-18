@@ -24,9 +24,9 @@
         });
 
         // For some reason the new_data is empty
-        new_data = vars.data
+        new_data = vars.data;
 
-        if(vars.x_type == "index") {
+        if(vars.x_type === "index") {
 
           vars.x_scale = d3.scale.ordinal()
                 .domain(d3.range(new_data.length))
@@ -63,13 +63,14 @@
             .attr("y", -6)
             .style("text-anchor", "end")
             .text(function(d) { 
-              if(typeof vars.x_text != undefined && vars.x_text != null)
+              if(typeof vars.x_text !== "undefined" && vars.x_text !== null) {
                 return vars.var_x;
-              else
+              } else {
                 return '';
+              }
             });
 
-        vars.svg.selectAll(".x.axis").transition().call(vars.x_axis)
+        vars.svg.selectAll(".x.axis").transition().call(vars.x_axis);
 
         var gPoints = vars.svg.selectAll(".points")
                         .data(new_data, function(d, i) { return d[vars.var_text]; });
@@ -99,7 +100,7 @@
                         });
 
         // Add a graphical mark
-        gPoints_enter.each(vistk.utils.add_mark)
+        gPoints_enter.each(vistk.utils.add_mark);
 
         gPoints_enter.append("text")
                         .attr("x", 10)
@@ -107,18 +108,19 @@
                         .attr("dy", ".35em")
                         .attr("class", "dot__label")
                         .attr("transform", "rotate(-30)")
-                        .text(function(d) { return d[vars.var_text]; })
+                        .text(function(d) { return d[vars.var_text]; });
 
-        var gPoints_exit = gPoints.exit().style("opacity", .1);
+        var gPoints_exit = gPoints.exit().style("opacity", 0.1);
 
         vars.svg.selectAll(".points")
                         .transition().delay(function(d, i) { return i / vars.data.length * 100; }).duration(1000)
                         .attr("transform", function(d, i) {
-                          if(vars.x_type == "index")
+                          if(vars.x_type === "index") {
                             return "translate("+d.rank+", "+vars.height/2+")";
-                          else
+                          } else {
                             return "translate(" + vars.x_scale(d[vars.var_x]) + ", " + vars.height/2 + ")";
-                        })
+                          }
+                        });
 
 /*      // For some reasons hides the labels
         if(typeof vars.highlight.length != undefined) {
@@ -131,17 +133,17 @@
 
           var selection_points = gPoints
             .filter(function(d, i) {
-              return i == vars.selection[0];
-            })
+              return i === vars.selection[0];
+            });
 
           selection_points.select(".dot__circle")
-            .classed("selected", false)
+            .classed("selected", false);
 
           selection_points.select(".dot__label")
             .filter(function(d, i) {
-              return i == vars.selection[0];
+              return i === vars.selection[0];
             })
-            .classed("selected", true)
+            .classed("selected", true);
 
         }
 

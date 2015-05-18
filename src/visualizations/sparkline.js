@@ -6,8 +6,9 @@
         // Or do something to build the temporal data? Should it happen here?
         vars.data.forEach(function(d) {
 
-          if(d.dept_name === "Antioquia")
-            new_data.push({name: d.dept_name, year: vars.time.parse(d.year), realgdp: d.realgdp})
+          if(d.dept_name === "Antioquia") {
+            new_data.push({name: d.dept_name, year: vars.time.parse(d.year), realgdp: d.realgdp});
+          }
 
         });
 
