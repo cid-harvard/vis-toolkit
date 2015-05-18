@@ -67,6 +67,7 @@
 
     // SVG Container
     svg: null,
+    duration: 1000,
 
     nb_viz: nb_viz
   };
@@ -118,4 +119,3 @@
 
   // Events 
   vars.dispatch = d3.dispatch("init", "end", "highlightOn", "highlightOut", "selection");
-  

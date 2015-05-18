@@ -70,7 +70,7 @@
               }
             });
 
-        vars.svg.selectAll(".x.axis").transition().call(vars.x_axis);
+        vars.svg.selectAll(".x.axis").transition().duration(vars.duration).call(vars.x_axis);
 
         var gPoints = vars.svg.selectAll(".points")
                         .data(new_data, function(d, i) { return d[vars.var_text]; });
@@ -113,20 +113,20 @@
         var gPoints_exit = gPoints.exit().style("opacity", 0.1);
 
         vars.svg.selectAll(".points")
-                        .transition().delay(function(d, i) { return i / vars.data.length * 100; }).duration(1000)
+                        .transition().delay(function(d, i) { return i / vars.data.length * 100; }).duration(vars.duration)
                         .attr("transform", function(d, i) {
                           if(vars.x_type === "index") {
-                            return "translate("+d.rank+", "+vars.height/2+")";
+                            return "translate(" + d.rank + ", " + vars.height/2 + ")";
                           } else {
                             return "translate(" + vars.x_scale(d[vars.var_x]) + ", " + vars.height/2 + ")";
                           }
                         });
 
-/*      // For some reasons hides the labels
+        // For some reasons hides the labels
         if(typeof vars.highlight.length != undefined) {
           vars.evt.call("highlightOn", vars.data[vars.highlight]);
         }
-*/
+
         // If init, then dispatch those events
         // TODO: dispatch focus event here and highlight nodes
         if(vars.selection.length > 0) {
