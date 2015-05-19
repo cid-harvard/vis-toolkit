@@ -13,32 +13,42 @@ vistk.utils.items_mark = function(d, i) {
                       .attr("r", 5)
                       .attr("cx", 0)
                       .attr("cy", 0)
-                      .attr("class", "dot__circle")
+                      .attr("class", "mark__circle")
                       .style("fill", function(d) { return vars.color(d[vars.var_color]); });
       break;
 
     case "rect":
 
-     d3.select(this).append("rect")
+      d3.select(this).append("rect")
                       .attr("height", vars.mark.height)
                       .attr("width", vars.mark.width)                              
                       .attr("x", -vars.mark.width/2)
                       .attr("y", -vars.mark.height/2)
-                      .attr("class", "dot__circle")
+                      .attr("class", "mark__rect")
                       .style("fill", function(d) { return vars.color(d[vars.var_color]); });
 
       break;
 
     case "diamond":
 
-     d3.select(this).append("rect")
+      d3.select(this).append("rect")
                       .attr("height", vars.mark.height)
                       .attr("width", vars.mark.width)                              
                       .attr("x", -vars.mark.width/2)
                       .attr("y", -vars.mark.height/2)
-                      .attr("class", "dot__circle")
+                      .attr("class", "mark__diamond")
                       .attr("transform", "rotate(45)")
                       .style("fill", function(d) { return vars.color(d[vars.var_color]); });
+
+    case "text":
+
+      d3.select(this).append("text")
+                      .attr("x", 10)
+                      .attr("y", 0)
+                      .attr("dy", ".35em")
+                      .attr("class", "mark__text")
+                      .attr("transform", "rotate(-30)")
+                      .text(function(d) { return d[vars.var_text]; });
 
       break;
   }

@@ -40,7 +40,8 @@
 
           vars.x_scale = d3.scale.linear()
               .range([vars.margin.left, vars.width-vars.margin.left-vars.margin.right])
-              .domain([0, d3.max(vars.new_data, function(d) { return d[vars.var_x]; })]).nice();
+              .domain([0, d3.max(vars.new_data, function(d) { return d[vars.var_x]; })])
+              .nice();
         
         }
 
@@ -63,7 +64,9 @@
             .attr("y", -6)
             .style({
               "text-anchor": "end",
-              "display": function(d) { return typeof vars.x_text !== "undefined" && vars.x_text !== null }
+              "display": function(d) { 
+                return typeof vars.x_text !== "undefined" && vars.x_text !== null;
+              }
             })
             .text(vars.var_x);
 
@@ -99,6 +102,9 @@
         // Add a graphical mark
         gPoints_enter.each(vistk.utils.items_mark);
 
+        // TODO: turn graphical mark that can be customized
+        // gPoints_enter.each(vistk.utils.items_mark);
+        // ..the mapping configuration should be in the config file
         gPoints_enter.append("text")
                         .attr("x", 10)
                         .attr("y", 0)
@@ -118,8 +124,6 @@
                             return "translate(" + vars.x_scale(d[vars.var_x]) + ", " + vars.height/2 + ")";
                           }
                         });
-
-
 
         // If init, then dispatch those events
         // TODO: dispatch focus event here and highlight nodes

@@ -12,6 +12,11 @@
 [ ] Extract common functionalities
 [ ] Dealing with missing data
 
+## Marks and Connections
+
+[ ] Add specific shapes like countries
+[ ] Connections too
+
 ## Interactions
 
 [ ] Use of dispatch events
@@ -35,6 +40,8 @@
 
 [ ] Hightlight
 [ ] Selection
+
+[ ] Improve hover behavior
 
 ## Treemap
 
@@ -99,7 +106,6 @@
 [ ] Aggregation
 [ ] Filter
 
-
 ##  Sparkline
 
 [ ] Data wrangling
@@ -134,4 +140,3 @@
 
 * Either from the visualization itself, or with auto-generated widgets
 * Binding with external buttons/widgets
-
