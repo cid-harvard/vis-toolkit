@@ -203,8 +203,6 @@
   });
 }
 
-
-
 /* LOADING DATASETS
 
       var label_loader = d3.select(vars.container).selectAll(".loader").data([vars.var_id])

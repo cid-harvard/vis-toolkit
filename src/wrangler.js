@@ -82,7 +82,7 @@
       vars.new_data = nested_data.map(function(d) { return d.values; });
     }
 
-    if(vars.type == "linechart") {
+    if(vars.type === "linechart") {
 
       vars.new_data.forEach(function(d) {
         d[vars.var_time] = vars.time.parse(d.year);

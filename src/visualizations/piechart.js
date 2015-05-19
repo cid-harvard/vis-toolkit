@@ -1,7 +1,3 @@
-
-
-      
-
       case "piechart":
 
         var r = vars.width/6;
@@ -36,8 +32,3 @@
 
 
         break;
-
-
-
-
-

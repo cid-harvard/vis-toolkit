@@ -1,4 +1,3 @@
-
       case "nodelink":
 
         vars.evt.register("highlightOn", function(d) {
