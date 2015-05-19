@@ -11,44 +11,6 @@
             .classed("focus", false);
         });
 
-        // Create the root node
-        r = {}
-        r.name = "root";
-        groups = [];
-
-        // Creates the groups here
-        vars.new_data.map(function(d, i) {
-
-          if(typeof groups[d[vars.var_group]] == "undefined") {
-            groups[d[vars.var_group]] = [];
-          }
-
-          groups[d[vars.var_group]]
-           .push({name: d.name, size: d.value, attr: d.item_id, group: +d[vars.var_group], year: d.year, id: i, focus: d.focus});
-
-        })
-
-        // Make sure there is no empty elements
-        groups = groups.filter(function(n){ return n != undefined }); 
-        
-        // Creates the parent nodes
-        parents = groups.map(function(d, i) {
-
-          node = {};
-          node.name = d[0].name;
-          node.group = d[0].group;
-
-          // Create the children nodes
-          node.children = d.map(function(e, j) {
-            return {name: e.name, size: e.size, group: e.group, year: e.year, id: e.id, focus: e.focus}
-          })
-
-          return node;
-        })
-
-        // Add parents to the root
-        r.children = parents;
-
         var treemap = d3.layout.treemap()
             .padding(4)
             .sticky(true)
@@ -60,6 +22,8 @@
             .data(treemap.nodes);
 
         // ENTER
+        // TODO: turn into a mark creation
+        // vistk.utils.items_mark 
         var cell_enter = cell.enter().append("g")
             .attr("class", "cell")
             .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });

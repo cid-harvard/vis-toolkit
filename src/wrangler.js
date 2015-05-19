@@ -2,7 +2,7 @@
     vars.new_data = vars.data;
 
     // Filter data by time
-    if(typeof vars.time.current_time !== "undefined" && vars.time.current_time != null) {
+    if(typeof vars.time !== "undefined" && typeof vars.time.current_time !== "undefined" && vars.time.current_time != null) {
 
       console.log("[time.filter]", vars.time.var_time, vars.time.current_time);
 
@@ -84,6 +84,7 @@
 
     if(vars.type === "linechart") {
 
+      // Parse data
       vars.new_data.forEach(function(d) {
         d[vars.var_time] = vars.time.parse(d.year);
       });
@@ -125,7 +126,6 @@
 
     if(vars.type == "sparkline") {
 
-
       vars.new_data = [];
 
       // Flatten the data here
@@ -138,6 +138,47 @@
 
       });
 
+    }
+
+    if(vars.type == "treemap") {
+
+      // Create the root node
+      r = {}
+      r.name = "root";
+      groups = [];
+
+      // Creates the groups here
+      vars.new_data.map(function(d, i) {
+
+        if(typeof groups[d[vars.var_group]] == "undefined") {
+          groups[d[vars.var_group]] = [];
+        }
+
+        groups[d[vars.var_group]]
+         .push({name: d.name, size: d.value, attr: d.item_id, group: +d[vars.var_group], year: d.year, id: i, focus: d.focus});
+
+      })
+
+      // Make sure there is no empty elements
+      groups = groups.filter(function(n){ return n != undefined }); 
+      
+      // Creates the parent nodes
+      parents = groups.map(function(d, i) {
+
+        node = {};
+        node.name = d[0].name;
+        node.group = d[0].group;
+
+        // Create the children nodes
+        node.children = d.map(function(e, j) {
+          return {name: e.name, size: e.size, group: e.group, year: e.year, id: e.id, focus: e.focus}
+        })
+
+        return node;
+      })
+
+      // Add parents to the root
+      r.children = parents;
 
     }
  
