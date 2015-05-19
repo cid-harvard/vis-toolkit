@@ -5,12 +5,11 @@
 <link href="../css/vistk.css" rel="stylesheet">
 <body>
 <div id="viz"></div>
-
 <script>
 
 d3.json("../data/diversification_ubiquity_hs4_1995_2012.json", function(error, countries) {
 
-  flat_years = vistk.utils.flatten_years(countries);
+  var flat_years = vistk.utils.flatten_years(countries);
 
   visualization = vistk.viz()
     .type("scatterplot")
@@ -18,15 +17,17 @@ d3.json("../data/diversification_ubiquity_hs4_1995_2012.json", function(error, c
     .data(flat_years)
     .params({
       var_x: 'nb_products',
-      var_y: 'avg_products'
+      var_y: 'avg_products',
+      time: {
+        var_time: "year", 
+        current_time: 1995
+      }
     })
     .id(["continent", "country"])
     .group("continent")
-    .time({var_time: "year", current_time: 1995})
-    .title("Testing Table")
-    .color("continent")
+    .color("continent");
 
-  d3.select("#viz").call(visualization)
+  d3.select("#viz").call(visualization);
 
 });
 

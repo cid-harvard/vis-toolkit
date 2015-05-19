@@ -132,7 +132,7 @@
                             vars.evt.call("clicked", d);
                           });
 
-        gPoints_enter.each(vistk.utils.add_mark);
+        gPoints_enter.each(vistk.utils.items_mark);
 
           var labels = gPoints_enter.append("text")
               .attr("x", 10)

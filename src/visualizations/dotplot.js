@@ -97,7 +97,7 @@
                         });
 
         // Add a graphical mark
-        gPoints_enter.each(vistk.utils.add_mark);
+        gPoints_enter.each(vistk.utils.items_mark);
 
         gPoints_enter.append("text")
                         .attr("x", 10)
@@ -144,8 +144,5 @@
         if(typeof vars.highlight.length !== undefined) {
           vars.evt.call("highlightOn", vars.new_data[vars.highlight]);
         }
-
-
-
 
         break;        
