@@ -62,6 +62,7 @@
           d3.max(countries, function(c) { return d3.max(c.values, function(v) { return v[vars.var_y]; }); })
         ]);
 
+        // Grid layout (background)
         vars.svg.append("g")
             .attr("class", "x grid")
             .attr("transform", "translate(0," + vars.height + ")")

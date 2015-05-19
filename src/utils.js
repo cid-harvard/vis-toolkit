@@ -1,3 +1,9 @@
+vistk.utils.items_group = function(d, i) {
+
+
+
+}
+
 vistk.utils.items_mark = function(d, i) {
 
   if(typeof vars.mark === "undefined") {
@@ -13,7 +19,7 @@ vistk.utils.items_mark = function(d, i) {
                       .attr("r", 5)
                       .attr("cx", 0)
                       .attr("cy", 0)
-                      .attr("class", "mark__circle")
+                      .attr("class", "items__mark__circle")
                       .style("fill", function(d) { return vars.color(d[vars.var_color]); });
       break;
 
@@ -24,7 +30,7 @@ vistk.utils.items_mark = function(d, i) {
                       .attr("width", vars.mark.width)                              
                       .attr("x", -vars.mark.width/2)
                       .attr("y", -vars.mark.height/2)
-                      .attr("class", "mark__rect")
+                      .attr("class", "items__mark__rect")
                       .style("fill", function(d) { return vars.color(d[vars.var_color]); });
 
       break;
@@ -36,9 +42,11 @@ vistk.utils.items_mark = function(d, i) {
                       .attr("width", vars.mark.width)                              
                       .attr("x", -vars.mark.width/2)
                       .attr("y", -vars.mark.height/2)
-                      .attr("class", "mark__diamond")
+                      .attr("class", "items__mark__diamond")
                       .attr("transform", "rotate(45)")
                       .style("fill", function(d) { return vars.color(d[vars.var_color]); });
+
+      break;
 
     case "text":
 
@@ -46,7 +54,7 @@ vistk.utils.items_mark = function(d, i) {
                       .attr("x", 10)
                       .attr("y", 0)
                       .attr("dy", ".35em")
-                      .attr("class", "mark__text")
+                      .attr("class", "items__mark__text")
                       .attr("transform", "rotate(-30)")
                       .text(function(d) { return d[vars.var_text]; });
 

@@ -26,6 +26,7 @@
                         .data(vars.new_data, function(d, i) { return i; });
 
         // Enter groups for items graphical marks
+        // TODO: Ideally we should allow different mappings for the items
         var gItems_enter = gItems.enter()
                         .append("g")
                         .filter(function(d, i) {
