@@ -24,11 +24,12 @@
                         });
 
         // Add a graphical mark
-        gPoints_enter.each(vistk.utils.item_mark)
+        gPoints_enter.each(vistk.utils.items_mark)
 
         // Customize it (e.g. add labels)
 
         // Add a connection mark
+        gPoints_enter.each(vistk.utils.connect_mark)
 
         // Add axis
 
