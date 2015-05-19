@@ -1,4 +1,4 @@
-vistk.utils.add_mark = function(d, i) {
+vistk.utils.items_mark = function(d, i) {
 
   if(typeof vars.mark === "undefined") {
     vars.mark = {};
@@ -45,20 +45,27 @@ vistk.utils.add_mark = function(d, i) {
 
 }
 
-vistk.utils.add_connection = function(d, i) {
+vistk.utils.connect_mark = function(d, i) {
 
-  if(typeof vars.connection != "undefined") {
+  if(typeof vars.connect != "undefined") {
 
-    switch(vars.connection.type) {
+    switch(vars.connect.type) {
 
       case "line":
+
+
+        d3.select(this).append('path')
+            .attr('class', 'sparkline')
+            .attr('d', function(d) {
+              console.log(d)
+              return vars.line(d);
+            });
 
       break;
     }
 
   }
 }
-
 
 vistk.utils.make_x_axis = function() {        
     return d3.svg.axis()
@@ -110,7 +117,7 @@ var merge = function() {
 // One way to wrap text.. but creates too many elements..
 // http://bl.ocks.org/mbostock/7555321
 
-function wrap(text, width) {
+vistk.utils.wrap = function(text, width) {
 
   text.each(function() {
 

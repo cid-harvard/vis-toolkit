@@ -71,6 +71,14 @@
     duration: 1000,
     interpolate: "monotone",
 
+    connect: {
+      type: "line"
+    },
+
+    items: {
+      type: "circle"
+    },
+
     nb_viz: nb_viz
   };
 
