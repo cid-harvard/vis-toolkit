@@ -22,8 +22,6 @@
     type: "",
 
     // Default dimensions
-    width: 1000,
-    height: 600,
     margin: {top: 30, right: 20, bottom: 10, left: 30},
 
     // Default Variables mapping
@@ -68,6 +66,8 @@
 
     // SVG Container
     svg: null,
+    ratio: .5, // Visualization aspect ratio
+
     duration: 1000,
     interpolate: "monotone",
 
@@ -120,9 +120,21 @@
 
   if (!vars.data) { vars.data = []; }
 
-  // Calculate new dimensions based on margins
-  vars.width = vars.width - vars.margin.left - vars.margin.right;
-  vars.height = vars.height - vars.margin.top - vars.margin.bottom;
+  if(typeof vars.width === "undefined" && typeof vars.height === "undefined") {
+
+    vars.width = parseInt(d3.select("#viz").style('width'));
+    vars.width = vars.width - vars.margin.left - vars.margin.right;
+    vars.height = vars.width * vars.ratio;
+
+  } else {
+
+    // Calculate new dimensions based on margins
+    vars.width = vars.width - vars.margin.left - vars.margin.right;
+    vars.height = vars.height - vars.margin.top - vars.margin.bottom;
+
+  }
 
   // Events 
-  vars.dispatch = d3.dispatch("init", "end", "highlightOn", "highlightOut", "selection");
+  vars.dispatch = d3.dispatch("init", "end", "highlightOn", "highlightOut", "selection", 'resize');
+
+  d3.select(window).on('resize', function(d) { vars.evt.call("resize", d); });
