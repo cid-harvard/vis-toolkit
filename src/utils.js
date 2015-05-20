@@ -44,11 +44,9 @@ vistk.utils.items_mark = function(d, i) {
                       .attr("y", -vars.mark.height/2)
                       .classed("items__mark__diamond", true)
                       .classed("selected", function(d) { return vars.selection.indexOf(d[vars.var_text]) >= 0; })
-                      .classed("highlighted", function(d) {
-                        console.log(vars.highlight.indexOf(d[vars.var_text]), vars.var_text)
-                       return vars.highlight.indexOf(d[vars.var_text]) >= 0; })
-                      .attr("transform", "rotate(45)")
-                
+                      .classed("highlighted", function(d) { return vars.highlight.indexOf(d[vars.var_text]) >= 0; })
+                      .attr("transform", "rotate(45)");
+
       break;
 
     case "text":

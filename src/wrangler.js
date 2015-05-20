@@ -82,7 +82,7 @@
       vars.new_data = nested_data.map(function(d) { return d.values; });
     }
 
-    if(vars.type === "linechart") {
+    if(vars.type === "linechart" || vars.type === "sparkline") {
 
       // Parse data
       vars.new_data.forEach(function(d) {
@@ -99,12 +99,12 @@
           id: c.replace(" ", "_"),
           name: c,
           values: vars.new_data.filter(function(d) {
-            return d[vars.var_text] == c;
+            return d[vars.var_text] === c;
           }).map(function (d) {
             return {date: vars.time.parse(d.year), rank: +d.rank, year: d.year};
           })
         };
-      })
+      });
 
       // Make sure all countries and all ranks are there
       countries.forEach(function(c) {
@@ -114,30 +114,12 @@
           c.values.forEach(function(v) {
             if(v.year == y)
               is_year = true;
-          })
+          });
           if(!is_year) {
             c.values.push({date: vars.time.parse(y), rank: null, year: y})
           }
         });
-
       });
-
-    }
-
-    if(vars.type == "sparkline") {
-
-      vars.new_data = [];
-
-      // Flatten the data here
-      // Or do something to build the temporal data? Should it happen here?
-      vars.data.forEach(function(d) {
-
-        if(d.dept_name === "Antioquia") {
-          vars.new_data.push({name: d.dept_name, year: vars.time.parse(d.year), realgdp: d.realgdp});
-        }
-
-      });
-
     }
 
     if(vars.type == "treemap") {
@@ -160,7 +142,7 @@
       })
 
       // Make sure there is no empty elements
-      groups = groups.filter(function(n){ return n != undefined }); 
+      groups = groups.filter(function(n) { return n != undefined }); 
       
       // Creates the parent nodes
       parents = groups.map(function(d, i) {

@@ -24,19 +24,17 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
   var parse_year = d3.time.format("%Y").parse;
 
   visualization = vistk.viz()
-    .type("sparkline")
-    .container("#viz")
-    .height(100)
-    .width(300)
-    .data(departments)
-    .id("id")
-    .var_y("realgdp")
-    .group("name")
-    .color("name")
-    .title("Products")
-    .group("id")
-    .ui(false)
     .params({
+      type: "sparkline",
+      container: "#viz",
+      width: 300,
+      height: 100,
+      data: departments,
+      id: "id",
+      var_y: "realgdp",
+      var_group: "dept_name",
+      color: "name",
+      ui: false,
       time: {
         var_time: "year", 
         parse: parse_year,
@@ -47,9 +45,10 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
         height: 10
       },
       interpolate: "linear",
+      var_text: "dept_name",
+      filter: ["Antioquia"]
     //  filter: [0]
     })
-    .text("name");
 
   d3.select("#viz").call(visualization);
 
