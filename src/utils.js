@@ -42,10 +42,13 @@ vistk.utils.items_mark = function(d, i) {
                       .attr("width", vars.mark.width)                              
                       .attr("x", -vars.mark.width/2)
                       .attr("y", -vars.mark.height/2)
-                      .attr("class", "items__mark__diamond")
+                      .classed("items__mark__diamond", true)
+                      .classed("selected", function(d) { return vars.selection.indexOf(d[vars.var_text]) >= 0; })
+                      .classed("highlighted", function(d) {
+                        console.log(vars.highlight.indexOf(d[vars.var_text]), vars.var_text)
+                       return vars.highlight.indexOf(d[vars.var_text]) >= 0; })
                       .attr("transform", "rotate(45)")
-                      .style("fill", function(d) { return vars.color(d[vars.var_color]); });
-
+                
       break;
 
     case "text":

@@ -31,7 +31,9 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
       var_y: ['dept_pop', 'realgdp'],
       x_text: null,
       x_ticks: 2,
-      x_format: function(d) { return '$' + d3.format(".1s")(d); },      
+      x_format: function(d) { 
+        return '$' + d3.format(".1s")(d); 
+      },      
       mark: {
         type: 'diamond',
         width: 10,
@@ -46,9 +48,9 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
         options: ui_options
       },
       id: "name",
-      var_text: null, 
+      var_text: "dept_name", 
       selection: [0],
-      highlight: [0],
+      highlight: ["Antioquia"],
       duration: 0,
       tickSize: 0,
       tickPadding: 10

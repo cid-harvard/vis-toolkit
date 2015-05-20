@@ -81,7 +81,8 @@
             })
             .text(vars.var_x);
 
-        vars.svg.selectAll(".x.axis tick line").style("display", "none")
+        vars.svg.selectAll(".x.axis tick line")
+                .style("display", "none");
 
         vars.svg.selectAll(".x.axis").transition()
             .duration(vars.duration)

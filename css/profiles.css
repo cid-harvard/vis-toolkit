@@ -6,9 +6,18 @@ circle .dot .focus {
     fill: #EBE6E3;
 }
 
-.items__mark__diamond .highlighted {
-    fill: #EBE6E3;
-    opacity: 1;
+.items__mark__diamond {
+    fill: gray;
+    opacity: .1;
+}
+
+.items__mark__diamond.highlighted {
+  fill: red;
+  opacity: 1;
+ }
+
+.dot__label {
+  display: none;
 }
 
 .dots__labels:hover {
@@ -22,4 +31,4 @@ circle .dot .focus {
 
 .domain {
   stroke-dasharray: 1,1
-}=
+}
