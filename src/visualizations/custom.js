@@ -4,6 +4,7 @@
         vars.evt.register("highlightOn", function(d) { });
         vars.evt.register("highlightOut", function(d) { });
         vars.evt.register("selection", function(d) { });
+        vars.evt.register("resize", function(d) { });
 
         // Bind data to groups
         var gPoints = vars.svg.selectAll(".mark__group")

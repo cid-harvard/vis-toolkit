@@ -2,8 +2,8 @@
 
         vars.evt.register("highlightOn", function(d) {
 
-          gPoints.selectAll(".dot__circle").classed("highlighted", function(e, j) { return e === d; });
-          gPoints.selectAll(".dot__label").classed("highlighted", function(e, j) { return e === d; });
+          gPoints.selectAll(".items_mark").classed("highlighted", function(e, j) { return e === d; });
+        //  gPoints.selectAll(".items_mark").classed("highlighted", function(e, j) { return e === d; });
 
           // Tentative of data driven selection update
           vars.data.forEach(function(e) {
@@ -17,7 +17,7 @@
 
         vars.evt.register("highlightOut", function(d) {
 
-          gPoints.selectAll(".dot__circle").classed("highlighted", false);
+          gPoints.selectAll(".items_mark").classed("highlighted", false);
           gPoints.selectAll(".dot__label").classed("highlighted", false);
 
           vars.data.forEach(function(e) { d.__highlight = false; })
@@ -64,7 +64,9 @@
             .style("text-anchor", "end")
             .text(function(d) { return vars.var_x; })
 
-        vars.svg.selectAll(".y.axis").data([vars.new_data]).enter().append("g")
+        vars.svg.selectAll(".y.axis").data([vars.new_data])
+          .enter()
+            .append("g")
             .attr("class", "y axis")
             .attr("transform", "translate("+vars.margin.left+", 0)")              
           .append("text")
@@ -78,8 +80,11 @@
         vars.svg.selectAll(".x.axis").call(vars.x_axis);
         vars.svg.selectAll(".y.axis").call(vars.y_axis);
 
-        var gPoints = vars.svg.selectAll(".points")
+        var gPoints = vars.svg.selectAll(".items__group")
                         .data(vars.new_data, function(d, i) { return d.name + " " + i; });
+
+        // TODO: create groups this way
+        // gPoints = vistk.utils.items_groups
 
         // Here we want to deal with aggregated datasets
         // TODO
@@ -121,7 +126,7 @@
           // ENTER
           var gPoints_enter = gPoints.enter()
                         .append("g")
-                          .attr("class", "points")
+                          .attr("class", "items__group")
                           .on("mouseenter", function(d, i) {
                             vars.evt.call("highlightOn", d);
                           })
@@ -132,7 +137,8 @@
                             vars.evt.call("clicked", d);
                           });
 
-        gPoints_enter.each(vistk.utils.items_mark);
+          gPoints_enter.each(vistk.utils.items_mark);
+
 
           var labels = gPoints_enter.append("text")
               .attr("x", 10)

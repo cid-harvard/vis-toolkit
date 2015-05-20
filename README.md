@@ -167,6 +167,7 @@ Annotations
 Labels
 * http://bl.ocks.org/dbuezas/9306799
 
+* Connecting labels to items
 
 Legends
  * Color scale / legend (should contain the min/max values and min/max color range)
@@ -281,6 +282,10 @@ Map of countries that can be colored and labeled.
 * http://www.redblobgames.com/grids/hexagons/#rings
 * Hex to shape transition http://www.bloomberg.com/graphics/2015-uk-election/#0
 
+* Composite projects https://rveciana.github.io/d3-composite-projections/
+
+* Distance heat map http://emptypipes.org/supp/isochrone_rome/
+
 ### Scatterplot
 
 * Scatterplot http://bl.ocks.org/mbostock/3887118
@@ -312,6 +317,7 @@ Combination of a matrix with nested scatterplots within each cell. The matrix be
 
 * http://bl.ocks.org/mbostock/4063663
 
+* Re-sort http://bl.ocks.org/ianyfchang/8119685
 
 ### Node link
 
@@ -366,6 +372,8 @@ Listing of charts
 * Aligned line chart http://www.lesechos.fr/infographie/2014-07-06-emploi-salaires/emplois.html
 
 * Grids http://www.d3noob.org/2013/01/adding-grid-lines-to-d3js-graph.html
+
+* Bi-partite graph http://bl.ocks.org/NPashaP/9796212
 
 ## Roadmap
 
@@ -510,6 +518,8 @@ Template
 * Metrics Graphics - http://metricsgraphicsjs.org/interactive-demo.htm
 * Vega - https://github.com/trifacta/vega
 * Visible - http://visible.io/examples.html
+* IVTK
+ * Templates configuration http://philogb.github.io/jit/demos.html
 
 ## Misc
 
