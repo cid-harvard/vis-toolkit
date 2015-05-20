@@ -58,8 +58,8 @@
         vars.x_scale.domain(d3.extent(vars.new_data, function(d) { return d[vars.var_time]; }));
 
         vars.y_scale.domain([
-          d3.min(countries, function(c) { return d3.min(c.values, function(v) { return v[vars.var_y]; }); }),
-          d3.max(countries, function(c) { return d3.max(c.values, function(v) { return v[vars.var_y]; }); })
+          d3.min(items, function(c) { return d3.min(c.values, function(v) { return v[vars.var_y]; }); }),
+          d3.max(items, function(c) { return d3.max(c.values, function(v) { return v[vars.var_y]; }); })
         ]);
 
         // Grid layout (background)
@@ -86,7 +86,7 @@
             .text(vars.y_text);
 
         var country = vars.svg.selectAll(".country")
-            .data(countries)
+            .data(items)
           .enter()
             .append("g")
             .attr("class", function(d) {

@@ -532,3 +532,5 @@ Template
 ### Using other libs
 
 * https://github.com/wbkd/d3-extended
+
+* Responsive visualization http://eyeseast.github.io/visible-data/2013/08/26/responsive-d3/

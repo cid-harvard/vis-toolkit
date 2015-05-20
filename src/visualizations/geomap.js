@@ -1,5 +1,13 @@
       case "geomap":
 
+        vars.dispatch.on("highlightOn", function(d) {
+          console.log(d)
+        });
+
+        vars.dispatch.on("highlightOut", function(d) {
+          console.log(d)
+        });
+
         // http://techslides.com/demos/d3/d3-world-map-colors-tooltips.html
         var projection = d3.geo.mercator()
                         .translate([vars.width/2, vars.height/2])
@@ -45,7 +53,7 @@
           // TODO: see above
           countries = countries.filter(function(d) {
             return typeof d.data != "undefined";
-          })
+          });
 
           // Update
           var country = vars.gSvg.selectAll(".country").data(countries);
@@ -66,21 +74,12 @@
                                     return vars.color(d.data[vars.var_color]);
                                   });
 
-          vars.dispatch.on("highlightOn", function(d) {
-            console.log(d)
-          });
-
-          vars.dispatch.on("highlightOut", function(d) {
-            console.log(d)
-          });
-
           //Show/hide tooltip
           country_enter
                 .on("mouseenter", function(d, i) {
                   vars.dispatch.highlightOn(d);
                 })
                 .on("mousemove", function(d,i) {
-
 
                   var mouse = d3.mouse(vars.gSvg.node()).map( function(d) { return parseInt(d); } );
 
@@ -100,4 +99,3 @@
           }
 
           break;
-

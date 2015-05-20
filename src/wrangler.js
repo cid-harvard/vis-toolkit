@@ -89,12 +89,12 @@
         d[vars.var_time] = vars.time.parse(d.year);
       });
 
-      all_years = d3.set(vars.new_data.map(function(d) { return d.year;})).values();
+      var all_years = d3.set(vars.new_data.map(function(d) { return d.year;})).values();
 
-      var unique_countries = d3.set(vars.new_data.map(function(d) { return d[vars.var_text]; })).values();
+      var unique_items = d3.set(vars.new_data.map(function(d) { return d[vars.var_text]; })).values();
 
-      // Find unique countries and create ids
-      countries = unique_countries.map(function(c) {
+      // Find unique items and create ids
+      var items = unique_items.map(function(c) {
         return {
           id: c.replace(" ", "_"),
           name: c,
@@ -106,26 +106,28 @@
         };
       });
 
-      // Make sure all countries and all ranks are there
-      countries.forEach(function(c) {
+      // Make sure all items and all ranks are there
+      items.forEach(function(c) {
 
         all_years.forEach(function(y) {
           var is_year = false;
           c.values.forEach(function(v) {
-            if(v.year == y)
+            if(v.year === y) {
               is_year = true;
+            }
           });
           if(!is_year) {
-            c.values.push({date: vars.time.parse(y), rank: null, year: y})
+            c.values.push({date: vars.time.parse(y), rank: null, year: y});
           }
         });
+
       });
     }
 
-    if(vars.type == "treemap") {
+    if(vars.type === "treemap") {
 
       // Create the root node
-      r = {}
+      r = {};
       r.name = "root";
       r.depth = 0;
       groups = [];
@@ -133,17 +135,17 @@
       // Creates the groups here
       vars.new_data.map(function(d, i) {
 
-        if(typeof groups[d[vars.var_group]] == "undefined") {
+        if(typeof groups[d[vars.var_group]] === "undefined") {
           groups[d[vars.var_group]] = [];
         }
 
         groups[d[vars.var_group]]
          .push({name: d.name, size: d.value, attr: d.item_id, group: +d[vars.var_group], year: d.year, id: i, focus: d.focus});
 
-      })
+      });
 
       // Make sure there is no empty elements
-      groups = groups.filter(function(n) { return n != undefined }); 
+      groups = groups.filter(function(n) { return n !== "undefined"; }); 
       
       // Creates the parent nodes
       parents = groups.map(function(d, i) {
@@ -154,11 +156,11 @@
 
         // Create the children nodes
         node.children = d.map(function(e, j) {
-          return {name: e.name, size: e.size, group: e.group, year: e.year, id: e.id, focus: e.focus}
-        })
+          return {name: e.name, size: e.size, group: e.group, year: e.year, id: e.id, focus: e.focus};
+        });
 
         return node;
-      })
+      });
 
       // Add parents to the root
       r.children = parents;

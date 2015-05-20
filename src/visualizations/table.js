@@ -122,7 +122,7 @@
        // Function that orders the rows of the table
         function sort_by(header) {
 
-          if(vars.debug) console.log("[sort_by]", header);
+          if(vars.debug) { console.log("[sort_by]", header); }
 
           vars.sort_by.column = header;
           vars.sort_by.is_sorted = !vars.sort_by.is_sorted;
@@ -193,7 +193,7 @@
 
         function paint_zebra_rows(rows) {
           rows.filter(function() {
-            return d3.select(this).style("display") != "none";
+            return d3.select(this).style("display") !== "none";
           })
             .classed("odd", function(d, i) { return (i % 2) === 0; });
         }

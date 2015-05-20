@@ -3,7 +3,7 @@
         vars.evt.register("highlightOn", function(d) {
 
           // Highlight nodes
-          vars.svg.selectAll(".node").style("opacity", .1)    
+          vars.svg.selectAll(".node").style("opacity", .1);
           vars.svg.selectAll(".node").filter(function(e, j) { return e === d; }).style("opacity", 1);
 
           // Highlight Links
@@ -16,10 +16,10 @@
             .style("stroke-width", function(d) { return 3; });
 
           vars.svg.selectAll(".target_"+d.id).each(function(e) {
-            vars.svg.select("#node_"+e.source.id).style("opacity", 1) 
+            vars.svg.select("#node_"+e.source.id).style("opacity", 1);
           })
           .style("opacity", 1)
-          .style("stroke-width", function(d) { return 3; })
+          .style("stroke-width", function(d) { return 3; });
 
           // TODO: quick fix to coordinate with a table
           vars.svg.selectAll(".node").filter(function(e, j) { return e.data === d; }).style("opacity", 1);
@@ -33,16 +33,16 @@
             vars.svg.select("#node_"+e.source.data.product_id).style("opacity", 1) 
           })
           .style("opacity", 1)
-          .style("stroke-width", function(d) { return 3; })
+          .style("stroke-width", function(d) { return 3; });
 
         });
 
         vars.evt.register("highlightOut", function(d) {
 
-          vars.svg.selectAll(".node").style("opacity", 1)
+          vars.svg.selectAll(".node").style("opacity", 1);
           vars.svg.selectAll(".link")
             .style("opacity", .4)
-            .style("stroke-width", function(d) { return 1; })
+            .style("stroke-width", function(d) { return 1; });
 
         });
 
@@ -105,11 +105,11 @@
             .style("opacity", .4);
 
         var node = vars.svg.selectAll(".node")
-            .data(vars.nodes, function(d) { return d.id});
+            .data(vars.nodes, function(d) { return d.id; });
 
         var node_enter = node.enter().append("circle")
             .attr("class", "node")
-            .attr("id", function(d) { return "node_"+d.id; })
+            .attr("id", function(d) { return "node_" + d.id; })
             .attr("r", 5)
            /* .attr("r", function(d) { 
               if(typeof d.data != "undefined")
@@ -132,10 +132,9 @@
         link.attr("x1", function(d) { return x(d.source.x); })
             .attr("y1", function(d) { return y(d.source.y); })
             .attr("x2", function(d) { return x(d.target.x); })
-            .attr("y2", function(d) { return y(d.target.y); })
+            .attr("y2", function(d) { return y(d.target.y); });
 
         node.attr("cx", function(d) { return x(d.x); })
             .attr("cy", function(d) { return y(d.y); });
-
 
         break;

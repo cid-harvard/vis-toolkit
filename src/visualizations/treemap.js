@@ -26,23 +26,25 @@
         // vistk.utils.items_mark 
         var cell_enter = cell.enter().append("g")
             .attr("class", "cell")
-            .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+            .attr("transform", function(d) { 
+              return "translate(" + d.x + "," + d.y + ")"; 
+            });
 
         cell_enter.append("rect")
             .attr("width", function(d) { return d.dx; })
             .attr("height", function(d) { return d.dy; })
             .style("fill", function(d) {
               return d.children ? vars.color(d[vars.var_color]) : null; 
-            })
+            });
 
         // TODO: persistent bug when hovering a cell
         cell
-          .filter(function(d) { return d.depth == 2})
+          .filter(function(d) { return d.depth === 2; })
           .on("mousemove", function(d) {      
             vars.evt.call("highlightOn", d);
           }).on("mouseout", function(d) {
             vars.evt.call("highlightOut", d);
-          })
+          });
 
         cell_enter.append("text")
             .attr("x", function(d) { return 10; })
@@ -51,15 +53,18 @@
             .attr("text-anchor", "left")
             .style("font-size", 15)
             .text(function(d) { 
-              if(d.depth == 1)
+              if(d.depth === 1) {
                 return d.name;
+              } else {
+                return "";
+              }
             //  return d.children ? null : d[vars.var_text].slice(0, 3)+"..."; 
             })
             .on("mouseenter", function(d, i) {                
               vars.dispatch.highlightOn(d)              
             }).on("mouseout", function(d) {
               vars.dispatch.highlightOut(d)  
-            })
+            });
 
         // EXIT
         var cell_exit = cell.exit().remove();
@@ -73,9 +78,9 @@
             .style("fill", function(d) {
               return d.children ? vars.color(d[vars.var_color]) : null; 
             })
-            .classed("focus", function(d, i) { return d.focus; })
+            .classed("focus", function(d, i) { return d.focus; });
 
         cell.select("text")
-            .call(wrap)
+            .call(wrap);
 
       break;

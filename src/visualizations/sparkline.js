@@ -17,7 +17,7 @@
       
         var gConnect_enter = gConnect.enter()
                         .append("g")
-                        .attr("class", "connect__group")
+                        .attr("class", "connect__group");
 
         // Enter connect graphical marks
         gConnect_enter.each(vistk.utils.connect_mark);      

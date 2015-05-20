@@ -1,4 +1,3 @@
-
   if(typeof nb_viz === "undefined") {
     nb_viz = 0;
     global = {};
@@ -69,7 +68,7 @@
 
     // SVG Container
     svg: null,
-    ratio: .5, // Visualization aspect ratio
+    ratio: 0.5, // Visualization aspect ratio
 
     duration: 1000,
     interpolate: "monotone",
@@ -140,4 +139,6 @@
   // Events 
   vars.dispatch = d3.dispatch("init", "end", "highlightOn", "highlightOut", "selection", 'resize');
 
-  d3.select(window).on('resize', function(d) { vars.evt.call("resize", d); });
+  d3.select(window).on('resize', function(d) { 
+    vars.evt.call("resize", d); 
+  });

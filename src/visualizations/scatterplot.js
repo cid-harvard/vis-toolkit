@@ -11,7 +11,7 @@
               e.__highlight = true;
             else
               e.__highlight = false;
-          })
+          });
 
         });
 
@@ -62,7 +62,7 @@
             .attr("x", vars.width-vars.margin.left-vars.margin.right)
             .attr("y", -6)
             .style("text-anchor", "end")
-            .text(function(d) { return vars.var_x; })
+            .text(function(d) { return vars.var_x; });
 
         vars.svg.selectAll(".y.axis").data([vars.new_data])
           .enter()
@@ -75,7 +75,7 @@
             .attr("y", 6)
             .attr("dy", ".71em")
             .style("text-anchor", "end")
-            .text(function(d) { return vars.var_y; })
+            .text(function(d) { return vars.var_y; });
 
         vars.svg.selectAll(".x.axis").call(vars.x_axis);
         vars.svg.selectAll(".y.axis").call(vars.y_axis);
@@ -95,13 +95,13 @@
           var gPoints_enter = gPoints.selectAll(".points")
                         .enter()
                           .append("g")
-                          .attr("class", "points")
+                          .attr("class", "points");
 
           var dots = gPoints_enter.append("rect")
             .attr("r", 5)
             .attr("height", 10)
             .attr("width", 10)
-            .style("fill", function(d) { return vars.color(d[vars.var_color]); })
+            .style("fill", function(d) { return vars.color(d[vars.var_color]); });
 
           var labels = gPoints_enter.append("text")
               .attr("x", 10)
@@ -113,13 +113,13 @@
           var gPoints_exit = gPoints.exit().style("opacity", .1);
 
           // Update all the remaining dots
-          gPoints.style("opacity", 1)    
+          gPoints.style("opacity", 1);
 
           gPoints
               .transition()
               .attr("transform", function(d) {
                 return "translate(" + vars.x_scale(d[vars.var_x])+", " + vars.y_scale(d[vars.var_y]) + ")";
-              })
+              });
 
         } else { 
 
@@ -156,12 +156,12 @@
 
             // Update all the remaining dots
             gPoints.style("opacity", function(d) {
-              console.log(d.__highlight)
-                if(d.__highlight)
+                if(d.__highlight) {
                   return 1;
-                else
+                } else {
                   return .1;
-              })              
+                }
+              });
 
           } else {
 
@@ -173,7 +173,8 @@
             .transition()
             .attr("transform", function(d) {
               return "translate(" + vars.x_scale(d[vars.var_x]) + ", " + vars.y_scale(d[vars.var_y]) + ")";
-            })
+            });
         }
 
         break;
+        
