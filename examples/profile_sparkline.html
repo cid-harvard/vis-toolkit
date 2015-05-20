@@ -3,6 +3,19 @@
 <script src="../js/d3.js"></script>
 <script src="../build/vistk.js"></script>
 <link href="../css/vistk.css" rel="stylesheet">
+<style>
+.items__group:not(last-child) {
+  display: none
+}
+
+.items__group:last-child {
+  display: block;
+}
+
+.items__group:last-child > .items__mark__diamond {
+  fill: red;
+}
+</style>
 <body>
 <div id="viz"></div>
 <script>

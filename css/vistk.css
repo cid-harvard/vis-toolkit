@@ -3,11 +3,6 @@ body {
    font-family: "ff-meta-serif-web-pro";
 }
 
-h1 {
-
-}
-
-
 /* Table */
 table {
   border-collapse: collapse;
@@ -156,6 +151,10 @@ div.tooltip {
 }
 
 /* Dot plot */
+
+.items__mark__diamond {
+  fill: red;
+}
 
 circle.dot__circle {
   fill: gray;

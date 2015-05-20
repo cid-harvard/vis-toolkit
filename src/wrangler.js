@@ -127,6 +127,7 @@
       // Create the root node
       r = {}
       r.name = "root";
+      r.depth = 0;
       groups = [];
 
       // Creates the groups here
