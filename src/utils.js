@@ -175,7 +175,7 @@ vistk.utils.wrap = function(text, width) {
   });
 }
 
-function find_node_by_id(id) {
+vistk.utils.find_node_by_id = function(id) {
   var res = vars.nodes.filter(function(d) {
     return d.id == id;
   })[0];
@@ -186,7 +186,7 @@ function find_node_by_id(id) {
   return res;
 }
 
-function find_data_by_id(id) {
+vistk.utils.find_data_by_id = function(id) {
   var res = vars.new_data.filter(function(d) {
     return d[vars.var_id] == +id;
   })[0];

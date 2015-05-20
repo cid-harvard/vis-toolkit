@@ -73,7 +73,7 @@
           }
 
           // Find the value in vars.data
-          d.data = find_data_by_id(d.id);
+          d.data = vistk.utils.find_data_by_id(d.id);
 
           if(typeof d.data == "undefined") {
             d.data = {};
@@ -84,19 +84,16 @@
 
         vars.links.forEach(function(d, i) {
 
-          d.source = find_node_by_id(d.source);
-          d.target = find_node_by_id(d.target);
+          d.source = vistk.utils.find_node_by_id(d.source);
+          d.target = vistk.utils.find_node_by_id(d.target);
 
         })
 
-        var x = d3.scale.linear()
-            .range([0, vars.width]);
+        vars.x_scale = d3.scale.linear().range([0, vars.width]);
+        vars.y_scale = d3.scale.linear().range([0, vars.height]); // Reverted Scale!
 
-        var y = d3.scale.linear()
-            .range([0, vars.height]); // Reverted Scale!
-
-        x.domain([min_x, max_x]);
-        y.domain([min_y, max_y]);
+        vars.x_scale.domain([min_x, max_x]);
+        vars.y_scale.domain([min_y, max_y]);
 
         var link = vars.svg.selectAll(".link")
             .data(vars.links)
@@ -113,16 +110,7 @@
         // ENTER
         var gPoints_enter = gPoints.enter()
                       .append("g")
-                        .attr("class", "items__group")
-                        .on("mouseenter", function(d, i) {
-                          vars.evt.call("highlightOn", d);
-                        })
-                        .on("mouseout", function(d) {
-                          vars.evt.call("highlightOut", d);
-                        })
-                        .on("click", function(d) {
-                          vars.evt.call("clicked", d);
-                        });
+                        .each(vistk.utils.items_group);
 
         gPoints_enter.each(vistk.utils.items_mark)
             .select("circle")
@@ -134,13 +122,14 @@
 
         var gPoints_exit = gPoints.exit().style({opacity: 0.1});
 
-        link.attr("x1", function(d) { return x(d.source.x); })
-            .attr("y1", function(d) { return y(d.source.y); })
-            .attr("x2", function(d) { return x(d.target.x); })
-            .attr("y2", function(d) { return y(d.target.y); });
+        // UPDATE
+        link.attr("x1", function(d) { return vars.x_scale(d.source.x); })
+            .attr("y1", function(d) { return vars.y_scale(d.source.y); })
+            .attr("x2", function(d) { return vars.x_scale(d.target.x); })
+            .attr("y2", function(d) { return vars.y_scale(d.target.y); });
 
         gPoints.attr("transform", function(d) { 
-          return "translate(" + x(d.x) + "," + y(d.y) + ")"; 
+          return "translate(" + vars.x_scale(d.x) + "," + vars.y_scale(d.y) + ")"; 
         });
 
         break;

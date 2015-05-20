@@ -26,13 +26,12 @@
                         .data(vars.new_data, function(d, i) { return i; });
 
         // Enter groups for items graphical marks
-        // TODO: Ideally we should allow different mappings for the items
         var gItems_enter = gItems.enter()
                         .append("g")
                         .filter(function(d, i) {
                           return i === 0 || i === vars.new_data.length - 1;
                         })
-                        .attr("class", "items__group")
+                        .each(vistk.utils.items_group)
                         .attr("transform", function(d, i) {
                           return "translate(" + vars.x_scale(d[vars.time.var_time]) + ", " + vars.y_scale(d[vars.var_y]) + ")";
                         });
@@ -44,7 +43,8 @@
 
         // Update items
         vars.svg.selectAll(".items__group")
-                        .transition().delay(function(d, i) { return i / vars.data.length * 100; })
+                        .transition()
+                        .delay(function(d, i) { return i / vars.data.length * 100; })
                         .duration(vars.duration)
                         .attr("transform", function(d, i) {
                           return "translate(" + vars.x_scale(d[vars.time.var_time]) + ", " + vars.y_scale(d[vars.var_y]) + ")";

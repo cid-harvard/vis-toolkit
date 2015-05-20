@@ -21,15 +21,6 @@
 
           selected_node.classed("selected", !selected_node.classed("selected"));
 
-          /*
-          var index = vars.selection.indexOf(d);
-
-          if(index <0)
-            vars.selection.push(d);
-          else
-            vars.selection.splice(index, 1);
-          */
-
         });
 
         if(vars.x_type === "index") {
@@ -54,6 +45,7 @@
         
         }
 
+        // TODO: make the X axis re-usable
         vars.x_axis = d3.svg.axis()
             .scale(vars.x_scale)
             .ticks(vars.x_ticks)

@@ -14,7 +14,6 @@
                         .append("g")
                         .each(vistk.utils.items_group);
 
-
         // Add a graphical mark
         gPoints_enter.each(vistk.utils.items_mark)
 
