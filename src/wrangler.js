@@ -38,8 +38,6 @@
     // Aggregate data
     if(vars.aggregate === vars.var_group) {
 
-      accessor_year = vars.accessor_year;
-
       // Do the nesting
       // Should make sure it works for a generc dataset
       // Also for time or none-time attributes
@@ -48,8 +46,8 @@
           return d[vars.var_group];
         })
         .rollup(function(leaves) {
-          // Generates a new dataset with aggregated data
 
+          // Generates a new dataset with aggregated data
           var aggregation = {};
 
           aggregation[vars.var_text] = leaves[0][vars.var_group];
@@ -127,10 +125,10 @@
     if(vars.type === "treemap") {
 
       // Create the root node
-      r = {};
+      var r = {};
       r.name = "root";
       r.depth = 0;
-      groups = [];
+      var groups = [];
 
       // Creates the groups here
       vars.new_data.map(function(d, i) {
@@ -148,7 +146,7 @@
       groups = groups.filter(function(n) { return n !== "undefined"; }); 
       
       // Creates the parent nodes
-      parents = groups.map(function(d, i) {
+      var parents = groups.map(function(d, i) {
 
         node = {};
         node.name = d[0].name;

@@ -23,7 +23,7 @@
               .property("checked", false)
               .on("change", function(d) { 
 
-                update_filters(this.value, this.checked);
+                vistk.utils.update_filters(this.value, this.checked);
                 /*
                 vars.data = vars.data.filter(function(e, j) {
                   console.log(e[vars.var_group], d)

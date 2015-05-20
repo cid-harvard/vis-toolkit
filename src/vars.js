@@ -61,10 +61,8 @@
     color: d3.scale.category20c(),
     size: d3.scale.linear(),
 
-    accessor_year: function(d) { return d; },
-
     dispatch: [],
-    evt: {register: function() {}, call: function() {}},  
+    evt: {register: function() {}, call: function() {} },  
 
     // SVG Container
     svg: null,

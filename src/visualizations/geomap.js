@@ -1,11 +1,11 @@
       case "geomap":
 
         vars.dispatch.on("highlightOn", function(d) {
-          console.log(d)
+          console.log(d);
         });
 
         vars.dispatch.on("highlightOut", function(d) {
-          console.log(d)
+          console.log(d);
         });
 
         // http://techslides.com/demos/d3/d3-world-map-colors-tooltips.html
@@ -81,7 +81,7 @@
                 })
                 .on("mousemove", function(d,i) {
 
-                  var mouse = d3.mouse(vars.gSvg.node()).map( function(d) { return parseInt(d); } );
+                  var mouse = d3.mouse(vars.gSvg.node()).map(function(d) { return parseInt(d); });
 
                   tooltip
                     .classed("hidden", false)
@@ -91,7 +91,7 @@
                 })
                 .on("mouseout",  function(d,i) {
                   vars.dispatch.highlightOut(d);                  
-                  tooltip.classed("hidden", true)
+                  tooltip.classed("hidden", true);
                 });
 
             country_exit = country.exit().style({"display": "none"});
