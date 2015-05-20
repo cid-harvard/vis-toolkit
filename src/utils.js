@@ -13,16 +13,6 @@ vistk.utils.items_mark = function(d, i) {
 
   switch(vars.mark.type) {
 
-    case "circle":
-
-      d3.select(this).append("circle")
-                      .attr("r", 5)
-                      .attr("cx", 0)
-                      .attr("cy", 0)
-                      .attr("class", "items__mark__circle")
-                      .style("fill", function(d) { return vars.color(d[vars.var_color]); });
-      break;
-
     case "rect":
 
       d3.select(this).append("rect")
@@ -30,7 +20,7 @@ vistk.utils.items_mark = function(d, i) {
                       .attr("width", vars.mark.width)                              
                       .attr("x", -vars.mark.width/2)
                       .attr("y", -vars.mark.height/2)
-                      .attr("class", "items__mark__rect")
+                      .classed("items__mark__rect", true)
                       .style("fill", function(d) { return vars.color(d[vars.var_color]); });
 
       break;
@@ -55,11 +45,24 @@ vistk.utils.items_mark = function(d, i) {
                       .attr("x", 10)
                       .attr("y", 0)
                       .attr("dy", ".35em")
-                      .attr("class", "items__mark__text")
+                      .classed("items__mark__text", true)
                       .attr("transform", "rotate(-30)")
                       .text(function(d) { return d[vars.var_text]; });
 
       break;
+
+
+    case "circle":
+    default:
+
+      d3.select(this).append("circle")
+                      .attr("r", 5)
+                      .attr("cx", 0)
+                      .attr("cy", 0)
+                      .classed("items__mark__circle", true)
+                      .style("fill", function(d) { return vars.color(d[vars.var_color]); });
+      break;
+
   }
 
 }
@@ -71,8 +74,8 @@ vistk.utils.connect_mark = function(d, i) {
     switch(vars.connect.type) {
 
       case "line":
-
-
+      default:
+      
         d3.select(this).append('path')
             .attr('class', 'sparkline')
             .attr('d', function(d) {
@@ -186,7 +189,7 @@ function find_data_by_id(id) {
   return res;
 }
 
-function update_filters(value, add) {
+vistk.utils.update_filters = function(value, add) {
   if(vars.dev) console.log("[update_filters]", value);  
   // If we add a new value to filter
   if(add) {
