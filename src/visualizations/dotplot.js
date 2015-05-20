@@ -21,6 +21,15 @@
 
           selected_node.classed("selected", !selected_node.classed("selected"));
 
+          /*
+          var index = vars.selection.indexOf(d);
+
+          if(index <0)
+            vars.selection.push(d);
+          else
+            vars.selection.splice(index, 1);
+          */
+
         });
 
         if(vars.x_type === "index") {
@@ -70,10 +79,12 @@
             })
             .text(vars.var_x);
 
-        vars.svg.selectAll(".x.axis").transition().duration(vars.duration).call(vars.x_axis);
+        vars.svg.selectAll(".x.axis").transition()
+            .duration(vars.duration)
+            .call(vars.x_axis);
 
         var gPoints = vars.svg.selectAll(".mark__group")
-                        .data(vars.new_data, function(d, i) { return i; });
+                         .data(vars.new_data, function(d, i) { return i; });
 
         var gPoints_enter = gPoints.enter()
                         .append("g")
@@ -89,14 +100,6 @@
                         })
                         .on("click", function(d) {
                            vars.evt.call("selection", d);
-                          /*
-                          var index = vars.selection.indexOf(d);
-
-                          if(index <0)
-                            vars.selection.push(d);
-                          else
-                            vars.selection.splice(index, 1);
-                          */
                         });
 
         // Add a graphical mark
@@ -111,12 +114,15 @@
                         .attr("dy", ".35em")
                         .attr("class", "dot__label")
                         .attr("transform", "rotate(-30)")
+                        .attr("display", "none")
                         .text(function(d) { return d[vars.var_text]; });
 
         var gPoints_exit = gPoints.exit().style("opacity", 0.1);
 
         vars.svg.selectAll(".mark__group")
-                        .transition().delay(function(d, i) { return i / vars.data.length * 100; }).duration(vars.duration)
+                        .transition()
+                        .delay(function(d, i) { return i / vars.data.length * 100; })
+                        .duration(vars.duration)
                         .attr("transform", function(d, i) {
                           if(vars.x_type === "index") {
                             return "translate(" + d[vars.var_x] + ", " + vars.height/2 + ")";
