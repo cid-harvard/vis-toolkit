@@ -52,6 +52,9 @@
     y_ticks: 5,
     y_axis: null,
 
+    tickSize: 10,
+    tickPadding: 0,
+
     // Automatically generate UI elements
     ui: true,
 

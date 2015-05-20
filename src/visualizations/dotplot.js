@@ -60,6 +60,8 @@
             // Quick fix to get max value
             .tickValues([0, d3.max(vars.new_data, function(d) { return d[vars.var_x]; })])
             .tickFormat(function(d) { return vars.x_format(d); })
+            .tickSize(vars.tickSize)
+            .tickPadding(vars.tickPadding)
             .orient("bottom");
 
         vars.svg.selectAll(".x.axis").data([vars.new_data])
@@ -78,6 +80,8 @@
               }
             })
             .text(vars.var_x);
+
+        vars.svg.selectAll(".x.axis tick line").style("display", "none")
 
         vars.svg.selectAll(".x.axis").transition()
             .duration(vars.duration)
@@ -114,7 +118,6 @@
                         .attr("dy", ".35em")
                         .attr("class", "dot__label")
                         .attr("transform", "rotate(-30)")
-                        .attr("display", "none")
                         .text(function(d) { return d[vars.var_text]; });
 
         var gPoints_exit = gPoints.exit().style("opacity", 0.1);
