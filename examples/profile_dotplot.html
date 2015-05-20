@@ -3,7 +3,29 @@
 <script src="../js/d3.js" charset="utf-8"></script>
 <script src="../build/vistk.js"></script>
 <link href="../css/vistk.css" rel="stylesheet">
-<link href="../css/profiles.css" rel="stylesheet">
+<style>
+.items__mark__diamond {
+    fill: gray;
+    opacity: .1;
+}
+
+.items__mark__diamond.highlighted {
+  fill: red;
+  opacity: 1;
+ }
+
+.dot__label {
+  display: none;
+}
+
+.axis > .label {
+    display: none;
+}
+
+.axis > .domain {
+  stroke-dasharray: 1,1
+}
+</style>
 <body>
 <div id="viz"></div>
 <script>
