@@ -90,19 +90,10 @@
 
         var gPoints_enter = gPoints.enter()
                         .append("g")
-                        .attr("class", "mark__group")
-                        .on("mouseover",function(d) {
-                          vars.evt.call("highlightOn", d);
-                        })
-                        .on("mouseleave", function(d) {
-                          vars.evt.call("highlightOut", d);
-                        })
-                        .on("click", function(d) {
-                           vars.evt.call("selection", d);
-                        })
+                        .each(vistk.utils.items_group)
                         .attr("transform", function(d, i) {
                           return "translate(" + vars.margin.left + ", " + vars.height/2 + ")";
-                        })
+                        });
 
         // Add a graphical mark
         gPoints_enter.each(vistk.utils.items_mark);

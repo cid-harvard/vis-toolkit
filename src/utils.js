@@ -1,7 +1,6 @@
 vistk.utils.items_group = function(d, i) {
 
-  d3.select(this).append("g")
-                  .attr("class", "mark__group")
+  d3.select(this).attr("class", "mark__group")
                   .on("mouseover",function(d) {
                     vars.evt.call("highlightOn", d);
                   })
@@ -11,7 +10,6 @@ vistk.utils.items_group = function(d, i) {
                   .on("click", function(d) {
                      vars.evt.call("selection", d);
                   });
-
 }
 
 vistk.utils.items_mark = function(d, i) {

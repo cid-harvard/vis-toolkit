@@ -8,21 +8,12 @@
 
         // Bind data to groups
         var gPoints = vars.svg.selectAll(".mark__group")
-                  .data(vars.new_data, function(d, i) { return d[vars.var_text]; });
-
+                         .data(vars.new_data, function(d, i) { return i; });
 
         var gPoints_enter = gPoints.enter()
                         .append("g")
-                        .attr("class", "mark__group")
-                        .on("mouseover",function(d) {
-                          vars.evt.call("highlightOn", d);
-                        })
-                        .on("mouseleave", function(d) {
-                          vars.evt.call("highlightOut", d);
-                        })
-                        .on("click", function(d) {
-                           vars.evt.call("selection", d);
-                        });
+                        .each(vistk.utils.items_group);
+
 
         // Add a graphical mark
         gPoints_enter.each(vistk.utils.items_mark)
