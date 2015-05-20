@@ -2,7 +2,7 @@
 
         vars.evt.register("highlightOn", function(d) {
 
-          gPoints.selectAll(".dot__circle").classed("highlighted", function(e, j) { return e === d; });
+          gPoints.selectAll(".items__group").classed("highlighted", function(e, j) { return e === d; });
           gPoints.selectAll(".dot__label").classed("highlighted", function(e, j) { return e === d; });
         
         });
@@ -91,9 +91,6 @@
         var gPoints_enter = gPoints.enter()
                         .append("g")
                         .attr("class", "mark__group")
-                        .attr("transform", function(d, i) {
-                          return "translate(" + vars.margin.left + ", " + vars.height/2 + ")";
-                        })
                         .on("mouseover",function(d) {
                           vars.evt.call("highlightOn", d);
                         })
@@ -102,7 +99,10 @@
                         })
                         .on("click", function(d) {
                            vars.evt.call("selection", d);
-                        });
+                        })
+                        .attr("transform", function(d, i) {
+                          return "translate(" + vars.margin.left + ", " + vars.height/2 + ")";
+                        })
 
         // Add a graphical mark
         gPoints_enter.each(vistk.utils.items_mark);

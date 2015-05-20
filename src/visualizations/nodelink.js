@@ -107,7 +107,7 @@
             .style("stroke-width", function(d) { return Math.sqrt(d.value); })
             .style("opacity", .4);
 
-        gPoints = vars.svg.selectAll(".items__group")
+        var gPoints = vars.svg.selectAll(".items__group")
                         .data(vars.nodes, function(d) { return d.id; });
 
         // ENTER
@@ -124,20 +124,14 @@
                           vars.evt.call("clicked", d);
                         });
 
-        gPoints_enter.each(vistk.utils.items_mark);
-
-/*
-        var node = vars.svg.selectAll(".node")
-            .data(vars.nodes, function(d) { return d.id; });
-
-        var node_enter = node.enter().append("circle")
-            .attr("class", "node")
+        gPoints_enter.each(vistk.utils.items_mark)
+            .select("circle")
             .attr("id", function(d) { return "node_" + d.id; })
             .attr("r", 5)
-            .style("fill", function(d) { 
-              return vars.color(d.data[vars.var_color]); 
-            })
-*/
+              .style("fill", function(d) { 
+                return vars.color(d.data[vars.var_color]); 
+              })
+
         var gPoints_exit = gPoints.exit().style({opacity: 0.1});
 
         link.attr("x1", function(d) { return x(d.source.x); })

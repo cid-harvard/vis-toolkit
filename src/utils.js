@@ -1,6 +1,16 @@
 vistk.utils.items_group = function(d, i) {
 
-
+  d3.select(this).append("g")
+                  .attr("class", "mark__group")
+                  .on("mouseover",function(d) {
+                    vars.evt.call("highlightOn", d);
+                  })
+                  .on("mouseleave", function(d) {
+                    vars.evt.call("highlightOut", d);
+                  })
+                  .on("click", function(d) {
+                     vars.evt.call("selection", d);
+                  });
 
 }
 
@@ -75,7 +85,7 @@ vistk.utils.connect_mark = function(d, i) {
 
       case "line":
       default:
-      
+
         d3.select(this).append('path')
             .attr('class', 'sparkline')
             .attr('d', function(d) {
