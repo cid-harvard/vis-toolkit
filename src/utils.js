@@ -47,6 +47,14 @@ vistk.utils.items_mark = function(d, i) {
 
       break;
 
+    case "arc":
+      
+      d3.select(this).append("path")
+          .attr("fill", function(d, i) {
+            return vars.color(d[vars.var_color]);
+          })
+          .attr("d", arc);
+
     case "text":
 
       d3.select(this).append("text")
@@ -58,7 +66,6 @@ vistk.utils.items_mark = function(d, i) {
                       .text(function(d) { return d[vars.var_text]; });
 
       break;
-
 
     case "circle":
     default:

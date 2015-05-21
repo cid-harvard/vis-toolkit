@@ -5,32 +5,41 @@
         vars.evt.register("highlightOut", function(d) { });
         vars.evt.register("selection", function(d) { });
         vars.evt.register("resize", function(d) { });
-        
+
         var r = vars.width/6;
 
-        var vis = vars.svg.append("g")
-                    .attr("transform", "translate(" + vars.width/2 + "," + vars.height/2 + ")");
-        
         var pie = d3.layout.pie().value(function(d) { return d[vars.var_share]; }); // equal share
 
-        var arc = d3.svg.arc().outerRadius(r);
+        var arc = d3.svg.arc().outerRadius(r).innerRadius(r);
 
-        var arcs = vis.selectAll("g.slice")
-                      .data(pie(vars.new_data))
-                    .enter()
-                      .append("g")
-                      .attr("class", "slice");
-        
-        arcs.append("path")
-            .attr("fill", function(d, i) {
-              return vars.color(d[vars.var_color]);
-            })
-            .attr("d", arc);
+        // Bind data to groups
+        var gPoints = vars.svg.selectAll(".mark__group")
+                         .data(pie(vars.new_data), function(d, i) { return i; })
+
+        // ENTER
+
+        // Add a group for marks
+        var gPoints_enter = gPoints.enter()
+                        .append("g")
+                          .attr("transform", "translate(" + vars.width/2 + "," + vars.height/2 + ")")
+                          .each(vistk.utils.items_group);
+
+        // Add a graphical mark
+        gPoints_enter.each(vistk.utils.items_mark)
+                        .attr("transform", function(d) { 
+                          return "translate(" + arc.centroid(d) + ")"; 
+                        });
+
+        // Add an other graphical mark (e.g. text labels)
+
+/*
+
 
         arcs.append("text")
             .attr("transform", function(d) { return "translate(" + arc.centroid(d) + ")"; })
             .attr("dy", ".35em")
             .style("text-anchor", "middle")
             .text(function(d) { return d[vars.var_text]; });
+*/
 
         break;

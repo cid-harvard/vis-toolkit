@@ -173,6 +173,7 @@
           
           }
 
+          // POST-UPDATE
           gPoints
             .transition()
             .attr("transform", function(d) {
