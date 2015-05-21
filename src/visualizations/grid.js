@@ -1,6 +1,6 @@
         case "grid":
 
-          nb_dimension =  Math.ceil(Math.sqrt(vars.data.length));
+          var nb_dimension =  Math.ceil(Math.sqrt(vars.data.length));
 
           // Create the x and y scale as index scale
           vars.x_scale = d3.scale.linear()
@@ -25,7 +25,7 @@
                 res.push({index: index, x: i, y: j});
               }
             })
-          })
+          });
 
           var gPoints = vars.svg.selectAll(".mark__group")
                           .data(res, function(d, i) { return d["index"]; });
@@ -37,7 +37,7 @@
 
           // Add a graphical mark
           gPoints_enter.each(vistk.utils.items_mark)
-                            .style("fill", "gren");
+                          .style("fill", "gren");
 
           // EXIT
           var gPoints_exit = gPoints.exit().remove();

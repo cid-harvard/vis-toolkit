@@ -1,0 +1,120 @@
+<!doctype html>
+<meta charset="utf-8">
+<script src="../js/d3.js"></script>
+<script src="../build/vistk.js"></script>
+<link href="../css/vistk.css" rel="stylesheet">
+<body>
+<style>
+
+path {
+  stroke: #000;
+  fill: none;
+}
+
+path:first-child {
+  fill: yellow !important;
+}
+
+circle {
+  fill: #000;
+  pointer-events: none;
+}
+
+</style>
+
+<div id="viz"></div>
+<script>
+
+// TODO
+// [X] Create fake data for the table to be screen filling
+// [ ] Customize enter exit behaviors using colors
+// [ ] Create some nested charts within each cell (instead of marks)
+// [ ] Option for using a consistant grid (e.g. 100 items)
+// [X] Space partitionning
+// [ ] Use the full/consistant grid for consistant space paritionning
+
+  var visualization = vistk.viz()
+    .type("grid")
+    .width(800)
+    .height(600)
+    .container("#viz")
+    .data([])
+    .params({
+      mark: {
+        type: "rect",
+        width: 10,
+        height: 10
+      }
+    });
+
+function redraw() {
+
+  path = path
+      .data(voronoi(vertices), polygon);
+
+  path.enter().append("path")
+      .attr("d", polygon);
+
+  path.exit().remove();
+
+  path.order();
+}
+
+function polygon(d) {
+  return "M" + d.join("L") + "Z";
+}
+
+
+var voronoi = d3.geom.voronoi()
+    .clipExtent([[0, 0], [vars.width, vars.height]]);
+
+d3.select("#viz").call(visualization);
+
+setInterval(function(d) {
+
+  var data = d3.range(100*Math.random());
+
+  var nb_dimension =  Math.ceil(Math.sqrt(data.length));
+
+  var res = [];
+
+  // Create foci for each dimension
+  // TOFIX: should update children, not necessary replace
+  d3.range(nb_dimension).map(function(d, i) {
+     d3.range(nb_dimension).map(function(e, j) {
+
+      // To make sure we don't update more points than necessary
+      if(i * nb_dimension + j < data.length) {
+        // IMPORTANT to clone the _params here
+        var index = i*nb_dimension+j;
+        res.push({index: index, x: i, y: j});
+      }
+    })
+  });
+
+  visualization.data(data);
+  d3.select("#viz").call(visualization);
+
+  vertices = res.map(function(d) {
+    return [vars.x_scale(d.x), vars.y_scale(d.y)];
+  });
+
+  path = vars.svg.append("g").selectAll("path");
+
+  var points = vars.svg.selectAll("circle")
+      .data(vertices.slice(1));
+
+  points.enter().append("circle")
+      .attr("transform", function(d) { return "translate(" + d + ")"; })
+      .attr("r", 1.5);
+
+  points.exit().remove();
+
+  redraw();
+
+}, 1000)
+
+
+
+</script>
+</body>
