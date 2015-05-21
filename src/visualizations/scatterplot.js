@@ -7,10 +7,12 @@
 
           // Tentative of data driven selection update
           vars.data.forEach(function(e) {
-            if(d === e)
+            if(d === e) {
               e.__highlight = true;
-            else
+            } else {
               e.__highlight = false;
+            }
+
           });
 
         });
@@ -20,7 +22,8 @@
           gPoints.selectAll(".items_mark").classed("highlighted", false);
           gPoints.selectAll(".dot__label").classed("highlighted", false);
 
-          vars.data.forEach(function(e) { d.__highlight = false; })
+          vars.data.forEach(function(e) { d.__highlight = false; });
+
         });
 
         vars.x_scale = d3.scale.linear()
@@ -29,6 +32,10 @@
         vars.y_scale = d3.scale.linear()
             .range([vars.height-vars.margin.top-vars.margin.bottom, vars.margin.top]);
 
+        vars.x_scale.domain([0, d3.max(vars.data, function(d) { return d[vars.var_x]; })]).nice();
+        vars.y_scale.domain([0, d3.max(vars.data, function(d) { return d[vars.var_y]; })]).nice();
+
+        // AXIS
         vars.x_axis = d3.svg.axis()
             .scale(vars.x_scale)
             .orient("bottom");
@@ -42,15 +49,6 @@
             .append("text")
             .attr("class", "year label")
             .attr("text-anchor", "end");
-
-        // Background year label
-        vars.svg.selectAll(".label")
-            .attr("y", 124)
-            .attr("x", 500)
-            .text(vars.current_time);
-
-        vars.x_scale.domain([0, d3.max(vars.data, function(d) { return d[vars.var_x]; })]).nice();
-        vars.y_scale.domain([0, d3.max(vars.data, function(d) { return d[vars.var_y]; })]).nice();
 
         vars.svg.selectAll(".x.axis").data([vars.new_data])
           .enter()
@@ -80,6 +78,12 @@
         vars.svg.selectAll(".x.axis").call(vars.x_axis);
         vars.svg.selectAll(".y.axis").call(vars.y_axis);
 
+        // Background year label
+        vars.svg.selectAll(".label")
+            .attr("y", 124)
+            .attr("x", 500)
+            .text(vars.current_time);
+
         var gPoints = vars.svg.selectAll(".items__group")
                         .data(vars.new_data, function(d, i) { return d.name + " " + i; });
 
@@ -90,7 +94,7 @@
         // TODO
         // [ ] Use gPoints_enter.each(vistk.utils.add_mark);
         // [ ] Animated transition with the non-aggregated points
-        if(vars.aggregate == vars.var_group) {
+        if(vars.aggregate === vars.var_group) {
 
           var gPoints_enter = gPoints.selectAll(".points")
                         .enter()
@@ -139,7 +143,7 @@
 
           gPoints_enter.each(vistk.utils.items_mark);
 
-
+          // TODO: add this as a graphical mark
           var labels = gPoints_enter.append("text")
               .attr("x", 10)
               .attr("y", 0)
@@ -159,7 +163,7 @@
                 if(d.__highlight) {
                   return 1;
                 } else {
-                  return .1;
+                  return 0.1;
                 }
               });
 
