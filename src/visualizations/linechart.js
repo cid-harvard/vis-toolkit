@@ -10,7 +10,7 @@
           vars.svg.selectAll(".line").filter(function(e, j) { return e === d; }).style("stroke-width", 3);
           vars.svg.selectAll(".text").filter(function(e, j) { return e === d; }).style("text-decoration", "underline");
 
-        })
+        });
 
         vars.evt.register("highlightOut", function(d) {
 
@@ -19,7 +19,7 @@
           vars.svg.selectAll(".line").filter(function(e, j) { return e === d; }).style("stroke-width", 1);
           vars.svg.selectAll(".text").filter(function(e, j) { return e === d; }).style("text-decoration", "none");
 
-        })
+        });
 
         vars.evt.register("selection", function(d) {
 

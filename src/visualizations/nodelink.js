@@ -75,19 +75,19 @@
           // Find the value in vars.data
           d.data = vistk.utils.find_data_by_id(d.id);
 
-          if(typeof d.data == "undefined") {
+          if(typeof d.data === "undefined") {
             d.data = {};
             d.data.category = 0;
           }
 
-        })
+        });
 
         vars.links.forEach(function(d, i) {
 
           d.source = vistk.utils.find_node_by_id(d.source);
           d.target = vistk.utils.find_node_by_id(d.target);
 
-        })
+        });
 
         vars.x_scale = d3.scale.linear().range([0, vars.width]);
         vars.y_scale = d3.scale.linear().range([0, vars.height]); // Reverted Scale!
@@ -119,9 +119,9 @@
             .select("circle")
             .attr("id", function(d) { return "node_" + d.id; })
             .attr("r", 5)
-              .style("fill", function(d) { 
-                return vars.color(d.data[vars.var_color]); 
-              })
+            .style("fill", function(d) { 
+              return vars.color(d.data[vars.var_color]); 
+            });
 
         var gPoints_exit = gPoints.exit().style({opacity: 0.1});
 
@@ -135,4 +135,4 @@
           return "translate(" + vars.x_scale(d.x) + "," + vars.y_scale(d.y) + ")"; 
         });
 
-        break;
+      break;

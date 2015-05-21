@@ -114,7 +114,7 @@
               .style("text-anchor", "start")
               .text(function(d) { return d[vars.var_text]; });
 
-          var gPoints_exit = gPoints.exit().style("opacity", .1);
+          var gPoints_exit = gPoints.exit().style("opacity", 0.1);
 
           // Update all the remaining dots
           gPoints.style("opacity", 1);
@@ -153,7 +153,7 @@
               .text(function(d) { return d[vars.var_text]; });
 
           // EXIT
-          var gPoints_exit = gPoints.exit().style("opacity", .1);
+          var gPoints_exit = gPoints.exit().style("opacity", 0.1);
 
           // UPDATE
           if(vars.data.filter(function(d) { return d.__highlight;}).length > 0) {

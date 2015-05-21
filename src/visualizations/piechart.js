@@ -1,5 +1,11 @@
       case "piechart":
 
+        // Events handlers
+        vars.evt.register("highlightOn", function(d) { });
+        vars.evt.register("highlightOut", function(d) { });
+        vars.evt.register("selection", function(d) { });
+        vars.evt.register("resize", function(d) { });
+        
         var r = vars.width/6;
 
         var vis = vars.svg.append("g")

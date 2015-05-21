@@ -10,26 +10,30 @@
         var gPoints = vars.svg.selectAll(".mark__group")
                          .data(vars.new_data, function(d, i) { return i; });
 
+        // ENTER
+
+        // Add a group for marks
         var gPoints_enter = gPoints.enter()
                         .append("g")
                         .each(vistk.utils.items_group);
 
         // Add a graphical mark
-        gPoints_enter.each(vistk.utils.items_mark)
+        gPoints_enter.each(vistk.utils.items_mark);
 
-        // Customize it (e.g. add labels)
+        // Add an other graphical mark (e.g. text labels)
 
         // Add a connection mark
         gPoints_enter.each(vistk.utils.connect_mark)
 
         // Add axis
 
-        // Add decoration layers
-
-        // ... what else?
+        // Add grid layer
 
         // EXIT
+        var gPoints_exit = gPoints.exit();
 
         // UPDATE
+        gPoints
+            .transition();
 
       break;

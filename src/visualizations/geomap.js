@@ -78,7 +78,7 @@
           country_enter
                 .on("mouseenter", function(d, i) {
                   vars.dispatch.highlightOn(d);
-                                  tooltip
+                  tooltip
                    .classed("hidden", false)
                 })
                 .on("mousemove", function(d,i) {

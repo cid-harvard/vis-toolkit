@@ -51,9 +51,9 @@ d3.json("../data/exports_2012.json", function(error, exports) {
     .size("size")
     .text("name")
     .time({var_time: "year", current_time: 2012})
-    .focus(1121)
+    .focus(1121);
 
-  d3.select("#viz").call(visualization)
+  d3.select("#viz").call(visualization);
 
 })
 

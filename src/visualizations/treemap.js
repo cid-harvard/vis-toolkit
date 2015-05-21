@@ -60,10 +60,10 @@
               }
             //  return d.children ? null : d[vars.var_text].slice(0, 3)+"..."; 
             })
-            .on("mouseenter", function(d, i) {                
-              vars.dispatch.highlightOn(d)              
+            .on("mouseenter", function(d, i) {
+              vars.dispatch.highlightOn(d);
             }).on("mouseout", function(d) {
-              vars.dispatch.highlightOut(d)  
+              vars.dispatch.highlightOut(d);
             });
 
         // EXIT
