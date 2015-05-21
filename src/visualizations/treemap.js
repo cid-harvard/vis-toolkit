@@ -18,9 +18,20 @@
             .value(function(d) { return d[vars.var_size]; });
 
         // PRE-UPDATE
-        var cell = vars.svg.data([r]).selectAll("g")
+        var gPoints = vars.svg.data([vars.r]).selectAll("g")
             .data(treemap.nodes);
 
+        var gPoints_enter = gPoints.enter()
+                        .append("g")
+                        .each(vistk.utils.items_group)
+                        .attr("transform", function(d) { 
+                          return "translate(" + d.x + "," + d.y + ")"; 
+                        });
+
+        // Add a graphical mark
+        gPoints_enter.each(vistk.utils.items_mark)
+
+        /*
         // ENTER
         // TODO: turn into a mark creation
         // vistk.utils.items_mark 
@@ -39,7 +50,6 @@
 
         // TODO: persistent bug when hovering a cell
         cell
-          .filter(function(d) { return d.depth === 2; })
           .on("mousemove", function(d) {      
             vars.evt.call("highlightOn", d);
           }).on("mouseout", function(d) {
@@ -82,5 +92,5 @@
 
         cell.select("text")
             .call(wrap);
-
+*/
       break;

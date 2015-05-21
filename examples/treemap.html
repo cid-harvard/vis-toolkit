@@ -39,23 +39,33 @@ d3.json("../data/exports_2012.json", function(error, exports) {
     });
 
   visualization = vistk.viz()
-    .type("treemap")
-    .container("#viz")
-    .height(600)
-    .width(900)
-    .data(exports.data)
-    .id("product")
-    .group("group")
-    .color("group")
-    .title("Products")
-    .size("size")
-    .text("name")
-    .time({var_time: "year", current_time: 2012})
-    .focus(1121);
+    .params({
+      type: "treemap",
+      container: "#viz",
+      height: 600,
+      width: 900,
+      data: exports.data,
+      var_id: "product",
+      var_group: "group",
+      var_color: "group",
+      title: "Products",
+      var_size: "size",
+      var_text: "name",
+      time: {
+        var_time: "year", 
+        current_time: 2012
+      },
+      mark: {
+        type: 'rect',
+        width: 10,
+        height: 10
+      },
+      focus: 1121
+    });
 
   d3.select("#viz").call(visualization);
 
-})
+});
 
 </script>
 </body>

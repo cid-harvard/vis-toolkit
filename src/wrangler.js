@@ -125,9 +125,9 @@
     if(vars.type === "treemap") {
 
       // Create the root node
-      var r = {};
-      r.name = "root";
-      r.depth = 0;
+      vars.r = {};
+      vars.r.name = "root";
+      vars.r.depth = 0;
       var groups = [];
 
       // Creates the groups here
@@ -161,7 +161,7 @@
       });
 
       // Add parents to the root
-      r.children = parents;
+      vars.r.children = parents;
 
     }
  
