@@ -13,13 +13,6 @@
 // [ ] Use with a different configuration (abs and relative), one labels other rect
 // [ ] Connect the dot plots together with a line
 
-/*
-
-
-
-
-*/
-
 d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments) {
 
   departments.forEach(function(d, i) {
@@ -31,10 +24,26 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
     d["value_added"] = +d["value_added"];
   });
 
-  var ui_options = [];
+  var params_scatterplot = {
+      width: 600,
+      height: 400,
+      type: "scatterplot"
+    }
 
   visualization = vistk.viz()
-    .params({
+    .params(params_scatterplot);
+
+  var grid_data = [
+    {x: params_scatterplot.width/2, y: params_scatterplot.height/4},
+    {x: params_scatterplot.width/2, y: 3*params_scatterplot.height/4}
+  ];
+
+  visualization.data(grid_data);
+
+  d3.select("#viz").call(visualization);
+
+  var params_dotplot = {
+      height: 200,
       type: 'dotplot',      
       data: departments,
       container: '#viz',
@@ -54,16 +63,24 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
         current_time: 2013
       },
       ui: {
-        default: true,
-        options: ui_options
+        default: false
       },
       id: "name",
       var_text: "dept_name", 
       selection: [0],
       highlight: [0]
-    });
+    };
+
+  visualization = vistk.viz()
+    .params(params_dotplot);
 
   d3.select("#viz").call(visualization);
+
+  visualization = vistk.viz()
+    .params(params_dotplot);
+
+  d3.select("#viz").call(visualization);
+
 });
 
 </script>
