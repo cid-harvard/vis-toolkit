@@ -4,37 +4,58 @@
 <script src="../build/vistk.js"></script>
 <link href="../css/vistk.css" rel="stylesheet">
 <body>
+<style>
+
+path {
+  stroke: #000;
+  fill: none;
+}
+
+path:first-child {
+  fill: yellow !important;
+}
+
+circle {
+  fill: #000;
+  pointer-events: none;
+}
+
+</style>
+
 <div id="viz"></div>
 <script>
 
 // TODO
-// [ ] Create fake data for the table to be screen filling
-// [ ] Create some nested charts within each cell
+// [X] Create fake data for the table to be screen filling
+// [ ] Customize enter exit behaviors using colors
+// [ ] Create some nested charts within each cell (instead of marks)
+// [ ] Option for using a consistant grid (e.g. 100 items)
 
-  var visualization = vistk.viz()
-    .type("grid")
-    .width(800)
-    .height(600)
-    .container("#viz")
-    .data([])
-    .params({
-      mark: {
-        type: "rect",
-        width: 10,
-        height: 10
-      }
-    });
+var visualization = vistk.viz()
+  .type("grid")
+  .width(800)
+  .height(600)
+  .container("#viz")
+  .data([])
+  .params({
+    mark: {
+      type: "rect",
+      width: 10,
+      height: 10
+    }
+  });
 
+
+setInterval(function(d) {
+
+  var data = d3.range(100*Math.random());
+
+  visualization.data(data);
   d3.select("#viz").call(visualization);
 
-  setInterval(function(d) {
+}, 1000)
 
-    var data = d3.range(100*Math.random());
 
-    visualization.data(data);
-     d3.select("#viz").call(visualization);
-
-  }, 1000)
 
 </script>
 </body>
