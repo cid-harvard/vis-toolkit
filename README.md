@@ -323,13 +323,18 @@ Combination of a matrix with nested scatterplots within each cell. The matrix be
 
 * Node-Link ([Demo](http://cid-harvard.github.io/vis-toolkit/examples/nodelink.html) | [Source](examples/nodelink.html))
 
-* Test with curved links http://bl.ocks.org/mbostock/4600693
+* Curved links 
+ * http://bl.ocks.org/mbostock/4600693
+
+* Self-reference links
+ * http://bl.ocks.org/GerHobbelt/3616279
 
 * Rings http://bl.ocks.org/bansaghi/e490c7c238a67a77996d 
 
 * Self-organized Packing http://colinwhite.net/Packed%20Circle/index.html
 
  * Zoom to bounding box http://bl.ocks.org/mbostock/4699541
+
 
 ### Bar chart
 
@@ -486,7 +491,6 @@ Storytelling
 * Step by step widget http://nbremer.github.io/urbanization/
 * Previous work on visual decomposition
 
-
 Template
 * See http://bost.ocks.org/mike/chart/
 * See http://bost.ocks.org/mike/chart/time-series-chart.js
@@ -526,6 +530,7 @@ Template
 * http://webpack.github.io/
 * http://square.github.io/crossfilter/
 * http://sigfried.github.io/supergroup/
+* https://github.com/gka/d3-jetpack#selectionon
 
 * Show uncertainty - http://www.velir.com/blog/index.php/2013/07/11/visualizing-data-uncertainty-an-experiment-with-d3-js/
 
@@ -534,3 +539,5 @@ Template
 * https://github.com/wbkd/d3-extended
 
 * Responsive visualization http://eyeseast.github.io/visible-data/2013/08/26/responsive-d3/
+* http://bl.ocks.org/curran/raw/9aafca5fba0c7fde13aa/
+* http://mobileinfovis.com/smartphone

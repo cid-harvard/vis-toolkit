@@ -108,10 +108,13 @@
                         .data(vars.nodes, function(d) { return d.id; });
 
         // ENTER
+
+        // Items groups
         var gPoints_enter = gPoints.enter()
                       .append("g")
                         .each(vistk.utils.items_group);
 
+        // Items marks (circle)
         gPoints_enter.each(vistk.utils.items_mark)
             .select("circle")
             .attr("id", function(d) { return "node_" + d.id; })

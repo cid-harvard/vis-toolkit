@@ -102,6 +102,7 @@
               return c;
             });
 
+        // TODO: turn into a connection mark
         country.append("path")
             .attr("class", "country line")
             .attr("d", function(d) {
@@ -122,6 +123,7 @@
             })
             .style("stroke", function(d) { return vars.color(d[vars.var_color]); });
 
+        // TODO: turn into an item mark
         country.append("text")
             .datum(function(d) { 
               d.values.sort(function(a, b) { return a.year > b.year;}); 

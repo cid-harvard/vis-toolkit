@@ -12,10 +12,10 @@
         var arcs = vis.selectAll("g.slice")
                       .data(pie(vars.new_data))
                     .enter()
-                      .append("svg:g")
+                      .append("g")
                       .attr("class", "slice");
         
-        arcs.append("svg:path")
+        arcs.append("path")
             .attr("fill", function(d, i) {
               return vars.color(d[vars.var_color]);
             })

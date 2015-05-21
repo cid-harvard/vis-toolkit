@@ -16,7 +16,7 @@
         var path = d3.geo.path()
             .projection(projection);
 
-        var tooltip = d3.select(vars.container).append("div")
+        tooltip = d3.select(vars.container).append("div")
             .attr("class", "tooltip");
 
         vars.gSvg = vars.svg
@@ -78,19 +78,21 @@
           country_enter
                 .on("mouseenter", function(d, i) {
                   vars.dispatch.highlightOn(d);
+                                  tooltip
+                   .classed("hidden", false)
                 })
                 .on("mousemove", function(d,i) {
 
                   var mouse = d3.mouse(vars.gSvg.node()).map(function(d) { return parseInt(d); });
 
                   tooltip
-                    .classed("hidden", false)
                     .attr("style", "left:"+(mouse[0]+25)+"px;top:"+mouse[1]+"px")
                     .html(d._name);
 
                 })
-                .on("mouseout",  function(d,i) {
-                  vars.dispatch.highlightOut(d);                  
+                .on("mouseleave",  function(d,i) {
+                  console.log("OUT")
+                  vars.dispatch.highlightOut(d);             
                   tooltip.classed("hidden", true);
                 });
 
