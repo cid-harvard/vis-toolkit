@@ -11,29 +11,30 @@
 // [ ] Create fake data for the table to be screen filling
 // [ ] Create some nested charts within each cell
 
-  // Generate dataset
-  var data = d3.range(100*Math.random());
-
-  visualization = vistk.viz()
+  var visualization = vistk.viz()
     .type("grid")
     .width(800)
     .height(600)
     .container("#viz")
-    .data(data)
-    .columns(['a', 'b', 'c'])
+    .data([])
     .params({
       mark: {
         type: "rect",
         width: 10,
         height: 10
       }
-      // For each mark, do something different
-
-      // In that case we want to create a scatterplot
     });
 
   d3.select("#viz").call(visualization);
 
+  setInterval(function(d) {
+
+    var data = d3.range(100*Math.random());
+
+    visualization.data(data);
+     d3.select("#viz").call(visualization);
+
+  }, 1000)
 
 </script>
 </body>

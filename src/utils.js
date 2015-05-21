@@ -97,33 +97,41 @@ vistk.utils.connect_mark = function(d, i) {
   }
 }
 
+vistk.utils.create_axis = function(d, i) {
+
+  // TODO:
+  // [ ] Find parameters
+  // [ ] Make it work for dot plot, scatterplot (x/y axis)
+
+}
+
 vistk.utils.make_x_axis = function() {        
-    return d3.svg.axis()
-        .scale(vars.x_scale)
-         .orient("bottom")
-         .ticks(10);
+  return d3.svg.axis()
+      .scale(vars.x_scale)
+       .orient("bottom")
+       .ticks(10);
 }
 
 // TODO: add accessor as argument and var_time
 vistk.utils.flatten_years = function(data) {
-    var flat = [];
+  var flat = [];
 
-    //for each country
-    data.forEach(function(root) {
-      
-        //for each year in each country
-        root.years.forEach(function(year) {
-            //extend the year object with the common properties stored just once in the country object
+  //for each country
+  data.forEach(function(root) {
+    
+      //for each year in each country
+      root.years.forEach(function(year) {
+          //extend the year object with the common properties stored just once in the country object
 
-          var current_year = merge(root, year);
-          delete current_year.years;
+        var current_year = merge(root, year);
+        delete current_year.years;
 
-            //add it to the final flat array
-            flat.push(current_year);
-        })
-    });
+          //add it to the final flat array
+          flat.push(current_year);
+      })
+  });
 
-    return flat;
+  return flat;
 }
 
 // UTIS FUNCTIONS

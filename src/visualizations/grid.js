@@ -11,7 +11,7 @@
                     .domain([0, nb_dimension])
                     .range([0, vars.height]);
 
-          res = [];
+          var res = [];
 
           // Create foci for each dimension
           // TOFIX: should update children, not necessary replace
@@ -19,44 +19,34 @@
              d3.range(nb_dimension).map(function(e, j) {
 
               // To make sure we don't update more points than necessary
-              if(i*nb_dimension+j < vars.data.length) {
-
+              if(i * nb_dimension + j < vars.data.length) {
                 // IMPORTANT to clone the _params here
                 var index = i*nb_dimension+j;
-                res.push({index: index, x: vars.x_scale(i), y: vars.y_scale(j)});
+                res.push({index: index, x: i, y: j});
               }
             })
           })
 
-        var gPoints = vars.svg.selectAll(".points")
-                        .data(res, function(d, i) { return d["index"]; });
+          var gPoints = vars.svg.selectAll(".mark__group")
+                          .data(res, function(d, i) { return d["index"]; });
 
           // ENTER
           var gPoints_enter = gPoints.enter()
-                        .append("g")
-                          .attr("class", "points")
-                          .on("mouseenter", function(d, i) {
-                            vars.evt.call("highlightOn", d);
-                          })
-                          .on("mouseout", function(d) {
-                            vars.evt.call("highlightOut", d);
-                          })
-                          .on("click", function(d) {
-                            vars.evt.call("clicked", d);
-                          });
+                          .append("g")
+                          .each(vistk.utils.items_group);
 
-          var dots = gPoints_enter.append("circle")
-              .attr("r", 5)
-              .attr("cx", 0)
-              .attr("cy", 0)
-              .attr("class", "dot__circle")
-              .style("fill", function(d) { return vars.color(d[vars.var_color]); })
+          // Add a graphical mark
+          gPoints_enter.each(vistk.utils.items_mark)
+                            .style("fill", "gren");
 
-          vars.svg.selectAll(".points")
-              .transition()
-              .attr("transform", function(d) {
-                console.log(d)
-                return "translate(" + d.x + ", " + d.y + ")";
-              })
+          // EXIT
+          var gPoints_exit = gPoints.exit().remove();
+
+          vars.svg.selectAll(".mark__group")
+                .transition()
+                .attr("transform", function(d) {
+                  return "translate(" +  vars.x_scale(d.x) + ", " + vars.y_scale(d.y) + ")";
+                })
+                .style("fill", "blue");
 
         break;
