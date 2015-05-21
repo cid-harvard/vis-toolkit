@@ -25,15 +25,21 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
   });
 
   var params_scatterplot = {
+      type: "scatterplot",
       width: 600,
-      height: 400,
-      type: "scatterplot"
-    }
+      height: 400,      
+      container: "#viz",
+      id: ["continent", "country"],
+      group: "continent",
+      var_color: "continent",
+      var_x: 'x',
+      var_y: 'y'
+    };
 
   visualization = vistk.viz()
     .params(params_scatterplot);
 
-  var grid_data = [
+  grid_data = [
     {x: params_scatterplot.width/2, y: params_scatterplot.height/4},
     {x: params_scatterplot.width/2, y: 3*params_scatterplot.height/4}
   ];

@@ -21,6 +21,7 @@
         var gPoints = vars.svg.data([vars.r]).selectAll("g")
             .data(treemap.nodes);
 
+        // Add items groups
         var gPoints_enter = gPoints.enter()
                         .append("g")
                         .each(vistk.utils.items_group)
@@ -28,8 +29,12 @@
                           return "translate(" + d.x + "," + d.y + ")"; 
                         });
 
-        // Add a graphical mark
-        gPoints_enter.each(vistk.utils.items_mark)
+        // Add items graphical mark
+        gPoints_enter.each(vistk.utils.items_mark);
+
+        // TODO
+        // Consider nesting as a connection mark...
+        // Add text as item graphical mark
 
         /*
         // ENTER
@@ -47,14 +52,6 @@
             .style("fill", function(d) {
               return d.children ? vars.color(d[vars.var_color]) : null; 
             });
-
-        // TODO: persistent bug when hovering a cell
-        cell
-          .on("mousemove", function(d) {      
-            vars.evt.call("highlightOn", d);
-          }).on("mouseout", function(d) {
-            vars.evt.call("highlightOut", d);
-          });
 
         cell_enter.append("text")
             .attr("x", function(d) { return 10; })
