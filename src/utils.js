@@ -65,6 +65,15 @@ vistk.utils.items_mark = function(d, i) {
                       .attr("transform", "rotate(-30)")
                       .text(function(d) { return d[vars.var_text]; });
 
+/*
+        arcs.append("text")
+            .attr("transform", function(d) { return "translate(" + arc.centroid(d) + ")"; })
+            .attr("dy", ".35em")
+            .style("text-anchor", "middle")
+            .text(function(d) { return d[vars.var_text]; });
+*/
+
+
       break;
 
     case "circle":

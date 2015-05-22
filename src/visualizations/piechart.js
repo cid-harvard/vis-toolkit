@@ -26,20 +26,11 @@
 
         // Add a graphical mark
         gPoints_enter.each(vistk.utils.items_mark)
+                        .select("*")
                         .attr("transform", function(d) { 
                           return "translate(" + arc.centroid(d) + ")"; 
                         });
 
         // Add an other graphical mark (e.g. text labels)
-
-/*
-
-
-        arcs.append("text")
-            .attr("transform", function(d) { return "translate(" + arc.centroid(d) + ")"; })
-            .attr("dy", ".35em")
-            .style("text-anchor", "middle")
-            .text(function(d) { return d[vars.var_text]; });
-*/
 
         break;
