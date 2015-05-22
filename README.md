@@ -183,7 +183,6 @@ Mostly done using the `.params()` helper
 * Customized visual design
  * Default CSS but should allow this to be overloaded
 
-
 ## Visualizations
 
 Below is the list of currently implemented visualizations and list of upcoming ones.
@@ -195,12 +194,9 @@ Below is the list of currently implemented visualizations and list of upcoming o
 * Using pagination http://handsontable.com/demo/pagination.html#5
 * https://github.com/mleibman/SlickGrid
 
-
-
 * Efficient DOM handling do progressively display a lot of elements http://nexts.github.io/Clusterize.js/
 
 * Another efficient way of scrolling rows http://bl.ocks.org/jasondavies/3689677
-
 
 Readings
 
@@ -368,7 +364,6 @@ Area chart with stacked shapes on top of each other (the previous layer being th
 
 * Parallel coordinates http://bl.ocks.org/syntagmatic/42d5b54c5cfe002e7dd8
 
-
 ### Other charts
 
 Listing of charts
@@ -379,17 +374,11 @@ Listing of charts
 * Using rectangles and height http://www.economist.com/news/finance-and-economics/21601568-new-data-suggest-chinese-economy-bigger-previously-thought-dragon
 
 
-
 * Grids http://www.d3noob.org/2013/01/adding-grid-lines-to-d3js-graph.html
 
 * Bi-partite graph http://bl.ocks.org/NPashaP/9796212
 
 ## Roadmap
-
-* v0.1 Alpha
- * Fundamental visualizations
- * Basic interactions: filter, aggregate, time update, focus
- * Dev environment
 
 * v0.2 Beta
  * Generic data format as input

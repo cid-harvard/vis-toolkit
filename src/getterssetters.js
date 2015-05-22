@@ -1,3 +1,30 @@
+
+  // If init, then dispatch those events
+  // TODO: dispatch focus event here and highlight nodes
+  if(vars.selection.length > 0) {
+
+    var selection_points = gItems
+      .filter(function(d, i) {
+        return i === vars.selection[0];
+      });
+
+    selection_points.select(".dot__circle")
+      .classed("selected", false);
+
+    selection_points.select(".dot__label")
+      .filter(function(d, i) {
+        return i === vars.selection[0];
+      })
+      .classed("selected", true);
+
+  }
+
+  if(typeof vars.highlight !== undefined && vars.highlight.length > 0) {
+
+    vars.evt.call("highlightOn", vars.new_data[vars.highlight]);
+  
+  }
+
   // Public Variables
   chart.id = function(x) {
     if (!arguments.length) return vars.var_id;

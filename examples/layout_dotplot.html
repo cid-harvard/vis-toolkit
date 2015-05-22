@@ -11,7 +11,7 @@
 // [ ] Create a vertical layout
 // [ ] Nest dot plots in each layouts
 // [ ] Use with a different configuration (abs and relative), one labels other rect
-// [ ] Connect the dot plots together with a line
+// [ ] Connect the dot plots together with a line (should be another chart)
 
 d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments) {
 
@@ -81,6 +81,8 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
     .params(params_dotplot);
 
   d3.select("#viz").call(visualization);
+
+  params_dotplot.x_type = 'index';
 
   visualization = vistk.viz()
     .params(params_dotplot);

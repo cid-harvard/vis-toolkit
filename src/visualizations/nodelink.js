@@ -3,8 +3,8 @@
         vars.evt.register("highlightOn", function(d) {
 
           // Highlight nodes
-          vars.svg.selectAll(".node").style("opacity", 0.1);
-          vars.svg.selectAll(".node").filter(function(e, j) { return e === d; }).style("opacity", 1);
+          vars.svg.selectAll(".mark__group").style("opacity", 0.1);
+          vars.svg.selectAll(".mark__group").filter(function(e, j) { return e === d; }).style("opacity", 1);
 
           // Highlight Links
           vars.svg.selectAll(".link").style("opacity", 0.1);
@@ -22,7 +22,7 @@
           .style("stroke-width", function(d) { return 3; });
 
           // TODO: quick fix to coordinate with a table
-          vars.svg.selectAll(".node").filter(function(e, j) { return e.data === d; }).style("opacity", 1);
+          vars.svg.selectAll(".mark__group").filter(function(e, j) { return e.data === d; }).style("opacity", 1);
           vars.svg.selectAll(".source_"+d.product_id).each(function(e) {
             vars.svg.select("#node_"+e.target.data.product_id).style("opacity", 1) 
           })
@@ -39,7 +39,7 @@
 
         vars.evt.register("highlightOut", function(d) {
 
-          vars.svg.selectAll(".node").style("opacity", 1);
+          vars.svg.selectAll(".mark__group").style("opacity", 1);
           vars.svg.selectAll(".link")
             .style("opacity", .4)
             .style("stroke-width", function(d) { return 1; });
@@ -104,18 +104,18 @@
             .style("stroke-width", function(d) { return Math.sqrt(d.value); })
             .style("opacity", .4);
 
-        var gPoints = vars.svg.selectAll(".items__group")
+        var gItems = vars.svg.selectAll(".items__group")
                         .data(vars.nodes, function(d) { return d.id; });
 
         // ENTER
 
         // Items groups
-        var gPoints_enter = gPoints.enter()
+        var gItems_enter = gItems.enter()
                       .append("g")
                         .each(vistk.utils.items_group);
 
         // Items marks (circle)
-        gPoints_enter.each(vistk.utils.items_mark)
+        gItems.each(vistk.utils.items_mark)
             .select("circle")
             .attr("id", function(d) { return "node_" + d.id; })
             .attr("r", 5)
@@ -123,7 +123,7 @@
               return vars.color(d.data[vars.var_color]); 
             });
 
-        var gPoints_exit = gPoints.exit().style({opacity: 0.1});
+        var gItems_exit = gItems.exit().style({opacity: 0.1});
 
         // UPDATE
         link.attr("x1", function(d) { return vars.x_scale(d.source.x); })
@@ -131,7 +131,7 @@
             .attr("x2", function(d) { return vars.x_scale(d.target.x); })
             .attr("y2", function(d) { return vars.y_scale(d.target.y); });
 
-        gPoints.attr("transform", function(d) { 
+        gItems.attr("transform", function(d) { 
           return "translate(" + vars.x_scale(d.x) + "," + vars.y_scale(d.y) + ")"; 
         });
 
