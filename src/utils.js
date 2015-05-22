@@ -57,12 +57,15 @@ vistk.utils.items_mark = function(d, i) {
 
     case "text":
 
+      if(typeof vars.mark.rotate === "undefined")
+        vars.mark.rotate = 0;
+      
       d3.select(this).append("text")
                       .attr("x", 10)
                       .attr("y", 0)
                       .attr("dy", ".35em")
                       .classed("items__mark__text", true)
-                      .attr("transform", "rotate(-30)")
+                      .attr("transform", "rotate(" +  vars.mark.rotate + ")")
                       .text(function(d) { return d[vars.var_text]; });
 
 /*

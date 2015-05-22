@@ -2,15 +2,15 @@
 
         vars.evt.register("highlightOn", function(d) {
 
-          gPoints.selectAll(".items__group").classed("highlighted", function(e, j) { return e === d; });
-          gPoints.selectAll(".dot__label").classed("highlighted", function(e, j) { return e === d; });
+          gItems.selectAll(".items__group").classed("highlighted", function(e, j) { return e === d; });
+          gItems.selectAll(".dot__label").classed("highlighted", function(e, j) { return e === d; });
         
         });
 
         vars.evt.register("highlightOut", function(d) {
 
-          gPoints.selectAll(".dot__circle").classed("highlighted", false);
-          gPoints.selectAll(".dot__label").classed("highlighted", false);
+          gItems.selectAll(".dot__circle").classed("highlighted", false);
+          gItems.selectAll(".dot__label").classed("highlighted", false);
 
         });
 
@@ -47,32 +47,31 @@
 
         vars.svg.call(vistk.utils.axis);
 
-        var gPoints = vars.svg.selectAll(".mark__group")
+        // PRE-UPDATE
+        var gItems = vars.svg.selectAll(".mark__group")
                          .data(vars.new_data, function(d, i) { return i; });
 
-        var gPoints_enter = gPoints.enter()
+        // ENTER
+        var gItems_enter = gItems.enter()
                         .append("g")
                         .each(vistk.utils.items_group)
                         .attr("transform", function(d, i) {
                           return "translate(" + vars.margin.left + ", " + vars.height/2 + ")";
                         });
 
-        // Add a graphical mark
-        gPoints_enter.each(vistk.utils.items_mark);
+        // Add a graphical mark (items)
+        gItems_enter.each(vistk.utils.items_mark);
 
-        // TODO: turn graphical mark that can be customized
-        // gPoints_enter.each(vistk.utils.items_mark);
-        // ..the mapping configuration should be in the config file
-        gPoints_enter.append("text")
-                        .attr("x", 10)
-                        .attr("y", 0)
-                        .attr("dy", ".35em")
-                        .attr("class", "dot__label")
-                        .attr("transform", "rotate(-30)")
-                        .text(function(d) { return d[vars.var_text]; });
+        // Add a graphical mark (labels)
+        vars.mark.type = "text";
+        vars.mark.rotate = "-30";
 
-        var gPoints_exit = gPoints.exit().style("opacity", 0.1);
+        gItems_enter.each(vistk.utils.items_mark);
 
+        // EXIT
+        var gItems_exit = gItems.exit().style("opacity", 0.1);
+
+        // POST-UPDATE
         vars.svg.selectAll(".mark__group")
                         .transition()
                         .delay(function(d, i) { return i / vars.data.length * 100; })
@@ -89,7 +88,7 @@
         // TODO: dispatch focus event here and highlight nodes
         if(vars.selection.length > 0) {
 
-          var selection_points = gPoints
+          var selection_points = gItems
             .filter(function(d, i) {
               return i === vars.selection[0];
             });

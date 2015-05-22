@@ -81,7 +81,8 @@
 
     mark: {
       height: 10,
-      width: 10
+      width: 10,
+      rotate: 0
     },
 
     nb_viz: nb_viz
