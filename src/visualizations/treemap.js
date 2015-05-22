@@ -18,11 +18,11 @@
             .value(function(d) { return d[vars.var_size]; });
 
         // PRE-UPDATE
-        var gPoints = vars.svg.data([vars.r]).selectAll("g")
+        var gItems = vars.svg.data([vars.r]).selectAll("g")
             .data(treemap.nodes);
 
         // Add items groups
-        var gPoints_enter = gPoints.enter()
+        var gItems_enter = gItems.enter()
                         .append("g")
                         .each(vistk.utils.items_group)
                         .attr("transform", function(d) { 
@@ -30,7 +30,18 @@
                         });
 
         // Add items graphical mark
-        gPoints_enter.each(vistk.utils.items_mark);
+        gItems_enter.each(vistk.utils.items_mark)
+            .select("rect")
+                .attr("width", function(d) { return d.dx; })
+                .attr("height", function(d) { return d.dy; });
+
+
+        // EXIT
+        var gItems_exit = gItems.exit();
+
+        // UPDATE
+        gItems
+            .transition();
 
         // TODO
         // Consider nesting as a connection mark...
@@ -67,11 +78,6 @@
               }
             //  return d.children ? null : d[vars.var_text].slice(0, 3)+"..."; 
             })
-            .on("mouseenter", function(d, i) {
-              vars.dispatch.highlightOn(d);
-            }).on("mouseout", function(d) {
-              vars.dispatch.highlightOut(d);
-            });
 
         // EXIT
         var cell_exit = cell.exit().remove();

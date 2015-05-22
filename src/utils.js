@@ -94,7 +94,6 @@ vistk.utils.connect_mark = function(d, i) {
         d3.select(this).append('path')
             .attr('class', 'sparkline')
             .attr('d', function(d) {
-              console.log(d)
               return vars.line(d);
             });
 
