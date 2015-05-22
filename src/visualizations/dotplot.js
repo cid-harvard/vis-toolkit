@@ -1,5 +1,6 @@
       case "dotplot":
 
+        // REGISTER EVENTS
         vars.evt.register("highlightOn", function(d) {
 
           gItems.selectAll(".items__group").classed("highlighted", function(e, j) { return e === d; });
@@ -45,6 +46,7 @@
         
         }
 
+        // TODO: should specify this is an horizontal axis
         vars.svg.call(vistk.utils.axis);
 
         // PRE-UPDATE
@@ -83,29 +85,5 @@
                             return "translate(" + vars.x_scale(d[vars.var_x]) + ", " + vars.height/2 + ")";
                           }
                         });
-
-        // If init, then dispatch those events
-        // TODO: dispatch focus event here and highlight nodes
-        if(vars.selection.length > 0) {
-
-          var selection_points = gItems
-            .filter(function(d, i) {
-              return i === vars.selection[0];
-            });
-
-          selection_points.select(".dot__circle")
-            .classed("selected", false);
-
-          selection_points.select(".dot__label")
-            .filter(function(d, i) {
-              return i === vars.selection[0];
-            })
-            .classed("selected", true);
-
-        }
-
-        if(typeof vars.highlight.length !== undefined) {
-          vars.evt.call("highlightOn", vars.new_data[vars.highlight]);
-        }
 
         break;        

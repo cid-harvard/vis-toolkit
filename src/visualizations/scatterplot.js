@@ -2,8 +2,8 @@
 
         vars.evt.register("highlightOn", function(d) {
 
-          gPoints.selectAll(".items_mark").classed("highlighted", function(e, j) { return e === d; });
-        //  gPoints.selectAll(".items_mark").classed("highlighted", function(e, j) { return e === d; });
+          gItems.selectAll(".items_mark").classed("highlighted", function(e, j) { return e === d; });
+        //  gItems.selectAll(".items_mark").classed("highlighted", function(e, j) { return e === d; });
 
           // Tentative of data driven selection update
           vars.data.forEach(function(e) {
@@ -19,8 +19,8 @@
 
         vars.evt.register("highlightOut", function(d) {
 
-          gPoints.selectAll(".items_mark").classed("highlighted", false);
-          gPoints.selectAll(".dot__label").classed("highlighted", false);
+          gItems.selectAll(".items_mark").classed("highlighted", false);
+          gItems.selectAll(".dot__label").classed("highlighted", false);
 
           vars.data.forEach(function(e) { d.__highlight = false; });
 
@@ -84,42 +84,42 @@
             .attr("x", 500)
             .text(vars.current_time);
 
-        var gPoints = vars.svg.selectAll(".items__group")
+        var gItems = vars.svg.selectAll(".items__group")
                         .data(vars.new_data, function(d, i) { return d.name + " " + i; });
 
         // TODO: create groups this way
-        // gPoints = vistk.utils.items_groups
+        // gItems = vistk.utils.items_groups
 
         // Here we want to deal with aggregated datasets
         // TODO
-        // [ ] Use gPoints_enter.each(vistk.utils.add_mark);
+        // [ ] Use gItems_enter.each(vistk.utils.add_mark);
         // [ ] Animated transition with the non-aggregated points
         if(vars.aggregate === vars.var_group) {
 
-          var gPoints_enter = gPoints.selectAll(".points")
+          var gItems_enter = gItems.selectAll(".points")
                         .enter()
                           .append("g")
                           .attr("class", "points");
 
-          var dots = gPoints_enter.append("rect")
+          var dots = gItems_enter.append("rect")
             .attr("r", 5)
             .attr("height", 10)
             .attr("width", 10)
             .style("fill", function(d) { return vars.color(d[vars.var_color]); });
 
-          var labels = gPoints_enter.append("text")
+          var labels = gItems_enter.append("text")
               .attr("x", 10)
               .attr("y", 0)
               .attr("dy", ".35em")
               .style("text-anchor", "start")
               .text(function(d) { return d[vars.var_text]; });
 
-          var gPoints_exit = gPoints.exit().style("opacity", 0.1);
+          var gItems_exit = gItems.exit().style("opacity", 0.1);
 
           // Update all the remaining dots
-          gPoints.style("opacity", 1);
+          gItems.style("opacity", 1);
 
-          gPoints
+          gItems
               .transition()
               .attr("transform", function(d) {
                 return "translate(" + vars.x_scale(d[vars.var_x])+", " + vars.y_scale(d[vars.var_y]) + ")";
@@ -128,7 +128,7 @@
         } else { 
 
           // ENTER
-          var gPoints_enter = gPoints.enter()
+          var gItems_enter = gItems.enter()
                         .append("g")
                           .attr("class", "items__group")
                           .on("mouseenter", function(d, i) {
@@ -141,25 +141,22 @@
                             vars.evt.call("clicked", d);
                           });
 
-          gPoints_enter.each(vistk.utils.items_mark);
+          gItems_enter.each(vistk.utils.items_mark);
 
           // TODO: add this as a graphical mark
-          var labels = gPoints_enter.append("text")
-              .attr("x", 10)
-              .attr("y", 0)
-              .attr("dy", ".35em")
-              .attr("class", "dot__label")              
-              .style("text-anchor", "start")
-              .text(function(d) { return d[vars.var_text]; });
+        // Add a graphical mark (labels)
+          vars.mark.type = "text";
+
+          gItems_enter.each(vistk.utils.items_mark);
 
           // EXIT
-          var gPoints_exit = gPoints.exit().style("opacity", 0.1);
+          var gItems_exit = gItems.exit().style("opacity", 0.1);
 
           // UPDATE
           if(vars.data.filter(function(d) { return d.__highlight;}).length > 0) {
 
             // Update all the remaining dots
-            gPoints.style("opacity", function(d) {
+            gItems.style("opacity", function(d) {
                 if(d.__highlight) {
                   return 1;
                 } else {
@@ -169,12 +166,12 @@
 
           } else {
 
-            gPoints.style("opacity", 1);
+            gItems.style("opacity", 1);
           
           }
 
           // POST-UPDATE
-          gPoints
+          gItems
             .transition()
             .attr("transform", function(d) {
               return "translate(" + vars.x_scale(d[vars.var_x]) + ", " + vars.y_scale(d[vars.var_y]) + ")";
