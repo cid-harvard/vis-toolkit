@@ -1,0 +1,33 @@
+<!doctype html>
+<meta charset="utf-8">
+<script src="../js/d3.js"></script>
+<script src="../build/vistk.js"></script>
+<link href="../css/vistk.css" rel="stylesheet">
+<body>
+<div id="viz"></div>
+<script>
+
+d3.json("../data/exports_2012.json", function(error, exports) {
+
+  visualization = vistk.viz()
+    .params({
+      type: "stacked",
+      container: "#viz",
+      width: 960,
+      height: 500,
+      data: exports,
+      id: "id",
+      var_y: "realgdp",
+      var_group: "dept_name",
+      color: "name",
+      ui: false,
+      interpolate: "linear",
+      var_text: "dept_name"
+    });
+
+  d3.select("#viz").call(visualization);
+
+
+});
+
+</script>
