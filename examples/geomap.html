@@ -5,31 +5,31 @@
 <link href="../css/vistk.css" rel="stylesheet">
 <script src="../js/queue.v1.min.js"></script>
 <script src="../js/topojson.js"></script>
-
-
 <body>
 <div id="viz"></div>
 <script>
 
 d3.json("../data/partners_usa_2012_csay.json", function(error, partners) {
 
-ex = partners;
-
   visualization = vistk.viz()
-    .type("geomap")
-    .container("#viz")
-    .height(500)
-    .width(600)
-    .data(partners.data)
-    .id(["continent", "name"])
-    .group("continent")
-    .color("share")
-    .title("Maps of trade partners")
     .params({
+      type: "geomap",
+      container: "#viz",
+      height: 500,
+      width: 600,
+      data: partners.data,
+      var_id: ["continent", "name"],
+      var_group: "continent",
+      var_color: "share", 
+      mark: {
+        type: 'shape',
+        width: 10,
+        height: 10
+      },
       time: {var_time: "year", current_time: 2012}
-    })
+    });
 
-  d3.select("#viz").call(visualization)
+  d3.select("#viz").call(visualization);
 
 })
 

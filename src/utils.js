@@ -55,16 +55,31 @@ vistk.utils.items_mark = function(d, i) {
           })
           .attr("d", arc);
 
+    case "shape":
+
+
+      d3.select(this).insert("path")
+                      .attr("class", "country")    
+                        .attr("title", function(d,i) { 
+                          return d.name; 
+                        })
+                        .attr("d", vars.path)
+                        .style("fill", function(d, i) { 
+                          return vars.color(d.data[vars.var_color]);
+                        });
+
+
     case "text":
 
       if(typeof vars.mark.rotate === "undefined")
         vars.mark.rotate = 0;
-      
+
       d3.select(this).append("text")
                       .attr("x", 10)
                       .attr("y", 0)
                       .attr("dy", ".35em")
                       .classed("items__mark__text", true)
+                      .style("text-anchor", "start")
                       .attr("transform", "rotate(" +  vars.mark.rotate + ")")
                       .text(function(d) { return d[vars.var_text]; });
 

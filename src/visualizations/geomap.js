@@ -1,19 +1,22 @@
       case "geomap":
 
-        vars.dispatch.on("highlightOn", function(d) {
-          console.log(d);
-        });
 
-        vars.dispatch.on("highlightOut", function(d) {
+        // REGISTER EVENTS
+        vars.evt.register("highlightOn", function(d) { 
+
           console.log(d);
+
         });
+        vars.evt.register("highlightOut", function(d) { });
+        vars.evt.register("selection", function(d) { });
+        vars.evt.register("resize", function(d) { });
 
         // http://techslides.com/demos/d3/d3-world-map-colors-tooltips.html
         var projection = d3.geo.mercator()
                         .translate([vars.width/2, vars.height/2])
                         .scale(100);
 
-        var path = d3.geo.path()
+        vars.path = d3.geo.path()
             .projection(projection);
 
         tooltip = d3.select(vars.container).append("div")
@@ -55,25 +58,28 @@
             return typeof d.data != "undefined";
           });
 
-          // Update
-          var country = vars.gSvg.selectAll(".country").data(countries);
+
+          // PRE-UPDATE
+          var gItems = vars.svg.selectAll(".mark__group")
+                           .data(countries, function(d, i) { return i; });
+
+          // ENTER
+
+          // Add a group for marks
+          var gItems_enter = gItems.enter()
+                          .append("g")
+                          .each(vistk.utils.items_group);
+
+          // Add a graphical mark
+          gItems_enter.each(vistk.utils.items_mark)
+              .select("path")
+              .attr("title", function(d,i) { return d.name; });
 
           // We override the current color scale to make it linear
           vars.color = d3.scale.linear()
             .domain([d3.min(vars.new_data, function(d) { return d[vars.var_color]; }), d3.max(vars.new_data, function(d) { return d[vars.var_color]; })])
             .range(["red", "green"]);
-
-          var country_enter = country.enter()
-                                .insert("path")
-                                .attr("class", "country")    
-                                  .attr("title", function(d,i) { 
-                                    return d.name; 
-                                  })
-                                  .attr("d", path)
-                                  .style("fill", function(d, i) { 
-                                    return vars.color(d.data[vars.var_color]);
-                                  });
-
+/*
           //Show/hide tooltip
           country_enter
                 .on("mouseenter", function(d, i) {
@@ -97,7 +103,7 @@
                 });
 
             country_exit = country.exit().style({"display": "none"});
-
+*/
           }
 
           break;
