@@ -7,7 +7,7 @@ module.exports = function(grunt) {
         separator: '\n',
       },
       build: {
-        src: ['src/start.js', 'src/vars.js', 'src/star_constructor.js', 'src/wrangler.js', 'src/visualizations/dotplot.js', 'src/visualizations/sparkline.js',  'src/visualizations/table.js', 'src/visualizations/treemap.js', 'src/visualizations/scatterplot.js', 'src/visualizations/grid.js', 'src/visualizations/geomap.js', 'src/visualizations/linechart.js', 'src/visualizations/nodelink.js', 'src/visualizations/piechart.js', 'src/ui.js', 'src/getterssetters.js', 'src/end_constructor.js', 'src/utils.js', 'src/end.js'],
+        src: ['src/start.js', 'src/vars.js', 'src/star_constructor.js', 'src/wrangler.js', 'src/visualizations/dotplot.js', 'src/visualizations/sparkline.js',  'src/visualizations/table.js', 'src/visualizations/treemap.js', 'src/visualizations/scatterplot.js', 'src/visualizations/grid.js', 'src/visualizations/geomap.js', 'src/visualizations/linechart.js', 'src/visualizations/nodelink.js', 'src/visualizations/piechart.js', 'src/visualizations/stacked.js', 'src/ui.js', 'src/getterssetters.js', 'src/end_constructor.js', 'src/utils.js', 'src/end.js'],
         dest: 'build/vistk.js',
       },
     },
