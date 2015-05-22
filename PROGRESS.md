@@ -118,6 +118,29 @@
 ## Matrix
 
 [X] Simple example
+[ ] Integrated example
+[ ] Data wrangling
+
+[ ] Hightlight
+[ ] Selection
+[ ] Aggregation
+[ ] Filter
+
+## Bar chart
+
+[X] Simple example
+[ ] Integrated example
+[ ] Data wrangling
+
+[ ] Hightlight
+[ ] Selection
+[ ] Aggregation
+[ ] Filter
+
+## Pie chart
+
+[X] Simple example
+[ ] Integrated example
 [ ] Data wrangling
 
 [ ] Hightlight
