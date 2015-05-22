@@ -12,7 +12,7 @@
         });
 
         var treemap = d3.layout.treemap()
-            .padding(4)
+            .padding(vars.mark.padding)
             .sticky(true)
             .size([vars.width, vars.height])
             .value(function(d) { return d[vars.var_size]; });

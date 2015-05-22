@@ -79,6 +79,11 @@
       type: "circle"
     },
 
+    mark: {
+      height: 10,
+      width: 10
+    },
+
     nb_viz: nb_viz
   };
 
