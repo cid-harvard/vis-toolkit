@@ -26,6 +26,7 @@
         gPoints_enter.each(vistk.utils.connect_mark)
 
         // Add axis
+        gPoints_enter.each(vistk.utils.axis)
 
         // Add grid layer
 
