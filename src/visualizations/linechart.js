@@ -45,7 +45,7 @@
         // TODO: use the connection mark instead of the line
         // FIX FOR MISSING VALUES
         // https://github.com/mbostock/d3/wiki/SVG-Shapes
-        vars.svg_line = d3.svg.line()
+        vars.line = d3.svg.line()
         // https://gist.github.com/mbostock/3035090
             .defined(function(d) { return d[vars.var_y] != null; })
             .interpolate(vars.interpolate)
@@ -85,28 +85,24 @@
             .style("text-anchor", "end")
             .text(vars.y_text);
 
-        var country = vars.svg.selectAll(".country")
-            .data(items)
-          .enter()
-            .append("g")
-            .attr("class", function(d) {
+        // TODO: add all the line and not just the filtered one
+        var gConnect = vars.svg.selectAll(".connect__group")
+                        .data([vars.new_data], function(d, i) { return i; });
+      
+        var gConnect_enter = gConnect.enter()
+                        .append("g")
+                        .attr("class", "connect__group");
 
-              var c = "country";
+        // Enter connect graphical marks
+        gConnect_enter.each(vistk.utils.connect_mark)
+        .style("stroke", function(d) { return vars.color(d[vars.var_color]); });
 
-              if(vars.selection.indexOf(d.name) >= 0)
-                c += " selected";
-
-              if(vars.highlight.indexOf(d.name) >= 0)
-                c += " highlighted";
-
-              return c;
-            });
-
+/*
         // TODO: turn into a connection mark
-        country.append("path")
+        gItems_enter.append("path")
             .attr("class", "country line")
             .attr("d", function(d) {
-              return vars.svg_line(d.values); 
+              return vars.line(d.values); 
             })
             .attr("id", function(d) { return d[vars.var_id]; })
             .attr("class", function(d) {
@@ -122,9 +118,21 @@
               return c;
             })
             .style("stroke", function(d) { return vars.color(d[vars.var_color]); });
+*/
+
+        var gItems = vars.svg.selectAll(".items__group")
+                        .data(items);
+
+        // Enter groups for items graphical marks
+        var gItems_enter = gItems.enter()
+                        .append("g")
+                        .each(vistk.utils.items_group)
+                        .attr("transform", function(d, i) {
+                          return "translate(" + vars.x_scale(d[vars.time.var_time]) + ", " + vars.y_scale(d[vars.var_y]) + ")";
+                        });
 
         // TODO: turn into an item mark
-        country.append("text")
+        gItems_enter.append("text")
             .datum(function(d) { 
               d.values.sort(function(a, b) { return a.year > b.year;}); 
               return {name: d.name, id: d[vars.var_id], value: d.values[d.values.length - 1]}; 
