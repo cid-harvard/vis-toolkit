@@ -115,6 +115,16 @@
 [ ] Aggregation
 [ ] Filter
 
+## Matrix
+
+[X] Simple example
+[ ] Data wrangling
+
+[ ] Hightlight
+[ ] Selection
+[ ] Aggregation
+[ ] Filter
+
 # Storytelling
 
 [ ] Stepper

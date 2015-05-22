@@ -242,6 +242,9 @@ Text wrap
 
 * Should have bins for each time point (as an option)
 
+* Aligned line chart http://www.lesechos.fr/infographie/2014-07-06-emploi-salaires/emplois.html
+
+* http://www.nytimes.com/interactive/2014/10/19/upshot/peyton-manning-breaks-touchdown-passing-record.html?
 
 #### Sparkline
 
@@ -316,6 +319,7 @@ An array with rows and columns.
 Combination of a matrix with nested scatterplots within each cell. The matrix being the cross product of the dimensions to represent.
 
 * http://bl.ocks.org/mbostock/4063663
+* http://bl.ocks.org/mbostock/4063663
 
 * Re-sort http://bl.ocks.org/ianyfchang/8119685
 
@@ -374,7 +378,7 @@ Listing of charts
 
 * Using rectangles and height http://www.economist.com/news/finance-and-economics/21601568-new-data-suggest-chinese-economy-bigger-previously-thought-dragon
 
-* Aligned line chart http://www.lesechos.fr/infographie/2014-07-06-emploi-salaires/emplois.html
+
 
 * Grids http://www.d3noob.org/2013/01/adding-grid-lines-to-d3js-graph.html
 
