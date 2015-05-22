@@ -1,6 +1,5 @@
       case "geomap":
 
-
         // REGISTER EVENTS
         vars.evt.register("highlightOn", function(d) { 
 
@@ -26,6 +25,11 @@
             .call(d3.behavior.zoom()
             .on("zoom", redraw))
             .append("g");
+
+        // We override the current color scale to make it linear
+        vars.color = d3.scale.linear()
+          .domain([d3.min(vars.new_data, function(d) { return d[vars.var_color]; }), d3.max(vars.new_data, function(d) { return d[vars.var_color]; })])
+          .range(["red", "green"]);
 
         function redraw() {
             vars.gSvg.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
@@ -73,37 +77,27 @@
           // Add a graphical mark
           gItems_enter.each(vistk.utils.items_mark)
               .select("path")
-              .attr("title", function(d,i) { return d.name; });
+              .attr("title", function(d,i) { return d[vars.var_text]; })
+              .on("mouseenter", function(d, i) {
+                vars.dispatch.highlightOn(d);
+                tooltip
+                 .classed("hidden", false)
+              })
+              .on("mousemove", function(d,i) {
 
-          // We override the current color scale to make it linear
-          vars.color = d3.scale.linear()
-            .domain([d3.min(vars.new_data, function(d) { return d[vars.var_color]; }), d3.max(vars.new_data, function(d) { return d[vars.var_color]; })])
-            .range(["red", "green"]);
-/*
-          //Show/hide tooltip
-          country_enter
-                .on("mouseenter", function(d, i) {
-                  vars.dispatch.highlightOn(d);
-                  tooltip
-                   .classed("hidden", false)
-                })
-                .on("mousemove", function(d,i) {
+                var mouse = d3.mouse(vars.gSvg.node()).map(function(d) { return parseInt(d); });
 
-                  var mouse = d3.mouse(vars.gSvg.node()).map(function(d) { return parseInt(d); });
+                tooltip
+                  .attr("style", "left:"+(mouse[0]+25)+"px;top:"+mouse[1]+"px")
+                  .html(d._name);
 
-                  tooltip
-                    .attr("style", "left:"+(mouse[0]+25)+"px;top:"+mouse[1]+"px")
-                    .html(d._name);
+              })
+              .on("mouseleave",  function(d,i) {
+                console.log("OUT")
+                vars.dispatch.highlightOut(d);             
+                tooltip.classed("hidden", true);
+              });
 
-                })
-                .on("mouseleave",  function(d,i) {
-                  console.log("OUT")
-                  vars.dispatch.highlightOut(d);             
-                  tooltip.classed("hidden", true);
-                });
-
-            country_exit = country.exit().style({"display": "none"});
-*/
           }
 
           break;

@@ -20,13 +20,17 @@ d3.json("../data/partners_usa_2012_csay.json", function(error, partners) {
       data: partners.data,
       var_id: ["continent", "name"],
       var_group: "continent",
-      var_color: "share", 
+      var_color: "share",
+      vars_text: "name",
       mark: {
         type: 'shape',
         width: 10,
         height: 10
       },
-      time: {var_time: "year", current_time: 2012}
+      time: {
+        var_time: "year", 
+        current_time: 2012
+      }
     });
 
   d3.select("#viz").call(visualization);
