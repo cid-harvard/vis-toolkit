@@ -248,7 +248,7 @@ vistk.utils.flatten_years = function(data) {
 // UTIS FUNCTIONS
 
 // http://stackoverflow.com/questions/171251/how-can-i-merge-properties-of-two-javascript-objects-dynamically
-var merge = function() {
+vistk.utils.merge = function() {
     var obj = {},
         i = 0,
         il = arguments.length,

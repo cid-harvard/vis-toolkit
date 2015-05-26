@@ -76,15 +76,15 @@
 
     join_data = data;
 
-    // Go through all the dataset and merge with the current one
+    // Go through all the dataset and vistk.utils.merge with the current one
     data.forEach(function(d, i) {
 
       vars.data.forEach(function(e, j) {
 
         if( (d[vars.var_join] == e[vars.var_join]) && (d.year == 2011)) {
 
-//          console.log("merge", d, e, merge(d, e));
-          return  merge(d, e);
+//          console.log("vistk.utils.merge", d, e, vistk.utils.merge(d, e));
+          return  vistk.utils.merge(d, e);
 
         }
       });
@@ -232,7 +232,7 @@
   // Generic parameters function
   chart.params = function(x) {
     if (!arguments.length) return vars;
-    vars = merge(vars, x);
+    vars = vistk.utils.merge(vars, x);
     return chart;
   };
 
