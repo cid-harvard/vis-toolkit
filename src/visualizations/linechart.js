@@ -87,15 +87,16 @@
 
         // TODO: add all the line and not just the filtered one
         var gConnect = vars.svg.selectAll(".connect__group")
-                        .data([vars.new_data], function(d, i) { return i; });
+                        .data(items);//, function(d, i) { return i; });
       
         var gConnect_enter = gConnect.enter()
                         .append("g")
-                        .attr("class", "connect__group");
+                        .each(vistk.utils.connect_group);
 
         // Enter connect graphical marks
         gConnect_enter.each(vistk.utils.connect_mark)
-        .style("stroke", function(d) { return vars.color(d[vars.var_color]); });
+                        .style("stroke", function(d) { return vars.color(d[vars.var_color]); });
+
 
 /*
         // TODO: turn into a connection mark
@@ -157,23 +158,4 @@
             .attr("id", function(d) { return d[vars.var_id]; })
             .text(function(d) { return d[vars.var_text]; })
 
-        vars.svg.selectAll(".country").on("mouseover", function(d) {
-          vars.evt.call("highlightOn", d);
-        })
-        .on("mouseout", function(d) {
-          vars.evt.call("highlightOut", d);
-        });
-
-        vars.svg.selectAll("text.country").on("click", function(d) {
-          vars.evt.call("selection", d);
-        })
-/*
-        vars.svg.select("svg").on("click", function(d) {
-
-          d3.selectAll(".selected").classed("selected", false);
-          d3.selectAll(".line:not(.selected)").style("opacity", 1);
-          d3.selectAll(".text:not(.selected)").style("opacity", 1);
-
-        })
-*/
         break;

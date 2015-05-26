@@ -109,6 +109,20 @@ vistk.utils.items_mark = function(d, i) {
 
 }
 
+vistk.utils.connect_group = function(d, i) {
+
+  d3.select(this).attr("class", "connect__group")
+                  .on("mouseover",function(d) {
+                    vars.evt.call("highlightOn", d);
+                  })
+                  .on("mouseleave", function(d) {
+                    vars.evt.call("highlightOut", d);
+                  })
+                  .on("click", function(d) {
+                     vars.evt.call("selection", d);
+                  });
+}
+
 vistk.utils.connect_mark = function(d, i) {
 
   if(typeof vars.connect != "undefined") {
@@ -119,7 +133,7 @@ vistk.utils.connect_mark = function(d, i) {
       default:
 
         d3.select(this).append('path')
-            .attr('class', 'sparkline')
+            .attr('class', 'connect__path')
             .attr('d', function(d) {
               return vars.line(d);
             });
@@ -292,3 +306,4 @@ vistk.utils.update_filters = function(value, add) {
       vars.filter.splice(index, 1);
   }
 }
+

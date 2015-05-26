@@ -16,7 +16,9 @@ d3.csv("../data/new_rankings2.csv", function(error, data) {
 
   data.forEach(function(d) {
 
+    // Create ids for countries
     for(var k in d) {
+
       if(k != "Country") {
         res.push({name: d.Country, year: k, rank: +d[k], id: d.Country.replace(" ", "_"), category: d[k]%5 + ""})
       }
