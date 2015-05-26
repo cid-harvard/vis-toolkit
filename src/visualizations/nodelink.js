@@ -1,5 +1,7 @@
       case "nodelink":
 
+        vars.connect.type = "line";
+
         vars.evt.register("highlightOn", function(d) {
 
           // Highlight nodes
@@ -95,14 +97,22 @@
         vars.x_scale.domain([min_x, max_x]);
         vars.y_scale.domain([min_y, max_y]);
 
-        var link = vars.svg.selectAll(".link")
-            .data(vars.links)
-          .enter().append("line")
-            .attr("class", function(d) {
-              return "link source_"+d.source.id+" target_"+d.target.id;
-            })
-            .style("stroke-width", function(d) { return Math.sqrt(d.value); })
-            .style("opacity", .4);
+        // TODO: add all the line and not just the filtered one
+        var gConnect = vars.svg.selectAll(".connect__group")
+                        .data(vars.links);//, function(d, i) { return i; });
+      
+        var gConnect_enter = gConnect.enter()
+                        .append("g")
+                        .each(vistk.utils.connect_group);
+
+        // Enter connect graphical marks
+        gConnect_enter.each(vistk.utils.connect_mark)
+                        .style("stroke", function(d) { return vars.color(d[vars.var_color]); })
+                        .attr("class", function(d) {
+                                      return "link source_"+d.source.id+" target_"+d.target.id;
+                        })
+                        .style("stroke-width", function(d) { return Math.sqrt(d.value); })
+                        .style("opacity", .4);
 
         var gItems = vars.svg.selectAll(".items__group")
                         .data(vars.nodes, function(d) { return d.id; });
@@ -124,12 +134,6 @@
             });
 
         var gItems_exit = gItems.exit().style({opacity: 0.1});
-
-        // UPDATE
-        link.attr("x1", function(d) { return vars.x_scale(d.source.x); })
-            .attr("y1", function(d) { return vars.y_scale(d.source.y); })
-            .attr("x2", function(d) { return vars.x_scale(d.target.x); })
-            .attr("y2", function(d) { return vars.y_scale(d.target.y); });
 
         gItems.attr("transform", function(d) { 
           return "translate(" + vars.x_scale(d.x) + "," + vars.y_scale(d.y) + ")"; 

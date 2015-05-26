@@ -2,6 +2,13 @@
 
         vars.accessor_values = function(d) { return d.values; };
 
+        vars.connect.type = "path";
+
+        vars.path = d3.svg.line()
+                     .interpolate(vars.interpolate)
+                     .x(function(d) { return vars.x_scale(d[vars.time.var_time]); })
+                     .y(function(d) { return vars.y_scale(d[vars.var_y]); });
+
         vars.evt.register("highlightOn", function(d) {
 
           vars.svg.selectAll(".connect__group:not(.selected)").style("opacity", 0.2);
