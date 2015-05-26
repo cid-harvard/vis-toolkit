@@ -1,17 +1,22 @@
       case "sparkline":
 
-        vars.connect.type = "path";
+        vars.params = {
+          connect: {
+            type: "path"
+          },
+          x_scale: d3.scale.linear().range([0, vars.width - 2])
+                      .domain(d3.extent(vars.new_data, function(d) { return d[vars.time.var_time]; })),
 
-        vars.x_scale = d3.scale.linear().range([0, vars.width - 2]);
-        vars.y_scale = d3.scale.linear().range([vars.height - 4, 0]);
+          y_scale: d3.scale.linear().range([vars.height - 4, 0])
+                      .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_y]; })),
 
-        vars.x_scale.domain(d3.extent(vars.new_data, function(d) { return d[vars.time.var_time]; }));
-        vars.y_scale.domain(d3.extent(vars.new_data, function(d) { return d[vars.var_y]; }));
-
-        vars.path = d3.svg.line()
+          path: d3.svg.line()
                      .interpolate(vars.interpolate)
                      .x(function(d) { return vars.x_scale(d[vars.time.var_time]); })
-                     .y(function(d) { return vars.y_scale(d[vars.var_y]); });
+                     .y(function(d) { return vars.y_scale(d[vars.var_y]); })
+        }
+
+        vars = merge(vars, vars.params);
 
         // TODO: add all the line and not just the filtered one
         var gConnect = vars.svg.selectAll(".connect__group")
@@ -22,7 +27,7 @@
                         .attr("class", "connect__group");
 
         // Enter connect graphical marks
-        gConnect_enter.each(vistk.utils.connect_mark);      
+        gConnect_enter.each(vistk.utils.connect_mark);
 
         var gItems = vars.svg.selectAll(".items__group")
                         .data(vars.new_data, function(d, i) { return i; });

@@ -1,5 +1,9 @@
       case "custom":
 
+        // OVERRIDING PARAMETERS
+        vars.params = {
+        }
+
         // REGISTER EVENTS
         vars.evt.register("highlightOn", function(d) { });
         vars.evt.register("highlightOut", function(d) { });
@@ -23,10 +27,10 @@
         // Add an other graphical mark (e.g. text labels)
 
         // Add a connection mark
-        gItems_enter.each(vistk.utils.connect_mark)
+        gItems_enter.each(vistk.utils.connect_mark);
 
         // Add axis
-        gItems_enter.each(vistk.utils.axis)
+        gItems_enter.each(vistk.utils.axis);
 
         // Add grid layer
 
@@ -38,3 +42,4 @@
             .transition();
 
       break;
+      
