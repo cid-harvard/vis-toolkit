@@ -21,10 +21,12 @@
                         .append("g")
                         .each(vistk.utils.items_group);
 
-        // Add a graphical mark
-        gItems_enter.each(vistk.utils.items_mark);
+        vars.marks.each(function(d) {
 
-        // Add an other graphical mark (e.g. text labels)
+          // Add a graphical mark
+          gItems_enter.each(vistk.utils.items_mark);
+
+        })
 
         // Add a connection mark
         gItems_enter.each(vistk.utils.connect_mark);

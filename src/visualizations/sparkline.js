@@ -16,7 +16,7 @@
                      .y(function(d) { return vars.y_scale(d[vars.var_y]); })
         }
 
-        vars = merge(vars, vars.params);
+        vars = vistk.utils.merge(vars, vars.params);
 
         // TODO: add all the line and not just the filtered one
         var gConnect = vars.svg.selectAll(".connect__group")
