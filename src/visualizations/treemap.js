@@ -29,32 +29,62 @@
                           return "translate(" + d.x + "," + d.y + ")"; 
                         });
 
-        // Add items graphical mark
-        // 
-        gItems_enter
-            .filter(function(d, j) { 
-              return d.depth > 0; 
-            })
-            .each(vistk.utils.items_mark)
-            .select("rect")
-                        .style("fill", function(d) {
-              return d.children ? vars.color(d[vars.var_color]) : null; 
-            })
-            .attr("width", function(d) { return d.dx; })
-            .attr("height", function(d) { return d.dy; });
-
+/*
         // TODO: Add items labels
         // Make them fit the parent element
         vars.mark.type = "text";
 
-        gItems_enter.each(vistk.utils.items_mark);
+        gItems_enter
+            .filter(function(d, j) { 
+              return d.depth == 1;
+            })
+            .each(vistk.utils.items_mark);
+*/
+
+
+        vars.mark.type = "text";
+
+        // Add items graphical mark (DEPTH 2)
+        gItems_enter
+            .filter(function(d, j) { 
+              return d.depth == 1;
+            })
+            .each(vistk.utils.items_mark)
+            .select("rect")
+            /*
+            .style("fill", function(d) {
+              return vars.color(d[vars.var_color]);
+//              return d.children ? vars.color(d[vars.var_color]) : null; 
+            })
+      */
+            .attr("width", function(d) { return d.dx; })
+            .attr("height", function(d) { return d.dy; })
+            .call(vistk.utils.wrap, 100);
+
+
+        vars.mark.type = "rect";
+
+        // Add items graphical mark (DEPTH 2)
+        gItems_enter
+            .filter(function(d, j) { 
+              return d.depth == 2;
+            })
+            .each(vistk.utils.items_mark)
+            .select("rect")
+            .style("fill", function(d) {
+
+              return vars.color(d[vars.var_color]);
+//              return d.children ? vars.color(d[vars.var_color]) : null; 
+            })
+            .attr("width", function(d) { return d.dx; })
+            .attr("height", function(d) { return d.dy; })
+
 
         // EXIT
         var gItems_exit = gItems.exit();
 
         // UPDATE
-        gItems
-            .transition();
+        gItems.transition();
 
         // TODO
         // Consider nesting as a connection mark...

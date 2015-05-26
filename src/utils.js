@@ -29,7 +29,7 @@ vistk.utils.items_mark = function(d, i) {
                       .attr("x", -vars.mark.width/2)
                       .attr("y", -vars.mark.height/2)
                       .classed("items__mark__rect", true)
-                      .style("fill", function(d) { return vars.color(d[vars.var_color]); });
+             //         .style("fill", function(d) { return vars.color(d[vars.var_color]); });
 
       break;
 
@@ -243,21 +243,26 @@ var merge = function() {
 // One way to wrap text.. but creates too many elements..
 // http://bl.ocks.org/mbostock/7555321
 
-vistk.utils.wrap = function(text, width) {
+vistk.utils.wrap = function(node) {
 
-  text.each(function() {
+  node.each(function() {
+
+    console.log("EHERE", d3.select(this).data()[0].dx, d3.select(this).data()[0], d3.select(this).attr("dy"))
 
     width = d3.select(this).data()[0].dx;
 
     var text = d3.select(this),
-        words = text.text().split(/\s+/).reverse(),
+        words = d3.select(this).data()[0].name.split(/\s+/).reverse(),
         word,
         line = [],
         lineNumber = 0,
         lineHeight = 1.1, // ems
         y = text.attr("y"),
-        dy = parseFloat(text.attr("dy")),
+        dy = 100, //parseFloat(text.attr("dy")),
         tspan = text.text(null).append("tspan").attr("x", 0).attr("y", y).attr("dy", dy + "em");
+
+        console.log("WPRD", words, line, tspan);
+
     while (word = words.pop()) {
       line.push(word);
       tspan.text(line.join(" "));
