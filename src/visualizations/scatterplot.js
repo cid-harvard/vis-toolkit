@@ -1,5 +1,40 @@
       case "scatterplot":
 
+        vars.params = {
+          x_scale: d3.scale.linear()
+                      .range([vars.margin.left, vars.width-vars.margin.left-vars.margin.right])
+                      .domain([0, d3.max(vars.new_data, function(d) { return d[vars.var_x]; })])
+                      .nice(),
+
+          y_scale: d3.scale.linear().range([vars.height - 4, 0])
+                      .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_y]; })),
+
+          path: d3.svg.line()
+                     .interpolate(vars.interpolate)
+                     .x(function(d) { return vars.x_scale(d[vars.time.var_time]); })
+                     .y(function(d) { return vars.y_scale(d[vars.var_y]); }),
+          connect: {
+            type: null
+          },
+          marks: [{
+            attr: "country",
+            marks: [{
+                type: "rect"
+              }, {
+                type: "text",
+                rotate: "0",
+                translate: null
+              }]
+            }, {
+            attr: "continent",
+            marks: [{
+              type: "pie"
+            }]
+          }]
+        };
+
+        vars = vistk.utils.merge(vars, vars.params);
+
         vars.evt.register("highlightOn", function(d) {
 
           gItems.selectAll(".items_mark").classed("highlighted", function(e, j) { return e === d; });
