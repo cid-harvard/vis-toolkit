@@ -18,26 +18,27 @@ d3.json("../data/atlas_international_product_space.json", function(graph) {
     });
 
     visualization = vistk.viz()
-      .nodes(graph.nodes)
-      .links(graph.edges)
-      .data(exports)
-      .height(300)
-      .width(400)
-      .type("nodelink")
-      .container("#viz")
       .params({
+        nodes: graph.nodes,
+        links: graph.edges,
+        data: exports,
+        height: 300,
+        width: 400,
+        type: 'nodelink',
+        container: '#viz',
         var_x: 'nb_products',
-        var_y: 'avg_products'
-      })      
-      .id("product_id")
-      .group("category")
-      .size("value")
-      .time(2012)
-      .color("category")
-      .text("product_id")
-      .title("Product space")
-      .time({var_time: "year", current_time: 2008})
-      .ui(true)
+        var_y: 'avg_products',
+        var_id: 'product_id',
+        var_group: 'category',
+        var_size: 'value',
+        var_color: 'category',
+        var_text: 'product_id',
+        time: {
+          var_time: "year", 
+          current_time: 2008
+        },
+        ui: true
+      });
 
     d3.select("#viz").call(visualization)
 

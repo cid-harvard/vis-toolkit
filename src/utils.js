@@ -130,12 +130,23 @@ vistk.utils.connect_mark = function(d, i) {
     switch(vars.connect.type) {
 
       case "line":
+
+        d3.select(this).append('line')
+            .attr('class', 'connect__line')
+            .attr("x1", function(d) { return vars.x_scale(d.source.x); })
+            .attr("y1", function(d) { return vars.y_scale(d.source.y); })
+            .attr("x2", function(d) { return vars.x_scale(d.target.x); })
+            .attr("y2", function(d) { return vars.y_scale(d.target.y); });
+
+        break;
+
+      case "path":
       default:
 
         d3.select(this).append('path')
             .attr('class', 'connect__path')
             .attr('d', function(d) {
-              return vars.line(vars.accessor_values(d));
+              return vars.path(vars.accessor_values(d));
             });
 
       break;
