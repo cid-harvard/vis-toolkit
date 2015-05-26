@@ -50,21 +50,21 @@
           countries.forEach(function(d) { 
 
             // Retrieve the country name based on its id
-            d._name = names.filter(function(n) { return d.id == n.id; })[0].name; 
+            d._name = names.filter(function(n) { return d.id === n.id; })[0].name; 
 
             // TODO: should merge on a more reliable join (e.g. 2-char)
-            d.data = vars.new_data.filter(function(n) { return d._name == n.name; })[0];
+            d.data = vars.new_data.filter(function(n) { return d._name === n.name; })[0];
 
           });
 
           // TODO: see above
           countries = countries.filter(function(d) {
-            return typeof d.data != "undefined";
+            return typeof d.data !== "undefined";
           });
 
 
           // PRE-UPDATE
-          var gItems = vars.svg.selectAll(".mark__group")
+          var gItems = vars.gSvg.selectAll(".mark__group")
                            .data(countries, function(d, i) { return i; });
 
           // ENTER
@@ -81,7 +81,7 @@
               .on("mouseenter", function(d, i) {
                 vars.dispatch.highlightOn(d);
                 tooltip
-                 .classed("hidden", false)
+                 .classed("hidden", false);
               })
               .on("mousemove", function(d,i) {
 

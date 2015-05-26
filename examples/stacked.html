@@ -19,15 +19,16 @@ d3.json("../data/exports_2012.json", function(error, exports) {
       id: "id",
       var_y: "realgdp",
       var_group: "dept_name",
-      color: "name",
+      var_color: "name",
       ui: false,
       interpolate: "linear",
-      var_text: "dept_name"
+      var_text: "dept_name",
+      time: {
+        parse: d3.time.format("%Y").parse
+      }
     });
 
   d3.select("#viz").call(visualization);
 
-
 });
-
 </script>

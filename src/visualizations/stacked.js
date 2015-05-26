@@ -6,8 +6,8 @@
         vars.evt.register("selection", function(d) { });
         vars.evt.register("resize", function(d) { });
 
-        var parseDate = d3.time.format("%y-%b-%d").parse,
-            formatPercent = d3.format(".0%");
+       // var parseDate = d3.time.format("%y-%b-%d").parse,
+        var formatPercent = d3.format(".0%");
 
         vars.x_scale = d3.time.scale()
             .range([0, vars.width]);
@@ -35,8 +35,6 @@
         var stack = d3.layout.stack()
             .values(function(d) { return d.values; });
 
-        var parseDate = d3.time.format("%Y").parse;
-
         // Find the number or years
 
         unique_years = d3.set(vars.data.data.map(function(d) { return d.year;})).values();
@@ -55,10 +53,10 @@
       //      return a;
           })
 
-          a.date = parseDate(d);
+          a.date = vars.time.parse(d);
           data = data.concat(a);
 
-        })
+        });
 
         color.domain(d3.keys(data[0]).filter(function(key) { return key !== "date"; }));
 

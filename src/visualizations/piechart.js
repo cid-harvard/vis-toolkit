@@ -14,7 +14,7 @@
 
         // Bind data to groups
         var gPoints = vars.svg.selectAll(".mark__group")
-                         .data(pie(vars.new_data), function(d, i) { return i; })
+                         .data(pie(vars.new_data), function(d, i) { return i; });
 
         // ENTER
 

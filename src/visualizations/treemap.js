@@ -41,13 +41,12 @@
             .each(vistk.utils.items_mark);
 */
 
-
         vars.mark.type = "text";
 
         // Add items graphical mark (DEPTH 2)
         gItems_enter
             .filter(function(d, j) { 
-              return d.depth == 1;
+              return d.depth === 1;
             })
             .each(vistk.utils.items_mark)
             .select("rect")
@@ -67,7 +66,7 @@
         // Add items graphical mark (DEPTH 2)
         gItems_enter
             .filter(function(d, j) { 
-              return d.depth == 2;
+              return d.depth === 2;
             })
             .each(vistk.utils.items_mark)
             .select("rect")
@@ -77,8 +76,7 @@
 //              return d.children ? vars.color(d[vars.var_color]) : null; 
             })
             .attr("width", function(d) { return d.dx; })
-            .attr("height", function(d) { return d.dy; })
-
+            .attr("height", function(d) { return d.dy; });
 
         // EXIT
         var gItems_exit = gItems.exit();
