@@ -68,6 +68,18 @@ vistk.utils.items_mark = function(d, i) {
                           return vars.color(d.data[vars.var_color]);
                         });
 
+    case "pie":
+
+
+      d3.select(this).insert("path")
+                      .attr("class", "country")    
+                        .attr("title", function(d,i) { 
+                          return d.name; 
+                        })
+                        .attr("d", vars.path)
+                        .style("fill", function(d, i) { 
+                          return vars.color(d.data[vars.var_color]);
+                        });
 
     case "text":
 
