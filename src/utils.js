@@ -135,7 +135,7 @@ vistk.utils.connect_mark = function(d, i) {
         d3.select(this).append('path')
             .attr('class', 'connect__path')
             .attr('d', function(d) {
-              return vars.line(d);
+              return vars.line(vars.accessor_values(d));
             });
 
       break;

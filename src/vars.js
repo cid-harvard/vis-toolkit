@@ -85,6 +85,8 @@
       rotate: 0
     },
 
+    accessor_values: function(d) { return d; },
+
     nb_viz: nb_viz
   };
 

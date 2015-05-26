@@ -1,13 +1,15 @@
       case "linechart":
 
+        vars.accessor_values = function(d) { return d.values; };
+
         vars.evt.register("highlightOn", function(d) {
 
-          vars.svg.selectAll(".line:not(.selected)").style("opacity", 0.2);
+          vars.svg.selectAll(".connect__group:not(.selected)").style("opacity", 0.2);
           vars.svg.selectAll(".text:not(.selected)").style("opacity", 0.2);
 
           vars.svg.selectAll("#"+d[vars.var_id]).style("opacity", 1);
 
-          vars.svg.selectAll(".line").filter(function(e, j) { return e === d; }).style("stroke-width", 3);
+          vars.svg.selectAll(".connect__group").filter(function(e, j) { return e === d; }).style("stroke-width", 3);
           vars.svg.selectAll(".text").filter(function(e, j) { return e === d; }).style("text-decoration", "underline");
 
         });
@@ -16,7 +18,7 @@
 
           vars.svg.selectAll(".country:not(.selected)").style("opacity", 1);
 
-          vars.svg.selectAll(".line").filter(function(e, j) { return e === d; }).style("stroke-width", 1);
+          vars.svg.selectAll(".connect__group").filter(function(e, j) { return e === d; }).style("stroke-width", 1);
           vars.svg.selectAll(".text").filter(function(e, j) { return e === d; }).style("text-decoration", "none");
 
         });
@@ -97,30 +99,6 @@
         gConnect_enter.each(vistk.utils.connect_mark)
                         .style("stroke", function(d) { return vars.color(d[vars.var_color]); });
 
-
-/*
-        // TODO: turn into a connection mark
-        gItems_enter.append("path")
-            .attr("class", "country line")
-            .attr("d", function(d) {
-              return vars.line(d.values); 
-            })
-            .attr("id", function(d) { return d[vars.var_id]; })
-            .attr("class", function(d) {
-
-              var c = "country line";
-
-              if(vars.selection.indexOf(d.name) >= 0)
-                c += " selected";
-
-              if(vars.highlight.indexOf(d.name) >= 0)
-                c += " highlighted";
-
-              return c;
-            })
-            .style("stroke", function(d) { return vars.color(d[vars.var_color]); });
-*/
-
         var gItems = vars.svg.selectAll(".items__group")
                         .data(items);
 
@@ -129,7 +107,12 @@
                         .append("g")
                         .each(vistk.utils.items_group)
                         .attr("transform", function(d, i) {
-                          return "translate(" + vars.x_scale(d[vars.time.var_time]) + ", " + vars.y_scale(d[vars.var_y]) + ")";
+                          return "translate(" + vars.x_scale(vars.accessor_values(d)[vars.time.var_time]) + ", " + vars.y_scale(vars.accessor_values(d)[vars.var_y]) + ")";
+                        });
+
+        gItems_enter.each(vistk.utils.items_mark)
+                        .attr("transform", function(d, i) {
+                          return "translate(" + vars.x_scale(vars.accessor_values(d)[vars.time.var_time]) + ", " + vars.y_scale(vars.accessor_values(d)[vars.var_y]) + ")";
                         });
 
         // TODO: turn into an item mark
@@ -139,7 +122,7 @@
               return {name: d.name, id: d[vars.var_id], value: d.values[d.values.length - 1]}; 
             })
             .attr("transform", function(d) { 
-              return "translate(" + vars.x_scale(d.value[vars.var_time]) + "," + vars.y_scale(d.value.rank) + ")"; 
+              return "translate(" + vars.x_scale(vars.accessor_values(d)[vars.var_time]) + "," + vars.y_scale(vars.accessor_values(d)[vars.var_y]) + ")"; 
             })
             .attr("x", 3)
             .attr("class", function(d) {
