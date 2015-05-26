@@ -68,7 +68,7 @@
           var title = vars.title;
 
           if(typeof vars.current_time !== "undefined") {
-            title += " (" + vars.current_time + ")";
+            title += " (" + vars.time.current_time + ")";
           }
 
           table.append("caption")

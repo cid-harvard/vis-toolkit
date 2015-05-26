@@ -10,21 +10,23 @@
 d3.json("../data/exports_2012.json", function(error, exports) {
 
   visualization = vistk.viz()
-    .type("table")
-    .width(800)
-    .height(600)
-    .container("#viz")
-    .data(exports.data)
-    .columns(['community_name', 'name', 'distance', 'pci', 'rca', 'share', 'year'])
-    .id(["community_name", "name"])
-    .group("community_name")
-    .text("name")
-    .time({var_time: "year", current_time: 1995})
-    .title("Products")
-    .color("community_name")
-    .on("highlightOn", function(d) {
-       console.log("CUSTOM file table", d);
-    })
+    .params({
+        type: "table",
+        width: 800,
+        height: 600,
+        container: "#viz",
+        data: exports.data,
+        columns: ['community_name', 'name', 'distance', 'pci', 'rca', 'share', 'year'],
+        id: ["community_name", "name"],
+        group: "community_name",
+        text: "name",
+        time: {
+          var_time: "year", 
+          current_time: 1995
+        },
+        title: "Products",
+        var_color: "community_name"
+      });
 
   d3.select("#viz").call(visualization)
 

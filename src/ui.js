@@ -74,15 +74,17 @@
 
         }
 
-        if(vars.var_time) {
+        if(vars.time) {
 
-          var label_slider = d3.select(vars.container).selectAll(".slider").data([vars.var_id])
-            .enter()
-              .append("label")
-              .attr("class", "slider")
+          var label_slider = d3.select(vars.container)
+            .selectAll(".slider")
+            .data([vars.var_id])
+          .enter()
+            .append("label")
+            .attr("class", "slider");
 
           // Assuming we have continuous years
-          unique_years = d3.set(vars.data.map(function(d) { return d[vars.var_time];})).values();
+          unique_years = d3.set(vars.data.map(function(d) { return d[vars.time.var_time];})).values();
 
           // TODO: find time range
           label_slider.append("input")
@@ -90,10 +92,10 @@
                         .attr("class", "slider-random")
                         .property("min", d3.min(unique_years))
                         .property("max", d3.max(unique_years))
-                        .property("value", vars.current_time)
+                        .property("value", vars.time.current_time)
                         .attr("step", 1)
                         .on("input", function() {
-                          vars.current_time = +this.value;
+                          vars.time.current_time = +this.value;
                           d3.select("#viz").call(visualization);
                         })
                         .style("width", "100px");
