@@ -220,7 +220,7 @@ vistk.utils.axis = function(d, i) {
 vistk.utils.y_axis = function(d, i) {
 
   vars.y_axis = d3.svg.axis()
-      .scale(vars.y_scale)
+      .scale(vars.y_scale[0]["func"])
       .orient("left");
 
   vars.svg.selectAll(".y.axis").data([vars.new_data])
@@ -254,6 +254,14 @@ vistk.utils.make_x_axis = function() {
   return d3.svg.axis()
       .scale(vars.x_scale[0]["func"])
        .orient("bottom")
+       .ticks(10);
+}
+
+
+vistk.utils.make_y_axis = function() {        
+  return d3.svg.axis()
+      .scale(vars.y_scale[0]["func"])
+       .orient("left")
        .ticks(10);
 }
 

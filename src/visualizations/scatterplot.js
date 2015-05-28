@@ -5,20 +5,19 @@
               name: "linear",
               func: d3.scale.linear()
                       .range([vars.margin.left, vars.width-vars.margin.left-vars.margin.right])
-                      .domain([0, d3.max(vars.data, function(d) { return d[vars.var_x]; })]).nice(),
+                      .domain([0, d3.max(vars.data, function(d) { return d[vars.var_x]; })]).nice()
             }
           ],
 
           x_ticks: 10,
 
-          y_scale: d3.scale.linear()
+          y_scale: [{
+              name: "linear",
+              func: d3.scale.linear()
                       .range([vars.height-vars.margin.top-vars.margin.bottom, vars.margin.top])
                       .domain([0, d3.max(vars.data, function(d) { return d[vars.var_y]; })]).nice(),
-
-          path: d3.svg.line()
-                     .interpolate(vars.interpolate)
-                     .x(function(d) { return vars.x_scale(d[vars.time.var_time]); })
-                     .y(function(d) { return vars.y_scale(d[vars.var_y]); }),
+            }
+          ],
 
           connect: {
             type: null
@@ -83,6 +82,12 @@
             .tickSize(-vars.height, 0, 0)
             .tickFormat(""));
 
+        vars.svg.append("g")
+            .attr("class", "y grid")
+            .attr("transform", "translate(0, 0)")
+            .call(vistk.utils.make_y_axis()
+            .tickSize(-vars.width, 0, 0)
+            .tickFormat(""));
 
         // PRE-UPDATE
         var gItems = vars.svg.selectAll(".mark__group")
@@ -127,7 +132,7 @@
                                 e.continent = d.continent;
                                 e.i = j;
 
-                                return "translate(" + vars.params.x_scale[0]["func"](d[vars.var_x]) + ", " + vars.y_scale(d[vars.var_y]) + ")";
+                                return "translate(" + vars.params.x_scale[0]["func"](d[vars.var_x]) + ", " + vars.params.y_scale[0]["func"](d[vars.var_y]) + ")";
                               });
 
             vars.items[1].marks.forEach(function(d) {
@@ -162,7 +167,7 @@
         gItems
           .transition()
           .attr("transform", function(d) {
-            return "translate(" + vars.params.x_scale[0]["func"](d[vars.var_x]) + ", " + vars.y_scale(d[vars.var_y]) + ")";
+            return "translate(" + vars.params.x_scale[0]["func"](d[vars.var_x]) + ", " + vars.params.y_scale[0]["func"](d[vars.var_y]) + ")";
           });
 
       break;
