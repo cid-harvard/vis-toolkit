@@ -50,12 +50,15 @@ vistk.utils.items_mark = function(d, i) {
 
     case "arc":
 
-      var arc = d3.svg.arc().outerRadius(vars.radius).innerRadius(0);
+      var arc = d3.svg.arc().outerRadius(function(d) {
+        return 50;
+        // return vars.r_scale(d.total_piescatter);
+      }).innerRadius(0);
       
       d3.select(this).append("path")
           .attr("fill", function(d, i) {
             if(d.i > 0)
-              return vars.color(d.data[vars.var_color]);
+              return vars.color(d[vars.var_color]);
             else
               return "#fff";
           })

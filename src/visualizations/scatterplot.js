@@ -19,6 +19,10 @@
             }
           ],
 
+          r_scale: d3.scale.linear(),
+
+          var_r: "total_piescatter",
+
           connect: {
             type: null
           },
@@ -107,8 +111,12 @@
 
           vars.pie = d3.layout.pie().value(function(d) { return d[vars.var_share]; }); // equal share
 
-          vars.radius = vars.width/12;
+          //vars.radius = vars.width/12;
           vars.accessor_data = function(d) { return d.data; };
+
+          vars.r_scale.range([0, vars.width/6])
+                    .domain([0, d3.max(vars.new_data, function(d) { return d[vars.var_r]; })]);
+
 
           gItems_enter.each(function(d) {
 
@@ -131,6 +139,7 @@
                                 // Needed for the graphical mark
                                 e.continent = d.continent;
                                 e.i = j;
+                                e.total_piescatter = d.piescatter[0] + d.piescatter[1];
 
                                 return "translate(" + vars.params.x_scale[0]["func"](d[vars.var_x]) + ", " + vars.params.y_scale[0]["func"](d[vars.var_y]) + ")";
                               });

@@ -4,6 +4,8 @@
 
           x_scale: [],
 
+          r_scale: d3.scale.linear(),
+
           items: [{
             attr: "country",
             marks: [{
@@ -21,16 +23,19 @@
         vars.evt.register("selection", function(d) { });
         vars.evt.register("resize", function(d) { });
 
-        vars.radius = vars.width/6;
-
         var pie = d3.layout.pie().value(function(d) { return d[vars.var_share]; }); // equal share
 
         // Special arc for labels centroids
-        var arc = d3.svg.arc().outerRadius(vars.radius).innerRadius(vars.radius);
+        // var arc = d3.svg.arc().outerRadius(vars.radius).innerRadius(vars.radius);
 
         // Bind data to groups
         var gItems = vars.svg.selectAll(".mark__group")
                          .data(pie(vars.new_data), function(d, i) { return i; });
+
+        vars.r_scale.range([0, vars.width/6])
+                    .domain([0, d3.max(vars.new_data, function(d) { return d[vars.var_share]; })]);
+
+        vars.radius = vars.r_scale(500);
 
         // ENTER
 
