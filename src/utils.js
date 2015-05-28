@@ -30,7 +30,7 @@ vistk.utils.items_mark = function(d, i) {
                       .attr("x", -vars.mark.width/2)
                       .attr("y", -vars.mark.height/2)
                       .classed("items__mark__rect", true)
-             //         .style("fill", function(d) { return vars.color(d[vars.var_color]); });
+                      .style("fill", function(d) { return vars.color(d[vars.var_color]); });
 
       break;
 
@@ -49,10 +49,12 @@ vistk.utils.items_mark = function(d, i) {
       break;
 
     case "arc":
+
+      var arc = d3.svg.arc().outerRadius(vars.radius).innerRadius(0);
       
       d3.select(this).append("path")
           .attr("fill", function(d, i) {
-            return vars.color(d[vars.var_color]);
+            return vars.color(d.data[vars.var_color]);
           })
           .attr("d", arc);
 
@@ -76,10 +78,12 @@ vistk.utils.items_mark = function(d, i) {
                           return d.name; 
                         })
                         .attr("d", vars.path)
+                        /*
                         .style("fill", function(d, i) { 
                           return vars.color(d.data[vars.var_color]);
                         });
-
+                        */
+      break;
     case "text":
 
       if(typeof vars.mark.rotate === "undefined")
