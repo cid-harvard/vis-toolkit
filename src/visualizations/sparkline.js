@@ -2,13 +2,17 @@
 
         vars.params = {
 
-          connect: {
+          connect: [{
             attr: vars.time.var_time,
             marks: [{
                 type: "path",
                 rotate: "0",
+                func: d3.svg.line()
+                     .interpolate(vars.interpolate)
+                     .x(function(d) { return vars.x_scale[0]["func"](d[vars.time.var_time]); })
+                     .y(function(d) { return vars.y_scale[0]["func"](d[vars.var_y]); }),
               }]
-          },
+          }],
 
           x_scale: [{
               name: "linear",
@@ -23,11 +27,6 @@
                       .range([vars.height - 4, 0])
                       .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_y]; }))
           }],
-
-          path: d3.svg.line()
-                     .interpolate(vars.interpolate)
-                     .x(function(d) { return vars.x_scale[0]["func"](d[vars.time.var_time]); })
-                     .y(function(d) { return vars.y_scale[0]["func"](d[vars.var_y]); }),
 
           items: [{
             attr: "year",
@@ -45,7 +44,7 @@
 
         vars = vistk.utils.merge(vars, vars.params);
 
-        // TODO: add all the line and not just the filtered one
+        // Connect marks
         var gConnect = vars.svg.selectAll(".connect__group")
                         .data([vars.new_data], function(d, i) { return i; });
       
@@ -53,12 +52,11 @@
                         .append("g")
                         .attr("class", "connect__group");
 
-        // Enter connect graphical marks
-       // gConnect_enter.each(vistk.utils.connect_mark);
-
         vars.connect[0].marks.forEach(function(d) {
           
-          gItems_enter.each(vistk.utils.connect_mark);
+          vars.mark.type = d.type;
+          vars.mark.rotate = d.rotate;
+          gConnect_enter.each(vistk.utils.connect_mark);
 
         });
 
@@ -73,7 +71,7 @@
                           return "translate(" + vars.x_scale[0]["func"](d[vars.time.var_time]) + ", " + vars.y_scale[0]["func"](d[vars.var_y]) + ")";
                         });
 
-        // Add graphical marks
+        // Items marks
         vars.items[0].marks.forEach(function(d) {
 
           vars.mark.type = d.type;

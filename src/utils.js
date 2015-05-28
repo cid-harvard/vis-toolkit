@@ -170,7 +170,7 @@ vistk.utils.connect_mark = function(d, i) {
         d3.select(this).append('path')
             .attr('class', 'connect__path')
             .attr('d', function(d) {
-              return vars.path(vars.accessor_values(d));
+              return vars.connect[0].marks[0]["func"](vars.accessor_values(d));
             });
 
       break;
@@ -385,7 +385,7 @@ vistk.utils.update_filters = function(value, add) {
   if(vars.dev) {
     console.log("[update_filters]", value);
   }
-  
+
   // If we add a new value to filter
   if(add) {
     if(vars.filter.indexOf(value) < 0) {
