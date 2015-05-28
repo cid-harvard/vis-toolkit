@@ -15,8 +15,6 @@
         var y = d3.scale.linear()
             .range([vars.height, 0]);
 
-        var color = d3.scale.category20();
-
         var xAxis = d3.svg.axis()
             .scale(vars.x_scale)
             .orient("bottom");
@@ -35,51 +33,17 @@
         var stack = d3.layout.stack()
             .values(function(d) { return d.values; });
 
-        // Find the number or years
-
-        unique_years = d3.set(vars.data.data.map(function(d) { return d.year;})).values();
-
-        data = [];
-
-        unique_years.forEach(function(d) {
-
-          a = {};
-
-          vars.data.data.filter(function(e) {
-            return e.year == d;
-          })
-          .map(function(e) {
-            a[e.abbrv] = e.share;
-      //      return a;
-          })
-
-          a.date = vars.time.parse(d);
-          data = data.concat(a);
-
-        });
-
-        color.domain(d3.keys(data[0]).filter(function(key) { return key !== "date"; }));
-
-        browsers = stack(color.domain().map(function(name) {
-          return {
-            name: name,
-            values: data.map(function(d) {
-              return {date: d.date, y: d[name]};
-            })
-          };
-        }));
-
         vars.x_scale.domain(d3.extent(data, function(d) { return d.date; }));
 
         var browser = vars.svg.selectAll(".browser")
-            .data(browsers)
+            .data(vars.new_data)
           .enter().append("g")
             .attr("class", "browser");
 
         browser.append("path")
             .attr("class", "area")
             .attr("d", function(d) { return area(d.values); })
-            .style("fill", function(d) { return color(d.name); });
+            .style("fill", function(d) { return vars.color(d.name); });
 
         browser.append("text")
             .datum(function(d) { return {name: d.name, value: d.values[d.values.length - 1]}; })

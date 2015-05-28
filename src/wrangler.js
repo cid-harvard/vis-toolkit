@@ -12,6 +12,8 @@
 
     }
 
+
+
     // Init
     if(vars.focus.length > 0) {
       
@@ -102,10 +104,10 @@
 
       // Parse data
       vars.new_data.forEach(function(d) {
-        d[vars.var_time] = vars.time.parse(d.year);
+        d[vars.var_time] = vars.time.parse(d[vars.var_time]);
       });
 
-      var all_years = d3.set(vars.new_data.map(function(d) { return d.year;})).values();
+      var all_years = d3.set(vars.new_data.map(function(d) { return d.year; })).values();
 
       var unique_items = d3.set(vars.new_data.map(function(d) { return d[vars.var_text]; })).values();
 
@@ -138,6 +140,47 @@
         });
 
       });
+    }
+
+    if(vars.type === "stacked") {
+
+
+      var stack = d3.layout.stack()
+          .values(function(d) { return d.values; });
+
+      // Find the number or years
+
+      unique_years = d3.set(vars.data.data.map(function(d) { return d.year;})).values();
+
+      data = [];
+
+      unique_years.forEach(function(d) {
+
+        a = {};
+
+        vars.data.data.filter(function(e) {
+          return e.year == d;
+        })
+        .map(function(e) {
+          a[e.abbrv] = e.share;
+    //      return a;
+        })
+
+        a.date = vars.time.parse(d);
+        data = data.concat(a);
+
+      });
+
+      vars.new_data = stack(d3.keys(data[0]).filter(function(key) { return key !== "date"; }).map(function(name) {
+        return {
+          name: name,
+          values: data.map(function(d) {
+            return {date: d.date, y: d[name]};
+          })
+        };
+      }));
+
+
     }
 
     if(vars.type === "treemap") {
