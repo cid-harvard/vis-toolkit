@@ -382,7 +382,10 @@ vistk.utils.find_data_by_id = function(id) {
 }
 
 vistk.utils.update_filters = function(value, add) {
-  if(vars.dev) console.log("[update_filters]", value);  
+  if(vars.dev) {
+    console.log("[update_filters]", value);
+  }
+  
   // If we add a new value to filter
   if(add) {
     if(vars.filter.indexOf(value) < 0) {

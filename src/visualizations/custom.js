@@ -40,7 +40,7 @@
                         .each(vistk.utils.items_group);
 
 
-        // Add graphical marks
+        // Add items marks
         vars.items.forEach(function(d) {
 
           // TODO: avoid doing this..
@@ -50,14 +50,19 @@
 
         });
 
-        // Add a connection mark
-        gItems_enter.each(vistk.utils.connect_mark);
+        // Add connection marks
+        vars.connect[0].marks.forEach(function(d) {
+          
+          gItems_enter.each(vistk.utils.connect_mark);
+
+        });
 
         // Adding axis
         vars.axes.forEach(function(d) {
 
           // TODO: provide properties to the axis
           gItems_enter.each(vistk.utils.axis);
+
         });
         // Add grid layer
 
