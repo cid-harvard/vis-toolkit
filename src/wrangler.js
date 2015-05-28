@@ -62,14 +62,18 @@
             return d[vars.var_y];
           });
 
-          aggregation["export"] = d3.sum(leaves, function(d) {
+          aggregation.piescatter = [];
+          aggregation.piescatter[0] = {};
+          aggregation.piescatter[1] = {};
+
+          aggregation.piescatter[0].nb_products = d3.sum(leaves, function(d) {
             if(d[vars.var_y] >= 30)
               return d[vars.var_x];
             else
               return 0;
           });
 
-          aggregation["nonexport"] = d3.sum(leaves, function(d) {
+          aggregation.piescatter[1].nb_products = d3.sum(leaves, function(d) {
             if(d[vars.var_y] < 30)
               return d[vars.var_x];
             else

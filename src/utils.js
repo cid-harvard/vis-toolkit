@@ -54,8 +54,12 @@ vistk.utils.items_mark = function(d, i) {
       
       d3.select(this).append("path")
           .attr("fill", function(d, i) {
-            return vars.color(d.data[vars.var_color]);
+            if(d.i > 0)
+              return vars.color(d.data[vars.var_color]);
+            else
+              return "#fff";
           })
+          .attr("stroke", "black")
           .attr("d", arc);
 
     case "shape":

@@ -98,12 +98,13 @@
 
           gItems_enter.each(function(d) {
 
+            console.log("NNNNN", d.piescatter)
             // Special arc for labels centroids
             var arc = d3.svg.arc().outerRadius(vars.radius).innerRadius(vars.radius);
 
             // Bind data to groups
             var gItems2 = vars.svg.selectAll(".mark__group2")
-                             .data(vars.pie(vars.new_data), function(d, i) { return i; });
+                             .data(vars.pie(d.piescatter), function(d, i) { return i; });
 
             // ENTER
 
@@ -112,8 +113,10 @@
                             .append("g")
                               .attr("transform", "translate(" + vars.width/2 + "," + vars.height/2 + ")")
                               .each(vistk.utils.items_group)
-                              .attr("transform", function(d) {
-                                return "translate(" + vars.params.x_scale[0]["func"](vars.accessor_data(d)[vars.var_x]) + ", " + vars.y_scale(vars.accessor_data(d)[vars.var_y]) + ")";
+                              .attr("transform", function(e, j) {
+                                e.continent = d.continent;
+                                e.i = j;
+                                return "translate(" + vars.params.x_scale[0]["func"](d[vars.var_x]) + ", " + vars.y_scale(d[vars.var_y]) + ")";
                               });
 
             vars.items[1].marks.forEach(function(d) {
@@ -127,6 +130,8 @@
           });
 
         } else {
+
+          vars.accessor_data = function(d) { return d; };
 
             // Add graphical marks
             vars.items[0].marks.forEach(function(d) {
