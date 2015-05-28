@@ -146,6 +146,16 @@ div.hidden {
   display: none;
 }
 
+/* Bar chart */
+
+.bar {
+  fill: steelblue;
+}
+
+.bar:hover {
+  fill: brown;
+}
+
 /* Sparkline */
 
 .connect__path {

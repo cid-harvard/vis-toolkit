@@ -102,6 +102,52 @@
 
         }
 
+     if(vars.x_scale.length > 0) {
+
+      // Additional options below
+      d3.select("#viz").append("select")
+        .attr("id", "select_var_x")
+        .on("change", function(d) {
+
+          visualization.params({
+            var_x: this.value
+          })
+          d3.select("#viz").call(visualization)
+
+        })
+        .selectAll("option")
+        .data(d3.keys(vars.data[0]))
+      .enter()
+        .append("option")
+        .attr("value", function(d) { return d; })
+        .html(function(d) { return d; })
+
+        var label_radios = d3.select("#viz").selectAll(".aggregations").data(["index", "linear"])
+          .enter()
+            .append("label")
+            .attr("class", "aggregations")
+
+        // TODO: find levels of aggregation
+        label_radios.append("input")
+                   .attr("type", "radio")
+                   .attr("id", "id")  
+                   .attr("value", function(d) { return d; })
+                   .attr("name", "radio-nest")
+                   .property("checked", true)
+                   .on("change", function(d) { 
+                      visualization.params({
+                        x_type: d
+                      })
+                      d3.select("#viz").call(visualization)
+                   });
+
+        label_radios.append("span")
+            .html(function(d) { 
+              return d ;
+            });
+
+     }
+
      if(vars.ui.options) {
 
       // Currently options for dotplot

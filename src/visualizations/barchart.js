@@ -1,5 +1,56 @@
-      case "custom":
+      case "barchart":
 
+        var x = d3.scale.ordinal()
+            .rangeRoundBands([0, vars.width], .1);
+
+        var y = d3.scale.linear()
+            .range([vars.height, 0]);
+
+        var xAxis = d3.svg.axis()
+            .scale(x)
+            .orient("bottom");
+
+        var yAxis = d3.svg.axis()
+            .scale(y)
+            .orient("left")
+            .ticks(10, "%");
+
+        vars.svg.append("g")
+            .attr("transform", "translate(" + vars.margin.left + "," + vars.margin.top + ")");
+
+
+        x.domain(vars.data.map(function(d) { return d.letter; }));
+        y.domain([0, d3.max(vars.data, function(d) { return d.frequency; })]);
+
+        vars.svg.append("g")
+            .attr("class", "x axis")
+            .attr("transform", "translate(0," + vars.height + ")")
+            .call(xAxis);
+
+        vars.svg.append("g")
+            .attr("class", "y axis")
+            .call(yAxis)
+          .append("text")
+            .attr("transform", "rotate(-90)")
+            .attr("y", 6)
+            .attr("dy", ".71em")
+            .style("text-anchor", "end")
+            .text("Frequency");
+
+        vars.svg.selectAll(".bar")
+            .data(vars.data)
+          .enter().append("rect")
+            .attr("class", "bar")
+            .attr("x", function(d) { return x(d.letter); })
+            .attr("width", x.rangeBand())
+            .attr("y", function(d) { return y(d.frequency); })
+            .attr("height", function(d) { return vars.height - y(d.frequency); });
+
+        function type(d) {
+          d.frequency = +d.frequency;
+          return d;
+        }
+/*
         // CHART PARAMETERS
         vars.params = {
           scales: [{
@@ -17,10 +68,8 @@
             type: "circle",
             r: "10"
           }],
-          connect: []
+          connect: []          
         }
-
-        vars = vistk.utils.merge(vars, vars.params);
 
         // REGISTER EVENTS
         vars.evt.register("highlightOn", function(d) { });
@@ -66,5 +115,5 @@
 
         // POST-UPDATE
         gItems.transition();
-
+*/
       break;

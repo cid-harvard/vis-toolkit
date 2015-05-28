@@ -1,13 +1,27 @@
       case "dotplot":
 
         vars.params = {
-          connect: {
-            type: "path"
-          },
-          x_scale: d3.scale.linear()
+          x_scale: [{
+              name: "linear",
+              func: d3.scale.linear()
                       .range([vars.margin.left, vars.width-vars.margin.left-vars.margin.right])
                       .domain([0, d3.max(vars.new_data, function(d) { return d[vars.var_x]; })])
-                      .nice(),
+                      .nice()
+            }, {
+              name: "index",
+              func: d3.scale.ordinal()
+                .domain(d3.range(vars.new_data.length))
+                .rangeBands([vars.margin.left, vars.width - vars.margin.left - vars.margin.right]),
+              callback: function() {
+                          vars.new_data.sort(function ascendingKey(a, b) {
+                            return d3.ascending(a[vars.var_x], b[vars.var_x]);
+                          })
+                          .forEach(function(d, i) {
+                            d.rank = vars.x_scale(i);
+                          });
+              }
+            }
+          ],
 
           y_scale: d3.scale.linear().range([vars.height - 4, 0])
                       .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_y]; })),
@@ -17,12 +31,15 @@
                      .x(function(d) { return vars.x_scale(d[vars.time.var_time]); })
                      .y(function(d) { return vars.y_scale(d[vars.var_y]); }),
 
-          marks: [{
-            type: "diamond"
+          items: [{
+            type: "diamond",
+            rotate: "0"
           },{
             type: "text",
             rotate: "-30"
-          }]
+          }],
+
+          connect: []
         };
 
         vars = vistk.utils.merge(vars, vars.params);
@@ -51,25 +68,6 @@
 
         });
 
-        if(vars.x_type === "index") {
-
-          vars.x_scale = d3.scale.ordinal()
-                .domain(d3.range(vars.new_data.length))
-                .rangeBands([vars.margin.left, vars.width - vars.margin.left - vars.margin.right]);
-
-          vars.new_data.sort(function ascendingKey(a, b) {
-            return d3.ascending(a[vars.var_x], b[vars.var_x]);
-          })
-          .forEach(function(d, i) {
-            d.rank = vars.x_scale(i);
-          });
-
-        } else {
-
-          // DEFAULT VALUES (LINEAR)
-
-        }
-
         // TODO: should specify this is an horizontal axis
         vars.svg.call(vistk.utils.axis);
 
@@ -85,14 +83,14 @@
                           return "translate(" + vars.margin.left + ", " + vars.height/2 + ")";
                         });
 
-        // Add a graphical mark (items)
-        gItems_enter.each(vistk.utils.items_mark);
+        // Add graphical marks
+        vars.items.forEach(function(d) {
 
-        // Add a graphical mark (labels)
-        vars.mark.type = "text";
-        vars.mark.rotate = "-30";
+          vars.mark.type = d.type;
+          vars.mark.rotate = d.rotate;
+          gItems_enter.each(vistk.utils.items_mark);
 
-        gItems_enter.each(vistk.utils.items_mark);
+        });
 
         // EXIT
         var gItems_exit = gItems.exit().style("opacity", 0.1);
@@ -106,8 +104,8 @@
                           if(vars.x_type === "index") {
                             return "translate(" + d[vars.var_x] + ", " + vars.height/2 + ")";
                           } else {
-                            return "translate(" + vars.x_scale(d[vars.var_x]) + ", " + vars.height/2 + ")";
+                            return "translate(" + vars.x_scale[0]["func"](d[vars.var_x]) + ", " + vars.height/2 + ")";
                           }
                         });
 
-        break;        
+        break;

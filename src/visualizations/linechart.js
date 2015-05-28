@@ -1,13 +1,41 @@
       case "linechart":
 
-        vars.accessor_values = function(d) { return d.values; };
+        vars.params = {
 
-        vars.connect.type = "path";
+          accessor_values: function(d) { return d.values; },
 
-        vars.path = d3.svg.line()
+          x_scale: [{
+              name: "linear",
+              func: d3.time.scale()
+                  .range([0, vars.width-100])
+                  .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_time]; }))
+            }
+          ],
+
+          y_scale: d3.scale.linear()
+                      .range([vars.height - 4, 0])
+                      .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_y]; })),
+
+          path: d3.svg.line()
                      .interpolate(vars.interpolate)
-                     .x(function(d) { return vars.x_scale(d[vars.time.var_time]); })
-                     .y(function(d) { return vars.y_scale(d[vars.var_y]); });
+                     .x(function(d) { return vars.x_scale[0]["func"](d[vars.time.var_time]); })
+                     .y(function(d) { return vars.y_scale(d[vars.var_y]); }),
+
+          items: [{
+            type: "diamond",
+            rotate: "0"
+          },{
+            type: "text",
+            rotate: "-30"
+          }],
+
+          connect: {
+            type: "path"
+          },
+
+        };
+
+        vars = vistk.utils.merge(vars, vars.params);
 
         vars.evt.register("highlightOn", function(d) {
 
@@ -37,14 +65,11 @@
 
         });
 
-        vars.x_scale = d3.time.scale()
-            .range([0, vars.width-100]);
-
         vars.y_scale = d3.scale.linear()
             .range([0, vars.height-100]);
 
         vars.x_axis = d3.svg.axis()
-            .scale(vars.x_scale)
+            .scale(vars.x_scale[0]["func"])
             .orient("top");
 
         vars.y_axis = d3.svg.axis()
@@ -58,13 +83,11 @@
         // https://gist.github.com/mbostock/3035090
             .defined(function(d) { return d[vars.var_y] != null; })
             .interpolate(vars.interpolate)
-            .x(function(d) { return vars.x_scale(d[vars.var_time]); })
+            .x(function(d) { return vars.x_scale[0]["func"](d[vars.var_time]); })
             .y(function(d) { return vars.y_scale(d[vars.var_y]); });
 
         // TODO: fix the color scale
         vars.color.domain(d3.keys(vars.new_data[0]).filter(function(key) { return key !== "date"; }));
-
-        vars.x_scale.domain(d3.extent(vars.new_data, function(d) { return d[vars.var_time]; }));
 
         vars.y_scale.domain([
           d3.min(items, function(c) { return d3.min(c.values, function(v) { return v[vars.var_y]; }); }),
@@ -107,20 +130,43 @@
                         .style("stroke", function(d) { return vars.color(d[vars.var_color]); });
 
         var gItems = vars.svg.selectAll(".items__group")
-                        .data(items);
+                        .data(vars.new_data, function(d, i) { return i; });
 
+        // ENTER
+        var gItems_enter = gItems.enter()
+                        .append("g")
+                        .each(vistk.utils.items_group)
+                        .attr("transform", function(d, i) {
+                          console.log(d,  vars.x_scale[0]["func"](d[vars.time.var_time]))
+                          return "translate(" + vars.x_scale[0]["func"](d[vars.time.var_time]) + ", " + vars.y_scale(d[vars.var_y]) + ")";
+                        });
+
+        // Add graphical marks
+        vars.items[0].marks.forEach(function(d) {
+
+          vars.mark.type = d.type;
+          vars.mark.rotate = d.rotate;
+          gItems_enter.each(vistk.utils.items_mark);
+
+        });
+
+        // Enter items
+        gItems_enter.each(vistk.utils.items_mark);
+
+/*
         // Enter groups for items graphical marks
         var gItems_enter = gItems.enter()
                         .append("g")
                         .each(vistk.utils.items_group)
                         .attr("transform", function(d, i) {
-                          return "translate(" + vars.x_scale(vars.accessor_values(d)[vars.time.var_time]) + ", " + vars.y_scale(vars.accessor_values(d)[vars.var_y]) + ")";
+                          return "translate(" + vars.x_scale[0]["func"](vars.accessor_values(d)[vars.time.var_time]) + ", " + vars.y_scale(vars.accessor_values(d)[vars.var_y]) + ")";
                         });
 
         gItems_enter.each(vistk.utils.items_mark)
                         .attr("transform", function(d, i) {
-                          return "translate(" + vars.x_scale(vars.accessor_values(d)[vars.time.var_time]) + ", " + vars.y_scale(vars.accessor_values(d)[vars.var_y]) + ")";
+                          return "translate(" + vars.x_scale[0]["func"](vars.accessor_values(d)[vars.time.var_time]) + ", " + vars.y_scale(vars.accessor_values(d)[vars.var_y]) + ")";
                         });
+
 
         // TODO: turn into an item mark
         gItems_enter.append("text")
@@ -129,7 +175,7 @@
               return {name: d.name, id: d[vars.var_id], value: d.values[d.values.length - 1]}; 
             })
             .attr("transform", function(d) { 
-              return "translate(" + vars.x_scale(vars.accessor_values(d)[vars.var_time]) + "," + vars.y_scale(vars.accessor_values(d)[vars.var_y]) + ")"; 
+              return "translate(" + vars.x_scale[0]["func"](vars.accessor_values(d)[vars.var_time]) + "," + vars.y_scale(vars.accessor_values(d)[vars.var_y]) + ")"; 
             })
             .attr("x", 3)
             .attr("class", function(d) {
@@ -147,5 +193,5 @@
             .attr("dy", ".35em")
             .attr("id", function(d) { return d[vars.var_id]; })
             .text(function(d) { return d[vars.var_text]; })
-
+*/
         break;

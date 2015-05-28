@@ -10,6 +10,7 @@ vistk.utils.items_group = function(d, i) {
                   .on("click", function(d) {
                      vars.evt.call("selection", d);
                   });
+
 }
 
 vistk.utils.items_mark = function(d, i) {
@@ -57,7 +58,6 @@ vistk.utils.items_mark = function(d, i) {
 
     case "shape":
 
-
       d3.select(this).insert("path")
                       .attr("class", "country")    
                         .attr("title", function(d,i) { 
@@ -69,7 +69,6 @@ vistk.utils.items_mark = function(d, i) {
                         });
 
     case "pie":
-
 
       d3.select(this).insert("path")
                       .attr("class", "country")    
@@ -96,6 +95,7 @@ vistk.utils.items_mark = function(d, i) {
                       .text(function(d) { return d[vars.var_text]; });
 
 /*
+        // For pie chart wedges..
         arcs.append("text")
             .attr("transform", function(d) { return "translate(" + arc.centroid(d) + ")"; })
             .attr("dy", ".35em")
@@ -154,7 +154,7 @@ vistk.utils.connect_mark = function(d, i) {
 
       case "path":
       default:
-
+      
         d3.select(this).append('path')
             .attr('class', 'connect__path')
             .attr('d', function(d) {
@@ -176,7 +176,7 @@ vistk.utils.axis = function(d, i) {
 
   // TODO: make the X axis re-usable
   vars.x_axis = d3.svg.axis()
-      .scale(vars.x_scale)
+      .scale(vars.x_scale[0]["func"])
       .ticks(vars.x_ticks)
       // Quick fix to get max value
       .tickValues([0, d3.max(vars.new_data, function(d) { return d[vars.var_x]; })])
@@ -208,6 +208,31 @@ vistk.utils.axis = function(d, i) {
 
 }
 
+vistk.utils.y_axis = function(d, i) {
+
+  vars.y_axis = d3.svg.axis()
+      .scale(vars.y_scale)
+      .orient("left");
+
+  vars.svg.selectAll(".y.axis").data([vars.new_data])
+    .enter()
+      .append("g")
+      .attr("class", "y axis")
+      .attr("transform", "translate("+vars.margin.left+", 0)")              
+    .append("text")
+      .attr("class", "label")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 6)
+      .attr("dy", ".71em")
+      .style("text-anchor", "end")
+      .text(function(d) { return vars.var_y; });
+
+  vars.svg.selectAll(".y.axis").transition()
+      .duration(vars.duration)
+      .call(vars.y_axis);
+
+}
+
 vistk.utils.grid = function(d, i) {
 
   // TODO:
@@ -218,9 +243,24 @@ vistk.utils.grid = function(d, i) {
 
 vistk.utils.make_x_axis = function() {        
   return d3.svg.axis()
-      .scale(vars.x_scale)
+      .scale(vars.x_scale[0]["func"])
        .orient("bottom")
        .ticks(10);
+}
+
+vistk.utils.background_label = function() {
+
+  vars.svg.selectAll(".label").data(vars.new_data)
+    .enter()
+      .append("text")
+      .attr("class", "year label")
+      .attr("text-anchor", "end");
+
+  vars.svg.selectAll(".label")
+      .attr("y", 124)
+      .attr("x", 500)
+      .text(vars.current_time);
+
 }
 
 // TODO: add accessor as argument and var_time
@@ -334,4 +374,3 @@ vistk.utils.update_filters = function(value, add) {
       vars.filter.splice(index, 1);
   }
 }
-

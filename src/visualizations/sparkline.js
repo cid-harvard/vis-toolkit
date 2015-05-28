@@ -1,20 +1,40 @@
       case "sparkline":
 
         vars.params = {
+
           connect: {
             type: "path"
           },
-          x_scale: d3.scale.linear().range([0, vars.width - 2])
-                      .domain(d3.extent(vars.new_data, function(d) { return d[vars.time.var_time]; })),
 
-          y_scale: d3.scale.linear().range([vars.height - 4, 0])
+          x_scale: [{
+              name: "linear",
+              func: d3.scale.linear()
+                      .range([0, vars.width - 2])
+                      .domain(d3.extent(vars.new_data, function(d) { return d[vars.time.var_time]; }))
+          }],
+
+          y_scale: d3.scale.linear()
+                      .range([vars.height - 4, 0])
                       .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_y]; })),
 
           path: d3.svg.line()
                      .interpolate(vars.interpolate)
-                     .x(function(d) { return vars.x_scale(d[vars.time.var_time]); })
-                     .y(function(d) { return vars.y_scale(d[vars.var_y]); })
-        }
+                     .x(function(d) { return vars.x_scale[0]["func"](d[vars.time.var_time]); })
+                     .y(function(d) { return vars.y_scale(d[vars.var_y]); }),
+
+          items: [{
+            attr: "year",
+            marks: [{
+                type: "diamond",
+                rotate: "0",
+              }, {
+                type: "text",
+                rotate: "30",
+                translate: null
+              }]
+          }]
+
+        };
 
         vars = vistk.utils.merge(vars, vars.params);
 
@@ -32,21 +52,25 @@
         var gItems = vars.svg.selectAll(".items__group")
                         .data(vars.new_data, function(d, i) { return i; });
 
-        // Enter groups for items graphical marks
+        // ENTER
         var gItems_enter = gItems.enter()
                         .append("g")
-                        .filter(function(d, i) {
-                          return i === 0 || i === vars.new_data.length - 1;
-                        })
                         .each(vistk.utils.items_group)
                         .attr("transform", function(d, i) {
-                          return "translate(" + vars.x_scale(d[vars.time.var_time]) + ", " + vars.y_scale(d[vars.var_y]) + ")";
+                          return "translate(" + vars.x_scale[0]["func"](d[vars.time.var_time]) + ", " + vars.y_scale(d[vars.var_y]) + ")";
                         });
+
+        // Add graphical marks
+        vars.items[0].marks.forEach(function(d) {
+
+          vars.mark.type = d.type;
+          vars.mark.rotate = d.rotate;
+          gItems_enter.each(vistk.utils.items_mark);
+
+        });
 
         // Enter items
         gItems_enter.each(vistk.utils.items_mark);
-
-        // TODO: Update connect
 
         // Update items
         vars.svg.selectAll(".items__group")
@@ -54,6 +78,6 @@
                         .delay(function(d, i) { return i / vars.data.length * 100; })
                         .duration(vars.duration)
                         .attr("transform", function(d, i) {
-                          return "translate(" + vars.x_scale(d[vars.time.var_time]) + ", " + vars.y_scale(d[vars.var_y]) + ")";
+                          return "translate(" + vars.x_scale[0]["func"](d[vars.time.var_time]) + ", " + vars.y_scale(d[vars.var_y]) + ")";
                         });
         break;

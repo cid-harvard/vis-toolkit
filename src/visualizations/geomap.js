@@ -36,13 +36,13 @@
         }
 
         queue()
-            .defer(d3.json, "../data/world-110m.json")
+            .defer(d3.json, "../shapefiles/world/world-110m.json")
             .defer(d3.tsv, "../data/world-country-names.tsv")
             .await(ready);
 
         function ready(error, world, names) {
 
-          countries = topojson.object(world, world.objects.countries).geometries,
+          var countries = topojson.object(world, world.objects.countries).geometries,
               neighbors = topojson.neighbors(world, countries),
               i = -1,
               n = countries.length;
