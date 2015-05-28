@@ -8,7 +8,7 @@
               name: "linear",
               func: d3.time.scale()
                   .range([0, vars.width-100])
-                  .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_time]; }))
+                  .domain(d3.extent(vars.new_data, function(d) { return d[vars.time.var_time]; }))
             }
           ],
 
@@ -70,9 +70,6 @@
                   .classed("selected", !vars.svg.selectAll("#"+d[vars.var_id]).classed("selected"));
 
         });
-
-        vars.y_scale = d3.scale.linear()
-            .range([0, vars.height-100]);
 
         vars.x_axis = d3.svg.axis()
             .scale(vars.x_scale[0]["func"])
@@ -138,7 +135,6 @@
           gConnect_enter.each(vistk.utils.connect_mark);
 
         });
-
 
         var gItems = vars.svg.selectAll(".items__group")
                         .data(vars.new_data, function(d, i) { return i; });

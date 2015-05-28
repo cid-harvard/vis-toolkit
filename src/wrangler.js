@@ -104,7 +104,7 @@
 
       // Parse data
       vars.new_data.forEach(function(d) {
-        d[vars.var_time] = vars.time.parse(d[vars.var_time]);
+        d[vars.time.var_time] = vars.time.parse(d[vars.time.var_time]);
       });
 
       var all_years = d3.set(vars.new_data.map(function(d) { return d.year; })).values();

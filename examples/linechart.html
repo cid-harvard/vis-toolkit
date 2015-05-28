@@ -40,7 +40,7 @@ d3.csv("../data/new_rankings2.csv", function(error, data) {
     var_y: "rank",
     time: {
       parse: d3.time.format("%Y").parse,
-      var_time: 'date'
+      var_time: 'year'
     },
     selection: ["Japan", "Switzerland", "Germany", "South Korea", "Finland", "United Kingdom", "United States", "France", "Italy", "China", "Mexico", "Spain"],
     highlight: "France"
