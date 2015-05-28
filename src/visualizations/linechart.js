@@ -12,14 +12,12 @@
             }
           ],
 
-          y_scale: d3.scale.linear()
+          y_scale: [{
+              name: "linear",
+              func: d3.scale.linear()
                       .range([vars.height - 4, 0])
-                      .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_y]; })),
-
-          path: d3.svg.line()
-                     .interpolate(vars.interpolate)
-                     .x(function(d) { return vars.x_scale[0]["func"](d[vars.time.var_time]); })
-                     .y(function(d) { return vars.y_scale(d[vars.var_y]); }),
+                      .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_y]; }))
+          }],
 
           items: [{
             type: "diamond",
@@ -29,9 +27,17 @@
             rotate: "-30"
           }],
 
-          connect: {
-            type: "path"
-          },
+          connect: [{
+            attr: vars.time.var_time,
+            marks: [{
+                type: "path",
+                rotate: "0",
+                func: d3.svg.line()
+                     .interpolate(vars.interpolate)
+                     .x(function(d) { return vars.x_scale[0]["func"](d[vars.time.var_time]); })
+                     .y(function(d) { return vars.y_scale(d[vars.var_y]); })
+              }]
+          }]
 
         };
 
@@ -117,17 +123,22 @@
             .style("text-anchor", "end")
             .text(vars.y_text);
 
-        // TODO: add all the line and not just the filtered one
+        // Connect marks
         var gConnect = vars.svg.selectAll(".connect__group")
-                        .data(items);//, function(d, i) { return i; });
+                        .data(items, function(d, i) { return i; });
       
         var gConnect_enter = gConnect.enter()
                         .append("g")
-                        .each(vistk.utils.connect_group);
+                        .attr("class", "connect__group");
 
-        // Enter connect graphical marks
-        gConnect_enter.each(vistk.utils.connect_mark)
-                        .style("stroke", function(d) { return vars.color(d[vars.var_color]); });
+        vars.connect[0].marks.forEach(function(d) {
+          
+          vars.mark.type = d.type;
+          vars.mark.rotate = d.rotate;
+          gConnect_enter.each(vistk.utils.connect_mark);
+
+        });
+
 
         var gItems = vars.svg.selectAll(".items__group")
                         .data(vars.new_data, function(d, i) { return i; });
@@ -149,9 +160,6 @@
           gItems_enter.each(vistk.utils.items_mark);
 
         });
-
-        // Enter items
-        gItems_enter.each(vistk.utils.items_mark);
 
 /*
         // Enter groups for items graphical marks

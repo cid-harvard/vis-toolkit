@@ -2,18 +2,6 @@
 
         vars.params = {
 
-          connect: [{
-            attr: vars.time.var_time,
-            marks: [{
-                type: "path",
-                rotate: "0",
-                func: d3.svg.line()
-                     .interpolate(vars.interpolate)
-                     .x(function(d) { return vars.x_scale[0]["func"](d[vars.time.var_time]); })
-                     .y(function(d) { return vars.y_scale[0]["func"](d[vars.var_y]); }),
-              }]
-          }],
-
           x_scale: [{
               name: "linear",
               func: d3.scale.linear()
@@ -37,6 +25,18 @@
                 type: "text",
                 rotate: "30",
                 translate: null
+              }]
+          }],
+
+          connect: [{
+            attr: vars.time.var_time,
+            marks: [{
+                type: "path",
+                rotate: "0",
+                func: d3.svg.line()
+                     .interpolate(vars.interpolate)
+                     .x(function(d) { return vars.x_scale[0]["func"](d[vars.time.var_time]); })
+                     .y(function(d) { return vars.y_scale[0]["func"](d[vars.var_y]); }),
               }]
           }]
 

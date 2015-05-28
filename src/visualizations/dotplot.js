@@ -23,13 +23,7 @@
             }
           ],
 
-          y_scale: d3.scale.linear().range([vars.height - 4, 0])
-                      .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_y]; })),
-
-          path: d3.svg.line()
-                     .interpolate(vars.interpolate)
-                     .x(function(d) { return vars.x_scale(d[vars.time.var_time]); })
-                     .y(function(d) { return vars.y_scale(d[vars.var_y]); }),
+          y_scale: [],
 
           items: [{
             type: "diamond",
