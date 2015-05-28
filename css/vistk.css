@@ -176,7 +176,7 @@ circle.dot__circle {
 }
 
 circle.dot__circle.selected {
-  stroke": black;
+  stroke: black;
   stroke-width: "3px";
   opacity: 1
 
@@ -212,4 +212,10 @@ rect.dot__circle {
 
 .points {
   opacity: 1;
+}
+
+/* Pie chart */
+
+path {
+  stroke: black;
 }

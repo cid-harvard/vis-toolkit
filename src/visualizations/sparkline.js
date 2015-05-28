@@ -33,7 +33,7 @@
                 translate: null
               }]
           }]
-
+          
         };
 
         vars = vistk.utils.merge(vars, vars.params);

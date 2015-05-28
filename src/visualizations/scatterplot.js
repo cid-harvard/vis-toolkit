@@ -75,6 +75,15 @@
 
         vars.svg.call(vistk.utils.y_axis);
  
+        // GRID
+        vars.svg.append("g")
+            .attr("class", "x grid")
+            .attr("transform", "translate(0," + vars.height + ")")
+            .call(vistk.utils.make_x_axis()
+            .tickSize(-vars.height, 0, 0)
+            .tickFormat(""));
+
+
         // PRE-UPDATE
         var gItems = vars.svg.selectAll(".mark__group")
                           .data(vars.new_data, function(d, i) { 
@@ -98,7 +107,6 @@
 
           gItems_enter.each(function(d) {
 
-            console.log("NNNNN", d.piescatter)
             // Special arc for labels centroids
             var arc = d3.svg.arc().outerRadius(vars.radius).innerRadius(vars.radius);
 
@@ -114,8 +122,11 @@
                               .attr("transform", "translate(" + vars.width/2 + "," + vars.height/2 + ")")
                               .each(vistk.utils.items_group)
                               .attr("transform", function(e, j) {
+
+                                // Needed for the graphical mark
                                 e.continent = d.continent;
                                 e.i = j;
+
                                 return "translate(" + vars.params.x_scale[0]["func"](d[vars.var_x]) + ", " + vars.y_scale(d[vars.var_y]) + ")";
                               });
 

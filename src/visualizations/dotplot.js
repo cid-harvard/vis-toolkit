@@ -39,7 +39,10 @@
             rotate: "-30"
           }],
 
-          connect: []
+          connect: [],
+
+          x_tickValues: [0, d3.max(vars.new_data, function(d) { return d[vars.var_x]; })]
+
         };
 
         vars = vistk.utils.merge(vars, vars.params);

@@ -23,6 +23,7 @@
     // Default dimensions
     margin: {top: 30, right: 20, bottom: 10, left: 30},
 
+
     // Default Variables mapping
     var_text: "name",
     var_color: null,
@@ -44,6 +45,7 @@
     x_ticks: 5,
     x_axis: null,
     x_format: function(d) { return d; },
+    x_tickValues: null,
 
     // SCATTERPLOT (INCLUDES DOTPLOT)
     y_type: "linear",

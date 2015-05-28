@@ -59,7 +59,6 @@ vistk.utils.items_mark = function(d, i) {
             else
               return "#fff";
           })
-          .attr("stroke", "black")
           .attr("d", arc);
 
     case "shape":
@@ -189,7 +188,7 @@ vistk.utils.axis = function(d, i) {
       .scale(vars.x_scale[0]["func"])
       .ticks(vars.x_ticks)
       // Quick fix to get max value
-      .tickValues([0, d3.max(vars.new_data, function(d) { return d[vars.var_x]; })])
+      .tickValues(vars.x_tickValues)
       .tickFormat(function(d) { return vars.x_format(d); })
       .tickSize(vars.tickSize)
       .tickPadding(vars.tickPadding)
