@@ -8,8 +8,6 @@
 
 d3.tsv("../data/data.tsv", function(error, data) {
 
-  console.log(data);
-
   visualization = vistk.viz().params({
     type: "barchart",
     container: "#viz",
@@ -18,10 +16,10 @@ d3.tsv("../data/data.tsv", function(error, data) {
     id: ["continent", "country"],
     group: "continent",
     var_share: "nb_products",
-    time: {
-      var_time: "year", 
-      current_time: 1995,
-    },
+    //time: {
+    //  var_time: "year", 
+    //  current_time: 1995,
+    //},
     var_color: "continent",
     var_text: "name",
     selection: ["Angola"]

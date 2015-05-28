@@ -1,26 +1,84 @@
       case "barchart":
 
-        var x = d3.scale.ordinal()
-            .rangeRoundBands([0, vars.width], .1);
+        vars.params = {
+          x_scale: [{
+              name: "linear",
+              func: d3.scale.ordinal()
+                      .rangeRoundBands([0, vars.width], .1)
+                      .domain(vars.data.map(function(d) { return d.letter; })),
+            }
+          ],
 
-        var y = d3.scale.linear()
-            .range([vars.height, 0]);
+          x_ticks: 10,
 
+          y_scale: [{
+              name: "linear",
+              func: d3.scale.linear()
+                      .range([vars.height, 0])
+                      .domain([0, d3.max(vars.data, function(d) { return d.frequency; })]),
+            }
+          ],
+
+          connect: {
+            type: null
+          },
+
+          items: [{
+            attr: "country",
+            marks: [{
+                type: "circle",
+                rotate: "0",
+              }, {
+                type: "text",
+                rotate: "30",
+                translate: null
+              }]
+            }, {
+            attr: "continent",
+            marks: [{
+              type: "arc"
+            }, {
+                type: "text",
+                rotate: "-30",
+                translate: null
+              }]
+          }]
+
+        };
+
+        vars = vistk.utils.merge(vars, vars.params);
+
+        // REGISTER EVENTS
+        vars.evt.register("highlightOn", function(d) { });
+        vars.evt.register("highlightOut", function(d) { });
+        vars.evt.register("selection", function(d) { });
+        vars.evt.register("resize", function(d) { });
+
+        // AXIS
+        vars.svg.call(vistk.utils.axis)
+                .select(".x.axis")
+                .attr("transform", "translate(0," + (vars.height - vars.margin.bottom - vars.margin.top) + ")")
+              .append("text") // TODO: fix axis labels
+                .attr("class", "label")
+                .attr("x", vars.width-vars.margin.left-vars.margin.right)
+                .attr("y", -6)
+                .style("text-anchor", "end")
+                .text(function(d) { return vars.var_x; });                
+
+        vars.svg.call(vistk.utils.y_axis);
+
+/*
         var xAxis = d3.svg.axis()
-            .scale(x)
+            .scale(vars.x_scale[0]["func"])
             .orient("bottom");
 
         var yAxis = d3.svg.axis()
-            .scale(y)
+            .scale(vars.y_scale[0]["func"])
             .orient("left")
             .ticks(10, "%");
 
         vars.svg.append("g")
             .attr("transform", "translate(" + vars.margin.left + "," + vars.margin.top + ")");
-
-
-        x.domain(vars.data.map(function(d) { return d.letter; }));
-        y.domain([0, d3.max(vars.data, function(d) { return d.frequency; })]);
 
         vars.svg.append("g")
             .attr("class", "x axis")
@@ -36,46 +94,23 @@
             .attr("dy", ".71em")
             .style("text-anchor", "end")
             .text("Frequency");
+*/
 
         vars.svg.selectAll(".bar")
             .data(vars.data)
-          .enter().append("rect")
+          .enter()
+            .append("rect")
             .attr("class", "bar")
-            .attr("x", function(d) { return x(d.letter); })
-            .attr("width", x.rangeBand())
-            .attr("y", function(d) { return y(d.frequency); })
-            .attr("height", function(d) { return vars.height - y(d.frequency); });
+            .attr("x", function(d) { return vars.x_scale[0]["func"](d.letter); })
+            .attr("width", vars.x_scale[0]["func"].rangeBand())
+            .attr("y", function(d) { return vars.y_scale[0]["func"](d.frequency); })
+            .attr("height", function(d) { return vars.height - vars.y_scale[0]["func"](d.frequency); });
 
         function type(d) {
           d.frequency = +d.frequency;
           return d;
         }
 /*
-        // CHART PARAMETERS
-        vars.params = {
-          scales: [{
-            name: "linear",
-            func: d3.scale.linear()
-                    .range([vars.margin.left, vars.width-vars.margin.left-vars.margin.right])
-                    .domain([0, d3.max(vars.data, function(d) { return d[vars.var_x]; })]).nice(),
-            callback: function() {}
-          }],
-          axes: [],
-          items: [{
-            type: "rect",
-            rotate: "0"
-          }, {
-            type: "circle",
-            r: "10"
-          }],
-          connect: []          
-        }
-
-        // REGISTER EVENTS
-        vars.evt.register("highlightOn", function(d) { });
-        vars.evt.register("highlightOut", function(d) { });
-        vars.evt.register("selection", function(d) { });
-        vars.evt.register("resize", function(d) { });
 
         // PRE-UPDATE
         var gItems = vars.svg.selectAll(".mark__group")

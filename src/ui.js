@@ -151,7 +151,6 @@
 
      if(vars.ui.options) {
 
-
         var label_radios = d3.select("#viz").selectAll(".aggregations_radio").data(vars.id)
           .enter()
             .append("label")
