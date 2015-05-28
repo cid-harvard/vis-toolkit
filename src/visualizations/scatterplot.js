@@ -8,6 +8,9 @@
                       .domain([0, d3.max(vars.data, function(d) { return d[vars.var_x]; })]).nice(),
             }
           ],
+
+          x_ticks: 10,
+
           y_scale: d3.scale.linear()
                       .range([vars.height-vars.margin.top-vars.margin.bottom, vars.margin.top])
                       .domain([0, d3.max(vars.data, function(d) { return d[vars.var_y]; })]).nice(),
@@ -16,9 +19,11 @@
                      .interpolate(vars.interpolate)
                      .x(function(d) { return vars.x_scale(d[vars.time.var_time]); })
                      .y(function(d) { return vars.y_scale(d[vars.var_y]); }),
+
           connect: {
             type: null
           },
+
           items: [{
             attr: "country",
             marks: [{
@@ -33,9 +38,13 @@
             attr: "continent",
             marks: [{
               type: "pie"
-            }]
-          }],
-          x_ticks: 10
+            }, {
+                type: "text",
+                rotate: "-30",
+                translate: null
+              }]
+          }]
+
         };
 
         vars = vistk.utils.merge(vars, vars.params);
@@ -68,7 +77,9 @@
  
         // PRE-UPDATE
         var gItems = vars.svg.selectAll(".mark__group")
-                         .data(vars.new_data, function(d, i) { return i; });
+                          .data(vars.new_data, function(d, i) { 
+                            return d.name; 
+                          });
 
         // ENTER
         var gItems_enter = gItems.enter()
@@ -78,17 +89,33 @@
                             return "translate(" + vars.margin.left + ", " + vars.height/2 + ")";
                           });
 
-        // Add graphical marks
-        vars.items[0].marks.forEach(function(d) {
 
-          vars.mark.type = d.type;
-          vars.mark.rotate = d.rotate;
-          gItems_enter.each(vistk.utils.items_mark);
+        if(vars.aggregate === vars.var_group) {
 
-        });
+            // Add graphical marks
+            vars.items[1].marks.forEach(function(d) {
+
+              vars.mark.type = d.type;
+              vars.mark.rotate = d.rotate;
+              gItems_enter.each(vistk.utils.items_mark);
+
+            });
+
+        } else {
+
+            // Add graphical marks
+            vars.items[0].marks.forEach(function(d) {
+
+              vars.mark.type = d.type;
+              vars.mark.rotate = d.rotate;
+              gItems_enter.each(vistk.utils.items_mark);
+
+            });
+
+        }
 
         // EXIT
-        var gItems_exit = gItems.exit().style("opacity", 0.1);
+        var gItems_exit = gItems.exit().remove();
 
         // POST-UPDATE
         gItems
