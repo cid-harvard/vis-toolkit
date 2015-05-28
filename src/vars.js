@@ -86,6 +86,7 @@
     },
 
     accessor_values: function(d) { return d; },
+    accessor_data: function(d) { return d; },
 
     nb_viz: nb_viz
   };

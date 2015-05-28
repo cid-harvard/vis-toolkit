@@ -37,7 +37,7 @@
             }, {
             attr: "continent",
             marks: [{
-              type: "pie"
+              type: "arc"
             }, {
                 type: "text",
                 rotate: "-30",
@@ -89,17 +89,42 @@
                             return "translate(" + vars.margin.left + ", " + vars.height/2 + ")";
                           });
 
-
         if(vars.aggregate === vars.var_group) {
 
-            // Add graphical marks
+          vars.pie = d3.layout.pie().value(function(d) { return d[vars.var_share]; }); // equal share
+
+          vars.radius = vars.width/12;
+          vars.accessor_data = function(d) { return d.data; };
+
+          gItems_enter.each(function(d) {
+
+            // Special arc for labels centroids
+            var arc = d3.svg.arc().outerRadius(vars.radius).innerRadius(vars.radius);
+
+            // Bind data to groups
+            var gItems2 = vars.svg.selectAll(".mark__group2")
+                             .data(vars.pie(vars.new_data), function(d, i) { return i; });
+
+            // ENTER
+
+            // Add a group for marks
+            var gItems2_enter = gItems2.enter()
+                            .append("g")
+                              .attr("transform", "translate(" + vars.width/2 + "," + vars.height/2 + ")")
+                              .each(vistk.utils.items_group)
+                              .attr("transform", function(d) {
+                                return "translate(" + vars.params.x_scale[0]["func"](vars.accessor_data(d)[vars.var_x]) + ", " + vars.y_scale(vars.accessor_data(d)[vars.var_y]) + ")";
+                              });
+
             vars.items[1].marks.forEach(function(d) {
 
               vars.mark.type = d.type;
               vars.mark.rotate = d.rotate;
-              gItems_enter.each(vistk.utils.items_mark);
+              gItems2_enter.each(vistk.utils.items_mark);
 
             });
+
+          });
 
         } else {
 

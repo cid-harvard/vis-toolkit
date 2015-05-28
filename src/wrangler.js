@@ -62,6 +62,20 @@
             return d[vars.var_y];
           });
 
+          aggregation["export"] = d3.sum(leaves, function(d) {
+            if(d[vars.var_y] >= 30)
+              return d[vars.var_x];
+            else
+              return 0;
+          });
+
+          aggregation["nonexport"] = d3.sum(leaves, function(d) {
+            if(d[vars.var_y] < 30)
+              return d[vars.var_x];
+            else
+              return 0;
+          });
+
           vars.columns.forEach(function(c) {
             if(c === vars.var_text || c === vars.var_group) {
               return;

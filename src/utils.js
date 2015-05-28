@@ -96,7 +96,9 @@ vistk.utils.items_mark = function(d, i) {
                       .classed("items__mark__text", true)
                       .style("text-anchor", "start")
                       .attr("transform", "rotate(" +  vars.mark.rotate + ")")
-                      .text(function(d) { return d[vars.var_text]; });
+                      .text(function(d) { 
+                        return vars.accessor_data(d)[vars.var_text]; 
+                      });
 
 /*
         // For pie chart wedges..
