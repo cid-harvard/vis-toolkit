@@ -3,3 +3,5 @@ node_modules/*
 build/*
 
 .DS_Store
+
+data/chiapas_munis_2012.csv

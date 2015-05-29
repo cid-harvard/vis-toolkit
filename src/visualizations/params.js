@@ -97,9 +97,7 @@ vars.params["sparkline"] = {
 vars.params["parallel_coordinates"] = vars.params["dotplot"];
 
 
-vars.params["splot_graph"] {
-
-  accessor_values:
+vars.params["splot_graph"] = {
 
 
 } 

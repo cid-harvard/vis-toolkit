@@ -33,7 +33,8 @@
     selection: [],
     filter: [],
     aggregate: [],
-    current_time: null,
+
+    time: {var_time: null, current_time: -1},
 
     // TABLE
     columns: [],

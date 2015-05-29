@@ -1,0 +1,46 @@
+<!doctype html>
+<meta charset="utf-8">
+<script src="../js/d3.js"></script>
+<script src="../build/vistk.js"></script>
+<link href="../css/vistk.css" rel="stylesheet">
+<body>
+<div id="viz"></div>
+<script>
+
+/*
+
+comitan = df.query("location_id == 7019")
+san_cristobal = df.query("location_id == 7078")
+tapachula = df.query("location_id == 7089")
+tuxtla = df.query("location_id == 7101")
+
+*/
+
+d3.csv("../data/chiapas_munis_2012.csv", function(error, munis) {
+
+//  var flat_years = vistk.utils.flatten_years(countries);
+  console.log(munis)
+  mm = munis;
+
+  visualization = vistk.viz()
+    .params({
+      type: "scatterplot",
+      container: "#viz",
+      data: munis,
+      id: ["continent", "country"],
+      var_group: "continent",
+      var_color: "continent",
+      var_x: 'nb_products',
+      var_y: 'avg_products',
+      var_share: "nb_products",
+      ui: {
+        default: true,
+        options: ["country", "continent"]
+      }
+    });
+
+  d3.select("#viz").call(visualization);
+
+});
+
+</script>
