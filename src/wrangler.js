@@ -119,7 +119,7 @@
           values: vars.new_data.filter(function(d) {
             return d[vars.var_text] === c;
           }).map(function (d) {
-            return {date: vars.time.parse(d.year), rank: +d.rank, year: d.year};
+            return {date: d[vars.time.var_time], rank: +d.rank, year: d.year};
           })
         };
       });

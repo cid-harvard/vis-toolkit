@@ -25,6 +25,8 @@ d3.csv("../data/new_rankings2.csv", function(error, data) {
     }
   });
 
+  dd = data;
+
   visualization = vistk.viz().params({
     type: "linechart",
     container: "#viz",

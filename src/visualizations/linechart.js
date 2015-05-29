@@ -16,15 +16,22 @@
               name: "linear",
               func: d3.scale.linear()
                       .range([vars.height - 4, 0])
-                      .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_y]; }))
+                      .domain([
+                        d3.min(items, function(c) { return d3.min(c.values, function(v) { return v[vars.var_y]; }); }),
+                        d3.max(items, function(c) { return d3.max(c.values, function(v) { return v[vars.var_y]; }); })
+                      ])
           }],
 
           items: [{
-            type: "diamond",
-            rotate: "0"
-          },{
-            type: "text",
-            rotate: "-30"
+            attr: "year",
+            marks: [{
+                type: "diamond",
+                rotate: "0",
+              }, {
+                type: "text",
+                rotate: "30",
+                translate: null
+              }]
           }],
 
           connect: [{
@@ -35,7 +42,7 @@
                 func: d3.svg.line()
                      .interpolate(vars.interpolate)
                      .x(function(d) { return vars.x_scale[0]["func"](d[vars.time.var_time]); })
-                     .y(function(d) { return vars.y_scale(d[vars.var_y]); })
+                     .y(function(d) { return vars.y_scale[0]["func"](d[vars.var_y]); })
               }]
           }]
 
@@ -76,7 +83,7 @@
             .orient("top");
 
         vars.y_axis = d3.svg.axis()
-            .scale(vars.y_scale)
+            .scale(vars.y_scale[0]["func"])
             .orient("left");
 
         // TODO: use the connection mark instead of the line
@@ -87,15 +94,10 @@
             .defined(function(d) { return d[vars.var_y] != null; })
             .interpolate(vars.interpolate)
             .x(function(d) { return vars.x_scale[0]["func"](d[vars.var_time]); })
-            .y(function(d) { return vars.y_scale(d[vars.var_y]); });
+            .y(function(d) { return vars.y_scale[0]["func"](d[vars.var_y]); });
 
         // TODO: fix the color scale
         vars.color.domain(d3.keys(vars.new_data[0]).filter(function(key) { return key !== "date"; }));
-
-        vars.y_scale.domain([
-          d3.min(items, function(c) { return d3.min(c.values, function(v) { return v[vars.var_y]; }); }),
-          d3.max(items, function(c) { return d3.max(c.values, function(v) { return v[vars.var_y]; }); })
-        ]);
 
         // Grid layout (background)
         vars.svg.append("g")
@@ -144,11 +146,10 @@
                         .append("g")
                         .each(vistk.utils.items_group)
                         .attr("transform", function(d, i) {
-                          console.log(d,  vars.x_scale[0]["func"](d[vars.time.var_time]))
-                          return "translate(" + vars.x_scale[0]["func"](d[vars.time.var_time]) + ", " + vars.y_scale(d[vars.var_y]) + ")";
+                          return "translate(" + vars.x_scale[0]["func"](d[vars.time.var_time]) + ", " + vars.y_scale[0]["func"](d[vars.var_y]) + ")";
                         });
 
-        // Add graphical marks
+        // Items marks
         vars.items[0].marks.forEach(function(d) {
 
           vars.mark.type = d.type;
