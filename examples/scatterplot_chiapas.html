@@ -47,8 +47,6 @@ d3.csv("../data/chiapas_munis_2012.csv", function(error, munis) {
 
   });
 
-dd = data_comitan;
-
   visualization = vistk.viz()
     .params({
       type: "scatterplot",
@@ -61,6 +59,7 @@ dd = data_comitan;
       var_y: 'pci',
       var_share: "distance",
       var_text: "product_name",
+      r_cutoff: function(d) { return d.rca > 1; },
       ui: {
         default: true,
         options: ["community_id", "product_id"]

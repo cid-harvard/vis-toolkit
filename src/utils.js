@@ -57,6 +57,7 @@ vistk.utils.items_mark = function(d, i) {
       
       d3.select(this).append("path")
           .attr("fill", function(d, i) {
+            console.log("FIIII", d, d[vars.var_color])
             if(d.i > 0)
               return vars.color(d[vars.var_color]);
             else

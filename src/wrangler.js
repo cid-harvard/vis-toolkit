@@ -68,18 +68,20 @@
           aggregation.piescatter[0] = {};
           aggregation.piescatter[1] = {};
 
-          aggregation.piescatter[0].nb_products = d3.sum(leaves, function(d) {
-            if(d[vars.var_y] >= 30)
-              return d[vars.var_x];
-            else
+          aggregation.piescatter[0][vars.var_share] = d3.sum(leaves, function(d) {
+            if(vars.r_cutoff(d)) {
+              return 1;
+            } else {
               return 0;
+            }
           });
 
-          aggregation.piescatter[1].nb_products = d3.sum(leaves, function(d) {
-            if(d[vars.var_y] < 30)
-              return d[vars.var_x];
-            else
+          aggregation.piescatter[1][vars.var_share] = d3.sum(leaves, function(d) {
+            if(!vars.r_cutoff(d)) {
+              return 1;
+            } else {
               return 0;
+            }
           });
 
           vars.columns.forEach(function(c) {

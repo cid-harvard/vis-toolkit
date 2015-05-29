@@ -54,6 +54,7 @@
     y_axis: null,
 
     r_scale: null,
+    r_cutoff: function(d) { return d > 30; },
 
     tickSize: 10,
     tickPadding: 0,

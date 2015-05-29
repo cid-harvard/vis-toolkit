@@ -138,7 +138,7 @@
                               .attr("transform", function(e, j) {
 
                                 // Needed for the graphical mark
-                                e.continent = d.continent;
+                                e[vars.var_group] = d[vars.var_group];
                                 e.i = j;
                                 e.total_piescatter = d.piescatter[0] + d.piescatter[1];
 
