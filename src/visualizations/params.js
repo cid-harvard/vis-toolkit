@@ -1,5 +1,8 @@
 vars.params = {};
 
+// TODO
+// There should be an abstract version of the dotplot
+// And then decide weither it is horizontal or vertical
 vars.params["dotplot"] = {
   x_scale: [{
       name: "linear",
@@ -10,14 +13,14 @@ vars.params["dotplot"] = {
     }, {
       name: "index",
       func: d3.scale.ordinal()
-        .domain(d3.range(vars.new_data.length))
-        .rangeBands([vars.margin.left, vars.width - vars.margin.left - vars.margin.right]),
+              .domain(d3.range(vars.new_data.length))
+              .rangeBands([vars.margin.left, vars.width - vars.margin.left - vars.margin.right]),
       callback: function() {
                   vars.new_data.sort(function ascendingKey(a, b) {
                     return d3.ascending(a[vars.var_x], b[vars.var_x]);
                   })
                   .forEach(function(d, i) {
-                    d.rank = vars.x_scale(i);
+                    d.rank = vars.x_scale[0]["func"](i);
                   });
       }
     }
@@ -39,6 +42,10 @@ vars.params["dotplot"] = {
 
 };
 
+// TODO
+// Add all the required parameters to change that
+vars.params["dotplot_horizontal"] = vars.params["dotplot"];
+vars.params["dotplot_vertical"] = vars.params["dotplot"];
 
 vars.params["sparkline"] = {
 
@@ -84,7 +91,8 @@ vars.params["sparkline"] = {
 
 };
 
-vars.params["parallel_coordinates"] = {
-  
-}
+// TODO
+// Sequence of vertical dotplots in an horizontal layout
+// Connected with lines
+vars.params["parallel_coordinates"] = vars.params["dotplot"];
 
