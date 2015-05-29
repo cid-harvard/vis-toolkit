@@ -84,3 +84,7 @@ vars.params["sparkline"] = {
 
 };
 
+vars.params["parallel_coordinates"] = {
+  
+}
+
