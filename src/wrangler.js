@@ -108,7 +108,7 @@
 
     // vars.time_data format
     // {id:, name:, values: [{date: d[vars.time.var_time], rank:, year:]}
-    if(vars.type === "linechart" || vars.type === "sparkline") {
+    if(vars.type === "linechart" || vars.type === "sparkline" || vars.type === "stacked") {
 
       // Parse data
       vars.new_data.forEach(function(d) {
@@ -124,7 +124,7 @@
       vars.time_data = unique_items.map(function(c) {
 
         return {
-          id: c.replace(" ", "_"),                    // Create unique ids
+          id: c.replace(/\ /g, '_').replace(/\,/g, '.'),                    // Create unique ids
           name: c,                                    // Name for the current item
           // TODO: add other stuff? other temporal values?
           values: vars.new_data.filter(function(d) {
@@ -142,11 +142,15 @@
         };
       });
 
+    /* DISABLING missing values detection for the moment
+
       // Make sure all items and all ranks are there
       vars.time_data.forEach(function(c) {
 
         vars.time.points.forEach(function(y) {
           var is_year = false;
+
+          console.log("TIMEP", y)
 
           c.values.forEach(function(v) {
             if(v.year === y) {
@@ -157,7 +161,7 @@
           if(!is_year) {
 
             // Set missing values to null
-            var v = {date: vars.time.parse(y), year: y}
+            var v = {date: v, year: v}
             v[vars.var_y] = null;
 
             c.values.push(v);
@@ -167,15 +171,23 @@
         });
 
       });
+    */
     }
 
     if(vars.type === "stacked") {
 
       var stack = d3.layout.stack()
-          .values(function(d) { return d.values; });
+          .values(function(d) { 
+            console.log("DDD", d)
+            return d.values; })
+          .x(function(d) { return d.date; })          
+          .y(function(d) { return d.value; });
 
+       vars.time_data = stack(vars.time_data);
+    }
       // Find the number or years
 
+/*
       unique_years = d3.set(vars.data.data.map(function(d) { return d.year;})).values();
 
       data = [];
@@ -208,7 +220,7 @@
 
 
     }
-
+*/
     if(vars.type === "treemap") {
 
       // Create the root node

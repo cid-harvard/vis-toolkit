@@ -9,22 +9,25 @@
 
 d3.json("../data/exports_2012.json", function(error, exports) {
 
+  xp = exports;
+
   visualization = vistk.viz()
     .params({
       type: "stacked",
       container: "#viz",
       width: 960,
       height: 500,
-      data: exports,
+      data: exports.data,
       id: "id",
-      var_y: "realgdp",
-      var_group: "dept_name",
-      var_color: "name",
+      var_y: "value",
+      var_group: "community_id",
+      var_color: "community_id",
       ui: false,
       interpolate: "linear",
-      var_text: "dept_name",
+      var_text: "name",
       time: {
-        parse: d3.time.format("%Y").parse
+        parse: function(d) { return d3.time.format("%Y").parse(d+""); },
+        var_time: "year"
       }
     });
 

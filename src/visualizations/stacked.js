@@ -61,15 +61,16 @@
 
         var area = d3.svg.area()
             .interpolate('cardinal')
-            .x(function(d) { return vars.x_scale(d.date); })
+            .x(function(d) { return vars.x_scale(d[vars.time.var_time]); })
             .y0(function(d) { return y(d.y0); })
             .y1(function(d) { return y(d.y0 + d.y); });
 
-        vars.x_scale.domain(d3.extent(data, function(d) { return d.date; }));
+        vars.x_scale.domain(d3.extent(vars.new_data, function(d) { return d[vars.time.var_time]; }));
 
         var browser = vars.svg.selectAll(".browser")
-            .data(vars.new_data)
-          .enter().append("g")
+            .data(vars.time_data)
+          .enter()
+            .append("g")
             .attr("class", "browser");
 
         browser.append("path")
@@ -77,13 +78,16 @@
             .attr("d", function(d) { return area(d.values); })
             .style("fill", function(d) { return vars.color(d.name); });
 
+/*
         browser.append("text")
             .datum(function(d) { return {name: d.name, value: d.values[d.values.length - 1]}; })
-            .attr("transform", function(d) { return "translate(" + vars.x_scale(d.value.date) + "," + y(d.value.y0 + d.value.y / 2) + ")"; })
+            .attr("transform", function(d) {
+                console.log("VVVV", d)
+             return "translate(" + vars.x_scale(d.value.date) + "," + y(d.value.y0 + d.value.y / 2) + ")"; })
             .attr("x", -6)
             .attr("dy", ".35em")
             .text(function(d) { return d.name; });
-
+*/
         vars.svg.append("g")
             .attr("class", "x axis")
             .attr("transform", "translate(0," + vars.height + ")")
