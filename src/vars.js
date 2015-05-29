@@ -23,7 +23,6 @@
     // Default dimensions
     margin: {top: 30, right: 20, bottom: 10, left: 30},
 
-
     // Default Variables mapping
     var_text: "name",
     var_color: null,
@@ -34,7 +33,7 @@
     filter: [],
     aggregate: [],
 
-    time: {var_time: null, current_time: -1},
+    time: {var_time: null, current_time: null},
 
     // TABLE
     columns: [],

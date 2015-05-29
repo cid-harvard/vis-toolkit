@@ -38,6 +38,8 @@
     // Aggregate data
     if(vars.aggregate === vars.var_group) {
 
+      console.log("[aggregate]", vars.aggregate);
+
       // Do the nesting
       // Should make sure it works for a generc dataset
       // Also for time or none-time attributes

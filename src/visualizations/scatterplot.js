@@ -1,11 +1,12 @@
       case "scatterplot":
 
         vars.params = {
+
           x_scale: [{
               name: "linear",
               func: d3.scale.linear()
                       .range([vars.margin.left, vars.width-vars.margin.left-vars.margin.right])
-                      .domain([0, d3.max(vars.data, function(d) { return d[vars.var_x]; })]).nice()
+                      .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_x]; })).nice()
             }
           ],
 
@@ -15,7 +16,7 @@
               name: "linear",
               func: d3.scale.linear()
                       .range([vars.height-vars.margin.top-vars.margin.bottom, vars.margin.top])
-                      .domain([0, d3.max(vars.data, function(d) { return d[vars.var_y]; })]).nice(),
+                      .domain(d3.extent(vars.data, function(d) { return d[vars.var_y]; })).nice(),
             }
           ],
 
@@ -96,7 +97,7 @@
         // PRE-UPDATE
         var gItems = vars.svg.selectAll(".mark__group")
                           .data(vars.new_data, function(d, i) { 
-                            return d.name; 
+                            return d[vars.var_text]; 
                           });
 
         // ENTER

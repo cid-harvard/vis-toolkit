@@ -5,37 +5,65 @@
 <link href="../css/vistk.css" rel="stylesheet">
 <body>
 <div id="viz"></div>
+<style>
+.items__mark__text {
+  display: none;
+}
+
+.items__mark__text: hover {
+  display: visible;
+}
+
+</style>
 <script>
 
-/*
+// What we want:
 
-comitan = df.query("location_id == 7019")
-san_cristobal = df.query("location_id == 7078")
-tapachula = df.query("location_id == 7089")
-tuxtla = df.query("location_id == 7101")
+// comitan = df.query("location_id == 7019")
+// san_cristobal = df.query("location_id == 7078")
+// tapachula = df.query("location_id == 7089")
+// tuxtla = df.query("location_id == 7101")
 
-*/
+// Data format
+// location_id,product_id,rca,value,pci,distance,product_name,community_id,community_name
+// 8021.0,0101,0.519559025764,1025.0,0.360865205526,0.95753878355,Horses,106,Animal & Animal Products
+// 19011.0,0101,232.11378479,24750.0,0.360865205526,0.989889979362,Horses,106,Animal & Animal Products
 
 d3.csv("../data/chiapas_munis_2012.csv", function(error, munis) {
 
 //  var flat_years = vistk.utils.flatten_years(countries);
-  console.log(munis)
-  mm = munis;
+
+  var data_comitan = munis.filter(function(d) { 
+
+    // Remove products with missing values
+    return (d.location_id === "7019.0" && typeof d.distance != "undefined" && d.distance.length > 0 && typeof d.pci != "undefined" && d.pci.length > 0);
+
+  })
+
+  data_comitan.forEach(function(d) {
+
+    d.distance = parseFloat(d.distance);
+    d.pci = parseFloat(d.pci);
+
+  });
+
+dd = data_comitan;
 
   visualization = vistk.viz()
     .params({
       type: "scatterplot",
       container: "#viz",
-      data: munis,
-      id: ["continent", "country"],
-      var_group: "continent",
-      var_color: "continent",
-      var_x: 'nb_products',
-      var_y: 'avg_products',
-      var_share: "nb_products",
+      data: data_comitan,
+      id: ["community_id", "product_id"],
+      var_group: "community_id",
+      var_color: "community_id",
+      var_x: 'distance',
+      var_y: 'pci',
+      var_share: "distance",
+      var_text: "product_name",
       ui: {
         default: true,
-        options: ["country", "continent"]
+        options: ["community_id", "product_id"]
       }
     });
 
