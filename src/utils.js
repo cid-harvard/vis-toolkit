@@ -126,7 +126,7 @@ vistk.utils.items_mark = function(d, i) {
                       .attr("cx", 0)
                       .attr("cy", 0)
                       .classed("items__mark__circle", true)
-                  //    .style("fill", function(d) { return vars.color(d[vars.var_color]); });
+                      .style("fill", function(d) { return vars.color(vars.accessor_values(d)[vars.var_color]); });
       break;
 
   }

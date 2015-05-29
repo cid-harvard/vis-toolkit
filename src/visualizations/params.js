@@ -96,3 +96,10 @@ vars.params["sparkline"] = {
 // Connected with lines
 vars.params["parallel_coordinates"] = vars.params["dotplot"];
 
+
+vars.params["splot_graph"] {
+
+  accessor_values:
+
+
+} 

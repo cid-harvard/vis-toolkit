@@ -12,8 +12,6 @@
 
     }
 
-
-
     // Init
     if(vars.focus.length > 0) {
       

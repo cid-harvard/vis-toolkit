@@ -160,7 +160,9 @@ What to do with missing data over time?
 
 
 Annotations
-* Linear regression lines http://www.highcharts.com/demo/combo-regression/grid
+* Linear regression lines 
+ * http://www.highcharts.com/demo/combo-regression/grid
+ * https://github.com/Tom-Alexander/regression-js
 * Multiple layers (e.g. background with grid, ..)
 * Markers http://metricsgraphicsjs.org/interactive-demo.htm and http://metricsgraphicsjs.org/examples.htm#annotations
 

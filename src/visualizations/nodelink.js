@@ -72,6 +72,7 @@
         vars = vistk.utils.merge(vars, vars.params);
 
         vars.connect.type = "line";
+        vars.accessor_values = function(d) { return d.data; };
 
         vars.evt.register("highlightOn", function(d) {
 
@@ -174,9 +175,7 @@
           vars.mark.rotate = d.rotate;
           gItems_enter.each(vistk.utils.items_mark)
           .attr("id", function(d) { return "node_" + d.id; })
-          .style("fill", function(d) { 
-              return vars.color(d.data[vars.var_color]); 
-            });
+
 
         });
 
