@@ -8,6 +8,7 @@ module.exports = function(grunt) {
       },
       build: {
         src: ['src/start.js', 'src/vars.js', 'src/star_constructor.js', 'src/wrangler.js', 
+              'src/visualizations/params.js', 'src/start_selection.js', 
               'src/visualizations/dotplot.js', 'src/visualizations/sparkline.js',  'src/visualizations/table.js', 
               'src/visualizations/treemap.js', 'src/visualizations/scatterplot.js', 'src/visualizations/grid.js', 
               'src/visualizations/geomap.js', 'src/visualizations/linechart.js', 'src/visualizations/nodelink.js', 

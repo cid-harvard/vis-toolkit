@@ -1,50 +1,6 @@
       case "sparkline":
 
-        vars.params = {
-
-          accessor_values: function(d) { return d.values; },
-
-          x_scale: [{
-              name: "linear",
-              func: d3.scale.linear()
-                      .range([0, vars.width - 2])
-                      .domain(d3.extent(vars.new_data, function(d) { return d[vars.time.var_time]; }))
-          }],
-
-          y_scale: [{
-              name: "linear",
-              func: d3.scale.linear()
-                      .range([vars.height - 4, 0])
-                      .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_y]; }))
-          }],
-
-          items: [{
-            attr: "year",
-            marks: [{
-                type: "diamond",
-                rotate: "0",
-              }, {
-                type: "text",
-                rotate: "30",
-                translate: null
-              }]
-          }],
-
-          connect: [{
-            attr: vars.time.var_time,
-            marks: [{
-                type: "path",
-                rotate: "0",
-                func: d3.svg.line()
-                     .interpolate(vars.interpolate)
-                     .x(function(d) { return vars.x_scale[0]["func"](d[vars.time.var_time]); })
-                     .y(function(d) { return vars.y_scale[0]["func"](d[vars.var_y]); }),
-              }]
-          }]
-
-        };
-
-        vars = vistk.utils.merge(vars, vars.params);
+        vars = vistk.utils.merge(vars, vars.params["sparkline"]);
 
         // Connect marks
         var gConnect = vars.svg.selectAll(".connect__group")
