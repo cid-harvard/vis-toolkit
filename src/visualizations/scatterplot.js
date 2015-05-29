@@ -80,16 +80,26 @@
         vars.svg.call(vistk.utils.y_axis);
  
         // GRID
-        vars.svg.append("g")
+        vars.svg.selectAll(".x.grid").data([vars.new_data])
+          .enter()
+            .append("g")
             .attr("class", "x grid")
-            .attr("transform", "translate(0," + vars.height + ")")
+            .attr("transform", "translate(0," + vars.height + ")");
+
+        vars.svg.selectAll(".x.grid").transition()
+            .duration(vars.duration)
             .call(vistk.utils.make_x_axis()
             .tickSize(-vars.height, 0, 0)
             .tickFormat(""));
 
-        vars.svg.append("g")
+        vars.svg.selectAll(".y.grid").data([vars.new_data])
+          .enter()
+            .append("g")        
             .attr("class", "y grid")
-            .attr("transform", "translate(0, 0)")
+            .attr("transform", "translate(0, 0)");
+
+        vars.svg.selectAll(".y.grid").transition()
+            .duration(vars.duration)
             .call(vistk.utils.make_y_axis()
             .tickSize(-vars.width, 0, 0)
             .tickFormat(""));
