@@ -126,7 +126,7 @@ vistk.utils.items_mark = function(d, i) {
                       .attr("cx", 0)
                       .attr("cy", 0)
                       .classed("items__mark__circle", true)
-                      .style("fill", function(d) { return vars.color(d[vars.var_color]); });
+                  //    .style("fill", function(d) { return vars.color(d[vars.var_color]); });
       break;
 
   }
@@ -157,10 +157,10 @@ vistk.utils.connect_mark = function(d, i) {
 
         d3.select(this).append('line')
             .attr('class', 'connect__line')
-            .attr("x1", function(d) { return vars.x_scale(d.source.x); })
-            .attr("y1", function(d) { return vars.y_scale(d.source.y); })
-            .attr("x2", function(d) { return vars.x_scale(d.target.x); })
-            .attr("y2", function(d) { return vars.y_scale(d.target.y); });
+            .attr("x1", function(d) { return vars.x_scale[0]["func"](d.source.x); })
+            .attr("y1", function(d) { return vars.y_scale[0]["func"](d.source.y); })
+            .attr("x2", function(d) { return vars.x_scale[0]["func"](d.target.x); })
+            .attr("y2", function(d) { return vars.y_scale[0]["func"](d.target.y); });
 
         break;
 

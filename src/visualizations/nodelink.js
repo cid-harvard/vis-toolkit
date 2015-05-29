@@ -1,5 +1,76 @@
       case "nodelink":
 
+        var min_x = Infinity, max_x = 0, min_y = Infinity, max_y = 0;
+
+        vars.nodes.forEach(function(d, i) {
+
+          if(d.x < min_x) {
+            min_x = d.x;
+          }
+
+          if(d.y < min_y) {
+            min_y = d.y;
+          }
+
+          if(d.x > max_x) {
+            max_x = d.x;
+          }
+
+          if(d.y > max_y) {
+            max_y = d.y;
+          }
+
+          // Find the value in vars.data
+          d.data = vistk.utils.find_data_by_id(d.id);
+
+          if(typeof d.data === "undefined") {
+            d.data = {};
+            d.data.category = 0;
+          }
+
+        });
+
+        vars.params = {
+
+          x_scale: [{
+              name: "linear",
+              func: d3.scale.linear()
+                      .range([0, vars.width])
+                      .domain([min_x, max_x])
+          }],
+
+          y_scale: [{
+              name: "linear",
+              func: d3.scale.linear()
+                    .range([0, vars.height])
+                    .domain([min_y, max_y])
+          }],
+
+          items: [{
+            attr: "year",
+            marks: [{
+                type: "circle",
+                rotate: "0",
+              }, {
+                type: "text",
+                rotate: "30",
+                translate: null
+              }]
+          }],
+
+          connect: [{
+            attr: "",
+            marks: [{
+                type: "line",
+                rotate: "0",
+                func: null,
+              }]
+          }],
+
+        };
+
+        vars = vistk.utils.merge(vars, vars.params);
+
         vars.connect.type = "line";
 
         vars.evt.register("highlightOn", function(d) {
@@ -54,36 +125,6 @@
             .linkDistance(30)
             .size([vars.width, vars.height]);
 
-        var min_x = Infinity, max_x = 0, min_y = Infinity, max_y = 0;
-
-        vars.nodes.forEach(function(d, i) {
-
-          if(d.x < min_x) {
-            min_x = d.x;
-          }
-
-          if(d.y < min_y) {
-            min_y = d.y;
-          }
-
-          if(d.x > max_x) {
-            max_x = d.x;
-          }
-
-          if(d.y > max_y) {
-            max_y = d.y;
-          }
-
-          // Find the value in vars.data
-          d.data = vistk.utils.find_data_by_id(d.id);
-
-          if(typeof d.data === "undefined") {
-            d.data = {};
-            d.data.category = 0;
-          }
-
-        });
-
         vars.links.forEach(function(d, i) {
 
           d.source = vistk.utils.find_node_by_id(d.source);
@@ -91,52 +132,54 @@
 
         });
 
-        vars.x_scale = d3.scale.linear().range([0, vars.width]);
-        vars.y_scale = d3.scale.linear().range([0, vars.height]); // Reverted Scale!
-
-        vars.x_scale.domain([min_x, max_x]);
-        vars.y_scale.domain([min_y, max_y]);
-
-        // TODO: add all the line and not just the filtered one
+        // Connect marks
         var gConnect = vars.svg.selectAll(".connect__group")
-                        .data(vars.links);//, function(d, i) { return i; });
+                        .data(vars.links);
       
         var gConnect_enter = gConnect.enter()
                         .append("g")
-                        .each(vistk.utils.connect_group);
+                        .attr("class", "connect__group");
 
-        // Enter connect graphical marks
-        gConnect_enter.each(vistk.utils.connect_mark)
-                        .style("stroke", function(d) { return vars.color(d[vars.var_color]); })
+        vars.connect[0].marks.forEach(function(d) {
+          
+          vars.mark.type = d.type;
+          vars.mark.rotate = d.rotate;
+          gConnect_enter.each(vistk.utils.connect_mark)
+                        .style("stroke", function(d) { 
+                            return vars.color(d[vars.var_color]); 
+                        })
                         .attr("class", function(d) {
-                                      return "link source_"+d.source.id+" target_"+d.target.id;
+                          return "link source_"+d.source.id+" target_"+d.target.id;
                         })
                         .style("stroke-width", function(d) { return Math.sqrt(d.value); })
                         .style("opacity", .4);
+
+        });
 
         var gItems = vars.svg.selectAll(".items__group")
                         .data(vars.nodes, function(d) { return d.id; });
 
         // ENTER
-
-        // Items groups
         var gItems_enter = gItems.enter()
-                      .append("g")
-                        .each(vistk.utils.items_group);
+                        .append("g")
+                        .each(vistk.utils.items_group)
+                        .attr("transform", function(d) { 
+                          return "translate(" + vars.x_scale[0]["func"](d.x) + "," + vars.y_scale[0]["func"](d.y) + ")"; 
+                        });
 
-        // Items marks (circle)
-        gItems.each(vistk.utils.items_mark)
-            .select("circle")
-            .attr("id", function(d) { return "node_" + d.id; })
-            .attr("r", 5)
-            .style("fill", function(d) { 
+        // Items marks
+        vars.items[0].marks.forEach(function(d) {
+
+          vars.mark.type = d.type;
+          vars.mark.rotate = d.rotate;
+          gItems_enter.each(vistk.utils.items_mark)
+          .attr("id", function(d) { return "node_" + d.id; })
+          .style("fill", function(d) { 
               return vars.color(d.data[vars.var_color]); 
             });
 
-        var gItems_exit = gItems.exit().style({opacity: 0.1});
-
-        gItems.attr("transform", function(d) { 
-          return "translate(" + vars.x_scale(d.x) + "," + vars.y_scale(d.y) + ")"; 
         });
+
+        var gItems_exit = gItems.exit().style({opacity: 0.1});
 
       break;

@@ -73,7 +73,7 @@ circle.node {
   fill: white;
 }
 
-.link {
+.connect__line {
   stroke: #999;
   stroke-opacity: .6;
 }
