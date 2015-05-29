@@ -100,6 +100,14 @@
       vars.new_data = nested_data.map(function(d) { return d.values; });
     }
 
+    // TODO 
+    // Unify with stacked
+    // Parse data to time/date
+    // Find all time points
+    // For each item, make sure no missing value, and if there is do something
+
+    // vars.time_data format
+    // {id:, name:, values: [{date: d[vars.time.var_time], rank:, year:]}
     if(vars.type === "linechart" || vars.type === "sparkline") {
 
       // Parse data
@@ -107,43 +115,61 @@
         d[vars.time.var_time] = vars.time.parse(d[vars.time.var_time]);
       });
 
-      var all_years = d3.set(vars.new_data.map(function(d) { return d.year; })).values();
+      vars.time.interval = d3.extent(vars.new_data, function(d) { return d[vars.time.var_time]; });
+      vars.time.points = d3.set(vars.new_data.map(function(d) { return d[vars.time.var_time]; })).values();
 
       var unique_items = d3.set(vars.new_data.map(function(d) { return d[vars.var_text]; })).values();
 
       // Find unique items and create ids
-      var items = unique_items.map(function(c) {
+      vars.time_data = unique_items.map(function(c) {
+
         return {
-          id: c.replace(" ", "_"),
-          name: c,
+          id: c.replace(" ", "_"),                    // Create unique ids
+          name: c,                                    // Name for the current item
+          // TODO: add other stuff? other temporal values?
           values: vars.new_data.filter(function(d) {
-            return d[vars.var_text] === c;
-          }).map(function (d) {
-            return {date: d[vars.time.var_time], rank: +d.rank, year: d.year};
-          })
+
+              return d[vars.var_text] === c;
+            
+            }).map(function (d) {
+            
+              var v = {date: d[vars.time.var_time], year: d.year};;
+              v[vars.var_y] = d[vars.var_y];
+
+              return v;
+            
+            })
         };
       });
 
       // Make sure all items and all ranks are there
-      items.forEach(function(c) {
+      vars.time_data.forEach(function(c) {
 
-        all_years.forEach(function(y) {
+        vars.time.points.forEach(function(y) {
           var is_year = false;
+
           c.values.forEach(function(v) {
             if(v.year === y) {
               is_year = true;
             }
           });
+
           if(!is_year) {
-            c.values.push({date: vars.time.parse(y), rank: null, year: y});
+
+            // Set missing values to null
+            var v = {date: vars.time.parse(y), year: y}
+            v[vars.var_y] = null;
+
+            c.values.push(v);
+
           }
+
         });
 
       });
     }
 
     if(vars.type === "stacked") {
-
 
       var stack = d3.layout.stack()
           .values(function(d) { return d.values; });

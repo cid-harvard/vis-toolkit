@@ -2,6 +2,8 @@
 
         vars.params = {
 
+          accessor_values: function(d) { return d.values; },
+
           x_scale: [{
               name: "linear",
               func: d3.scale.linear()
@@ -46,7 +48,7 @@
 
         // Connect marks
         var gConnect = vars.svg.selectAll(".connect__group")
-                        .data([vars.new_data], function(d, i) { return i; });
+                        .data(vars.time_data, function(d, i) { return i; });
       
         var gConnect_enter = gConnect.enter()
                         .append("g")
