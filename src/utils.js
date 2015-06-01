@@ -51,16 +51,19 @@ vistk.utils.items_mark = function(d, i) {
     case "arc":
 
       var arc = d3.svg.arc().outerRadius(function(d) {
-        return 20; // vars.r_scale(d3.sum(vars.new_data[0].piescatter, function(d) { return d[vars.var_share]; }));
+        return vars.radius; // vars.r_scale(d3.sum(vars.new_data[0].piescatter, function(d) { return d[vars.var_share]; }));
       }).innerRadius(0);
       
       d3.select(this).append("path")
           .attr("fill", function(d, i) {
-            if(d.i == 0)
-              return vars.color(d[vars.var_color]);
-            else
-              return "#fff";
+            return vars.color(d[vars.var_color]);
           })
+          .style("fill-opacity", function(d, i) {
+            if(d.i == 0)
+              return .2;
+            else
+              return .2;
+          })          
           .attr("d", arc);
 
     case "shape":
@@ -122,11 +125,11 @@ vistk.utils.items_mark = function(d, i) {
     default:
 
       d3.select(this).append("circle")
-                      .attr("r", 5)
+                      .attr("r", vars.mark.radius)
                       .attr("cx", 0)
                       .attr("cy", 0)
                       .classed("items__mark__circle", true)
-                      .style("fill", function(d) { return vars.color(vars.accessor_values(d)[vars.var_color]); });
+                      .style("fill", vars.mark.fill);
       break;
 
   }

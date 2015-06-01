@@ -1,0 +1,50 @@
+<!doctype html>
+<meta charset="utf-8">
+<script src="../js/d3.js"></script>
+<script src="../build/vistk.js"></script>
+<script src="../js/boxplot.js"></script>
+<link href="../css/vistk.css" rel="stylesheet">
+<div id="viz"></div>
+<script>
+
+
+d3.csv("../data/morley.csv", function(error, csv) {
+
+
+  visualization = vistk.viz().params({
+    type: "boxplot",
+    container: "#viz",
+    data: csv,
+    share: "nb_products",
+    id: ["continent", "country"],
+    group: "continent",
+    var_share: "nb_products",
+    var_radius: "nb_products",
+    var_color: "continent",
+    var_text: "name",
+    selection: ["Angola"]
+  });
+
+  d3.select("#viz").call(visualization);
+
+/*
+  setInterval(function() {
+    svg.datum(randomize).call(chart.duration(1000));
+  }, 2000);
+*/
+});
+
+function randomize(d) {
+  if (!d.randomizer) d.randomizer = randomizer(d);
+  return d.map(d.randomizer);
+}
+
+function randomizer(d) {
+  var k = d3.max(d) * .02;
+  return function(d) {
+    return Math.max(min, Math.min(max, d + k * (Math.random() - .5)));
+  };
+}
+
+
+</script>

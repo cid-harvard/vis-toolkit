@@ -89,8 +89,12 @@
     mark: {
       height: 10,
       width: 10,
-      rotate: 0
+      rotate: 0,
+      radius: 5,
+      fill: function(d) { return vars.color(vars.accessor_values(d)[vars.var_color]); }
     },
+
+    radius: 20,
 
     accessor_values: function(d) { return d; },
     accessor_data: function(d) { return d; },
