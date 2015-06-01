@@ -273,15 +273,14 @@ vistk.utils.make_y_axis = function() {
 
 vistk.utils.background_label = function() {
 
-  vars.svg.selectAll(".label").data([vars.new_data])
+  vars.svg.selectAll(".label")
+      .data([vars.new_data])
     .enter()
       .append("text")
       .attr("class", "label")
-      .attr("text-anchor", "middle");
-
-  vars.svg.selectAll(".label")
+      .attr("text-anchor", "middle")
       .attr("y", -vars.height + vars.margin.top + vars.margin.bottom)
-      .attr("x", 500)
+      .attr("x", vars.width/2)
       .text(vars.title);
 
 }

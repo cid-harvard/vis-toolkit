@@ -41,8 +41,6 @@ var locations = [
 
 d3.csv("../data/chiapas_munis_2012.csv", function(error, munis) {
 
-//  var flat_years = vistk.utils.flatten_years(countries);
-
   locations.forEach(function(d, i) {
 
     var data_comitan = munis.filter(function(d) { 

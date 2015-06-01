@@ -31,11 +31,7 @@
           attr: "country",
           marks: [{
               type: "rect",
-              rotate: "0",
-              x: function(d) { return vars.x_scale[0]["func"](d.letter); },
-              width: vars.x_scale[0]["func"].rangeBand(),
-              y: function(d) { return vars.y_scale[0]["func"](d.frequency); },
-              height: function(d) { return vars.height - vars.y_scale[0]["func"](d.frequency); }
+              rotate: "0"
             }, {
               type: "text",
               rotate: "90",
@@ -67,7 +63,6 @@
 
         vars.svg.call(vistk.utils.y_axis);
 
-
         vars.svg.selectAll(".bar")
             .data(vars.data)
           .enter()
@@ -96,12 +91,14 @@
 
           vars.mark.type = d.type;
           vars.mark.rotate = d.rotate;
+
           gItems_enter.each(vistk.utils.items_mark)
+            .select("rect")
             .attr("class", "bar")
-            .attr("x", function(d) { return vars.x_scale[0]["func"](d[vars.var_x]); })
+       //     .attr("x", function(d) { return vars.x_scale[0]["func"](d[vars.var_x]); })
             .attr("width", vars.x_scale[0]["func"].rangeBand())
-            .attr("y", function(d) { return vars.y_scale[0]["func"](d[vars.var_y]); })
-            .attr("height", function(d) { return vars.height - vars.y_scale[0]["func"](d[vars.var_y]); });
+            .attr("y", function(d) { return 100- vars.y_scale[0]["func"](d[vars.var_y]); })
+            .attr("height", function(d) { return vars.y_scale[0]["func"](d[vars.var_y]); });
 
         });
 

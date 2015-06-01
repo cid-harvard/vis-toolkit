@@ -33,6 +33,7 @@
             marks: [{
                 type: "circle",
                 rotate: "0",
+                radius: 5                
               }, {
                 type: "text",
                 rotate: "30",
@@ -41,12 +42,17 @@
             }, {
             attr: "continent",
             marks: [{
+                type: "circle",
+                rotate: "0",
+                radius: 20,
+                fill: "#fff"
+            }, {
               type: "arc"
             }, {
                 type: "text",
                 rotate: "-30",
                 translate: null
-              }]
+            }]
           }]
 
         };
@@ -72,7 +78,7 @@
                 .attr("transform", "translate(0," + (vars.height - vars.margin.bottom - vars.margin.top) + ")")
               .append("text") // TODO: fix axis labels
                 .attr("class", "label")
-                .attr("x", vars.width-vars.margin.left-vars.margin.right)
+                .attr("x", vars.width - vars.margin.left - vars.margin.right)
                 .attr("y", -6)
                 .style("text-anchor", "end")
                 .text(function(d) { return vars.var_x; });                
@@ -120,7 +126,7 @@
 
         if(vars.aggregate === vars.var_group) {
 
-          vars.pie = d3.layout.pie().value(function(d) { return d[vars.var_share]; }); // equal share
+          vars.pie = d3.layout.pie().value(function(d) { return d[vars.var_share]; });
 
           // vars.radius = vars.width/12;
           // vars.accessor_data = function(d) { return d.data; };
@@ -128,6 +134,7 @@
           vars.r_scale.range([0, vars.width/6])
                     .domain([0, d3.max(vars.new_data, function(d) { return d[vars.var_r]; })]);
 
+          vars.mark.radius = vars.radius;
 
           gItems_enter.each(function(d) {
 
@@ -159,6 +166,13 @@
             vars.items[1].marks.forEach(function(d) {
 
               vars.mark.type = d.type;
+
+              if(typeof d.fill !== "undefined") {
+                vars.mark.fill = function() { return d.fill; };
+              } else {
+                vars.mark.fill = function(d) { return vars.color(vars.accessor_values(d)[vars.var_color]); };
+              }
+
               vars.mark.rotate = d.rotate;
               gItems2_enter.each(vistk.utils.items_mark);
 
