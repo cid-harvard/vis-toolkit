@@ -84,12 +84,12 @@
           .enter()
             .append("g")
             .attr("class", "x grid")
-            .attr("transform", "translate(0," + vars.height + ")");
+            .attr("transform", "translate(0," + (vars.height-vars.margin.top-vars.margin.bottom) + ")");
 
         vars.svg.selectAll(".x.grid").transition()
             .duration(vars.duration)
             .call(vistk.utils.make_x_axis()
-            .tickSize(-vars.height, 0, 0)
+            .tickSize(-vars.height+vars.margin.top+vars.margin.bottom, 0, 0)
             .tickFormat(""));
 
         vars.svg.selectAll(".y.grid").data([vars.new_data])
@@ -123,7 +123,7 @@
           vars.pie = d3.layout.pie().value(function(d) { return d[vars.var_share]; }); // equal share
 
           //vars.radius = vars.width/12;
-          vars.accessor_data = function(d) { return d.data; };
+          // vars.accessor_data = function(d) { return d.data; };
 
           vars.r_scale.range([0, vars.width/6])
                     .domain([0, d3.max(vars.new_data, function(d) { return d[vars.var_r]; })]);
@@ -149,6 +149,7 @@
 
                                 // Needed for the graphical mark
                                 e[vars.var_group] = d[vars.var_group];
+                                e[vars.var_text] = d[vars.var_text];
                                 e.i = j;
                                 e.total_piescatter = d.piescatter[0] + d.piescatter[1];
 
@@ -169,14 +170,14 @@
 
           vars.accessor_data = function(d) { return d; };
 
-            // Add graphical marks
-            vars.items[0].marks.forEach(function(d) {
+          // Add graphical marks
+          vars.items[0].marks.forEach(function(d) {
 
-              vars.mark.type = d.type;
-              vars.mark.rotate = d.rotate;
-              gItems_enter.each(vistk.utils.items_mark);
+            vars.mark.type = d.type;
+            vars.mark.rotate = d.rotate;
+            gItems_enter.each(vistk.utils.items_mark);
 
-            });
+          });
 
         }
 
