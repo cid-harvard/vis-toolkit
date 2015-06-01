@@ -5,9 +5,13 @@
 <link href="../css/vistk.css" rel="stylesheet">
 <body>
 <div id="viz"></div>
+<div id="viz_0"></div>
+<div id="viz_1"></div>
+<div id="viz_2"></div>
+<div id="viz_3"></div>
 <style>
 .items__mark__text {
-  display: block;
+  display: none;
 }
 
 .items__mark__text: hover {
@@ -19,10 +23,16 @@
 
 // What we want:
 
-// comitan = df.query("location_id == 7019")
-// san_cristobal = df.query("location_id == 7078")
-// tapachula = df.query("location_id == 7089")
-// tuxtla = df.query("location_id == 7101")
+var locations = [
+
+  {name: "Comitan", location_id: 7019},
+
+/*
+  {name: "San Cristobal", location_id: 7078},
+  {name: "Tapachula", location_id: 7089},
+  {name: "Tuxtla", location_id: 7101}
+*/
+];
 
 // Data format
 // location_id,product_id,rca,value,pci,distance,product_name,community_id,community_name
@@ -36,41 +46,56 @@ d3.csv("../data/chiapas_munis_2012.csv", function(error, munis) {
 
 //  var flat_years = vistk.utils.flatten_years(countries);
 
-  var data_comitan = munis.filter(function(d) { 
+  locations.forEach(function(d, i) {
 
-    // Remove products with missing values
-    return (d.location_id === "7019.0" && typeof d.distance != "undefined" && d.distance.length > 0 && typeof d.pci != "undefined" && d.pci.length > 0);
+    var data_comitan = munis.filter(function(d) { 
 
-  })
+      // Remove products with missing values
+      return (d.location_id === "7019.0" && typeof d.distance != "undefined" && d.distance.length > 0 && typeof d.pci != "undefined" && d.pci.length > 0);
 
-  data_comitan.forEach(function(d) {
+    })
 
-    d.distance = parseFloat(d.distance);
-    d.pci = parseFloat(d.pci);
+    data_comitan.forEach(function(d) {
 
-  });
+      d.distance = parseFloat(d.distance);
+      d.pci = parseFloat(d.pci);
 
-  visualization = vistk.viz()
-    .params({
-      type: "scatterplot",
-      container: "#viz",
-      data: data_comitan,
-      id: ["community_name", "product_id"],
-      var_group: "community_name",
-      var_color: "community_id",
-      var_x: 'distance',
-      var_y: 'pci',
-      var_share: "distance",
-      var_text: "product_name",
-      x_format: function(d) { return d3.format(".3f")(d); },
-      r_cutoff: function(d) { return d.rca > 1; },
-      ui: {
-        default: true,
-        options: ["community_id", "product_id"]
-      }
     });
 
-  d3.select("#viz").call(visualization);
+    visualization = vistk.viz()
+      .params({
+        type: "scatterplot",
+        container: "#viz",// + i,
+        data: data_comitan,
+        id: ["community_name", "product_id"],
+        var_group: "community_name",
+        var_color: "community_id",
+        var_x: 'distance',
+        var_y: 'pci',
+        var_share: "distance",
+        var_text: "product_name",
+        x_format: function(d) { return d3.format(".3f")(d); },
+        r_cutoff: function(d) { return d.rca > 1; },
+        ui: {
+          default: true,
+          options: ["community_id", "product_id"]
+        },
+        title: d.name,
+
+        // TODO: merge with charts params
+        x_scale: [{
+          range:[0.9, 1]
+        }],
+
+        y_scale: [{
+          range:[-6, 6]
+        }],
+
+      });
+
+    d3.select("#viz").call(visualization);
+
+  });
 
 });
 

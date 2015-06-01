@@ -191,5 +191,7 @@
             return "translate(" + vars.params.x_scale[0]["func"](d[vars.var_x]) + ", " + vars.params.y_scale[0]["func"](d[vars.var_y]) + ")";
           });
 
+        vistk.utils.background_label("test");
+
       break;
         
