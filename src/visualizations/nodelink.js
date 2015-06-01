@@ -120,12 +120,6 @@
 
         });
 
-        // TODO: use in case we don't have (x, y) coordinates for nodes'
-        var force = d3.layout.force()
-            .charge(-120)
-            .linkDistance(30)
-            .size([vars.width, vars.height]);
-
         vars.links.forEach(function(d, i) {
 
           d.source = vistk.utils.find_node_by_id(d.source);
