@@ -191,7 +191,7 @@ vistk.utils.axis = function(d, i) {
       .ticks(vars.x_ticks)
       // Quick fix to get max value
       .tickValues(vars.x_tickValues)
-      .tickFormat(function(d) { return vars.x_format(d); })
+      .tickFormat(vars.x_format)
       .tickSize(vars.tickSize)
       .tickPadding(vars.tickPadding)
       .orient("bottom");
@@ -328,8 +328,6 @@ vistk.utils.merge = function() {
 vistk.utils.wrap = function(node) {
 
   node.each(function() {
-
-    console.log("EHERE", d3.select(this).data()[0].dx, d3.select(this).data()[0], d3.select(this).attr("dy"))
 
     width = d3.select(this).data()[0].dx;
 

@@ -240,7 +240,9 @@ Text wrap
 
 * Should have bins for each time point (as an option)
 
-* Aligned line chart http://www.lesechos.fr/infographie/2014-07-06-emploi-salaires/emplois.html
+#### Aligned line chart 
+
+http://www.lesechos.fr/infographie/2014-07-06-emploi-salaires/emplois.html
 
 * http://www.nytimes.com/interactive/2014/10/19/upshot/peyton-manning-breaks-touchdown-passing-record.html?
 
@@ -373,12 +375,18 @@ Listing of charts
 * http://annkemery.com/essentials/
 * http://www.d3js.org/
 
+* https://pinboard.in/u:vlandham/t:scroll/
+
 * Using rectangles and height http://www.economist.com/news/finance-and-economics/21601568-new-data-suggest-chinese-economy-bigger-previously-thought-dragon
 
 
 * Grids http://www.d3noob.org/2013/01/adding-grid-lines-to-d3js-graph.html
 
 * Bi-partite graph http://bl.ocks.org/NPashaP/9796212
+
+D3js notebook
+https://github.com/carnby/matta
+http://www.benfrederickson.com/distance-metrics/
 
 ## Roadmap
 

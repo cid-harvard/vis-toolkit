@@ -41,7 +41,7 @@
 
     // DOTPLOT
     x_type: "linear",
-    x_scale: null,
+    x_scale: [],
     x_ticks: 5,
     x_axis: null,
     x_format: function(d) { return d; },
@@ -49,7 +49,7 @@
 
     // SCATTERPLOT (INCLUDES DOTPLOT)
     y_type: "linear",
-    y_scale: null,
+    y_scale: [],
     y_ticks: 5,
     y_axis: null,
 
