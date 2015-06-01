@@ -11,15 +11,19 @@
           }],
           axes: [],
           items: [{
-            type: "rect",
-            rotate: "0"
-          }, {
-            type: "circle",
-            r: "10"
+            attr: "attr",
+            marks: [{
+                type: "rect",
+                rotate: "0"
+              }, {
+                type: "circle",
+                r: "10"
+            }]
           }],
           connect: []
         }
 
+        // MERGE WITH GLOBAL VARS
         vars = vistk.utils.merge(vars, vars.params);
 
         // REGISTER EVENTS
@@ -39,9 +43,8 @@
                         .append("g")
                         .each(vistk.utils.items_group);
 
-
         // Add items marks
-        vars.items.forEach(function(d) {
+        vars.items[0].marks.forEach(function(d) {
 
           // TODO: avoid doing this..
           vars.mark.type = d.type;

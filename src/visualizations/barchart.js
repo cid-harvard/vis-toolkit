@@ -24,9 +24,9 @@
           },
         };
 
-
         vars = vistk.utils.merge(vars, vars.params);
 
+        // Params break down is required as there are some dependencies
         vars.items = [{
           attr: "country",
           marks: [{
@@ -91,7 +91,12 @@
 
           vars.mark.type = d.type;
           vars.mark.rotate = d.rotate;
-          gItems_enter.each(vistk.utils.items_mark);
+          gItems_enter.each(vistk.utils.items_mark)
+            .attr("class", "bar")
+            .attr("x", function(d) { return vars.x_scale[0]["func"](d[vars.var_x]); })
+            .attr("width", vars.x_scale[0]["func"].rangeBand())
+            .attr("y", function(d) { return vars.y_scale[0]["func"](d[vars.var_y]); })
+            .attr("height", function(d) { return vars.height - vars.y_scale[0]["func"](d[vars.var_y]); });
 
         });
 

@@ -23,7 +23,7 @@ vistk.utils.items_mark = function(d, i) {
   switch(vars.mark.type) {
 
     case "rect":
-    
+
       d3.select(this).append("rect")
                       .attr("height", vars.mark.height)
                       .attr("width", vars.mark.width)                              
@@ -89,6 +89,7 @@ vistk.utils.items_mark = function(d, i) {
                         });
                         */
       break;
+
     case "text":
 
       if(typeof vars.mark.rotate === "undefined")

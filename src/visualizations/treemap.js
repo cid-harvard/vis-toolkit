@@ -1,5 +1,41 @@
       case "treemap":
 
+        vars.params = {
+          x_scale: [{
+              name: "linear",
+              func: d3.scale.ordinal()
+                      .rangeRoundBands([0, vars.width], .1)
+                      .domain(vars.data.map(function(d) { return d[vars.var_x]; })),
+            }
+          ],
+
+          x_ticks: 10,
+
+          y_scale: [{
+              name: "linear",
+              func: d3.scale.linear()
+                      .range([vars.height, 0])
+                      .domain([0, d3.max(vars.data, function(d) { return d[vars.var_y]; })]),
+            }
+          ],
+
+          items: [{
+            attr: "country",
+            marks: [{
+                type: "rect",
+                rotate: "0"
+              }, {
+                type: "text",
+                rotate: "0",
+                translate: null
+              }]
+          }],
+
+          connect: [],
+        };
+
+        vars = vistk.utils.merge(vars, vars.params);
+
         vars.evt.register("highlightOn", function(d) {
           vars.svg.selectAll("rect")
             .filter(function(e, j) { return e === d; })
@@ -17,17 +53,38 @@
             .size([vars.width, vars.height])
             .value(function(d) { return d[vars.var_size]; });
 
+
         // PRE-UPDATE
         var gItems = vars.svg.data([vars.r]).selectAll("g")
             .data(treemap.nodes);
 
-        // Add items groups
+        // ENTER
         var gItems_enter = gItems.enter()
                         .append("g")
                         .each(vistk.utils.items_group)
                         .attr("transform", function(d) { 
                           return "translate(" + d.x + "," + d.y + ")"; 
                         });
+
+        // Add graphical marks
+        vars.items[0].marks.forEach(function(d) {
+
+          vars.mark.type = d.type;
+          vars.mark.rotate = d.rotate;
+
+          //vars.mark.height = function(d) { return d.dx; };
+          // vars.mark.width = function(d) { return d.dy; };
+
+          gItems_enter
+                .filter(function(d, j) {
+                    return (vars.mark.type == "rect" && d.depth == 2) || (vars.mark.type == "text" && d.depth == 1);
+                  })
+                .each(vistk.utils.items_mark)
+                .select("rect")
+                .attr("width", function(d) { return d.dx; })
+                .attr("height", function(d) { return d.dy; });
+
+        });
 
 /*
         // TODO: Add items labels
@@ -40,6 +97,8 @@
             })
             .each(vistk.utils.items_mark);
 */
+
+/*
 
         vars.mark.type = "text";
 
@@ -56,6 +115,7 @@
 //              return d.children ? vars.color(d[vars.var_color]) : null; 
             })
       */
+      /*
             .attr("width", function(d) { return d.dx; })
             .attr("height", function(d) { return d.dy; })
             .call(vistk.utils.wrap, 100);
@@ -78,25 +138,6 @@
             .attr("width", function(d) { return d.dx; })
             .attr("height", function(d) { return d.dy; });
 
-        // EXIT
-        var gItems_exit = gItems.exit();
-
-        // UPDATE
-        gItems.transition();
-
-        // TODO
-        // Consider nesting as a connection mark...
-        // Add text as item graphical mark
-
-        /*
-        // ENTER
-        // TODO: turn into a mark creation
-        // vistk.utils.items_mark 
-        var cell_enter = cell.enter().append("g")
-            .attr("class", "cell")
-            .attr("transform", function(d) { 
-              return "translate(" + d.x + "," + d.y + ")"; 
-            });
 
         cell_enter.append("rect")
             .attr("width", function(d) { return d.dx; })
@@ -120,11 +161,6 @@
             //  return d.children ? null : d[vars.var_text].slice(0, 3)+"..."; 
             })
 
-        // EXIT
-        var cell_exit = cell.exit().remove();
-
-        // UPDATE
-        cell.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
 
         cell.select("rect")
             .attr("width", function(d) { return d.dx; })

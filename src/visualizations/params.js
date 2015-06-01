@@ -33,11 +33,14 @@ vars.params["dotplot"] = {
   y_scale: [],
 
   items: [{
-    type: "diamond",
-    rotate: "0"
-  },{
-    type: "text",
-    rotate: "-30"
+    attr: "name",
+    marks: [{
+      type: "diamond",
+      rotate: "0"
+    },{
+      type: "text",
+      rotate: "-30"
+    }]
   }],
 
   connect: [],
