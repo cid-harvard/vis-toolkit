@@ -41,6 +41,11 @@
               rotate: "90",
               translate: null
             }]
+        }, {
+          attr: "continent",
+          marks: [{
+            // Stacked bar chart
+          }]
         }];
 
         // REGISTER EVENTS

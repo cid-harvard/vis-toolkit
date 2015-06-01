@@ -20,18 +20,18 @@
           ],
 
           items: [{
-            attr: "country",
+            attr: "depth2",
             marks: [{
                 type: "rect",
                 rotate: "0"
-              }, {
-                type: "text",
-                rotate: "0",
-                translate: null
               }]
           }],
 
-          connect: [],
+          connect: [{
+            attr: "depth1",
+            type: "text",
+            rotate: "0"
+          }],
         };
 
         vars = vistk.utils.merge(vars, vars.params);
@@ -48,12 +48,28 @@
         });
 
         var treemap = d3.layout.treemap()
-            .padding(vars.mark.padding)
+            .padding(vars.padding)
             .sticky(true)
             .size([vars.width, vars.height])
             .value(function(d) { return d[vars.var_size]; });
 
+/*
+        // Connect marks
+        var gConnect = vars.svg.selectAll(".connect__group")
+                        .data(treemap.nodes);
+      
+        var gConnect_enter = gConnect.enter()
+                        .append("g")
+                        .attr("class", "connect__group");
 
+        vars.connect[0].marks.forEach(function(d) {
+          
+          vars.mark.type = d.type;
+          vars.mark.rotate = d.rotate;
+          gConnect_enter.each(vistk.utils.connect_mark);
+
+        });
+*/
         // PRE-UPDATE
         var gItems = vars.svg.data([vars.r]).selectAll("g")
             .data(treemap.nodes);
@@ -72,7 +88,7 @@
           vars.mark.type = d.type;
           vars.mark.rotate = d.rotate;
 
-          //vars.mark.height = function(d) { return d.dx; };
+          // vars.mark.height = function(d) { return d.dx; };
           // vars.mark.width = function(d) { return d.dy; };
 
           gItems_enter
@@ -81,6 +97,7 @@
                   })
                 .each(vistk.utils.items_mark)
                 .select("rect")
+                .transition().duration(2000)
                 .attr("width", function(d) { return d.dx; })
                 .attr("height", function(d) { return d.dy; });
 

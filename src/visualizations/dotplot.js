@@ -42,7 +42,7 @@
                         });
 
         // Add graphical marks
-        vars.items.forEach(function(d) {
+        vars.items[0].marks.forEach(function(d) {
 
           vars.mark.type = d.type;
           vars.mark.rotate = d.rotate;

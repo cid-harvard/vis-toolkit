@@ -544,3 +544,4 @@ Template
 * Responsive visualization http://eyeseast.github.io/visible-data/2013/08/26/responsive-d3/
 * http://bl.ocks.org/curran/raw/9aafca5fba0c7fde13aa/
 * http://mobileinfovis.com/smartphone
+
