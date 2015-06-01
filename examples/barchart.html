@@ -6,23 +6,24 @@
 <div id="viz"></div>
 <script>
 
-d3.tsv("../data/data.tsv", function(error, data) {
+d3.json("../data/diversification_ubiquity_hs4_1995_2012.json", function(error, countries) {
+
+  var flat_years = vistk.utils.flatten_years(countries);
 
   visualization = vistk.viz().params({
     type: "barchart",
     container: "#viz",
-    data: data,
-    share: "nb_products",
+    data: flat_years,
     id: ["continent", "country"],
-    group: "continent",
-    var_share: "nb_products",
-    //time: {
-    //  var_time: "year", 
-    //  current_time: 1995,
-    //},
+    var_group: "continent",
     var_color: "continent",
-    var_text: "name",
-    selection: ["Angola"]
+    var_x: 'name',
+    time: {
+      var_time: "year",
+      current_time: 1995
+    },
+    var_color: "continent",
+    var_text: "name"
   });
 
   d3.select("#viz").call(visualization);

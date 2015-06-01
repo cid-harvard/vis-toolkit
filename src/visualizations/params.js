@@ -1,5 +1,9 @@
 vars.params = {};
 
+vars.params.basic = {};
+vars.params.composite = {};
+vars.params.custom = {};
+
 // TODO
 // There should be an abstract version of the dotplot
 // And then decide weither it is horizontal or vertical
@@ -37,6 +41,11 @@ vars.params["dotplot"] = {
   }],
 
   connect: [],
+
+  axes: [
+    {type: "x",
+     scale: null}
+  ],
 
   x_tickValues: [0, d3.max(vars.new_data, function(d) { return d[vars.var_x]; })]
 
@@ -99,5 +108,6 @@ vars.params["parallel_coordinates"] = vars.params["dotplot"];
 
 vars.params["splot_graph"] = {
 
+  layout: null // Should be a X axis
 
-} 
+};
