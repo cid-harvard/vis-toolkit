@@ -83,6 +83,8 @@
     items: {
       type: "circle"
     },
+      
+    padding: 5,
 
     mark: {
       height: 10,
@@ -93,6 +95,7 @@
     accessor_values: function(d) { return d; },
     accessor_data: function(d) { return d; },
 
+    container: "#viz",
     nb_viz: nb_viz
   };
 
@@ -136,7 +139,7 @@
 
   if(typeof vars.width === "undefined" && typeof vars.height === "undefined") {
 
-    vars.width = parseInt(d3.select("#viz").style('width'));
+    vars.width = parseInt(d3.select(vars.container).style('width'));
     vars.width = vars.width - vars.margin.left - vars.margin.right;
     vars.height = vars.width * vars.ratio;
 

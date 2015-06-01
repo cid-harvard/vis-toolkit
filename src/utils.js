@@ -270,16 +270,16 @@ vistk.utils.make_y_axis = function() {
 
 vistk.utils.background_label = function() {
 
-  vars.svg.selectAll(".label").data(vars.new_data)
+  vars.svg.selectAll(".label").data([vars.new_data])
     .enter()
       .append("text")
-      .attr("class", "year label")
-      .attr("text-anchor", "end");
+      .attr("class", "label")
+      .attr("text-anchor", "middle");
 
   vars.svg.selectAll(".label")
-      .attr("y", 124)
+      .attr("y", -vars.height + vars.margin.top + vars.margin.bottom)
       .attr("x", 500)
-      .text(vars.current_time);
+      .text(vars.title);
 
 }
 
