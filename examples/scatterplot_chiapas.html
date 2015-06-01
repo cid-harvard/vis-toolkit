@@ -7,7 +7,7 @@
 <div id="viz"></div>
 <style>
 .items__mark__text {
-  display: none;
+  display: block;
 }
 
 .items__mark__text: hover {
@@ -28,6 +28,9 @@
 // location_id,product_id,rca,value,pci,distance,product_name,community_id,community_name
 // 8021.0,0101,0.519559025764,1025.0,0.360865205526,0.95753878355,Horses,106,Animal & Animal Products
 // 19011.0,0101,232.11378479,24750.0,0.360865205526,0.989889979362,Horses,106,Animal & Animal Products
+
+// TODO
+// Fixed vaues range 
 
 d3.csv("../data/chiapas_munis_2012.csv", function(error, munis) {
 
@@ -52,13 +55,14 @@ d3.csv("../data/chiapas_munis_2012.csv", function(error, munis) {
       type: "scatterplot",
       container: "#viz",
       data: data_comitan,
-      id: ["community_id", "product_id"],
-      var_group: "community_id",
+      id: ["community_name", "product_id"],
+      var_group: "community_name",
       var_color: "community_id",
       var_x: 'distance',
       var_y: 'pci',
       var_share: "distance",
       var_text: "product_name",
+      x_format: function(d) { return d3.format(".3f")(d); },
       r_cutoff: function(d) { return d.rca > 1; },
       ui: {
         default: true,

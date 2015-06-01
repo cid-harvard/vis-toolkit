@@ -96,12 +96,12 @@
           .enter()
             .append("g")        
             .attr("class", "y grid")
-            .attr("transform", "translate(0, 0)");
+            .attr("transform", "translate(" + vars.margin.left + ", 0)");
 
         vars.svg.selectAll(".y.grid").transition()
             .duration(vars.duration)
             .call(vistk.utils.make_y_axis()
-            .tickSize(-vars.width, 0, 0)
+            .tickSize(-vars.width+vars.margin.left+vars.margin.right, 0, 0)
             .tickFormat(""));
 
         // PRE-UPDATE
@@ -122,7 +122,7 @@
 
           vars.pie = d3.layout.pie().value(function(d) { return d[vars.var_share]; }); // equal share
 
-          //vars.radius = vars.width/12;
+          // vars.radius = vars.width/12;
           // vars.accessor_data = function(d) { return d.data; };
 
           vars.r_scale.range([0, vars.width/6])
