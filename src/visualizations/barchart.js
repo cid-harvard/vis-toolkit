@@ -19,30 +19,30 @@
             }
           ],
 
+          items: [{
+            attr: "country",
+            marks: [{
+                type: "rect",
+                rotate: "0"
+              }, {
+                type: "text",
+                rotate: "90",
+                translate: null,
+                anchor: "end"
+              }]
+          }, {
+            attr: "continent",
+            marks: [{
+              // Stacked bar chart
+            }]
+          }],
+
           connect: {
             type: null
           },
         };
 
         vars = vistk.utils.merge(vars, vars.params);
-
-        // Params break down is required as there are some dependencies
-        vars.items = [{
-          attr: "country",
-          marks: [{
-              type: "rect",
-              rotate: "0"
-            }, {
-              type: "text",
-              rotate: "90",
-              translate: null
-            }]
-        }, {
-          attr: "continent",
-          marks: [{
-            // Stacked bar chart
-          }]
-        }];
 
         // REGISTER EVENTS
         vars.evt.register("highlightOn", function(d) { });
@@ -61,19 +61,11 @@
                 .style("text-anchor", "end")
                 .text(function(d) { return vars.var_x; });                
 
-        vars.svg.call(vistk.utils.y_axis);
-
-        vars.svg.selectAll(".bar")
-            .data(vars.data)
-          .enter()
-            .append("rect")
-            .attr("class", "bar")
-            .attr("x", function(d) { return vars.x_scale[0]["func"](d.letter); })
-            .attr("width", vars.x_scale[0]["func"].rangeBand())
-            .attr("y", function(d) { return vars.y_scale[0]["func"](d.frequency); })
-            .attr("height", function(d) { return vars.height - vars.y_scale[0]["func"](d.frequency); });
-
 */
+
+        vars.svg.call(vistk.utils.y_axis);
+        vars.svg.call(vistk.utils.axis);
+
         // PRE-UPDATE
         var gItems = vars.svg.selectAll(".mark__group")
                          .data(vars.new_data, function(d, i) { return i; });
@@ -117,35 +109,5 @@
                             return "translate(" + vars.x_scale[0]["func"](d[vars.var_x]) + ", " + vars.height/2 + ")";
                           }
                         });
-
-
-/*
-        var xAxis = d3.svg.axis()
-            .scale(vars.x_scale[0]["func"])
-            .orient("bottom");
-
-        var yAxis = d3.svg.axis()
-            .scale(vars.y_scale[0]["func"])
-            .orient("left")
-            .ticks(10, "%");
-
-        vars.svg.append("g")
-            .attr("transform", "translate(" + vars.margin.left + "," + vars.margin.top + ")");
-
-        vars.svg.append("g")
-            .attr("class", "x axis")
-            .attr("transform", "translate(0," + vars.height + ")")
-            .call(xAxis);
-
-        vars.svg.append("g")
-            .attr("class", "y axis")
-            .call(yAxis)
-          .append("text")
-            .attr("transform", "rotate(-90)")
-            .attr("y", 6)
-            .attr("dy", ".71em")
-            .style("text-anchor", "end")
-            .text("Frequency");
-*/
 
       break;
