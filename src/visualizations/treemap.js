@@ -24,6 +24,10 @@
             marks: [{
                 type: "rect",
                 rotate: "0"
+              },{
+                attr: "depth1",
+                type: "text",
+                rotate: "0"
               }]
           }],
 
@@ -91,15 +95,19 @@
           // vars.mark.height = function(d) { return d.dx; };
           // vars.mark.width = function(d) { return d.dy; };
 
-          gItems_enter
+          var new_items = gItems_enter
                 .filter(function(d, j) {
                     return (vars.mark.type == "rect" && d.depth == 2) || (vars.mark.type == "text" && d.depth == 1);
                   })
                 .each(vistk.utils.items_mark)
-                .select("rect")
+
+          new_items.select("rect")
                 .transition().duration(2000)
                 .attr("width", function(d) { return d.dx; })
                 .attr("height", function(d) { return d.dy; });
+
+          new_items.select("text")
+                .call(vistk.utils.wrap);
 
         });
 
