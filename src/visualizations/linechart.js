@@ -136,7 +136,7 @@
 
         });
 
-        var gItems = vars.svg.selectAll(".items__group")
+        var gItems = vars.svg.selectAll(".mark__group")
                         .data(vars.new_data, function(d, i) { return i; });
 
         // ENTER
@@ -155,6 +155,12 @@
           gItems_enter.each(vistk.utils.items_mark);
 
         });
+
+        gItems.transition()
+          .attr("transform", function(d, i) {
+            return "translate(" + vars.x_scale[0]["func"](d[vars.time.var_time]) + ", " + vars.y_scale[0]["func"](d[vars.var_y]) + ")";
+          });
+
 
 /*
         // Enter groups for items graphical marks
