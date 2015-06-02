@@ -70,7 +70,7 @@ d3.csv("../data/chiapas_munis_2012.csv", function(error, munis) {
         var_share: "distance",
         var_text: "product_name",
         x_format: function(d) { return d3.format(".3f")(d); },
-        r_cutoff: function(d) { return d.rca > 1; },
+        r_cutoff: function(d) { return d.rca < 1; },
         ui: {
           default: true,
           options: ["community_id", "product_id"]

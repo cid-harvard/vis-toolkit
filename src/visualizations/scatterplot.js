@@ -44,8 +44,7 @@
             marks: [{
                 type: "circle",
                 rotate: "0",
-                radius: 20,
-                fill: "#fff"
+                radius: 20
             }, {
               type: "arc"
             }, {
@@ -205,7 +204,7 @@
             return "translate(" + vars.params.x_scale[0]["func"](d[vars.var_x]) + ", " + vars.params.y_scale[0]["func"](d[vars.var_y]) + ")";
           });
 
-        vistk.utils.background_label("test");
+        vistk.utils.background_label(vars.title);
 
       break;
         
