@@ -60,7 +60,7 @@ vistk.utils.items_mark = function(d, i) {
           })
           .style("fill-opacity", function(d, i) {
             if(d.i == 0)
-              return .2;
+              return 1;
             else
               return .2;
           })          
@@ -276,7 +276,7 @@ vistk.utils.background_label = function() {
   vars.svg.selectAll(".label")
       .data([vars.new_data])
     .enter()
-      .append("text")
+      .insert("text")
       .attr("class", "label")
       .attr("text-anchor", "middle")
       .attr("y", -vars.height + vars.margin.top + vars.margin.bottom)
@@ -341,10 +341,8 @@ vistk.utils.wrap = function(node) {
         lineNumber = 0,
         lineHeight = 1.1, // ems
         y = text.attr("y"),
-        dy = 100, //parseFloat(text.attr("dy")),
+        dy = 0, //parseFloat(text.attr("dy")),
         tspan = text.text(null).append("tspan").attr("x", 0).attr("y", y).attr("dy", dy + "em");
-
-        console.log("WPRD", words, line, tspan);
 
     while (word = words.pop()) {
       line.push(word);

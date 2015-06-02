@@ -1,0 +1,123 @@
+<!doctype html>
+<meta charset="utf-8">
+<script src="../js/d3.js"></script>
+<script src="../build/vistk.js"></script>
+<link href="../css/vistk.css" rel="stylesheet">
+<body>
+<div id="viz" style="float: left;"></div>
+<div id="stepper" style="position: fixed; right: 0px;">
+  <ul>
+    <li><input name="radio-step" value="default" type="radio" checked>Default chart</li>
+    <li><input name="radio-step" value="dotplot" type="radio">Dotplot</li>
+    <li><input name="radio-step" value="scatterplot" type="radio">Scatterplot</li>
+    <li><input name="radio-step" value="barchart" type="radio">Bar chart</li>
+    <li><input name="radio-step" type="radio">Treemap</li>
+    <li><input name="radio-step" type="radio">Geomap</li>
+    <li><input name="radio-step" type="radio">Sparklines</li>
+    <li><input name="radio-step" type="radio">Line chart</li>  
+    <li><input name="radio-step" type="radio">Stacked graph</li>  
+  </ul>
+</div>
+
+<script>
+
+d3.json("../data/diversification_ubiquity_hs4_1995_2012.json", function(error, countries) {
+
+  var flat_years = vistk.utils.flatten_years(countries);
+
+  visualization = vistk.viz()
+    .params({
+      width: 500,
+      height: 500,
+      type: "blob",
+      container: "#viz",
+      data: flat_years,
+      id: ["continent", "country"],
+      var_group: "continent",
+      var_color: "continent",
+      time: {
+        var_time: "year",
+        current_time: 1995
+      },
+      ui: {
+        default: true,
+        options: ["country", "continent"]
+      },
+      title: "World Countries"
+    });
+
+  d3.select("#viz").call(visualization);
+
+});
+
+d3.select("input[value='default']").on("click", function(d) {
+
+  // TODO: reset all other parameters?
+  visualization.params({
+      type: "default"
+    });
+
+  d3.select("#viz").call(visualization);
+
+});
+
+d3.select("input[value='dotplot']").on("click", function(d) {
+
+  visualization.params({
+      type: "dotplot",
+      var_x: "nb_products"
+    });
+
+  d3.select("#viz").call(visualization);
+
+});
+
+d3.select("input[value='scatterplot']").on("click", function(d) {
+
+  visualization.params({
+      type: "scatterplot",
+      container: "#viz",
+      id: ["continent", "country"],
+      var_group: "continent",
+      var_color: "continent",
+      var_x: 'nb_products',
+      var_y: 'avg_products',
+      var_share: "nb_products",
+      time: {
+        var_time: "year",
+        current_time: 1995
+      },
+      ui: {
+        default: true,
+        options: ["country", "continent"]
+      },
+      title: "World Countries"
+    });
+
+  d3.select("#viz").call(visualization);
+
+});
+
+d3.select("input[value='barchart']").on("click", function(d) {
+
+  visualization.params({
+    type: "barchart",
+    container: "#viz",
+    id: ["continent", "country"],
+    var_group: "continent",
+    var_color: "continent",
+    var_x: 'name',
+    var_y: 'avg_products',
+    time: {
+      var_time: "year",
+      current_time: 1995
+    },
+    var_color: "continent",
+    var_text: "name"
+  });
+
+  d3.select("#viz").call(visualization);
+
+});
+
+</script>

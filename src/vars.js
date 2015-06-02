@@ -14,7 +14,7 @@
     var_group: null,
     data: [],
     links: [],
-    title: null,
+    title: "",
     focus: [],
     nesting: null,
     nesting_aggs: {},
@@ -156,8 +156,8 @@
   }
 
   // Events 
-  vars.dispatch = d3.dispatch("init", "end", "highlightOn", "highlightOut", "selection", 'resize');
+  vars.dispatch = d3.dispatch('init', 'end', 'highlightOn', 'highlightOut', 'selection', 'resize', 'clearAnimations');
 
   d3.select(window).on('resize', function(d) { 
-    vars.evt.call("resize", d); 
+    vars.evt.call("resize", d);
   });
