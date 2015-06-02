@@ -64,7 +64,7 @@
         vars.svg.call(vistk.utils.y_axis);
 
         // PRE-UPDATE
-        var gItems = vars.svg.selectAll(".mark__group")
+        gItems = vars.svg.selectAll(".mark__group")
                          .data(vars.new_data, function(d, i) { return i; });
 
         // ENTER
@@ -81,7 +81,9 @@
           vars.mark.type = d.type;
           vars.mark.rotate = d.rotate;
 
-          gItems_enter.each(vistk.utils.items_mark)
+          gItems_enter.each(vistk.utils.items_mark);
+
+          gItems.each(vistk.utils.items_mark)
             .select("rect")
        //     .attr("x", function(d) { return vars.x_scale[0]["func"](d[vars.var_x]); })
             .attr("width", vars.x_scale[0]["func"].rangeBand())
@@ -93,7 +95,6 @@
         // EXIT
         var gItems_exit = gItems.exit().style("opacity", 0.1);
 
-        gItems.selectAll("rect").each(vistk.utils.items_mark);
 
         // POST-UPDATE
         gItems.transition()

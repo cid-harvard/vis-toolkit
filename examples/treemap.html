@@ -5,11 +5,11 @@
 <link href="../css/vistk.css" rel="stylesheet">
 <body>
 <style>
-text{
+text {
     font: 20px Verdana, Helvetica, Arial, sans-serif;
 }
 
-tspan{
+tspan {
   fill: red;
   font-weight: bold
 }
@@ -26,7 +26,7 @@ d3.json("../data/exports_2012.json", function(error, exports) {
         d.parent = d.community_id;
         d.group = d.code[0];
     })
-
+/*
     // create a name: node map
     var dataMap = exports.data.reduce(function(map, node) {
         map[node.name] = node;
@@ -48,7 +48,7 @@ d3.json("../data/exports_2012.json", function(error, exports) {
             treeData.push(node);
         }
     });
-
+*/
   visualization = vistk.viz()
     .params({
       type: "treemap",

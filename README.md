@@ -107,18 +107,14 @@ What to do with missing data over time?
 * Custom format for charts
  * e.g. `.total_bar({"prefix": "Export Value: $", "suffix": " USD", "format": ",f"})`
 
-
-## How to create a new chart
-
-* What is the interface? Options are:
- * Object inheritance
- * Create a list of pre-defined visualization
- * Implement a specific interface (à la d3plus)
-* What should be reused or not?
-* How to define the transitions to other apps?
-
-
 ## Chart 
+
+Each chart is a configuration
+
+* Defauts
+* Chart specific
+* User customizations
+
 
 1. Data wrangling
  * Standard structure
