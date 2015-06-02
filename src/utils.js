@@ -24,13 +24,19 @@ vistk.utils.items_mark = function(d, i) {
 
     case "rect":
 
-      d3.select(this).append("rect")
-                      .attr("height", vars.mark.height)
-                      .attr("width", vars.mark.width)                              
-                      .attr("x", -vars.mark.width/2)
-                      .attr("y", -vars.mark.height/2)
-                      .classed("items__mark__rect", true)
-                      .style("fill", function(d) { return vars.color(d[vars.var_color]); });
+      console.log("IPDATE", d)
+
+      var mark = d3.select(this).selectAll(".items__mark__rect").data([d]);
+
+      mark.enter().append("rect")
+                .attr("height", vars.mark.height)
+                .attr("width", vars.mark.width)                              
+                .attr("x", -vars.mark.width/2)
+                .attr("y", -vars.mark.height/2)
+                .classed("items__mark__rect", true)
+                .style("fill", function(d) { return vars.color(d[vars.var_color]); });
+
+      mark.exit().remove();
 
       break;
 

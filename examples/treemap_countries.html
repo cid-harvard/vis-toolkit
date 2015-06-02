@@ -1,0 +1,85 @@
+<!doctype html>
+<meta charset="utf-8">
+<script src="../js/d3.js"></script>
+<script src="../build/vistk.js"></script>
+<link href="../css/vistk.css" rel="stylesheet">
+<body>
+<style>
+text{
+    font: 20px Verdana, Helvetica, Arial, sans-serif;
+}
+
+tspan {
+  fill: red;
+  font-weight: bold
+}
+
+</style>
+<div id="viz"></div>
+<script>
+
+
+d3.json("../data/diversification_ubiquity_hs4_1995_2012.json", function(error, countries) {
+
+    flat_years = vistk.utils.flatten_years(countries);
+
+    countries.forEach(function(d) {
+        d.parent = d.continent;
+        d.group = d.continent;
+    })
+
+    // create a name: node map
+    var dataMap = countries.reduce(function(map, node) {
+        map[node.name] = node;
+        return map;
+    }, {});
+
+    // create the tree array
+    treeData = [];
+
+    countries.forEach(function(node) {
+        var parent = dataMap[node.parent];
+        if (parent) {
+            // create child array if it doesn't exist
+            (parent.children || (parent.children = []))
+                // add node to child array
+                .push(node);
+        } else {
+            // parent is null or missing
+            treeData.push(node);
+        }
+    });
+
+    cc = countries;
+
+  visualization = vistk.viz()
+    .params({
+      type: "treemap",
+      container: "#viz",
+      height: 600,
+      width: 900,
+      data: countries,
+      var_id: "name",
+      var_group: "group",
+      var_color: "group",
+      title: "Products",
+      var_size: "latitude",
+      var_text: "name",
+      time: {
+        var_time: "year", 
+        current_time: 2012
+      },
+      mark: {
+        type: 'rect',
+        width: 10,
+        height: 10
+      },
+      focus: 1121
+    });
+
+  d3.select("#viz").call(visualization);
+
+});
+
+</script>
+</body>
