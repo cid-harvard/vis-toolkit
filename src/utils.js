@@ -24,8 +24,6 @@ vistk.utils.items_mark = function(d, i) {
 
     case "rect":
 
-      console.log("IPDATE", d)
-
       var mark = d3.select(this).selectAll(".items__mark__rect").data([d]);
 
       mark.enter().append("rect")
@@ -112,8 +110,6 @@ vistk.utils.items_mark = function(d, i) {
           .attr("transform", "translate(" + d3.event.x + "," + d3.event.y + ")rotate(" +  vars.mark.rotate + ")");
       }
 
-      d3.select(this)
-
       d3.select(this).append("text")
                       .attr("x", 10)
                       .attr("y", 0)
@@ -124,7 +120,7 @@ vistk.utils.items_mark = function(d, i) {
                       .text(function(d) { 
                         return vars.accessor_data(d)[vars.var_text]; 
                       })
-                      .call(drag)
+                      .call(drag);
 
 /*
         // For pie chart wedges..
