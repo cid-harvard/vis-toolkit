@@ -104,6 +104,16 @@ vistk.utils.items_mark = function(d, i) {
       if(typeof vars.mark.rotate === "undefined")
         vars.mark.rotate = 0;
 
+      var drag = d3.behavior.drag()
+          .on("drag", dragmove);
+
+      function dragmove(d) {
+          d3.select(this)
+          .attr("transform", "translate(" + d3.event.x + "," + d3.event.y + ")rotate(" +  vars.mark.rotate + ")");
+      }
+
+      d3.select(this)
+
       d3.select(this).append("text")
                       .attr("x", 10)
                       .attr("y", 0)
@@ -113,7 +123,8 @@ vistk.utils.items_mark = function(d, i) {
                       .attr("transform", "rotate(" +  vars.mark.rotate + ")")
                       .text(function(d) { 
                         return vars.accessor_data(d)[vars.var_text]; 
-                      });
+                      })
+                      .call(drag)
 
 /*
         // For pie chart wedges..
