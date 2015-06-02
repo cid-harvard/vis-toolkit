@@ -27,7 +27,8 @@
               },{
                 attr: "depth1",
                 type: "text",
-                rotate: "0"
+                rotate: "0",
+                translate: "(10, 0)"
               }]
           }],
 
@@ -54,6 +55,7 @@
         var treemap = d3.layout.treemap()
             .padding(vars.padding)
             .sticky(true)
+            .sort(function(a,b) { return b[vars.var_size] - a[vars.var_size]; })
             .size([vars.width, vars.height])
             .value(function(d) { return d[vars.var_size]; });
 
@@ -80,7 +82,7 @@
 
         // ENTER
         var gItems_enter = gItems.enter()
-                        .append("g")
+                        .insert("g", ":first-child")
                         .each(vistk.utils.items_group)
                         .attr("transform", function(d) { 
                           return "translate(" + d.x + "," + d.y + ")"; 
@@ -111,40 +113,7 @@
 
         });
 
-/*
-        // TODO: Add items labels
-        // Make them fit the parent element
-        vars.mark.type = "text";
-
-        gItems_enter
-            .filter(function(d, j) { 
-              return d.depth == 1;
-            })
-            .each(vistk.utils.items_mark);
-*/
-
-/*
-
-        vars.mark.type = "text";
-
-        // Add items graphical mark (DEPTH 2)
-        gItems_enter
-            .filter(function(d, j) { 
-              return d.depth === 1;
-            })
-            .each(vistk.utils.items_mark)
-            .select("rect")
-            /*
-            .style("fill", function(d) {
-              return vars.color(d[vars.var_color]);
-//              return d.children ? vars.color(d[vars.var_color]) : null; 
-            })
-      */
       /*
-            .attr("width", function(d) { return d.dx; })
-            .attr("height", function(d) { return d.dy; })
-            .call(vistk.utils.wrap, 100);
-
 
         vars.mark.type = "rect";
 
@@ -186,7 +155,6 @@
             //  return d.children ? null : d[vars.var_text].slice(0, 3)+"..."; 
             })
 
-
         cell.select("rect")
             .attr("width", function(d) { return d.dx; })
             .attr("height", function(d) { return d.dy; })
@@ -195,8 +163,6 @@
             })
             .classed("focus", function(d, i) { return d.focus; });
 
-        cell.select("text")
-            .call(wrap);
 */
       break;
       
