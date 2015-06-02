@@ -61,7 +61,7 @@
         vars = vistk.utils.merge(vars, vars.params);
 
         // In case we don't have (x, y) coordinates for nodes'
-        force = d3.layout.force()
+        vars.force = d3.layout.force()
             .size([vars.width, vars.height])
             .charge(-50)
             .linkDistance(10)
@@ -72,7 +72,12 @@
         vars.var_x = 'x';
         vars.var_y = 'y';
 
-        force.nodes(vars.new_data).start();
+        vars.force.nodes(vars.new_data).start();
+
+        // In case we change visualization before the nodes are settled
+        vars.evt.register("clearAnimations", function(d) {
+          vars.force.nodes(vars.new_data).stop();
+        });
 
         // PRE-UPDATE
         var gItems = vars.svg.selectAll(".mark__group")
@@ -108,5 +113,8 @@
                           });
 
         }
+
+        // Remove grid and axes
+        vars.svg.selectAll(".x, .y").remove();
 
       break;

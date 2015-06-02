@@ -26,6 +26,9 @@
 
         });
 
+        // Remove grid and axes
+        vars.svg.selectAll(".x, .y").remove();
+
         // TODO: should specify this is an horizontal axis
         vars.svg.call(vistk.utils.axis);
 
