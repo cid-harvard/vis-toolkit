@@ -56,6 +56,13 @@
 
         };
 
+        // Merging with user configurations 
+        if(typeof vars.user_config.x_scale[0] !== "undefined")
+          vars.params.x_scale[0]["func"].domain(vars.user_config.x_scale[0].domain);
+
+        if(typeof vars.user_config.y_scale[0] !== "undefined")
+          vars.params.y_scale[0]["func"].domain(vars.user_config.y_scale[0].domain);
+
         vars = vistk.utils.merge(vars, vars.params);
 
         vars.evt.register("highlightOn", function(d) {
