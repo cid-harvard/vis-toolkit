@@ -77,7 +77,7 @@
         });
 */
         // PRE-UPDATE
-        var gItems = vars.svg.data([vars.r]).selectAll("g")
+        var gItems = vars.svg.data([vars.root]).selectAll("g")
             .data(treemap.nodes);
 
         // ENTER

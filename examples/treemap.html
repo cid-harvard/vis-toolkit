@@ -5,6 +5,7 @@
 <link href="../css/vistk.css" rel="stylesheet">
 <body>
 <style>
+
 text {
     font: 20px Verdana, Helvetica, Arial, sans-serif;
 }
@@ -20,35 +21,10 @@ tspan {
 
 d3.json("../data/exports_2012.json", function(error, exports) {
 
-    xp = exports
-
     exports.data.forEach(function(d) {
-        d.parent = d.community_id;
         d.group = d.code[0];
-    })
-/*
-    // create a name: node map
-    var dataMap = exports.data.reduce(function(map, node) {
-        map[node.name] = node;
-        return map;
-    }, {});
-
-    // create the tree array
-    treeData = [];
-
-    exports.data.forEach(function(node) {
-        var parent = dataMap[node.parent];
-        if (parent) {
-            // create child array if it doesn't exist
-            (parent.children || (parent.children = []))
-                // add node to child array
-                .push(node);
-        } else {
-            // parent is null or missing
-            treeData.push(node);
-        }
     });
-*/
+
   visualization = vistk.viz()
     .params({
       type: "treemap",
@@ -59,12 +35,14 @@ d3.json("../data/exports_2012.json", function(error, exports) {
       var_id: "product",
       var_group: "group",
       var_color: "group",
+      var_parent: "community_id",
       title: "Products",
       var_size: "size",
       var_text: "name",
       time: {
         var_time: "year", 
-        current_time: 2012
+        current_time: 2012,
+        parse: function(d) { return d; }
       },
       mark: {
         type: 'rect',

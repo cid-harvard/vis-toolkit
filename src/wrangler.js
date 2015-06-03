@@ -226,43 +226,73 @@
     if(vars.type === "treemap") {
 
       // Create the root node
-      vars.r = {};
-      vars.r.name = "root";
-      vars.r.depth = 0;
-      var groups = [];
+      vars.root = {};
+      vars.root.name = "root";
+      vars.root.depth = 0;
+
+      vars.groups = [];
+
+      // Make sure each node has a parent attribute
+      vars.new_data.forEach(function(d) {
+          d.parent = d.var_parent;
+      });
+
+/*
+    // create a name: node map
+    var dataMap = exports.data.reduce(function(map, node) {
+        map[node.name] = node;
+        return map;
+    }, {});
+
+    // create the tree array
+    treeData = [];
+
+    exports.data.forEach(function(node) {
+        var parent = dataMap[node.parent];
+        if (parent) {
+            // create child array if it doesn't exist
+            (parent.children || (parent.children = []))
+                // add node to child array
+                .push(node);
+        } else {
+            // parent is null or missing
+            treeData.push(node);
+        }
+    });
+*/
 
       // Creates the groups here
       vars.new_data.map(function(d, i) {
 
-        if(typeof groups[d[vars.var_group]] === "undefined") {
-          groups[d[vars.var_group]] = [];
+        if(typeof vars.groups[d[vars.var_group]] === "undefined") {
+          vars.groups[d[vars.var_group]] = [];
         }
 
-        groups[d[vars.var_group]]
+
+        vars.groups[d[vars.var_group]]
          .push({name: d.name, size: d.value, attr: d.item_id, group: +d[vars.var_group], year: d.year, id: i, focus: d.focus});
 
       });
-
-      // Make sure there is no empty elements
-      groups = groups.filter(function(n) { return n !== "undefined"; }); 
       
-      // Creates the parent nodes
-      var parents = groups.map(function(d, i) {
+      // Make sure there is no empty elements
+      vars.groups = vars.groups.filter(function(n) { return n !== "undefined"; }); 
+
+      console.log("GROUP", vars.groups)
+
+      // Add group elements are root children
+      vars.root.children = vars.groups.map(function(d, i) {
 
         node = {};
         node.name = d[0].name;
         node.group = d[0].group;
 
-        // Create the children nodes
+        // Create the children nodesvar
         node.children = d.map(function(e, j) {
           return {name: e.name, size: e.size, group: e.group, year: e.year, id: e.id, focus: e.focus};
         });
 
         return node;
+
       });
 
-      // Add parents to the root
-      vars.r.children = parents;
-
     }
-
