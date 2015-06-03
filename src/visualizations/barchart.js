@@ -72,7 +72,7 @@
                         .append("g")
                         .each(vistk.utils.items_group)
                         .attr("transform", function(d, i) {
-                          return "translate(" + vars.margin.left + ", " + vars.height/2 + ")";
+                          return "translate(" + vars.x_scale[0]["func"](d[vars.var_x]) + ", " + (vars.height - vars.margin.top - vars.margin.bottom) + ")";
                         });
 
         // Add graphical marks
@@ -81,13 +81,18 @@
           vars.mark.type = d.type;
           vars.mark.rotate = d.rotate;
 
-          gItems_enter.each(vistk.utils.items_mark);
+          gItems_enter.each(vistk.utils.items_mark)
+            .select("rect")
+       //     .attr("x", function(d) { return vars.x_scale[0]["func"](d[vars.var_x]); })
+            .attr("width", vars.x_scale[0]["func"].rangeBand())
+            .attr("y", function(d) { return - vars.y_scale[0]["func"](d[vars.var_y]); })
+            .attr("height", 0);
 
           // Update each mark
           gItems.each(vistk.utils.items_mark)
             .select("rect")
+            .transition().duration(1000)
        //     .attr("x", function(d) { return vars.x_scale[0]["func"](d[vars.var_x]); })
-            .attr("width", vars.x_scale[0]["func"].rangeBand())
             .attr("y", function(d) { return - vars.y_scale[0]["func"](d[vars.var_y]); })
             .attr("height", function(d) { return vars.y_scale[0]["func"](d[vars.var_y]); });
 

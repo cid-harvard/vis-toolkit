@@ -490,6 +490,8 @@ Storytelling
 * Step by step widget http://nbremer.github.io/urbanization/
 * Previous work on visual decomposition
 
+* http://www.ft.com/ig/features/baseline/federer-nadal-different-paths-greatness/
+
 Template
 * See http://bost.ocks.org/mike/chart/
 * See http://bost.ocks.org/mike/chart/time-series-chart.js
