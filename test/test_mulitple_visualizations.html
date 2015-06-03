@@ -1,0 +1,93 @@
+<!doctype html>
+<meta charset="utf-8">
+<script src="../js/d3.js"></script>
+<script src="../build/vistk.js"></script>
+<link href="../css/vistk.css" rel="stylesheet">
+<body>
+<div id="viz-scatterplot"></div>
+<div id="viz-dotplot"></div>
+<script>
+
+d3.json("../data/diversification_ubiquity_hs4_1995_2012.json", function(error, countries) {
+
+  var flat_years = vistk.utils.flatten_years(countries);
+
+  var visualization = vistk.viz()
+    .params({
+      type: "scatterplot",
+      container: "#viz-scatterplot",
+      data: flat_years,
+      id: ["year", "continent", "country"],
+      var_group: "continent",
+      var_color: "continent",
+      var_x: 'nb_products',
+      var_y: 'avg_products',
+      var_share: "nb_products",
+      time: {
+        var_time: "year",
+        current_time: 1995,
+        parse: function(d) { return d; }
+      },
+      x_scale: [{
+        domain: [0, 700]
+      }],
+      ui: {
+        default: true,
+        options: ["country", "continent", "year"]
+      },
+      title: "World Countries"
+    });
+
+  d3.select(visualization.container()).call(visualization);
+
+});
+
+d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments) {
+
+  departments.forEach(function(d, i) {
+    d.dept_pop = +d.dept_pop;
+    d.year = +d.year;
+    d.realgdp = +d.realgdp;
+    d.realgdp_percap = +d.realgdp_percap;    
+    d["sum(export_value)"] = +d["sum(export_value)"];
+    d["value_added"] = +d["value_added"];
+  });
+
+  var ui_options = [];
+
+  visualization = vistk.viz()
+    .params({
+      type: 'dotplot',      
+      data: departments,
+      container: '#viz-dotplot',
+      var_x: 'dept_pop',
+      x_type: 'linear',
+      var_y: ['dept_pop', 'realgdp'],
+      x_text: null,
+      x_ticks: 10,
+      x_format: function(d) { return '$' + d3.format(".2s")(d); },
+      mark: {
+        type: 'diamond',
+        width: 10,
+        height: 10
+      },
+      time: {
+        var_time: 'year', 
+        current_time: 2013,
+        parse: function(d) { return d; }
+      },
+      ui: {
+        default: true,
+        options: ui_options
+      },
+      id: "name",
+      var_text: "dept_name", 
+      selection: [0],
+      highlight: [0]
+    });
+
+  d3.select(visualization.container()).call(visualization);
+});
+
+
+</script>
