@@ -59,7 +59,7 @@ vistk.utils.items_mark = function(d, i) {
     case "arc":
 
       var arc = d3.svg.arc().outerRadius(function(d) {
-        return vars.radius; // vars.r_scale(d3.sum(vars.new_data[0].piescatter, function(d) { return d[vars.var_share]; }));
+        return vars.mark.radius;
       }).innerRadius(0);
       
       d3.select(this).append("path")
@@ -68,9 +68,9 @@ vistk.utils.items_mark = function(d, i) {
           })
           .style("fill-opacity", function(d, i) {
             if(d.i == 0)
-              return 1;
-            else
               return .2;
+            else
+              return 1;
           })          
           .attr("d", arc);
 
@@ -139,7 +139,6 @@ vistk.utils.items_mark = function(d, i) {
             .style("text-anchor", "middle")
             .text(function(d) { return d[vars.var_text]; });
 */
-
 
       break;
 

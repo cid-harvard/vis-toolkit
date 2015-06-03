@@ -4,7 +4,7 @@
 <script src="../build/vistk.js"></script>
 <link href="../css/vistk.css" rel="stylesheet">
 <body>
-<div id="viza"></div>
+<div id="viz"></div>
 <script>
 
 d3.json("../data/diversification_ubiquity_hs4_1995_2012.json", function(error, countries) {
@@ -14,7 +14,7 @@ d3.json("../data/diversification_ubiquity_hs4_1995_2012.json", function(error, c
   var visualization = vistk.viz()
     .params({
       type: "scatterplot",
-      container: "#viza",
+      container: "#viz",
       data: flat_years,
       id: ["year", "continent", "country"],
       var_group: "continent",

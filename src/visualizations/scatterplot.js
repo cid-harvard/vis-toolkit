@@ -20,9 +20,9 @@
             }
           ],
 
-          r_scale: d3.scale.linear(),
-
-          var_r: "total_piescatter",
+          r_scale: d3.scale.linear()
+                      .range([10, 30])
+                      .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_r]; })),
 
           connect: {
             type: null
@@ -137,15 +137,23 @@
           // vars.radius = vars.width/12;
           // vars.accessor_data = function(d) { return d.data; };
 
-          vars.r_scale.range([0, vars.width/6])
-                    .domain([0, d3.max(vars.new_data, function(d) { return d[vars.var_r]; })]);
+          gItems_enter.each(function(d, i) {
 
-          vars.mark.radius = vars.radius;
+          
+          if(vars.r_scale == null) {
+            vars.mark.radius = vars.radius;
+          } else {
 
-          gItems_enter.each(function(d) {
+            vars.mark.radius = vars.r_scale(d[vars.var_r]);
+
+          console.log("RADIUS", vars.mark.radius, d, d[vars.var_r])
+
+          }
+
+
 
             // Special arc for labels centroids
-            var arc = d3.svg.arc().outerRadius(vars.radius).innerRadius(vars.radius);
+            var arc = d3.svg.arc().outerRadius(vars.mark.radius).innerRadius(vars.mark.radius);
 
             // Bind data to groups
             var gItems2 = vars.svg.selectAll(".mark__group2")
@@ -169,7 +177,10 @@
                                 return "translate(" + vars.params.x_scale[0]["func"](d[vars.var_x]) + ", " + vars.params.y_scale[0]["func"](d[vars.var_y]) + ")";
                               });
 
-            vars.items[1].marks.forEach(function(d) {
+            vars.items[1].marks.forEach(function(d, j) {
+
+              if(j == 0 || i == 0)
+                return;
 
               vars.mark.type = d.type;
 
@@ -180,7 +191,9 @@
               }
 
               vars.mark.rotate = d.rotate;
-              gItems2_enter.each(vistk.utils.items_mark);
+              gItems2_enter.each(vistk.utils.items_mark)
+                .select("circle")
+                .attr("r", vars.mark.radius);
 
             });
 

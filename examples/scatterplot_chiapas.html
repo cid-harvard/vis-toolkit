@@ -43,6 +43,24 @@ d3.csv("../data/chiapas_munis_2012.csv", function(error, munis) {
 
   locations.forEach(function(d, i) {
 
+    total_value_mexico = 0;
+
+    d3.nest()
+        .key(function(d) {
+          return d["community_name"];
+        })
+        .rollup(function(leaves) {
+
+          // Generates a new dataset with aggregated data
+          var aggregation = {};
+
+        })
+        .entries(munis);
+
+      // Transform key/value into values tab only
+      // vars.new_data = nested_data.map(function(d) { return d.values; });
+
+
     var data_comitan = munis.filter(function(d) { 
 
       // Remove products with missing values
@@ -54,6 +72,7 @@ d3.csv("../data/chiapas_munis_2012.csv", function(error, munis) {
 
       d.distance = parseFloat(d.distance);
       d.pci = parseFloat(d.pci);
+      d.total_value_mexico = total_value_mexico;
 
     });
 
@@ -67,6 +86,7 @@ d3.csv("../data/chiapas_munis_2012.csv", function(error, munis) {
         var_color: "community_name",
         var_x: 'distance',
         var_y: 'pci',
+        var_r: 'community_total',
         var_share: "distance",
         var_text: "product_name",
         x_format: function(d) { return d3.format(".3f")(d); },
