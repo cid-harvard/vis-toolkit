@@ -4,28 +4,10 @@
 <script src="../build/vistk.js"></script>
 <link href="../css/vistk.css" rel="stylesheet">
 <body>
-<style>
-
-text {
-    font: 20px Verdana, Helvetica, Arial, sans-serif;
-}
-
-tspan {
-  fill: gray;
-  font-weight: bold
-}
-
-</style>
 <div id="viz"></div>
 <script>
 
 d3.json("../data/exports_2012.json", function(error, exports) {
-
-  exports.data.forEach(function(d) {
-      d.group = d.code[0];
-  });
-
-  xp = exports;
 
   visualization = vistk.viz()
     .params({
@@ -35,9 +17,8 @@ d3.json("../data/exports_2012.json", function(error, exports) {
       width: 900,
       data: exports.data,
       var_id: "product",
-      var_group: "group",
-      var_color: "group",
-      var_parent: "community_id",
+      var_group: "community_id",
+      var_color: "community_id",
       title: "Products",
       var_size: "value",
       var_text: "name",

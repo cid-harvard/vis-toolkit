@@ -49,7 +49,7 @@
 
         vars.evt.register("highlightOut", function(d) {
           vars.svg.selectAll("rect")
-            .classed("focus", false);
+              .classed("focus", false);
         });
 
         var treemap = d3.layout.treemap()
@@ -82,7 +82,7 @@
 
         // ENTER
         var gItems_enter = gItems.enter()
-                        .insert("g", ":first-child")
+                      .insert("g", ":first-child")
                         .each(vistk.utils.items_group)
                         .attr("transform", function(d) { 
                           return "translate(" + d.x + "," + d.y + ")"; 
@@ -95,21 +95,18 @@
           vars.mark.rotate = d.rotate;
           vars.mark.translate = d.translate;
 
-          // vars.mark.height = function(d) { return d.dx; };
-          // vars.mark.width = function(d) { return d.dy; };
-
           var new_items = gItems_enter
                 .filter(function(d, j) {
                     return (vars.mark.type == "rect" && d.depth == 2) || (vars.mark.type == "text" && d.depth == 1);
                   })
                 .each(vistk.utils.items_mark)
 
-          new_items.select("rect")
+          gItems.select("rect")
                 .transition().duration(2000)
                 .attr("width", function(d) { return d.dx; })
                 .attr("height", function(d) { return d.dy; });
 
-          new_items.select("text")
+          gItems.select("text")
                 .call(vistk.utils.wrap);
 
         });

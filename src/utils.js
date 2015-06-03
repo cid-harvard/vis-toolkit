@@ -106,6 +106,9 @@ vistk.utils.items_mark = function(d, i) {
       if(typeof vars.mark.rotate === "undefined")
         vars.mark.rotate = 0;
 
+      if(typeof vars.mark.translate === "undefined")
+        vars.mark.translate = [0, 0];
+
       var drag = d3.behavior.drag()
           .on("drag", dragmove);
 
