@@ -12,7 +12,8 @@
 
       } else {
         // HTML Container for table
-        vars.svg = d3.select(vars.container).append("div").style({height: vars.height+"px", width: vars.width+"px", overflow: "scroll"});
+        vars.svg = d3.select(vars.container).append("div")
+            .style({height: vars.height+"px", width: vars.width+"px", overflow: "scroll"});
 
       }
     }

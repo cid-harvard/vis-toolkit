@@ -31,7 +31,7 @@
                 })
                 */
 
-                d3.select("#viz").call(visualization);
+                d3.select("vars.container").call(visualization);
 
               })
 
@@ -60,7 +60,7 @@
                      .on("change", function(d) { 
 
                        vars.aggregate=d;
-                       d3.select("#viz").call(visualization);
+                       d3.select("vars.container").call(visualization);
 
                      });
 
@@ -96,7 +96,7 @@
                         .attr("step", 1)
                         .on("input", function() {
                           vars.time.current_time = +this.value;
-                          d3.select("#viz").call(visualization);
+                          d3.select("vars.container").call(visualization);
                         })
                         .style("width", "100px");
 
@@ -114,7 +114,7 @@
               visualization.params({
                 var_x: this.value
               })
-              d3.select("#viz").call(visualization)
+              d3.select("vars.container").call(visualization)
 
             })
             .selectAll("option")
@@ -124,7 +124,7 @@
             .attr("value", function(d) { return d; })
             .html(function(d) { return d; })
 
-            var label_radios = d3.select("#viz").selectAll(".aggregations").data(["index", "linear"])
+            var label_radios = d3.select("vars.container").selectAll(".aggregations").data(["index", "linear"])
               .enter()
                 .append("label")
                 .attr("class", "aggregations")
@@ -141,7 +141,7 @@
                           visualization.params({
                             x_type: d
                           })
-                          d3.select("#viz").call(visualization)
+                          d3.select("vars.container").call(visualization)
                        });
 
             label_radios.append("span")
@@ -153,7 +153,7 @@
 
      if(vars.ui.options) {
 
-        var label_radios = d3.select("#viz").selectAll(".aggregations_radio").data(vars.id)
+        var label_radios = d3.select("vars.container").selectAll(".aggregations_radio").data(vars.id)
           .enter()
             .append("label")
             .attr("class", "aggregations_radio")
@@ -168,7 +168,7 @@
                    .on("change", function(d) { 
 
                       vars.aggregate = d;
-                      d3.select("#viz").call(visualization)
+                      d3.select("vars.container").call(visualization)
 
                    });
 
@@ -194,7 +194,7 @@
           var id_focus = vars.new_data.map(function(d) {return d[vars.var_text]; }).indexOf(this.value);
           visualization.focus(1);
 
-          d3.select("#viz").call(visualization);
+          d3.select(vars.container).call(visualization);
 
         })
         .selectAll("option")
@@ -211,7 +211,7 @@
 
                 vars.svg.selectAll(".selected").classed("selected", false);
                 vars.selection = [];
-                d3.select("#viz").call(visualization);
+                d3.select(vars.container).call(visualization);
 
               })
              .html("Clear selection");
@@ -223,7 +223,7 @@
 
                 vars.svg.selectAll(".highlighted").classed("highlighted", false);
                 vars.highlight = [];                
-                d3.select("#viz").call(visualization);
+                d3.select(vars.container).call(visualization);
 
               })
              .html("Clear highlight");

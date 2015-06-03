@@ -147,7 +147,7 @@
 
   if(typeof vars.width === "undefined" && typeof vars.height === "undefined") {
 
-    vars.width = parseInt(d3.select(vars.container).style('width'));
+    vars.width = parseInt(d3.select("body").style('width').substring(0, d3.select("body").style('width').length-2));
     vars.width = vars.width - vars.margin.left - vars.margin.right;
     vars.height = vars.width * vars.ratio;
 

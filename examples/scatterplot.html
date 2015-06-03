@@ -4,17 +4,17 @@
 <script src="../build/vistk.js"></script>
 <link href="../css/vistk.css" rel="stylesheet">
 <body>
-<div id="viz"></div>
+<div id="viza"></div>
 <script>
 
 d3.json("../data/diversification_ubiquity_hs4_1995_2012.json", function(error, countries) {
 
   var flat_years = vistk.utils.flatten_years(countries);
 
-  visualization = vistk.viz()
+  var visualization = vistk.viz()
     .params({
       type: "scatterplot",
-      container: "#viz",
+      container: "#viza",
       data: flat_years,
       id: ["year", "continent", "country"],
       var_group: "continent",
@@ -37,7 +37,7 @@ d3.json("../data/diversification_ubiquity_hs4_1995_2012.json", function(error, c
       title: "World Countries"
     });
 
-  d3.select("#viz").call(visualization);
+  d3.select(visualization.container()).call(visualization);
 
 });
 

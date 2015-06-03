@@ -27,7 +27,7 @@
 
           chart.domain([min, max]);
 
-          d3.select("#viz").selectAll(".box").data(data)
+          d3.select(vars.container).selectAll(".box").data(data)
             .enter().append("svg")
               .attr("class", "box")
               .attr("width", width + margin.left + margin.right)
