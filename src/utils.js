@@ -24,6 +24,9 @@ vistk.utils.items_mark = function(d, i) {
 
     case "rect":
 
+
+      d3.select(this).selectAll(".items__mark__circle").remove();
+
       var mark = d3.select(this).selectAll(".items__mark__rect").data([d]);
 
       mark.enter().append("rect")

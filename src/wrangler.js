@@ -110,7 +110,7 @@
 
     // vars.time_data format
     // {id:, name:, values: [{date: d[vars.time.var_time], rank:, year:]}
-    if(vars.type === "linechart" || vars.type === "sparkline" || vars.type === "stacked") {
+ //   if(vars.type === "linechart" || vars.type === "sparkline" || vars.type === "stacked") {
 
       // Parse data
       vars.new_data.forEach(function(d) {
@@ -174,7 +174,7 @@
 
       });
     */
-    }
+ //   }
 
     if(vars.type === "stacked") {
 
