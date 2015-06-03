@@ -122,7 +122,7 @@ vistk.utils.items_mark = function(d, i) {
                       .attr("dy", ".35em")
                       .classed("items__mark__text", true)
                       .style("text-anchor", "start")
-                      .attr("transform", "rotate(" +  vars.mark.rotate + ")")
+                      .attr("transform", "translate(" +  vars.mark.translate + ")rotate(" +  vars.mark.rotate + ")")
                       .text(function(d) { 
                         return vars.accessor_data(d)[vars.var_text]; 
                       })

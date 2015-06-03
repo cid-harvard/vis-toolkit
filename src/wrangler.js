@@ -278,7 +278,7 @@
       });
 
       // Make sure there is no empty elements
-      //vars.groups = vars.groups.filter(function(n) { return n !== "undefined"; }); 
+      // vars.groups = vars.groups.filter(function(n) { return n !== "undefined"; }); 
 
       // Add group elements are root children
       vars.root.children = vars.groups.map(function(d, i) {

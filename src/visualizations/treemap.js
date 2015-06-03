@@ -28,7 +28,7 @@
                 attr: "depth1",
                 type: "text",
                 rotate: "0",
-                translate: "(10, 0)"
+                translate: [5, 20]
               }]
           }],
 
@@ -93,6 +93,7 @@
 
           vars.mark.type = d.type;
           vars.mark.rotate = d.rotate;
+          vars.mark.translate = d.translate;
 
           // vars.mark.height = function(d) { return d.dx; };
           // vars.mark.width = function(d) { return d.dy; };
