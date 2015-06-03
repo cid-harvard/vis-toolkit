@@ -234,7 +234,7 @@
 
       // Make sure each node has a parent attribute
       vars.new_data.forEach(function(d) {
-          d.parent = d.var_parent;
+        d.parent = d.var_parent;
       });
 
 /*
@@ -260,24 +260,25 @@
         }
     });
 */
+      var unique_groups = [];
 
       // Creates the groups here
       vars.new_data.map(function(d, i) {
 
-        if(typeof vars.groups[d[vars.var_group]] === "undefined") {
-          vars.groups[d[vars.var_group]] = [];
+        if(typeof unique_groups[d[vars.var_group]] === "undefined") {
+          unique_groups.push(d[vars.var_group]);
+          vars.groups[unique_groups.indexOf(d[vars.var_group])] = [];
         }
 
+        var n = {name: d[vars.var_group], group: d[vars.var_group], year: d.year, id: i};
+        n[vars.var_size] = d[vars.var_size];
 
-        vars.groups[d[vars.var_group]]
-         .push({name: d.name, size: d.value, attr: d.item_id, group: +d[vars.var_group], year: d.year, id: i, focus: d.focus});
+        vars.groups[unique_groups.indexOf(d[vars.var_group])].push(n);
 
       });
-      
-      // Make sure there is no empty elements
-      vars.groups = vars.groups.filter(function(n) { return n !== "undefined"; }); 
 
-      console.log("GROUP", vars.groups)
+      // Make sure there is no empty elements
+      //vars.groups = vars.groups.filter(function(n) { return n !== "undefined"; }); 
 
       // Add group elements are root children
       vars.root.children = vars.groups.map(function(d, i) {
@@ -286,9 +287,11 @@
         node.name = d[0].name;
         node.group = d[0].group;
 
-        // Create the children nodesvar
+        // Create the children nodes var
         node.children = d.map(function(e, j) {
-          return {name: e.name, size: e.size, group: e.group, year: e.year, id: e.id, focus: e.focus};
+          var n = {name: e.name, group: e.group, year: e.year, id: e.id};
+          n[vars.var_size] = e[vars.var_size]; 
+          return n;
         });
 
         return node;

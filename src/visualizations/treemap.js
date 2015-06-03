@@ -55,7 +55,7 @@
         var treemap = d3.layout.treemap()
             .padding(vars.padding)
             .sticky(true)
-            .sort(function(a,b) { return b[vars.var_size] - a[vars.var_size]; })
+            .sort(function(a,b) { return a[vars.var_size] - b[vars.var_size]; })
             .size([vars.width, vars.height])
             .value(function(d) { return d[vars.var_size]; });
 

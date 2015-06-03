@@ -21,9 +21,11 @@ tspan {
 
 d3.json("../data/exports_2012.json", function(error, exports) {
 
-    exports.data.forEach(function(d) {
-        d.group = d.code[0];
-    });
+  exports.data.forEach(function(d) {
+      d.group = d.code[0];
+  });
+
+  xp = exports;
 
   visualization = vistk.viz()
     .params({
@@ -37,7 +39,7 @@ d3.json("../data/exports_2012.json", function(error, exports) {
       var_color: "group",
       var_parent: "community_id",
       title: "Products",
-      var_size: "size",
+      var_size: "value",
       var_text: "name",
       time: {
         var_time: "year", 
