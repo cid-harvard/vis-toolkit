@@ -35,7 +35,8 @@ d3.json("../data/atlas_international_product_space.json", function(graph) {
         var_text: 'product_id',
         time: {
           var_time: "year", 
-          current_time: 2008
+          current_time: 2008,
+          parse: function(d) { return d; }
         },
         ui: true
       });

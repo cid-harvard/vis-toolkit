@@ -33,7 +33,11 @@
     filter: [],
     aggregate: [],
 
-    time: {var_time: null, current_time: null},
+    time: {
+      var_time: null, 
+      current_time: null,
+      parse: function(d) { return d; }
+    },
 
     // TABLE
     columns: [],

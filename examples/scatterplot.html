@@ -16,7 +16,7 @@ d3.json("../data/diversification_ubiquity_hs4_1995_2012.json", function(error, c
       type: "scatterplot",
       container: "#viz",
       data: flat_years,
-      id: ["continent", "country"],
+      id: ["year", "continent", "country"],
       var_group: "continent",
       var_color: "continent",
       var_x: 'nb_products',
@@ -24,14 +24,15 @@ d3.json("../data/diversification_ubiquity_hs4_1995_2012.json", function(error, c
       var_share: "nb_products",
       time: {
         var_time: "year",
-        current_time: 1995
+        current_time: 1995,
+        parse: function(d) { return d; }
       },
       x_scale: [{
         domain: [0, 700]
       }],
       ui: {
         default: true,
-        options: ["country", "continent"]
+        options: ["country", "continent", "year"]
       },
       title: "World Countries"
     });

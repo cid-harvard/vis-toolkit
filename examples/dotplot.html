@@ -38,7 +38,8 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
       },
       time: {
         var_time: 'year', 
-        current_time: 2013
+        current_time: 2013,
+        parse: function(d) { return d; }
       },
       ui: {
         default: true,
