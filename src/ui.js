@@ -31,7 +31,7 @@
                 })
                 */
 
-                d3.select("vars.container").call(visualization);
+                d3.select(vars.container).call(visualization);
 
               })
 
@@ -60,7 +60,7 @@
                      .on("change", function(d) { 
 
                        vars.aggregate=d;
-                       d3.select("vars.container").call(visualization);
+                       d3.select(vars.container).call(visualization);
 
                      });
 
@@ -74,33 +74,33 @@
 
         }
 
-        if(vars.time) {
+      if(vars.time) {
 
-          var label_slider = d3.select(vars.container)
-            .selectAll(".slider")
-            .data([vars.var_id])
-          .enter()
-            .append("label")
-            .attr("class", "slider");
+        var label_slider = d3.select(vars.container)
+          .selectAll(".slider")
+          .data([vars.var_id])
+        .enter()
+          .append("label")
+          .attr("class", "slider");
 
-          // Assuming we have continuous years
-          unique_years = d3.set(vars.data.map(function(d) { return d[vars.time.var_time];})).values();
+        // Assuming we have continuous years
+        unique_years = d3.set(vars.data.map(function(d) { return d[vars.time.var_time];})).values();
 
-          // TODO: find time range
-          label_slider.append("input")
-                        .attr("type", "range")
-                        .attr("class", "slider-random")
-                        .property("min", d3.min(unique_years))
-                        .property("max", d3.max(unique_years))
-                        .property("value", vars.time.current_time)
-                        .attr("step", 1)
-                        .on("input", function() {
-                          vars.time.current_time = +this.value;
-                          d3.select("vars.container").call(visualization);
-                        })
-                        .style("width", "100px");
+        // TODO: find time range
+        label_slider.append("input")
+                      .attr("type", "range")
+                      .attr("class", "slider-random")
+                      .property("min", d3.min(unique_years))
+                      .property("max", d3.max(unique_years))
+                      .property("value", vars.time.current_time)
+                      .attr("step", 1)
+                      .on("input", function() {
+                        vars.time.current_time = +this.value;
+                        d3.select(vars.container).call(visualization);
+                      })
+                      .style("width", "100px");
 
-        }
+      }
 
      if(vars.x_scale.length > 0) {
 
@@ -114,7 +114,7 @@
               visualization.params({
                 var_x: this.value
               })
-              d3.select("vars.container").call(visualization)
+              d3.select(vars.container).call(visualization)
 
             })
             .selectAll("option")
@@ -124,7 +124,7 @@
             .attr("value", function(d) { return d; })
             .html(function(d) { return d; })
 
-            var label_radios = d3.select("vars.container").selectAll(".aggregations").data(["index", "linear"])
+            var label_radios = d3.select(vars.container).selectAll(".aggregations").data(["index", "linear"])
               .enter()
                 .append("label")
                 .attr("class", "aggregations")
@@ -141,7 +141,7 @@
                           visualization.params({
                             x_type: d
                           })
-                          d3.select("vars.container").call(visualization)
+                          d3.select(vars.container).call(visualization)
                        });
 
             label_radios.append("span")
@@ -153,7 +153,7 @@
 
      if(vars.ui.options) {
 
-        var label_radios = d3.select("vars.container").selectAll(".aggregations_radio").data(vars.id)
+        var label_radios = d3.select(vars.container).selectAll(".aggregations_radio").data(vars.id)
           .enter()
             .append("label")
             .attr("class", "aggregations_radio")
@@ -168,7 +168,7 @@
                    .on("change", function(d) { 
 
                       vars.aggregate = d;
-                      d3.select("vars.container").call(visualization)
+                      d3.select(vars.container).call(visualization)
 
                    });
 
