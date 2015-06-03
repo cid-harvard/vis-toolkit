@@ -186,6 +186,12 @@
 
           });
 
+
+        } else if(vars.aggregate === vars.time.var_time) {
+
+
+          // TODO: add sparkline in there
+
         } else {
 
           vars.accessor_data = function(d) { return d; };
@@ -196,6 +202,9 @@
             vars.mark.type = d.type;
             vars.mark.rotate = d.rotate;
             gItems_enter.each(vistk.utils.items_mark);
+
+            // Update mark
+            gItems.each(vistk.utils.items_mark);
 
           });
 

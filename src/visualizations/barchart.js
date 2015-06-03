@@ -83,6 +83,7 @@
 
           gItems_enter.each(vistk.utils.items_mark);
 
+          // Update each mark
           gItems.each(vistk.utils.items_mark)
             .select("rect")
        //     .attr("x", function(d) { return vars.x_scale[0]["func"](d[vars.var_x]); })

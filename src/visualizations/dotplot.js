@@ -46,11 +46,10 @@
 
         // Add graphical marks
         vars.items[0].marks.forEach(function(d) {
-
           vars.mark.type = d.type;
           vars.mark.rotate = d.rotate;
           gItems_enter.each(vistk.utils.items_mark);
-
+          gItems.each(vistk.utils.items_mark);
         });
 
         // EXIT

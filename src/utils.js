@@ -24,7 +24,7 @@ vistk.utils.items_mark = function(d, i) {
 
     case "rect":
 
-
+      // In case the transition comes from a dot/scatter plot
       d3.select(this).selectAll(".items__mark__circle").remove();
 
       var mark = d3.select(this).selectAll(".items__mark__rect").data([d]);
@@ -35,6 +35,7 @@ vistk.utils.items_mark = function(d, i) {
                 .attr("x", -vars.mark.width/2)
                 .attr("y", -vars.mark.height/2)
                 .classed("items__mark__rect", true)
+                .attr("transform", "rotate(0)")
                 .style("fill", function(d) { return vars.color(d[vars.var_color]); });
 
       mark.exit().remove();
@@ -113,6 +114,8 @@ vistk.utils.items_mark = function(d, i) {
           .attr("transform", "translate(" + d3.event.x + "," + d3.event.y + ")rotate(" +  vars.mark.rotate + ")");
       }
 
+      d3.select(this).selectAll(".items__mark__text").remove();
+
       d3.select(this).append("text")
                       .attr("x", 10)
                       .attr("y", 0)
@@ -140,10 +143,14 @@ vistk.utils.items_mark = function(d, i) {
     case "circle":
     default:
 
+      // In case the transition comes from a bar chart
+      d3.select(this).selectAll(".items__mark__rect").remove();
+
       d3.select(this).append("circle")
                       .attr("r", vars.mark.radius)
                       .attr("cx", 0)
                       .attr("cy", 0)
+                      .attr("transform", "rotate(0)")
                       .classed("items__mark__circle", true)
                       .style("fill", vars.mark.fill);
       break;

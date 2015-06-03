@@ -32,18 +32,16 @@
         vars.evt.register("selection", function(d) { });
         vars.evt.register("resize", function(d) { });
 
-        // PRE-UPDATE
+        // PRE-UPDATE ITEMS
         var gItems = vars.svg.selectAll(".mark__group")
                          .data(vars.new_data, function(d, i) { return i; });
 
-        // ENTER
-
-        // Add a group for marks
+        // ENTER ITEMS
         var gItems_enter = gItems.enter()
                         .append("g")
                         .each(vistk.utils.items_group);
 
-        // Add items marks
+        // APPEND AND UPDATE ITEMS MARKS
         vars.items[0].marks.forEach(function(d) {
 
           // TODO: avoid doing this..
@@ -51,11 +49,18 @@
           vars.mark.rotate = d.rotate;
           gItems_enter.each(vistk.utils.items_mark);
 
+          // Update existing marks
+          gItems.each(vistk.utils.items_mark);
+
         });
 
+        // TODO: decide if we attach to items or connect selection
         // Add connection marks
         vars.connect[0].marks.forEach(function(d) {
           
+          gItems_enter.each(vistk.utils.connect_mark);
+          
+          // Update existing marks
           gItems_enter.each(vistk.utils.connect_mark);
 
         });
