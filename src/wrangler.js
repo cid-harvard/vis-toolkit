@@ -231,13 +231,13 @@
       vars.root.depth = 0;
 
       vars.groups = [];
-
+/*
       // Make sure each node has a parent attribute
       vars.new_data.forEach(function(d) {
         d.parent = d.var_parent;
       });
 
-/*
+
     // create a name: node map
     var dataMap = exports.data.reduce(function(map, node) {
         map[node.name] = node;
@@ -260,25 +260,25 @@
         }
     });
 */
-      var unique_groups = [];
+      vars.unique_groups = [];
 
       // Creates the groups here
       vars.new_data.map(function(d, i) {
 
-        if(typeof unique_groups[d[vars.var_group]] === "undefined") {
-          unique_groups.push(d[vars.var_group]);
-          vars.groups[unique_groups.indexOf(d[vars.var_group])] = [];
+        if(vars.unique_groups.indexOf(d[vars.var_group]) < 0) {
+          vars.unique_groups.push(d[vars.var_group]);
+          vars.groups[vars.unique_groups.indexOf(d[vars.var_group])] = [];
         }
 
         var n = {name: d[vars.var_group], group: d[vars.var_group], year: d.year, id: i};
         n[vars.var_size] = d[vars.var_size];
-
-        vars.groups[unique_groups.indexOf(d[vars.var_group])].push(n);
+        n[vars.var_group] = d[vars.var_group];
+        vars.groups[vars.unique_groups.indexOf(d[vars.var_group])].push(n);
 
       });
 
       // Make sure there is no empty elements
-      // vars.groups = vars.groups.filter(function(n) { return n !== "undefined"; }); 
+     vars.groups = vars.groups.filter(function(n) { return n !== "undefined"; }); 
 
       // Add group elements are root children
       vars.root.children = vars.groups.map(function(d, i) {
@@ -291,6 +291,7 @@
         node.children = d.map(function(e, j) {
           var n = {name: e.name, group: e.group, year: e.year, id: e.id};
           n[vars.var_size] = e[vars.var_size]; 
+          n[vars.var_group] = e[vars.var_group];
           return n;
         });
 

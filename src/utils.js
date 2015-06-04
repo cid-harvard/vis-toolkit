@@ -36,7 +36,9 @@ vistk.utils.items_mark = function(d, i) {
                 .attr("y", -vars.mark.height/2)
                 .classed("items__mark__rect", true)
                 .attr("transform", "rotate(0)")
-                .style("fill", function(d) { return vars.color(d[vars.var_color]); });
+                .style("fill", function(d) { 
+                  console.log(d)
+                  return vars.color(d[vars.var_color]); });
 
       mark.exit().remove();
 

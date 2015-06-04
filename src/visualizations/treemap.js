@@ -52,7 +52,7 @@
               .classed("focus", false);
         });
 
-        var treemap = d3.layout.treemap()
+        vars.treemap = d3.layout.treemap()
             .padding(vars.padding)
             .sticky(true)
             .sort(function(a,b) { return a[vars.var_size] - b[vars.var_size]; })
@@ -78,7 +78,7 @@
 */
         // PRE-UPDATE
         var gItems = vars.svg.data([vars.root]).selectAll("g")
-            .data(treemap.nodes);
+            .data(vars.treemap.nodes);
 
         // ENTER
         var gItems_enter = gItems.enter()
