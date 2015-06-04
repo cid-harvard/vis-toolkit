@@ -94,7 +94,8 @@
             .transition().duration(1000)
        //     .attr("x", function(d) { return vars.x_scale[0]["func"](d[vars.var_x]); })
             .attr("y", function(d) { return - vars.y_scale[0]["func"](d[vars.var_y]); })
-            .attr("height", function(d) { return vars.y_scale[0]["func"](d[vars.var_y]); });
+            .attr("height", function(d) { return vars.y_scale[0]["func"](d[vars.var_y]); })
+            .attr("width", vars.x_scale[0]["func"].rangeBand());
 
         });
 

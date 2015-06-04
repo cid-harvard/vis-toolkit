@@ -525,6 +525,7 @@ Template
 * Visible - http://visible.io/examples.html
 * IVTK
  * Templates configuration http://philogb.github.io/jit/demos.html
+* http://www.pubnub.com/developers/eon/chart/spline/
 
 ## Misc
 

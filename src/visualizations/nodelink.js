@@ -139,6 +139,7 @@
           
           vars.mark.type = d.type;
           vars.mark.rotate = d.rotate;
+
           gConnect_enter.each(vistk.utils.connect_mark)
                         .style("stroke", function(d) { 
                             return vars.color(d[vars.var_color]); 
@@ -169,7 +170,6 @@
           vars.mark.rotate = d.rotate;
           gItems_enter.each(vistk.utils.items_mark)
           .attr("id", function(d) { return "node_" + d.id; })
-
 
         });
 

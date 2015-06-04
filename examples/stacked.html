@@ -9,9 +9,7 @@
 
 d3.json("../data/exports_2012.json", function(error, exports) {
 
-  xp = exports;
-
-  visualization = vistk.viz()
+  var visualization = vistk.viz()
     .params({
       type: "stacked",
       container: "#viz",
@@ -31,7 +29,7 @@ d3.json("../data/exports_2012.json", function(error, exports) {
       }
     });
 
-  d3.select("#viz").call(visualization);
+  d3.select(visualization.container()).call(visualization);
 
 });
 </script>
