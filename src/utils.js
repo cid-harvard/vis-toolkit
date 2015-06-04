@@ -36,9 +36,7 @@ vistk.utils.items_mark = function(d, i) {
                 .attr("y", -vars.mark.height/2)
                 .classed("items__mark__rect", true)
                 .attr("transform", "rotate(0)")
-                .style("fill", function(d) { 
-                  console.log(d)
-                  return vars.color(d[vars.var_color]); });
+                .style("fill", function(d) { return vars.color(d[vars.var_color]); });
 
       mark.exit().remove();
 
@@ -196,7 +194,7 @@ vistk.utils.connect_mark = function(d, i) {
 
       case "path":
       default:
-      
+     
         d3.select(this).append('path')
             .attr('class', 'connect__path')
             .attr('d', function(d) {
@@ -300,13 +298,13 @@ vistk.utils.make_y_axis = function() {
 
 vistk.utils.background_label = function() {
 
-  vars.svg.selectAll(".label")
+  vars.svg.selectAll(".title")
       .data([vars.new_data])
     .enter()
       .insert("text")
-      .attr("class", "label")
+      .attr("class", "title")
       .attr("text-anchor", "middle")
-      .attr("y", -vars.height + vars.margin.top + vars.margin.bottom)
+      .attr("y", 0)
       .attr("x", vars.width/2)
       .text(vars.title);
 

@@ -17,21 +17,17 @@
 .items__mark__text: hover {
   display: visible;
 }
-
 </style>
 <script>
 
-// What we want:
-
 var locations = [
 
-  {name: "Comitan", location_id: 7019},
 
-/*
+//  {name: "Comitan", location_id: 7019},
   {name: "San Cristobal", location_id: 7078},
-  {name: "Tapachula", location_id: 7089},
-  {name: "Tuxtla", location_id: 7101}
-*/
+//  {name: "Tapachula", location_id: 7089},
+//  {name: "Tuxtla", location_id: 7101}
+
 ];
 
 // Data format
@@ -43,36 +39,21 @@ d3.csv("../data/chiapas_munis_2012.csv", function(error, munis) {
 
   locations.forEach(function(d, i) {
 
-    total_value_mexico = 0;
-
-    d3.nest()
-        .key(function(d) {
-          return d["community_name"];
-        })
-        .rollup(function(leaves) {
-
-          // Generates a new dataset with aggregated data
-          var aggregation = {};
-
-        })
-        .entries(munis);
-
       // Transform key/value into values tab only
       // vars.new_data = nested_data.map(function(d) { return d.values; });
 
-
-    var data_comitan = munis.filter(function(d) { 
+    data = munis.filter(function(d) { 
 
       // Remove products with missing values
-      return (d.location_id === "7019.0" && typeof d.distance != "undefined" && d.distance.length > 0 && typeof d.pci != "undefined" && d.pci.length > 0);
+      return (d.location_id === d.location_id && typeof d.distance !== "undefined" && d.distance.length > 0 && typeof d.pci !== "undefined" && d.pci.length > 0);
 
     })
 
-    data_comitan.forEach(function(d) {
+    data.forEach(function(d) {
 
       d.distance = parseFloat(d.distance);
       d.pci = parseFloat(d.pci);
-      d.total_value_mexico = total_value_mexico;
+      d.community_total = 10;
 
     });
 
@@ -80,24 +61,24 @@ d3.csv("../data/chiapas_munis_2012.csv", function(error, munis) {
       .params({
         type: "scatterplot",
         container: "#viz",// + i,
-        data: data_comitan,
+        data: data,
         id: ["community_name", "product_id"],
         var_group: "community_name",
         var_color: "community_name",
         var_x: 'distance',
         var_y: 'pci',
-        var_r: 'community_total',
+        var_r: 'value',
         var_share: "distance",
         var_text: "product_name",
         x_format: function(d) { return d3.format(".3f")(d); },
         r_cutoff: function(d) { return d.rca < 1; },
+        color: d3.scale.ordinal().domain(["Reino Animales", "Reino Vegetales", "Productos Alimenticios", "Minerales", "Química", "Plásticos / Cauchos", "Pieles y cueros", "Madera", "Textiles", "Calzado / Sombrerería ", "Piedra / Vidrio", "Metales", "Maquinaria / Eléctrico", "Transporte", "Misceláneo (Instrumentos médicos, etc.)", undefined]).range(["#3182bd", "#6baed6", "#9ecae1", "#c6dbef", "#e6550d", "#fd8d3c", "#fdae6b", "#fdd0a2", "#31a354", "#74c476", "#a1d99b", "#c7e9c0", "#756bb1", "#9e9ac8", "#bcbddc", "#dadaeb", "#636363", "#969696", "#bdbdbd", "#d9d9d9"]),
         ui: {
           default: true,
           options: ["community_id", "product_id"]
         },
         title: d.name,
 
-        // TODO: merge with charts params
         x_scale: [{
           domain: [0.96, 0.98]
         }],
@@ -113,5 +94,4 @@ d3.csv("../data/chiapas_munis_2012.csv", function(error, munis) {
   });
 
 });
-
 </script>

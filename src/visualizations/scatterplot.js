@@ -45,13 +45,28 @@
                 type: "circle",
                 rotate: "0",
                 radius: 20
+                // TODO: add specific r_scale
             }, {
               type: "arc"
+                // TODO: add specific r_scale              
             }, {
                 type: "text",
                 rotate: "-30",
                 translate: null
+                // TODO: move away according to r_scale                
             }]
+          }],
+
+          connect: [{
+            attr: vars.time.var_time,
+            marks: [{
+                type: "path",
+                rotate: "0",
+                func: d3.svg.line()
+                     .interpolate(vars.interpolate)
+                     .x(function(d) { return vars.x_scale[0]["func"](d[vars.time.var_time]); })
+                     .y(function(d) { return vars.y_scale[0]["func"](d[vars.var_y]); }),
+              }]
           }]
 
         };
@@ -139,18 +154,11 @@
 
           gItems_enter.each(function(d, i) {
 
-          
-          if(vars.r_scale == null) {
-            vars.mark.radius = vars.radius;
-          } else {
-
-            vars.mark.radius = vars.r_scale(d[vars.var_r]);
-
-          console.log("RADIUS", vars.mark.radius, d, d[vars.var_r])
-
-          }
-
-
+            if(vars.r_scale == null) {
+              vars.mark.radius = vars.radius;
+            } else {
+              vars.mark.radius = vars.r_scale(d[vars.var_r]);
+            }
 
             // Special arc for labels centroids
             var arc = d3.svg.arc().outerRadius(vars.mark.radius).innerRadius(vars.mark.radius);
@@ -164,7 +172,7 @@
             // Add a group for marks
             var gItems2_enter = gItems2.enter()
                             .append("g")
-                              .attr("transform", "translate(" + vars.width/2 + "," + vars.height/2 + ")")
+ //                             .attr("transform", "translate(" + vars.width/2 + "," + vars.height/2 + ")")
                               .each(vistk.utils.items_group)
                               .attr("transform", function(e, j) {
 
@@ -191,6 +199,7 @@
               }
 
               vars.mark.rotate = d.rotate;
+
               gItems2_enter.each(vistk.utils.items_mark)
                 .select("circle")
                 .attr("r", vars.mark.radius);
@@ -199,11 +208,30 @@
 
           });
 
-
         } else if(vars.aggregate === vars.time.var_time) {
 
+          vars.accessor_values = function(d) { return d.values; };
 
-          // TODO: add sparkline in there
+          // PRE-UPDATE CONNECT
+          var gConnect = vars.svg.selectAll(".connect__group")
+                          .data(vars.time_data, function(d, i) { return i; });
+        
+          // ENTER CONNECT
+          var gConnect_enter = gConnect.enter()
+                          .append("g")
+                          .attr("class", "connect__group");
+
+          // APPEND CONNECT MARK
+          vars.connect[0].marks.forEach(function(d) {
+            
+            console.log("CONNECT", d)
+
+            vars.mark.type = d.type;
+            vars.mark.rotate = d.rotate;
+            gConnect_enter.each(vistk.utils.connect_mark);
+
+          });
+
 
         } else {
 

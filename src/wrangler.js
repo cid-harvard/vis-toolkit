@@ -12,7 +12,7 @@
 
     }
 
-    // Init
+    // Focus
     if(vars.focus.length > 0) {
       
       vars.new_data.forEach(function(d, i) {
@@ -64,6 +64,10 @@
             return d[vars.var_y];
           });
 
+          aggregation[vars.var_r] = d3.sum(leaves, function(d) {
+            return d[vars.var_r];
+          });
+
           aggregation.piescatter = [];
           aggregation.piescatter[0] = {};
           aggregation.piescatter[1] = {};
@@ -110,17 +114,17 @@
 
     // vars.time_data format
     // {id:, name:, values: [{date: d[vars.time.var_time], rank:, year:]}
- //   if(vars.type === "linechart" || vars.type === "sparkline" || vars.type === "stacked") {
+    //   if(vars.type === "linechart" || vars.type === "sparkline" || vars.type === "stacked") {
 
       // Parse data
-      vars.new_data.forEach(function(d) {
+      vars.data.forEach(function(d) {
         d[vars.time.var_time] = vars.time.parse(d[vars.time.var_time]);
       });
 
-      vars.time.interval = d3.extent(vars.new_data, function(d) { return d[vars.time.var_time]; });
-      vars.time.points = d3.set(vars.new_data.map(function(d) { return d[vars.time.var_time]; })).values();
+      vars.time.interval = d3.extent(vars.data, function(d) { return d[vars.time.var_time]; });
+      vars.time.points = d3.set(vars.data.map(function(d) { return d[vars.time.var_time]; })).values();
 
-      var unique_items = d3.set(vars.new_data.map(function(d) { return d[vars.var_text]; })).values();
+      var unique_items = d3.set(vars.data.map(function(d) { return d[vars.var_text]; })).values();
 
       // Find unique items and create ids
       vars.time_data = unique_items.map(function(c) {
@@ -129,7 +133,7 @@
           id: c.replace(/\ /g, '_').replace(/\,/g, '.'),                    // Create unique ids
           name: c,                                    // Name for the current item
           // TODO: add other stuff? other temporal values?
-          values: vars.new_data.filter(function(d) {
+          values: vars.data.filter(function(d) {
 
               return d[vars.var_text] === c;
             
