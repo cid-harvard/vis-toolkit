@@ -32,11 +32,7 @@
               }]
           }],
 
-          connect: [{
-            attr: "depth1",
-            type: "text",
-            rotate: "0"
-          }],
+          connect: [],
         };
 
         vars = vistk.utils.merge(vars, vars.params);
@@ -52,6 +48,9 @@
               .classed("focus", false);
         });
 
+        // Remove any existing grid or axes
+        vars.svg.selectAll(".x, .y").remove();
+
         vars.treemap = d3.layout.treemap()
             .padding(vars.padding)
             .sticky(true)
@@ -59,23 +58,6 @@
             .size([vars.width, vars.height])
             .value(function(d) { return d[vars.var_size]; });
 
-/*
-        // Connect marks
-        var gConnect = vars.svg.selectAll(".connect__group")
-                        .data(treemap.nodes);
-      
-        var gConnect_enter = gConnect.enter()
-                        .append("g")
-                        .attr("class", "connect__group");
-
-        vars.connect[0].marks.forEach(function(d) {
-          
-          vars.mark.type = d.type;
-          vars.mark.rotate = d.rotate;
-          gConnect_enter.each(vistk.utils.connect_mark);
-
-        });
-*/
         // PRE-UPDATE
         var gItems = vars.svg.data([vars.root]).selectAll("g")
             .data(vars.treemap.nodes);
@@ -87,6 +69,11 @@
                         .attr("transform", function(d) { 
                           return "translate(" + d.x + "," + d.y + ")"; 
                         });
+
+        gItems.transition().duration(vars.duration)
+              .attr("transform", function(d) { 
+                return "translate(" + d.x + "," + d.y + ")"; 
+              });
 
         // Add graphical marks
         vars.items[0].marks.forEach(function(d) {
@@ -102,7 +89,7 @@
                 .each(vistk.utils.items_mark)
 
           gItems.select("rect")
-                .transition().duration(2000)
+                .transition().duration(vars.duration)
                 .attr("width", function(d) { return d.dx; })
                 .attr("height", function(d) { return d.dy; });
 
@@ -112,8 +99,6 @@
         });
 
       /*
-
-        vars.mark.type = "rect";
 
         // Add items graphical mark (DEPTH 2)
         gItems_enter
@@ -129,7 +114,6 @@
             })
             .attr("width", function(d) { return d.dx; })
             .attr("height", function(d) { return d.dy; });
-
 
         cell_enter.append("rect")
             .attr("width", function(d) { return d.dx; })
