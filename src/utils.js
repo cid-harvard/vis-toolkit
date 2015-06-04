@@ -20,6 +20,8 @@ vistk.utils.items_mark = function(d, i) {
     vars.mark.type = "circle";
   }
 
+  var context = d3.select(this).property("__context__");
+
   switch(vars.mark.type) {
 
     case "rect":
@@ -175,7 +177,9 @@ vistk.utils.connect_group = function(d, i) {
                   });
 }
 
-vistk.utils.connect_mark = function(d, i) {
+vistk.utils.connect_mark = function(d) {
+
+  var context = d3.select(this).property("__context__");
 
   if(typeof vars.connect != "undefined") {
 
@@ -194,7 +198,7 @@ vistk.utils.connect_mark = function(d, i) {
 
       case "path":
       default:
-     
+
         d3.select(this).append('path')
             .attr('class', 'connect__path')
             .attr('d', function(d) {
@@ -205,6 +209,17 @@ vistk.utils.connect_mark = function(d, i) {
     }
 
   }
+}
+
+vistk.utils.create_chart = function(g, config) {
+
+  // Creates a new chart with the given config
+
+  // Appends it to the current node
+
+  d3.select(this)
+
+
 }
 
 vistk.utils.axis = function(d, i) {

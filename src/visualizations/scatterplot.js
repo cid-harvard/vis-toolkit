@@ -7,6 +7,11 @@
               func: d3.scale.linear()
                       .range([vars.margin.left, vars.width-vars.margin.left-vars.margin.right])
                       .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_x]; })).nice()
+            }, {
+              name: "linear_sparkline",
+              func: d3.scale.linear()
+                      .range([0, 100])
+                      .domain(d3.extent(vars.data, function(d) { return d[vars.time.var_time]; })).nice()
             }
           ],
 
@@ -16,6 +21,11 @@
               name: "linear",
               func: d3.scale.linear()
                       .range([vars.height-vars.margin.top-vars.margin.bottom, vars.margin.top])
+                      .domain(d3.extent(vars.data, function(d) { return d[vars.var_y]; })).nice(),
+            }, {
+              name: "linear_sparkline",
+              func: d3.scale.linear()
+                      .range([100, 0])
                       .domain(d3.extent(vars.data, function(d) { return d[vars.var_y]; })).nice(),
             }
           ],
@@ -64,8 +74,8 @@
                 rotate: "0",
                 func: d3.svg.line()
                      .interpolate(vars.interpolate)
-                     .x(function(d) { return vars.x_scale[0]["func"](d[vars.time.var_time]); })
-                     .y(function(d) { return vars.y_scale[0]["func"](d[vars.var_y]); }),
+                     .x(function(d) { return vars.x_scale[1]["func"](d[vars.time.var_time]); })
+                     .y(function(d) { return vars.y_scale[1]["func"](d[vars.var_y]); }),
               }]
           }]
 
@@ -131,6 +141,13 @@
             .tickSize(-vars.width+vars.margin.left+vars.margin.right, 0, 0)
             .tickFormat(""));
 
+        var context = {
+          width: vars.width/10,
+          height: vars.height/10,
+          x_scale: vars.params.x_scale[0]["func"],
+          y_scale: vars.params.y_scale[0]["func"]
+        };
+
         // PRE-UPDATE
         var gItems = vars.svg.selectAll(".mark__group")
                           .data(vars.new_data, function(d, i) { 
@@ -143,7 +160,8 @@
                           .each(vistk.utils.items_group)
                           .attr("transform", function(d, i) {
                             return "translate(" + vars.margin.left + ", " + vars.height/2 + ")";
-                          });
+                          })
+                          .property("__context__", context);
 
         if(vars.aggregate === vars.var_group) {
 
@@ -219,19 +237,21 @@
           // ENTER CONNECT
           var gConnect_enter = gConnect.enter()
                           .append("g")
-                          .attr("class", "connect__group");
+                          .attr("class", "connect__group")
+                          .attr("transform", "translate(0,0)")
+                          .property("__context__", context)
+                          .attr("transform", function(d) {
+                            return "translate(" + (vars.params.x_scale[0]["func"](vars.accessor_values(d)[0][vars.var_x])*1.1) + ", " + vars.y_scale[0]["func"](vars.accessor_values(d)[0][vars.var_y]) + ")";
+                          });
 
           // APPEND CONNECT MARK
           vars.connect[0].marks.forEach(function(d) {
-            
-            console.log("CONNECT", d)
 
             vars.mark.type = d.type;
             vars.mark.rotate = d.rotate;
             gConnect_enter.each(vistk.utils.connect_mark);
 
           });
-
 
         } else {
 
@@ -242,6 +262,7 @@
 
             vars.mark.type = d.type;
             vars.mark.rotate = d.rotate;
+
             gItems_enter.each(vistk.utils.items_mark);
 
             // Update mark

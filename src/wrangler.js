@@ -139,8 +139,9 @@
             
             }).map(function (d) {
             
-              var v = {date: d[vars.time.var_time], year: d.year};;
+              var v = {date: d[vars.time.var_time], year: d.year};
               v[vars.var_y] = d[vars.var_y];
+              v[vars.var_x] = d[vars.var_x];
 
               return v;
             
