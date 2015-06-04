@@ -11,11 +11,11 @@
     <li><input name="radio-step" value="dotplot" type="radio">Dotplot</li>
     <li><input name="radio-step" value="scatterplot" type="radio">Scatterplot</li>
     <li><input name="radio-step" value="barchart" type="radio">Bar chart</li>
-    <li><input name="radio-step" type="radio">Treemap</li>
-    <li><input name="radio-step" type="radio">Geomap</li>
-    <li><input name="radio-step" type="radio">Sparklines</li>
+    <li><input name="radio-step" value="treemap" type="radio">Treemap</li>
+    <li><input name="radio-step" value="geomap" type="radio">Geomap</li>
+    <li><input name="radio-step" value="sparkline" type="radio">Sparklines</li>
     <li><input name="radio-step" value="linechart" type="radio">Line chart</li>  
-    <li><input name="radio-step" type="radio">Stacked graph</li>  
+    <li><input name="radio-step" value="stacked" type="radio">Stacked graph</li>  
   </ul>
 </div>
 
@@ -30,17 +30,18 @@ if(document.location.hash.substring(1) === "products") {
   file_type = "prducts";
 }
 
+var visualization = vistk.viz().params({
+      width: 500,
+      height: 500
+    });
 
 d3.json(file, function(error, countries) {
 
   if(file_type == "countries")
     flat_years = vistk.utils.flatten_years(countries);
 
-  visualization = vistk.viz()
-    .params({
-      width: 500,
-      height: 500,
-      type: "blob",
+  visualization.params({
+      type: "default",
       container: "#viz",
       data: flat_years,
       id: ["continent", "country"],
@@ -58,18 +59,17 @@ d3.json(file, function(error, countries) {
       title: "World Countries"
     });
 
-  d3.select("#viz").call(visualization);
+  d3.select(visualization.container()).call(visualization);
 
 });
 
 d3.select("input[value='default']").on("click", function(d) {
 
-  // TODO: reset all other parameters?
   visualization.params({
       type: "default"
     });
 
-  d3.select("#viz").call(visualization);
+  d3.select(visualization.container()).call(visualization);
 
 });
 
@@ -80,7 +80,7 @@ d3.select("input[value='dotplot']").on("click", function(d) {
       var_x: "nb_products"
     });
 
-  d3.select("#viz").call(visualization);
+  d3.select(visualization.container()).call(visualization);
 
 });
 
@@ -88,7 +88,6 @@ d3.select("input[value='scatterplot']").on("click", function(d) {
 
   visualization.params({
       type: "scatterplot",
-      container: "#viz",
       id: ["continent", "country"],
       var_group: "continent",
       var_color: "continent",
@@ -102,7 +101,7 @@ d3.select("input[value='scatterplot']").on("click", function(d) {
       title: "World Countries"
     });
 
-  d3.select("#viz").call(visualization);
+  d3.select(visualization.container()).call(visualization);
 
 });
 
@@ -110,7 +109,6 @@ d3.select("input[value='barchart']").on("click", function(d) {
 
   visualization.params({
     type: "barchart",
-    container: "#viz",
     id: ["continent", "country"],
     var_group: "continent",
     var_color: "continent",
@@ -120,9 +118,33 @@ d3.select("input[value='barchart']").on("click", function(d) {
     var_text: "name"
   });
 
-  d3.select("#viz").call(visualization);
+  d3.select(visualization.container()).call(visualization);
 
 });
+
+d3.select("input[value='treemap']").on("click", function(d) {
+
+ visualization.params({
+    type: "treemap",
+    var_id: "name",
+    var_group: "continent",
+    var_color: "continent",
+    var_parent: "continent",
+    title: "Countries",
+    var_size: "nb_products",
+    var_text: "name",
+    mark: {
+      type: 'rect',
+      width: 10,
+      height: 10
+    },
+    focus: 1121
+  });
+
+  d3.select(visualization.container()).call(visualization);
+
+});
+
 
 d3.select("input[value='linechart']").on("click", function(d) {
 
@@ -139,7 +161,7 @@ d3.select("input[value='linechart']").on("click", function(d) {
     highlight: "France"
   });
 
-  d3.select("#viz").call(visualization);
+  d3.select(visualization.container()).call(visualization);
 
 });
 
