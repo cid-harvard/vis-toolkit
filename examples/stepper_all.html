@@ -146,6 +146,26 @@ d3.select("input[value='treemap']").on("click", function(d) {
 });
 
 
+d3.select("input[value='geomap']").on("click", function(d) {
+
+ visualization.params({
+    type: "scatterplot",
+    var_id: "name",
+    var_group: "continent",
+    var_color: "continent",
+    var_parent: "continent",
+    var_x: 'longitude',
+    var_y: 'latitude',
+    title: "Countries",
+    var_size: "nb_products",
+    var_text: "name",
+  });
+
+  d3.select(visualization.container()).call(visualization);
+
+});
+
+
 d3.select("input[value='linechart']").on("click", function(d) {
 
   visualization.params({

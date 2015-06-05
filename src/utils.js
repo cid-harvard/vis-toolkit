@@ -122,22 +122,21 @@ vistk.utils.items_mark = function(d, i) {
           .attr("transform", "translate(" + d3.event.x + "," + d3.event.y + ")rotate(" +  vars.mark.rotate + ")");
       }
 
-//      d3.select(this).selectAll(".items__mark__text").remove();
-
      var mark = d3.select(this).selectAll(".items__mark__text").data([d]);
 
       mark.enter().append("text")
+          .classed("items__mark__text", true)
+          .style("text-anchor", "start")
+          .attr("x", 10)
+          .attr("y", 0)
+          .attr("dy", ".35em")
+          .call(drag);
 
-      mark.attr("x", 10)
-                  .attr("y", 0)
-                  .attr("dy", ".35em")
-                  .classed("items__mark__text", true)
-                  .style("text-anchor", "start")
-                  .attr("transform", "translate(" +  vars.mark.translate + ")rotate(" +  vars.mark.rotate + ")")
-                  .text(function(d) { 
-                    return vars.accessor_data(d)[vars.var_text]; 
-                  })
-                  .call(drag);
+      mark.transition()
+          .attr("transform", "translate(" +  vars.mark.translate + ")rotate(" +  vars.mark.rotate + ")")
+          .text(function(d) { 
+            return vars.accessor_data(d)[vars.var_text]; 
+          });
 
 /*
         // For pie chart wedges..
@@ -155,16 +154,19 @@ vistk.utils.items_mark = function(d, i) {
 
       // In case the transition comes from a bar chart
       d3.select(this).selectAll(".items__mark__rect").remove();
+      d3.select(this).selectAll(".items__mark__diamond").remove();      
+      d3.select(this).selectAll(".items__mark__circle").remove();
 
       var mark = d3.select(this).selectAll(".items__mark__circle").data([d]);
 
       mark.enter().append("circle")
+                  .classed("items__mark__circle", true)
                   .attr("r", vars.mark.radius)
                   .attr("cx", 0)
                   .attr("cy", 0)
                   .attr("transform", "rotate(0)")
-                  .classed("items__mark__circle", true)
                   .style("fill", vars.mark.fill);
+
       break;
 
   }
