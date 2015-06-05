@@ -1,0 +1,43 @@
+<!doctype html>
+<meta charset="utf-8">
+<script src="../js/d3.js"></script>
+<script src="../build/vistk.js"></script>
+<link href="../css/vistk.css" rel="stylesheet">
+<body>
+<div id="viz"></div>
+<script>
+
+
+
+//d3.json("../data/atlas_international_product_space.json", function(graph) {
+
+  d3.json("../data/col_dept_exports_3.json", function(exports) {
+
+  // cog: 0.4208957237122138coi: 0.8067728413148435"distance: 0.8179699425486985export_rca: 0.04472251026943858export_value: 29700id: 2479import_value: 3278477product_id: "115"year: 2008
+  
+    visualization = vistk.viz()
+      .params({
+        type: "scatterplot",
+        container: "#viz",
+        data: exports,
+        id: ["id"],
+        var_x: 'export_rca',
+        var_y: 'export_value',
+        time: {
+          var_time: "year", 
+          current_time: 2008,
+          parse: function(d) { return d; }
+        },
+        ui: {
+          default: true,
+          options: ["community_name", "product"]
+        },
+        title: "Product Space Colombia Exports"
+      });
+
+    d3.select("#viz").call(visualization);
+
+  });
+
+//});
+</script>
