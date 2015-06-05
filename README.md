@@ -40,6 +40,7 @@ Look a the [various examples](http://cid-harvard.github.io/vis-toolkit/examples/
 * **D3** version `3.4.10` (not tested with other versions, but no reason why not)
 * Eventually some `topojson.js`, `queue.js` dependencies for the geomap
 * Also relies on world shape files for maps (should be avoided in the future?)
+* Plus metadata (e.g. product space nodes and links)
 
 ## Examples
 
@@ -62,8 +63,7 @@ Composite examples (using coordinated views)
 Re-creation of standard examples
 
 * Anscombe quartet ([Demo](http://cid-harvard.github.io/vis-toolkit/examples/anscombe.html)
-* Gapminder
-* 
+ 
 
 ## Data Management
 
@@ -103,7 +103,6 @@ What to do with missing data over time?
 * Then other properties, attributes, can be loaded on-demand and eventually be kept
  * How do we decide to get rid of some items/attributes/properties?
 
-
 * Custom format for charts
  * e.g. `.total_bar({"prefix": "Export Value: $", "suffix": " USD", "format": ",f"})`
 
@@ -114,7 +113,6 @@ Each chart is a configuration
 * Defauts
 * Chart specific
 * User customizations
-
 
 1. Data wrangling
  * Standard structure
@@ -236,9 +234,9 @@ Text wrap
 
 * Should have bins for each time point (as an option)
 
-#### Aligned line chart 
+#### Aligned line chart
 
-http://www.lesechos.fr/infographie/2014-07-06-emploi-salaires/emplois.html
+* http://www.lesechos.fr/infographie/2014-07-06-emploi-salaires/emplois.html
 
 * http://www.nytimes.com/interactive/2014/10/19/upshot/peyton-manning-breaks-touchdown-passing-record.html?
 
@@ -381,20 +379,11 @@ Listing of charts
 * Bi-partite graph http://bl.ocks.org/NPashaP/9796212
 
 D3js notebook
-https://github.com/carnby/matta
-http://www.benfrederickson.com/distance-metrics/
+* https://github.com/carnby/matta
+* http://www.benfrederickson.com/distance-metrics/
+* + Mali's stuff
 
 ## Roadmap
-
-* v0.2 Beta
- * Generic data format as input
- * Couple of more visualizations
- * Code testing and production deployment
-
-* v0.3
- * States
- * Fully tested with API
- * Included in a real website
 
 * Tests
  * Should provide a series of tests (client or server)
@@ -416,7 +405,6 @@ http://www.benfrederickson.com/distance-metrics/
  * Derive values? E.g. active or not for the rca value
 
 * Misc
- * Automate compilation
  * Testing (using Travis?)
  * Sample datasets we will be using
  * Consistent input file format
@@ -460,7 +448,6 @@ Interesting reading on D3 modular/reusable
 * [Mike Bostock’s reusable D3](http://bost.ocks.org/mike/chart/)
 * Improved version https://javacrypt.wordpress.com/2012/12/15/improvements-to-d3s-reusable-component-pattern/
 * Closure https://developer.mozilla.org/en-US/docs/Web/JavaScript/Closures
-
 
 * https://blog.safaribooksonline.com/2013/07/11/reusable-d3-js-using-attrtween-transitions-and-mv/
 
@@ -513,10 +500,10 @@ Template
  * Utils functions `nv.utils.defaultColor()`
 
 * [d3.chart](http://bocoup.com/weblog/introducing-d3-chart/)
- * 
 
 * C3.js - http://c3js.org/ 
  * Configuration file https://github.com/masayuki0812/c3/blob/master/src/config.js
+
 * xCharts - http://tenxer.github.io/xcharts/ 
 * Rickshaw - http://code.shutterstock.com/rickshaw/
 * D3 Charts - https://github.com/ndarville/d3-charts
@@ -526,6 +513,7 @@ Template
 * IVTK
  * Templates configuration http://philogb.github.io/jit/demos.html
 * http://www.pubnub.com/developers/eon/chart/spline/
+* D3Kit https://github.com/twitter/d3kit
 
 ## Misc
 
@@ -543,4 +531,5 @@ Template
 * Responsive visualization http://eyeseast.github.io/visible-data/2013/08/26/responsive-d3/
 * http://bl.ocks.org/curran/raw/9aafca5fba0c7fde13aa/
 * http://mobileinfovis.com/smartphone
+* http://www.scmp.com/infographics/article/1461850/here-comes-rain-again-hong-kongs-rainfall-patterns-1997
 

@@ -60,6 +60,10 @@
 [-] Time filter by range
 [ ] Show current time
 
+TODO
+-Fix data wrangling (move away from using text)
+-FInd a way to use metadata
+
 ## Sparklines
 
 [ ] Data wrangling
