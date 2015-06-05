@@ -56,13 +56,24 @@
 
         vars.evt.register("highlightOn", function(d) {
 
+          /*
           vars.svg.selectAll(".connect__group:not(.selected)").style("opacity", 0.2);
-          vars.svg.selectAll(".text:not(.selected)").style("opacity", 0.2);
+          vars.svg.selectAll(".items__mark__circle:not(.selected)").style("opacity", 0.2);
+          vars.svg.selectAll(".items__mark__text:not(.selected)").style("opacity", 0.2);
+          */
 
           vars.svg.selectAll("#"+d[vars.var_id]).style("opacity", 1);
+          vars.svg.selectAll("#"+d[vars.var_text].replace(/\ /g, '_').replace(/\,/g, '_')).style("opacity", 1);
+          vars.svg.selectAll(".items__mark__circle.selected").style("opacity", 1);
+          vars.svg.selectAll(".items__mark__text.selected").style("opacity", 0.2);
 
-          vars.svg.selectAll(".connect__group").filter(function(e, j) { return e === d; }).style("stroke-width", 3);
-          vars.svg.selectAll(".text").filter(function(e, j) { return e === d; }).style("text-decoration", "underline");
+          vars.svg.selectAll(".connect__group").filter(function(e, j) { return e === d; })
+              .style("stroke-width", 3);
+
+          vars.svg.selectAll(".items__mark__text").filter(function(e, j) { return e === d; })
+              .style("font-weight", 700)
+//              .style("text-decoration", "underline")
+
 
         });
 
@@ -70,8 +81,9 @@
 
           vars.svg.selectAll(".country:not(.selected)").style("opacity", 1);
 
-          vars.svg.selectAll(".connect__group").filter(function(e, j) { return e === d; }).style("stroke-width", 1);
-          vars.svg.selectAll(".text").filter(function(e, j) { return e === d; }).style("text-decoration", "none");
+          vars.svg.selectAll(".connect__group").filter(function(e, j) { return e === d; })
+                  .style("stroke-width", 1);
+     //     vars.svg.selectAll(".text").filter(function(e, j) { return e === d; }).style("text-decoration", "none");
 
         });
 
@@ -133,9 +145,7 @@
         var gConnect_enter = gConnect.enter()
                         .append("g")
                         .attr("class", "connect__group")
-                        .attr("id", function(d) {
-                          return d[vars.var_id];
-                        })
+                        .attr("id", function(d) { return d[vars.var_id]; })
                         .style("opacity", 0.2);
 
         vars.connect[0].marks.forEach(function(d) {
@@ -144,7 +154,11 @@
           vars.mark.rotate = d.rotate;
           vars.mark.fill = d.fill;
           vars.mark.stroke = d.stroke;
-          gConnect_enter.each(vistk.utils.connect_mark);
+          gConnect_enter.each(vistk.utils.connect_mark)
+            .select("path")
+            .attr("id", function(d) {
+              console.log(d[vars.var_id])
+             return d[vars.var_id]; })
 
         });
 
@@ -155,9 +169,13 @@
         var gItems_enter = gItems.enter()
                         .append("g")
                         .each(vistk.utils.items_group)
+                        .attr("id", function(d) { return d[vars.var_id]; })
                         .attr("transform", function(d, i) {
                         //  console.log(d[vars.time.var_time] == vars.time.parse(vars.time.current_time))
                           return "translate(" + vars.x_scale[0]["func"](d[vars.time.var_time]) + ", " + vars.y_scale[0]["func"](d[vars.var_y]) + ")";
+                        })
+                        .classed("selected", function(d) {
+                          return vars.selection.indexOf(d[vars.var_id]) >= 0;
                         });
 
         // Items marks
@@ -166,7 +184,15 @@
           vars.mark.type = d.type;
           vars.mark.rotate = d.rotate;
           vars.mark.fill = d.fill;
-          gItems_enter.each(vistk.utils.items_mark);
+          var new_gItems = gItems_enter.each(vistk.utils.items_mark)
+          
+          new_gItems.select("circle")
+                      .attr("id", function(d) { return d[vars.var_id]; })
+                      .style("opacity", .2);
+
+          new_gItems.select("text")
+                      .attr("id", function(d) { return d[vars.var_id]; })
+                      .style("opacity", 0.2);
 
         });
 
