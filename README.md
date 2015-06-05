@@ -514,6 +514,7 @@ Template
  * Templates configuration http://philogb.github.io/jit/demos.html
 * http://www.pubnub.com/developers/eon/chart/spline/
 * D3Kit https://github.com/twitter/d3kit
+* DataSquid http://datasquid.co/
 
 ## Misc
 

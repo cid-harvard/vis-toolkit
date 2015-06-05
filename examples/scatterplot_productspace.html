@@ -12,30 +12,27 @@ d3.json("../data/atlas_international_product_space.json", function(graph) {
   d3.json("../data/col_dept_exports_3.json", function(exports) {
 
   // cog: 0.4208957237122138coi: 0.8067728413148435"distance: 0.8179699425486985export_rca: 0.04472251026943858export_value: 29700id: 2479import_value: 3278477product_id: "115"year: 2008
-  
-vistk.utils.find_node_by_id = function(nodes, id) {
-  var res = nodes.filter(function(d) {
-    return d.id == id;
-  })[0];
+      
+    vistk.utils.find_node_by_id = function(nodes, id) {
+      var res = nodes.filter(function(d) {
+        return d.id == id;
+      })[0];
 
-  if(typeof res == "undefined") {
-    res = {x: 500, y: 1500};
-  }
+      if(typeof res == "undefined") {
+        res = {x: 500+Math.random()*400, y: 1500+Math.random()*400};
+      }
 
-  return res;
-}
-  exports.forEach(function(d, i) {
+      return res;
+    }
 
-    // Find the value in vars.data
-    var node = vistk.utils.find_node_by_id(graph.nodes, d.product_id);
+    exports.forEach(function(d, i) {
 
-    d.x = node.x;
-    d.y = node.y;
+      // Find the value in vars.data
+      var node = vistk.utils.find_node_by_id(graph.nodes, d.product_id);
 
-  });
-
-    exports.forEach(function(node){
-      node.category = node.product_id.slice(0, 1);      
+      d.x = node.x;
+      d.y = node.y;
+      d.category = d.product_id.slice(0, 1);
     });
 
     visualization = vistk.viz()

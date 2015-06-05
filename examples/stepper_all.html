@@ -145,7 +145,6 @@ d3.select("input[value='treemap']").on("click", function(d) {
 
 });
 
-
 d3.select("input[value='geomap']").on("click", function(d) {
 
  visualization.params({
@@ -159,12 +158,23 @@ d3.select("input[value='geomap']").on("click", function(d) {
     title: "Countries",
     var_size: "nb_products",
     var_text: "name",
+    items: [{
+      attr: "country",
+      marks: [{
+        type: "circle",
+        rotate: "0",
+        radius: 5                
+      }, {
+        type: "text",
+        rotate: "30",
+        translate: null
+      }]
+    }],
   });
 
   d3.select(visualization.container()).call(visualization);
 
 });
-
 
 d3.select("input[value='linechart']").on("click", function(d) {
 

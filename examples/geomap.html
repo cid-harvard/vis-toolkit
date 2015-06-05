@@ -11,6 +11,8 @@
 
 d3.json("../data/partners_usa_2012_csay.json", function(error, partners) {
 
+  dd = partners;
+
   visualization = vistk.viz()
     .params({
       type: "geomap",
