@@ -1,0 +1,59 @@
+<!doctype html>
+<meta charset="utf-8">
+<script src="../js/d3.js"></script>
+<script src="../build/vistk.js"></script>
+<link href="../css/vistk.css" rel="stylesheet">
+<body>
+<div id="viz"></div>
+<body>
+<script src="../js/d3.js"></script>
+<script>
+
+d3.csv("../data/ECI _Rankings_2003-2013.csv", function(error, data) {
+
+  var res = [];
+
+  console.log(data)
+
+  // iso3,name_observatory,rank_eci2003,rank_eci2004,rank_eci2005,rank_eci2006,rank_eci2007,rank_eci2008,rank_eci2009,rank_eci2010,rank_eci2011,rank_eci2012,rank_eci2013
+  // AGO,Angola,121,84,122,121,121,121,123,119,122,118,103
+
+  data.forEach(function(d) {
+
+    // Create ids for countries
+    for(var k in d) {
+
+      if(k.trim() != "name_observatory" && k.trim() != "iso3") {
+        res.push({name: d.name_observatory, year: k.replace("rank_eci", ""), rank: +d[k], id: d.iso3, category: d[k]%5 + ""})
+      }
+
+    }
+  });
+
+  visualization = vistk.viz().params({
+    type: "linechart",
+    container: "#viz",
+    height: 1200,
+    width: 900,
+    data: res,
+    var_id: ["id"],
+    var_group: "category",
+    var_color: "id",
+    title: "Products",
+    var_text: "name",
+    y_text: "ECI Rank",
+    var_y: "rank",
+    time: {
+      parse: d3.time.format("%Y").parse,
+      var_time: 'year',
+      current_time: "2013"
+    },
+    selection: ["BOL", "COL", "ECU", "KOR", "PER", "PRY", "VNM"],
+    highlight: "BOL"
+  });
+
+  d3.select("#viz").call(visualization);
+
+});
+
+</script>
