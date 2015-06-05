@@ -7,22 +7,47 @@
 <div id="viz"></div>
 <script>
 
-
-
-//d3.json("../data/atlas_international_product_space.json", function(graph) {
+d3.json("../data/atlas_international_product_space.json", function(graph) {
 
   d3.json("../data/col_dept_exports_3.json", function(exports) {
 
   // cog: 0.4208957237122138coi: 0.8067728413148435"distance: 0.8179699425486985export_rca: 0.04472251026943858export_value: 29700id: 2479import_value: 3278477product_id: "115"year: 2008
   
+vistk.utils.find_node_by_id = function(nodes, id) {
+  var res = nodes.filter(function(d) {
+    return d.id == id;
+  })[0];
+
+  if(typeof res == "undefined") {
+    res = {x: 500, y: 1500};
+  }
+
+  return res;
+}
+  exports.forEach(function(d, i) {
+
+    // Find the value in vars.data
+    var node = vistk.utils.find_node_by_id(graph.nodes, d.product_id);
+
+    d.x = node.x;
+    d.y = node.y;
+
+  });
+
+    exports.forEach(function(node){
+      node.category = node.product_id.slice(0, 1);      
+    });
+
     visualization = vistk.viz()
       .params({
         type: "scatterplot",
         container: "#viz",
         data: exports,
-        id: ["id"],
-        var_x: 'export_rca',
-        var_y: 'export_value',
+        id: "id",
+        var_x: 'x',
+        var_y: 'y',
+        var_color: 'category',
+        var_group: 'category',
         time: {
           var_time: "year", 
           current_time: 2008,
@@ -39,5 +64,5 @@
 
   });
 
-//});
+});
 </script>

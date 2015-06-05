@@ -150,9 +150,7 @@
 
         // PRE-UPDATE
         var gItems = vars.svg.selectAll(".mark__group")
-                          .data(vars.new_data, function(d, i) { 
-                            return d[vars.var_text]; 
-                          });
+                          .data(vars.new_data)//, function(d, i) {  return d[vars.var_id]; });
 
         // ENTER
         var gItems_enter = gItems.enter()

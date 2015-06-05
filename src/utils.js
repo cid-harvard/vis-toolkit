@@ -127,7 +127,7 @@ vistk.utils.items_mark = function(d, i) {
      var mark = d3.select(this).selectAll(".items__mark__text").data([d]);
 
       mark.enter().append("text")
-      
+
       mark.attr("x", 10)
                   .attr("y", 0)
                   .attr("dy", ".35em")
