@@ -22,9 +22,8 @@
 
 var locations = [
 
-
-//  {name: "Comitan", location_id: 7019},
-  {name: "San Cristobal", location_id: 7078},
+  {name: "Comitan", location_id: 7019},
+//  {name: "San Cristobal", location_id: 7078},
 //  {name: "Tapachula", location_id: 7089},
 //  {name: "Tuxtla", location_id: 7101}
 
@@ -42,10 +41,14 @@ d3.csv("../data/chiapas_munis_2012.csv", function(error, munis) {
       // Transform key/value into values tab only
       // vars.new_data = nested_data.map(function(d) { return d.values; });
 
+      var nb_node = 0;
+
     data = munis.filter(function(d) { 
 
+      nb_node++;
+
       // Remove products with missing values
-      return (d.location_id === d.location_id && typeof d.distance !== "undefined" && d.distance.length > 0 && typeof d.pci !== "undefined" && d.pci.length > 0);
+      return (nb_node < 10 && d.location_id === d.location_id && typeof d.distance !== "undefined" && d.distance.length > 0 && typeof d.pci !== "undefined" && d.pci.length > 0);
 
     })
 

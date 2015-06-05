@@ -114,7 +114,7 @@
 
     // vars.time_data format
     // {id:, name:, values: [{date: d[vars.time.var_time], rank:, year:]}
-    //   if(vars.type === "linechart" || vars.type === "sparkline" || vars.type === "stacked") {
+   if(vars.type === "linechart" || vars.type === "sparkline" || vars.type === "stacked") {
 
       // Parse data
       vars.data.forEach(function(d) {
@@ -124,13 +124,13 @@
       vars.time.interval = d3.extent(vars.data, function(d) { return d[vars.time.var_time]; });
       vars.time.points = d3.set(vars.data.map(function(d) { return d[vars.time.var_time]; })).values();
 
-      var unique_items = d3.set(vars.data.map(function(d) { return d[vars.var_text]; })).values();
+      vars.unique_items = d3.set(vars.data.map(function(d) { return d[vars.var_text]; })).values();
 
       // Find unique items and create ids
-      vars.time_data = unique_items.map(function(c) {
+      vars.time_data = vars.unique_items.map(function(c) {
 
         return {
-          id: c.replace(/\ /g, '_').replace(/\,/g, '.'),                    // Create unique ids
+          id: c.replace(/\ /g, '_').replace(/\,/g, '_'),                    // Create unique ids
           name: c,                                    // Name for the current item
           // TODO: add other stuff? other temporal values?
           values: vars.data.filter(function(d) {
@@ -180,7 +180,7 @@
 
       });
     */
- //   }
+    }
 
     if(vars.type === "stacked") {
 

@@ -241,7 +241,7 @@
                           .attr("transform", "translate(0,0)")
                           .property("__context__", context)
                           .attr("transform", function(d) {
-                            return "translate(" + (vars.params.x_scale[0]["func"](vars.accessor_values(d)[0][vars.var_x])*1.1) + ", " + vars.y_scale[0]["func"](vars.accessor_values(d)[0][vars.var_y]) + ")";
+                            return "translate(" + (vars.params.x_scale[0]["func"](vars.accessor_values(d)[0][vars.var_x])-5) + ", " + (vars.y_scale[0]["func"](vars.accessor_values(d)[0][vars.var_y])/1.25-5) + ")";
                           });
 
           // APPEND CONNECT MARK
