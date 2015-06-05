@@ -142,7 +142,8 @@
               var v = {date: d[vars.time.var_time], year: d.year};
               v[vars.var_y] = d[vars.var_y];
               v[vars.var_x] = d[vars.var_x];
-
+              v[vars.var_id] = d[vars.var_id];
+              v[vars.var_color] = d[vars.var_color];
               return v;
             
             })

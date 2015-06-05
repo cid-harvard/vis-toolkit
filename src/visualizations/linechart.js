@@ -4,6 +4,8 @@
 
           accessor_values: function(d) { return d.values; },
 
+          accessor_items: function(d) { return d; },
+
           x_scale: [{
               name: "linear",
               func: d3.time.scale()
@@ -15,7 +17,7 @@
           y_scale: [{
               name: "linear",
               func: d3.scale.linear()
-                      .range([vars.height - 4, 0])
+                      .range([0, vars.height - 4])
                       .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_y]; }))
 
           }],
@@ -23,11 +25,12 @@
           items: [{
             attr: "year",
             marks: [{
-                type: "diamond",
+                type: "circle",
                 rotate: "0",
+                fill: function(d) { return vars.color(vars.accessor_items(d)[vars.var_color]); }
               }, {
                 type: "text",
-                rotate: "30",
+                rotate: "0",
                 translate: null
               }]
           }],
@@ -126,7 +129,11 @@
       
         var gConnect_enter = gConnect.enter()
                         .append("g")
-                        .attr("class", "connect__group");
+                        .attr("class", "connect__group")
+                        .attr("id", function(d) {
+                          return d[vars.var_id];
+                        })
+                        .style("opacity", 0.2);
 
         vars.connect[0].marks.forEach(function(d) {
           
@@ -144,6 +151,7 @@
                         .append("g")
                         .each(vistk.utils.items_group)
                         .attr("transform", function(d, i) {
+                        //  console.log(d[vars.time.var_time] == vars.time.parse(vars.time.current_time))
                           return "translate(" + vars.x_scale[0]["func"](d[vars.time.var_time]) + ", " + vars.y_scale[0]["func"](d[vars.var_y]) + ")";
                         });
 
@@ -152,6 +160,7 @@
 
           vars.mark.type = d.type;
           vars.mark.rotate = d.rotate;
+          vars.mark.fill = d.fill;
           gItems_enter.each(vistk.utils.items_mark);
 
         });
