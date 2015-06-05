@@ -40,6 +40,9 @@
             marks: [{
                 type: "path",
                 rotate: "0",
+                stroke: function(d) { 
+                  console.log("dd", d);
+                  return vars.color(vars.accessor_values(d)[0][vars.var_color]); },
                 func: d3.svg.line()
                      .interpolate(vars.interpolate)
                      .x(function(d) { return vars.x_scale[0]["func"](d[vars.time.var_time]); })
@@ -139,6 +142,8 @@
           
           vars.mark.type = d.type;
           vars.mark.rotate = d.rotate;
+          vars.mark.fill = d.fill;
+          vars.mark.stroke = d.stroke;
           gConnect_enter.each(vistk.utils.connect_mark);
 
         });

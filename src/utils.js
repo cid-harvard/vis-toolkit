@@ -201,6 +201,8 @@ vistk.utils.connect_mark = function(d) {
 
         d3.select(this).append('path')
             .attr('class', 'connect__path')
+            .style("fill", vars.mark.fill)
+            .style("stroke", vars.mark.stroke)            
             .attr('d', function(d) {
               return vars.connect[0].marks[0]["func"](vars.accessor_values(d));
             });

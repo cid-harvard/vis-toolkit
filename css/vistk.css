@@ -167,7 +167,7 @@ div.hidden {
 .connect__path {
   fill: none;
   stroke: #000;
-  stroke-width: 0.5px;
+  stroke-width: 1.5px;
 }
 
 /* Dot plot */
