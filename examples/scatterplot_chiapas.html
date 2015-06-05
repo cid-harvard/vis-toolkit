@@ -22,20 +22,26 @@
 
 var locations = [
 
-//  {name: "Comitan", location_id: "7019.0", domain: [0.96, 0.98]},
+//    {name: "Comitan", location_id: "7019.0", domain: [0.96, 0.98]},
 //  {name: "San Cristobal", location_id: "7078.0", domain: [0.95, 0.97]},
 //  {name: "Tapachula", location_id: "7089.0", domain: [0.95, 0.97]},
 //  {name: "Tuxtla", location_id: "7101.0", domain: [0.893, 0.92]}
-    {name: "Chiapas", domain: [0.8, 1.1]}
+
+  {name: "Chiapa", location_id: "7.0", domain: [0.89, 0.94]},
 
 ];
+
+// d3.selectAll(".x").remove()
+
+// e.location_id.slice(0, 1) == "7"s
 
 // Data format
 // location_id,product_id,rca,value,pci,distance,product_name,community_id,community_name
 // 8021.0,0101,0.519559025764,1025.0,0.360865205526,0.95753878355,Horses,106,Animal & Animal Products
 // 19011.0,0101,232.11378479,24750.0,0.360865205526,0.989889979362,Horses,106,Animal & Animal Products
 
-d3.csv("../data/chiapas_munis_2012.csv", function(error, products) {
+d3.csv("../data/chiapas_states_2012.csv", function(error, products) {
+//d3.csv("../data/chiapas_munis_2012.csv", function(error, products) {
 
   locations.forEach(function(d, i) {
 
@@ -46,7 +52,7 @@ d3.csv("../data/chiapas_munis_2012.csv", function(error, products) {
     data = products.filter(function(e, j) {
 
       // Remove products with missing values
-      return (e.location_id.slice(0, 1) == "7"  && typeof e.distance !== "undefined" && e.distance.length > 0 && typeof e.pci !== "undefined" && e.pci.length > 0);
+      return (e.location_id === d.location_id && typeof e.distance !== "undefined" && e.distance.length > 0 && typeof e.pci !== "undefined" && e.pci.length > 0);
 
     });
 
