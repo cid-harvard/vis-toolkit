@@ -282,3 +282,13 @@ path {
   stroke-opacity: 1;
   stroke-width: 2.5px;  
 }
+
+.items__mark__rect:not(.highlighted) {
+  stroke-width: 0px;  
+}
+
+.items__mark__rect.highlighted {
+  stroke-opacity: 1;
+  stroke: black;
+  stroke-width: 2.5px;
+}

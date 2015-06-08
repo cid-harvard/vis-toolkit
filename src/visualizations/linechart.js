@@ -192,7 +192,7 @@
           // Update
           gConnect.each(vistk.utils.items_mark)
                 .select("path")
-                .classed("highlighted", function(d, i) { return vars.new_data[i].__highlighted; });
+                .classed("highlighted", function(d, i) { return vars.time_data[i].__highlighted; });
 
         });
 

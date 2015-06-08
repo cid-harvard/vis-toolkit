@@ -34,9 +34,6 @@
                       .range([10, 30])
                       .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_r]; })),
 
-          connect: {
-            type: null
-          },
 
           items: [{
             attr: "country",
@@ -77,9 +74,49 @@
                      .x(function(d) { return vars.x_scale[1]["func"](d[vars.time.var_time]); })
                      .y(function(d) { return vars.y_scale[1]["func"](d[vars.var_y]); }),
               }]
+          }, {
+            attr: "",
+            marks: [{
+                type: "line",
+                rotate: "0",
+                func: null,
+              }]
           }]
 
         };
+
+
+        vars = vistk.utils.merge(vars, vars.params);
+        
+
+        if(vars.links !== null) {
+
+          // Connect marks
+          var gConnect = vars.svg.selectAll(".connect__group")
+                          .data(vars.links);
+        
+          var gConnect_enter = gConnect.enter()
+                          .append("g")
+                          .attr("class", "connect__group");
+
+          vars.connect[0].marks.forEach(function(d) {
+            
+            vars.mark.type = d.type;
+            vars.mark.rotate = d.rotate;
+
+            gConnect_enter.each(vistk.utils.connect_mark)
+                          .style("stroke", function(d) { 
+                              return vars.color(d[vars.var_color]); 
+                          })
+                          .attr("class", function(d) {
+                            return "link source_"+d.source.id+" target_"+d.target.id;
+                          })
+                          .style("stroke-width", function(d) { return Math.sqrt(d.value); })
+                          .style("opacity", .4);
+
+          });
+
+        }
 
         // Tentative to merge user and chart configurations 
         if(typeof vars.user_config.x_scale !== "undefined" && typeof vars.user_config.x_scale[0] !== "undefined")
@@ -87,8 +124,6 @@
 
         if(typeof vars.user_config.y_scale !== "undefined" && typeof vars.user_config.y_scale[0] !== "undefined")
           vars.params.y_scale[0]["func"].domain(vars.user_config.y_scale[0].domain);
-
-        vars = vistk.utils.merge(vars, vars.params);
 
         // AXIS
         vars.svg.call(vistk.utils.axis)
