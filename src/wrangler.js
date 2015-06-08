@@ -1,38 +1,52 @@
-    // Get a copy of the whole dataset
-    vars.new_data = vars.data;
 
-    // Filter data by time
-    if(typeof vars.time !== "undefined" && typeof vars.time.current_time !== "undefined" && vars.time.current_time != null) {
 
-      console.log("[time.filter]", vars.time.var_time, vars.time.current_time);
+    if(vars.this_chart == null) {
+      // Get a copy of the whole dataset
+      vars.new_data = vars.data;
 
-      vars.new_data = vars.new_data.filter(function(d) {
-        return d[vars.time.var_time] === vars.time.current_time;
-      });
-
-    }
-
-    // Focus
-    if(vars.focus.length > 0) {
-      
+      // Init states for tdata
       vars.new_data.forEach(function(d, i) {
-          if(i === vars.focus[0]) {
-            d.focus = true;
-          } else {
-            d.focus = false;
-          }
-        });
-    }
 
-    // Filter data by attribute
-    // TODO: not sure we should remove data, but add an attribute instead would better
-    if(vars.filter.length > 0) {
+        if(vars.filter.indexOf(d[vars.var_id]) < 0)
+          d.__filtered = false;
+        else
+          d.__filtered = true;
 
-      vars.new_data = vars.new_data.filter(function(d) {
-        // We don't keep values that are not in the vars.filter array
-        return vars.filter.indexOf(d[vars.var_group]) > -1;
+        if(vars.highlight.indexOf(d[vars.var_id]) < 0)
+          d.__highlighted = false;
+        else
+          d.__highlighted = true;
+
+        if(vars.selection.indexOf(d[vars.var_id]) < 0)
+          d.__selected = false;
+        else
+          d.__selected = true;
+
       });
-    
+
+
+      // Filter data by time
+      if(typeof vars.time !== "undefined" && typeof vars.time.current_time !== "undefined" && vars.time.current_time != null) {
+
+        console.log("[time.filter]", vars.time.var_time, vars.time.current_time);
+
+        vars.new_data = vars.new_data.filter(function(d) {
+          return d[vars.time.var_time] === vars.time.current_time;
+        });
+
+      }
+
+      // Filter data by attribute
+      // TODO: not sure we should remove data, but add an attribute instead would better
+      if(vars.filter.length > 0) {
+
+        vars.new_data = vars.new_data.filter(function(d) {
+          // We don't keep values that are not in the vars.filter array
+          return vars.filter.indexOf(d[vars.var_group]) > -1;
+        });
+      
+      }
+
     }
 
     // Aggregate data

@@ -8,6 +8,8 @@
   vars = {
     // PUBLIC (set by the user)
     container : "",
+    this_chart: null,
+
     dev : true,
     id : "id",
     id_var : "id",
@@ -15,9 +17,11 @@
     data: [],
     links: [],
     title: "",
+    
     focus: [],
-    nesting: null,
-    nesting_aggs: {},
+    selection: [],
+    filter: [],
+
     type: "",
 
     // Default dimensions
