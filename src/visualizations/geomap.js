@@ -1,11 +1,88 @@
       case "geomap":
 
+        vars.params = {
+
+          x_scale: [{
+              name: "linear",
+              func: d3.scale.linear()
+                      .range([vars.margin.left, vars.width-vars.margin.left-vars.margin.right])
+                      .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_x]; })).nice()
+            }, {
+              name: "linear_sparkline",
+              func: d3.scale.linear()
+                      .range([0, 100])
+                      .domain(d3.extent(vars.data, function(d) { return d[vars.time.var_time]; })).nice()
+            }
+          ],
+
+          x_ticks: 10,
+
+          y_scale: [{
+              name: "linear",
+              func: d3.scale.linear()
+                      .range([vars.height-vars.margin.top-vars.margin.bottom, vars.margin.top])
+                      .domain(d3.extent(vars.data, function(d) { return d[vars.var_y]; })).nice(),
+            }, {
+              name: "linear_sparkline",
+              func: d3.scale.linear()
+                      .range([100, 0])
+                      .domain(d3.extent(vars.data, function(d) { return d[vars.var_y]; })).nice(),
+            }
+          ],
+
+          r_scale: d3.scale.linear()
+                      .range([10, 30])
+                      .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_r]; })),
+
+          connect: {
+            type: null
+          },
+
+          items: [{
+            attr: "country",
+            marks: [{
+                type: "circle",
+                rotate: "0",
+                radius: 5                
+              }, {
+                type: "text",
+                rotate: "30",
+                translate: null
+              }]
+            }, {
+            attr: "continent",
+            marks: [{
+                type: "circle",
+                rotate: "0",
+                radius: 20
+                // TODO: add specific r_scale
+            }, {
+              type: "arc"
+                // TODO: add specific r_scale              
+            }, {
+                type: "text",
+                rotate: "-30",
+                translate: null
+                // TODO: move away according to r_scale                
+            }]
+          }],
+
+          connect: [{
+            attr: vars.time.var_time,
+            marks: [{
+                type: "path",
+                rotate: "0",
+                func: d3.svg.line()
+                     .interpolate(vars.interpolate)
+                     .x(function(d) { return vars.x_scale[1]["func"](d[vars.time.var_time]); })
+                     .y(function(d) { return vars.y_scale[1]["func"](d[vars.var_y]); }),
+              }]
+          }]
+
+        };
+
         // REGISTER EVENTS
-        vars.evt.register("highlightOn", function(d) { 
-
-          console.log(d);
-
-        });
+        vars.evt.register("highlightOn", function(d) { });
         vars.evt.register("highlightOut", function(d) { });
         vars.evt.register("selection", function(d) { });
         vars.evt.register("resize", function(d) { });
@@ -49,6 +126,7 @@
 
           countries.forEach(function(d) { 
 
+            console.log("DDD", d, countries)
             // Retrieve the country name based on its id
             d._name = names.filter(function(n) { return d.id === n.id; })[0].name; 
 
