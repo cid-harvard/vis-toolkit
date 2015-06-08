@@ -98,6 +98,10 @@
 
         });
 
+
+        vistk.utils.background_label(vars.title);
+
+
       /*
 
         // Add items graphical mark (DEPTH 2)

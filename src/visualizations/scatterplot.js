@@ -253,14 +253,6 @@
             // Update mark
             gItems.each(vistk.utils.items_mark);
 
-            gItems.each(vistk.utils.items_mark)
-                  .select("circle")
-                  .classed("highlighted", function(d, i) { return d.__highlighted; });
-
-            gItems.each(vistk.utils.items_mark)
-                  .select("text")
-                  .classed("highlighted", function(d, i) { return d.__highlighted; });
-
           });
 
         }

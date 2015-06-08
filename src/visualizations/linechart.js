@@ -1,7 +1,5 @@
       case "linechart":
 
-      console.log("INNN LINECHART")
-
         vars.params = {
 
           accessor_values: function(d) { return d.values; },
@@ -110,7 +108,6 @@
   */
         vars.evt.register("selection", function(d) {
 
-          
           vars.svg.selectAll("#"+d[vars.var_id])
                   .classed("selected", function(d) {
 
@@ -184,6 +181,7 @@
           vars.mark.rotate = d.rotate;
           vars.mark.fill = d.fill;
           vars.mark.stroke = d.stroke;
+
 
           gConnect_enter.each(vistk.utils.connect_mark)
             .select("path")

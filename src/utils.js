@@ -32,7 +32,8 @@
 
         var mark = d3.select(this).selectAll(".items__mark__rect").data([d]);
 
-        mark.enter().append("rect")
+        mark.enter()
+                .append("rect")
                   .attr("height", vars.mark.height)
                   .attr("width", vars.mark.width)                              
                   .attr("x", -vars.mark.width/2)
@@ -40,6 +41,10 @@
                   .classed("items__mark__rect", true)
                   .attr("transform", "rotate(0)")
                   .style("fill", function(d) { return vars.color(d[vars.var_color]); });
+
+        mark
+            .classed("highlighted", function(d, i) { return d.__highlighted; })
+            .classed("selected", function(d, i) { return d.__selected; });
 
         mark.exit().remove();
 
@@ -55,8 +60,11 @@
                   .attr("x", -vars.mark.width/2)
                   .attr("y", -vars.mark.height/2)
                   .classed("items__mark__diamond", true)
-                  .classed("highlighted", function(d, i) { return d.__highlighted; })
                   .attr("transform", "rotate(45)");
+
+        mark
+            .classed("highlighted", function(d, i) { return d.__highlighted; })
+            .classed("selected", function(d, i) { return d.__selected; });
 
         break;
 
@@ -172,6 +180,11 @@
                     .attr("transform", "rotate(0)")
                     .style("fill", vars.mark.fill);
 
+        mark
+            .classed("highlighted", function(d, i) { return d.__highlighted; })
+            .classed("selected", function(d, i) { return d.__selected; });
+
+
         break;
 
     }
@@ -202,7 +215,9 @@
 
         case "line":
 
-          d3.select(this).append('line')
+          var mark = d3.select(this).selectAll(".connect__line").data([d]);
+
+          mark.enter().append('line')
               .attr('class', 'connect__line')
               .attr("x1", function(d) { return vars.x_scale[0]["func"](d.source.x); })
               .attr("y1", function(d) { return vars.y_scale[0]["func"](d.source.y); })
