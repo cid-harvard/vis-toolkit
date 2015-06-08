@@ -340,27 +340,6 @@
 
   }
 
-  // TODO: add accessor as argument and var_time
-  vistk.utils.flatten_years = function(data) {
-    var flat = [];
-
-    //for each country
-    data.forEach(function(root) {
-      
-        //for each year in each country
-        root.years.forEach(function(year) {
-            //extend the year object with the common properties stored just once in the country object
-
-          var current_year = merge(root, year);
-          delete current_year.years;
-
-            //add it to the final flat array
-            flat.push(current_year);
-        })
-    });
-
-    return flat;
-  }
 
   // UTIS FUNCTIONS
 
@@ -450,7 +429,6 @@
         vars.filter.splice(index, 1);
     }
   }
-
 
   // TODO: add accessor as argument and var_time
   vistk.utils.flatten_years = function(data) {

@@ -96,6 +96,11 @@
             .attr("y", function(d) { return - vars.y_scale[0]["func"](d[vars.var_y]); })
             .attr("height", function(d) { return vars.y_scale[0]["func"](d[vars.var_y]); })
             .attr("width", vars.x_scale[0]["func"].rangeBand());
+            
+          // Update
+          gItems.each(vistk.utils.items_mark)
+                .select("text")
+                .classed("highlighted", function(d, i) { return d.__highlighted; });
 
         });
 

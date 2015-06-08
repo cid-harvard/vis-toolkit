@@ -256,3 +256,22 @@ path {
 .items__mark__text.highlighted {
   text-decoration: underline;
 }
+
+.items__mark__circle:not(.highlighted) {
+  stroke-width: 1.5px;
+}
+
+.items__mark__circle.highlighted {
+  stroke: black;
+  stroke-width: 2.5px;
+}
+
+.connect__path:not(.highlighted) {
+  stroke-opacity: .2;
+  stroke-width: 1.5px;  
+}
+
+.connect__path.highlighted {
+  stroke-opacity: 1;
+  stroke-width: 2.5px;  
+}

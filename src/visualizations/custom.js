@@ -52,6 +52,11 @@
           // Update existing marks
           gItems.each(vistk.utils.items_mark);
 
+          // Update specific mark
+          gItems.each(vistk.utils.items_mark)
+                .select("text")
+                .classed("highlighted", function(d, i) { return d.__highlighted; });
+
         });
 
         // TODO: decide if we attach to items or connect selection
