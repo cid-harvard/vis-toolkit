@@ -56,14 +56,19 @@
 
         vars.evt.register("highlightOn", function(d) {
 
-          /*
+          d.__highlighted = true;
+
           vars.svg.selectAll(".connect__group:not(.selected)").style("opacity", 0.2);
           vars.svg.selectAll(".items__mark__circle:not(.selected)").style("opacity", 0.2);
           vars.svg.selectAll(".items__mark__text:not(.selected)").style("opacity", 0.2);
-          */
 
+          vars.svg.selectAll(".connect__group:not(.selected)").style("opacity", 0.2)
+          
           vars.svg.selectAll("#"+d[vars.var_id]).style("opacity", 1);
           vars.svg.selectAll("#"+d[vars.var_text].replace(/\ /g, '_').replace(/\,/g, '_')).style("opacity", 1);
+
+
+/*
           vars.svg.selectAll(".items__mark__circle.selected").style("opacity", 1);
           vars.svg.selectAll(".items__mark__text.selected").style("opacity", 0.2);
 
@@ -74,23 +79,50 @@
               .style("font-weight", 700)
 //              .style("text-decoration", "underline")
 
-
+*/
         });
 
         vars.evt.register("highlightOut", function(d) {
 
-          vars.svg.selectAll(".country:not(.selected)").style("opacity", 1);
+          d.__highlighted = false;
 
-          vars.svg.selectAll(".connect__group").filter(function(e, j) { return e === d; })
+          vars.svg.selectAll("#"+d[vars.var_id]).style("opacity", .5)
+          vars.svg.selectAll("#"+d[vars.var_text].replace(/\ /g, '_').replace(/\,/g, '_')).style("opacity", .5);
+
+          vars.svg.selectAll(".selected").style("opacity", 1).style("stroke-opacity", 0.5);
+          //vars.svg.selectAll(".items__mark__circle.selected").style("opacity", 1);
+          //vars.svg.selectAll(".items__mark__text.selected").style("opacity", 1);
+
+/*
+          vars.svg.selectAll(".connect__group:not(.selected)").style("opacity", 0.2);
+          vars.svg.selectAll(".items__mark__circle:not(.selected)").style("opacity", 0.2);
+          vars.svg.selectAll(".items__mark__text:not(.selected)").style("opacity", 0.2);
+*/
+
+/*
+          vars.svg.selectAll(".connect__group")
+                  .filter(function(e, j) { return e === d; })
                   .style("stroke-width", 1);
      //     vars.svg.selectAll(".text").filter(function(e, j) { return e === d; }).style("text-decoration", "none");
 
+
+  */
         });
 
         vars.evt.register("selection", function(d) {
 
+          d.__selected = !d.__selected;
+
           vars.svg.selectAll("#"+d[vars.var_id])
-                  .classed("selected", !vars.svg.selectAll("#"+d[vars.var_id]).classed("selected"));
+                  .classed("selected", function(d) {
+
+                    console.log(d3.select(this).classed("selected"))
+
+                    return !vars.svg.selectAll("#"+d[vars.var_id]).classed("selected");
+
+                  });
+
+                  console.log(vars.svg.selectAll("#"+d[vars.var_id]).classed("selected"));
 
         });
 
