@@ -65,35 +65,29 @@ svg.append("path")
     .attr("transform", "translate(450,250)")
     .attr("d", big);
 
+var current_mark = 0;
 
-/*
+var visualization = vistk.viz()
+  .params({
+    type: "grid",
+    container: "#viz",
+    items: [
+      {mark: d3.superformulaTypes[0]}
+    ],
+    width: 960,
+    height: 500,
+    data: [{x: 0, y: 0}],
+    id: "id",
+    ui: false,
+    var_text: "name"
+  });
 
-d3.json("../data/exports_2012.json", function(error, exports) {
+setTimeout(function() {
 
-  var visualization = vistk.viz()
-    .params({
-      type: "stacked",
-      container: "#viz",
-      width: 960,
-      height: 500,
-      data: exports.data,
-      id: "id",
-      var_y: "value",
-      var_group: "community_id",
-      var_color: "community_id",
-      ui: false,
-      interpolate: "linear",
-      var_text: "name",
-      time: {
-        parse: function(d) { return d3.time.format("%Y").parse(d+""); },
-        var_time: "year"
-      }
-    });
-
+  current_mark++;
+  visualization.params.items[0].mark = d3.superformulaTypes[current_mark % d3.superformulaTypes.length];
   d3.select(visualization.container()).call(visualization);
 
-});
-*/
-
+}, 1000)
 
 </script>

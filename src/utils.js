@@ -517,7 +517,7 @@
   }
 
   // Credits: http://bl.ocks.org/mbostock/1705868
-  dvistk.utils.translate_along = function(path, duration) {
+  vistk.utils.translate_along = function(path, duration) {
     var l = path.node().getTotalLength();
     return function(d, i, a) {
       return function(t) {
