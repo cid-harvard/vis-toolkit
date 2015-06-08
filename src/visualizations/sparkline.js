@@ -35,13 +35,18 @@
                           return "translate(" + vars.x_scale[0]["func"](d[vars.time.var_time]) + ", " + vars.y_scale[0]["func"](d[vars.var_y]) + ")";
                         });
 
-        // APPEND ITEMS MARK
+        // ITEMS MARKS
         vars.items[0].marks.forEach(function(d) {
 
+          // Enter
           vars.mark.type = d.type;
           vars.mark.rotate = d.rotate;
           gItems_enter.each(vistk.utils.items_mark);
 
+          // Update
+          gItems.each(vistk.utils.items_mark)
+                .select("text")
+                .classed("highlighted", function(d, i) { return d.__highlighted; });
         });
 
         // POST-UPDATE ITEMS

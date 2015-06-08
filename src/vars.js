@@ -9,7 +9,9 @@
     // PUBLIC (set by the user)
     container : "",
     this_chart: null,
+
     new_data: null,
+    time_data: null,
 
     dev : true,
     id : "id",
@@ -111,8 +113,6 @@
     container: "#viz",
     nb_viz: nb_viz
   };
-
-  console.log("SETTING VARS", vars.this_chart)
 
   vars.evt.register = function(evt, f, d) {
 

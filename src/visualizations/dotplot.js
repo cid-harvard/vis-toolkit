@@ -20,11 +20,15 @@
                           return "translate(" + vars.margin.left + ", " + vars.height/2 + ")";
                         });
 
-        // Add graphical marks
+        // ITEMS MARKS
         vars.items[0].marks.forEach(function(d) {
+
+          // Enter
           vars.mark.type = d.type;
           vars.mark.rotate = d.rotate;
           gItems_enter.each(vistk.utils.items_mark);
+
+          // Update
           gItems.each(vistk.utils.items_mark)
                 .select("text")
                 .classed("highlighted", function(d, i) { return d.__highlighted; });
