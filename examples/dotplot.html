@@ -45,10 +45,10 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
         default: true,
         options: ui_options
       },
-      id: "name",
+      var_id: "dept_name",
       var_text: "dept_name", 
-      selection: [0],
-      highlight: [0]
+      selection: ["Antioquia"],
+      highlight: ["Antioquia"]
     });
 
   d3.select("#viz").call(visualization);

@@ -257,6 +257,14 @@ path {
   text-decoration: underline;
 }
 
+.items__mark__text:not(.selected) {
+  font-weight: 200;
+}
+
+.items__mark__text.selected {
+  font-weight: 700;
+}
+
 .items__mark__circle:not(.highlighted) {
   stroke-width: 1.5px;
 }

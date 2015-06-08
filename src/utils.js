@@ -127,15 +127,17 @@
        var mark = d3.select(this).selectAll(".items__mark__text").data([d]);
 
         mark.enter().append("text")
-            .classed("items__mark__text", true)
-            .classed("highlighted", function(d, i) { return d.__highlighted; })
+            .classed("items__mark__text", true)         
             .style("text-anchor", "start")
             .attr("x", 10)
             .attr("y", 0)
             .attr("dy", ".35em")
             .call(drag);
 
-        mark.transition()
+        mark
+            .classed("highlighted", function(d, i) { return d.__highlighted; })
+            .classed("selected", function(d, i) { return d.__selected; })   
+            .transition()
             .attr("transform", "translate(" +  vars.mark.translate + ")rotate(" +  vars.mark.rotate + ")")
             .text(function(d) { 
               return vars.accessor_data(d)[vars.var_text]; 

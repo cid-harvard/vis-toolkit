@@ -29,9 +29,7 @@
           gItems_enter.each(vistk.utils.items_mark);
 
           // Update
-          gItems.each(vistk.utils.items_mark)
-                .select("text")
-                .classed("highlighted", function(d, i) { return d.__highlighted; });
+          gItems.each(vistk.utils.items_mark);
         });
 
         // EXIT
