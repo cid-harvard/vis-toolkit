@@ -47,7 +47,7 @@
 
       case "diamond":
 
-        var mark = d3.select(this).selectAll(".items__mark__rect").data([d]);
+        var mark = d3.select(this).selectAll(".items__mark__diamond").data([d]);
 
         mark.enter().append("rect")
                   .attr("height", vars.mark.height)
