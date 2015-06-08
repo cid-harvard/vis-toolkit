@@ -242,6 +242,18 @@
 
     }
 */
+
+    if(vars.links !== null) {
+
+        vars.links.forEach(function(d, i) {
+
+          d.source = vistk.utils.find_node_by_id(d.source);
+          d.target = vistk.utils.find_node_by_id(d.target);
+
+        });
+
+    }
+
     if(vars.type === "treemap") {
 
       // Create the root node

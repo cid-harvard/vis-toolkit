@@ -39,6 +39,8 @@ d3.json("../data/atlas_international_product_space.json", function(graph) {
       .params({
         type: "scatterplot",
         container: "#viz",
+        nodes: graph.nodes,
+        links: graph.edges,
         data: exports,
         id: ["category", "id"],
         var_x: 'x',
