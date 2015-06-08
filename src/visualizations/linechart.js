@@ -1,5 +1,7 @@
       case "linechart":
 
+      console.log("INNN LINECHART")
+
         vars.params = {
 
           accessor_values: function(d) { return d.values; },
@@ -40,8 +42,7 @@
             marks: [{
                 type: "path",
                 rotate: "0",
-                stroke: function(d) { 
-                  console.log("dd", d);
+                stroke: function(d) {
                   return vars.color(vars.accessor_values(d)[0][vars.var_color]); },
                 func: d3.svg.line()
                      .interpolate(vars.interpolate)
@@ -54,10 +55,9 @@
 
         vars = vistk.utils.merge(vars, vars.params);
 
-        vars.evt.register("highlightOn", function(d) {
+     //   vars.evt.register("highlightOn", function(d) {
 
-          d.__highlighted = true;
-
+/*
           vars.svg.selectAll(".connect__group:not(.selected)").style("opacity", 0.2);
           vars.svg.selectAll(".items__mark__circle:not(.selected)").style("opacity", 0.2);
           vars.svg.selectAll(".items__mark__text:not(.selected)").style("opacity", 0.2);
@@ -66,7 +66,7 @@
           
           vars.svg.selectAll("#"+d[vars.var_id]).style("opacity", 1);
           vars.svg.selectAll("#"+d[vars.var_text].replace(/\ /g, '_').replace(/\,/g, '_')).style("opacity", 1);
-
+*/
 
 /*
           vars.svg.selectAll(".items__mark__circle.selected").style("opacity", 1);
@@ -80,11 +80,10 @@
 //              .style("text-decoration", "underline")
 
 */
+/*
         });
 
         vars.evt.register("highlightOut", function(d) {
-
-          d.__highlighted = false;
 
           vars.svg.selectAll("#"+d[vars.var_id]).style("opacity", .5)
           vars.svg.selectAll("#"+d[vars.var_text].replace(/\ /g, '_').replace(/\,/g, '_')).style("opacity", .5);
@@ -106,13 +105,12 @@
      //     vars.svg.selectAll(".text").filter(function(e, j) { return e === d; }).style("text-decoration", "none");
 
 
-  */
-        });
 
+        });
+  */
         vars.evt.register("selection", function(d) {
 
-          d.__selected = !d.__selected;
-
+          
           vars.svg.selectAll("#"+d[vars.var_id])
                   .classed("selected", function(d) {
 
@@ -186,11 +184,17 @@
           vars.mark.rotate = d.rotate;
           vars.mark.fill = d.fill;
           vars.mark.stroke = d.stroke;
+
           gConnect_enter.each(vistk.utils.connect_mark)
             .select("path")
             .attr("id", function(d) {
-              console.log(d[vars.var_id])
-             return d[vars.var_id]; })
+             return d[vars.var_id]; 
+           })
+
+          // Update
+          gConnect.each(vistk.utils.items_mark)
+                .select("path")
+                .classed("highlighted", function(d, i) { return vars.new_data[i].__highlighted; });
 
         });
 
@@ -217,14 +221,23 @@
           vars.mark.rotate = d.rotate;
           vars.mark.fill = d.fill;
           var new_gItems = gItems_enter.each(vistk.utils.items_mark)
-          
+
+/*          
           new_gItems.select("circle")
                       .attr("id", function(d) { return d[vars.var_id]; })
                       .style("opacity", .2);
 
           new_gItems.select("text")
                       .attr("id", function(d) { return d[vars.var_id]; })
-                      .style("opacity", 0.2);
+                      .style("opacity", 0.2)
+*/
+          gItems.each(vistk.utils.items_mark)
+                .select("text")
+                .classed("highlighted", function(d, i) { return d.__highlighted; });
+
+          gItems.each(vistk.utils.items_mark)
+                .select("circle")
+                .classed("highlighted", function(d, i) { return d.__highlighted; });
 
         });
 
