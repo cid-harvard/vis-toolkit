@@ -7,7 +7,27 @@
 <div id="viz"></div>
 <script>
 
-d3.json("../data/exports_2012.json", function(error, exports) {
+d3.json("../data/exports_quinn_2012.json", function(error, exports) {
+
+  /*
+    {
+    "cog": 0.4454352986568881,
+    "coi": -0.24858148355392148,
+    "department_id": 930,
+    "distance": 0.8955484947890789,
+    "export_rca": 0,
+    "export_value": 0,
+    "import_value": 0,
+    "product_id": 114,
+    "year": 2012,
+    "name": "Live horses, asses, mules or hinnies",
+    "level": "4digit",
+    "parent_id": 16,
+    "parent_name": "Live Animals",
+    "parent_code": "01",
+    "code": "0101"
+  }
+  */
 
   visualization = vistk.viz()
     .params({
@@ -15,12 +35,12 @@ d3.json("../data/exports_2012.json", function(error, exports) {
       container: "#viz",
       height: 600,
       width: 900,
-      data: exports.data,
-      var_id: "name",
-      var_group: "community_id",
-      var_color: "community_id",
-      title: "Products",
-      var_size: "value",
+      data: exports,
+      var_id: "code",
+      var_group: "parent_code",
+      var_color: "parent_code",
+      title: "Export treemap",
+      var_size: "export_value",
       var_text: "name",
       time: {
         var_time: "year", 
