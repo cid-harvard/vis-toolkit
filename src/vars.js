@@ -9,6 +9,7 @@
     // PUBLIC (set by the user)
     container : "",
     this_chart: null,
+    new_data: null,
 
     dev : true,
     id : "id",
@@ -111,6 +112,8 @@
     nb_viz: nb_viz
   };
 
+  console.log("SETTING VARS", vars.this_chart)
+
   vars.evt.register = function(evt, f, d) {
 
     if(vars.dev) { console.log("[vars.evt.register]", evt); }
@@ -163,9 +166,20 @@
 
   }
 
-  // Events 
+  // List of events 
   vars.dispatch = d3.dispatch('init', 'end', 'highlightOn', 'highlightOut', 'selection', 'resize', 'clearAnimations');
 
+  // Default events
   d3.select(window).on('resize', function(d) { 
     vars.evt.call("resize", d);
+  });
+
+  vars.evt.register("highlightOn", function(d) {
+    d.__highlighted = true;
+    console.log("THIS TRUE", d.__highlighted)
+    d3.select(vars.container).call(visualization);
+  });
+
+  vars.evt.register("highlightOut", function(d) {
+    d.__highlighted = false;
   });

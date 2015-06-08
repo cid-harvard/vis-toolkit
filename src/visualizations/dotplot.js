@@ -2,21 +2,6 @@
 
         vars = vistk.utils.merge(vars, vars.params["dotplot"]);
 
-        // REGISTER EVENTS
-        vars.evt.register("highlightOn", function(d) {
-
-          gItems.selectAll(".items__group").classed("highlighted", function(e, j) { return e === d; });
-          gItems.selectAll(".dot__label").classed("highlighted", function(e, j) { return e === d; });
-        
-        });
-
-        vars.evt.register("highlightOut", function(d) {
-
-          gItems.selectAll(".dot__circle").classed("highlighted", false);
-          gItems.selectAll(".dot__label").classed("highlighted", false);
-
-        });
-
         vars.evt.register("selection", function(d) {
 
           var selected_node = d3.selectAll(".dot__circle")
@@ -57,6 +42,10 @@
 
         // POST-UPDATE
         vars.svg.selectAll(".mark__group")
+                        .classed("highlighted", function(d, i) { 
+                          console.log(d.__highlighted);
+                          return d.__highlighted; 
+                        })
                         .transition()
                         .delay(function(d, i) { return i / vars.data.length * 100; })
                         .duration(vars.duration)

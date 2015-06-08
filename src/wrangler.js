@@ -1,6 +1,6 @@
 
+    if(vars.new_data === null) {
 
-    if(vars.this_chart == null) {
       // Get a copy of the whole dataset
       vars.new_data = vars.data;
 
@@ -23,7 +23,6 @@
           d.__selected = true;
 
       });
-
 
       // Filter data by time
       if(typeof vars.time !== "undefined" && typeof vars.time.current_time !== "undefined" && vars.time.current_time != null) {

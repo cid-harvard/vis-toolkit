@@ -248,3 +248,11 @@ path {
   fill: none;
   stroke: #ccc;
 }
+
+.items__mark__text:not(.highlighted) {
+  text-decoration: none;
+}
+
+.items__mark__text.highlighted {
+  text-decoration: underline;
+}

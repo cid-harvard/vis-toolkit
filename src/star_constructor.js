@@ -17,3 +17,7 @@
 
       }
     }
+
+
+
+  console.log("SETTING CONSUTRCIOT", vars.this_chart)
