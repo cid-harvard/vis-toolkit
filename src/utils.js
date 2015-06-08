@@ -503,4 +503,28 @@
     });
   }
 
+  vistk.utils.animate_trajectory = function(path, start_time, duration) {
+
+    var totalLength = path.node().getTotalLength();
+
+    path.attr("stroke-width", "5")
+        .attr("stroke-dasharray", totalLength + " " + totalLength)
+        .attr("stroke-dashoffset", totalLength)
+      .transition()
+        .duration(duration)
+        .ease("linear")
+        .attr("stroke-dashoffset", 0)
+  }
+
+  // Credits: http://bl.ocks.org/mbostock/1705868
+  dvistk.utils.translate_along = function(path, duration) {
+    var l = path.node().getTotalLength();
+    return function(d, i, a) {
+      return function(t) {
+        var p = path.node().getPointAtLength(t * l);
+        return "translate(" + p.x + "," + p.y + ")";
+      };
+    };
+  }
+
 
