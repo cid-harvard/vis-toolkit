@@ -176,10 +176,10 @@
 
   vars.evt.register("highlightOn", function(d) {
     d.__highlighted = true;
-    console.log("THIS TRUE", d.__highlighted)
-    d3.select(vars.container).call(visualization);
+    d3.select(vars.container).call(vars.this_chart);
   });
 
   vars.evt.register("highlightOut", function(d) {
     d.__highlighted = false;
+    d3.select(vars.container).call(vars.this_chart);
   });

@@ -1,6 +1,7 @@
   vistk.utils.items_group = function(d, i) {
 
     d3.select(this).attr("class", "mark__group")
+                    .classed("highlighted", function(d, i) { return d.__highlighted; })
                     .on("mouseover",function(d) {
                       vars.evt.call("highlightOn", d);
                     })
@@ -46,15 +47,16 @@
 
       case "diamond":
 
-        d3.select(this).append("rect")
-                        .attr("height", vars.mark.height)
-                        .attr("width", vars.mark.width)                              
-                        .attr("x", -vars.mark.width/2)
-                        .attr("y", -vars.mark.height/2)
-                        .classed("items__mark__diamond", true)
-                        .classed("selected", function(d) { return vars.selection.indexOf(d[vars.var_text]) >= 0; })
-                        .classed("highlighted", function(d) { return vars.highlight.indexOf(d[vars.var_text]) >= 0; })
-                        .attr("transform", "rotate(45)");
+        var mark = d3.select(this).selectAll(".items__mark__rect").data([d]);
+
+        mark.enter().append("rect")
+                  .attr("height", vars.mark.height)
+                  .attr("width", vars.mark.width)                              
+                  .attr("x", -vars.mark.width/2)
+                  .attr("y", -vars.mark.height/2)
+                  .classed("items__mark__diamond", true)
+                  .classed("highlighted", function(d, i) { return d.__highlighted; })
+                  .attr("transform", "rotate(45)");
 
         break;
 
@@ -126,6 +128,7 @@
 
         mark.enter().append("text")
             .classed("items__mark__text", true)
+            .classed("highlighted", function(d, i) { return d.__highlighted; })
             .style("text-anchor", "start")
             .attr("x", 10)
             .attr("y", 0)

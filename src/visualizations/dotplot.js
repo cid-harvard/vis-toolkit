@@ -2,16 +2,7 @@
 
         vars = vistk.utils.merge(vars, vars.params["dotplot"]);
 
-        vars.evt.register("selection", function(d) {
-
-          var selected_node = d3.selectAll(".dot__circle")
-            .filter(function(e, j) { return e === d; });
-
-          selected_node.classed("selected", !selected_node.classed("selected"));
-
-        });
-
-        // Remove any existing grid or axes
+        // Remove any existing grid or axes (TO BE FIXED)
         vars.svg.selectAll(".x, .y").remove();
 
         // TODO: should specify this is an horizontal axis
@@ -34,7 +25,9 @@
           vars.mark.type = d.type;
           vars.mark.rotate = d.rotate;
           gItems_enter.each(vistk.utils.items_mark);
-          gItems.each(vistk.utils.items_mark);
+          gItems.each(vistk.utils.items_mark)
+                .select("text")
+                .classed("highlighted", function(d, i) { return d.__highlighted; });
         });
 
         // EXIT
@@ -42,10 +35,7 @@
 
         // POST-UPDATE
         vars.svg.selectAll(".mark__group")
-                        .classed("highlighted", function(d, i) { 
-                          console.log(d.__highlighted);
-                          return d.__highlighted; 
-                        })
+                        .classed("highlighted", function(d, i) { return d.__highlighted; })
                         .transition()
                         .delay(function(d, i) { return i / vars.data.length * 100; })
                         .duration(vars.duration)

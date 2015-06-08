@@ -4,7 +4,7 @@
       // Get a copy of the whole dataset
       vars.new_data = vars.data;
 
-      // Init states for tdata
+      // Init states for data from the chart parameters
       vars.new_data.forEach(function(d, i) {
 
         if(vars.filter.indexOf(d[vars.var_id]) < 0)
