@@ -267,7 +267,6 @@ path {
 }
 
 .connect__path:not(.highlighted) {
-  stroke-opacity: .2;
   stroke-width: 1.5px;  
 }
 

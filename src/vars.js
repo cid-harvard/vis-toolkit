@@ -183,3 +183,9 @@
     d.__highlighted = false;
     d3.select(vars.container).call(vars.this_chart);
   });
+
+  vars.evt.register("selection", function(d) {
+    d.__selected = !d.__selected;
+    d3.select(vars.container).call(vars.this_chart);
+  });
+  

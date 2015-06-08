@@ -90,19 +90,6 @@
 
         vars = vistk.utils.merge(vars, vars.params);
 
-        vars.evt.register("highlightOn", function(d) {
-
-          gItems.selectAll(".items_mark").classed("highlighted", function(e, j) { return e === d; });
-
-        });
-
-        vars.evt.register("highlightOut", function(d) {
-
-          gItems.selectAll(".items_mark").classed("highlighted", false);
-          gItems.selectAll(".dot__label").classed("highlighted", false);
-
-        });
-
         // AXIS
         vars.svg.call(vistk.utils.axis)
                 .select(".x.axis")
@@ -265,6 +252,14 @@
 
             // Update mark
             gItems.each(vistk.utils.items_mark);
+
+            gItems.each(vistk.utils.items_mark)
+                  .select("circle")
+                  .classed("highlighted", function(d, i) { return d.__highlighted; });
+
+            gItems.each(vistk.utils.items_mark)
+                  .select("text")
+                  .classed("highlighted", function(d, i) { return d.__highlighted; });
 
           });
 
