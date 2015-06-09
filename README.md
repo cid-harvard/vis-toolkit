@@ -32,8 +32,11 @@ Simply add the `vistk` JavaScript and CSS files as below:
 <link href="vistk.css" rel="stylesheet">
 <script src="vistk.js"></script>
 ```
+## Installation
 
-Look a the [various examples](http://cid-harvard.github.io/vis-toolkit/examples/) for more details on using the toolkit.
+* Install project dependencies with `npm install`.
+* Run Grunt with `grunt`.
+
 
 ### Dependencies
 
@@ -63,7 +66,8 @@ Composite examples (using coordinated views)
 Re-creation of standard examples
 
 * Anscombe quartet ([Demo](http://cid-harvard.github.io/vis-toolkit/examples/anscombe.html)
- 
+
+Look a the [various examples](http://cid-harvard.github.io/vis-toolkit/examples/).
 
 ## Data Management
 
@@ -518,12 +522,17 @@ Template
 
 ## Misc
 
+Data management
 * http://webpack.github.io/
 * http://square.github.io/crossfilter/
+* http://facetjs.org/
+
 * http://sigfried.github.io/supergroup/
 * https://github.com/gka/d3-jetpack#selectionon
 
 * Show uncertainty - http://www.velir.com/blog/index.php/2013/07/11/visualizing-data-uncertainty-an-experiment-with-d3-js/
+
+* Processing http://p5js.org/learn/examples/Math_Noise_Wave.php
 
 ### Using other libs
 

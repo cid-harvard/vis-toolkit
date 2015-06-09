@@ -1,6 +1,6 @@
       }
 
-      if(vars.ui) {
+      if(vars.ui.default) {
 
         // BUILDING THE UI elements
         d3.select(vars.container).selectAll(".break").data([vars.var_id])
