@@ -57,7 +57,11 @@ d3.json("../data/atlas_international_product_space.json", function(graph) {
         r_cutoff: function(d) { return d.export_rca < 1; },
         mark: {
           type: "circle",
-          radius: 5,
+          radius: function(d) { var c = d3.scale.linear()
+                  .domain(d3.extent(exports, function(d) { return vars.accessor_values(d).export_rca; }))
+                  .range([2, 10]);
+                  return c(d["export_rca"]);
+          },
           fill: function(d) { var c = d3.scale.linear()
                   .domain(d3.extent(exports, function(d) { return vars.accessor_values(d).export_rca; }))
                   .range(["lightgray", "darkgray"]);

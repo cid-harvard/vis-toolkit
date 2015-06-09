@@ -33,9 +33,7 @@
         var mark = d3.select(this).selectAll(".items__mark__rect").data([d]);
 
         mark.enter()
-                .append("rect")
-                  .attr("height", vars.mark.height)
-                  .attr("width", vars.mark.width)                              
+                .append("rect")                            
                   .attr("x", -vars.mark.width/2)
                   .attr("y", -vars.mark.height/2)
                   .classed("items__mark__rect", true)
@@ -43,6 +41,8 @@
                   .style("fill", function(d) { return vars.color(d[vars.var_color]); });
 
         mark
+            .attr("height", vars.mark.height)
+            .attr("width", vars.mark.width)  
             .classed("highlighted", function(d, i) { return d.__highlighted; })
             .classed("selected", function(d, i) { return d.__selected; });
 
@@ -165,7 +165,7 @@
       case "circle":
       default:
 
-        // In case the transition comes from a bar chart
+        // In case other marks already exist
         d3.select(this).selectAll(".items__mark__rect").remove();
         d3.select(this).selectAll(".items__mark__diamond").remove();      
         d3.select(this).selectAll(".items__mark__circle").remove();
@@ -174,16 +174,15 @@
 
         mark.enter().append("circle")
                     .classed("items__mark__circle", true)
-                    .attr("r", vars.mark.radius)
                     .attr("cx", 0)
                     .attr("cy", 0)
                     .attr("transform", "rotate(0)")
-                    .attr("fill", vars.mark.fill);
 
         mark
+            .attr("r", vars.mark.radius)
+            .attr("fill", vars.mark.fill)
             .classed("highlighted", function(d, i) { return d.__highlighted; })
             .classed("selected", function(d, i) { return d.__selected; });
-
 
         break;
 
@@ -322,10 +321,6 @@
 
   vistk.utils.grid = function(d, i) {
 
-    // TODO:
-    // [ ] Find parameters
-    // [ ] Type of grid
-
   }
 
   vistk.utils.make_x_axis = function() {        
@@ -357,8 +352,7 @@
 
   }
 
-
-  // UTIS FUNCTIONS
+  // UTILS FUNCTIONS
 
   // http://stackoverflow.com/questions/171251/how-can-i-merge-properties-of-two-javascript-objects-dynamically
   vistk.utils.merge = function() {
@@ -489,7 +483,6 @@
 
   // One way to wrap text.. but creates too many elements..
   // http://bl.ocks.org/mbostock/7555321
-
   function wrap(text, width) {
 
     text.each(function() {
@@ -541,5 +534,3 @@
       };
     };
   }
-
-
