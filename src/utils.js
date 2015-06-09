@@ -178,8 +178,8 @@
                     .attr("cx", 0)
                     .attr("cy", 0)
                     .attr("transform", "rotate(0)")
-                    .style("fill", function(d) {
-                      return vars.mark.fill(d);
+                    .attr("fill", function(d) {
+                      return vars.mark.fill(vars.accessor_values(d).export_rca);
                     });
 
         mark
