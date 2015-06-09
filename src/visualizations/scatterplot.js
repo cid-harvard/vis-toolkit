@@ -39,7 +39,8 @@
             marks: [{
                 type: "circle",
                 rotate: "0",
-                radius: 5                
+                radius: 5,
+     //           fill: vars.color(vars.accessor_values(d)[vars.var_color])
               }, {
                 type: "text",
                 rotate: "30",
@@ -50,7 +51,8 @@
             marks: [{
                 type: "circle",
                 rotate: "0",
-                radius: 20
+                radius: 20,
+  //              fill: vars.color(vars.accessor_values(d)[vars.var_color])
                 // TODO: add specific r_scale
             }, {
               type: "arc"
@@ -278,8 +280,8 @@
           // Add graphical marks
           vars.items[0].marks.forEach(function(d) {
 
-            //vars.mark.type = d.type;
-            //vars.mark.rotate = d.rotate;
+            vars.mark.type = d.type;
+            vars.mark.rotate = d.rotate;
 
             gItems_enter.each(vistk.utils.items_mark);
 

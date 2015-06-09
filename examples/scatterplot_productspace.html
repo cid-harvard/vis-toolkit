@@ -43,7 +43,6 @@ d3.json("../data/atlas_international_product_space.json", function(graph) {
         nodes: graph.nodes,
         links: graph.edges,
         data: exports,
-        id: ["category", "id"],
         var_x: 'x',
         var_y: 'y',
         //var_color: 'category',
@@ -54,6 +53,7 @@ d3.json("../data/atlas_international_product_space.json", function(graph) {
         x_grid_show: false,
         y_axis_show: false,
         y_grid_show: false,
+        var_id: ["product_id"],
         r_cutoff: function(d) { return d.export_rca < 1; },
         mark: {
           type: "circle",
@@ -71,7 +71,8 @@ d3.json("../data/atlas_international_product_space.json", function(graph) {
           default: true,
           options: ["community_name", "product"]
         },
-        title: "Product Space Colombia Exports"
+        title: "Product Space Colombia Exports",
+        selection: ["115", "116", "117", "118", "119", "120", "121", "122", "123", "124", "125"]
       });
 
     d3.select("#viz").call(visualization);
