@@ -11,13 +11,16 @@ d3.json("../data/atlas_international_product_space.json", function(graph) {
 
   d3.json("../data/col_dept_exports_3.json", function(exports) {
 
-  // cog: 0.4208957237122138coi: 0.8067728413148435"distance: 0.8179699425486985export_rca: 0.04472251026943858export_value: 29700id: 2479import_value: 3278477product_id: "115"year: 2008
-      
+    // cog: 0.4208957237122138 coi: 0.8067728413148435 distance: 0.8179699425486985 
+    // export_rca: 0.04472251026943858 export_value: 29700 id: 2479 import_value: 3278477
+    // product_id: "115" year: 2008  
     find_node_by_id = function(nodes, id) {
+      
       var res = nodes.filter(function(d) {
         return d.id == id;
       })[0];
 
+      // If we can't find product in the graph, put it in the corner
       if(typeof res == "undefined") {
         res = {x: 500+Math.random()*400, y: 1500+Math.random()*400};
       }
@@ -25,11 +28,9 @@ d3.json("../data/atlas_international_product_space.json", function(graph) {
       return res;
     }
 
+    // Merge node positions with products
     exports.forEach(function(d, i) {
-
-      // Find the value in vars.data
       var node = find_node_by_id(graph.nodes, d.product_id);
-
       d.x = node.x;
       d.y = node.y;
       d.category = d.product_id.slice(0, 1);
@@ -53,7 +54,7 @@ d3.json("../data/atlas_international_product_space.json", function(graph) {
         x_grid_show: false,
         y_axis_show: false,
         y_grid_show: false,
-        r_cutoff: function(d) { return d.export_rca < 1; },        
+        r_cutoff: function(d) { return d.export_rca < 1; },
         time: {
           var_time: "year", 
           current_time: 2008,
