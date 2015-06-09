@@ -15,7 +15,7 @@ d3.json("../data/atlas_international_product_space.json", function(graph) {
     // export_rca: 0.04472251026943858 export_value: 29700 id: 2479 import_value: 3278477
     // product_id: "115" year: 2008  
     find_node_by_id = function(nodes, id) {
-      
+
       var res = nodes.filter(function(d) {
         return d.id == id;
       })[0];
@@ -46,7 +46,7 @@ d3.json("../data/atlas_international_product_space.json", function(graph) {
         id: ["category", "id"],
         var_x: 'x',
         var_y: 'y',
-        var_color: 'category',
+        //var_color: 'category',
         var_group: 'category',
         var_r: 'export_value',
         var_share: "distance",
@@ -55,6 +55,13 @@ d3.json("../data/atlas_international_product_space.json", function(graph) {
         y_axis_show: false,
         y_grid_show: false,
         r_cutoff: function(d) { return d.export_rca < 1; },
+        mark: {
+          type: "circle",
+          radius: 5,
+          fill: d3.scale.linear()
+          .domain(d3.extent(exports, function(d) { return vars.accessor_values(d).export_rca; }))
+          .range(["gray", "black"])
+        },
         time: {
           var_time: "year", 
           current_time: 2008,

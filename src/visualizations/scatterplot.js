@@ -101,12 +101,7 @@
             vars.connect.type = d.type;
             vars.connect.rotate = d.rotate;
 
-            console.log("IN MARKS", d.type, d, vars.connect[1])
-
             gConnect_enter.each(vistk.utils.connect_mark)
-                          .style("stroke", function(d) { 
-                              return vars.color(d[vars.var_color]); 
-                          })
                           .attr("class", function(d) {
                             return "link source_"+d.source.id+" target_"+d.target.id;
                           })
