@@ -127,21 +127,24 @@
         // AXIS
         vars.svg.call(vistk.utils.axis)
                 .select(".x.axis")
+                .style("display", function() { return vars.x_axis_show ? "block": "none"; })
                 .attr("transform", "translate(0," + (vars.height - vars.margin.bottom - vars.margin.top) + ")")
               .append("text") // TODO: fix axis labels
                 .attr("class", "label")
                 .attr("x", vars.width - vars.margin.left - vars.margin.right)
                 .attr("y", -6)
                 .style("text-anchor", "end")
-                .text(function(d) { return vars.var_x; });                
+                .text(function(d) { return vars.var_x; });            
 
-        vars.svg.call(vistk.utils.y_axis);
- 
+        vars.svg.call(vistk.utils.y_axis)
+                .select(".y.axis")
+                .style("display", function() { return vars.y_axis_show ? "block": "none"; })
         // GRID
         vars.svg.selectAll(".x.grid").data([vars.new_data])
           .enter()
             .append("g")
             .attr("class", "x grid")
+            .style("display", function() { return vars.x_grid_show ? "block": "none"; })
             .attr("transform", "translate(0," + (vars.height-vars.margin.top-vars.margin.bottom) + ")");
 
         vars.svg.selectAll(".x.grid").transition()
@@ -152,8 +155,9 @@
 
         vars.svg.selectAll(".y.grid").data([vars.new_data])
           .enter()
-            .append("g")        
+            .append("g")
             .attr("class", "y grid")
+            .style("display", function() { return vars.y_axis_show ? "block": "none"; })
             .attr("transform", "translate(" + vars.margin.left + ", 0)");
 
         vars.svg.selectAll(".y.grid").transition()

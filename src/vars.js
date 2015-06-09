@@ -57,12 +57,16 @@
     x_axis: null,
     x_format: function(d) { return d; },
     x_tickValues: null,
+    x_axis_show: true,
+    x_grid_show: true,
 
     // SCATTERPLOT (INCLUDES DOTPLOT)
     y_type: "linear",
     y_scale: [],
     y_ticks: 5,
     y_axis: null,
+    y_axis_show: true,
+    y_grid_show: true,
 
     r_scale: null,
     r_cutoff: function(d) { return d > 30; },
