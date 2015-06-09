@@ -34,7 +34,6 @@
                       .range([10, 30])
                       .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_r]; })),
 
-
           items: [{
             attr: "country",
             marks: [{
@@ -85,9 +84,7 @@
 
         };
 
-
         vars = vistk.utils.merge(vars, vars.params);
-        
 
         if(vars.links !== null) {
 
@@ -99,10 +96,12 @@
                           .append("g")
                           .attr("class", "connect__group");
 
-          vars.connect[0].marks.forEach(function(d) {
+          vars.connect[1].marks.forEach(function(d) {
             
-            vars.mark.type = d.type;
-            vars.mark.rotate = d.rotate;
+            vars.connect.type = d.type;
+            vars.connect.rotate = d.rotate;
+
+            console.log("IN MARKS", d.type, d, vars.connect[1])
 
             gConnect_enter.each(vistk.utils.connect_mark)
                           .style("stroke", function(d) { 
@@ -210,18 +209,18 @@
             // Add a group for marks
             var gItems2_enter = gItems2.enter()
                             .append("g")
- //                             .attr("transform", "translate(" + vars.width/2 + "," + vars.height/2 + ")")
-                              .each(vistk.utils.items_group)
-                              .attr("transform", function(e, j) {
+                          //  .attr("transform", "translate(" + vars.width/2 + "," + vars.height/2 + ")")
+                            .each(vistk.utils.items_group)
+                            .attr("transform", function(e, j) {
 
-                                // Needed for the graphical mark
-                                e[vars.var_group] = d[vars.var_group];
-                                e[vars.var_text] = d[vars.var_text];
-                                e.i = j;
-                                e.total_piescatter = d.piescatter[0] + d.piescatter[1];
+                              // Needed for the graphical mark
+                              e[vars.var_group] = d[vars.var_group];
+                              e[vars.var_text] = d[vars.var_text];
+                              e.i = j;
+                              e.total_piescatter = d.piescatter[0] + d.piescatter[1];
 
-                                return "translate(" + vars.params.x_scale[0]["func"](d[vars.var_x]) + ", " + vars.params.y_scale[0]["func"](d[vars.var_y]) + ")";
-                              });
+                              return "translate(" + vars.params.x_scale[0]["func"](d[vars.var_x]) + ", " + vars.params.y_scale[0]["func"](d[vars.var_y]) + ")";
+                            });
 
             vars.items[1].marks.forEach(function(d, j) {
 

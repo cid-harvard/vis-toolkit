@@ -13,7 +13,7 @@ d3.json("../data/atlas_international_product_space.json", function(graph) {
 
   // cog: 0.4208957237122138coi: 0.8067728413148435"distance: 0.8179699425486985export_rca: 0.04472251026943858export_value: 29700id: 2479import_value: 3278477product_id: "115"year: 2008
       
-    vistk.utils.find_node_by_id = function(nodes, id) {
+    find_node_by_id = function(nodes, id) {
       var res = nodes.filter(function(d) {
         return d.id == id;
       })[0];
@@ -28,7 +28,7 @@ d3.json("../data/atlas_international_product_space.json", function(graph) {
     exports.forEach(function(d, i) {
 
       // Find the value in vars.data
-      var node = vistk.utils.find_node_by_id(graph.nodes, d.product_id);
+      var node = find_node_by_id(graph.nodes, d.product_id);
 
       d.x = node.x;
       d.y = node.y;
