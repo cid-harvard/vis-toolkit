@@ -40,7 +40,7 @@
                 type: "circle",
                 rotate: "0",
                 radius: 5,
-     //           fill: vars.color(vars.accessor_values(d)[vars.var_color])
+                fill: function(d) { return vars.color(vars.accessor_items(d)[vars.var_color]); }
               }, {
                 type: "text",
                 rotate: "30",
@@ -52,7 +52,7 @@
                 type: "circle",
                 rotate: "0",
                 radius: 20,
-  //              fill: vars.color(vars.accessor_values(d)[vars.var_color])
+                fill: function(d) { return vars.color(vars.accessor_items(d)[vars.var_color]); }
                 // TODO: add specific r_scale
             }, {
               type: "arc"

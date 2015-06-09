@@ -31,7 +31,7 @@ d3.csv("../data/new_rankings2.csv", function(error, data) {
     height: 600,
     width: 900,
     data: res,
-    var_id: ["id"], // Should be ["continent", "id"] to allow aggregation and filtering
+    var_id: ["name"], // Should be ["continent", "id"] to allow aggregation and filtering
     var_group: "category",
     var_color: "id", // TODO: color by final ranking value..
     title: "Products",
@@ -43,7 +43,7 @@ d3.csv("../data/new_rankings2.csv", function(error, data) {
       var_time: 'year',
       current_time: "2013"
     },
-    selection: ["Japan", "Switzerland", "Germany", "South Korea", "Finland", "United Kingdom", "United States", "France", "Italy", "China", "Mexico", "Spain"],
+    selection: ["Japan", "Switzerland", "Germany"],
     highlight: "France"
   });
 

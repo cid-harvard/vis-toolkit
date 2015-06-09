@@ -3,7 +3,6 @@
         vars.params = {
 
           accessor_values: function(d) { return d.values; },
-
           accessor_items: function(d) { return d; },
 
           x_scale: [{
@@ -40,8 +39,10 @@
             marks: [{
                 type: "path",
                 rotate: "0",
+                fill: function() { return "none"; },
                 stroke: function(d) {
-                  return vars.color(vars.accessor_values(d)[0][vars.var_color]); },
+                  return vars.color(vars.accessor_items(d)[vars.var_color]); 
+                },
                 func: d3.svg.line()
                      .interpolate(vars.interpolate)
                      .x(function(d) { return vars.x_scale[0]["func"](d[vars.time.var_time]); })
@@ -181,7 +182,6 @@
           vars.mark.rotate = d.rotate;
           vars.mark.fill = d.fill;
           vars.mark.stroke = d.stroke;
-
 
           gConnect_enter.each(vistk.utils.connect_mark)
             .select("path")

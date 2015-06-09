@@ -45,7 +45,7 @@ d3.json("../data/atlas_international_product_space.json", function(graph) {
         data: exports,
         var_x: 'x',
         var_y: 'y',
-        //var_color: 'category',
+        var_color: 'export_rca',
         var_group: 'category',
         var_r: 'export_value',
         var_share: "distance",
@@ -58,9 +58,11 @@ d3.json("../data/atlas_international_product_space.json", function(graph) {
         mark: {
           type: "circle",
           radius: 5,
-          fill: d3.scale.linear()
+          fill: function(d) { var c = d3.scale.linear()
                   .domain(d3.extent(exports, function(d) { return vars.accessor_values(d).export_rca; }))
-                  .range(["lightgray", "darkgray"])
+                  .range(["lightgray", "darkgray"]);
+                  return c(d["export_rca"]);
+          }
         },
         time: {
           var_time: "year", 

@@ -178,9 +178,7 @@
                     .attr("cx", 0)
                     .attr("cy", 0)
                     .attr("transform", "rotate(0)")
-                    .attr("fill", function(d) {
-                      return vars.mark.fill(vars.accessor_values(d).export_rca);
-                    });
+                    .attr("fill", vars.mark.fill);
 
         mark
             .classed("highlighted", function(d, i) { return d.__highlighted; })
