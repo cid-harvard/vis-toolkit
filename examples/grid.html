@@ -4,59 +4,45 @@
 <script src="../build/vistk.js"></script>
 <link href="../css/vistk.css" rel="stylesheet">
 <body>
-<style>
-
-path {
-  stroke: #000;
-  fill: none;
-}
-
-path:first-child {
-  fill: yellow !important;
-}
-
-circle {
-  fill: #000;
-  pointer-events: none;
-}
-
-</style>
-
 <div id="viz"></div>
 <script>
 
 // TODO
 // [X] Create fake data for the table to be screen filling
-// [ ] Customize enter exit behaviors using colors
+// [ ] Customize enter exit behaviors using colors (e.g. red before exit)
 // [ ] Create some nested charts within each cell (instead of marks)
 // [ ] Option for using a consistant grid (e.g. 100 items)
+//     which implies to use a color cutoff rather than enter/exit elements
 // [ ] See http://bl.ocks.org/mbostock/1009139
 
-var visualization = vistk.viz()
-  .type("grid")
-  .width(800)
-  .height(600)
-  .container("#viz")
-  .data([])
-  .params({
+var visualization = vistk.viz().params({
+    type: "grid",
+    width: 800,
+    height: 600,
+    container: "#viz",
+    data: [],
     mark: {
       type: "rect",
       width: 10,
-      height: 10
+      height: 10,
+      enter: null,
+      exit: function(d) { 
+        // TODO: vistk wait for the next event
+
+        // TODO: apply the color change
+        d3.select(this).style("fill", "red"); 
+      }
     }
   });
-
 
 setInterval(function(d) {
 
   var data = d3.range(100*Math.random());
 
-  visualization.data(data);
+  visualization.params({data: data});
   d3.select("#viz").call(visualization);
 
 }, 1000)
-
-
 
 </script>
 </body>
