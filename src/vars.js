@@ -178,18 +178,21 @@
     vars.evt.call("resize", d);
   });
 
+
   vars.evt.register("highlightOn", function(d) {
     d.__highlighted = true;
-    d3.select(vars.container).call(vars.this_chart);
+    if(vars.type !== "treemap")
+      d3.select(vars.container).call(vars.this_chart);
   });
 
   vars.evt.register("highlightOut", function(d) {
     d.__highlighted = false;
-    d3.select(vars.container).call(vars.this_chart);
+    if(vars.type !== "treemap")
+      d3.select(vars.container).call(vars.this_chart);
   });
 
   vars.evt.register("selection", function(d) {
     d.__selected = !d.__selected;
-    d3.select(vars.container).call(vars.this_chart);
+    if(vars.type !== "treemap")
+      d3.select(vars.container).call(vars.this_chart);
   });
-  

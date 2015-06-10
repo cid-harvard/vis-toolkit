@@ -5,7 +5,7 @@
               name: "linear",
               func: d3.scale.ordinal()
                       .rangeRoundBands([0, vars.width], .1)
-                      .domain(vars.data.map(function(d) { return d[vars.var_x]; })),
+                      .domain(vars.new_data.map(function(d) { return d[vars.var_x]; })),
             }
           ],
 
@@ -15,7 +15,7 @@
               name: "linear",
               func: d3.scale.linear()
                       .range([vars.height, 0])
-                      .domain([0, d3.max(vars.data, function(d) { return d[vars.var_y]; })]),
+                      .domain([0, d3.max(vars.new_data, function(d) { return d[vars.var_y]; })]),
             }
           ],
 
@@ -36,17 +36,6 @@
         };
 
         vars = vistk.utils.merge(vars, vars.params);
-
-        vars.evt.register("highlightOn", function(d) {
-          vars.svg.selectAll("rect")
-            .filter(function(e, j) { return e === d; })
-            .classed("focus", true);
-        });
-
-        vars.evt.register("highlightOut", function(d) {
-          vars.svg.selectAll("rect")
-              .classed("focus", false);
-        });
 
         // Remove any existing grid or axes
         vars.svg.selectAll(".x, .y").remove();
@@ -97,7 +86,6 @@
                 .call(vistk.utils.wrap);
 
         });
-
 
         vistk.utils.background_label(vars.title);
 
