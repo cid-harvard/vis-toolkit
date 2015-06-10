@@ -45,6 +45,7 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
 
   visualization = vistk.viz()
     .params({
+      margin: {top: 0, right: 0, bottom: 0, left: 0},
       type: 'dotplot',      
       data: departments,
       container: '#viz',
@@ -69,9 +70,9 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
         default: false,
         options: ui_options
       },
-      id: "name",
+      var_id: "dept_name",
       var_text: "dept_name", 
-      selection: [0],
+      selection: ["Antioquia"],
       highlight: ["Antioquia"],
       duration: 0,
       tickSize: 0,
