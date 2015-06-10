@@ -47,25 +47,25 @@
         vars.x_scale = d3.time.scale()
             .range([0, vars.width]);
 
-        var y = d3.scale.linear()
+        vars.y_scale = d3.scale.linear()
             .range([vars.height, 0]);
 
-        var xAxis = d3.svg.axis()
+        vars.xAxis = d3.svg.axis()
             .scale(vars.x_scale)
             .orient("bottom");
 
         var yAxis = d3.svg.axis()
-            .scale(y)
+            .scale(vars.y_scale)
             .orient("left")
             .tickFormat(formatPercent);
 
-        var area = d3.svg.area()
+        vars.x_scale.domain(d3.extent(vars.new_data, function(d) { return d[vars.time.var_time]; }));
+
+        vars.area = d3.svg.area()
             .interpolate('cardinal')
             .x(function(d) { return vars.x_scale(d[vars.time.var_time]); })
-            .y0(function(d) { return y(d.y0); })
-            .y1(function(d) { return y(d.y0 + d.y); });
-
-        vars.x_scale.domain(d3.extent(vars.new_data, function(d) { return d[vars.time.var_time]; }));
+            .y0(function(d) { return vars.y_scale(d.y0); })
+            .y1(function(d) { return vars.y_scale(d.y0 + d.y); });
 
         var browser = vars.svg.selectAll(".browser")
             .data(vars.time_data)
@@ -75,7 +75,7 @@
 
         browser.append("path")
             .attr("class", "area")
-            .attr("d", function(d) { return area(d.values); })
+            .attr("d", function(d) { return vars.area(d.values); })
             .style("fill", function(d) { return vars.color(d.name); });
 
 /*
@@ -91,7 +91,7 @@
         vars.svg.append("g")
             .attr("class", "x axis")
             .attr("transform", "translate(0," + vars.height + ")")
-            .call(xAxis);
+            .call(vars.xAxis);
 
         vars.svg.append("g")
             .attr("class", "y axis")

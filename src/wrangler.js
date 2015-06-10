@@ -163,10 +163,6 @@
         };
       });
 
-    /* DISABLING missing values detection for the moment
-
-
-    */
     }
 
     if(vars.type === "stacked") {
@@ -178,7 +174,8 @@
           var is_year = false;
 
           c.values.forEach(function(v) {
-            if(v.year === y) {
+
+            if(v[vars.time.var_time] == y) {
               is_year = true;
             }
           });
@@ -186,7 +183,9 @@
           if(!is_year) {
 
             // Set missing values to null
-            var v = {date: y, year: y}
+            var v = {date: y, year: y};
+            
+            v[vars.time.var_time] = y;
             v[vars.var_y] = 0;
             c.values.push(v);
 
@@ -198,9 +197,9 @@
 
       vars.stack = d3.layout.stack()
           .values(function(d) { 
-            console.log("DDD", d)
-            return d.values; })
-          .x(function(d) { return d[vars.var_time]; })          
+            return d.values; 
+          })
+          .x(function(d) { return d[vars.time.var_time]; })          
           .y(function(d) { return d[vars.var_y]; });
 
        vars.time_data = vars.stack(vars.time_data);
