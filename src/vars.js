@@ -165,8 +165,8 @@
   } else {
 
     // Calculate new dimensions based on margins
-    vars.width = vars.width - vars.margin.left - vars.margin.right;
-    vars.height = vars.height - vars.margin.top - vars.margin.bottom;
+    // vars.width = vars.width - vars.margin.left - vars.margin.right;
+    // vars.height = vars.height - vars.margin.top - vars.margin.bottom;
 
   }
 

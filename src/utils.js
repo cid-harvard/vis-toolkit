@@ -140,7 +140,7 @@
             .attr("x", 10)
             .attr("y", 0)
             .attr("dy", ".35em")
-            .call(drag);
+            // .call(drag);
 
         mark
             .classed("highlighted", function(d, i) { return d.__highlighted; })
