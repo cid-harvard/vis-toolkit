@@ -26,6 +26,7 @@
                 rotate: "0"
               }
 /*
+                // Removed because of DIV wrap
               ,{
                 attr: "depth1",
                 type: "text",
@@ -88,82 +89,35 @@
 
           gItems_enter
            .filter(function(d, j) {
-              console.log(d, d.depth);
-                    return d.depth == 1;
-                  })
-          .append("foreignObject")
+            return d.depth == 1 &&  d.dx > 30 && d.dy > 30;
+           })
+           .append("foreignObject")
                 .attr("width", function(d) { return (d.dx - vars.padding) + "px"; })
-                .attr("height", function(d) { return d.dy + "px"; })
+                .attr("height", function(d) { return (d.dy - vars.padding) + "px"; })
                 .append("xhtml:body")
                   .style("font", "14px 'Helvetica Neue'")
                   .append("div")
                 .style("width", function(d) { return d.dx + "px"; })
                 .style("height", function(d) { return d.dy + "px"; })
-                .style({"text-overflow": "ellipsis"})
-                  .html("An HTML Foreign")
+                .style({"text-overflow": "ellipsis", "overflow": "hidden"})
+                  .html(function(d) {
+                    return vars.accessor_data(d)[vars.var_text];
+                  })
 
+          // SVG wrap
           // new_items.selectAll("text").call(vistk.utils.wrap);
 
         });
 
-        // Quick hack: For some reason wrapping doesn't work with newly
-        // creted elements
+        // Removed because of Div wrap
+        /*
         setTimeout(function(d) { 
           vars.svg.selectAll("text")
                 //.call(vistk.utils.wrap);
         }, 500);
-
+        */
 
         vistk.utils.background_label(vars.title);
 
-  
-      /*
-
-        // Add items graphical mark (DEPTH 2)
-        gItems_enter
-            .filter(function(d, j) { 
-              return d.depth === 2;
-            })
-            .each(vistk.utils.items_mark)
-            .select("rect")
-            .style("fill", function(d) {
-
-              return vars.color(d[vars.var_color]);
-//              return d.children ? vars.color(d[vars.var_color]) : null; 
-            })
-            .attr("width", function(d) { return d.dx; })
-            .attr("height", function(d) { return d.dy; });
-
-        cell_enter.append("rect")
-            .attr("width", function(d) { return d.dx; })
-            .attr("height", function(d) { return d.dy; })
-            .style("fill", function(d) {
-              return d.children ? vars.color(d[vars.var_color]) : null; 
-            });
-
-        cell_enter.append("text")
-            .attr("x", function(d) { return 10; })
-            .attr("y", function(d) { return 10; })
-            .attr("dy", ".35em")
-            .attr("text-anchor", "left")
-            .style("font-size", 15)
-            .text(function(d) { 
-              if(d.depth === 1) {
-                return d.name;
-              } else {
-                return "";
-              }
-            //  return d.children ? null : d[vars.var_text].slice(0, 3)+"..."; 
-            })
-
-        cell.select("rect")
-            .attr("width", function(d) { return d.dx; })
-            .attr("height", function(d) { return d.dy; })
-            .style("fill", function(d) {
-              return d.children ? vars.color(d[vars.var_color]) : null; 
-            })
-            .classed("focus", function(d, i) { return d.focus; });
-
-*/
       break;
       
