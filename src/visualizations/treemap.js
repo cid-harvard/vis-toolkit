@@ -24,12 +24,16 @@
             marks: [{
                 type: "rect",
                 rotate: "0"
-              },{
+              }
+/*
+              ,{
                 attr: "depth1",
                 type: "text",
                 rotate: "0",
                 translate: [5, 20]
-              }]
+              }
+*/
+              ]
           }],
 
           connect: [],
@@ -80,9 +84,25 @@
           gItems.select("rect")
                 .transition().duration(vars.duration)
                 .attr("width", function(d) { return d.dx; })
-                .attr("height", function(d) { return d.dy; });
+                .attr("height", function(d) { return d.dy; })
 
-          new_items.selectAll("text").call(vistk.utils.wrap);
+          gItems_enter
+           .filter(function(d, j) {
+              console.log(d, d.depth);
+                    return d.depth == 1;
+                  })
+          .append("foreignObject")
+                .attr("width", function(d) { return (d.dx - vars.padding) + "px"; })
+                .attr("height", function(d) { return d.dy + "px"; })
+                .append("xhtml:body")
+                  .style("font", "14px 'Helvetica Neue'")
+                  .append("div")
+                .style("width", function(d) { return d.dx + "px"; })
+                .style("height", function(d) { return d.dy + "px"; })
+                .style({"text-overflow": "ellipsis"})
+                  .html("An HTML Foreign")
+
+          // new_items.selectAll("text").call(vistk.utils.wrap);
 
         });
 
@@ -90,7 +110,7 @@
         // creted elements
         setTimeout(function(d) { 
           vars.svg.selectAll("text")
-                .call(vistk.utils.wrap);
+                //.call(vistk.utils.wrap);
         }, 500);
 
 
