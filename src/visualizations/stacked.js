@@ -8,7 +8,7 @@
               name: "linear",
               func: d3.time.scale()
                   .range([0, vars.width-100])
-                  .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_time]; }))
+                  .domain(d3.extent(vars.data, function(d) { return d[vars.var_time]; }))
             }
           ],
 
@@ -16,7 +16,7 @@
               name: "linear",
               func: d3.scale.linear()
                       .range([vars.height - 4, 0])
-                      .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_y]; }))
+                      .domain(d3.extent(vars.data, function(d) { return d[vars.var_y]; }))
           }],
 
           items: [],
@@ -48,7 +48,8 @@
             .range([0, vars.width]);
 
         vars.y_scale = d3.scale.linear()
-            .range([vars.height, 0]);
+            .range([vars.height, 0])
+            .domain(d3.extent(vars.data, function(d) { return d[vars.var_y]; }));
 
         vars.xAxis = d3.svg.axis()
             .scale(vars.x_scale)
@@ -59,7 +60,7 @@
             .orient("left")
             .tickFormat(formatPercent);
 
-        vars.x_scale.domain(d3.extent(vars.new_data, function(d) { return d[vars.time.var_time]; }));
+        vars.x_scale.domain(d3.extent(vars.data, function(d) { return d[vars.time.var_time]; }));
 
         vars.area = d3.svg.area()
             .interpolate('cardinal')
