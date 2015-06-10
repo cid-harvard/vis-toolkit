@@ -165,13 +165,17 @@
 
     /* DISABLING missing values detection for the moment
 
+
+    */
+    }
+
+    if(vars.type === "stacked") {
+
       // Make sure all items and all ranks are there
       vars.time_data.forEach(function(c) {
 
         vars.time.points.forEach(function(y) {
           var is_year = false;
-
-          console.log("TIMEP", y)
 
           c.values.forEach(function(v) {
             if(v.year === y) {
@@ -182,9 +186,8 @@
           if(!is_year) {
 
             // Set missing values to null
-            var v = {date: v, year: v}
-            v[vars.var_y] = null;
-
+            var v = {date: y, year: y}
+            v[vars.var_y] = 0;
             c.values.push(v);
 
           }
@@ -192,19 +195,15 @@
         });
 
       });
-    */
-    }
 
-    if(vars.type === "stacked") {
-
-      var stack = d3.layout.stack()
+      vars.stack = d3.layout.stack()
           .values(function(d) { 
             console.log("DDD", d)
             return d.values; })
-          .x(function(d) { return d.date; })          
-          .y(function(d) { return d.value; });
+          .x(function(d) { return d[vars.var_time]; })          
+          .y(function(d) { return d[vars.var_y]; });
 
-       vars.time_data = stack(vars.time_data);
+       vars.time_data = vars.stack(vars.time_data);
     }
       // Find the number or years
 

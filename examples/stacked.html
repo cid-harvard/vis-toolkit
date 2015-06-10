@@ -25,7 +25,8 @@ d3.json("../data/exports_2012.json", function(error, exports) {
       var_text: "name",
       time: {
         parse: function(d) { return d3.time.format("%Y").parse(d+""); },
-        var_time: "year"
+        var_time: "year",
+        current_time: 2012
       }
     });
 
