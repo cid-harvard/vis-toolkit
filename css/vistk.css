@@ -47,12 +47,6 @@ text {
   fill: yellow;
 }
 
-tspan {
-  font: 20px Verdana, Helvetica, Arial, sans-serif;
-  fill: white;
-  font-weight: bold
-}
-
 /* Scatterplot */
 
 .axis path,

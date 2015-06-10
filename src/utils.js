@@ -377,6 +377,9 @@
 
     node.each(function() {
 
+      if(typeof d3.select(this).data()[0].name == "undefined")
+        return;
+
       width = d3.select(this).data()[0].dx;
 
       var text = d3.select(this),

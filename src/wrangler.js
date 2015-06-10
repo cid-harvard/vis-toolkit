@@ -301,7 +301,7 @@
           vars.groups[vars.unique_groups.indexOf(d[vars.var_group])] = [];
         }
 
-        var n = {name: d[vars.var_group], group: d[vars.var_group], year: d.year, id: i};
+        var n = {name: d[vars.var_text], group: d[vars.var_group], year: d.year, id: i};
         n[vars.var_size] = d[vars.var_size];
         n[vars.var_group] = d[vars.var_group];
         vars.groups[vars.unique_groups.indexOf(d[vars.var_group])].push(n);

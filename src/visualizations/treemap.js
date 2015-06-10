@@ -38,7 +38,7 @@
         vars = vistk.utils.merge(vars, vars.params);
 
         // Remove any existing grid or axes
-        vars.svg.selectAll(".x, .y").remove();
+        // vars.svg.selectAll(".x, .y").remove();
 
         vars.treemap = d3.layout.treemap()
             .padding(vars.padding)
@@ -82,14 +82,21 @@
                 .attr("width", function(d) { return d.dx; })
                 .attr("height", function(d) { return d.dy; });
 
-          gItems.select("text")
-                .call(vistk.utils.wrap);
+          new_items.selectAll("text").call(vistk.utils.wrap);
 
         });
 
+        // Quick hack: For some reason wrapping doesn't work with newly
+        // creted elements
+        setTimeout(function(d) { 
+          vars.svg.selectAll("text")
+                .call(vistk.utils.wrap);
+        }, 500);
+
+
         vistk.utils.background_label(vars.title);
 
-
+  
       /*
 
         // Add items graphical mark (DEPTH 2)
