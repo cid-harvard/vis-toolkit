@@ -65,8 +65,11 @@
     y_scale: [],
     y_ticks: 5,
     y_axis: null,
+    y_format: function(d) { return d; },
+    y_tickValues: null,
     y_axis_show: true,
     y_grid_show: true,
+
 
     r_scale: null,
     r_cutoff: function(d) { return d > 30; },

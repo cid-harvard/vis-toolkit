@@ -18,9 +18,9 @@
               func: d3.scale.linear()
                       .range([0, vars.height])
                       .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_y]; }))
+            }
+          ],
 
-          }],
-          
           connect: [{
             attr: vars.time.var_time,
             marks: [{
@@ -33,8 +33,8 @@
                 func: d3.svg.area()
                         .interpolate('cardinal')
                         .x(function(d) { return vars.x_scale[0]["func"](d[vars.time.var_time]); })
-                        .y0(function(d) { return vars.y_scale(d.y0); })
-                        .y1(function(d) { return vars.y_scale(d.y0 + d.y); })
+                        .y0(function(d) { return vars.y_scale[0]["func"](d.y0); })
+                        .y1(function(d) { return vars.y_scale[0]["func"](d.y0 + d.y); })
               }]
           }]
 
@@ -50,17 +50,17 @@
 
        // var parseDate = d3.time.format("%y-%b-%d").parse,
         var formatPercent = d3.format(".0%");
-
+/*
         vars.y_scale = d3.scale.linear()
             .range([vars.height, vars.margin.bottom])
             .domain(d3.extent(vars.data, function(d) { return d[vars.var_y]; }));
-
+*/
         vars.x_axis = d3.svg.axis()
             .scale(vars.x_scale[0]["func"])
             .orient("bottom(");
 
         vars.y_axis = d3.svg.axis()
-            .scale(vars.y_scale)
+            .scale(vars.y_scale[0]["func"])
             .orient("left");
 
         vars.area = d3.svg.area()

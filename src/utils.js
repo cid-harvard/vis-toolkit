@@ -298,6 +298,12 @@
 
     vars.y_axis = d3.svg.axis()
         .scale(vars.y_scale[0]["func"])
+        .ticks(vars.y_ticks)
+        // Quick fix to get max value
+        .tickValues(vars.y_tickValues)
+        .tickFormat(vars.y_format)
+        .tickSize(vars.y_tickSize)
+        .tickPadding(vars.y_tickPadding)
         .orient("left");
 
     vars.svg.selectAll(".y.axis").data([vars.new_data])
