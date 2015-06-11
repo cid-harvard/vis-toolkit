@@ -16,7 +16,7 @@
           y_scale: [{
               name: "linear",
               func: d3.scale.linear()
-                      .range([0, vars.height])
+                      .range([vars.height, 0])
                       .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_y]; }))
             }
           ],
@@ -48,13 +48,6 @@
         vars.evt.register("selection", function(d) { });
         vars.evt.register("resize", function(d) { });
 
-       // var parseDate = d3.time.format("%y-%b-%d").parse,
-        var formatPercent = d3.format(".0%");
-/*
-        vars.y_scale = d3.scale.linear()
-            .range([vars.height, vars.margin.bottom])
-            .domain(d3.extent(vars.data, function(d) { return d[vars.var_y]; }));
-*/
         vars.x_axis = d3.svg.axis()
             .scale(vars.x_scale[0]["func"])
             .orient("bottom(");
@@ -99,19 +92,10 @@
 
         });
 
-/*
-        browser.append("text")
-            .datum(function(d) { return {name: d.name, value: d.values[d.values.length - 1]}; })
-            .attr("transform", function(d) {
-             return "translate(" + vars.x_scale(d.value.date) + "," + y(d.value.y0 + d.value.y / 2) + ")"; })
-            .attr("x", -6)
-            .attr("dy", ".35em")
-            .text(function(d) { return d.name; });
-*/
         vars.svg.append("g")
             .attr("class", "x axis")
             .attr("transform", "translate(0," + (vars.height - vars.margin.bottom) + ")")
-            .call(vars.x_axis)
+            .call(vars.x_axis);
              
         vars.svg.append("g")
             .attr("class", "y axis")
@@ -123,7 +107,6 @@
             .attr("dy", "-1.71em")
             .style("text-anchor", "end")
             .text(vars.y_text);
-
 
       break;
       
