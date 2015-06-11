@@ -17,6 +17,7 @@
 
   vistk.utils.items_mark = function(d, i) {
 
+    // Default mark if not specified
     if(typeof vars.mark === "undefined") {
       vars.mark = {};
       vars.mark.type = "circle";
@@ -168,8 +169,7 @@
 
         // In case other marks already exist
         d3.select(this).selectAll(".items__mark__rect").remove();
-        d3.select(this).selectAll(".items__mark__diamond").remove();      
-        d3.select(this).selectAll(".items__mark__circle").remove();
+        d3.select(this).selectAll(".items__mark__diamond").remove();
 
         var mark = d3.select(this).selectAll(".items__mark__circle").data([d]);
 
@@ -280,7 +280,7 @@
 
     vars.svg.selectAll(".x.axis").data([vars.new_data])
       .enter()
-        .append("g")
+        .insert("g", ":first-child")
         .attr("class", "x axis")
         .attr("transform", "translate(0," + (vars.height/2) + ")")
       .append("text")
@@ -315,7 +315,7 @@
 
     vars.svg.selectAll(".y.axis").data([vars.new_data])
       .enter()
-        .append("g")
+        .insert("g", ":first-child")
         .attr("class", "y axis")
         .attr("transform", "translate("+vars.margin.left+", 0)")              
       .append("text")

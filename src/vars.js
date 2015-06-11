@@ -69,10 +69,11 @@
     y_ticks: 5,
     y_axis: null,
     y_format: function(d) { return d; },
+    y_tickSize: 10,
+    y_tickPadding: 0,
     y_tickValues: null,
     y_axis_show: true,
     y_grid_show: true,
-
 
     r_scale: null,
     r_cutoff: function(d) { return d > 30; },

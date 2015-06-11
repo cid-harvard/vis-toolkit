@@ -85,9 +85,7 @@
             .select("rect")
        //     .attr("x", function(d) { return vars.x_scale[0]["func"](d[vars.var_x]); })
             .attr("width", vars.x_scale[0]["func"].rangeBand())
-            .attr("y", function(d) { return - vars.y_scale[0]["func"](d[vars.var_y]); })
-            .attr("height", 0);
-
+            .attr("y", function(d) { return - vars.y_scale[0]["func"](d[vars.var_y]); });
           // Update each mark
           gItems.each(vistk.utils.items_mark)
             .select("rect")
