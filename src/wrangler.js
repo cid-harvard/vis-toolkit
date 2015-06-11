@@ -184,7 +184,7 @@
 
             // Set missing values to null
             var v = {date: y, year: y};
-            
+
             v[vars.time.var_time] = y;
             v[vars.var_y] = 0;
             c.values.push(v);
@@ -326,6 +326,28 @@
 
         return node;
 
+      });
+
+    }
+
+    if(vars.type == "grid") {
+
+      vars.new_data = [];
+
+      var nb_dimension =  Math.ceil(Math.sqrt(vars.data.length));
+      
+      // Create foci for each dimension
+      // TOFIX: should update children, not necessary replace
+      d3.range(nb_dimension).map(function(d, i) {
+         d3.range(nb_dimension).map(function(e, j) {
+
+          // To make sure we don't update more points than necessary
+          if(i * nb_dimension + j < vars.data.length) {
+            // IMPORTANT to clone the _params here
+            var index = i*nb_dimension+j;
+            vars.new_data.push({index: index, x: i, y: j});
+          }
+        })
       });
 
     }
