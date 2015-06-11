@@ -8,7 +8,8 @@
           x_scale: [{
               name: "linear",
               func: d3.time.scale()
-                      .range([0, vars.width])
+                      .range([vars.margin.left, vars.width - vars.margin.left - vars.margin.right])
+                      .domain(d3.extent(vars.data, function(d) { return d[vars.time.var_time]; }))
             }
           ],
 
@@ -19,20 +20,7 @@
                       .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_y]; }))
 
           }],
-
-          items: [{
-            attr: "year",
-            marks: [{
-                type: "circle",
-                rotate: "0",
-                fill: function(d) { return vars.color(vars.accessor_items(d)[vars.var_color]); }
-              }, {
-                type: "text",
-                rotate: "0",
-                translate: null
-              }]
-          }],
-
+          
           connect: [{
             attr: vars.time.var_time,
             marks: [{
@@ -64,19 +52,16 @@
         var formatPercent = d3.format(".0%");
 
         vars.y_scale = d3.scale.linear()
-            .range([vars.height, 0])
+            .range([vars.height, vars.margin.bottom])
             .domain(d3.extent(vars.data, function(d) { return d[vars.var_y]; }));
 
-        vars.xAxis = d3.svg.axis()
+        vars.x_axis = d3.svg.axis()
             .scale(vars.x_scale[0]["func"])
-            .orient("bottom");
+            .orient("bottom(");
 
-        vars.yAxis = d3.svg.axis()
+        vars.y_axis = d3.svg.axis()
             .scale(vars.y_scale)
-            .orient("left")
-            .tickFormat(formatPercent);
-
-        vars.x_scale[0]["func"].domain(d3.extent(vars.data, function(d) { return d[vars.time.var_time]; }));
+            .orient("left");
 
         vars.area = d3.svg.area()
             .interpolate('cardinal')
@@ -114,13 +99,10 @@
 
         });
 
-
-
 /*
         browser.append("text")
             .datum(function(d) { return {name: d.name, value: d.values[d.values.length - 1]}; })
             .attr("transform", function(d) {
-                console.log("VVVV", d)
              return "translate(" + vars.x_scale(d.value.date) + "," + y(d.value.y0 + d.value.y / 2) + ")"; })
             .attr("x", -6)
             .attr("dy", ".35em")
@@ -128,12 +110,20 @@
 */
         vars.svg.append("g")
             .attr("class", "x axis")
-            .attr("transform", "translate(0," + vars.height + ")")
-            .call(vars.xAxis);
-
+            .attr("transform", "translate(0," + (vars.height - vars.margin.bottom) + ")")
+            .call(vars.x_axis)
+             
         vars.svg.append("g")
             .attr("class", "y axis")
-            .call(vars.yAxis);
+            .attr("transform", "translate(" + (vars.margin.left) + ",0)")
+            .call(vars.y_axis)
+          .append("text")
+            .attr("transform", "rotate(-90)")
+            .attr("y", 6)
+            .attr("dy", "-1.71em")
+            .style("text-anchor", "end")
+            .text(vars.y_text);
+
 
       break;
       
