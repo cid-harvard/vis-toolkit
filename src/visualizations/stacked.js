@@ -38,14 +38,15 @@
             marks: [{
                 type: "path",
                 rotate: "0",
-                fill: function() { return "none"; },
+                fill: function(d) { return vars.color(d.name); },
                 stroke: function(d) {
                   return vars.color(vars.accessor_items(d)[vars.var_color]); 
                 },
-                func: d3.svg.line()
-                     .interpolate(vars.interpolate)
-                     .x(function(d) { return vars.x_scale[0]["func"](d[vars.time.var_time]); })
-                     .y(function(d) { return vars.y_scale[0]["func"](d[vars.var_y]); })
+                func: d3.svg.area()
+                        .interpolate('cardinal')
+                        .x(function(d) { return vars.x_scale[0]["func"](d[vars.time.var_time]); })
+                        .y0(function(d) { return vars.y_scale(d.y0); })
+                        .y1(function(d) { return vars.y_scale(d.y0 + d.y); })
               }]
           }]
 
@@ -83,16 +84,37 @@
             .y0(function(d) { return vars.y_scale(d.y0); })
             .y1(function(d) { return vars.y_scale(d.y0 + d.y); });
 
-        var browser = vars.svg.selectAll(".browser")
-            .data(vars.time_data)
-          .enter()
-            .append("g")
-            .attr("class", "browser");
+        // Connect marks
+        var gConnect = vars.svg.selectAll(".connect__group")
+                        .data(vars.time_data, function(d, i) { return i; });
+      
+        var gConnect_enter = gConnect.enter()
+                        .append("g")
+                        .attr("class", "connect__group")
+                        .attr("id", function(d) { return d[vars.var_id]; })
+                        .style("opacity", 0.2);
 
-        browser.append("path")
-            .attr("class", "area")
-            .attr("d", function(d) { return vars.area(d.values); })
-            .style("fill", function(d) { return vars.color(d.name); });
+        vars.connect[0].marks.forEach(function(d) {
+          
+          vars.mark.type = d.type;
+          vars.mark.rotate = d.rotate;
+          vars.mark.fill = d.fill;
+          vars.mark.stroke = d.stroke;
+
+          gConnect_enter.each(vistk.utils.connect_mark)
+            .select("path")
+            .attr("id", function(d) {
+             return d[vars.var_id]; 
+           })
+
+          // Update
+          gConnect.each(vistk.utils.items_mark)
+                .select("path")
+                .classed("highlighted", function(d, i) { return vars.time_data[i].__highlighted; });
+
+        });
+
+
 
 /*
         browser.append("text")
