@@ -28,8 +28,9 @@
                 rotate: "-30"
               }]
             }],
-            var_x: "i",
-            var_y: "j"
+            var_x: "x",
+            var_y: "y",
+            var_text: "index"
           };
 
         vars = vistk.utils.merge(vars, vars.params);
@@ -48,7 +49,7 @@
 
         // ITEMS MARKS
         vars.items[0].marks.forEach(function(d) {
-
+          console.log("ADD MARK", d.type)
           // Enter
           vars.mark.type = d.type;
           vars.mark.rotate = d.rotate;
@@ -58,6 +59,18 @@
           gItems.each(vistk.utils.items_mark);
         });
 
-        gItems.exit().remove();
+
+        // EXIT
+        var gItems_exit = gItems.exit().remove();
+
+        // POST-UPDATE
+        vars.svg.selectAll(".mark__group")
+                        .classed("highlighted", function(d, i) { return d.__highlighted; })
+                        .transition()
+                        .delay(function(d, i) { return i / vars.data.length * 100; })
+                        .duration(vars.duration)
+                        .attr("transform", function(d, i) {
+                          return "translate(" + vars.x_scale[0]["func"](d[vars.var_x]) + ", " + vars.y_scale[0]["func"](d[vars.var_y]) + ")";
+                        });
 
         break;
