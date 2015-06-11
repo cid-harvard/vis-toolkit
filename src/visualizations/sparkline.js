@@ -21,6 +21,9 @@
           vars.mark.rotate = d.rotate;
           gConnect_enter.each(vistk.utils.connect_mark);
 
+          // Update
+          gConnect.each(vistk.utils.connect_mark);
+
         });
 
         // PRE-UPDATE ITEMS
@@ -44,9 +47,8 @@
           gItems_enter.each(vistk.utils.items_mark);
 
           // Update
-          gItems.each(vistk.utils.items_mark)
-                .select("text")
-                .classed("highlighted", function(d, i) { return d.__highlighted; });
+          gItems.each(vistk.utils.items_mark);
+
         });
 
         // POST-UPDATE ITEMS

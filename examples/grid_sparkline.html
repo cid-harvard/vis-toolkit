@@ -1,0 +1,75 @@
+<!doctype html>
+<meta charset="utf-8">
+<script src="../js/d3.js"></script>
+<script src="../build/vistk.js"></script>
+<link href="../css/vistk.css" rel="stylesheet">
+<body>
+<div id="viz"></div>
+<script>
+
+d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments) {
+
+  // Data pre-processing
+  departments.forEach(function(d, i) {
+
+    d.id = i;
+    d.dept_pop = +d.dept_pop;
+    d.realgdp = +d.realgdp;
+    d.realgdp_percap = +d.realgdp_percap;    
+    d["sum(export_value)"] = +d["sum(export_value)"];
+    d["value_added"] = +d["value_added"];
+
+  });
+
+  // TODO: unique departments
+  unique_dept = d3.set(departments.map(function(d) { return d["dept_name"]; })).values();
+
+	var grid = vistk.viz().params({
+    type: "grid",
+    width: 800,
+    height: 600,
+    container: "#viz",
+    data: d3.range(unique_dept.length),
+    items: [
+    	{mark: "sparkline"}
+
+    ]
+  });
+
+  d3.select("#viz").call(grid);
+/*
+  visualization = vistk.viz()
+    .params({
+      type: "sparkline",
+      container: "#viz",
+      width: 300,
+      height: 100,
+      data: departments,
+      id: "id",
+      var_y: "realgdp",
+      var_group: "dept_name",
+      var_color: "name",
+      ui: false,
+      time: {
+        var_time: "year", 
+        parse: d3.time.format("%Y").parse,
+        interval: []
+      },
+      mark: {
+        type: 'diamond',
+        width: 10,
+        height: 10
+      },
+      interpolate: "linear",
+      var_text: "dept_name",
+      filter: ["Antioquia"],
+      selection: [],
+      highlight: []
+    });
+
+  d3.select(visualization.container()).call(visualization);
+*/
+});
+
+</script>
+</body>

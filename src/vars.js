@@ -98,15 +98,9 @@
     duration: 1000,
     interpolate: "monotone",
 
-    connect: {
-      type: "line"
-    },
-
-    items: {
-      type: "circle"
-    },
-      
     padding: 5,
+
+    radius: 5,
 
     mark: {
       height: 10,
