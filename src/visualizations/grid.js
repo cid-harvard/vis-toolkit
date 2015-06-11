@@ -1,34 +1,63 @@
         case "grid":
 
-          // Create the x and y scale as index scale
-          vars.x_scale = d3.scale.linear()
-                    .domain([0, nb_dimension])
-                    .range([0, vars.width]);
+          vars.params = {
 
-          vars.y_scale = d3.scale.linear()
-                    .domain([0, nb_dimension])
-                    .range([0, vars.height]);
+            x_scale: [{
+                name: "linear",
+                func: d3.scale.linear()
+                      .domain([0, nb_dimension])
+                      .range([0, vars.width])
+              }
+            ],
 
-          var gPoints = vars.svg.selectAll(".mark__group")
-                          .data(vars.new_data, function(d, i) { return d["index"]; });
+            y_scale: [{
+                name: "linear",
+                func: d3.scale.linear()
+                      .domain([0, nb_dimension])
+                      .range([0, vars.height])
+              }
+            ],
 
-          // ENTER
-          var gPoints_enter = gPoints.enter()
-                          .append("g")
-                          .each(vistk.utils.items_group);
+            items: [{
+              attr: "name",
+              marks: [{
+                type: "diamond",
+                rotate: "0"
+              },{
+                type: "text",
+                rotate: "-30"
+              }]
+            }],
+            var_x: "i",
+            var_y: "j"
+          };
 
-          // Add a graphical mark
-          gPoints_enter.each(vistk.utils.items_mark)
-                          .style("fill", "gren");
+        vars = vistk.utils.merge(vars, vars.params);
 
-          // EXIT
-          var gPoints_exit = gPoints.exit().remove();
+        // PRE-UPDATE
+        var gItems = vars.svg.selectAll(".mark__group")
+                         .data(vars.new_data, function(d, i) { return i; });
 
-          vars.svg.selectAll(".mark__group")
-                .transition()
-                .attr("transform", function(d) {
-                  return "translate(" +  vars.x_scale(d.x) + ", " + vars.y_scale(d.y) + ")";
-                })
-                .style("fill", "blue");
+        // ENTER
+        var gItems_enter = gItems.enter()
+                        .append("g")
+                        .each(vistk.utils.items_group)
+                        .attr("transform", function(d, i) {
+                          return "translate(" + vars.margin.left + ", " + vars.height/2 + ")";
+                        });
+
+        // ITEMS MARKS
+        vars.items[0].marks.forEach(function(d) {
+
+          // Enter
+          vars.mark.type = d.type;
+          vars.mark.rotate = d.rotate;
+          gItems_enter.each(vistk.utils.items_mark);
+
+          // Update
+          gItems.each(vistk.utils.items_mark);
+        });
+
+        gItems.exit().remove();
 
         break;

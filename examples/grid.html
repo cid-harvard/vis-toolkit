@@ -14,25 +14,15 @@
 // [ ] Option for using a consistant grid (e.g. 100 items)
 //     which implies to use a color cutoff rather than enter/exit elements
 // [ ] See http://bl.ocks.org/mbostock/1009139
+// [ ] Show labels and other marks
+// [ ] 
 
 var visualization = vistk.viz().params({
     type: "grid",
     width: 800,
     height: 600,
     container: "#viz",
-    data: [],
-    mark: {
-      type: "rect",
-      width: 10,
-      height: 10,
-      enter: null,
-      exit: function(d) { 
-        // TODO: vistk wait for the next event
-
-        // TODO: apply the color change
-        d3.select(this).style("fill", "red"); 
-      }
-    }
+    data: []
   });
 
 setInterval(function(d) {

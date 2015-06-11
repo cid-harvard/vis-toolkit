@@ -347,7 +347,8 @@
             var index = i*nb_dimension+j;
             vars.new_data.push({index: index, x: i, y: j});
           }
-        })
+        });
+         
       });
 
     }
