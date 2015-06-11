@@ -4,8 +4,11 @@
     global.evt = [];
   }
 
-  // Parameters for the visualization
-  vars = {
+  // Contains parameters for the current chart
+  vars = {};
+
+  // Default parameters for all charts
+  var default_vars = {
     // PUBLIC (set by the user)
     container : "",
     this_chart: null,
@@ -120,6 +123,8 @@
     container: "#viz",
     nb_viz: nb_viz
   };
+
+  vars = vistk.utils.merge(vars, default_vars);
 
   vars.evt.register = function(evt, f, d) {
 

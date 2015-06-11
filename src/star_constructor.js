@@ -17,3 +17,5 @@
 
       }
     }
+
+    vars = vistk.utils.merge(vars, vars.user_vars);

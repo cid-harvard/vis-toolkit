@@ -115,11 +115,11 @@
         }
 
         // Tentative to merge user and chart configurations 
-        if(typeof vars.user_config.x_scale !== "undefined" && typeof vars.user_config.x_scale[0] !== "undefined")
-          vars.params.x_scale[0]["func"].domain(vars.user_config.x_scale[0].domain);
+        if(typeof vars.user_vars.x_scale !== "undefined" && typeof vars.user_vars.x_scale[0] !== "undefined")
+          vars.params.x_scale[0]["func"].domain(vars.user_vars.x_scale[0].domain);
 
-        if(typeof vars.user_config.y_scale !== "undefined" && typeof vars.user_config.y_scale[0] !== "undefined")
-          vars.params.y_scale[0]["func"].domain(vars.user_config.y_scale[0].domain);
+        if(typeof vars.user_vars.y_scale !== "undefined" && typeof vars.user_vars.y_scale[0] !== "undefined")
+          vars.params.y_scale[0]["func"].domain(vars.user_vars.y_scale[0].domain);
 
         // AXIS
         vars.svg.call(vistk.utils.axis)
@@ -192,7 +192,7 @@
 
           gItems_enter.each(function(d, i) {
 
-            if(vars.r_scale == null) {
+            if(vars.r_scale == null) {  
               vars.mark.radius = vars.radius;
             } else {
               vars.mark.radius = vars.r_scale(d[vars.var_r]);

@@ -1,8 +1,7 @@
 
   chart.params = function(x) {
     if (!arguments.length) return vars;
-    vars = vistk.utils.merge(vars, x);
-    vars.user_config = x;    
+    vars.user_vars = x;    
     return chart;
   };
 
