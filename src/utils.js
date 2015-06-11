@@ -221,24 +221,30 @@
 
           mark.enter().append('line')
               .classed('connect__line', true)
-              .classed("highlighted", function(d, i) { return d.__highlighted; })
-              .classed("selected", function(d, i) { return d.__selected; })
               .attr("x1", function(d) { return vars.x_scale[0]["func"](d.source.x); })
               .attr("y1", function(d) { return vars.y_scale[0]["func"](d.source.y); })
               .attr("x2", function(d) { return vars.x_scale[0]["func"](d.target.x); })
               .attr("y2", function(d) { return vars.y_scale[0]["func"](d.target.y); });
+
+          mark              
+              .classed("highlighted", function(d, i) { return d.__highlighted; })
+              .classed("selected", function(d, i) { return d.__selected; });
 
           break;
 
         case "path":
         default:
 
-          d3.select(this).append('path')
+          var mark = d3.select(this).selectAll(".connect__path").data([d]);
+
+          mark.enter().append('path')
               .classed('connect__path', true)
+              .style("fill", vars.mark.fill)
+              .style("stroke", vars.mark.stroke);   
+
+          mark              
               .classed("highlighted", function(d, i) { return d.__highlighted; })
               .classed("selected", function(d, i) { return d.__selected; })
-              .style("fill", vars.mark.fill)
-              .style("stroke", vars.mark.stroke)            
               .attr('d', function(d) {
                 return vars.connect[0].marks[0]["func"](vars.accessor_values(d));
               });
