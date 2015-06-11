@@ -231,6 +231,8 @@ Text wrap
 * Done using HTML elements http://bl.ocks.org/mbostock/7555321
 * Another treeemap with word wrap http://bl.ocks.org/mundhradevang/1387786
 
+* Actually used this one https://gist.github.com/billdwhite/4325239
+* In case of HTML treemap http://jsfiddle.net/vis4/BrLaT/
 
 ### Line chart
 
