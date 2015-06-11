@@ -54,74 +54,6 @@
 
         vars = vistk.utils.merge(vars, vars.params);
 
-     //   vars.evt.register("highlightOn", function(d) {
-
-/*
-          vars.svg.selectAll(".connect__group:not(.selected)").style("opacity", 0.2);
-          vars.svg.selectAll(".items__mark__circle:not(.selected)").style("opacity", 0.2);
-          vars.svg.selectAll(".items__mark__text:not(.selected)").style("opacity", 0.2);
-
-          vars.svg.selectAll(".connect__group:not(.selected)").style("opacity", 0.2)
-          
-          vars.svg.selectAll("#"+d[vars.var_id]).style("opacity", 1);
-          vars.svg.selectAll("#"+d[vars.var_text].replace(/\ /g, '_').replace(/\,/g, '_')).style("opacity", 1);
-*/
-
-/*
-          vars.svg.selectAll(".items__mark__circle.selected").style("opacity", 1);
-          vars.svg.selectAll(".items__mark__text.selected").style("opacity", 0.2);
-
-          vars.svg.selectAll(".connect__group").filter(function(e, j) { return e === d; })
-              .style("stroke-width", 3);
-
-          vars.svg.selectAll(".items__mark__text").filter(function(e, j) { return e === d; })
-              .style("font-weight", 700)
-//              .style("text-decoration", "underline")
-
-*/
-/*
-        });
-
-        vars.evt.register("highlightOut", function(d) {
-
-          vars.svg.selectAll("#"+d[vars.var_id]).style("opacity", .5)
-          vars.svg.selectAll("#"+d[vars.var_text].replace(/\ /g, '_').replace(/\,/g, '_')).style("opacity", .5);
-
-          vars.svg.selectAll(".selected").style("opacity", 1).style("stroke-opacity", 0.5);
-          //vars.svg.selectAll(".items__mark__circle.selected").style("opacity", 1);
-          //vars.svg.selectAll(".items__mark__text.selected").style("opacity", 1);
-
-/*
-          vars.svg.selectAll(".connect__group:not(.selected)").style("opacity", 0.2);
-          vars.svg.selectAll(".items__mark__circle:not(.selected)").style("opacity", 0.2);
-          vars.svg.selectAll(".items__mark__text:not(.selected)").style("opacity", 0.2);
-*/
-
-/*
-          vars.svg.selectAll(".connect__group")
-                  .filter(function(e, j) { return e === d; })
-                  .style("stroke-width", 1);
-     //     vars.svg.selectAll(".text").filter(function(e, j) { return e === d; }).style("text-decoration", "none");
-
-
-
-        });
-  */
-        vars.evt.register("selection", function(d) {
-
-          vars.svg.selectAll("#"+d[vars.var_id])
-                  .classed("selected", function(d) {
-
-                    console.log(d3.select(this).classed("selected"))
-
-                    return !vars.svg.selectAll("#"+d[vars.var_id]).classed("selected");
-
-                  });
-
-                  console.log(vars.svg.selectAll("#"+d[vars.var_id]).classed("selected"));
-
-        });
-
         vars.x_axis = d3.svg.axis()
             .scale(vars.x_scale[0]["func"])
             .orient("top");
@@ -190,7 +122,7 @@
            })
 
           // Update
-          gConnect.each(vistk.utils.items_mark)
+          gConnect.each(vistk.utils.connect_mark)
                 .select("path")
                 .classed("highlighted", function(d, i) { return vars.time_data[i].__highlighted; });
 

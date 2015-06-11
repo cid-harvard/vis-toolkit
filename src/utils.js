@@ -2,6 +2,7 @@
 
     d3.select(this).attr("class", "mark__group")
                     .classed("highlighted", function(d, i) { return d.__highlighted; })
+                    .classed("selected", function(d, i) { return d.__selected; })
                     .on("mouseover",function(d) {
                       vars.evt.call("highlightOn", d);
                     })
@@ -193,6 +194,8 @@
   vistk.utils.connect_group = function(d, i) {
 
     d3.select(this).attr("class", "connect__group")
+                    .classed("highlighted", function(d, i) { return d.__highlighted; })
+                    .classed("selected", function(d, i) { return d.__selected; })
                     .on("mouseover",function(d) {
                       vars.evt.call("highlightOn", d);
                     })
@@ -217,7 +220,9 @@
           var mark = d3.select(this).selectAll(".connect__line").data([d]);
 
           mark.enter().append('line')
-              .attr('class', 'connect__line')
+              .classed('connect__line', true)
+              .classed("highlighted", function(d, i) { return d.__highlighted; })
+              .classed("selected", function(d, i) { return d.__selected; })
               .attr("x1", function(d) { return vars.x_scale[0]["func"](d.source.x); })
               .attr("y1", function(d) { return vars.y_scale[0]["func"](d.source.y); })
               .attr("x2", function(d) { return vars.x_scale[0]["func"](d.target.x); })
@@ -229,7 +234,9 @@
         default:
 
           d3.select(this).append('path')
-              .attr('class', 'connect__path')
+              .classed('connect__path', true)
+              .classed("highlighted", function(d, i) { return d.__highlighted; })
+              .classed("selected", function(d, i) { return d.__selected; })
               .style("fill", vars.mark.fill)
               .style("stroke", vars.mark.stroke)            
               .attr('d', function(d) {
