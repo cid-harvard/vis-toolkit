@@ -86,6 +86,7 @@ setTimeout(function() {
 
   current_mark++;
   visualization.params.items[0].mark = d3.superformulaTypes[current_mark % d3.superformulaTypes.length];
+  
   d3.select(visualization.container()).call(visualization);
 
 }, 1000)

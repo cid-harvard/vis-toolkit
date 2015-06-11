@@ -13,7 +13,7 @@
     <li><input name="radio-step" value="barchart" type="radio">Bar chart</li>
     <li><input name="radio-step" value="treemap" type="radio">Treemap</li>
     <li><input name="radio-step" value="geomap" type="radio">Geomap</li>
-    <li><input name="radio-step" value="sparkline" type="radio">Sparklines</li>
+    <li><input name="radio-step" value="sparkline" type="radio">Sparklines (grid)</li>
     <li><input name="radio-step" value="linechart" type="radio">Line chart</li>  
     <li><input name="radio-step" value="stacked" type="radio">Stacked graph</li>  
   </ul>
@@ -75,6 +75,8 @@ d3.select("input[value='default']").on("click", function(d) {
 
 d3.select("input[value='dotplot']").on("click", function(d) {
 
+  vars.svg.selectAll(".x, .y").remove();
+
   visualization.params({
       type: "dotplot",
       var_x: "nb_products"
@@ -107,6 +109,8 @@ d3.select("input[value='scatterplot']").on("click", function(d) {
 
 d3.select("input[value='barchart']").on("click", function(d) {
 
+  d3.selectAll(".items__mark__diamond").remove();
+
   visualization.params({
     type: "barchart",
     id: ["continent", "country"],
@@ -124,7 +128,10 @@ d3.select("input[value='barchart']").on("click", function(d) {
 
 d3.select("input[value='treemap']").on("click", function(d) {
 
- visualization.params({
+  vars.svg.selectAll(".x, .y").remove();
+  d3.selectAll(".items__mark__text").remove();
+
+  visualization.params({
     type: "treemap",
     var_id: "name",
     var_group: "continent",
@@ -137,8 +144,7 @@ d3.select("input[value='treemap']").on("click", function(d) {
       type: 'rect',
       width: 10,
       height: 10
-    },
-    focus: 1121
+    }
   });
 
   d3.select(visualization.container()).call(visualization);

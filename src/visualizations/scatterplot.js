@@ -192,7 +192,7 @@
 
           gItems_enter.each(function(d, i) {
 
-            if(vars.r_scale == null) {  
+            if(vars.r_scale !== null) {  
               vars.mark.radius = vars.radius;
             } else {
               vars.mark.radius = vars.r_scale(d[vars.var_r]);

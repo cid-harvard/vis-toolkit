@@ -4,7 +4,7 @@
           x_scale: [{
               name: "linear",
               func: d3.scale.ordinal()
-                      .rangeRoundBands([0, vars.width], .1)
+                      .rangeRoundBands([0, vars.width - vars.margin.left - vars.margin.right], .1)
                       .domain(vars.data.map(function(d) { return d[vars.var_x]; })),
             }
           ],
@@ -14,7 +14,7 @@
           y_scale: [{
               name: "linear",
               func: d3.scale.linear()
-                      .range([vars.height, 0])
+                      .range([vars.height - vars.margin.top - vars.margin.bottom, 0])
                       .domain([0, d3.max(vars.data, function(d) { return d[vars.var_y]; })]),
             }
           ],

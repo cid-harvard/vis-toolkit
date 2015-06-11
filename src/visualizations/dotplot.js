@@ -2,9 +2,6 @@
 
         vars = vistk.utils.merge(vars, vars.params["dotplot"]);
 
-        // Remove any existing grid or axes (TO BE FIXED)
-        vars.svg.selectAll(".x, .y").remove();
-
         // TODO: should specify this is an horizontal axis
         vars.svg.call(vistk.utils.axis);
 
