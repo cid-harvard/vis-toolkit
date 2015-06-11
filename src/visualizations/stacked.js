@@ -17,7 +17,7 @@
               name: "linear",
               func: d3.scale.linear()
                       .range([vars.height, 0])
-                      .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_y]; }))
+                      .domain(d3.extent(vars.time_data[vars.time_data.length-1].values, function(d) { return d[vars.var_y]; }))
             }
           ],
 
@@ -86,7 +86,7 @@
            })
 
           // Update
-          gConnect.each(vistk.utils.items_mark)
+          gConnect.each(vistk.utils.connect_mark)
                 .select("path")
                 .classed("highlighted", function(d, i) { return vars.time_data[i].__highlighted; });
 

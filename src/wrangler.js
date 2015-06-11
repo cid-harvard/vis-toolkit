@@ -119,38 +119,39 @@
       vars.new_data = nested_data.map(function(d) { return d.values; });
     }
 
-    // TODO 
-    // Unify with stacked
-    // Parse data to time/date
-    // Find all time points
-    // For each item, make sure no missing value, and if there is do something
-
     // vars.time_data format
     // {id:, name:, values: [{date: d[vars.time.var_time], rank:, year:]}
-   if(vars.time_data === null && vars.type === "linechart" || vars.type === "sparkline" || vars.type === "stacked") {
+   if(vars.type === "linechart" || vars.type === "sparkline" || vars.type === "stacked") {
 
-      // Parse data
-      vars.data.forEach(function(d) {
-        d[vars.time.var_time] = vars.time.parse(d[vars.time.var_time]);
-      });
 
-      vars.time.interval = d3.extent(vars.data, function(d) { return d[vars.time.var_time]; });
-      vars.time.points = d3.set(vars.data.map(function(d) { return d[vars.time.var_time]; })).values();
+      if(vars.time_data === null) {
+        // Parse time in raw data
+        vars.data.forEach(function(d) {
+          d[vars.time.var_time] = vars.time.parse(d[vars.time.var_time]);
+        });
 
-      vars.unique_items = d3.set(vars.data.map(function(d) { return d[vars.var_text]; })).values();
+        vars.time.interval = d3.extent(vars.data, function(d) { return d[vars.time.var_time]; });
+        vars.time.points = d3.set(vars.data.map(function(d) { return d[vars.time.var_time]; })).values();
+
+        vars.unique_items = d3.set(vars.data.map(function(d) { return d[vars.var_text]; })).values();
+
+      }
 
       // Find unique items and create ids
       vars.time_data = vars.unique_items.map(function(c) {
 
-        return {
-          id: c.replace(/\ /g, '_').replace(/\,/g, '_'),                    // Create unique ids
-          name: c,                                    // Name for the current item
-          // TODO: add other stuff? other temporal values?
-          values: vars.data.filter(function(d) {
-
+        var list_values = vars.data.filter(function(d) {
               return d[vars.var_text] === c;
-            
-            }).map(function (d) {
+            });
+
+        return {
+          id: c.replace(/\ /g, '_').replace(/\,/g, '_'), // Create unique ids
+          name: Math.random(),                                       // Name for the current item
+          // TODO: add other stuff? other temporal values?
+          __highlighted: list_values[0].__highlighted,
+          __selected: list_values[0].__selected,
+          __filtered: list_values[0].__filtered,
+          values: list_values.map(function (d) {
             
               var v = {date: d[vars.time.var_time], year: d.year};
               v[vars.var_y] = d[vars.var_y];
@@ -196,9 +197,7 @@
       });
 
       vars.stack = d3.layout.stack()
-          .values(function(d) { 
-            return d.values; 
-          })
+          .values(function(d) { return d.values; })
           .x(function(d) { return d[vars.time.var_time]; })          
           .y(function(d) { return d[vars.var_y]; });
 
@@ -348,7 +347,7 @@
             vars.new_data.push({index: index, x: i, y: j});
           }
         });
-         
+
       });
 
     }
