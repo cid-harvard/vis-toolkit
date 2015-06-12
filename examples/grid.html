@@ -22,8 +22,11 @@ var visualization = vistk.viz().params({
     width: 800,
     height: 600,
     container: "#viz",
-    data: []
-  });
+    data: d3.range(100*Math.random())
+});
+
+  d3.select("#viz").call(visualization);
+
 
 setInterval(function(d) {
 

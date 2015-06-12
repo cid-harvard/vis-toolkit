@@ -342,8 +342,12 @@
           // To make sure we don't update more points than necessary
           if(i * nb_dimension + j < vars.data.length) {
             // IMPORTANT to clone the _params here
-            var index = i*nb_dimension+j;
-            vars.new_data.push({index: index, x: i, y: j});
+            var index = i * nb_dimension + j;
+            var datum = vars.data[index];
+            datum.x = i;
+            datum.y = j;
+            datum.index = index;
+            vars.new_data.push(datum);
           }
         });
 

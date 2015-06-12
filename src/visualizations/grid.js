@@ -30,7 +30,6 @@
             }],
             var_x: "x",
             var_y: "y",
-            var_text: "index"
           };
 
           vars = vistk.utils.merge(vars, vars.params);
