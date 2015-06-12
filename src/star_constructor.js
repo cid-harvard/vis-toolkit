@@ -17,5 +17,5 @@
 
       }
     }
-
+    console.log("merge", vars.user_vars)
     vars = vistk.utils.merge(vars, vars.user_vars);

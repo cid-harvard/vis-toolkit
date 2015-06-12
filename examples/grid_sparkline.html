@@ -24,14 +24,21 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
   // TODO: unique departments
   unique_dept = d3.set(departments.map(function(d) { return d["dept_name"]; })).values();
 
-	var grid = vistk.viz().params({
+  var grid = vistk.viz().params({
     type: "grid",
     width: 800,
     height: 600,
     container: "#viz",
-    data: d3.range(unique_dept.length),
+    data: departments,
+    var_group: "dept_name",
+    aggregate: "dept_name",
+    time: {
+      var_time: "year", 
+      parse: d3.time.format("%Y").parse,
+      interval: []
+    },
     items: [
-    	{mark: "sparkline"}
+      {mark: "sparkline"}
     ]
   });
 
@@ -39,40 +46,40 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
 
   d3.selectAll(".mark__group").each(function(d, i) {
 
-  	var id = "mark__group__" + i;
+    var id = "mark__group__" + i;
 
-  	d3.select(this).attr("id", id);
+    d3.select(this).attr("id", id);
 
-	  var vis = vistk.viz()
-	    .params({
-	      type: "sparkline",
-	      container: "#"+id,
-	      width: 100,
-	      height: 100,
-	      data: departments,
-	      id: "id",
-	      var_y: "realgdp",
-	      var_group: "dept_name",
-	      var_color: "name",
-	      ui: false,
-	      time: {
-	        var_time: "year", 
-	        parse: d3.time.format("%Y").parse,
-	        interval: []
-	      },
-	      mark: {
-	        type: 'diamond',
-	        width: 10,
-	        height: 10
-	      },
-	      interpolate: "linear",
-	      var_text: "dept_name",
-	      filter: ["Antioquia"],
-	      selection: [],
-	      highlight: []
-	    });
+    var vis = vistk.viz()
+      .params({
+        type: "sparkline",
+        container: "#"+id,
+        width: 100,
+        height: 100,
+        data: departments,
+        id: "id",
+        var_y: "realgdp",
+        var_group: "dept_name",
+        var_color: "name",
+        ui: false,
+        time: {
+          var_time: "year", 
+          parse: d3.time.format("%Y").parse,
+          interval: []
+        },
+        mark: {
+          type: 'diamond',
+          width: 10,
+          height: 10
+        },
+        interpolate: "linear",
+        var_text: "dept_name",
+        filter: ["Antioquia"],
+        selection: [],
+        highlight: []
+      });
 
-	  d3.select(vis.container()).call(vis);
+    d3.select(vis.container()).call(vis);
 
   })
 

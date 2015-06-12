@@ -121,7 +121,7 @@
 
     // vars.time_data format
     // {id:, name:, values: [{date: d[vars.time.var_time], rank:, year:]}
-   if(vars.type === "linechart" || vars.type === "sparkline" || vars.type === "stacked") {
+    if(vars.type === "linechart" || vars.type === "sparkline" || vars.type === "stacked") {
 
       if(vars.time_data === null) {
         // Parse time in raw data
@@ -159,7 +159,7 @@
               v[vars.var_color] = d[vars.var_color];
               return v;
             
-            })
+          })
         };
       });
 
