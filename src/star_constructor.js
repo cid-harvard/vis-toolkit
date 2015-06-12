@@ -1,12 +1,14 @@
   chart = function(selection) {
 
+    vars = vistk.utils.merge(vars, vars.user_vars);
+
     // Create the top level element conaining the visualization
     if(!vars.svg) {
        if(vars.type !== "table") {
        
         vars.svg = d3.select(vars.container).append("svg")
-          .attr("width", vars.width + vars.margin.left + vars.margin.right)
-          .attr("height", vars.height + vars.margin.top + vars.margin.bottom)
+          .attr("width", vars.width)
+          .attr("height", vars.height)
           .append("g")
             .attr("transform", "translate(" + vars.margin.left + "," + vars.margin.top + ")");
 
@@ -17,5 +19,3 @@
 
       }
     }
-    console.log("merge", vars.user_vars)
-    vars = vistk.utils.merge(vars, vars.user_vars);

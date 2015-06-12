@@ -115,7 +115,7 @@
     accessor_values: function(d) { return d; },
     accessor_data: function(d) { return d; },
 
-    container: "#viz",
+    container: "#viz_0",
     nb_viz: nb_viz
   };
 
