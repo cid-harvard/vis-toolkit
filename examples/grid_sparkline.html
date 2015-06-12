@@ -9,6 +9,7 @@
 
 d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments) {
 
+
   // Data pre-processing
   departments.forEach(function(d, i) {
 
@@ -21,15 +22,15 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
 
   });
 
-  // TODO: unique departments
-  unique_dept = d3.set(departments.map(function(d) { return d["dept_name"]; })).values();
+  unique_dept = d3.set(departments.map(function(d) { return d["dept_name"]; })).values()
+                  .map(function(d) { return {"dept_name": d}});
 
   var grid = vistk.viz().params({
     type: "grid",
     width: 800,
     height: 600,
     container: "#viz",
-    data: departments,
+    data: unique_dept,
     var_group: "dept_name",
     aggregate: "dept_name",
     var_text: "dept_name",
@@ -43,8 +44,8 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
     ]
   });
 
-  d3.select("#viz").call(grid);
-
+  d3.select(grid.container()).call(grid);
+/*
   d3.selectAll(".mark__group").each(function(d, i) {
 
     var id = "mark__group__" + i;
@@ -75,7 +76,7 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
         },
         interpolate: "linear",
         var_text: "dept_name",
-        filter: ["Antioquia"],
+        filter: [d],
         selection: [],
         highlight: []
       });
@@ -83,7 +84,7 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
     d3.select(vis.container()).call(vis);
 
   })
-
+*/
 });
 
 </script>
