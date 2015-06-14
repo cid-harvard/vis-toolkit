@@ -6,9 +6,11 @@
           accessor_items: function(d) { return d; },
 
           x_ticks: 10,
-          x_format: function(d) { return d; },
+          x_format: d3.time.format("%Y"),
           x_tickValues: null,
           x_axis_orient: "top",
+
+          y_grid_show: true,
 
           x_scale: [{
               name: "linear",

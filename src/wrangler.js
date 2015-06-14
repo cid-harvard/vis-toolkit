@@ -137,30 +137,33 @@
       }
 
       // Find unique items and create ids
-      vars.time_data = vars.unique_items.map(function(c) {
+      vars.time_data = vars.unique_items.map(function(c, i) {
 
         var list_values = vars.data.filter(function(d) {
               return d[vars.var_text] === c;
             });
 
-        return {
-          id: c.replace(/\ /g, '_').replace(/\,/g, '_'), // Create unique ids
-          name: Math.random(),                                       // Name for the current item
+        var m = vars.new_data[i];
+
+       //   id: list_values[0][vars.var_id], // Create unique ids
+          // name: Math.random(),                                       // Name for the current item
           // TODO: add other stuff? other temporal values?
-          __highlighted: list_values[0].__highlighted,
-          __selected: list_values[0].__selected,
-          __filtered: list_values[0].__filtered,
-          values: list_values.map(function (d) {
+       //   __highlighted: list_values[0].__highlighted,
+       //   __selected: list_values[0].__selected,
+       //   __filtered: list_values[0].__filtered,
+        m.values = list_values.map(function (d) {
             
               var v = {date: d[vars.time.var_time], year: d.year};
               v[vars.var_y] = d[vars.var_y];
               v[vars.var_x] = d[vars.var_x];
               v[vars.var_id] = d[vars.var_id];
-              v[vars.var_color] = d[vars.var_color];
               return v;
             
           })
-        };
+
+     //   m[vars.var_group] = list_values[0][vars.var_color];        
+     //   m[vars.var_color] = list_values[0][vars.var_color];
+        return m;
       });
 
     }

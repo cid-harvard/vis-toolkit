@@ -241,16 +241,14 @@
               .classed('connect__path', true)
               .style("fill", vars.mark.fill)
               .style("stroke", function(d) {
-                
-                console.log(d, vars.mark.stroke(d));
                 return vars.mark.stroke(d)
-
               });
 
           mark              
               .classed("highlighted", function(d, i) { return d.__highlighted; })
               .classed("selected", function(d, i) { return d.__selected; })
               .attr('d', function(d) {
+                    console.log("CONNECT OA", d.__highlighted)
                 return vars.connect[0].marks[0]["func"](vars.accessor_values(d));
               });
 
