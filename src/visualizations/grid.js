@@ -47,7 +47,7 @@
                           });
 
           // Aggregate into sparklines
-          if(vars.aggregate === vars.var_group) {
+          if(vars.aggregate !== vars.var_group) {
 
             // Create a sparkline for the current cell of the grid
 

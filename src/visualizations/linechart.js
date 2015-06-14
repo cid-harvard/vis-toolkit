@@ -5,6 +5,11 @@
           accessor_values: function(d) { return d.values; },
           accessor_items: function(d) { return d; },
 
+          x_ticks: 10,
+          x_format: function(d) { return d; },
+          x_tickValues: null,
+          x_axis_orient: "top",
+
           x_scale: [{
               name: "linear",
               func: d3.time.scale()
@@ -54,10 +59,6 @@
 
         vars = vistk.utils.merge(vars, vars.params);
 
-        vars.x_axis = d3.svg.axis()
-            .scale(vars.x_scale[0]["func"])
-            .orient("top");
-
         vars.y_axis = d3.svg.axis()
             .scale(vars.y_scale[0]["func"])
             .orient("left");
@@ -76,19 +77,19 @@
         vars.color.domain(d3.keys(vars.new_data[0]).filter(function(key) { return key !== "date"; }));
 
         // Grid layout (background)
-        vars.svg.append("g")
+        vars.svg.data([vars.new_data]).enter().append("g")
             .attr("class", "x grid")
             .attr("transform", "translate(0," + vars.height + ")")
             .call(vistk.utils.make_x_axis()
             .tickSize(-vars.height, 0, 0)
             .tickFormat(""));
 
-        vars.svg.append("g")
-            .attr("class", "x axis")
-            .attr("transform", "translate(0," + -5 + ")")
-            .call(vars.x_axis);
+        vars.svg
+            .call(vistk.utils.axis)
+            .select(".x.axis")
+            .attr("transform", "translate(0," + 0+ ")");
 
-        vars.svg.append("g")
+        vars.svg.data([vars.new_data]).enter().append("g")
             .attr("class", "y axis")
             .call(vars.y_axis)
           .append("text")
@@ -118,8 +119,9 @@
           gConnect_enter.each(vistk.utils.connect_mark)
             .select("path")
             .attr("id", function(d) {
-             return d[vars.var_id]; 
-           })
+              return d[vars.var_id]; 
+            })
+            .style("stroke", d.stroke);
 
           // Update
           gConnect.each(vistk.utils.connect_mark)

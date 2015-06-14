@@ -240,7 +240,12 @@
           mark.enter().append('path')
               .classed('connect__path', true)
               .style("fill", vars.mark.fill)
-              .style("stroke", vars.mark.stroke);   
+              .style("stroke", function(d) {
+                
+                console.log(d, vars.mark.stroke(d));
+                return vars.mark.stroke(d)
+
+              });
 
           mark              
               .classed("highlighted", function(d, i) { return d.__highlighted; })
@@ -261,8 +266,6 @@
 
     // Appends it to the current node
 
-    d3.select(this)
-
 
   }
 
@@ -282,7 +285,7 @@
         .tickFormat(vars.x_format)
         .tickSize(vars.tickSize)
         .tickPadding(vars.tickPadding)
-        .orient("bottom");
+        .orient(vars.x_axis_orient);
 
     vars.svg.selectAll(".x.axis").data([vars.new_data])
       .enter()
@@ -295,7 +298,7 @@
         .attr("y", -6)
         .style({
           "text-anchor": "end",
-          "display": function(d) { 
+          "display": function(d) {
             return typeof vars.x_text !== "undefined" && vars.x_text !== null;
           }
         })

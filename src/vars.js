@@ -61,7 +61,9 @@
     x_format: function(d) { return d; },
     x_tickValues: null,
     x_axis_show: true,
+    x_axis_orient: "bottom",
     x_grid_show: true,
+
 
     // SCATTERPLOT (INCLUDES DOTPLOT)
     y_type: "linear",
