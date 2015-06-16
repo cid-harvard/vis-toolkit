@@ -67,7 +67,10 @@
                       .attr("cx", 0)
                       .attr("cy", 0)
                       .attr("transform", "rotate(0)")
-                      .attr("r", params.radius)
+                      .attr("r", function(d) {
+                        console.log(d, vars.items[0].marks[0].r_scale(d))
+                        return params.r_scale(d);
+                      })
                       .attr("fill", params.fill)
 
           mark

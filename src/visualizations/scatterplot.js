@@ -30,16 +30,18 @@
             }
           ],
 
-          r_scale: d3.scale.linear()
-                      .range([10, 30])
-                      .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_r]; })),
+          // r_scale: d3.scale.linear()
+          //            .range([10, 30])
+          //            .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_r]; })),
 
           items: [{
             attr: "country",
             marks: [{
                 type: "circle",
                 rotate: "0",
-                radius: 5,
+                r_scale: d3.scale.linear()
+                            .range([10, 30])
+                            .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_r]; })),
                 fill: function(d) { return vars.color(vars.accessor_items(d)[vars.var_color]); }
               }, {
                 type: "text",
@@ -87,8 +89,6 @@
         };
 
         vars = vistk.utils.merge(vars, vars.params);
-
-        vars.svg
 
         // In case there are some links between items available
         if(vars.links !== null) {
@@ -269,8 +269,6 @@
           });
 
         } else {
-
-          vars.accessor_data = function(d) { return d; };
 
           // Add graphical marks
           vars.items[0].marks.forEach(function(params) {
