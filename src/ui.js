@@ -31,7 +31,7 @@
                 })
                 */
 
-                d3.select(vars.container).call(visualization);
+                d3.select(vars.container).call(vars.this_chart);
 
               })
 
@@ -60,7 +60,7 @@
                      .on("change", function(d) { 
 
                        vars.aggregate=d;
-                       d3.select(vars.container).call(visualization);
+                       d3.select(vars.container).call(vars.this_chart);
 
                      });
 
@@ -96,7 +96,7 @@
                       .attr("step", 1)
                       .on("input", function() {
                         vars.time.current_time = +this.value;
-                        d3.select(vars.container).call(visualization);
+                        d3.select(vars.container).call(vars.this_chart);
                       })
                       .style("width", "100px");
 
@@ -114,7 +114,7 @@
               visualization.params({
                 var_x: this.value
               })
-              d3.select(vars.container).call(visualization)
+              d3.select(vars.container).call(vars.this_chart)
 
             })
             .selectAll("option")
@@ -141,7 +141,7 @@
                           visualization.params({
                             x_type: d
                           })
-                          d3.select(vars.container).call(visualization)
+                          d3.select(vars.container).call(vars.this_chart)
                        });
 
             label_radios.append("span")
@@ -168,7 +168,7 @@
                    .on("change", function(d) { 
 
                       vars.aggregate = d;
-                      d3.select(vars.container).call(visualization)
+                      d3.select(vars.container).call(vars.this_chart)
 
                    });
 
@@ -194,7 +194,7 @@
           var id_focus = vars.new_data.map(function(d) {return d[vars.var_text]; }).indexOf(this.value);
           visualization.focus(1);
 
-          d3.select(vars.container).call(visualization);
+          d3.select(vars.container).call(vars.this_chart);
 
         })
         .selectAll("option")
@@ -211,7 +211,7 @@
 
                 vars.svg.selectAll(".selected").classed("selected", false);
                 vars.selection = [];
-                d3.select(vars.container).call(visualization);
+                d3.select(vars.container).call(vars.this_chart);
 
               })
              .html("Clear selection");
@@ -223,7 +223,7 @@
 
                 vars.svg.selectAll(".highlighted").classed("highlighted", false);
                 vars.highlight = [];                
-                d3.select(vars.container).call(visualization);
+                d3.select(vars.container).call(vars.this_chart);
 
               })
              .html("Clear highlight");

@@ -1,16 +1,15 @@
 
   chart.params = function(x) {
-    if (!arguments.length) return vars;
+    if(!arguments.length) return vars;
     vars.user_vars = x;    
     return chart;
   };
 
   chart.container = function(x) {
-    if (!arguments.length) return vars.container;
+    if(!arguments.length) return vars.container;
     vars.container = x;
     return chart;
   };
-
 
   chart.join = function(data, var_join) {
 
