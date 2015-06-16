@@ -31,7 +31,7 @@
     type: "",
 
     // Default dimensions
-    margin: {top: 30, right: 20, bottom: 10, left: 30},
+    margin: {top: 10, right: 10, bottom: 10, left: 10},
 
     // Default Variables mapping
     var_text: "name",

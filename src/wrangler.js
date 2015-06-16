@@ -1,4 +1,7 @@
 
+    // Calculate vars.new_data which should contain two things
+    // 1/ The list of all items (e.g. countries, products)
+    // 2/ The metadata for each items
     if(vars.new_data === null) {
 
       // Get a copy of the whole dataset
@@ -24,7 +27,8 @@
 
       });
 
-      // Filter data by time
+      // Filter vars.new_data by time
+      // Thus, vars.new_data is always a unique time slice of the dataset
       if(typeof vars.time !== "undefined" && typeof vars.time.current_time !== "undefined" && vars.time.current_time != null) {
 
         console.log("[time.filter]", vars.time.var_time, vars.time.current_time);
@@ -132,28 +136,26 @@
         vars.time.interval = d3.extent(vars.data, function(d) { return d[vars.time.var_time]; });
         vars.time.points = d3.set(vars.data.map(function(d) { return d[vars.time.var_time]; })).values();
 
-        vars.unique_items = d3.set(vars.data.map(function(d) { return d[vars.var_text]; })).values();
+        // Retriev the unique items from the raw data
+        vars.unique_items = d3.set(vars.new_data.map(function(d) { return d[vars.var_text]; })).values();
 
       }
 
       // Find unique items and create ids
       vars.time_data = vars.unique_items.map(function(c, i) {
 
-        var list_values = vars.data.filter(function(d) {
+        var time_values = vars.data.filter(function(d) {
               return d[vars.var_text] === c;
             });
 
+        // Init with corresponding time slice
         var m = vars.new_data[i];
 
-       //   id: list_values[0][vars.var_id], // Create unique ids
-          // name: Math.random(),                                       // Name for the current item
-          // TODO: add other stuff? other temporal values?
-       //   __highlighted: list_values[0].__highlighted,
-       //   __selected: list_values[0].__selected,
-       //   __filtered: list_values[0].__filtered,
-        m.values = list_values.map(function (d) {
+        // Create time values
+        m.values = time_values.map(function (d) {
             
-              var v = {date: d[vars.time.var_time], year: d.year};
+              var v = {}; 
+              v[vars.time.var_time] = d[vars.time.var_time];
               v[vars.var_y] = d[vars.var_y];
               v[vars.var_x] = d[vars.var_x];
               v[vars.var_id] = d[vars.var_id];
@@ -161,8 +163,6 @@
             
           })
 
-     //   m[vars.var_group] = list_values[0][vars.var_color];        
-     //   m[vars.var_color] = list_values[0][vars.var_color];
         return m;
       });
 

@@ -320,7 +320,6 @@
               .classed("highlighted", function(d, i) { return d.__highlighted; })
               .classed("selected", function(d, i) { return d.__selected; })
               .attr('d', function(d) {
-                    console.log("CONNECT OA", d.__highlighted)
                 return vars.connect[0].marks[0]["func"](vars.accessor_values(d));
               });
 
@@ -332,15 +331,7 @@
 
   vistk.utils.axis = function(d, i) {
 
-    vars.x_axis = d3.svg.axis()
-        .scale(vars.x_scale[0]["func"])
-        .ticks(vars.x_ticks)
-        // Quick fix to get max value
-        .tickValues(vars.x_tickValues)
-        .tickFormat(vars.x_format)
-        .tickSize(vars.tickSize)
-        .tickPadding(vars.tickPadding)
-        .orient(vars.x_axis_orient);
+    vars.x_axis = vistk.utils.make_x_axis();
 
     vars.svg.selectAll(".x.axis").data([vars.new_data])
       .enter()
@@ -367,15 +358,7 @@
 
   vistk.utils.y_axis = function(d, i) {
 
-    vars.y_axis = d3.svg.axis()
-        .scale(vars.y_scale[0]["func"])
-        .ticks(vars.y_ticks)
-        // Quick fix to get max value
-        .tickValues(vars.y_tickValues)
-        .tickFormat(vars.y_format)
-        .tickSize(vars.y_tickSize)
-        .tickPadding(vars.y_tickPadding)
-        .orient("left");
+    vars.y_axis = vistk.utils.make_y_axis();
 
     vars.svg.selectAll(".y.axis").data([vars.new_data])
       .enter()
@@ -399,15 +382,25 @@
   vistk.utils.make_x_axis = function() {        
     return d3.svg.axis()
         .scale(vars.x_scale[0]["func"])
-         .orient("bottom")
-         .ticks(10);
+        .ticks(vars.x_ticks)
+        // Quick fix to get max value
+        .tickValues(vars.x_tickValues)
+        .tickFormat(vars.x_format)
+        .tickSize(vars.tickSize)
+        .tickPadding(vars.tickPadding)
+        .orient(vars.x_axis_orient);
   }
 
   vistk.utils.make_y_axis = function() {        
     return d3.svg.axis()
         .scale(vars.y_scale[0]["func"])
-         .orient("left")
-         .ticks(10);
+        .ticks(vars.y_ticks)
+        // Quick fix to get max value
+        .tickValues(vars.y_tickValues)
+        .tickFormat(vars.y_format)
+        .tickSize(vars.y_tickSize)
+        .tickPadding(vars.y_tickPadding)
+        .orient("left");
   }
 
   vistk.utils.background_label = function() {
