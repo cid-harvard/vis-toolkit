@@ -33,6 +33,7 @@
           };
 
           vars = vistk.utils.merge(vars, vars.params);
+          vars.items = vistk.utils.merge(vars.items, vars.user_vars.items);
 
           // PRE-UPDATE
           var gItems = vars.svg.selectAll(".mark__group")

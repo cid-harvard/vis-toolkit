@@ -22,11 +22,23 @@ var visualization = vistk.viz().params({
   width: 800,
   height: 600,
   container: "#viz",
-  data: []
+  data: [],
+  var_text: "index",
+  var_color: "index",
+	items: [{
+    attr: "name",
+    marks: [{
+      type: "circle",
+      rotate: "0",
+      fill: function(d) { return vars.color(vars.accessor_values(d)[vars.var_color]); }
+    },{
+      type: "text",
+      rotate: "-30"
+    }]
+  }],
 });
 
 d3.select("#viz").call(visualization);
-
 
 setInterval(function(d) {
 
