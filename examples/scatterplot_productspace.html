@@ -62,9 +62,10 @@ d3.json("../data/atlas_international_product_space.json", function(graph) {
                   .range([2, 10]);
                   return c(d["export_rca"]);
           },
-          fill: function(d) { var c = d3.scale.linear()
-                  .domain(d3.extent(exports, function(d) { return vars.accessor_values(d).export_rca; }))
-                  .range(["lightgray", "red"]);
+          fill: function(d) { 
+                  var c = d3.scale.linear()
+                    .domain(d3.extent(exports, function(d) { return vars.accessor_values(d).export_rca; }))
+                    .range(["lightgray", "red"]);
                   return c(d["export_rca"]);
           }
         },

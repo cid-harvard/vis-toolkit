@@ -272,6 +272,11 @@ path {
   stroke-width: 2.5px;
 }
 
+.items__mark__circle.selected {
+  stroke: black;
+  stroke-width: 1.5px;
+}
+
 .connect__path:not(.highlighted) {
   stroke-width: 1px;  
 }

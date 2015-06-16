@@ -16,7 +16,7 @@ d3.json("../data/diversification_ubiquity_hs4_1995_2012.json", function(error, c
       type: "scatterplot",
       container: "#viz",
       data: flat_years,
-      id: "country",
+      id: ["continent", "country"],
       var_group: "continent",
       var_color: "continent",
       var_x: 'nb_products',
