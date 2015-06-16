@@ -21,7 +21,7 @@
               name: "linear",
               func: d3.scale.linear()
                       .range([vars.height-vars.margin.top-vars.margin.bottom, vars.margin.top])
-                      .domain(d3.extent(vars.data, function(d) { return d[vars.var_y]; })).nice(),
+                      .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_y]; })).nice(),
             }, {
               name: "linear_sparkline",
               func: d3.scale.linear()
@@ -30,9 +30,9 @@
             }
           ],
 
-          // r_scale: d3.scale.linear()
-          //            .range([10, 30])
-          //            .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_r]; })),
+           r_scale: d3.scale.linear()
+                      .range([10, 30])
+                      .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_r]; })),
 
           items: [{
             attr: "country",
@@ -127,18 +127,11 @@
         // AXIS
         vars.svg.call(vistk.utils.axis)
                 .select(".x.axis")
-                .style("display", function() { return vars.x_axis_show ? "block": "none"; })
-                .attr("transform", "translate(0," + (vars.height - vars.margin.bottom - vars.margin.top) + ")")
-              .append("text") // TODO: fix axis labels
-                .attr("class", "label")
-                .attr("x", vars.width - vars.margin.left - vars.margin.right)
-                .attr("y", -6)
-                .style("text-anchor", "end")
-                .text(function(d) { return vars.var_x; });            
-
+                .attr("transform", "translate(0," + (vars.height - vars.margin.bottom - vars.margin.top) + ")");
+       
         vars.svg.call(vistk.utils.y_axis)
-                .select(".y.axis")
-                .style("display", function() { return vars.y_axis_show ? "block": "none"; })
+                .select(".y.axis");
+
         // GRID
         vars.svg.selectAll(".x.grid").data([vars.new_data])
           .enter()
@@ -168,7 +161,7 @@
 
         // PRE-UPDATE
         var gItems = vars.svg.selectAll(".mark__group")
-                          .data(vars.new_data)//, function(d, i) {  return d[vars.var_id]; });
+                          .data(vars.new_data, function(d, i) {  return d[vars.var_text]; });
 
         // ENTER
         var gItems_enter = gItems.enter()
@@ -273,6 +266,7 @@
           // Add graphical marks
           vars.items[0].marks.forEach(function(params) {
 
+            // Enter mark
             gItems_enter.call(vistk.utils.draw_mark, params);
 
             // Update mark
