@@ -30,6 +30,7 @@ d3.csv("../data/new_rankings2.csv", function(error, data) {
     container: "#viz",
     height: 600,
     width: 900,
+    margin: {top: 30, right: 10, bottom: 10, left: 10},
     data: res,
     var_id: ["name"], // Should be ["continent", "id"] to allow aggregation and filtering
     var_group: "category",

@@ -19,6 +19,7 @@
           
           vars.mark.type = d.type;
           vars.mark.rotate = d.rotate;
+          vars.mark.stroke = d.stroke;
           gConnect_enter.each(vistk.utils.connect_mark);
 
           // Update
@@ -44,6 +45,7 @@
           // Enter
           vars.mark.type = d.type;
           vars.mark.rotate = d.rotate;
+
           gItems_enter.each(vistk.utils.items_mark);
 
           // Update

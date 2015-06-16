@@ -9,7 +9,7 @@
 
 d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments) {
 
-  var dimensions = ["value_added", "sum(export_value)", "realgdp_percap", "realgdp", "dept_pop"];
+  var dimensions = ["dept_code", "value_added", "sum(export_value)", "realgdp_percap", "realgdp", "dept_pop"];
 
   departments.forEach(function(d, i) {
     d.dept_pop = +d.dept_pop;

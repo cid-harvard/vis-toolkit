@@ -26,42 +26,48 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
   unique_dept = d3.set(departments.map(function(d) { return d["dept_name"]; })).values()
                   .map(function(d) { return {"dept_name": d}});
 
+  var dimensions = ["realgdp", "sum(export_value)", "dept_pop", "value_added", "realgdp_percap"];
+
   unique_dept.forEach(function(d, i) {
 
-    var vis_id = "vis_" + i;
+    dimensions.forEach(function(e, j) {
+      var vis_id = "vis_" + i;
 
-    d3.select("body").append("div").attr("id", vis_id);
+      d3.select("body").append("div").attr("id", vis_id);
 
-    vis = vistk.viz()
-      .params({
-        type: "sparkline",
-        container: "#"+vis_id,
-        width: 300,
-        height: 100,
-        data: departments,
-        id: "id",
-        var_y: "realgdp",
-        var_group: "dept_name",
-        var_color: "name",
-        ui: false,
-        time: {
-          var_time: "year", 
-          parse: d3.time.format("%Y").parse,
-          interval: []
-        },
-        mark: {
-          type: 'diamond',
-          width: 10,
-          height: 10
-        },
-        interpolate: "linear",
-        var_text: "dept_name",
-        filter: ["Antioquia"],
-        selection: [],
-        highlight: []
-      });
+      vis = vistk.viz()
+        .params({
+          type: "sparkline",
+          container: "#"+vis_id,
+          width: 300,
+          height: 100,
+          data: departments,
+          id: "id",
+          var_y: e,
+          var_group: "dept_name",
+          var_color: "name",
+          ui: false,
+          time: {
+            var_time: "year", 
+            parse: d3.time.format("%Y").parse,
+            interval: [],
+//            current_time: "2008"
+          },
+          mark: {
+            type: 'diamond',
+            width: 10,
+            height: 10
+          },
+          interpolate: "linear",
+          var_text: "dept_name",
+          filter: ["Antioquia"],
+          selection: [],
+          highlight: []
+        });
 
-    d3.select(vis.container()).call(vis);
+      d3.select(vis.container()).call(vis);
+
+    });
 
   });
 

@@ -66,14 +66,14 @@ vars.params["sparkline"] = {
   x_scale: [{
       name: "linear",
       func: d3.scale.linear()
-              .range([0, vars.width - 2])
+              .range([vars.margin.left, vars.width - vars.margin.left - vars.margin.right])
               .domain(d3.extent(vars.new_data, function(d) { return d[vars.time.var_time]; }))
   }],
 
   y_scale: [{
       name: "linear",
       func: d3.scale.linear()
-              .range([vars.height - 4, 0])
+              .range([vars.height - vars.margin.top - vars.margin.bottom, vars.margin.top])
               .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_y]; }))
   }],
 
@@ -94,6 +94,7 @@ vars.params["sparkline"] = {
     marks: [{
         type: "path",
         rotate: "0",
+        stroke: function(d) { return "black"; },
         func: d3.svg.line()
              .interpolate(vars.interpolate)
              .x(function(d) { return vars.x_scale[0]["func"](d[vars.time.var_time]); })
