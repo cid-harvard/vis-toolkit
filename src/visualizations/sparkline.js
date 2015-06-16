@@ -15,15 +15,13 @@
                         .attr("class", "connect__group");
 
         // APPEND CONNECT MARK
-        vars.connect[0].marks.forEach(function(d) {
-          
-          vars.mark.type = d.type;
-          vars.mark.rotate = d.rotate;
-          vars.mark.stroke = d.stroke;
-          gConnect_enter.each(vistk.utils.connect_mark);
+        vars.connect[0].marks.forEach(function(params) {
+          console.log("PARAM", params)
+          // Enter mark
+          gConnect_enter.call(vistk.utils.draw_mark, params);
 
-          // Update
-          gConnect.each(vistk.utils.connect_mark);
+          // Update mark
+          gConnect.call(vistk.utils.draw_mark, params);
 
         });
 
@@ -39,17 +37,14 @@
                           return "translate(" + vars.x_scale[0]["func"](d[vars.time.var_time]) + ", " + vars.y_scale[0]["func"](d[vars.var_y]) + ")";
                         });
 
-        // ITEMS MARKS
-        vars.items[0].marks.forEach(function(d) {
+        // Add graphical marks
+        vars.items[0].marks.forEach(function(params) {
 
-          // Enter
-          vars.mark.type = d.type;
-          vars.mark.rotate = d.rotate;
+          // Enter mark
+          gItems_enter.call(vistk.utils.draw_mark, params);
 
-          gItems_enter.each(vistk.utils.items_mark);
-
-          // Update
-          gItems.each(vistk.utils.items_mark);
+          // Update mark
+          gItems.call(vistk.utils.draw_mark, params);
 
         });
 
