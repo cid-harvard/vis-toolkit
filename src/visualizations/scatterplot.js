@@ -88,6 +88,8 @@
 
         vars = vistk.utils.merge(vars, vars.params);
 
+        vars.svg
+
         // In case there are some links between items available
         if(vars.links !== null) {
 
@@ -163,13 +165,6 @@
             .call(vistk.utils.make_y_axis()
             .tickSize(-vars.width+vars.margin.left+vars.margin.right, 0, 0)
             .tickFormat(""));
-
-        var context = {
-          width: vars.width/10,
-          height: vars.height/10,
-          x_scale: vars.params.x_scale[0]["func"],
-          y_scale: vars.params.y_scale[0]["func"]
-        };
 
         // PRE-UPDATE
         var gItems = vars.svg.selectAll(".mark__group")
@@ -259,7 +254,7 @@
                           .append("g")
                           .attr("class", "connect__group")
                           .attr("transform", "translate(0,0)")
-                          .property("__context__", context)
+                          // .property("__params__", context)
                           .attr("transform", function(d) {
                             return "translate(" + (vars.params.x_scale[0]["func"](vars.accessor_values(d)[0][vars.var_x])-5) + ", " + (vars.y_scale[0]["func"](vars.accessor_values(d)[0][vars.var_y])/1.25-5) + ")";
                           });
@@ -278,12 +273,12 @@
           vars.accessor_data = function(d) { return d; };
 
           // Add graphical marks
-          vars.items[0].marks.forEach(function(context) {
+          vars.items[0].marks.forEach(function(params) {
 
-            gItems_enter.property("__context__", context).each(vistk.utils.draw_mark);
+            gItems_enter.call(vistk.utils.draw_mark, params);
 
             // Update mark
-            gItems.each(vistk.utils.draw_mark);
+            gItems.call(vistk.utils.draw_mark, params);
 
           });
 

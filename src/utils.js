@@ -16,40 +16,71 @@
   }
 
   /*
-    Main function to draw marks  
-    Takes
+    Main function to draw marks 
+    Invoked from a .each() call passing in the current datum d and index i, 
+    with the this context of the current DOM element
 
+    params contains the parameters for the current graphical mark to draw 
+    e.g. scales, type of mark, radius, color function, ..
   */
-  vistk.utils.draw_mark = function(d, i) {
+  vistk.utils.draw_mark = function(selection, params) {
 
-    var context = d3.select(this).property("__context__");
+    //var params = d3.select(this).property("__params__");
 
-    switch(context.type) {
+    selection.each(function(d) {
 
-      case "circle":
-      default:
+      switch(params.type) {
 
-        // In case other marks already exist
-        d3.select(this).selectAll(".items__mark__rect").remove();
-        d3.select(this).selectAll(".items__mark__diamond").remove();
+        case "text":
 
-        var mark = d3.select(this).selectAll(".items__mark__circle").data([d]);
+          if(typeof params.rotate === "undefined")
+            params.rotate = 0;
 
-        mark.enter().append("circle")
-                    .classed("items__mark__circle", true)
-                    .attr("cx", 0)
-                    .attr("cy", 0)
-                    .attr("transform", "rotate(0)")
+          if(typeof vars.mark.translate === "undefined")
+            params.translate = [0, 0];
 
-        mark
-            .attr("r", vars.mark.radius)
-            .attr("fill", vars.mark.fill)
-            .classed("highlighted", function(d, i) { return d.__highlighted; })
-            .classed("selected", function(d, i) { return d.__selected; });
+         var mark = d3.select(this).selectAll(".items__mark__text").data([d]);
 
-        break;
+          mark.enter().append("text")
+              .classed("items__mark__text", true)         
+              .style("text-anchor", "start")
+              .attr("x", 10)
+              .attr("y", 0)
+              .attr("dy", ".35em");
 
-    }
+          mark
+              .classed("highlighted", function(d, i) { return d.__highlighted; })
+              .classed("selected", function(d, i) { return d.__selected; })   
+              .transition()
+              .attr("transform", "translate(" +  params.translate + ")rotate(" +  params.rotate + ")")
+              .text(function(d) { 
+                return vars.accessor_data(d)[vars.var_text]; 
+              });
+
+        case "circle":
+        default:
+
+          var mark = d3.select(this).selectAll(".items__mark__circle").data([d]);
+
+          mark.enter().append("circle")
+                      .classed("items__mark__circle", true)
+                      .attr("cx", 0)
+                      .attr("cy", 0)
+                      .attr("transform", "rotate(0)")
+                      .attr("r", params.radius)
+                      .attr("fill", params.fill)
+
+          mark
+             // .attr("r", function(d) {return params.radius; })
+             // .attr("fill", params.fill)
+              .classed("highlighted", function(d, i) { return d.__highlighted; })
+              .classed("selected", function(d, i) { return d.__selected; });
+
+          break;
+
+      }
+
+    });
 
   }
 
