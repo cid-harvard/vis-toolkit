@@ -25,7 +25,7 @@
   */
   vistk.utils.draw_mark = function(selection, params) {
 
-    //var params = d3.select(this).property("__params__");
+    // var params = d3.select(this).property("__params__");
 
     selection.each(function(d) {
 
@@ -57,6 +57,63 @@
                 return vars.accessor_data(d)[vars.var_text]; 
               });
 
+        break;
+
+        case "diamond":
+
+          var mark = d3.select(this).selectAll(".items__mark__diamond").data([d]);
+
+          mark.enter().append("rect")
+                    .attr("height", vars.mark.height)
+                    .attr("width", vars.mark.width)                              
+                    .attr("x", -vars.mark.width/2)
+                    .attr("y", -vars.mark.height/2)
+                    .classed("items__mark__diamond", true)
+                    .attr("transform", "rotate(45)");
+
+          mark
+              .classed("highlighted", function(d, i) { return d.__highlighted; })
+              .classed("selected", function(d, i) { return d.__selected; });
+
+        break;
+
+        case "line":
+
+          var mark = d3.select(this).selectAll(".connect__line").data([d]);
+
+          mark.enter().append('line')
+              .classed('connect__line', true)
+              .attr("x1", function(d) { return vars.x_scale[0]["func"](d.source.x); })
+              .attr("y1", function(d) { return vars.y_scale[0]["func"](d.source.y); })
+              .attr("x2", function(d) { return vars.x_scale[0]["func"](d.target.x); })
+              .attr("y2", function(d) { return vars.y_scale[0]["func"](d.target.y); });
+
+          mark              
+              .classed("highlighted", function(d, i) { return d.__highlighted; })
+              .classed("selected", function(d, i) { return d.__selected; });
+
+          break;
+
+        case "path":
+
+          var mark = d3.select(this).selectAll(".connect__path").data([d]);
+
+          mark.enter().append('path')
+              .classed('connect__path', true)
+              .style("fill", params.fill)
+              .style("stroke", function(d) {
+                return params.stroke(d)
+              });
+
+          mark              
+              .classed("highlighted", function(d, i) { return d.__highlighted; })
+              .classed("selected", function(d, i) { return d.__selected; })
+              .attr('d', function(d) {
+                return vars.connect[0].marks[0]["func"](vars.accessor_values(d));
+              });
+
+        break;
+
         case "circle":
         default:
 
@@ -68,8 +125,8 @@
                       .attr("cy", 0)
                       .attr("transform", "rotate(0)")
                       .attr("r", function(d) {
-                        console.log(d, vars.items[0].marks[0].r_scale(d))
-                        return params.r_scale(d);
+                        return 5;                     
+//                        return params.r_scale(d);
                       })
                       .attr("fill", params.fill)
 
@@ -249,7 +306,7 @@
                     .classed("items__mark__circle", true)
                     .attr("cx", 0)
                     .attr("cy", 0)
-                    .attr("transform", "rotate(0)")
+                    .attr("transform", "rotate(0)");
 
         mark
             .attr("r", vars.mark.radius)
@@ -325,7 +382,6 @@
 
         break;
       }
-
     }
   }
 
@@ -338,6 +394,7 @@
         .insert("g", ":first-child")
         .attr("class", "x axis")
         .attr("transform", "translate(0," + (vars.height/2) + ")")
+        .style("display", function() { return vars.x_axis_show ? "block": "none"; })
       .append("text")
         .attr("class", "label")
         .attr("x", vars.width-vars.margin.left-vars.margin.right)
@@ -364,14 +421,20 @@
       .enter()
         .insert("g", ":first-child")
         .attr("class", "y axis")
-        .attr("transform", "translate("+vars.margin.left+", 0)")              
+        .attr("transform", "translate(" + vars.margin.left + ", 0)")
+        .style("display", function() { return vars.y_axis_show ? "block": "none"; })
       .append("text")
         .attr("class", "label")
         .attr("transform", "rotate(-90)")
         .attr("y", 6)
         .attr("dy", ".71em")
-        .style("text-anchor", "end")
-        .text(function(d) { return vars.var_y; });
+        .style({
+          "text-anchor": "end",
+          "display": function(d) {
+            return typeof vars.y_text !== "undefined" && vars.y_text !== null;
+          }
+        })
+        .text(vars.var_y);
 
     vars.svg.selectAll(".y.axis").transition()
         .duration(vars.duration)
