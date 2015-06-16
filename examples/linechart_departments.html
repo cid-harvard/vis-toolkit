@@ -16,7 +16,7 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
 
     d.id = i;
     d.dept_pop = +d.dept_pop;
-    d.realgdp = +d.realgdp;
+    d.realgdp = -d.realgdp;
     d.realgdp_percap = +d.realgdp_percap;    
     d["sum(export_value)"] = +d["sum(export_value)"];
     d["value_added"] = +d["value_added"];
@@ -32,18 +32,17 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
     data: departments,
     var_id: "id", // Should be ["continent", "id"] to allow aggregation and filtering
     var_group: "name",
-    var_color: "name", // TODO: color by final ranking value..
+    var_color: "id", // TODO: color by final ranking value..
     title: "Products",
     var_text: "dept_name",
-    y_text: "ECI Rank",
     var_y: "realgdp",
     time: {
       parse: d3.time.format("%Y").parse,
       var_time: 'year',
       current_time: "2013"
     },
-    selection: ["Japan", "Switzerland", "Germany"],
-    highlight: "France"
+    selection: ["Antioquia", "Valle", "Bogotá D. C."],
+    highlight: "Bogotá D. C."
   });
 
   d3.select("#viz").call(visualization);

@@ -64,7 +64,7 @@
         vars.y_axis = d3.svg.axis()
             .scale(vars.y_scale[0]["func"])
             .orient("left");
-
+/*
         // TODO: use the connection mark instead of the line
         // FIX FOR MISSING VALUES
         // https://github.com/mbostock/d3/wiki/SVG-Shapes
@@ -74,7 +74,7 @@
             .interpolate(vars.interpolate)
             .x(function(d) { return vars.x_scale[0]["func"](d[vars.var_time]); })
             .y(function(d) { return vars.y_scale[0]["func"](d[vars.var_y]); });
-
+*/
         // TODO: fix the color scale
         vars.color.domain(d3.keys(vars.new_data[0]).filter(function(key) { return key !== "date"; }));
 
