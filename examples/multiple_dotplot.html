@@ -17,7 +17,7 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
     d.realgdp = +d.realgdp;
     d.realgdp_percap = +d.realgdp_percap;    
     d["sum(export_value)"] = +d["sum(export_value)"];
-    d["value_added"] = +d["value_added"];
+    d["value_added"] = isNaN(+d["value_added"]) ? 0: +d["value_added"];
   });
 
   var ui_options = [];
