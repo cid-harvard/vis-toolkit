@@ -1,7 +1,7 @@
 
   chart.params = function(x) {
     if(!arguments.length) return vars;
-    vars.user_vars = x;    
+    vars._user_vars = x;    
     return chart;
   };
 

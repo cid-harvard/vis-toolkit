@@ -25,8 +25,6 @@
   */
   vistk.utils.draw_mark = function(selection, params) {
 
-    // var params = d3.select(this).property("__params__");
-
     selection.each(function(d) {
 
       switch(params.type) {
@@ -113,6 +111,10 @@
               });
 
         break;
+
+        case "sparkline":
+
+
 
         case "circle":
         default:
@@ -483,7 +485,11 @@
   // UTILS FUNCTIONS
 
   // http://stackoverflow.com/questions/171251/how-can-i-merge-properties-of-two-javascript-objects-dynamically
-  vistk.utils.merge = function() {
+  vistk.utils.merge = function(d, e) {
+    if(vars.dev) {
+      console.log("[merge]", d, e);
+    }
+
       var obj = {},
           i = 0,
           il = arguments.length,
@@ -595,22 +601,6 @@
   }
 
   // UTIS FUNCTIONS
-
-  // http://stackoverflow.com/questions/171251/how-can-i-merge-properties-of-two-javascript-objects-dynamically
-  var merge = function() {
-      var obj = {},
-          i = 0,
-          il = arguments.length,
-          key;
-      for (; i < il; i++) {
-          for (key in arguments[i]) {
-              if (arguments[i].hasOwnProperty(key)) {
-                  obj[key] = arguments[i][key];
-              }
-          }
-      }
-      return obj;
-  };
 
   // One way to wrap text.. but creates too many elements..
   // http://bl.ocks.org/mbostock/7555321

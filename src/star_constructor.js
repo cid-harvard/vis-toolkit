@@ -1,5 +1,9 @@
   chart = function(selection) {
 
+    // Merging the various user params
+    vars.user_vars = vistk.utils.merge(vars.user_vars, vars._user_vars);
+
+    // Merging with current charts parameters set by the user in the HTML file
     vars = vistk.utils.merge(vars, vars.user_vars);
 
     // Create the top level element conaining the visualization
