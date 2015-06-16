@@ -63,6 +63,7 @@
     x_axis_show: true,
     x_axis_orient: "bottom",
     x_grid_show: true,
+    x_text: true,
 
 
     // SCATTERPLOT (INCLUDES DOTPLOT)
@@ -76,6 +77,7 @@
     y_tickValues: null,
     y_axis_show: true,
     y_grid_show: true,
+    y_text: true,
 
     r_scale: null,
     r_cutoff: function(d) { return d > 30; },
@@ -118,8 +120,10 @@
     accessor_data: function(d) { return d; },
     accessor_items: function(d) { return d; },
 
-    container: "#viz_0",
-    nb_viz: nb_viz
+    container: "#viz",
+    nb_viz: nb_viz,
+
+    _user_vars: {}
   };
 
   vars = vistk.utils.merge(vars, default_vars);

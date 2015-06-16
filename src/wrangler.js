@@ -1,14 +1,8 @@
 
-    // Calculate vars.new_data which should contain two things
-    // 1/ The list of all items (e.g. countries, products)
-    // 2/ The metadata for each items
-    if(vars.new_data === null) {
-
-      // Get a copy of the whole dataset
-      vars.new_data = vars.data;
+    vistk.utils.init_data = function() {
 
       // Init states for data from the chart parameters
-      vars.new_data.forEach(function(d, i) {
+      vars.data.forEach(function(d, i) {
 
         if(vars.filter.indexOf(d[vars.var_id]) < 0)
           d.__filtered = false;
@@ -27,29 +21,41 @@
 
       });
 
-      // Filter vars.new_data by time
-      // Thus, vars.new_data is always a unique time slice of the dataset
-      if(typeof vars.time !== "undefined" && typeof vars.time.current_time !== "undefined" && vars.time.current_time != null) {
+    }
 
-        console.log("[time.filter]", vars.time.var_time, vars.time.current_time);
+    // Calculate vars.new_data which should contain two things
+    // 1/ The list of all items (e.g. countries, products)
+    // 2/ The metadata for each items
+    if(vars.new_data === null) {
 
-        vars.new_data = vars.new_data.filter(function(d) {
-          return d[vars.time.var_time] === vars.time.current_time;
-        });
+      vistk.utils.init_data();
 
-      }
+      // Get a copy of the whole dataset
+      vars.new_data = vars.data;
 
-      // Filter data by attribute
-      // TODO: not sure we should remove data, but add an attribute instead would better
-      if(vars.filter.length > 0) {
+    }
 
-        vars.new_data = vars.new_data.filter(function(d) {
-          // We don't keep values that are not in the vars.filter array
-          return vars.filter.indexOf(d[vars.var_group]) > -1;
-        });
-      
-      }
+    // Filter vars.new_data by time
+    // Thus, vars.new_data is always a unique time slice of the dataset
+    if(typeof vars.time !== "undefined" && typeof vars.time.current_time !== "undefined" && vars.time.current_time != null) {
 
+      console.log("[time.filter]", vars.time.var_time, vars.time.current_time);
+
+      vars.new_data = vars.new_data.filter(function(d) {
+        return d[vars.time.var_time] === vars.time.current_time;
+      });
+
+    }
+
+    // Filter data by attribute
+    // TODO: not sure we should remove data, but add an attribute instead would better
+    if(vars.filter.length > 0) {
+
+      vars.new_data = vars.new_data.filter(function(d) {
+        // We don't keep values that are not in the vars.filter array
+        return vars.filter.indexOf(d[vars.var_group]) > -1;
+      });
+    
     }
 
     // Aggregate data
@@ -121,6 +127,7 @@
 
       // Transform key/value into values tab only
       vars.new_data = nested_data.map(function(d) { return d.values; });
+
     }
 
     // vars.time_data format
@@ -145,8 +152,8 @@
       vars.time_data = vars.unique_items.map(function(c, i) {
 
         var time_values = vars.data.filter(function(d) {
-              return d[vars.var_text] === c;
-            });
+          return d[vars.var_text] === c;
+        });
 
         // Init with corresponding time slice
         var m = vars.new_data[i];
@@ -244,12 +251,12 @@
 
     if(vars.links !== null) {
 
-        vars.links.forEach(function(d, i) {
+      vars.links.forEach(function(d, i) {
 
-          d.source = vistk.utils.find_node_by_id(d.source);
-          d.target = vistk.utils.find_node_by_id(d.target);
+        d.source = vistk.utils.find_node_by_id(d.source);
+        d.target = vistk.utils.find_node_by_id(d.target);
 
-        });
+      });
 
     }
 
