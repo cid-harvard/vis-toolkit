@@ -18,21 +18,23 @@
 // [ ] 
 
 var visualization = vistk.viz().params({
-    type: "grid",
-    width: 800,
-    height: 600,
-    container: "#viz",
-    data: d3.range(100*Math.random())
+  type: "grid",
+  width: 800,
+  height: 600,
+  container: "#viz",
+  data: []
 });
 
-  d3.select("#viz").call(visualization);
+d3.select("#viz").call(visualization);
 
 
 setInterval(function(d) {
 
-  var data = d3.range(100*Math.random());
+  var data = d3.range(100*Math.random()).map(function(d) {
+  	return {id: d};
+  });
 
-  visualization.params({data: data});
+  visualization.params({data: data, var_id: "id"});
   d3.select("#viz").call(visualization);
 
 }, 1000)
