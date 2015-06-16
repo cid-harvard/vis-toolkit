@@ -181,8 +181,7 @@
                           .each(vistk.utils.items_group)
                           .attr("transform", function(d, i) {
                             return "translate(" + vars.margin.left + ", " + vars.height/2 + ")";
-                          })
-                          .property("__context__", context);
+                          });
 
         if(vars.aggregate === vars.var_group) {
 
@@ -279,15 +278,12 @@
           vars.accessor_data = function(d) { return d; };
 
           // Add graphical marks
-          vars.items[0].marks.forEach(function(d) {
+          vars.items[0].marks.forEach(function(context) {
 
-            vars.mark.type = d.type;
-            vars.mark.rotate = d.rotate;
-
-            gItems_enter.each(vistk.utils.items_mark);
+            gItems_enter.property("__context__", context).each(vistk.utils.draw_mark);
 
             // Update mark
-            gItems.each(vistk.utils.items_mark);
+            gItems.each(vistk.utils.draw_mark);
 
           });
 

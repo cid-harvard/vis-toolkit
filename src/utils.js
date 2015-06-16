@@ -15,6 +15,44 @@
 
   }
 
+  /*
+    Main function to draw marks  
+    Takes
+
+  */
+  vistk.utils.draw_mark = function(d, i) {
+
+    var context = d3.select(this).property("__context__");
+
+    switch(context.type) {
+
+      case "circle":
+      default:
+
+        // In case other marks already exist
+        d3.select(this).selectAll(".items__mark__rect").remove();
+        d3.select(this).selectAll(".items__mark__diamond").remove();
+
+        var mark = d3.select(this).selectAll(".items__mark__circle").data([d]);
+
+        mark.enter().append("circle")
+                    .classed("items__mark__circle", true)
+                    .attr("cx", 0)
+                    .attr("cy", 0)
+                    .attr("transform", "rotate(0)")
+
+        mark
+            .attr("r", vars.mark.radius)
+            .attr("fill", vars.mark.fill)
+            .classed("highlighted", function(d, i) { return d.__highlighted; })
+            .classed("selected", function(d, i) { return d.__selected; });
+
+        break;
+
+    }
+
+  }
+
   vistk.utils.items_mark = function(d, i) {
 
     // Default mark if not specified
