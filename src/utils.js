@@ -258,23 +258,8 @@
     }
   }
 
-  vistk.utils.create_chart = function(g, config) {
-
-    // Creates a new chart with the given config
-
-    // Appends it to the current node
-
-
-  }
-
   vistk.utils.axis = function(d, i) {
 
-    // TODO:
-    // [ ] Find parameters
-    // [ ] Type of axis (horizontal, vertical, ..)
-    // [ ] Labels
-
-    // TODO: make the X axis re-usable
     vars.x_axis = d3.svg.axis()
         .scale(vars.x_scale[0]["func"])
         .ticks(vars.x_ticks)
@@ -339,17 +324,12 @@
 
   }
 
-  vistk.utils.grid = function(d, i) {
-
-  }
-
   vistk.utils.make_x_axis = function() {        
     return d3.svg.axis()
         .scale(vars.x_scale[0]["func"])
          .orient("bottom")
          .ticks(10);
   }
-
 
   vistk.utils.make_y_axis = function() {        
     return d3.svg.axis()

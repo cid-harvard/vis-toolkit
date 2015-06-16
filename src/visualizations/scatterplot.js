@@ -88,6 +88,7 @@
 
         vars = vistk.utils.merge(vars, vars.params);
 
+        // In case there are some links between items available
         if(vars.links !== null) {
 
           // Connect marks

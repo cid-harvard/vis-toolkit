@@ -42,9 +42,6 @@
 
         vars = vistk.utils.merge(vars, vars.params);
 
-        // Remove any existing grid or axes
-        // vars.svg.selectAll(".x, .y").remove();
-
         vars.treemap = d3.layout.treemap()
             .padding(vars.padding)
             .sticky(true)
@@ -94,9 +91,9 @@
            .append("foreignObject")
                 .attr("width", function(d) { return (d.dx - vars.padding) + "px"; })
                 .attr("height", function(d) { return (d.dy - vars.padding) + "px"; })
-                .append("xhtml:body")
-                  .style("font", "14px 'Helvetica Neue'")
-                  .append("div")
+              .append("xhtml:body")
+                .style("font", "14px 'Helvetica Neue'")
+                .append("div")
                 .style("width", function(d) { return d.dx + "px"; })
                 .style("height", function(d) { return d.dy + "px"; })
                 .style({"text-overflow": "ellipsis", "overflow": "hidden"})
@@ -110,12 +107,8 @@
         });
 
         // Removed because of Div wrap
-        /*
-        setTimeout(function(d) { 
-          vars.svg.selectAll("text")
-                //.call(vistk.utils.wrap);
-        }, 500);
-        */
+        //  vars.svg.selectAll("text")
+        //      .call(vistk.utils.wrap);
 
         vistk.utils.background_label(vars.title);
 

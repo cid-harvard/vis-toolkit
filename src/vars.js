@@ -161,19 +161,9 @@
 
   if (!vars.data) { vars.data = []; }
 
-  if(typeof vars.width === "undefined" && typeof vars.height === "undefined") {
-
-    vars.width = parseInt(d3.select("body").style('width').substring(0, d3.select("body").style('width').length-2));
-    vars.width = vars.width - vars.margin.left - vars.margin.right;
-    vars.height = vars.width * vars.ratio;
-
-  } else {
-
-    // Calculate new dimensions based on margins
-    // vars.width = vars.width - vars.margin.left - vars.margin.right;
-    // vars.height = vars.height - vars.margin.top - vars.margin.bottom;
-
-  }
+  vars.width = parseInt(d3.select("body").style('width').substring(0, d3.select("body").style('width').length-2));
+  vars.width = vars.width - vars.margin.left - vars.margin.right;
+  vars.height = vars.width * vars.ratio;
 
   // List of events 
   vars.dispatch = d3.dispatch('init', 'end', 'highlightOn', 'highlightOut', 'selection', 'resize', 'clearAnimations');
@@ -182,7 +172,6 @@
   d3.select(window).on('resize', function(d) { 
     vars.evt.call("resize", d);
   });
-
 
   vars.evt.register("highlightOn", function(d) {
     d.__highlighted = true;
