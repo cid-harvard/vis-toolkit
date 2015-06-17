@@ -241,7 +241,7 @@
 
           // PRE-UPDATE CONNECT
           var gConnect = vars.svg.selectAll(".connect__group")
-                          .data(vars.time_data, function(d, i) { return i; });
+                          .data(vars.new_data.map(function(d) { return vars.accessor_values(d); }), function(d, i) { return i; });
         
           // ENTER CONNECT
           var gConnect_enter = gConnect.enter()
@@ -250,14 +250,18 @@
                           .attr("transform", "translate(0,0)")
                           // .property("__params__", context)
                           .attr("transform", function(d) {
-                            return "translate(" + (vars.params.x_scale[0]["func"](vars.accessor_values(d)[0][vars.var_x])-5) + ", " + (vars.y_scale[0]["func"](vars.accessor_values(d)[0][vars.var_y])/1.25-5) + ")";
+                            console.log("DDD",d )
+                            return "translate(" + (vars.params.x_scale[0]["func"](d[0][vars.var_x])-5) + ", " + (vars.y_scale[0]["func"](d[0][vars.var_y])/1.25-5) + ")";
                           });
 
+          vars.accessor_values = function(d) { return d; };
           // APPEND CONNECT MARK
           vars.connect[0].marks.forEach(function(d) {
 
-            vars.mark.type = d.type;
-            vars.mark.rotate = d.rotate;
+            vars.connect.type = d.type;
+            vars.connect.rotate = d.rotate;
+            vars.mark.fill = "red";
+            vars.mark.stroke
             gConnect_enter.each(vistk.utils.connect_mark);
 
           });

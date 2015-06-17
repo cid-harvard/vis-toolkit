@@ -111,7 +111,7 @@
             .attr("id", "select_var_x")
             .on("change", function(d) {
 
-              visualization.params({
+              vars.this_chart.params({
                 var_x: this.value
               })
               d3.select(vars.container).call(vars.this_chart)
@@ -153,7 +153,7 @@
 
      if(vars.ui.options) {
 
-        var label_radios = d3.select(vars.container).selectAll(".aggregations_radio").data([vars.var_group, vars.var_id])
+        var label_radios = d3.select(vars.container).selectAll(".aggregations_radio").data([vars.time.var_time, vars.var_group, vars.var_id])
           .enter()
             .append("label")
             .attr("class", "aggregations_radio")
@@ -192,7 +192,7 @@
 
           // Focus on a sepecifc item
           var id_focus = vars.new_data.map(function(d) {return d[vars.var_text]; }).indexOf(this.value);
-          visualization.focus(1);
+          vars.this_chart.focus(1);
 
           d3.select(vars.container).call(vars.this_chart);
 
@@ -223,7 +223,7 @@
 
                 vars.svg.selectAll(".highlighted").classed("highlighted", false);
                 vars.highlight = [];                
-                d3.select(vars.container).call(visualization);
+                d3.select(vars.container).call(vars.this_chart);
 
               })
              .html("Clear highlight");

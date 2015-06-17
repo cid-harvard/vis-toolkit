@@ -121,9 +121,7 @@
           mark.enter().append('path')
               .classed('connect__path', true)
               .style("fill", params.fill)
-              .style("stroke", function(d) {
-                return params.stroke(d)
-              });
+              .style("stroke", params.stroke);
 
           mark              
               .classed("highlighted", function(d, i) { return d.__highlighted; })
@@ -454,9 +452,7 @@
           mark.enter().append('path')
               .classed('connect__path', true)
               .style("fill", vars.mark.fill)
-              .style("stroke", function(d) {
-                return vars.mark.stroke(d)
-              });
+              .style("stroke", vars.mark.stroke);
 
           mark              
               .classed("highlighted", function(d, i) { return d.__highlighted; })

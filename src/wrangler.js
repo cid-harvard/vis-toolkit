@@ -180,6 +180,15 @@
 
     }
 
+    // Towards a unique variable for wrangled data
+    vars.new_data.forEach(function(d, i) {
+
+      d.values = vars.data.filter(function(e) {
+        return d[vars.var_id] === e[vars.var_id];
+      });
+
+    });
+
     if(vars.type === "stacked") {
 
       // Make sure all items and all ranks are there
