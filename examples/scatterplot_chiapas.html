@@ -69,17 +69,19 @@ d3.csv("../data/chiapas_states_2012.csv", function(error, products) {
         var_x: 'distance',
         var_y: 'pci',
         var_r: 'value',
-        var_share: "distance",
         var_text: "product_name",
         x_format: function(d) { return d3.format(".3f")(d); },
-        r_cutoff: function(d) { return d.rca < 1; },
-         color: d3.scale.ordinal().domain(["Reino Animales", "Reino Vegetales", "Productos Alimenticios", "Minerales", "Química", "Plásticos / Cauchos", "Pieles y cueros", "Madera", "Textiles", "Calzado / Sombrerería ", "Piedra / Vidrio", "Metales", "Maquinaria / Eléctrico", "Transporte", "Misceláneo (Instrumentos médicos, etc.)", undefined]).range(["#3182bd", "#6baed6", "#9ecae1", "#c6dbef", "#e6550d", "#fd8d3c", "#fdae6b", "#fdd0a2", "#31a354", "#74c476", "#a1d99b", "#c7e9c0", "#756bb1", "#9e9ac8", "#bcbddc", "#dadaeb", "#636363", "#969696", "#bdbdbd", "#d9d9d9"]),
+        var_share: 'rca',
+        share_cutoff: function(d) { return d.rca < 1; },
+        color: d3.scale.ordinal().domain(["Reino Animales", "Reino Vegetales", "Productos Alimenticios", "Minerales", "Química", "Plásticos / Cauchos", "Pieles y cueros", "Madera", "Textiles", "Calzado / Sombrerería ", "Piedra / Vidrio", "Metales", "Maquinaria / Eléctrico", "Transporte", "Misceláneo (Instrumentos médicos, etc.)", undefined]).range(["#3182bd", "#6baed6", "#9ecae1", "#c6dbef", "#e6550d", "#fd8d3c", "#fdae6b", "#fdd0a2", "#31a354", "#74c476", "#a1d99b", "#c7e9c0", "#756bb1", "#9e9ac8", "#bcbddc", "#dadaeb", "#636363", "#969696", "#bdbdbd", "#d9d9d9"]),
         ui: {
           default: true,
           options: ["community_id", "product_id"]
         },
         title: d.name,
 
+        // In case we want to customize scales ranges and domains
+/*      
         x_scale: [{
           domain: d.domain
         }],
@@ -87,7 +89,7 @@ d3.csv("../data/chiapas_states_2012.csv", function(error, products) {
         y_scale: [{
           domain: [-3, 4]
         }],
-
+*/
       });
 
     d3.select(visualization.container()).call(visualization);

@@ -720,7 +720,7 @@
         .attr("stroke-dasharray", totalLength + " " + totalLength)
         .attr("stroke-dashoffset", totalLength)
       .transition()
-        .duration(duration)
+        .duration(vars.duration)
         .ease("linear")
         .attr("stroke-dashoffset", 0)
   }

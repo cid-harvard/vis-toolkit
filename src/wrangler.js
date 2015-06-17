@@ -75,6 +75,8 @@
           // Generates a new dataset with aggregated data
           var aggregation = {};
 
+          aggregation[vars.var_id] = leaves[0][vars.var_group];
+
           aggregation[vars.var_text] = leaves[0][vars.var_group];
 
           aggregation[vars.var_group] = leaves[0][vars.var_group];
@@ -96,7 +98,7 @@
           aggregation.piescatter[1] = {};
 
           aggregation.piescatter[0][vars.var_share] = d3.sum(leaves, function(d) {
-            if(vars.r_cutoff(d)) {
+            if(vars.share_cutoff(d)) {
               return 1;
             } else {
               return 0;
@@ -104,7 +106,7 @@
           });
 
           aggregation.piescatter[1][vars.var_share] = d3.sum(leaves, function(d) {
-            if(!vars.r_cutoff(d)) {
+            if(!vars.share_cutoff(d)) {
               return 1;
             } else {
               return 0;

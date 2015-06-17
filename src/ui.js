@@ -153,7 +153,7 @@
 
      if(vars.ui.options) {
 
-        var label_radios = d3.select(vars.container).selectAll(".aggregations_radio").data(vars.id)
+        var label_radios = d3.select(vars.container).selectAll(".aggregations_radio").data([vars.var_group, vars.var_id])
           .enter()
             .append("label")
             .attr("class", "aggregations_radio")
