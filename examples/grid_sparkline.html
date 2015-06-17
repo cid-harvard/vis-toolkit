@@ -30,7 +30,7 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
     width: 800,
     height: 600,
     container: "#viz",
-    data: unique_dept,
+    data: departments,
     var_group: "dept_name",
     var_text: "dept_name",
     var_id: "dept_name",
@@ -44,7 +44,7 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
       attr: "name",
       marks: [{
         type: "sparkline",
-        rotate: "0"
+        rotate: "0",
         var_y: "realgdp",
         interpolate: "linear",
         var_text: "dept_name"

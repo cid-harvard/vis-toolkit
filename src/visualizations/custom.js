@@ -58,6 +58,11 @@
 
         });
 
+        // We have three different types of connections
+        // 1/ Between different items at a given time for one dimension
+        // 2/ Between same items at a given time points
+        // 2/ Between same items at multiple given times
+
         // TODO: decide if we attach to items or connect selection
         // Add connection marks
         vars.connect[0].marks.forEach(function(d) {

@@ -43,3 +43,29 @@ Re-creation of standard examples
 * Anscombe quartet ([Demo](http://cid-harvard.github.io/vis-toolkit/examples/anscombe.html)
 
 Look a the [various examples](http://cid-harvard.github.io/vis-toolkit/examples/).
+
+## Customization
+
+```json
+var visualization = vistk.viz()
+      .params({})
+```
+
+* Default charts configs
+* Charts customize default config themself
+* User customization
+
+### Default charts configs
+
+* Basic charts
+
+### Charts configs
+
+* All the files in `src/visualizations/*.js` are 
+
+### User configs
+
+* Everything that is in the HTML file
+
+
+
