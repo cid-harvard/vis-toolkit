@@ -57,6 +57,28 @@
 
         break;
 
+      case "rect":
+        console.log("RECT", params)
+        var mark = d3.select(this).selectAll(".items__mark__rect").data([d]);
+
+        mark.enter()
+                .append("rect")                            
+                  .attr("x", -vars.mark.width/2)
+                  .attr("y", -vars.mark.height/2)
+                  .classed("items__mark__rect", true)
+                  .attr("transform", "rotate(0)")
+                  .style("fill", function(d) { return vars.color(d[vars.var_color]); });
+
+        mark
+            .attr("height", vars.mark.height)
+            .attr("width", vars.mark.width)  
+            .classed("highlighted", function(d, i) { return d.__highlighted; })
+            .classed("selected", function(d, i) { return d.__selected; });
+
+        mark.exit().remove();
+
+        break;
+
         case "diamond":
 
           var mark = d3.select(this).selectAll(".items__mark__diamond").data([d]);
@@ -114,7 +136,68 @@
 
         case "sparkline":
 
+          // LOAD CHART PARAMS
+          vars_mark = vistk.utils.merge(vars, vars.params["sparkline"]);
 
+          console.log("time", vars.new_data, params, d)
+          // Append a new group?
+          // What are the data?
+/*
+          // TODO: LOAD USER PARAMS
+
+          // PRE-UPDATE CONNECT
+          var gConnect = vars.svg.selectAll(".connect__group")
+                          .data(vars.time_data, function(d, i) { return i; });
+        
+          // ENTER CONNECT
+          var gConnect_enter = gConnect.enter()
+                          .append("g")
+                          .attr("class", "connect__group");
+
+          // APPEND CONNECT MARK
+          vars.connect[0].marks.forEach(function(params) {
+
+            // Enter mark
+            gConnect_enter.call(vistk.utils.draw_mark, params);
+
+            // Update mark
+            gConnect.call(vistk.utils.draw_mark, params);
+
+          });
+
+          // PRE-UPDATE ITEMS
+          var gItems = vars.svg.selectAll(".items__group")
+                          .data(vars.new_data, function(d, i) { return i; });
+
+          // ENTER ITEMS
+          var gItems_enter = gItems.enter()
+                          .append("g")
+                          .each(vistk.utils.items_group)
+                          .attr("transform", function(d, i) {
+                            return "translate(" + vars.x_scale[0]["func"](d[vars.time.var_time]) + ", " + vars.y_scale[0]["func"](d[vars.var_y]) + ")";
+                          });
+
+          // Add graphical marks
+          vars.items[0].marks.forEach(function(params) {
+
+            // Enter mark
+            gItems_enter.call(vistk.utils.draw_mark, params);
+
+            // Update mark
+            gItems.call(vistk.utils.draw_mark, params);
+
+          });
+
+          // POST-UPDATE ITEMS
+          vars.svg.selectAll(".items__group")
+                          .transition()
+                          .delay(function(d, i) { return i / vars.data.length * 100; })
+                          .duration(vars.duration)
+                          .attr("transform", function(d, i) {
+                            return "translate(" + vars.x_scale[0]["func"](d[vars.time.var_time]) + ", " + vars.y_scale[0]["func"](d[vars.var_y]) + ")";
+                          });
+*/
+        break;
 
         case "circle":
         default:

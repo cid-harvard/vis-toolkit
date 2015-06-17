@@ -8,6 +8,7 @@
 <div id="stepper" style="position: fixed; right: 0px;">
   <ul>
     <li><input name="radio-step" value="default" type="radio" checked>Default chart</li>
+    <li><input name="radio-step" value="grid" type="radio">Grid</li>
     <li><input name="radio-step" value="dotplot" type="radio">Dotplot</li>
     <li><input name="radio-step" value="scatterplot" type="radio">Scatterplot</li>
     <li><input name="radio-step" value="barchart" type="radio">Bar chart</li>
@@ -45,6 +46,7 @@ d3.json(file, function(error, countries) {
       container: "#viz",
       data: flat_years,
       id: ["continent", "country"],
+      var_id: 'name',
       var_group: "continent",
       var_color: "continent",
       time: {
@@ -73,13 +75,45 @@ d3.select("input[value='default']").on("click", function(d) {
 
 });
 
+d3.select("input[value='grid']").on("click", function(d) {
+
+  vars.svg.selectAll(".x, .y").remove();
+
+  visualization.params({
+    type: "grid",
+    items: [{
+      attr: "name",
+      marks: [{
+        type: "rect",
+        rotate: "0"
+      },{
+        type: "text",
+        rotate: "-30"
+      }]
+    }],
+  });
+
+  d3.select(visualization.container()).call(visualization);
+
+});
+
 d3.select("input[value='dotplot']").on("click", function(d) {
 
   vars.svg.selectAll(".x, .y").remove();
 
   visualization.params({
       type: "dotplot",
-      var_x: "nb_products"
+      var_x: "nb_products",
+      items: [{
+        attr: "name",
+        marks: [{
+          type: "diamond",
+          rotate: "0"
+        },{
+          type: "text",
+          rotate: "-30"
+        }]
+      }],
     });
 
   d3.select(visualization.container()).call(visualization);
