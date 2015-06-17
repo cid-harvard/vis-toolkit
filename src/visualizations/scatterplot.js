@@ -30,7 +30,7 @@
             }
           ],
 
-           r_scale: d3.scale.linear()
+          r_scale: d3.scale.linear()
                       .range([10, 30])
                       .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_r]; })),
 
@@ -172,6 +172,7 @@
                             return "translate(" + vars.margin.left + ", " + vars.height/2 + ")";
                           });
 
+        // TODO: find a better way to switch between graphical marks
         if(vars.aggregate === vars.var_group) {
 
           vars.pie = d3.layout.pie().value(function(d) { return d[vars.var_share]; });
@@ -259,8 +260,7 @@
 
             vars.connect.type = d.type;
             vars.connect.rotate = d.rotate;
-            vars.mark.fill = "red";
-            vars.mark.stroke
+            vars.mark.fill = "none";
             gConnect_enter.each(vistk.utils.connect_mark);
 
           });

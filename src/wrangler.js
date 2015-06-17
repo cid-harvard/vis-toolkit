@@ -51,6 +51,8 @@
     // TODO: not sure we should remove data, but add an attribute instead would better
     if(vars.filter.length > 0) {
 
+      console.log("[vars.filter]", vars.time.var_time, vars.time.current_time);
+
       vars.new_data = vars.new_data.filter(function(d) {
         // We don't keep values that are not in the vars.filter array
         return vars.filter.indexOf(d[vars.var_group]) > -1;
@@ -61,7 +63,7 @@
     // Aggregate data
     if(vars.aggregate === vars.var_group) {
 
-      console.log("[aggregate]", vars.aggregate);
+      console.log("[vars.aggregate]", vars.aggregate);
 
       // Do the nesting
       // Should make sure it works for a generc dataset
@@ -135,7 +137,6 @@
     vars.time.interval = d3.extent(vars.data, function(d) { return d[vars.time.var_time]; });
     vars.time.points = d3.set(vars.data.map(function(d) { return d[vars.time.var_time]; })).values();
 
-
     // vars.time_data format
     // {id:, name:, values: [{date: d[vars.time.var_time], rank:, year:]}
     if(vars.type === "sparkline" || vars.type === "stacked") {
@@ -145,7 +146,6 @@
         vars.data.forEach(function(d) {
           d[vars.time.var_time] = vars.time.parse(d[vars.time.var_time]);
         });
-
 
         // Retriev the unique items from the raw data
         vars.unique_items = d3.set(vars.new_data.map(function(d) { return d[vars.var_text]; })).values();

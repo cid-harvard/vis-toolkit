@@ -208,8 +208,8 @@
                       .attr("cy", 0)
                       .attr("transform", "rotate(0)")
                       .attr("r", function(d) {
-                        return 5;                     
-//                        return params.r_scale(d);
+                        return 5;
+//                        return vars.r_scale(d[vars.var_r]);
                       })
                       .attr("fill", params.fill)
 
