@@ -148,6 +148,7 @@ Below is the list of currently implemented visualizations and list of upcoming o
 
 * Using pagination http://handsontable.com/demo/pagination.html#5
 * https://github.com/mleibman/SlickGrid
+* http://derekeder.github.io/csv-to-html-table/
 
 * Efficient DOM handling do progressively display a lot of elements http://nexts.github.io/Clusterize.js/
 
@@ -478,6 +479,7 @@ Template
 * DataSquid http://datasquid.co/
 * Quadrigram http://www.quadrigram.com/#gallery
 * DC.js https://dc-js.github.io/dc.js/
+* Polychart https://www.polychart.com/demo
 
 ## Misc
 

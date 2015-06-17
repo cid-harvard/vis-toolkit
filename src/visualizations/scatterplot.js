@@ -1,5 +1,5 @@
       case "scatterplot":
-
+      
         vars.params = {
 
           x_scale: [{

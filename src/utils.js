@@ -486,9 +486,6 @@
 
   // http://stackoverflow.com/questions/171251/how-can-i-merge-properties-of-two-javascript-objects-dynamically
   vistk.utils.merge = function(d, e) {
-    if(vars.dev) {
-      console.log("[merge]", d, e);
-    }
 
       var obj = {},
           i = 0,
@@ -589,7 +586,7 @@
           root.years.forEach(function(year) {
               //extend the year object with the common properties stored just once in the country object
 
-            var current_year = merge(root, year);
+            var current_year = vistk.utils.merge(root, year);
             delete current_year.years;
 
               //add it to the final flat array

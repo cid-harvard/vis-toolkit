@@ -35,11 +35,11 @@ vars.params["dotplot"] = {
   items: [{
     attr: "name",
     marks: [{
-      type: "diamond",
+      type: "circle",
       rotate: "0"
     },{
       type: "text",
-      rotate: "-30"
+      rotate: "-90"
     }]
   }],
 

@@ -16,7 +16,7 @@
 
         // APPEND CONNECT MARK
         vars.connect[0].marks.forEach(function(params) {
-          console.log("PARAM", params)
+
           // Enter mark
           gConnect_enter.call(vistk.utils.draw_mark, params);
 
