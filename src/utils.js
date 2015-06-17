@@ -511,7 +511,7 @@
       if(typeof d3.select(this).data()[0].name == "undefined")
         return;
 
-      width = d3.select(this).data()[0].dx;
+      var width = d3.select(this).data()[0].dx;
 
       var text = d3.select(this),
           words = d3.select(this).data()[0].name.split(/\s+/).reverse(),

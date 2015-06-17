@@ -90,6 +90,8 @@
 
         vars = vistk.utils.merge(vars, vars.params);
 
+        vars.items = vistk.utils.merge(vars.items, vars.user_vars.items);
+
         // In case there are some links between items available
         if(vars.links !== null) {
 
@@ -161,7 +163,7 @@
 
         // PRE-UPDATE
         var gItems = vars.svg.selectAll(".mark__group")
-                          .data(vars.new_data, function(d, i) {  return d[vars.var_text]; });
+                          .data(vars.new_data, function(d, i) {  return d[vars.var_id]; });
 
         // ENTER
         var gItems_enter = gItems.enter()

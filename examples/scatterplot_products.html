@@ -11,28 +11,29 @@ d3.json("../data/exports_2012.json", function(error, exports) {
 
   visualization = vistk.viz()
     .params({
-      type: "scatterplot",
-      container: "#viz",
+      type: 'scatterplot',
+      container: '#viz',
       data: exports.data,
-      id: ["community_name", "product"],
-      var_group: "community_name",
-      var_color: "community_name",
+      var_id: 'code',
+      var_group: 'community_name',
+      var_color: 'community_name',
       var_x: 'rca',
       var_y: 'share',
-      var_share: "nb_products",
-      var_r: "distance",
+      var_share: 'nb_products',
+      var_r: 'distance',
+      var_text: 'name',
       r_cutoff: function(d) { return d.rca < 1; },
       time: {
-        var_time: "year", 
+        var_time: 'year', 
         current_time: 1995
       },
       ui: {
         default: true,
-        options: ["community_name", "product"]
+        options: ['community_name', 'product']
       }
     });
 
-  d3.select("#viz").call(visualization);
+  d3.select('#viz').call(visualization);
 
 });
 </script>

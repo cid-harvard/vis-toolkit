@@ -223,7 +223,7 @@
 
                 vars.svg.selectAll(".highlighted").classed("highlighted", false);
                 vars.highlight = [];                
-                d3.select(vars.container).call(vars.this_chart);
+                d3.select(vars.container).call(visualization);
 
               })
              .html("Clear highlight");
