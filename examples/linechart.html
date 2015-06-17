@@ -45,7 +45,10 @@ d3.csv("../data/new_rankings2.csv", function(error, data) {
       current_time: "2013"
     },
     selection: ["Japan", "Switzerland", "Germany"],
-    highlight: "France"
+    highlight: "France",
+    ui: {
+      default: true
+    },
   });
 
   d3.select("#viz").call(visualization);

@@ -101,10 +101,12 @@
             .style("text-anchor", "end")
             .text(vars.y_text);
 
-        // Connect marks
+        // PRE-UPDATE CONNECT
         var gConnect = vars.svg.selectAll(".connect__group")
-                        .data(vars.time_data, function(d, i) { return i; });
+                        .data(vars.new_data.map(function(d) { return vars.accessor_values(d); }), function(d, i) { return i; });
       
+        vars.accessor_values = function(d) { return d; };
+        
         var gConnect_enter = gConnect.enter()
                         .append("g")
                         .attr("class", "connect__group")

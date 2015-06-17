@@ -132,9 +132,13 @@
 
     }
 
+    vars.time.interval = d3.extent(vars.data, function(d) { return d[vars.time.var_time]; });
+    vars.time.points = d3.set(vars.data.map(function(d) { return d[vars.time.var_time]; })).values();
+
+
     // vars.time_data format
     // {id:, name:, values: [{date: d[vars.time.var_time], rank:, year:]}
-    if(vars.type === "linechart" || vars.type === "sparkline" || vars.type === "stacked") {
+    if(vars.type === "sparkline" || vars.type === "stacked") {
 
       if(vars.time_data === null) {
         // Parse time in raw data
@@ -142,8 +146,6 @@
           d[vars.time.var_time] = vars.time.parse(d[vars.time.var_time]);
         });
 
-        vars.time.interval = d3.extent(vars.data, function(d) { return d[vars.time.var_time]; });
-        vars.time.points = d3.set(vars.data.map(function(d) { return d[vars.time.var_time]; })).values();
 
         // Retriev the unique items from the raw data
         vars.unique_items = d3.set(vars.new_data.map(function(d) { return d[vars.var_text]; })).values();

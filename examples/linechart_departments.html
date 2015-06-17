@@ -30,7 +30,7 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
     width: 900,
     margin: {top: 30, right: 10, bottom: 10, left: 10},
     data: departments,
-    var_id: "id", // Should be ["continent", "id"] to allow aggregation and filtering
+    var_id: 'dept_name', // Should be ["continent", "id"] to allow aggregation and filtering
     var_group: "name",
     var_color: "id", // TODO: color by final ranking value..
     title: "Products",
@@ -39,7 +39,7 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
     time: {
       parse: d3.time.format("%Y").parse,
       var_time: 'year',
-      current_time: "2013"
+      current_time: '2013'
     },
     selection: ["Antioquia", "Valle", "Bogotá D. C."],
     highlight: "Bogotá D. C."

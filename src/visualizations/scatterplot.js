@@ -250,7 +250,6 @@
                           .attr("transform", "translate(0,0)")
                           // .property("__params__", context)
                           .attr("transform", function(d) {
-                            console.log("DDD",d )
                             return "translate(" + (vars.params.x_scale[0]["func"](d[0][vars.var_x])-5) + ", " + (vars.y_scale[0]["func"](d[0][vars.var_y])/1.25-5) + ")";
                           });
 
