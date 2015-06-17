@@ -31,11 +31,16 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
       x_text: null,
       x_ticks: 10,
       x_format: function(d) { return '$' + d3.format(".2s")(d); },
-      mark: {
-        type: 'diamond',
-        width: 10,
-        height: 10
-      },
+      items: [{
+        attr: "name",
+        marks: [{
+          type: "diamond",
+          rotate: "0"
+        },{
+          type: "text",
+          rotate: "-30"
+        }]
+      }],
       time: {
         var_time: 'year', 
         current_time: 2013,

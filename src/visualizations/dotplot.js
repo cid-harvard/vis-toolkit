@@ -1,8 +1,9 @@
       case "dotplot":
 
         vars = vistk.utils.merge(vars, vars.params["dotplot"]);
+        vars.items = vistk.utils.merge(vars.items, vars.user_vars.items);
 
-        // TODO: should specify this is an horizontal axis
+        // TODO: should specify this is an horizontal axis (from config)
         vars.svg.call(vistk.utils.axis);
 
         // PRE-UPDATE
@@ -17,16 +18,15 @@
                           return "translate(" + vars.margin.left + ", " + vars.height/2 + ")";
                         });
 
-        // ITEMS MARKS
-        vars.items[0].marks.forEach(function(d) {
+        // Add graphical marks
+        vars.items[0].marks.forEach(function(params) {
 
-          // Enter
-          vars.mark.type = d.type;
-          vars.mark.rotate = d.rotate;
-          gItems_enter.each(vistk.utils.items_mark);
+          // Enter mark
+          gItems_enter.call(vistk.utils.draw_mark, params);
 
-          // Update
-          gItems.each(vistk.utils.items_mark);
+          // Update mark
+          gItems.call(vistk.utils.draw_mark, params);
+
         });
 
         // EXIT
