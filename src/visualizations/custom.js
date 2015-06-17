@@ -1,6 +1,9 @@
       case "custom":
 
-        // CHART PARAMETERS
+        // DEFAULT CHART CONFIG
+        vars = vistk.utils.merge(vars, vars.params["dotplot"]);
+
+        // CUSTOM CHART PARAMETERS
         vars.params = {
           scales: [{
             name: "linear",
@@ -23,10 +26,13 @@
           connect: []
         }
 
-        // MERGE WITH GLOBAL VARS
+        // MERGE CUSTOM PARAMETERS
         vars = vistk.utils.merge(vars, vars.params);
 
-        // REGISTER EVENTS
+        // MERGE USER PARAMETERS
+        vars.items = vistk.utils.merge(vars.items, vars.user_vars.items);
+
+        // REGISTER CUSTOM EVENTS
         vars.evt.register("highlightOn", function(d) { });
         vars.evt.register("highlightOut", function(d) { });
         vars.evt.register("selection", function(d) { });
@@ -41,21 +47,14 @@
                         .append("g")
                         .each(vistk.utils.items_group);
 
-        // APPEND AND UPDATE ITEMS MARKS
-        vars.items[0].marks.forEach(function(d) {
+        // Add graphical marks
+        vars.items[0].marks.forEach(function(params) {
 
-          // TODO: avoid doing this..
-          vars.mark.type = d.type;
-          vars.mark.rotate = d.rotate;
-          gItems_enter.each(vistk.utils.items_mark);
+          // Enter mark
+          gItems_enter.call(vistk.utils.draw_mark, params);
 
-          // Update existing marks
-          gItems.each(vistk.utils.items_mark);
-
-          // Update specific mark
-          gItems.each(vistk.utils.items_mark)
-                .select("text")
-                .classed("highlighted", function(d, i) { return d.__highlighted; });
+          // Update mark
+          gItems.call(vistk.utils.draw_mark, params);
 
         });
 
