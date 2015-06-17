@@ -15,8 +15,8 @@ d3.json("../data/diversification_ubiquity_hs4_1995_2012.json", function(error, c
 
   scatterplot = vistk.viz()
     .params({
-      type: "scatterplot",
-      container: "#viz",
+      type: 'scatterplot',
+      container: '#viz',
       data: flat_years,
       var_id: 'name',
       var_group: "continent",
@@ -36,8 +36,9 @@ d3.json("../data/diversification_ubiquity_hs4_1995_2012.json", function(error, c
       items: [{
         attr: "name",
         marks: [{
-          type: "diamond",
-          rotate: "0"
+          type: "circle",
+          rotate: "0",
+          fill: function(d) { return vars.color(vars.accessor_items(d)[vars.var_color]); }
         },{
           type: "text",
           rotate: "-30"

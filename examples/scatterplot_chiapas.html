@@ -63,7 +63,7 @@ d3.csv("../data/chiapas_states_2012.csv", function(error, products) {
         type: "scatterplot",
         container: "#viz",// + i,
         data: data,
-        id: ["community_name", "product_id"],
+        var_id: 'product_id',
         var_group: "community_name",
         var_color: "community_name",
         var_x: 'distance',

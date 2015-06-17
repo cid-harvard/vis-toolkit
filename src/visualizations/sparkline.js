@@ -2,12 +2,13 @@
 
         // LOAD CHART PARAMS
         vars = vistk.utils.merge(vars, vars.params["sparkline"]);
+        vars.items = vistk.utils.merge(vars.items, vars.user_vars.items);
 
         // TODO: LOAD USER PARAMS
 
         // PRE-UPDATE CONNECT
         var gConnect = vars.svg.selectAll(".connect__group")
-                        .data(vars.time_data, function(d, i) { return i; });
+                        .data(vars.time_data, function(d, i) { return d[vars.var_id]; });
       
         // ENTER CONNECT
         var gConnect_enter = gConnect.enter()
@@ -27,7 +28,7 @@
 
         // PRE-UPDATE ITEMS
         var gItems = vars.svg.selectAll(".items__group")
-                        .data(vars.new_data, function(d, i) { return i; });
+                        .data(vars.new_data, function(d, i) { return d[vars.var_id]; });
 
         // ENTER ITEMS
         var gItems_enter = gItems.enter()

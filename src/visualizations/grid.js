@@ -37,7 +37,7 @@
 
           // PRE-UPDATE
           var gItems = vars.svg.selectAll(".mark__group")
-                           .data(vars.new_data, function(d, i) { return i; });
+                           .data(vars.new_data, function(d, i) { return d[vars.var_id]; });
 
           // ENTER
           var gItems_enter = gItems.enter()
@@ -66,7 +66,7 @@
           vars.svg.selectAll(".mark__group")
                           .classed("highlighted", function(d, i) { return d.__highlighted; })
                           .transition()
-                          .delay(function(d, i) { return i / vars.data.length * 100; })
+                          .delay(function(d, i) { return (i / vars.new_data.length) * 100; })
                           .duration(vars.duration)
                           .attr("transform", function(d, i) {
                             return "translate(" + vars.x_scale[0]["func"](d[vars.var_x]) + ", " + vars.y_scale[0]["func"](d[vars.var_y]) + ")";

@@ -89,7 +89,6 @@
         };
 
         vars = vistk.utils.merge(vars, vars.params);
-
         vars.items = vistk.utils.merge(vars.items, vars.user_vars.items);
 
         // In case there are some links between items available

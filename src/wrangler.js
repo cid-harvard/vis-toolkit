@@ -30,10 +30,10 @@
 
       vistk.utils.init_data();
 
-      // Get a copy of the whole dataset
-      vars.new_data = vars.data;
-
     }
+
+    // Get a copy of the whole dataset
+    vars.new_data = vars.data;
 
     // Filter vars.new_data by time
     // Thus, vars.new_data is always a unique time slice of the dataset
@@ -159,7 +159,7 @@
         var m = vars.new_data[i];
 
         // Create time values
-        m.values = time_values.map(function (d) {
+        var data_values = time_values.map(function (d) {
             
               var v = {}; 
               v[vars.time.var_time] = d[vars.time.var_time];
@@ -169,6 +169,9 @@
               return v;
             
           })
+
+        m.values = data_values;
+        vars.new_data[i].values = data_values;
 
         return m;
       });
