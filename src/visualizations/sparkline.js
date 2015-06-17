@@ -1,7 +1,7 @@
       case "sparkline":
 
         // LOAD CHART PARAMS
-        vars = vistk.utils.merge(vars, vars.params["sparkline"]);
+        vars = vistk.utils.merge(vars, vars.default_params["sparkline"]);
         vars.items = vistk.utils.merge(vars.items, vars.user_vars.items);
 
         // TODO: LOAD USER PARAMS

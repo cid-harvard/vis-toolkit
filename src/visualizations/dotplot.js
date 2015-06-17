@@ -1,6 +1,6 @@
       case "dotplot":
 
-        vars = vistk.utils.merge(vars, vars.params["dotplot"]);
+        vars = vistk.utils.merge(vars, vars.default_params["dotplot"]);
         vars.items = vistk.utils.merge(vars.items, vars.user_vars.items);
 
         // TODO: should specify this is an horizontal axis (from config)

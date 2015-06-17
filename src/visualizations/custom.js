@@ -1,7 +1,7 @@
       case "custom":
 
         // DEFAULT CHART CONFIG
-        vars = vistk.utils.merge(vars, vars.params["dotplot"]);
+        vars = vistk.utils.merge(vars, vars.default_params["dotplot"]);
 
         // CUSTOM CHART PARAMETERS
         vars.params = {

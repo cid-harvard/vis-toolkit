@@ -1,13 +1,13 @@
-vars.params = {};
+vars.default_params = {};
 
-vars.params.basic = {};
-vars.params.composite = {};
-vars.params.custom = {};
+vars.default_params.basic = {};
+vars.default_params.composite = {};
+vars.default_params.custom = {};
 
 // TODO
 // There should be an abstract version of the dotplot
 // And then decide weither it is horizontal or vertical
-vars.params["dotplot"] = {
+vars.default_params["dotplot"] = {
   x_scale: [{
       name: "linear",
       func: d3.scale.linear()
@@ -56,10 +56,10 @@ vars.params["dotplot"] = {
 
 // TODO
 // Add all the required parameters to change that
-vars.params["dotplot_horizontal"] = vars.params["dotplot"];
-vars.params["dotplot_vertical"] = vars.params["dotplot"];
+vars.default_params["dotplot_horizontal"] = vars.default_params["dotplot"];
+vars.default_params["dotplot_vertical"] = vars.default_params["dotplot"];
 
-vars.params["sparkline"] = {
+vars.default_params["sparkline"] = {
 
   accessor_values: function(d) { return d.values; },
 
@@ -107,10 +107,9 @@ vars.params["sparkline"] = {
 // TODO
 // Sequence of vertical dotplots in an horizontal layout
 // Connected with lines
-vars.params["parallel_coordinates"] = vars.params["dotplot"];
+vars.default_params["parallel_coordinates"] = vars.default_params["dotplot"];
 
-
-vars.params["splot_graph"] = {
+vars.default_params["splot_graph"] = {
 
   layout: null // Should be a X axis
 
