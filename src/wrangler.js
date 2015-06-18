@@ -30,6 +30,9 @@
 
       vistk.utils.init_data();
 
+      vars.time.interval = d3.extent(vars.data, function(d) { return d[vars.time.var_time]; });
+      vars.time.points = d3.set(vars.data.map(function(d) { return d[vars.time.var_time]; })).values();
+
     }
 
     // Get a copy of the whole dataset
@@ -134,12 +137,9 @@
 
     }
 
-    vars.time.interval = d3.extent(vars.data, function(d) { return d[vars.time.var_time]; });
-    vars.time.points = d3.set(vars.data.map(function(d) { return d[vars.time.var_time]; })).values();
-
     // vars.time_data format
     // {id:, name:, values: [{date: d[vars.time.var_time], rank:, year:]}
-    if(vars.type === "sparkline" || vars.type === "stacked") {
+    if(vars.type === "stacked") {
 
       if(vars.time_data === null) {
         // Parse time in raw data
@@ -175,7 +175,6 @@
           })
 
         m.values = data_values;
-        vars.new_data[i].values = data_values;
 
         return m;
       });
@@ -187,7 +186,15 @@
 
       d.values = vars.data.filter(function(e) {
         return d[vars.var_id] === e[vars.var_id];
-      });
+      })
+      .map(function(d) {
+        var v = {}; 
+        v[vars.time.var_time] = d[vars.time.var_time];
+        v[vars.var_y] = d[vars.var_y];
+        v[vars.var_x] = d[vars.var_x];
+        v[vars.var_id] = d[vars.var_id];
+        return v;
+      })
 
     });
 
@@ -356,9 +363,7 @@
 
     if(vars.type == "grid") {
 
-      vars.new_data = [];
-
-      var nb_dimension =  Math.ceil(Math.sqrt(vars.data.length));
+      var nb_dimension =  Math.ceil(Math.sqrt(vars.new_data.length));
       
       // Create foci for each dimension
       // TOFIX: should update children, not necessary replace
@@ -366,14 +371,14 @@
          d3.range(nb_dimension).map(function(e, j) {
 
           // To make sure we don't update more points than necessary
-          if(i * nb_dimension + j < vars.data.length) {
+          if(i * nb_dimension + j < vars.new_data.length) {
             // IMPORTANT to clone the _params here
             var index = i * nb_dimension + j;
-            var datum = vars.data[index];
+            var datum = vars.new_data[index];
             datum.x = i;
             datum.y = j;
             datum.index = index;
-            vars.new_data.push(datum);
+            //vars.new_data.push(datum);
           }
         });
 
