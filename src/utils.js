@@ -42,7 +42,13 @@
 
     selection.each(function(d) {
 
-      switch(params.type) {
+      var params_type = params.type;
+
+      if(typeof params_type == "function") {
+        params_type = params_type(params.type(d[params.var_mark]));
+      }
+
+      switch(params_type) {
 
         case "text":
 

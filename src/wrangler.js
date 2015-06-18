@@ -152,6 +152,7 @@
 
     }
 
+/*
     // vars.time_data format
     // {id:, name:, values: [{date: d[vars.time.var_time], rank:, year:]}
     if(vars.type === "stacked") {
@@ -195,6 +196,7 @@
       });
 
     }
+*/
 
     // Towards a unique variable for wrangled data
     vars.new_data.forEach(function(d, i) {
@@ -216,7 +218,7 @@
     if(vars.type === "stacked") {
 
       // Make sure all items and all ranks are there
-      vars.time_data.forEach(function(c) {
+      vars.new_data.forEach(function(c) {
 
         vars.time.points.forEach(function(y) {
           var is_year = false;
@@ -248,7 +250,7 @@
           .x(function(d) { return d[vars.time.var_time]; })          
           .y(function(d) { return d[vars.var_y]; });
 
-       vars.time_data = vars.stack(vars.time_data);
+       vars.new_data = vars.stack(vars.new_data);
     }
       // Find the number or years
 

@@ -78,17 +78,8 @@
           vars.mark.rotate = d.rotate;
           vars.mark.fill = d.fill;
           vars.mark.stroke = d.stroke;
-
-          gConnect_enter.each(vistk.utils.connect_mark)
-            .select("path")
-            .attr("id", function(d) {
-             return d[vars.var_id]; 
-           })
-
-          // Update
-          gConnect.each(vistk.utils.connect_mark)
-                .select("path")
-                .classed("highlighted", function(d, i) { return vars.time_data[i].__highlighted; });
+ 
+          gConnect_enter.each(vistk.utils.connect_mark);
 
         });
 
