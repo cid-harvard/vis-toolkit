@@ -258,7 +258,7 @@ Horizontal scatterplot without a Y-axis:
 * http://www.education-inequalities.org/indicators/mlevel1/countries/kyrgyzstan#?dimension=wealth_quintile&group=all&age_group=|mlevel1_3&year=|2009
 
 * Dot chart http://bl.ocks.org/nrabinowitz/2034281
-
+* Dots transition http://www.economist.com/blogs/graphicdetail/2015/06/daily-chart-14?fsrc=permar|image2
 
 #### Bubble plot 
 
