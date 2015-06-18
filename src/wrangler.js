@@ -24,14 +24,14 @@
     }
 
     // In case we use custom variables as X/Y variables 
-    if(typeof vars.var_x !== "string") {
+    if(typeof vars.var_x !== "string" && typeof vars.var_x === "function") {
       vars.data.forEach(function(d, i) {
         d._var_x = vars.var_x();
       });
       vars.var_x = "_var_x";
     }
 
-    if(typeof vars.var_y !== "string") {
+    if(typeof vars.var_y !== "string" && typeof vars.var_y === "function") {
       vars.data.forEach(function(d, i) {
         d._var_y = vars.var_y();
       });

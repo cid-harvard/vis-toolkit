@@ -1,10 +1,11 @@
       default:
 
-// TODO
-// Which current mark to draw?? connect[0] ? connect[1]?????
-
       	if(typeof vars.default_params[vars.type] === "undefined")
       		alert("No params for chart " + vars.type);
+
+      	// TODO
+      	// Contain the parameters in something different than global variable
+      	// Use the vistk.utils.create_chart()
 
         // LOAD CHART PARAMS
         vars = vistk.utils.merge(vars, vars.default_params[vars.type]);
