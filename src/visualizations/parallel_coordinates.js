@@ -1,6 +1,6 @@
       case "parallel_coordinates":
 
-        vars = vistk.utils.merge(vars, vars.params["dotplot"]);
+        vars = vistk.utils.merge(vars, vars.default_params["dotplot"]);
 
         // REGISTER EVENTS
         vars.evt.register("highlightOn", function(d) {

@@ -42,7 +42,7 @@ d3.json(file, function(error, countries) {
     flat_years = vistk.utils.flatten_years(countries);
 
   visualization.params({
-      type: "default",
+      type: "none",
       container: "#viz",
       data: flat_years,
       id: ["continent", "country"],
@@ -78,6 +78,7 @@ d3.select("input[value='default']").on("click", function(d) {
 d3.select("input[value='grid']").on("click", function(d) {
 
   vars.svg.selectAll(".x, .y").remove();
+  d3.selectAll(".items__mark__diamond").remove();
 
   visualization.params({
     type: "grid",
@@ -100,6 +101,8 @@ d3.select("input[value='grid']").on("click", function(d) {
 d3.select("input[value='dotplot']").on("click", function(d) {
 
   vars.svg.selectAll(".x, .y").remove();
+  d3.selectAll(".items__mark__rect").remove();
+  d3.selectAll(".items__mark__circle").remove();
 
   visualization.params({
       type: "dotplot",

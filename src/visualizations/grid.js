@@ -47,7 +47,6 @@
                             return "translate(" + vars.width / 2 + ", " + vars.height / 2 + ")";
                           });
 
-
           // Add graphical marks
           vars.items[0].marks.forEach(function(params) {
 

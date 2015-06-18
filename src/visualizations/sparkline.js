@@ -1,4 +1,4 @@
-      case "sparkline":
+      case "sparkline_old":
 
         // LOAD CHART PARAMS
         vars = vistk.utils.merge(vars, vars.default_params["sparkline"]);
@@ -30,7 +30,7 @@
                         .append("g")
                         .each(vistk.utils.items_group)
                         .attr("transform", function(d, i) {
-                          return "translate(" + vars.x_scale[0]["func"](d[vars.time.var_time]) + ", " + vars.y_scale[0]["func"](d[vars.var_y]) + ")";
+                          return "translate(" + vars.x_scale[0]["func"](d[vars.var_x]) + ", " + vars.y_scale[0]["func"](d[vars.var_y]) + ")";
                         });
 
         // APPEND AND UPDATE ITEMS MARK
@@ -44,7 +44,6 @@
                         .transition()
                         .duration(vars.duration)
                         .attr("transform", function(d, i) {
-                          console.log("UPDATE", d)
-                          return "translate(" + vars.x_scale[0]["func"](d[vars.time.var_time]) + ", " + vars.y_scale[0]["func"](d[vars.var_y]) + ")";
+                          return "translate(" + vars.x_scale[0]["func"](d[vars.var_x]) + ", " + vars.y_scale[0]["func"](d[vars.var_y]) + ")";
                         });
         break;
