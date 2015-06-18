@@ -9,7 +9,6 @@
 
 d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments) {
 
-
   // Data pre-processing
   departments.forEach(function(d, i) {
 
@@ -21,9 +20,6 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
     d["value_added"] = +d["value_added"];
 
   });
-
-  unique_dept = d3.set(departments.map(function(d) { return d["dept_name"]; })).values()
-                  .map(function(d) { return {"dept_name": d}});
 
   var grid = vistk.viz().params({
     type: "grid",
@@ -56,42 +52,7 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
   });
 
   d3.select("#viz").call(grid);
-/*
-  d3.selectAll(".mark__group").each(function(d, i) {
 
-    var id = "mark__group__" + i;
-
-    d3.select(this).attr("id", id);
-
-    var vis = vistk.viz()
-      .params({
-        type: "sparkline",
-        container: "#"+id,
-        width: 100,
-        height: 100,
-        data: departments,
-        id: "id",
-        var_y: "realgdp",
-        var_group: "dept_name",
-        var_color: "name",
-        ui: false,
-        time: {
-          var_time: "year", 
-          parse: d3.time.format("%Y").parse,
-          interval: []
-        },
-
-        interpolate: "linear",
-        var_text: "dept_name",
-        filter: [d],
-        selection: [],
-        highlight: []
-      });
-
-    d3.select(vis.container()).call(vis);
-
-  })
-*/
 });
 
 </script>
