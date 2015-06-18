@@ -131,6 +131,8 @@
 
         case "path":
 
+          var this_accessor_values = function(d) { return d.values; };
+          
           var mark = d3.select(this).selectAll(".connect__path").data([d]);
 
           mark.enter().append('path')
@@ -139,11 +141,11 @@
               .style("stroke", params.stroke);
 
           mark              
-              .classed("highlighted", function(d, i) { return d.__highlighted; })
-              .classed("selected", function(d, i) { return d.__selected; })
-              .attr('d', function(d) {
-                console.log(d.__highlighted)
-                return params["func"](vars.accessor_values(d));
+              .classed("highlighted", function(e, j) { return e.__highlighted; })
+              .classed("selected", function(e, j) { return e.__selected; })
+              .attr('d', function(e) {
+                console.log("IN SHAPE", params["func"], d, e.values)
+                return params["func"](e.values);
               });
 
         break;
@@ -154,7 +156,7 @@
           // LOAD CHART PARAMS
           sparkline_params = vars.default_params["sparkline"];
           sparkline_params.var_y = "realgdp";
-
+          sparkline_params.var_x = "time";
           sparkline_params.y_scale[0]["func"].domain(d3.extent([d.values], function(d) { return d[sparkline_params.var_y]; }));
 
           var params_marks = [{
@@ -162,13 +164,13 @@
             rotate: "0",
             func: d3.svg.line()
                  .interpolate(vars.interpolate)
-                 .x(function(d) { return sparkline_params.x_scale[0]["func"](d[vars.time.var_time]); })
+                 .x(function(d) { return sparkline_params.x_scale[0]["func"](d[sparkline_params.var_x]); })
                  .y(function(d) { return sparkline_params.y_scale[0]["func"](d[sparkline_params.var_y]); }),
           }];
 
           // PRE-UPDATE CONNECT
           var gConnect =  d3.select(this).selectAll(".connect__group")
-                          .data([d.values], function(d, i) { return i; });
+                          .data([d], function(d, i) { return i; });
         
           // ENTER CONNECT
           var gConnect_enter = gConnect.enter()
@@ -178,6 +180,7 @@
           // APPEND CONNECT MARK
           params_marks.forEach(function(params) {
 
+            console.log("INNN MARK", params)
             // Enter mark
             gConnect_enter.call(vistk.utils.draw_mark, params);
 
@@ -185,6 +188,17 @@
             gConnect.call(vistk.utils.draw_mark, params);
 
           });
+
+        break;
+
+        case "dotplot":
+
+          dotplot_params = vars.default_params["dotplot"];
+
+          vistk.utils.create_chart(dotplot_params);
+          // Adjust the parameters it inehrited
+
+          // Trigger the cart creation function
 
         break;
 
@@ -215,6 +229,13 @@
       }
 
     });
+
+  }
+
+  vistk.utils.create_chart = function(params) {
+
+    console.log("Creating chart with params ", params);
+
 
   }
 
@@ -436,7 +457,7 @@
               .classed("highlighted", function(d, i) { return d.__highlighted; })
               .classed("selected", function(d, i) { return d.__selected; })
               .attr('d', function(d) {
-                                console.log(d.__highlighted)
+                                console.log(d)
                 return vars.connect[0].marks[0]["func"](vars.accessor_values(d));
               });
 
