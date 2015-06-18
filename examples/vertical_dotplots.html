@@ -22,7 +22,46 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
 
   var ui_options = [];
 
+  var vertical_ordinal = vistk.viz()
+      .params({
+        height: 800,
+        width: 500,
+        type: 'vertical_ordinal',
+        data: departments,
+        container: '#viz',
+        var_y: 'dept_name',
+        var_x: 'value_added', // not necessary
+        x_type: 'linear',
+        x_text: null,
+        x_ticks: 10,
+        x_format: function(d) { return '$' + d3.format(".2s")(d); },
+        mark: {
+          type: 'diamond',
+          width: 10,
+          height: 10
+        },
+        time: {
+          var_time: 'year', 
+          current_time: 2013,
+          parse: function(d) { return d; }
+        },
+        ui: {
+          default: false,
+          options: ui_options
+        },
+        var_id: "dept_name",
+        var_text: "dept_name", 
+        selection: ["Antioquia"],
+        highlight: ["Antioquia"]
+      });
+
+    d3.select("#viz").call(vertical_ordinal);
+
+  })
+
+/*
   dimensions.forEach(function(d) {
+
     var dotplot = vistk.viz()
       .params({
         height: 100,
@@ -48,7 +87,6 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
           default: false,
           options: ui_options
         },
-        var_y: "year",
         var_id: "dept_name",
         var_text: "dept_name", 
         selection: ["Antioquia"],
@@ -58,7 +96,7 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
     d3.select("#viz").call(dotplot);
 
   })
+*/
 
-});
 
 </script>

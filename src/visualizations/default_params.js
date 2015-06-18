@@ -34,7 +34,7 @@ vars.default_params["dotplot"] = {
     name: "linear",
     func: d3.scale.linear()
             .range([vars.height/2, vars.height/2])
-            .domain([0, d3.max(vars.new_data, function(d) { return d[vars.var_x]; })])
+            .domain([0, d3.max(vars.new_data, function(d) { return d[vars.var_y]; })])
             .nice()
   }],
 
@@ -62,12 +62,18 @@ vars.default_params["dotplot"] = {
 
 vars.default_params["vertical_ordinal"] = {
 
-  x_scale: [],
+  x_scale: [{
+    name: "linear",
+    func: d3.scale.linear()
+            .range([vars.width/2, vars.width/2])
+            .domain([0, d3.max(vars.new_data, function(d) { return d[vars.var_x]; })])
+            .nice()
+  }],
 
   y_scale: [{
       name: "index",
       func: d3.scale.ordinal()
-              .domain(d3.range(vars.new_data.length))
+              .domain(d3.set(vars.new_data.map(function(d) { return d[vars.var_y]; })).values())
               .rangeBands([vars.margin.left, vars.width - vars.margin.left - vars.margin.right]),
       callback: function() {
                   vars.new_data.sort(function ascendingKey(a, b) {
@@ -87,18 +93,13 @@ vars.default_params["vertical_ordinal"] = {
       rotate: "0"
     },{
       type: "text",
-      rotate: "-90"
+      rotate: "0"
     }]
   }],
 
   connect: [],
 
-  axes: [
-    {type: "x",
-     scale: null}
-  ],
-
-  x_tickValues: [0, d3.max(vars.new_data, function(d) { return d[vars.var_x]; })]
+  x_axis_show: false
 
 };
 

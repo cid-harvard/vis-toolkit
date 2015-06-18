@@ -1,10 +1,6 @@
       default:
 
 // TODO
-// x scale and y scale
-// sparkline  vars.x_scale[0]["func"](d[vars.var_x])  vars.y_scale[0]["func"](d[vars.var_y])
-// dotplot    vars.x_scale[0]["func"](d[vars.var_x])          vars.height/2
-
 // Which current mark to draw?? connect[0] ? connect[1]?????
 
       	if(typeof vars.default_params[vars.type] === "undefined")
@@ -45,6 +41,7 @@
                         .append("g")
                         .each(vistk.utils.items_group)
                         .attr("transform", function(d, i) {
+                        	console.log(d, vars.y_scale[0]["func"](d[vars.var_y]), vars.var_y)
                           return "translate(" + vars.x_scale[0]["func"](d[vars.var_x]) + ", " + vars.y_scale[0]["func"](d[vars.var_y]) + ")";
                         });
 
