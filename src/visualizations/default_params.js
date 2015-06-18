@@ -103,10 +103,43 @@ vars.default_params["vertical_ordinal"] = {
 
 };
 
-// TODO
-// Add all the required parameters to change that
-vars.default_params["dotplot_horizontal"] = vars.default_params["dotplot"];
-vars.default_params["dotplot_vertical"] = vars.default_params["dotplot"];
+vars.default_params["grid"] = {
+
+  x_scale: [{
+      name: "linear",
+      func: d3.scale.linear()
+            .domain([0, nb_dimension])
+            .range([0, vars.width])
+    }
+  ],
+
+  y_scale: [{
+      name: "linear",
+      func: d3.scale.linear()
+            .domain([0, nb_dimension])
+            .range([0, vars.height])
+    }
+  ],
+
+  items: [{
+    attr: "name",
+    marks: [{
+      type: "diamond",
+      rotate: "0"
+    },{
+      type: "text",
+      rotate: "-30"
+    }]
+  }],
+
+  connect: [],
+
+  var_x: "x",
+  var_y: "y",
+
+  x_axis_show: false
+  
+};
 
 vars.default_params["sparkline"] = {
 

@@ -1,11 +1,11 @@
       default:
 
-      	if(typeof vars.default_params[vars.type] === "undefined")
-      		alert("No params for chart " + vars.type);
+       if(typeof vars.default_params[vars.type] === "undefined")
+          alert("No params for chart " + vars.type);
 
-      	// TODO
-      	// Contain the parameters in something different than global variable
-      	// Use the vistk.utils.create_chart()
+        // TODO
+        // Contain the parameters in something different than global variable
+        // Use the vistk.utils.create_chart()
 
         // LOAD CHART PARAMS
         vars = vistk.utils.merge(vars, vars.default_params[vars.type]);
