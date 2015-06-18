@@ -381,6 +381,17 @@
     // Generates x and y attributes to display items as a 2D grid
     if(vars.type == "grid") {
 
+      if(typeof vars.var_sort !== "undefined") {
+
+        if(typeof vars.var_sort_asc !== "undefined" && !vars.var_sort_asc) {
+          vars.new_data = vars.new_data.sort(function(a, b) { return d3.ascending(a[vars.var_sort], b[vars.var_sort]);});
+        } else {
+          vars.new_data = vars.new_data.sort(function(a, b) { return d3.descending(a[vars.var_sort], b[vars.var_sort]);});
+        }
+      }
+      
+      //.sort(function(a, b) { return a[vars.var_sort] - b;}) 
+
       var nb_dimension =  Math.ceil(Math.sqrt(vars.new_data.length));
       
       // Create foci for each dimension
@@ -396,7 +407,7 @@
             datum.x = i;
             datum.y = j;
             datum.index = index;
-            //vars.new_data.push(datum);
+
           }
         });
 
