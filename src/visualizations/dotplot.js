@@ -1,4 +1,4 @@
-      case "dotplot":
+      case "dotplot_old":
 
         vars = vistk.utils.merge(vars, vars.default_params["dotplot"]);
         vars.items = vistk.utils.merge(vars.items, vars.user_vars.items);
@@ -40,9 +40,9 @@
                         .duration(vars.duration)
                         .attr("transform", function(d, i) {
                           if(vars.x_type === "index") {
-                            return "translate(" + d[vars.var_x] + ", " + vars.height/2 + ")";
+                            return "translate(" + d[vars.var_x] + ", " + d[vars.var_y] + ")";
                           } else {
-                            return "translate(" + vars.x_scale[0]["func"](d[vars.var_x]) + ", " + vars.height/2 + ")";
+                            return "translate(" + vars.x_scale[0]["func"](d[vars.var_x]) + ", " + d[vars.var_y] + ")";
                           }
                         });
 

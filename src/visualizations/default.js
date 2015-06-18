@@ -2,7 +2,7 @@
 
 // TODO
 // x scale and y scale
-// sparkline  vars.x_scale[0]["func"](d[vars.time.var_time])  vars.y_scale[0]["func"](d[vars.var_y])
+// sparkline  vars.x_scale[0]["func"](d[vars.var_x])  vars.y_scale[0]["func"](d[vars.var_y])
 // dotplot    vars.x_scale[0]["func"](d[vars.var_x])          vars.height/2
 
 // Which current mark to draw?? connect[0] ? connect[1]?????
@@ -15,6 +15,8 @@
 
         // LOAD USER PARAMS
         vars.items = vistk.utils.merge(vars.items, vars.user_vars.items);
+
+        vars.svg.call(vistk.utils.axis);
 
         // PRE-UPDATE CONNECT
         var gConnect = vars.svg.selectAll(".connect__group")
@@ -43,7 +45,7 @@
                         .append("g")
                         .each(vistk.utils.items_group)
                         .attr("transform", function(d, i) {
-                          return "translate(" + vars.x_scale[0]["func"](d[vars.time.var_time]) + ", " + vars.y_scale[0]["func"](d[vars.var_y]) + ")";
+                          return "translate(" + vars.x_scale[0]["func"](d[vars.var_x]) + ", " + vars.y_scale[0]["func"](d[vars.var_y]) + ")";
                         });
 
         // APPEND AND UPDATE ITEMS MARK
@@ -57,7 +59,7 @@
                         .transition()
                         .duration(vars.duration)
                         .attr("transform", function(d, i) {
-                          return "translate(" + vars.x_scale[0]["func"](d[vars.time.var_time]) + ", " + vars.y_scale[0]["func"](d[vars.var_y]) + ")";
+                          return "translate(" + vars.x_scale[0]["func"](d[vars.var_x]) + ", " + vars.y_scale[0]["func"](d[vars.var_y]) + ")";
                         });
 
 

@@ -9,28 +9,34 @@ vars.default_params.custom = {};
 // And then decide weither it is horizontal or vertical
 vars.default_params["dotplot"] = {
   x_scale: [{
-      name: "linear",
-      func: d3.scale.linear()
-              .range([vars.margin.left, vars.width-vars.margin.left-vars.margin.right])
-              .domain([0, d3.max(vars.new_data, function(d) { return d[vars.var_x]; })])
-              .nice()
-    }, {
-      name: "index",
-      func: d3.scale.ordinal()
-              .domain(d3.range(vars.new_data.length))
-              .rangeBands([vars.margin.left, vars.width - vars.margin.left - vars.margin.right]),
-      callback: function() {
-                  vars.new_data.sort(function ascendingKey(a, b) {
-                    return d3.ascending(a[vars.var_x], b[vars.var_x]);
-                  })
-                  .forEach(function(d, i) {
-                    d.rank = vars.x_scale[0]["func"](i);
-                  });
+    name: "linear",
+    func: d3.scale.linear()
+            .range([vars.margin.left, vars.width-vars.margin.left-vars.margin.right])
+            .domain([0, d3.max(vars.new_data, function(d) { return d[vars.var_x]; })])
+            .nice()
+  }, {
+    name: "index",
+    func: d3.scale.ordinal()
+            .domain(d3.range(vars.new_data.length))
+            .rangeBands([vars.margin.left, vars.width - vars.margin.left - vars.margin.right]),
+    callback: function() {
+                vars.new_data.sort(function ascendingKey(a, b) {
+                  return d3.ascending(a[vars.var_x], b[vars.var_x]);
+                })
+                .forEach(function(d, i) {
+                  d.rank = vars.x_scale[0]["func"](i);
+                });
       }
     }
   ],
 
-  y_scale: [],
+  y_scale: [{
+    name: "linear",
+    func: d3.scale.linear()
+            .range([vars.height/2, vars.height/2])
+            .domain([0, d3.max(vars.new_data, function(d) { return d[vars.var_x]; })])
+            .nice()
+  }],
 
   items: [{
     attr: "name",
@@ -139,10 +145,12 @@ vars.default_params["sparkline"] = {
         stroke: function(d) { return "black"; },
         func: d3.svg.line()
              .interpolate(vars.interpolate)
-             .x(function(d) { return vars.x_scale[0]["func"](d[vars.time.var_time]); })
+             .x(function(d) { return vars.x_scale[0]["func"](d[vars.var_x]); })
              .y(function(d) { return vars.y_scale[0]["func"](d[vars.var_y]); }),
       }]
-  }]
+  }],
+
+  x_axis_show: false
 
 };
 
