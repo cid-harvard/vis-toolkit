@@ -90,7 +90,10 @@ vars.default_params["vertical_ordinal"] = {
     attr: "name",
     marks: [{
       type: "circle",
-      rotate: "0"
+      rotate: "0",
+     // r_scale: d3.scale.linear()
+     //             .range([10, 30])
+     //             .domain(d3.extent(vars.new_data, function(d) { return d[params.var_r]; }))
     },{
       type: "text",
       rotate: "0"
@@ -138,7 +141,7 @@ vars.default_params["grid"] = {
   var_y: "y",
 
   x_axis_show: false
-  
+
 };
 
 vars.default_params["sparkline"] = {

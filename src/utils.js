@@ -55,8 +55,9 @@
           if(typeof params.rotate === "undefined")
             params.rotate = 0;
 
-          if(typeof vars.mark.translate === "undefined")
+          if(typeof params.translate === "undefined") {
             params.translate = [0, 0];
+          }
 
          var mark = d3.select(this).selectAll(".items__mark__text").data([d]);
 
@@ -243,8 +244,16 @@
                       .attr("cy", 0)
                       .attr("transform", "rotate(0)")
                       .attr("r", function(d) {
-                        return 5;
-//                        return vars.r_scale(d[vars.var_r]);
+                        if(typeof params.var_r === "undefined") {
+                          return vars.radius;
+                        } else {
+
+                          var r_scale = d3.scale.linear()
+                            .range([10, 30])
+                            .domain(d3.extent(vars.new_data, function(d) { return d[params.var_r]; }))
+
+                          return r_scale(d[params.var_r]);
+                        }
                       })
                       .attr("fill", params.fill);
 

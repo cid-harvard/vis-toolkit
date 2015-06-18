@@ -114,8 +114,6 @@
       fill: function(d) { return vars.color(vars.accessor_values(d)[vars.var_color]); }
     },
 
-    radius: 20,
-
     accessor_values: function(d) { return d; },
     accessor_data: function(d) { return d; },
     accessor_items: function(d) { return d; },
