@@ -23,6 +23,21 @@
 
     }
 
+    // In case we use custom variables as X/Y variables 
+    if(typeof vars.var_x !== "string") {
+      vars.data.forEach(function(d, i) {
+        d._var_x = vars.var_x();
+      });
+      vars.var_x = "_var_x";
+    }
+
+    if(typeof vars.var_y !== "string") {
+      vars.data.forEach(function(d, i) {
+        d._var_y = vars.var_y();
+      });
+      vars.var_y = "_var_y";
+    }
+
     // Calculate vars.new_data which should contain two things
     // 1/ The list of all items (e.g. countries, products)
     // 2/ The metadata for each items
@@ -361,6 +376,7 @@
 
     }
 
+    // Generates x and y attributes to display items as a 2D grid
     if(vars.type == "grid") {
 
       var nb_dimension =  Math.ceil(Math.sqrt(vars.new_data.length));

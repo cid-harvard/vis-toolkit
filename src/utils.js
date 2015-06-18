@@ -15,6 +15,21 @@
 
   }
 
+  vistk.utils.connect_group = function(d, i) {
+
+    d3.select(this).attr("class", "connect__group")
+                    .classed("highlighted", function(d, i) { return d.__highlighted; })
+                    .classed("selected", function(d, i) { return d.__selected; })
+                    .on("mouseover",function(d) {
+                      vars.evt.call("highlightOn", d);
+                    })
+                    .on("mouseleave", function(d) {
+                      vars.evt.call("highlightOut", d);
+                    })
+                    .on("click", function(d) {
+                       vars.evt.call("selection", d);
+                    });
+  }
   /*
     Main function to draw marks 
     Invoked from a .each() call passing in the current datum d and index i, 
@@ -58,7 +73,7 @@
         break;
 
       case "rect":
-        console.log("RECT", params)
+
         var mark = d3.select(this).selectAll(".items__mark__rect").data([d]);
 
         mark.enter()
@@ -127,25 +142,33 @@
               .classed("highlighted", function(d, i) { return d.__highlighted; })
               .classed("selected", function(d, i) { return d.__selected; })
               .attr('d', function(d) {
-                return vars.connect[0].marks[0]["func"](vars.accessor_values(d));
+                console.log(d.__highlighted)
+                return params["func"](vars.accessor_values(d));
               });
 
         break;
 
         case "sparkline":
 
+          // TODO: pass custom parameters in there (grid sparkline)
           // LOAD CHART PARAMS
-          vars_mark = vistk.utils.merge(vars, vars.params["sparkline"]);
+          sparkline_params = vars.default_params["sparkline"];
+          sparkline_params.var_y = "realgdp";
 
-          console.log("time", vars.new_data, params, d)
-          // Append a new group?
-          // What are the data?
-/*
-          // TODO: LOAD USER PARAMS
+          sparkline_params.y_scale[0]["func"].domain(d3.extent([d.values], function(d) { return d[sparkline_params.var_y]; }));
+
+          var params_marks = [{
+            type: "path",
+            rotate: "0",
+            func: d3.svg.line()
+                 .interpolate(vars.interpolate)
+                 .x(function(d) { return sparkline_params.x_scale[0]["func"](d[vars.time.var_time]); })
+                 .y(function(d) { return sparkline_params.y_scale[0]["func"](d[sparkline_params.var_y]); }),
+          }];
 
           // PRE-UPDATE CONNECT
-          var gConnect = vars.svg.selectAll(".connect__group")
-                          .data(vars.time_data, function(d, i) { return i; });
+          var gConnect =  d3.select(this).selectAll(".connect__group")
+                          .data([d.values], function(d, i) { return i; });
         
           // ENTER CONNECT
           var gConnect_enter = gConnect.enter()
@@ -153,7 +176,7 @@
                           .attr("class", "connect__group");
 
           // APPEND CONNECT MARK
-          vars.connect[0].marks.forEach(function(params) {
+          params_marks.forEach(function(params) {
 
             // Enter mark
             gConnect_enter.call(vistk.utils.draw_mark, params);
@@ -163,38 +186,6 @@
 
           });
 
-          // PRE-UPDATE ITEMS
-          var gItems = vars.svg.selectAll(".items__group")
-                          .data(vars.new_data, function(d, i) { return i; });
-
-          // ENTER ITEMS
-          var gItems_enter = gItems.enter()
-                          .append("g")
-                          .each(vistk.utils.items_group)
-                          .attr("transform", function(d, i) {
-                            return "translate(" + vars.x_scale[0]["func"](d[vars.time.var_time]) + ", " + vars.y_scale[0]["func"](d[vars.var_y]) + ")";
-                          });
-
-          // Add graphical marks
-          vars.items[0].marks.forEach(function(params) {
-
-            // Enter mark
-            gItems_enter.call(vistk.utils.draw_mark, params);
-
-            // Update mark
-            gItems.call(vistk.utils.draw_mark, params);
-
-          });
-
-          // POST-UPDATE ITEMS
-          vars.svg.selectAll(".items__group")
-                          .transition()
-                          .delay(function(d, i) { return i / vars.data.length * 100; })
-                          .duration(vars.duration)
-                          .attr("transform", function(d, i) {
-                            return "translate(" + vars.x_scale[0]["func"](d[vars.time.var_time]) + ", " + vars.y_scale[0]["func"](d[vars.var_y]) + ")";
-                          });
-*/
         break;
 
         case "circle":
@@ -211,7 +202,7 @@
                         return 5;
 //                        return vars.r_scale(d[vars.var_r]);
                       })
-                      .attr("fill", params.fill)
+                      .attr("fill", params.fill);
 
           mark
              // .attr("r", function(d) {return params.radius; })
@@ -248,15 +239,17 @@
 
         mark.enter()
                 .append("rect")                            
-                  .attr("x", -vars.mark.width/2)
-                  .attr("y", -vars.mark.height/2)
+             //     .attr("x", -vars.mark.width/2)
+             //     .attr("y", -vars.mark.height/2)
                   .classed("items__mark__rect", true)
                   .attr("transform", "rotate(0)")
                   .style("fill", function(d) { return vars.color(d[vars.var_color]); });
 
-        mark
+        mark.transition().duration(1000)
             .attr("height", vars.mark.height)
-            .attr("width", vars.mark.width)  
+            .attr("width", vars.mark.width)
+            .attr("x", vars.mark.x)
+            .attr("y", vars.mark.y)
             .classed("highlighted", function(d, i) { return d.__highlighted; })
             .classed("selected", function(d, i) { return d.__selected; });
 
@@ -403,21 +396,6 @@
 
   }
 
-  vistk.utils.connect_group = function(d, i) {
-
-    d3.select(this).attr("class", "connect__group")
-                    .classed("highlighted", function(d, i) { return d.__highlighted; })
-                    .classed("selected", function(d, i) { return d.__selected; })
-                    .on("mouseover",function(d) {
-                      vars.evt.call("highlightOn", d);
-                    })
-                    .on("mouseleave", function(d) {
-                      vars.evt.call("highlightOut", d);
-                    })
-                    .on("click", function(d) {
-                       vars.evt.call("selection", d);
-                    });
-  }
 
   vistk.utils.connect_mark = function(d) {
 
@@ -458,6 +436,7 @@
               .classed("highlighted", function(d, i) { return d.__highlighted; })
               .classed("selected", function(d, i) { return d.__selected; })
               .attr('d', function(d) {
+                                console.log(d.__highlighted)
                 return vars.connect[0].marks[0]["func"](vars.accessor_values(d));
               });
 
