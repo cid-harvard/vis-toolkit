@@ -13,6 +13,7 @@
         // LOAD USER PARAMS
         vars.items = vistk.utils.merge(vars.items, vars.user_vars.items);
 
+        // TODO: also create Y-axis
         vars.svg.call(vistk.utils.axis);
 
         // PRE-UPDATE CONNECT
@@ -59,6 +60,5 @@
                         .attr("transform", function(d, i) {
                           return "translate(" + vars.x_scale[0]["func"](d[vars.var_x]) + ", " + vars.y_scale[0]["func"](d[vars.var_y]) + ")";
                         });
-
 
       break;

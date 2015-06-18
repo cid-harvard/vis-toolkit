@@ -201,7 +201,12 @@
 
           dotplot_params = vars.default_params["dotplot"];
 
-          vistk.utils.create_chart(dotplot_params);
+          var chart = d3.select(this).selectAll(".items__chart__dotplot").data(["TOTO"]);
+
+          chart.enter().append('g')
+              .classed('items__chart__dotplot', true)
+              .call(vistk.utils.create_chart, dotplot_params);
+              
           // Adjust the parameters it inehrited
 
           // Trigger the cart creation function
@@ -209,8 +214,6 @@
         break;
 
         case "star":
-
-          console.log("START", params.type(d["__highlighted"]));
 
           var star = d3.superformula()
               .type("star")
@@ -273,9 +276,57 @@
 
   vistk.utils.create_chart = function(params) {
 
-    console.log("Creating chart with params ", params);
+    console.log("Creating chart with params ", params, d3.select(this));
+
+    // Current group
+/*  
+    // PRE-UPDATE CONNECT
+    var gConnect = d3.select(this).append("g")
+                    .attr("class", "connect__group2");
+                 //   .data(d, function(d, i) { return d[vars.var_id]; });
 
 
+    // ENTER CONNECT
+    var gConnect_enter = gConnect.enter()
+                    .append("g")
+                    .attr("class", "connect__group");
+
+    // APPEND AND UPDATE CONNECT MARK
+    vars.connect.forEach(function(connect) {
+      connect.marks.forEach(function(params) {
+      gConnect_enter.call(vistk.utils.draw_mark, params);
+      gConnect.call(vistk.utils.draw_mark, params);
+    });
+
+    });
+
+    // PRE-UPDATE ITEMS
+    var gItems = vars.svg.selectAll(".mark__group")
+                    .data(vars.new_data, function(d, i) { return d[vars.var_id]; });
+
+    // ENTER ITEMS
+    var gItems_enter = gItems.enter()
+                    .append("g")
+                    .each(vistk.utils.items_group)
+                    .attr("transform", function(d, i) {
+                      console.log(d, vars.y_scale[0]["func"](d[vars.var_y]), vars.var_y)
+                      return "translate(" + vars.x_scale[0]["func"](d[vars.var_x]) + ", " + vars.y_scale[0]["func"](d[vars.var_y]) + ")";
+                    });
+
+    // APPEND AND UPDATE ITEMS MARK
+    vars.items[0].marks.forEach(function(params) {
+      gItems_enter.call(vistk.utils.draw_mark, params);
+      gItems.call(vistk.utils.draw_mark, params);
+    });
+
+    // POST-UPDATE ITEMS GROUPS
+    vars.svg.selectAll(".mark__group")
+                    .transition()
+                    .duration(vars.duration)
+                    .attr("transform", function(d, i) {
+                      return "translate(" + vars.x_scale[0]["func"](d[vars.var_x]) + ", " + vars.y_scale[0]["func"](d[vars.var_y]) + ")";
+                    });
+*/
   }
 
   vistk.utils.items_mark = function(d, i) {
