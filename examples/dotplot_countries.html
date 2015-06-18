@@ -7,51 +7,47 @@
 <div id="viz"></div>
 <script>
 
-d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments) {
+d3.json("../data/diversification_ubiquity_hs4_1995_2012.json", function(error, countries) {
 
-  departments.forEach(function(d, i) {
-    d.dept_pop = +d.dept_pop;
-    d.year = +d.year;
-    d.realgdp = +d.realgdp;
-    d.realgdp_percap = +d.realgdp_percap;    
-    d["sum(export_value)"] = +d["sum(export_value)"];
-    d["value_added"] = +d["value_added"];
-  });
+// [{"name": "Angola", "name_2char": "ao", "country_id": 4, "longitude": 13.242, "years": [{"avg_products": 61, "nb_products": 5, "year": 1995}
 
-  var ui_options = [];
+  var flat_years = vistk.utils.flatten_years(countries);
 
   visualization = vistk.viz()
     .params({
       type: 'dotplot',      
-      data: departments,
+      data: flat_years,
       container: '#viz',
-      var_x: 'dept_pop',
+      var_x: 'avg_products',
       x_type: 'linear',
-      var_y: ['dept_pop', 'realgdp'],
+      var_y: function() { return this.height/2; },
       x_text: null,
       x_ticks: 10,
       x_format: function(d) { return '$' + d3.format(".2s")(d); },
-      mark: {
-        type: 'diamond',
-        width: 10,
-        height: 10
-      },
+      items: [{
+        attr: "name",
+        marks: [{
+          type: "diamond",
+          rotate: "0"
+        },{
+          type: "text",
+          rotate: "-30"
+        }]
+      }],
       time: {
         var_time: 'year', 
-        current_time: 2013,
+        current_time: 2012,
         parse: function(d) { return d; }
       },
       ui: {
         default: true,
-        options: ui_options
+        options: ["country", "continent", "year"]
       },
-      id: "name",
-      var_text: "dept_name", 
-      selection: [0],
-      highlight: [0]
+      var_id: 'name',
+      var_text: "name"
     });
 
-  d3.select("#viz").call(visualization);
+    d3.select("#viz").call(visualization);
 });
 
 </script>
