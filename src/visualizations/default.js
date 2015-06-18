@@ -1,6 +1,13 @@
       default:
 
-      	if(typeof vars.default_params[vars.type] !== "undefined")
+// TODO
+// x scale and y scale
+// sparkline  vars.x_scale[0]["func"](d[vars.time.var_time])  vars.y_scale[0]["func"](d[vars.var_y])
+// dotplot    vars.x_scale[0]["func"](d[vars.var_x])          vars.height/2
+
+// Which current mark to draw?? connect[0] ? connect[1]?????
+
+      	if(typeof vars.default_params[vars.type] === "undefined")
       		alert("No params for chart " + vars.type);
 
         // LOAD CHART PARAMS
@@ -19,9 +26,12 @@
                         .attr("class", "connect__group");
 
         // APPEND AND UPDATE CONNECT MARK
-        vars.connect[0].marks.forEach(function(params) {
+        vars.connect.forEach(function(connect) {
+        	connect.marks.forEach(function(params) {
           gConnect_enter.call(vistk.utils.draw_mark, params);
           gConnect.call(vistk.utils.draw_mark, params);
+        });
+
         });
 
         // PRE-UPDATE ITEMS

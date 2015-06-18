@@ -54,6 +54,48 @@ vars.default_params["dotplot"] = {
 
 };
 
+vars.default_params["vertical_ordinal"] = {
+
+  x_scale: [],
+
+  y_scale: [{
+      name: "index",
+      func: d3.scale.ordinal()
+              .domain(d3.range(vars.new_data.length))
+              .rangeBands([vars.margin.left, vars.width - vars.margin.left - vars.margin.right]),
+      callback: function() {
+                  vars.new_data.sort(function ascendingKey(a, b) {
+                    return d3.ascending(a[vars.var_x], b[vars.var_x]);
+                  })
+                  .forEach(function(d, i) {
+                    d.rank = vars.x_scale[0]["func"](i);
+                  });
+      }
+    }
+  ],
+
+  items: [{
+    attr: "name",
+    marks: [{
+      type: "circle",
+      rotate: "0"
+    },{
+      type: "text",
+      rotate: "-90"
+    }]
+  }],
+
+  connect: [],
+
+  axes: [
+    {type: "x",
+     scale: null}
+  ],
+
+  x_tickValues: [0, d3.max(vars.new_data, function(d) { return d[vars.var_x]; })]
+
+};
+
 // TODO
 // Add all the required parameters to change that
 vars.default_params["dotplot_horizontal"] = vars.default_params["dotplot"];
