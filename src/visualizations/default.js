@@ -1,120 +1,54 @@
-      case "default":
       default:
 
-        vars.params = {
+      	if(typeof vars.default_params[vars.type] !== "undefined")
+      		alert("No params for chart " + vars.type);
 
-          x_scale: [{
-              name: "linear",
-              func: d3.scale.linear()
-                      .range([vars.margin.left, vars.width-vars.margin.left-vars.margin.right])
-                      .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_x]; })).nice()
-            }
-          ],
+        // LOAD CHART PARAMS
+        vars = vistk.utils.merge(vars, vars.default_params[vars.type]);
 
-          x_ticks: 10,
+        // LOAD USER PARAMS
+        vars.items = vistk.utils.merge(vars.items, vars.user_vars.items);
 
-          y_scale: [{
-              name: "linear",
-              func: d3.scale.linear()
-                      .range([vars.height-vars.margin.top-vars.margin.bottom, vars.margin.top])
-                      .domain(d3.extent(vars.data, function(d) { return d[vars.var_y]; })).nice(),
-            }
-          ],
+        // PRE-UPDATE CONNECT
+        var gConnect = vars.svg.selectAll(".connect__group")
+                        .data(vars.new_data, function(d, i) { return d[vars.var_id]; });
+      
+        // ENTER CONNECT
+        var gConnect_enter = gConnect.enter()
+                        .append("g")
+                        .attr("class", "connect__group");
 
-          r_scale: d3.scale.linear(),
-
-          var_r: "total_piescatter",
-
-          connect: {
-            type: null
-          },
-
-          items: [{
-            attr: "country",
-            marks: [{
-                type: "circle",
-                rotate: "0",
-                radius: 5                
-              }, {
-                type: "text",
-                rotate: "30",
-                translate: null
-              }]
-            }, {
-            attr: "continent",
-            marks: [{
-                type: "circle",
-                rotate: "0",
-                radius: 20,
-                fill: "#fff"
-            }, {
-              type: "arc"
-            }, {
-                type: "text",
-                rotate: "-30",
-                translate: null
-            }]
-          }]
-
-        };
-
-        vars = vistk.utils.merge(vars, vars.params);
-
-        // In case we don't have (x, y) coordinates for nodes'
-        vars.force = d3.layout.force()
-            .size([vars.width, vars.height])
-            .charge(-50)
-            .linkDistance(10)
-            .on("tick", tick)
-            .on("start", function(d) {})
-            .on("end", function(d) {})
-
-        vars.var_x = 'x';
-        vars.var_y = 'y';
-
-        vars.force.nodes(vars.new_data).start();
-
-        // In case we change visualization before the nodes are settled
-        vars.evt.register("clearAnimations", function(d) {
-          vars.force.nodes(vars.new_data).stop();
+        // APPEND AND UPDATE CONNECT MARK
+        vars.connect[0].marks.forEach(function(params) {
+          gConnect_enter.call(vistk.utils.draw_mark, params);
+          gConnect.call(vistk.utils.draw_mark, params);
         });
 
-        // PRE-UPDATE
+        // PRE-UPDATE ITEMS
         var gItems = vars.svg.selectAll(".mark__group")
-                         .data(vars.new_data, function(d, i) { return i; });
+                        .data(vars.new_data, function(d, i) { return d[vars.var_id]; });
 
-        // ENTER
+        // ENTER ITEMS
         var gItems_enter = gItems.enter()
                         .append("g")
                         .each(vistk.utils.items_group)
                         .attr("transform", function(d, i) {
-                          return "translate(" + vars.margin.left + ", " + vars.height/2 + ")";
+                          return "translate(" + vars.x_scale[0]["func"](d[vars.time.var_time]) + ", " + vars.y_scale[0]["func"](d[vars.var_y]) + ")";
                         });
 
-        // Add graphical marks
-        vars.items[0].marks.forEach(function(d) {
-
-          vars.mark.type = d.type;
-          vars.mark.rotate = d.rotate;
-          gItems_enter.each(vistk.utils.items_mark);
-
+        // APPEND AND UPDATE ITEMS MARK
+        vars.items[0].marks.forEach(function(params) {
+          gItems_enter.call(vistk.utils.draw_mark, params);
+          gItems.call(vistk.utils.draw_mark, params);
         });
 
-        // EXIT
-        var gItems_exit = gItems.exit().style("opacity", 0.1);
+        // POST-UPDATE ITEMS GROUPS
+        vars.svg.selectAll(".mark__group")
+                        .transition()
+                        .duration(vars.duration)
+                        .attr("transform", function(d, i) {
+                          return "translate(" + vars.x_scale[0]["func"](d[vars.time.var_time]) + ", " + vars.y_scale[0]["func"](d[vars.var_y]) + ")";
+                        });
 
-        // POST-UPDATE
-
-        function tick(duration) {
-
-          vars.svg.selectAll(".mark__group")
-                          .attr("transform", function(d, i) {
-                            return "translate(" + d.x + ", " + d.y + ")";
-                          });
-
-        }
-
-        // Remove grid and axes
-        vars.svg.selectAll(".x, .y").remove();
 
       break;
