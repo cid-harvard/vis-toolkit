@@ -186,7 +186,6 @@
           // APPEND CONNECT MARK
           params_marks.forEach(function(params) {
 
-            console.log("INNN MARK", params)
             // Enter mark
             gConnect_enter.call(vistk.utils.draw_mark, params);
 
@@ -206,6 +205,31 @@
 
           // Trigger the cart creation function
 
+        break;
+
+        case "star":
+
+          console.log("START", params.type(d["__highlighted"]));
+
+          var star = d3.superformula()
+              .type("star")
+              .size(10 * 50)
+              .segments(360);
+
+          var mark = d3.select(this).selectAll(".items__mark__star").data([d]);
+
+          mark.enter().append('path')
+              .classed('items__mark__star', true)
+              .attr('d', star);
+
+          mark              
+              .classed("highlighted", function(d, i) { return d.__highlighted; })
+              .classed("selected", function(d, i) { return d.__selected; });
+
+        break;
+
+
+        case "none":
         break;
 
         case "circle":
