@@ -64,7 +64,7 @@
     x_axis_orient: "bottom",
     x_grid_show: true,
     x_text: true,
-
+    x_axis_translate: [0, 0],
 
     // SCATTERPLOT (INCLUDES DOTPLOT)
     y_type: "linear",

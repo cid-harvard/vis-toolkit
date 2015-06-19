@@ -563,7 +563,7 @@
       .enter()
         .insert("g", ":first-child")
         .attr("class", "x axis")
-        .attr("transform", "translate(0," + (vars.height/2) + ")")
+        .attr("transform", "translate(" + vars.x_axis_translate + ")")
         .style("display", function() { return vars.x_axis_show ? "block": "none"; })
       .append("text")
         .attr("class", "label")

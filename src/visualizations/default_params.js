@@ -58,7 +58,7 @@ vars.default_params["dotplot"] = {
 
   x_axis_show: true,
   x_tickValues: [0, d3.max(vars.new_data, function(d) { return d[vars.var_x]; })],
-
+  x_axis_translate: [0, vars.height/2],
   y_axis_show: false
 };
 
@@ -241,9 +241,15 @@ vars.default_params["linechart"] = {
       }]
   }],
 
+  x_ticks: vars.time.points.length,
+//  x_format: d3.time.format("%Y"),
+  x_tickValues: null,
+  x_axis_orient: "top",
   x_axis_show: false,
+  x_grid_show: true,
 
-  y_axis_show: false
+  y_axis_show: false,
+  y_grid_show: true,
 };
 
 
