@@ -195,7 +195,57 @@ vars.default_params["sparkline"] = {
   y_axis_show: false
 };
 
-vars.default_params["linechart"] = vars.default_params["sparkline"];
+// TODO: clone sparkline
+// vars.default_params["linechart"] = vars.default_params["sparkline"];
+
+vars.default_params["linechart"] = {
+
+  accessor_values: function(d) { return d.values; },
+
+  x_scale: [{
+      name: "linear",
+      func: d3.scale.linear()
+              .range([vars.margin.left, vars.width - vars.margin.left - vars.margin.right])
+              .domain(vars.time.interval)
+  }],
+
+  y_scale: [{
+      name: "linear",
+      func: d3.scale.linear()
+              .range([vars.height - vars.margin.top - vars.margin.bottom, vars.margin.top])
+              .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_y]; }))
+  }],
+
+  items: [{
+    attr: "year",
+    marks: [{
+        type: "diamond",
+        rotate: "0",
+      }, {
+        type: "text",
+        rotate: "30",
+        translate: null
+      }]
+  }],
+
+  connect: [{
+    attr: vars.time.var_time,
+    marks: [{
+        type: "path",
+        rotate: "0",
+        stroke: function(d) { return "black"; },
+        func: d3.svg.line()
+             .interpolate(vars.interpolate)
+             .x(function(d) { return vars.x_scale[0]["func"](d[vars.var_x]); })
+             .y(function(d) { return vars.y_scale[0]["func"](d[vars.var_y]); }),
+      }]
+  }],
+
+  x_axis_show: false,
+
+  y_axis_show: false
+};
+
 
 vars.default_params["linechart"].items = [{
     attr: "name",
