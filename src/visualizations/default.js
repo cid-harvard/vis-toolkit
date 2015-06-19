@@ -32,7 +32,6 @@
             gConnect_enter.call(vistk.utils.draw_mark, params);
             gConnect.call(vistk.utils.draw_mark, params);
           });
-
         });
 
         // PRE-UPDATE ITEMS

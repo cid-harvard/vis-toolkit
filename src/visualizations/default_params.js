@@ -147,52 +147,56 @@ vars.default_params["grid"] = {
   y_axis_show: false
 };
 
-vars.default_params["sparkline"] = {
+vars.default_params["sparkline"] = function(scope) {
 
-  accessor_values: function(d) { return d.values; },
+  return {
+    accessor_values: function(d) { return d.values; },
 
-  x_scale: [{
-      name: "linear",
-      func: d3.scale.linear()
-              .range([vars.margin.left, vars.width - vars.margin.left - vars.margin.right])
-              .domain(vars.time.interval)
-  }],
+    x_scale: [{
+        name: "linear",
+        func: d3.scale.linear()
+                .range([scope.margin.left, scope.width - scope.margin.left - scope.margin.right])
+                .domain(scope.time.interval)
+    }],
 
-  y_scale: [{
-      name: "linear",
-      func: d3.scale.linear()
-              .range([vars.height - vars.margin.top - vars.margin.bottom, vars.margin.top])
-              .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_y]; }))
-  }],
+    y_scale: [{
+        name: "linear",
+        func: d3.scale.linear()
+                .range([scope.height - scope.margin.top - scope.margin.bottom, scope.margin.top])
+                .domain(d3.extent(scope.new_data, function(d) { return d[scope.var_y]; }))
+    }],
 
-  items: [{
-    attr: "year",
-    marks: [{
-        type: "circle",
-        rotate: "0",
-      }, {
-        type: "text",
-        rotate: "30",
-        translate: null
-      }]
-  }],
+    items: [{
+      attr: "year",
+      marks: [{
+          type: "circle",
+          rotate: "0",
+        }, {
+          type: "text",
+          rotate: "30",
+          translate: null
+        }]
+    }],
 
-  connect: [{
-    attr: vars.time.var_time,
-    marks: [{
-        type: "path",
-        rotate: "0",
-        stroke: function(d) { return "black"; },
-        func: d3.svg.line()
-             .interpolate(vars.interpolate)
-             .x(function(d) { return vars.x_scale[0]["func"](d[vars.var_x]); })
-             .y(function(d) { return vars.y_scale[0]["func"](d[vars.var_y]); }),
-      }]
-  }],
+    connect: [{
+      attr: scope.time.var_time,
+      marks: [{
+          type: "path",
+          rotate: "0",
+          stroke: function(d) { return "black"; },
+          func: d3.svg.line()
+               .interpolate(scope.interpolate)
+               .x(function(d) { return scope.x_scale[0]["func"](d[scope.var_x]); })
+               .y(function(d) { return scope.y_scale[0]["func"](d[scope.var_y]); }),
+        }]
+    }],
 
-  x_axis_show: false,
+    x_axis_show: false,
 
-  y_axis_show: false
+    y_axis_show: false
+
+  };
+
 };
 
 // TODO: clone sparkline
