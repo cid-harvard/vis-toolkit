@@ -506,7 +506,6 @@
 
   }
 
-
   vistk.utils.connect_mark = function(d) {
 
     var context = d3.select(this).property("__context__");
@@ -546,7 +545,6 @@
               .classed("highlighted", function(d, i) { return d.__highlighted; })
               .classed("selected", function(d, i) { return d.__selected; })
               .attr('d', function(d) {
-                                console.log(d)
                 return vars.connect[0].marks[0]["func"](vars.accessor_values(d));
               });
 

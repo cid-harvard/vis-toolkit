@@ -15,8 +15,9 @@ d3.json("../data/exports_2012.json", function(error, exports) {
       container: "#viz",
       width: 960,
       height: 500,
+      margin: {top: 10, right: 10, bottom: 30, left: 30},
       data: exports.data,
-      id: "id",
+      var_id: "id",
       var_y: "value",
       y_format: function(d) { return '$' + d3.format(".2s")(d); },
       var_group: "community_id",
@@ -27,7 +28,7 @@ d3.json("../data/exports_2012.json", function(error, exports) {
       time: {
         parse: function(d) { return d3.time.format("%Y").parse(d+""); },
         var_time: "year",
-        current_time: 2012
+        current_time: "2012"
       }
     });
 

@@ -9,7 +9,7 @@
               name: "linear",
               func: d3.time.scale()
                       .range([vars.margin.left, vars.width - vars.margin.left - vars.margin.right])
-                      .domain(d3.extent(vars.data, function(d) { return d[vars.time.var_time]; }))
+                      .domain(vars.time.interval)
             }
           ],
 
@@ -17,7 +17,7 @@
               name: "linear",
               func: d3.scale.linear()
                       .range([vars.height, 0])
-                      .domain(d3.extent(vars.time_data[vars.time_data.length-1].values, function(d) { return d[vars.var_y]; }))
+                      .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_y]; }))
             }
           ],
 
@@ -64,7 +64,7 @@
 
         // Connect marks
         var gConnect = vars.svg.selectAll(".connect__group")
-                        .data(vars.time_data, function(d, i) { return i; });
+                        .data(vars.new_data, function(d, i) { return i; });
       
         var gConnect_enter = gConnect.enter()
                         .append("g")

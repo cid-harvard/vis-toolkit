@@ -255,7 +255,7 @@
 
     // Chart specific metadata: stacked
     if(vars.type === "stacked") {
-/*
+
       // Make sure all items and all ranks are there
       vars.new_data.forEach(function(c) {
 
@@ -283,7 +283,7 @@
         });
 
       });
-*/
+
       vars.stack = d3.layout.stack()
           .values(function(d) { return d.values; })
           .x(function(d) { return d[vars.time.var_time]; })          
