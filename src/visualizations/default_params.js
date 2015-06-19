@@ -56,8 +56,10 @@ vars.default_params["dotplot"] = {
      scale: null}
   ],
 
-  x_tickValues: [0, d3.max(vars.new_data, function(d) { return d[vars.var_x]; })]
+  x_axis_show: true,
+  x_tickValues: [0, d3.max(vars.new_data, function(d) { return d[vars.var_x]; })],
 
+  y_axis_show: false
 };
 
 vars.default_params["vertical_ordinal"] = {
@@ -102,8 +104,9 @@ vars.default_params["vertical_ordinal"] = {
 
   connect: [],
 
-  x_axis_show: false
+  x_axis_show: false,
 
+  y_axis_show: false
 };
 
 vars.default_params["grid"] = {
@@ -140,8 +143,8 @@ vars.default_params["grid"] = {
   var_x: "x",
   var_y: "y",
 
-  x_axis_show: false
-
+  x_axis_show: false,
+  y_axis_show: false
 };
 
 vars.default_params["sparkline"] = {
@@ -187,8 +190,9 @@ vars.default_params["sparkline"] = {
       }]
   }],
 
-  x_axis_show: false
+  x_axis_show: false,
 
+  y_axis_show: false
 };
 
 // TODO
