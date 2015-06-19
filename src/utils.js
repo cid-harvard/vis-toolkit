@@ -44,8 +44,9 @@
 
       var params_type = params.type;
 
-      if(typeof params_type == "function") {
-        params_type = params_type(params.type(d[params.var_mark]));
+      // In case a function determines the type of mark to be used
+      if(typeof params_type === "function") {
+        params_type = params.type(d[params.var_mark]);
       }
 
       switch(params_type) {
@@ -264,6 +265,8 @@
              // .attr("fill", params.fill)
               .classed("highlighted", function(d, i) { return d.__highlighted; })
               .classed("selected", function(d, i) { return d.__selected; });
+
+          mark.exit().remove();
 
           break;
 

@@ -168,7 +168,7 @@ vars.default_params["sparkline"] = {
   items: [{
     attr: "year",
     marks: [{
-        type: "diamond",
+        type: "circle",
         rotate: "0",
       }, {
         type: "text",

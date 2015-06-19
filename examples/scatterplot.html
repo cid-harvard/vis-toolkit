@@ -42,7 +42,11 @@ d3.json("../data/diversification_ubiquity_hs4_1995_2012.json", function(error, c
           type: "circle",
           rotate: "0",
           fill: function(d) { return vars.color(vars.accessor_items(d)[vars.var_color]); }
-        },{
+        }, {
+          var_mark: '__selected',
+          type: d3.scale.ordinal().domain([true, false]).range(["rect", "none"]),
+          rotate: "0"
+        }, {
           type: "text",
           rotate: "-30"
         }]
@@ -51,6 +55,8 @@ d3.json("../data/diversification_ubiquity_hs4_1995_2012.json", function(error, c
         default: true,
         options: ["country", "continent", "year"]
       },
+      selection: ["France"],
+      highlight: ["France", "Germany"],      
       title: "World Countries"
     });
 
