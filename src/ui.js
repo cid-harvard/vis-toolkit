@@ -24,13 +24,7 @@
               .on("change", function(d) { 
 
                 vistk.utils.update_filters(this.value, this.checked);
-                /*
-                vars.data = vars.data.filter(function(e, j) {
-                  console.log(e[vars.var_group], d)
-                  return e[vars.var_group] == d;
-                })
-                */
-
+                vars.refresh = true;
                 d3.select(vars.container).call(vars.this_chart);
 
               })
@@ -60,6 +54,7 @@
                      .on("change", function(d) { 
 
                        vars.aggregate=d;
+                       vars.refresh = true;
                        d3.select(vars.container).call(vars.this_chart);
 
                      });
@@ -96,6 +91,7 @@
                       .attr("step", 1)
                       .on("input", function() {
                         vars.time.current_time = +this.value;
+                        vars.refresh = true;
                         d3.select(vars.container).call(vars.this_chart);
                       })
                       .style("width", "100px");

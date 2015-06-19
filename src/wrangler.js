@@ -65,6 +65,17 @@
 
       }
 */
+
+      if(typeof vars.time.filter != "undefined" && vars.time.filter.length > 0) {
+
+        console.log("[vars.time.filter]", vars.time.filter);
+
+        vars.new_data = vars.new_data.filter(function(d, i) {
+          return vars.time.filter[0] == d[vars.time.var_time];
+        });
+       
+      }
+
       // Filter data by attribute
       // TODO: not sure we should remove data, but add an attribute instead would better
       if(vars.filter.length > 0) {
@@ -75,7 +86,7 @@
           // We don't keep values that are not in the vars.filter array
           return vars.filter.indexOf(d[vars.var_group]) > -1;
         });
-      
+
       }
 
       vars.unique_items = d3.set(vars.new_data.map(function(d) { return d[vars.var_id]; })).values();
@@ -96,7 +107,7 @@
           return;
 
         // TIME VALUES
-        d.values = vars.data.filter(function(e) {
+        d.values = vars.new_data.filter(function(e) {
           return item_id === e[vars.var_id];
         })
         .map(function(d) {
