@@ -161,38 +161,59 @@
 
           // TODO: pass custom parameters in there (grid sparkline)
           // LOAD CHART PARAMS
-          sparkline_params = vars.default_params["sparkline"];
-          sparkline_params.var_y = "realgdp";
-          sparkline_params.var_x = "time";
-          sparkline_params.y_scale[0]["func"].domain(d3.extent([d.values], function(d) { return d[sparkline_params.var_y]; }));
 
-          var params_marks = [{
-            type: "path",
-            rotate: "0",
-            func: d3.svg.line()
-                 .interpolate(vars.interpolate)
-                 .x(function(d) { return sparkline_params.x_scale[0]["func"](d[sparkline_params.var_x]); })
-                 .y(function(d) { return sparkline_params.y_scale[0]["func"](d[sparkline_params.var_y]); }),
-          }];
+          scope = {};
+          scope = vistk.utils.merge(scope, vars)
+
+          scope = vars.default_params["sparkline"](scope);
+
+          scope.var_x = "year"
+          scope.var_y = "realgdp"
+
+          scope.width = scope.width / 2;
+
+          scope.y_scale[0]["func"].domain(d3.extent(d.values, function(d) {
+           return d[scope.var_y]; 
+          }))
+          .range([0, 50])
+
+          scope.x_scale[0]["func"].domain(d3.extent(d.values, function(d) {
+           return d[scope.var_x]; 
+          }))
+          .range([0, 50])
+
+
+          scope.connect = [{
+            marks: [{
+                type: "path",
+                rotate: "10",
+                stroke: function(d) { return "black"; },
+                func: d3.svg.line()
+                     .interpolate(scope.interpolate)
+                     .x(function(d) { return scope.x_scale[0]["func"](d[scope.var_x]); })
+                     .y(function(d) { return scope.y_scale[0]["func"](d[scope.var_y]); }),
+              }]
+          }]
 
           // PRE-UPDATE CONNECT
-          var gConnect =  d3.select(this).selectAll(".connect__group")
-                          .data([d], function(d, i) { return i; });
+          var gConnect = d3.select(this).selectAll(".connect__group")
+                          .data([d], function(d, i) { return i; })
         
           // ENTER CONNECT
           var gConnect_enter = gConnect.enter()
                           .append("g")
-                          .attr("class", "connect__group");
+                          .attr("class", "connect__group")
+                          .attr("transform", "translate(0,0)")
+                         // .attr("transform", function(d) {
+                         //   return "translate(" + (vars.x_scale[0]["func"](d.values[0][vars.var_x])-5) + ", " + (vars.y_scale[0]["func"](d.values[0][vars.var_y])/1.25-5) + ")";
+                         // });
 
           // APPEND CONNECT MARK
-          params_marks.forEach(function(params) {
-
-            // Enter mark
-            gConnect_enter.call(vistk.utils.draw_mark, params);
-
-            // Update mark
-            gConnect.call(vistk.utils.draw_mark, params);
-
+          scope.connect.forEach(function(connect) {
+            connect.marks.forEach(function(params) {
+              gConnect_enter.call(vistk.utils.draw_mark, params);
+              gConnect.call(vistk.utils.draw_mark, params);
+            });
           });
 
         break;
@@ -231,7 +252,7 @@
               .classed("selected", function(d, i) { return d.__selected; });
 
           mark.exit().remove();
-          
+
         break;
 
 
