@@ -28,7 +28,7 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
     container: "#viz",
     height: 600,
     width: 900,
-    margin: {top: 30, right: 10, bottom: 10, left: 10},
+    margin: {top: 30, right: 100, bottom: 30, left: 10},
     data: departments,
     var_id: 'dept_name', // Should be ["continent", "id"] to allow aggregation and filtering
     var_group: "name",
@@ -36,6 +36,7 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
     title: "Products",
     var_text: "dept_name",
     var_y: "realgdp",
+    var_x: "year",
     time: {
       parse: d3.time.format("%Y").parse,
       var_time: 'year',

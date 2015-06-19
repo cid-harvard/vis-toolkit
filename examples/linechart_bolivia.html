@@ -35,6 +35,7 @@ d3.csv("../data/ECI _Rankings_2003-2013.csv", function(error, data) {
     container: "#viz",
     height: 1200,
     width: 900,
+    margin: {top: 30, right: 100, bottom: 30, left: 10},
     data: res,
     var_id: ["id"],
     var_group: "category",
@@ -43,6 +44,7 @@ d3.csv("../data/ECI _Rankings_2003-2013.csv", function(error, data) {
     var_text: "name",
     y_text: "ECI Rank",
     var_y: "rank",
+    var_x: "year",
     time: {
       parse: d3.time.format("%Y").parse,
       var_time: 'year',
