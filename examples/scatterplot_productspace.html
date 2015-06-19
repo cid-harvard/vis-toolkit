@@ -57,6 +57,22 @@ d3.json("../data/atlas_international_product_space.json", function(graph) {
         id: "product_id",
         var_id: "product_id",
         r_cutoff: function(d) { return d.export_rca < 1; },
+        items: [{
+          attr: "name",
+          marks: [{
+            type: "circle",
+            rotate: "0",
+            fill: function(d) { return vars.color(vars.accessor_items(d)[vars.var_color]); }
+          }, {
+            var_mark: '__selected',
+            type: d3.scale.ordinal().domain([true, false]).range(["star", "none"]),
+            rotate: "0"
+          }, {
+            type: "text",
+            rotate: "-30"
+          }]
+        }],
+        /*
         mark: {
           type: "circle",
           radius: function(d) { var c = d3.scale.linear()
@@ -71,6 +87,7 @@ d3.json("../data/atlas_international_product_space.json", function(graph) {
                   return c(d["export_rca"]);
           }
         },
+        */
         time: {
           var_time: "year", 
           current_time: "2008",
