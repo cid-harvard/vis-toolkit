@@ -60,4 +60,6 @@
                           return "translate(" + vars.x_scale[0]["func"](d[vars.var_x]) + ", " + vars.y_scale[0]["func"](d[vars.var_y]) + ")";
                         });
 
+        vistk.utils.background_label(vars.title);
+
       break;

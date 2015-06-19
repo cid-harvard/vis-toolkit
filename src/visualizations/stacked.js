@@ -17,7 +17,7 @@
               name: "linear",
               func: d3.scale.linear()
                       .range([vars.height, 0])
-                      .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_y]; }))
+                    .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_y]; }))
             }
           ],
 
