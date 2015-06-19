@@ -310,3 +310,8 @@ path {
   stroke: black;
   stroke-width: 2.5px;
 }
+
+.items__mark__star {
+  fill: yellow;
+  stroke-width: .5px;
+}

@@ -230,6 +230,8 @@
               .classed("highlighted", function(d, i) { return d.__highlighted; })
               .classed("selected", function(d, i) { return d.__selected; });
 
+          mark.exit().remove();
+          
         break;
 
 
