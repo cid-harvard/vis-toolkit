@@ -9,8 +9,6 @@
 
 d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments) {
 
-  dd = departments;
-
   // Data pre-processing
   departments.forEach(function(d, i) {
 
@@ -25,11 +23,10 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
 
   // unique_dept = ["Antioquia"];
   // var dimensions = ["realgdp"];
-
-  unique_dept = d3.set(departments.map(function(d) { return d["dept_name"]; })).values()
+  var unique_dept = d3.set(departments.map(function(d) { return d["dept_name"]; })).values()
                   .map(function(d) { return d; });
 
-   var dimensions = ["realgdp", "sum(export_value)", "dept_pop", "value_added", "realgdp_percap"];
+  var dimensions = ["realgdp", "sum(export_value)", "dept_pop", "value_added", "realgdp_percap"];
 
   unique_dept.forEach(function(dep, i) {
 

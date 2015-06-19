@@ -129,8 +129,6 @@
 
           // Update
           gConnect.each(vistk.utils.connect_mark)
-                //.select("path")
-                //.classed("highlighted", function(d, i) { return vars.time_data[i].__highlighted; });
 
         });
 

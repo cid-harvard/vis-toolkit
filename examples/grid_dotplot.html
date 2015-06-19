@@ -49,7 +49,7 @@ setInterval(function(d) {
   	return {id: d};
   });
 
-  visualization.params({data: data, var_id: "id", refresh: true});
+  visualization.params({data: data, var_id: "id"});
   d3.select("#viz").call(visualization);
 
 }, 1000)

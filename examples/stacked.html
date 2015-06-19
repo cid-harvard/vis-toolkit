@@ -19,7 +19,6 @@ d3.json("../data/exports_2012.json", function(error, exports) {
       data: exports.data,
       var_id: "id",
       var_y: "value",
-      y_format: function(d) { return '$' + d3.format(".2s")(d); },
       var_group: "community_id",
       var_color: "community_id",
       ui: false,
