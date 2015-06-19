@@ -81,6 +81,8 @@
 
           gItems.select("rect")
                 .transition().duration(vars.duration)
+                .attr("x", 0)
+                .attr("y", 0)
                 .attr("width", function(d) { return d.dx; })
                 .attr("height", function(d) { return d.dy; })
 

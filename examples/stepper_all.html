@@ -125,6 +125,9 @@ d3.select("input[value='dotplot']").on("click", function(d) {
 
 d3.select("input[value='scatterplot']").on("click", function(d) {
 
+  d3.selectAll(".items__mark__rect").remove();
+  d3.selectAll(".items__mark__diamond").remove();
+
   visualization.params({
       type: "scatterplot",
       id: ["continent", "country"],
@@ -133,6 +136,16 @@ d3.select("input[value='scatterplot']").on("click", function(d) {
       var_x: 'nb_products',
       var_y: 'avg_products',
       var_share: "nb_products",
+      items: [{
+        attr: "name",
+        marks: [{
+          type: "circle",
+          rotate: "0"
+        },{
+          type: "text",
+          rotate: "-30"
+        }]
+      }],
       ui: {
         default: true,
         options: ["country", "continent"]
@@ -221,15 +234,21 @@ d3.select("input[value='geomap']").on("click", function(d) {
 
 d3.select("input[value='linechart']").on("click", function(d) {
 
-  visualization.params({
+  visualization = vistk.viz().params({
     type: "linechart",
-    var_id: ["id"], // Should be ["continent", "id"] to allow aggregation and filtering
+    var_id: "name",
     var_group: "category",
-    var_color: "id", // TODO: color by final ranking value..
-    title: "Products",
+    var_color: "category", // TODO: color by final ranking value..
+    title: "Line chart",
     var_text: "name",
-    y_text: "NB Products",
-    var_y: "nb_products",
+    y_text: "ECI Rank",
+    var_y: "rank",
+    var_x: "year",
+    time: {
+      parse: function(d) { return d; },
+      var_time: 'year',
+      current_time: 1995      
+    },
     selection: ["Japan", "Switzerland", "Germany"],
     highlight: "France"
   });

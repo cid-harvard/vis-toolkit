@@ -1,28 +1,3 @@
-
-    vistk.utils.init_data = function() {
-/*
-      // Init states for data from the chart parameters
-      vars.data.forEach(function(d, i) {
-
-        if(vars.filter.indexOf(d[vars.var_id]) < 0)
-          d.__filtered = false;
-        else
-          d.__filtered = true;
-
-        if(vars.highlight.indexOf(d[vars.var_id]) < 0)
-          d.__highlighted = false;
-        else
-          d.__highlighted = true;
-
-        if(vars.selection.indexOf(d[vars.var_id]) < 0)
-          d.__selected = false;
-        else
-          d.__selected = true;
-
-      });
-*/
-    }
-
     vars.items_data = [];
 
     // In case we use custom variables as X/Y variables 
@@ -48,23 +23,8 @@
       vars.time.interval = d3.extent(vars.data, function(d) { return d[vars.time.var_time]; });
       vars.time.points = d3.set(vars.data.map(function(d) { return d[vars.time.var_time]; })).values();
 
-
       // Get a copy of the whole dataset
       vars.new_data = vars.data;
-
-/*
-      // Filter vars.new_data by time
-      // Thus, vars.new_data is always a unique time slice of the dataset
-      if(typeof vars.time !== "undefined" && typeof vars.time.current_time !== "undefined" && vars.time.current_time != null) {
-
-        console.log("[time.filter]", vars.time.var_time, vars.time.current_time);
-
-        vars.new_data = vars.new_data.filter(function(d) {
-          return d[vars.time.var_time] === vars.time.current_time;
-        });
-
-      }
-*/
 
       if(typeof vars.time.filter != "undefined" && vars.time.filter.length > 0) {
 
@@ -97,7 +57,6 @@
       vars.unique_items.forEach(function(item_id, i) {
 
         // METADATA
-        // TODO: 
         var d = vars.new_data.filter(function(e, j) {
           return e[vars.var_id] == item_id && e[vars.time.var_time] == vars.time.current_time;
         })[0];
@@ -111,11 +70,12 @@
           return item_id === e[vars.var_id];
         })
         .map(function(d) {
+
+          // Below is what we need for time values
           var v = {}; 
           v[vars.time.var_time] = d[vars.time.var_time];
           v[vars.var_y] = d[vars.var_y];
           v[vars.var_x] = d[vars.var_x];
-          v[vars.var_id] = d[vars.var_id];
           return v;
         })
 
@@ -139,6 +99,8 @@
       });
 
       vars.new_data = vars.items_data;
+
+      // Flag that forces to re-wrangle data
       vars.refresh = false;
     }
 
