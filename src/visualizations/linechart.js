@@ -1,4 +1,4 @@
-      case "linechart":
+      case "linechart_old":
 
         vars.params = {
 

@@ -195,6 +195,23 @@ vars.default_params["sparkline"] = {
   y_axis_show: false
 };
 
+vars.default_params["linechart"] = vars.default_params["sparkline"];
+
+vars.default_params["linechart"].items = [{
+    attr: "name",
+    marks: [{
+      type: "circle",
+      rotate: "0",
+      fill: function(d) { return vars.color(vars.accessor_items(d)[vars.var_color]); }
+    },{
+      type: "text",
+      rotate: "0"
+    }]
+  }]
+
+vars.default_params["linechart"].connect[0].marks[0].stroke = function(d) { return vars.color(vars.accessor_items(d)[vars.var_color]); };
+vars.default_params["linechart"].x_axis_show = true;
+
 // TODO
 // Sequence of vertical dotplots in an horizontal layout
 // Connected with lines
