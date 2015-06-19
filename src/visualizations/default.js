@@ -15,7 +15,7 @@
 
         vars.svg.call(vistk.utils.axis);
         vars.svg.call(vistk.utils.y_axis)
-        
+
         // PRE-UPDATE CONNECT
         var gConnect = vars.svg.selectAll(".connect__group")
                         .data(vars.new_data, function(d, i) { return d[vars.var_id]; });
@@ -28,9 +28,9 @@
         // APPEND AND UPDATE CONNECT MARK
         vars.connect.forEach(function(connect) {
         	connect.marks.forEach(function(params) {
-          gConnect_enter.call(vistk.utils.draw_mark, params);
-          gConnect.call(vistk.utils.draw_mark, params);
-        });
+            gConnect_enter.call(vistk.utils.draw_mark, params);
+            gConnect.call(vistk.utils.draw_mark, params);
+          });
 
         });
 
@@ -43,7 +43,6 @@
                         .append("g")
                         .each(vistk.utils.items_group)
                         .attr("transform", function(d, i) {
-                        	console.log(d, vars.y_scale[0]["func"](d[vars.var_y]), vars.var_y)
                           return "translate(" + vars.x_scale[0]["func"](d[vars.var_x]) + ", " + vars.y_scale[0]["func"](d[vars.var_y]) + ")";
                         });
 

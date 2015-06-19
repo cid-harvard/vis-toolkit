@@ -1,6 +1,6 @@
 
     vistk.utils.init_data = function() {
-
+/*
       // Init states for data from the chart parameters
       vars.data.forEach(function(d, i) {
 
@@ -20,8 +20,11 @@
           d.__selected = true;
 
       });
-
+*/
     }
+
+    vars.items_data = [];
+
 
     // In case we use custom variables as X/Y variables 
     if(typeof vars.var_x !== "string" && typeof vars.var_x === "function") {
@@ -43,39 +46,86 @@
     // 2/ The metadata for each items
     if(vars.new_data === null) {
 
-      vistk.utils.init_data();
-
       vars.time.interval = d3.extent(vars.data, function(d) { return d[vars.time.var_time]; });
       vars.time.points = d3.set(vars.data.map(function(d) { return d[vars.time.var_time]; })).values();
 
-    }
 
-    // Get a copy of the whole dataset
-    vars.new_data = vars.data;
+      // Get a copy of the whole dataset
+      vars.new_data = vars.data;
 
-    // Filter vars.new_data by time
-    // Thus, vars.new_data is always a unique time slice of the dataset
-    if(typeof vars.time !== "undefined" && typeof vars.time.current_time !== "undefined" && vars.time.current_time != null) {
+/*
+      // Filter vars.new_data by time
+      // Thus, vars.new_data is always a unique time slice of the dataset
+      if(typeof vars.time !== "undefined" && typeof vars.time.current_time !== "undefined" && vars.time.current_time != null) {
 
-      console.log("[time.filter]", vars.time.var_time, vars.time.current_time);
+        console.log("[time.filter]", vars.time.var_time, vars.time.current_time);
 
-      vars.new_data = vars.new_data.filter(function(d) {
-        return d[vars.time.var_time] === vars.time.current_time;
+        vars.new_data = vars.new_data.filter(function(d) {
+          return d[vars.time.var_time] === vars.time.current_time;
+        });
+
+      }
+*/
+      // Filter data by attribute
+      // TODO: not sure we should remove data, but add an attribute instead would better
+      if(vars.filter.length > 0) {
+
+        console.log("[vars.filter]", vars.time.var_time, vars.time.current_time);
+
+        vars.new_data = vars.new_data.filter(function(d) {
+          // We don't keep values that are not in the vars.filter array
+          return vars.filter.indexOf(d[vars.var_group]) > -1;
+        });
+      
+      }
+
+      vars.unique_items = d3.set(vars.new_data.map(function(d) { return d[vars.var_id]; })).values();
+
+      vars.items_data = [];
+
+      // Towards a unique variable for wrangled data
+      vars.unique_items.forEach(function(item_id, i) {
+
+        // METADATA
+        // TODO: 
+        var d = vars.new_data.filter(function(e, j) {
+          return e[vars.var_id] == item_id && e[vars.time.var_time] == vars.time.current_time;
+        })[0];
+
+        // TIME VALUES
+        d.values = vars.data.filter(function(e) {
+          return item_id === e[vars.var_id];
+        })
+        .map(function(d) {
+          var v = {}; 
+          v[vars.time.var_time] = d[vars.time.var_time];
+          v[vars.var_y] = d[vars.var_y];
+          v[vars.var_x] = d[vars.var_x];
+          v[vars.var_id] = d[vars.var_id];
+          return v;
+        })
+
+        if(vars.filter.indexOf(item_id) < 0)
+          d.__filtered = false;
+        else
+          d.__filtered = true;
+
+        if(vars.highlight.indexOf(item_id) < 0)
+          d.__highlighted = false;
+        else
+          d.__highlighted = true;
+
+        if(vars.selection.indexOf(item_id) < 0)
+          d.__selected = false;
+        else
+          d.__selected = true;
+
+        vars.items_data.push(d);
+
       });
 
-    }
+      vars.new_data = vars.items_data;
 
-    // Filter data by attribute
-    // TODO: not sure we should remove data, but add an attribute instead would better
-    if(vars.filter.length > 0) {
-
-      console.log("[vars.filter]", vars.time.var_time, vars.time.current_time);
-
-      vars.new_data = vars.new_data.filter(function(d) {
-        // We don't keep values that are not in the vars.filter array
-        return vars.filter.indexOf(d[vars.var_group]) > -1;
-      });
-    
     }
 
     // Aggregate data
@@ -198,23 +248,9 @@
     }
 */
 
-    // Towards a unique variable for wrangled data
-    vars.new_data.forEach(function(d, i) {
 
-      d.values = vars.data.filter(function(e) {
-        return d[vars.var_id] === e[vars.var_id];
-      })
-      .map(function(d) {
-        var v = {}; 
-        v[vars.time.var_time] = d[vars.time.var_time];
-        v[vars.var_y] = d[vars.var_y];
-        v[vars.var_x] = d[vars.var_x];
-        v[vars.var_id] = d[vars.var_id];
-        return v;
-      })
 
-    });
-
+    // Chart specific metadata: stacked
     if(vars.type === "stacked") {
 
       // Make sure all items and all ranks are there
@@ -300,6 +336,7 @@
 
     }
 
+    // Chart specific metadata: treemap
     if(vars.type === "treemap") {
 
       // Create the root node
@@ -378,6 +415,7 @@
 
     }
 
+    // Chart specific metadata: grid
     // Generates x and y attributes to display items as a 2D grid
     if(vars.type == "grid") {
 

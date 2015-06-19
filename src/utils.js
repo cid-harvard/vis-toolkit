@@ -151,7 +151,6 @@
               .classed("highlighted", function(e, j) { return e.__highlighted; })
               .classed("selected", function(e, j) { return e.__selected; })
               .attr('d', function(e) {
-                console.log("IN SHAPE", params["func"], d, e.values)
                 return params["func"](e.values);
               });
 
@@ -206,7 +205,7 @@
           chart.enter().append('g')
               .classed('items__chart__dotplot', true)
               .call(vistk.utils.create_chart, dotplot_params);
-              
+
           // Adjust the parameters it inehrited
 
           // Trigger the cart creation function

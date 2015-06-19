@@ -155,7 +155,7 @@ vars.default_params["sparkline"] = {
       name: "linear",
       func: d3.scale.linear()
               .range([vars.margin.left, vars.width - vars.margin.left - vars.margin.right])
-              .domain(d3.extent(vars.new_data, function(d) { return d[vars.time.var_time]; }))
+              .domain(vars.time.interval)
   }],
 
   y_scale: [{
