@@ -349,13 +349,13 @@
 
         mark.enter()
                 .append("rect")                            
-             //     .attr("x", -vars.mark.width/2)
-             //     .attr("y", -vars.mark.height/2)
+                  .attr("x", -vars.mark.width/2)
+                  .attr("y", -vars.mark.height/2)
                   .classed("items__mark__rect", true)
                   .attr("transform", "rotate(0)")
                   .style("fill", function(d) { return vars.color(d[vars.var_color]); });
 
-        mark.transition().duration(1000)
+        mark
             .attr("height", vars.mark.height)
             .attr("width", vars.mark.width)
             .attr("x", vars.mark.x)

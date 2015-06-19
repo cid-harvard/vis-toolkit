@@ -23,10 +23,7 @@
             attr: "country",
             marks: [{
                 type: "rect",
-                rotate: "0",
-                y: function(d) { return - vars.y_scale[0]["func"](d[vars.var_y]); },
-                height: function(d) { return vars.y_scale[0]["func"](d[vars.var_y]); },
-                width: function() { return this.x_scale[0]["func"].rangeBand(); }
+                rotate: "0"
               }, {
                 type: "text",
                 rotate: "90",
@@ -83,23 +80,20 @@
 
           vars.mark.type = d.type;
           vars.mark.rotate = d.rotate;
-          vars.mark.x = d.x;
-          vars.mark.y = d.y;
-          vars.mark.height = d.y;
 
           gItems_enter.each(vistk.utils.items_mark)
             .select("rect")
        //     .attr("x", function(d) { return vars.x_scale[0]["func"](d[vars.var_x]); })
-      //      .attr("width", vars.x_scale[0]["func"].rangeBand())
-      //      .attr("y", function(d) { return - vars.y_scale[0]["func"](d[vars.var_y]); });
+            .attr("width", vars.x_scale[0]["func"].rangeBand())
+            .attr("y", function(d) { return - vars.y_scale[0]["func"](d[vars.var_y]); });
           // Update each mark
           gItems.each(vistk.utils.items_mark)
             .select("rect")
             .transition().duration(1000)
        //     .attr("x", function(d) { return vars.x_scale[0]["func"](d[vars.var_x]); })
-       //     .attr("y", function(d) { return - vars.y_scale[0]["func"](d[vars.var_y]); })
-       //     .attr("height", function(d) { return vars.y_scale[0]["func"](d[vars.var_y]); })
-       //     .attr("width", vars.x_scale[0]["func"].rangeBand());
+            .attr("y", function(d) { return - vars.y_scale[0]["func"](d[vars.var_y]); })
+            .attr("height", function(d) { return vars.y_scale[0]["func"](d[vars.var_y]); })
+            .attr("width", vars.x_scale[0]["func"].rangeBand());
 
           // Update
           gItems.each(vistk.utils.items_mark)

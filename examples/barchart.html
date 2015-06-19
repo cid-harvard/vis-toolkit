@@ -10,19 +10,19 @@ d3.json("../data/diversification_ubiquity_hs4_1995_2012.json", function(error, c
 
   var flat_years = vistk.utils.flatten_years(countries);
 
-  visualization = vistk.viz().params({
+  var visualization = vistk.viz().params({
     type: "barchart",
     container: "#viz",
     data: flat_years,
-    id: ["continent", "country"],
+    var_id: "name",
     var_group: "continent",
     var_color: "continent",
     var_x: 'name',
     var_y: 'avg_products',
     time: {
       var_time: "year",
-      current_time: 1995,
-      parse: function(d) { return d; }
+      current_time: "1995",
+//      parse: function(d) { return d; }
     },
     var_color: "continent",
     var_text: "name"
