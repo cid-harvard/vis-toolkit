@@ -92,7 +92,8 @@
         vars.items = vistk.utils.merge(vars.items, vars.user_vars.items);
 
         // In case there are some links between items available
-        if(vars.links !== null) {
+        // ..and we are not in aggregate mode
+        if(vars.links !== null && vars.aggregate != vars.var_group) {
 
           // Connect marks
           var gConnect = vars.svg.selectAll(".connect__group")

@@ -54,8 +54,8 @@ d3.json("../data/atlas_international_product_space.json", function(graph) {
         x_grid_show: false,
         y_axis_show: false,
         y_grid_show: false,
-        id: ["category", "product_id"],
-        var_id: ["product_id"],
+        id: "product_id",
+        var_id: "product_id",
         r_cutoff: function(d) { return d.export_rca < 1; },
         mark: {
           type: "circle",

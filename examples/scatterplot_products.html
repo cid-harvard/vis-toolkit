@@ -9,7 +9,7 @@
 
 d3.json("../data/exports_2012.json", function(error, exports) {
 
-  visualization = vistk.viz()
+  var visualization = vistk.viz()
     .params({
       type: 'scatterplot',
       container: '#viz',
@@ -22,7 +22,7 @@ d3.json("../data/exports_2012.json", function(error, exports) {
       var_share: 'nb_products',
       var_r: 'distance',
       var_text: 'name',
-      r_cutoff: function(d) { return d.rca < 1; },
+      share_cutoff: function(d) { return d.rca < 1; },
       time: {
         var_time: 'year', 
         current_time: 1995
