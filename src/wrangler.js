@@ -25,7 +25,6 @@
 
     vars.items_data = [];
 
-
     // In case we use custom variables as X/Y variables 
     if(typeof vars.var_x !== "string" && typeof vars.var_x === "function") {
       vars.data.forEach(function(d, i) {
@@ -44,7 +43,7 @@
     // Calculate vars.new_data which should contain two things
     // 1/ The list of all items (e.g. countries, products)
     // 2/ The metadata for each items
-    if(vars.new_data === null) {
+    if(vars.new_data === null || vars.refresh) {
 
       vars.time.interval = d3.extent(vars.data, function(d) { return d[vars.time.var_time]; });
       vars.time.points = d3.set(vars.data.map(function(d) { return d[vars.time.var_time]; })).values();
@@ -92,6 +91,10 @@
           return e[vars.var_id] == item_id && e[vars.time.var_time] == vars.time.current_time;
         })[0];
 
+        // TODO: it can happen there is no item for the current year (but for others)
+        if(typeof d === "undefined")
+          return;
+
         // TIME VALUES
         d.values = vars.data.filter(function(e) {
           return item_id === e[vars.var_id];
@@ -125,7 +128,7 @@
       });
 
       vars.new_data = vars.items_data;
-
+      vars.refresh = false;
     }
 
     // Aggregate data
@@ -252,7 +255,7 @@
 
     // Chart specific metadata: stacked
     if(vars.type === "stacked") {
-
+/*
       // Make sure all items and all ranks are there
       vars.new_data.forEach(function(c) {
 
@@ -280,7 +283,7 @@
         });
 
       });
-
+*/
       vars.stack = d3.layout.stack()
           .values(function(d) { return d.values; })
           .x(function(d) { return d[vars.time.var_time]; })          
@@ -437,10 +440,10 @@
       d3.range(nb_dimension).map(function(d, i) {
          d3.range(nb_dimension).map(function(e, j) {
 
+          var index = i * nb_dimension + j;
           // To make sure we don't update more points than necessary
-          if(i * nb_dimension + j < vars.new_data.length) {
+          if(index < vars.new_data.length) {
             // IMPORTANT to clone the _params here
-            var index = i * nb_dimension + j;
             var datum = vars.new_data[index];
             datum.x = i;
             datum.y = j;

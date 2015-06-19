@@ -709,8 +709,8 @@
       return d.id == id;
     })[0];
 
-    if(typeof res == "undefined")
-      console.log("id not found", id)
+    // if(typeof res == "undefined")
+     // console.log("id not found", id)
 
     return res;
   }
@@ -720,8 +720,8 @@
       return d[vars.var_id] == +id;
     })[0];
 
-    if(typeof res == "undefined")
-      console.log("Data id not found", id)
+    // if(typeof res == "undefined")
+    //  console.log("Data id not found", id)
 
     return res;
   }
