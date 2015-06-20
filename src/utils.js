@@ -120,6 +120,23 @@
 
         break;
 
+        case "tick":
+
+          var mark = d3.select(this).selectAll(".items__mark__tick").data([d]);
+
+          mark.enter().append('line')
+              .classed('items__mark__tick', true)
+              .attr("x1", function(d) { return 0; })
+              .attr("y1", function(d) { return -20; })
+              .attr("x2", function(d) { return 0; })
+              .attr("y2", function(d) { return 20; });
+
+          mark              
+              .classed("highlighted", function(d, i) { return d.__highlighted; })
+              .classed("selected", function(d, i) { return d.__selected; });
+
+        break;
+
         case "line":
 
           var mark = d3.select(this).selectAll(".connect__line").data([d]);

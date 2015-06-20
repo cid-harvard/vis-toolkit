@@ -315,3 +315,8 @@ path {
   fill: yellow;
   stroke-width: .5px;
 }
+
+.items__mark__tick {
+  stroke: black;
+  stroke-width: 1.5px;
+}
