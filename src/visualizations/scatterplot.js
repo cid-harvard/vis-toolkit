@@ -1,4 +1,4 @@
-      case "scatterplot":
+      case "scatterplot_old":
       
         vars.params = {
 
