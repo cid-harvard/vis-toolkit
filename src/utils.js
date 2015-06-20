@@ -139,7 +139,7 @@
           mark              
               .classed("highlighted", function(d, i) { return d.__highlighted; })
               .classed("selected", function(d, i) { return d.__selected; })
-              .transition()
+              .transition().duration(vars.duration)
               .attr("transform", function(d) {
 
                 if(typeof params.translate === "function") {
@@ -255,7 +255,7 @@
 
           dotplot_params = vars.default_params["dotplot"];
 
-          var chart = d3.select(this).selectAll(".items__chart__dotplot").data(["TOTO"]);
+          var chart = d3.select(this).selectAll(".items__chart__dotplot").data([d]);
 
           chart.enter().append('g')
               .classed('items__chart__dotplot', true)

@@ -62,7 +62,7 @@
     x_tickValues: null,
     x_axis_show: true,
     x_axis_orient: "bottom",
-    x_grid_show: true,
+    x_grid_show: false,
     x_text: true,
     x_axis_translate: [0, 0],
 
@@ -76,7 +76,7 @@
     y_tickPadding: 0,
     y_tickValues: null,
     y_axis_show: true,
-    y_grid_show: true,
+    y_grid_show: false,
     y_text: true,
     y_axis_translate: [0, 0],
 
