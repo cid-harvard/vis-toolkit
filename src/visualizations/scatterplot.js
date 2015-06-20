@@ -84,8 +84,9 @@
                 rotate: "0",
                 func: null,
               }]
-          }]
+          }],
 
+          y_axis_translate: [vars.margin.left, 0]
         };
 
         vars = vistk.utils.merge(vars, vars.params);
@@ -127,7 +128,7 @@
           vars.params.y_scale[0]["func"].domain(vars.user_vars.y_scale[0].domain);
 
         // AXIS
-        vars.svg.call(vistk.utils.axis)
+        vars.svg.call(vistk.utils.x_axis)
                 .select(".x.axis")
                 .attr("transform", "translate(0," + (vars.height - vars.margin.bottom - vars.margin.top) + ")");
        

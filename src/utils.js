@@ -614,7 +614,7 @@
     }
   }
 
-  vistk.utils.axis = function(d, i) {
+  vistk.utils.x_axis = function(d, i) {
 
     vars.x_axis = vistk.utils.make_x_axis();
 

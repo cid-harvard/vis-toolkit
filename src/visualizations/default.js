@@ -14,7 +14,7 @@
         vars.items = vistk.utils.merge(vars.items, vars.user_vars.items);
 
         // CREATE AXIS
-        vars.svg.call(vistk.utils.axis);
+        vars.svg.call(vistk.utils.x_axis);
         vars.svg.call(vistk.utils.y_axis)
 
         // PRE-UPDATE CONNECT

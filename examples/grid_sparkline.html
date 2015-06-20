@@ -36,6 +36,7 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
       interval: [],
       current_time: "2000"
     },
+    ui: {default: true},
     items: [{
       attr: "name",
       marks: [{
@@ -45,7 +46,6 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
         var_group: "dept_name",
         var_color: "name",
         var_id: "dept_name",
-        ui: {default: true},
         time: {
           var_time: "year", 
           parse: d3.time.format("%Y").parse,
