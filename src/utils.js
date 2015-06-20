@@ -275,7 +275,7 @@
                         } else {
 
                           var r_scale = d3.scale.linear()
-                            .range([10, 30])
+                            .range([4, 20])
                             .domain(d3.extent(vars.new_data, function(d) { return d[params.var_r]; }))
 
                           return r_scale(d[params.var_r]);

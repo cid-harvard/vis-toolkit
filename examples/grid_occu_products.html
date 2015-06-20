@@ -1,0 +1,49 @@
+<!doctype html>
+<meta charset="utf-8">
+<script src="../js/d3.js"></script>
+<script src="../build/vistk.js"></script>
+<link href="../css/vistk.css" rel="stylesheet">
+<body>
+<div id="viz"></div>
+<script>
+
+d3.json("../data/exports_2012.json", function(error, exports) {
+
+  var grid = vistk.viz().params({
+    type: "grid",
+    width: 800,
+    height: 600,
+    margin: {top: 30, right: 30, bottom: 30, left: 30},
+    container: "#viz",
+    data: exports.data,
+    var_text: 'name',
+    var_id: "code",
+    var_color: "community_name",
+    var_sort: "share",
+    var_sort_asc: true,
+    var_text: 'name',
+    share_cutoff: function(d) { return d.rca < 1; },
+    time: {
+      var_time: "year", 
+      parse: d3.time.format("%Y").parse,
+      interval: [],
+      current_time: "2000"
+    },
+    items: [{
+      attr: "name",
+      marks: [{
+        type: "circle",
+        rotate: "0",
+        var_r: "share",
+        var_fill: "community_name",
+        fill: function(d) { return vars.color(vars.accessor_items(d)[vars.var_color]); }
+      }]
+    }],
+  });
+
+  d3.select("#viz").call(grid);
+
+});
+
+</script>
+</body>
