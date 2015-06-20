@@ -269,53 +269,52 @@ vars.default_params["grid"] = {
 
 vars.default_params["sparkline"] = function(scope) {
 
-  return {
-    accessor_values: function(d) { return d.values; },
+  var params = {};
+  params.accessor_values = function(d) { return d.values; };
 
-    x_scale: [{
-        name: "linear",
-        func: d3.scale.linear()
-                .range([scope.margin.left, scope.width - scope.margin.left - scope.margin.right])
-                .domain(scope.time.interval)
-    }],
+  params.x_scale = [{
+    name: "linear",
+    func: d3.scale.linear()
+            .range([scope.margin.left, scope.width - scope.margin.left - scope.margin.right])
+            .domain(scope.time.interval)
+  }];
 
-    y_scale: [{
-        name: "linear",
-        func: d3.scale.linear()
-                .range([scope.height - scope.margin.top - scope.margin.bottom, scope.margin.top])
-                .domain(d3.extent(scope.new_data, function(d) { return d[scope.var_y]; }))
-    }],
+  params.y_scale = [{
+    name: "linear",
+    func: d3.scale.linear()
+            .range([scope.height - scope.margin.top - scope.margin.bottom, scope.margin.top])
+            .domain(d3.extent(scope.new_data, function(d) { return d[scope.var_y]; }))
+  }];
 
-    items: [{
-      attr: "year",
-      marks: [{
-          type: "circle",
-          rotate: "0",
-        }, {
-          type: "text",
-          rotate: "30",
-          translate: null
-        }]
-    }],
+  params.items = [{
+    attr: "year",
+    marks: [{
+        type: "circle",
+        rotate: "0",
+      }, {
+        type: "text",
+        rotate: "30"
+      }]
+  }];
 
-    connect: [{
-      attr: scope.time.var_time,
-      marks: [{
-          type: "path",
-          rotate: "0",
-          stroke: function(d) { return "black"; },
-          func: d3.svg.line()
-               .interpolate(scope.interpolate)
-               .x(function(d) { return scope.x_scale[0]["func"](d[scope.var_x]); })
-               .y(function(d) { return scope.y_scale[0]["func"](d[scope.var_y]); }),
-        }]
-    }],
+  params.connect = [{
+    attr: scope.time.var_time,
+    marks: [{
+        type: "path",
+        rotate: "0",
+        stroke: function(d) { return "black"; },
+        func: d3.svg.line()
+             .interpolate(scope.interpolate)
+             .x(function(d) { return params.x_scale[0]["func"](d[scope.var_x]); })
+             .y(function(d) { return params.y_scale[0]["func"](d[scope.var_y]); }),
+      }]
+  }];
 
-    x_axis_show: false,
+  params.x_axis_show = false;
 
-    y_axis_show: false
+  params.y_axis_show = false;
 
-  };
+  return params;
 
 };
 
@@ -347,8 +346,7 @@ vars.default_params["linechart"] = {
         rotate: "0",
       }, {
         type: "text",
-        rotate: "30",
-        translate: null
+        rotate: "30"
       }]
   }],
 

@@ -7,15 +7,53 @@
         // Contain the parameters in something different than global variable
         // Use the vistk.utils.create_chart()
 
+        if(vars.type == "sparkline") {
+          //scope = {};
+          //scope = vistk.utils.merge(scope, vars)
+          console.log("INIT VARS", vars)
+          scope = vars.default_params["sparkline"](vars);
+          vars = vistk.utils.merge(vars, scope);
+
+        } else {
+
         // LOAD CHART PARAMS
         vars = vistk.utils.merge(vars, vars.default_params[vars.type]);
 
         // LOAD USER PARAMS
         vars.items = vistk.utils.merge(vars.items, vars.user_vars.items);
+}
+
 
         // CREATE AXIS
         vars.svg.call(vistk.utils.x_axis);
         vars.svg.call(vistk.utils.y_axis)
+
+        // GRID
+        vars.svg.selectAll(".x.grid").data([vars.new_data])
+          .enter()
+            .append("g")
+            .attr("class", "x grid")
+            .style("display", function() { return vars.x_grid_show ? "block": "none"; })
+            .attr("transform", "translate(0," + (vars.height-vars.margin.top-vars.margin.bottom) + ")");
+
+        vars.svg.selectAll(".x.grid").transition()
+            .duration(vars.duration)
+            .call(vistk.utils.make_x_axis()
+            .tickSize(-vars.height+vars.margin.top+vars.margin.bottom, 0, 0)
+            .tickFormat(""));
+
+        vars.svg.selectAll(".y.grid").data([vars.new_data])
+          .enter()
+            .append("g")
+            .attr("class", "y grid")
+            .style("display", function() { return vars.y_axis_show ? "block": "none"; })
+            .attr("transform", "translate(" + vars.margin.left + ", 0)");
+
+        vars.svg.selectAll(".y.grid").transition()
+            .duration(vars.duration)
+            .call(vistk.utils.make_y_axis()
+            .tickSize(-vars.width+vars.margin.left+vars.margin.right, 0, 0)
+            .tickFormat(""));
 
         // PRE-UPDATE CONNECT
         var gConnect = vars.svg.selectAll(".connect__group")
@@ -33,6 +71,9 @@
             gConnect.call(vistk.utils.draw_mark, params);
           });
         });
+
+        // EXIT
+        var gConnect_exit = gConnect.exit().remove();
 
         // PRE-UPDATE ITEMS
         var gItems = vars.svg.selectAll(".mark__group")
@@ -61,5 +102,8 @@
                         });
 
         vistk.utils.background_label(vars.title);
+
+        // EXIT
+        var gItems_exit = gItems.exit().remove();
 
       break;
