@@ -49,22 +49,26 @@
         params_type = params.type(d[params.var_mark]);
       }
 
+      if(typeof params.rotate === "undefined")
+        params.rotate = 0;
+
+      if(typeof params.translate === "undefined") {
+        params.translate = [0, 0];
+      }
+
       switch(params_type) {
 
         case "text":
 
-          if(typeof params.rotate === "undefined")
-            params.rotate = 0;
-
-          if(typeof params.translate === "undefined") {
-            params.translate = [0, 0];
+          if(typeof params.text_anchor === "undefined") {
+            params.text_anchor = "start";
           }
 
          var mark = d3.select(this).selectAll(".items__mark__text").data([d]);
 
           mark.enter().append("text")
               .classed("items__mark__text", true)         
-              .style("text-anchor", "start")
+              .style("text-anchor", params.text_anchor)
               .attr("x", 10)
               .attr("y", 0)
               .attr("dy", ".35em");
@@ -129,11 +133,23 @@
               .attr("x1", function(d) { return 0; })
               .attr("y1", function(d) { return -20; })
               .attr("x2", function(d) { return 0; })
-              .attr("y2", function(d) { return 20; });
+              .attr("y2", function(d) { return 20; })
+              .attr("transform", "translate(0,0)rotate(0)");
 
           mark              
               .classed("highlighted", function(d, i) { return d.__highlighted; })
-              .classed("selected", function(d, i) { return d.__selected; });
+              .classed("selected", function(d, i) { return d.__selected; })
+              .transition()
+              .attr("transform", function(d) {
+
+                if(typeof params.translate === "function") {
+                  params_translate = params.translate(d);
+                } else {
+                  params_translate = params.translate;
+                }
+
+                return "translate(" +  params_translate + ")rotate(" +  params.rotate + ")";
+              });
 
         break;
 
