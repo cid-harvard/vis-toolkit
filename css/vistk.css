@@ -318,5 +318,13 @@ path {
 
 .items__mark__tick {
   stroke: black;
+  stroke-width: .2px;
+}
+
+.items__mark__tick.selected {
   stroke-width: 1.5px;
+}
+
+.items__mark__tick.highlighted {
+  stroke-width: 2.5px;
 }
