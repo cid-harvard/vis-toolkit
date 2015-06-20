@@ -62,6 +62,50 @@ vars.default_params["dotplot"] = {
   y_axis_show: false
 };
 
+vars.default_params["dotplot_vertical"] = {
+  x_scale: [{
+    name: "linear",
+    func: d3.scale.linear()
+            .range([vars.width/2, vars.width/2])
+            .domain([0, d3.max(vars.new_data, function(d) { return d[vars.var_x]; })])
+            .nice()
+  }],
+
+  y_scale: [{
+    name: "linear",
+    func: d3.scale.linear()
+            .range([vars.margin.top, vars.height-vars.margin.top-vars.margin.bottom])
+            .domain([0, d3.max(vars.new_data, function(d) { return d[vars.var_y]; })])
+            .nice()
+  }],
+
+  items: [{
+    attr: "name",
+    marks: [{
+      type: "circle",
+      rotate: "0"
+    },{
+      type: "text",
+      rotate: "-90"
+    }]
+  }],
+
+  connect: [],
+
+  axes: [
+    {type: "x",
+     scale: null}
+  ],
+
+  x_axis_show: false,
+  y_axis_show: true,
+  y_tickValues: [0, d3.max(vars.new_data, function(d) { return d[vars.var_x]; })],
+  y_axis_translate: [vars.width/2, 0],
+
+};
+
+// vars.default_params["dotplot_vertical"].x_scale[0]["func"].domain(vars.default_params["dotplot_vertical"].y_scale[0]["func"].domain());
+//vars.default_params["dotplot_vertical"].x_scale[0]["func"].range(vars.default_params["dotplot_vertical"].y_scale[0]["func"].domain());
 vars.default_params["vertical_ordinal"] = {
 
   x_scale: [{

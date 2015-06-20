@@ -617,7 +617,7 @@
       .enter()
         .insert("g", ":first-child")
         .attr("class", "y axis")
-        .attr("transform", "translate(" + vars.margin.left + ", 0)")
+        .attr("transform", "translate(" + vars.y_axis_translate + ")")
         .style("display", function() { return vars.y_axis_show ? "block": "none"; })
       .append("text")
         .attr("class", "label")

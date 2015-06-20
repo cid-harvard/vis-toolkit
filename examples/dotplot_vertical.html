@@ -1,0 +1,62 @@
+<!doctype html>
+<meta charset="utf-8">
+<script src="../js/d3.js" charset="utf-8"></script>
+<script src="../build/vistk.js"></script>
+<link href="../css/vistk.css" rel="stylesheet">
+<body>
+<div id="viz"></div>
+<script>
+
+d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments) {
+
+  departments.forEach(function(d, i) {
+    d.dept_pop = +d.dept_pop;
+    d.year = +d.year;
+    d.realgdp = +d.realgdp;
+    d.realgdp_percap = +d.realgdp_percap;    
+    d["sum(export_value)"] = +d["sum(export_value)"];
+    d["value_added"] = isNaN(+d["value_added"]) ? 0: +d["value_added"];
+  });
+
+  var ui_options = [];
+
+  visualization = vistk.viz()
+    .params({
+      type: 'dotplot_vertical',      
+      data: departments,
+      container: '#viz',
+      var_y: 'dept_pop',
+      var_x: function() { return this.width/2; },
+      y_text: null,
+      y_ticks: 10,
+      y_format: function(d) { return '$' + d3.format(".2s")(d); },
+      items: [{
+        attr: "name",
+        marks: [{
+          type: "diamond",
+          rotate: "0"
+        },{
+          type: "text",
+          rotate: "-30"
+        }]
+      }],
+      time: {
+        var_time: 'year', 
+        current_time: 2013,
+        parse: function(d) { return d; }
+      },
+      ui: {
+        default: true,
+        options: ui_options
+      },
+      var_id: "dept_name",
+      var_text: "dept_name", 
+//      filter: ["Antioquia", "Bogotá D. C."],
+      selection: ["Antioquia", "Bogotá D. C."],
+      highlight: ["Antioquia"]
+    });
+
+  d3.select("#viz").call(visualization);
+});
+
+</script>

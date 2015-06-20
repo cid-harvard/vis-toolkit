@@ -78,6 +78,7 @@
     y_axis_show: true,
     y_grid_show: true,
     y_text: true,
+    y_axis_translate: [0, 0],
 
     r_scale: null,
     r_cutoff: function(d) { return d > 30; },
