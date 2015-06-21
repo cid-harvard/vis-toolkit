@@ -31,7 +31,7 @@
         console.log("[vars.time.filter]", vars.time.filter);
 
         vars.new_data = vars.new_data.filter(function(d, i) {
-          return vars.time.filter[0] == d[vars.time.var_time];
+          return vars.time.filter.indexOf(d[vars.time.var_time]) > -1;
         });
        
       }

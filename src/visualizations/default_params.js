@@ -376,19 +376,34 @@ vars.default_params["linechart"] = {
 
 
 vars.default_params["linechart"].items = [{
-    attr: "name",
-    marks: [{
-      type: "circle",
-      rotate: "0",
-      fill: function(d) { return vars.color(vars.accessor_items(d)[vars.var_color]); }
-    },{
-      type: "text",
-      rotate: "0"
-    }]
+  attr: "name",
+  marks: [{
+    type: "circle",
+    rotate: "0",
+    fill: function(d) { return vars.color(vars.accessor_items(d)[vars.var_color]); }
+  },{
+    type: "text",
+    rotate: "0"
   }]
+}]
 
 vars.default_params["linechart"].connect[0].marks[0].stroke = function(d) { return vars.color(vars.accessor_items(d)[vars.var_color]); };
 vars.default_params["linechart"].x_axis_show = true;
+
+vars.default_params["slopegraph"] = vars.default_params["linechart"];
+
+vars.default_params["slopegraph"].items = [{
+  attr: "name",
+  marks: [{
+    type: "rect",
+    rotate: "0",
+    fill: function(d) { return vars.color(vars.accessor_items(d)[vars.var_color]); }
+  },{
+    type: "text",
+    rotate: "0"
+  }]
+}]
+
 
 // TODO
 // Sequence of vertical dotplots in an horizontal layout
