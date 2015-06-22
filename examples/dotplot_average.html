@@ -3,37 +3,6 @@
 <script src="../js/d3.js" charset="utf-8"></script>
 <script src="../build/vistk.js"></script>
 <link href="../css/vistk.css" rel="stylesheet">
-<style>
-.items__mark__diamond {
-    fill: gray;
-    opacity: .1;
-}
-
-.items__mark__diamond.highlighted {
-  stroke: black;
-  opacity: 1;
- }
-
-.items__mark__diamond.selected {
-  fill: red;
-  opacity: 1;
-}
-
-.items__mark__text {
-  display: none;
-}
-
-.axis > .label {
-  display: none;
-}
-
-.axis > .domain {
-  stroke: #000;
-  stroke-dasharray: 1,1
-}
-
-
-</style>
 <body>
 <div id="viz"></div>
 <script>
@@ -46,7 +15,7 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
     d.realgdp = +d.realgdp;
     d.realgdp_percap = +d.realgdp_percap;    
     d["sum(export_value)"] = +d["sum(export_value)"];
-    d["value_added"] = +d["value_added"];
+    d["value_added"] = isNaN(+d["value_added"]) ? 0: +d["value_added"];
   });
 
   var ui_options = [];
@@ -70,6 +39,9 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
         },{
           type: "text",
           rotate: "-30"
+        },{
+          type: "tick",
+          rotate: "-45"
         }]
       }],
       time: {
@@ -77,9 +49,14 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
         current_time: 2013,
         parse: function(d) { return d; }
       },
+      ui: {
+        default: true,
+        options: ui_options
+      },
       var_id: "dept_name",
       var_text: "dept_name", 
-      selection: ["Antioquia"],
+//      filter: ["Antioquia", "Bogotá D. C."],
+      selection: ["Antioquia", "Bogotá D. C."],
       highlight: ["Antioquia"]
     });
 
