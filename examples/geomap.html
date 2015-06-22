@@ -33,7 +33,7 @@ d3.json("../data/partners_usa_2012_csay.json", function(error, partners) {
         names: names,
         var_id: "name",
         var_group: "continent",
-        var_color: "name",
+        var_color: "share",
         vars_text: "name",
         mark: {
           type: 'shape',
@@ -41,8 +41,11 @@ d3.json("../data/partners_usa_2012_csay.json", function(error, partners) {
           height: 10
         },
         time: {
-          var_time: "year", 
+          var_time: "year",
           current_time: 2012
+        },
+        ui: {
+          default: true
         }
       });
 
