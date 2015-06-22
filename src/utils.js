@@ -654,7 +654,10 @@
         .style({
           "text-anchor": "end",
           "display": function(d) {
-            return typeof vars.x_text !== "undefined" && vars.x_text !== null;
+            if(vars.x_text)
+              return "block";
+            else
+              return "none";
           }
         })
         .text(vars.var_x);

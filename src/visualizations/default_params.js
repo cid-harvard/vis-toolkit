@@ -338,7 +338,7 @@ vars.default_params["sparkline"] = function(scope) {
     name: "linear",
     func: d3.scale.linear()
             .range([scope.height - scope.margin.top - scope.margin.bottom, scope.margin.top])
-            .domain(d3.extent(scope.new_data, function(d) { return d[scope.var_y]; }))
+              .domain(d3.extent(Array.prototype.concat.apply([], vars.new_data.map(function(d) { return d.values; }) ), function(d) { return d[vars.var_y]; }))
   }];
 
   params.items = [{
@@ -422,11 +422,12 @@ vars.default_params["linechart"] = {
 //  x_format: d3.time.format("%Y"),
   x_tickValues: null,
   x_axis_orient: "top",
-  x_axis_show: false,
+  x_axis_show: true,
   x_grid_show: true,
+  x_text: false,
 
   y_axis_show: false,
-  y_grid_show: true,
+  y_grid_show: false,
 };
 
 
@@ -516,6 +517,7 @@ vars.default_params["stacked"] = {
   x_grid_show: true,
   x_ticks: vars.time.points.length,
   x_format: d3.time.format("%Y"),
+  x_text: false,
   
   y_axis_show: true,
   y_axis_translate: [vars.margin.left, 0],
