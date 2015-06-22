@@ -68,7 +68,7 @@
           // Supporting multiple text elements
           var mark_id = vars.items[0].marks.indexOf(params);
 
-         var mark = d3.select(this).selectAll(".items__mark__text.items_"+mark_id).data([d]);
+          var mark = d3.select(this).selectAll(".items__mark__text.items_"+mark_id).data([d]);
 
           mark.enter().append("text")
               .classed("items__mark__text", true)
@@ -133,10 +133,14 @@
 
         case "tick":
 
-          var mark = d3.select(this).selectAll(".items__mark__tick").data([d]);
+          // Supporting multiple ticks marks
+          var mark_id = vars.items[0].marks.indexOf(params);
+
+          var mark = d3.select(this).selectAll(".items__mark__tick.items_"+mark_id).data([d]);
 
           mark.enter().append('line')
               .classed('items__mark__tick', true)
+              .classed("items_"+mark_id, true)
               .attr("x1", function(d) { return 0; })
               .attr("y1", function(d) { return -20; })
               .attr("x2", function(d) { return 0; })

@@ -40,6 +40,10 @@ d3.json("../data/diversification_ubiquity_hs4_1995_2012.json", function(error, c
         attr: "name",
         marks: [{
           type: "tick",
+          rotate: "90",
+          translate: function(d) { return [-vars.x_scale[0]["func"](d[vars.var_x])+30, 0]; }
+        },{
+          type: "tick",
           rotate: "0",
           translate: function(d) { return [0, -vars.y_scale[0]["func"](d[vars.var_y]) + vars.height - vars.margin.bottom - vars.margin.top]; }
         },{
