@@ -446,7 +446,60 @@ vars.default_params["linechart"].items = [{
 vars.default_params["linechart"].connect[0].marks[0].stroke = function(d) { return vars.color(vars.accessor_items(d)[vars.var_color]); };
 vars.default_params["linechart"].x_axis_show = true;
 
-vars.default_params["slopegraph"] = vars.default_params["linechart"];
+// Duplicating line chart configuration
+vars.default_params["slopegraph"] = {
+
+  accessor_values: function(d) { return d.values; },
+
+  x_scale: [{
+      name: "linear",
+      func: d3.scale.linear()
+              .range([vars.margin.left, vars.width - vars.margin.left - vars.margin.right])
+              .domain(vars.time.interval)
+  }],
+
+  y_scale: [{
+      name: "linear",
+      func: d3.scale.linear()
+              .range([vars.height - vars.margin.top - vars.margin.bottom, vars.margin.top])
+              .domain(d3.extent(Array.prototype.concat.apply([], vars.new_data.map(function(d) { return d.values; }) ), function(d) { return d[vars.var_y]; }))
+  }],
+
+  items: [{
+    attr: "year",
+    marks: [{
+        type: "diamond",
+        rotate: "0",
+      }, {
+        type: "text",
+        rotate: "30"
+      }]
+  }],
+
+  connect: [{
+    attr: vars.time.var_time,
+    marks: [{
+        type: "path",
+        rotate: "0",
+        stroke: function(d) { return "black"; },
+        func: d3.svg.line()
+             .interpolate(vars.interpolate)
+             .x(function(d) { return vars.x_scale[0]["func"](d[vars.var_x]); })
+             .y(function(d) { return vars.y_scale[0]["func"](d[vars.var_y]); }),
+      }]
+  }],
+
+  x_ticks: vars.time.points.length,
+//  x_format: d3.time.format("%Y"),
+  x_tickValues: null,
+  x_axis_orient: "top",
+  x_axis_show: true,
+  x_grid_show: true,
+  x_text: false,
+
+  y_axis_show: false,
+  y_grid_show: false,
+};
 
 // TODO
 // [ ] Vertical layout for oldest text should reflect oldest year

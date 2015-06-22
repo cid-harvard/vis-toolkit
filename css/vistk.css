@@ -338,3 +338,16 @@ path {
 .items__mark__tick.highlighted {
   stroke-width: 2.5px;
 }
+
+.items__mark__shape {
+  stroke: black;
+  stroke-width: .2px;
+}
+
+.items__mark__shape.selected {
+  stroke-width: 1.5px;
+}
+
+.items__mark__shape.highlighted {
+  stroke-width: 2.5px;
+}
