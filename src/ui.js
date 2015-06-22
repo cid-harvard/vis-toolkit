@@ -175,6 +175,52 @@
 
      }
 
+      // Sorting option
+      if(vars.ui.sort) {
+
+        d3.select(vars.container).selectAll(".label_sort").data([vars.ui.sort])
+          .enter()
+            .append("span")
+            .classed("label_sort", true)
+            .html("<br>Sort by")
+
+        var label_radios = d3.select(vars.container).selectAll(".sort_radio").data(vars.ui.sort)
+          .enter()
+            .append("label")
+            .attr("class", "sort_radio")
+
+        // TODO: find levels of aggregation
+        label_radios.append("input")
+                   .attr("type", "radio")
+                   .attr("id", "id")  
+                   .attr("value", function(d) { return d; })
+                   .attr("name", "radio-nest")
+                   .property("checked", function(d) {
+                      return d == vars.var_sort;
+                   })
+                   .on("click", function(d) { 
+
+                     if(vars.var_sort == d)
+                       vars.var_sort_asc = !vars.var_sort_asc;
+
+                      console.log("Updating sort", d, vars.var_sort, vars.var_sort_asc)
+                      vars.var_sort = d;
+                      d3.select(vars.container).call(vars.this_chart)
+
+                   });
+
+        label_radios.append("span")
+            .html(function(d) { 
+              return d ;
+            });
+      }
+
+        d3.select(vars.container).selectAll(".label_highlight").data([vars.var_id])
+          .enter()
+            .append("span")
+            .classed("label_highlight", true)
+            .html("<br>Select/highlight")
+
       // Highlight 
       var label_litems = d3.select(vars.container).selectAll(".items").data([vars.var_id])
         .enter()

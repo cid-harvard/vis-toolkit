@@ -33,7 +33,7 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
     var_id: "dept_name",
     var_color: "realgdp",
     var_sort: "realgdp",
-    var_sort_asc: true,
+    var_sort_asc: false,
     time: {
       var_time: "year", 
       parse: d3.time.format("%Y").parse,
@@ -48,12 +48,16 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
         var_r: "realgdp",
         var_fill: "realgdp",
         fill: function(d) { return vars.color(vars.accessor_items(d)[vars.var_color]); }
-      },{
+      }, {
         type: "text",
         rotate: "-30",
         translate: 10 // TODO: translate the same distance than the radius
       }]
     }],
+    ui: {
+      default: true,
+      sort: ["realgdp", "dept_name", "value_added"]
+    }
   });
 
   d3.select("#viz").call(grid);
