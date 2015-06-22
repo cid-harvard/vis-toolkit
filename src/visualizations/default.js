@@ -67,15 +67,48 @@
 
         // APPEND AND UPDATE CONNECT MARK
         vars.connect.forEach(function(connect) {
-        	connect.marks.forEach(function(params) {
-            gConnect_enter.call(vistk.utils.draw_mark, params);
-            gConnect.call(vistk.utils.draw_mark, params);
-          });
+
+          if(typeof connect.type == "undefined" || connect.type == "time") {
+
+          	connect.marks.forEach(function(params) {
+              gConnect_enter.call(vistk.utils.draw_mark, params);
+              gConnect.call(vistk.utils.draw_mark, params);
+            });
+
+          }/* else if(connect.type == "items" && vars.type == "productspace") {
+
+            if(vars.links.length > 0 && vars.aggregate != vars.var_group) {
+
+              // Connect marks
+              var gConnect = vars.svg.selectAll(".connect__group")
+                              .data(vars.links);
+            
+              var gConnect_enter = gConnect.enter()
+                              .append("g")
+                              .attr("class", "connect__group");
+
+              connect.marks.forEach(function(d) {
+                
+                vars.connect.type = d.type;
+                vars.connect.rotate = d.rotate;
+
+                gConnect_enter.each(vistk.utils.connect_mark)
+                              .attr("class", function(d) {
+                                return "link source_"+d.source.id+" target_"+d.target.id;
+                              })
+                              .style("stroke-width", function(d) { return Math.sqrt(d.value); })
+                              .style("opacity", .4);
+
+              });
+
+            }
+        
+          } 
+          */
         });
 
         // EXIT
         var gConnect_exit = gConnect.exit().remove();
-
 
 
         // PRE-UPDATE ITEMS

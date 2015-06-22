@@ -40,7 +40,7 @@ d3.json("../data/atlas_international_product_space.json", function(graph) {
 
     visualization = vistk.viz()
       .params({
-        type: "scatterplot",
+        type: "productspace",
         container: "#viz",
         nodes: graph.nodes,
         links: graph.edges,

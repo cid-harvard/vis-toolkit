@@ -180,6 +180,60 @@ vars.default_params["scatterplot"] = {
 };
 
 // Similar to scatterplot
+vars.default_params["productspace"] = {
+
+  x_scale: [{
+    name: "linear",
+    func: d3.scale.linear()
+            .range([vars.margin.left, vars.width-vars.margin.left-vars.margin.right])
+            .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_x]; })).nice()
+  }],
+
+  y_scale: [{
+    name: "linear",
+    func: d3.scale.linear()
+            .range([vars.height-vars.margin.top-vars.margin.bottom, vars.margin.top])
+            .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_y]; })).nice(),
+  }],
+
+  r_scale: d3.scale.linear()
+              .range([10, 30])
+              .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_r]; })),
+
+  items: [{
+    attr: "country",
+    marks: [{
+      type: "circle",
+      rotate: "0",
+      r_scale: d3.scale.linear()
+                  .range([10, 30])
+                  .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_r]; })),
+      fill: function(d) { return vars.color(vars.accessor_items(d)[vars.var_color]); }
+    }, {
+      type: "text",
+      rotate: "30",
+      translate: null
+    }]
+  }],
+
+  connect: [{
+    attr: "links",
+    type: "items",
+    marks: [{
+      type: "line",
+      rotate: "0",
+      func: null,
+    }]
+  }],
+
+  x_axis_show: false,
+  x_grid_show: false,
+  
+  y_axis_show: false,
+  y_grid_show: false
+};
+
+// Similar to scatterplot
 vars.default_params["barchart"] = {
 
   x_scale: [{
@@ -407,15 +461,16 @@ vars.default_params["linechart"] = {
 
   connect: [{
     attr: vars.time.var_time,
+    type: "time",
     marks: [{
-        type: "path",
-        rotate: "0",
-        stroke: function(d) { return "black"; },
-        func: d3.svg.line()
-             .interpolate(vars.interpolate)
-             .x(function(d) { return vars.x_scale[0]["func"](d[vars.var_x]); })
-             .y(function(d) { return vars.y_scale[0]["func"](d[vars.var_y]); }),
-      }]
+      type: "path",
+      rotate: "0",
+      stroke: function(d) { return "black"; },
+      func: d3.svg.line()
+           .interpolate(vars.interpolate)
+           .x(function(d) { return vars.x_scale[0]["func"](d[vars.var_x]); })
+           .y(function(d) { return vars.y_scale[0]["func"](d[vars.var_y]); }),
+    }]
   }],
 
   x_ticks: vars.time.points.length,
