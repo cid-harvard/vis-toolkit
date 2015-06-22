@@ -111,48 +111,52 @@
         var gConnect_exit = gConnect.exit().remove();
 
 
-        // PRE-UPDATE ITEMS
-        var gItems = vars.svg.selectAll(".mark__group")
-                        .data(vars.new_data, function(d, i) { return d[vars.var_id]; });
-
-        // ENTER ITEMS
-        var gItems_enter = gItems.enter()
-                        .append("g")
-                        .each(vistk.utils.items_group)
-                        .attr("transform", function(d, i) {
-                          return "translate(" + vars.x_scale[0]["func"](d[vars.var_x]) + ", " + vars.y_scale[0]["func"](d[vars.var_y]) + ")";
-                        });
-
-       // APPEND AND UPDATE ITEMS MARK
-        vars.items[0].marks.forEach(function(params) {
-          gItems_enter.call(vistk.utils.draw_mark, params);
-          gItems.call(vistk.utils.draw_mark, params);
-        });
 
 
-        /* Should be as below but current params don't match this format
+        if(typeof vars.items[0] !== "undefined") {
+          // PRE-UPDATE ITEMS
+          var gItems = vars.svg.selectAll(".mark__group")
+                          .data(vars.new_data, function(d, i) { return d[vars.var_id]; });
 
-          // APPEND AND UPDATE ITEMS MARK
-          vars.items.forEach(function(item) {
-            item.marks.forEach(function(params) {
+          // ENTER ITEMS
+          var gItems_enter = gItems.enter()
+                          .append("g")
+                          .each(vistk.utils.items_group)
+                          .attr("transform", function(d, i) {
+                            return "translate(" + vars.x_scale[0]["func"](d[vars.var_x]) + ", " + vars.y_scale[0]["func"](d[vars.var_y]) + ")";
+                          });
+
+           // APPEND AND UPDATE ITEMS MARK
+            vars.items[0].marks.forEach(function(params) {
               gItems_enter.call(vistk.utils.draw_mark, params);
               gItems.call(vistk.utils.draw_mark, params);
             });
-          });
 
-        */
 
-        // POST-UPDATE ITEMS GROUPS
-        vars.svg.selectAll(".mark__group")
-                        .transition()
-                        .duration(vars.duration)
-                        .attr("transform", function(d, i) {
-                          return "translate(" + vars.x_scale[0]["func"](d[vars.var_x]) + ", " + vars.y_scale[0]["func"](d[vars.var_y]) + ")";
-                        });
+            /* Should be as below but current params don't match this format
 
+              // APPEND AND UPDATE ITEMS MARK
+              vars.items.forEach(function(item) {
+                item.marks.forEach(function(params) {
+                  gItems_enter.call(vistk.utils.draw_mark, params);
+                  gItems.call(vistk.utils.draw_mark, params);
+                });
+              });
+
+            */
+
+          // POST-UPDATE ITEMS GROUPS
+          vars.svg.selectAll(".mark__group")
+                          .transition()
+                          .duration(vars.duration)
+                          .attr("transform", function(d, i) {
+                            return "translate(" + vars.x_scale[0]["func"](d[vars.var_x]) + ", " + vars.y_scale[0]["func"](d[vars.var_y]) + ")";
+                          });
+
+          // ITEMS EXIT
+          var gItems_exit = gItems.exit().remove();
+        }
+        
         vistk.utils.background_label(vars.title);
-
-        // EXIT
-        var gItems_exit = gItems.exit().remove();
 
       break;
