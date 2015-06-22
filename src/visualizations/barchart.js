@@ -1,4 +1,4 @@
-      case "barchart":
+      case "barchart_old":
 
         vars.params = {
           x_scale: [{

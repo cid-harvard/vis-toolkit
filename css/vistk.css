@@ -295,14 +295,15 @@ path {
   stroke-width: 3px;  
 }
 
-.items__mark__rect:not(.highlighted) {
-  stroke-width: 0px;  
-}
-
 .items__mark__rect.highlighted {
   stroke-opacity: 1;
   stroke: black;
   stroke-width: 2.5px;
+}
+
+.items__mark__rect.selected {
+  stroke-width: 1.5px;
+  stroke: black;
 }
 
 .items__mark__diamond.highlighted {
@@ -314,6 +315,15 @@ path {
 .items__mark__star {
   fill: yellow;
   stroke-width: .5px;
+}
+
+.items__mark__star.selected {
+  stroke-width: 1px;
+}
+
+.items__mark__star.highlighted {
+  fill: yellow;
+  stroke-width: 1.5px;
 }
 
 .items__mark__tick {

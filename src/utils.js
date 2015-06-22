@@ -97,8 +97,10 @@
                   .style("fill", function(d) { return vars.color(d[vars.var_color]); });
 
         mark
-            .attr("height", vars.mark.height)
-            .attr("width", vars.mark.width)  
+            .attr("height", params.height)
+            .attr("width", params.width)
+//            .attr("x", -vars.mark.width/2)
+            .attr("y", params.y)
             .classed("highlighted", function(d, i) { return d.__highlighted; })
             .classed("selected", function(d, i) { return d.__selected; });
 

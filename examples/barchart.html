@@ -19,35 +19,14 @@ d3.json("../data/diversification_ubiquity_hs4_1995_2012.json", function(error, c
       var_id: 'name',
       var_group: 'continent',
       var_color: 'continent',
-      var_x: 'nb_products',
+      var_x: 'name',
       var_y: 'avg_products',
-      var_r: 'nb_products',
-      var_share: "avg_products",
-      share_cutoff: function(d) { return d.avg_products > 30; },
       var_text: 'name_2char',
       time: {
         var_time: "year",
         current_time: "1995",
         parse: function(d) { return d; }
       },
-      x_scale: [{
-        domain: [0, 700]
-      }],
-      items: [{
-        attr: "name",
-        marks: [{
-          type: "circle",
-          rotate: "0",
-          fill: function(d) { return vars.color(vars.accessor_items(d)[vars.var_color]); }
-        }, {
-          var_mark: '__selected',
-          type: d3.scale.ordinal().domain([true, false]).range(["star", "none"]),
-          rotate: "0"
-        }, {
-          type: "text",
-          rotate: "-30"
-        }]
-      }],
       ui: {
         default: true,
         options: ["country", "continent", "year"]
