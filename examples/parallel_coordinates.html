@@ -27,7 +27,7 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
       container: '#viz',
       var_x: 'dept_pop',
       x_type: 'linear',
-      var_y: ['dept_pop', 'realgdp'],
+      var_y: ['dept_pop', 'realgdp', 'realgdp_percap', 'value_added'],
       x_text: null,
       x_ticks: 10,
       x_format: function(d) { return '$' + d3.format(".2s")(d); },

@@ -28,8 +28,6 @@ d3.json("../data/atlas_international_product_space.json", function(graph) {
       return res;
     }
 
-    console.log(exports)
-
     // Merge node positions with products
     exports.forEach(function(d, i) {
       var node = find_node_by_id(graph.nodes, d.product_id);

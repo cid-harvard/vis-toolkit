@@ -347,6 +347,14 @@ D3js notebook
 * http://www.benfrederickson.com/distance-metrics/
 * + Mali's stuff
 
+### Slope Graph
+
+* http://charliepark.org/slopegraphs/
+
+### Occugrid alternatives
+
+* http://neuralengr.com/asifr/journals/
+
 ## Roadmap
 
 * Tests
