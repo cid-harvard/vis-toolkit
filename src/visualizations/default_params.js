@@ -19,6 +19,7 @@ vars.default_params["dotplot"] = {
     func: d3.scale.ordinal()
             .domain(d3.range(vars.new_data.length))
             .rangeBands([vars.margin.left, vars.width - vars.margin.left - vars.margin.right]),
+    
     callback: function() {
                 vars.new_data.sort(function ascendingKey(a, b) {
                   return d3.ascending(a[vars.var_x], b[vars.var_x]);
@@ -547,21 +548,16 @@ vars.default_params["slopegraph"] = {
   }],
 
   x_ticks: vars.time.points.length,
-//  x_format: d3.time.format("%Y"),
-  x_tickValues: null,
+  x_tickValues: vars.time.interval,
   x_axis_orient: "top",
   x_axis_show: true,
-  x_grid_show: true,
+  x_grid_show: false,
   x_text: false,
 
   y_axis_show: false,
   y_grid_show: false,
 };
 
-// TODO
-// [ ] Vertical layout for oldest text should reflect oldest year
-// [ ] Customize x-axis to only show oldest/newest years
-// [ ] Don't show the axis line or any sort of grid
 vars.default_params["slopegraph"].items = [{
   attr: "name",
   marks: [{
@@ -577,12 +573,6 @@ vars.default_params["slopegraph"].items = [{
     text_anchor: "end",
     translate: [-(vars.width-vars.margin.left-vars.margin.right-vars.margin.left+20), 0]
   }],
-
-  x_text: false,
-  x_grid_show: false,
-
-  y_axis_show: false,
-  y_grid_show: false,
 
 }]
 
