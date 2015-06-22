@@ -402,7 +402,9 @@ vars.default_params["sparkline"] = function(scope) {
         rotate: "0",
       }, {
         type: "text",
-        rotate: "30"
+        rotate: "0",
+        translate: [-20, 0],
+        text_anchor: "end"
       }]
   }];
 
