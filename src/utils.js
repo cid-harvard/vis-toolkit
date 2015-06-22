@@ -153,6 +153,27 @@
 
         break;
 
+        case "shape":
+
+          var mark = d3.select(this).selectAll(".items__mark__shape").data([d]);
+
+          mark.enter().insert("path")
+                        .attr("class", "country")
+                        .classed('items__mark__shape', true)
+                        .attr("title", function(d,i) { 
+                          return d.name; 
+                        });
+
+          mark
+              .classed("highlighted", function(d, i) { return d.__highlighted; })
+              .classed("selected", function(d, i) { return d.__selected; })
+              .attr("d", vars.path)
+              .style("fill", function(d, i) { 
+                return params.fill(d.data[vars.var_color]);
+              });
+
+          break;
+
         case "line":
 
           var mark = d3.select(this).selectAll(".connect__line").data([d]);
