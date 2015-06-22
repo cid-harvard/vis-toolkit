@@ -21,7 +21,8 @@
 
         // LOAD USER PARAMS
         vars.items = vistk.utils.merge(vars.items, vars.user_vars.items);
-}
+        
+        }
 
 
         // CREATE AXIS
@@ -75,6 +76,8 @@
         // EXIT
         var gConnect_exit = gConnect.exit().remove();
 
+
+
         // PRE-UPDATE ITEMS
         var gItems = vars.svg.selectAll(".mark__group")
                         .data(vars.new_data, function(d, i) { return d[vars.var_id]; });
@@ -87,11 +90,24 @@
                           return "translate(" + vars.x_scale[0]["func"](d[vars.var_x]) + ", " + vars.y_scale[0]["func"](d[vars.var_y]) + ")";
                         });
 
-        // APPEND AND UPDATE ITEMS MARK
+       // APPEND AND UPDATE ITEMS MARK
         vars.items[0].marks.forEach(function(params) {
           gItems_enter.call(vistk.utils.draw_mark, params);
           gItems.call(vistk.utils.draw_mark, params);
         });
+
+
+        /* Should be as below but current params don't match this format
+
+          // APPEND AND UPDATE ITEMS MARK
+          vars.items.forEach(function(item) {
+            item.marks.forEach(function(params) {
+              gItems_enter.call(vistk.utils.draw_mark, params);
+              gItems.call(vistk.utils.draw_mark, params);
+            });
+          });
+
+        */
 
         // POST-UPDATE ITEMS GROUPS
         vars.svg.selectAll(".mark__group")

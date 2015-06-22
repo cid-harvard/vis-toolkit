@@ -67,7 +67,7 @@ d3.json("../data/atlas_international_product_space.json", function(graph) {
             fill: function(d) { return vars.color(vars.accessor_items(d)[vars.var_color]); },
             var_r: "export_value"
           }, {
-            var_mark: '__selected',
+            var_mark: '__highlighted',
             type: d3.scale.ordinal().domain([true, false]).range(["star", "none"]),
             rotate: "0"
           }, {
@@ -103,7 +103,8 @@ d3.json("../data/atlas_international_product_space.json", function(graph) {
           options: ["community_name", "product"]
         },
         title: "Product Space Colombia Exports",
-        highlight: ["115", "116", "117", "118", "119", "120", "121", "122", "123", "124", "125"]
+        selection: ["115", "116", "117", "118", "119", "120", "121", "122", "123", "124", "125"],
+        highlight: ["115"]
       });
 
     d3.select("#viz").call(visualization);
