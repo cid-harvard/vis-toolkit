@@ -448,6 +448,10 @@ vars.default_params["linechart"].x_axis_show = true;
 
 vars.default_params["slopegraph"] = vars.default_params["linechart"];
 
+// TODO
+// [ ] Vertical layout for oldest text should reflect oldest year
+// [ ] Customize x-axis to only show oldest/newest years
+// [ ] Don't show the axis line or any sort of grid
 vars.default_params["slopegraph"].items = [{
   attr: "name",
   marks: [{
@@ -455,9 +459,21 @@ vars.default_params["slopegraph"].items = [{
     rotate: "0",
     fill: function(d) { return vars.color(vars.accessor_items(d)[vars.var_color]); }
   },{
-    type: "text",
+    type: "text", // Text on the right (newest)
     rotate: "0"
-  }]
+  },{
+    type: "text", // Text on the left (oldest)
+    rotate: "0",
+    text_anchor: "end",
+    translate: [-(vars.width-vars.margin.left-vars.margin.right-vars.margin.left+20), 0]
+  }],
+
+  x_text: false,
+  x_grid_show: false,
+
+  y_axis_show: false,
+  y_grid_show: false,
+
 }]
 
 

@@ -64,10 +64,15 @@
             params.text_anchor = "start";
           }
 
-         var mark = d3.select(this).selectAll(".items__mark__text").data([d]);
+
+          // Supporting multiple text elements
+          var mark_id = vars.items[0].marks.indexOf(params);
+
+         var mark = d3.select(this).selectAll(".items__mark__text.items_"+mark_id).data([d]);
 
           mark.enter().append("text")
-              .classed("items__mark__text", true)         
+              .classed("items__mark__text", true)
+              .classed("items_"+mark_id, true)
               .style("text-anchor", params.text_anchor)
               .attr("x", 10)
               .attr("y", 0)
