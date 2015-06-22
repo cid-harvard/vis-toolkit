@@ -203,8 +203,10 @@
                      if(vars.var_sort == d)
                        vars.var_sort_asc = !vars.var_sort_asc;
 
-                      console.log("Updating sort", d, vars.var_sort, vars.var_sort_asc)
+                      vars.refresh = true;
+
                       vars.var_sort = d;
+
                       d3.select(vars.container).call(vars.this_chart)
 
                    });

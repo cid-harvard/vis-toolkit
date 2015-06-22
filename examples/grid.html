@@ -10,12 +10,9 @@
 // TODO
 // [X] Create fake data for the table to be screen filling
 // [ ] Customize enter exit behaviors using colors (e.g. red before exit)
-// [ ] Create some nested charts within each cell (instead of marks)
 // [ ] Option for using a consistant grid (e.g. 100 items)
 //     which implies to use a color cutoff rather than enter/exit elements
 // [ ] See http://bl.ocks.org/mbostock/1009139
-// [ ] Show labels and other marks
-// [ ] 
 
 var visualization = vistk.viz().params({
   type: "grid",
@@ -39,6 +36,10 @@ var visualization = vistk.viz().params({
       rotate: "-30"
     }]
   }],
+  ui: {
+    default: true,
+    sort: ["index"]
+  }
 });
 
 d3.select("#viz").call(visualization);
@@ -52,7 +53,7 @@ setInterval(function(d) {
   visualization.params({data: data, var_id: "id", refresh: true});
   d3.select("#viz").call(visualization);
 
-}, 1000)
+}, 3000)
 
 </script>
 </body>
