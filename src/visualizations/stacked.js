@@ -1,4 +1,4 @@
-      case "stacked":
+      case "stacked_old":
 
         vars.params = {
 
@@ -16,8 +16,8 @@
           y_scale: [{
               name: "linear",
               func: d3.scale.linear()
-                      .range([vars.height, 0])
-                    .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_y]; }))
+                      .range([vars.margin.top, vars.height - vars.margin.top - vars.margin.bottom])
+                      .domain([d3.max(vars.new_data, function(d) { return d[vars.var_y]; }), 0])
             }
           ],
 
@@ -42,12 +42,6 @@
 
         vars = vistk.utils.merge(vars, vars.params);
 
-        // Events handlers
-        vars.evt.register("highlightOn", function(d) { });
-        vars.evt.register("highlightOut", function(d) { });
-        vars.evt.register("selection", function(d) { });
-        vars.evt.register("resize", function(d) { });
-
         vars.x_axis = d3.svg.axis()
             .scale(vars.x_scale[0]["func"])
             .orient("bottom(");
@@ -55,12 +49,6 @@
         vars.y_axis = d3.svg.axis()
             .scale(vars.y_scale[0]["func"])
             .orient("left");
-
-        vars.area = d3.svg.area()
-            .interpolate('cardinal')
-            .x(function(d) { return vars.x_scale[0]["func"](d[vars.time.var_time]); })
-            .y0(function(d) { return vars.y_scale(d.y0); })
-            .y1(function(d) { return vars.y_scale(d.y0 + d.y); });
 
         // Connect marks
         var gConnect = vars.svg.selectAll(".connect__group")

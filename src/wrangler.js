@@ -232,6 +232,8 @@
        vars.new_data = vars.stack(vars.new_data);
     }
 
+    // Links between items
+    // Used for product space
     if(vars.links !== null) {
 
       vars.links.forEach(function(d, i) {

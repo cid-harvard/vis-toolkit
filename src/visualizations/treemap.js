@@ -62,9 +62,9 @@
                         });
 
         gItems.transition().duration(vars.duration)
-              .attr("transform", function(d) { 
-                return "translate(" + d.x + "," + d.y + ")"; 
-              });
+                      .attr("transform", function(d) { 
+                        return "translate(" + d.x + "," + d.y + ")"; 
+                      });
 
         // Add graphical marks
         vars.items[0].marks.forEach(function(d) {
@@ -84,24 +84,24 @@
                 .attr("x", 0)
                 .attr("y", 0)
                 .attr("width", function(d) { return d.dx; })
-                .attr("height", function(d) { return d.dy; })
+                .attr("height", function(d) { return d.dy; });
 
           gItems_enter
-           .filter(function(d, j) {
-            return d.depth == 1 &&  d.dx > 30 && d.dy > 30;
-           })
-           .append("foreignObject")
-                .attr("width", function(d) { return (d.dx - vars.padding) + "px"; })
-                .attr("height", function(d) { return (d.dy - vars.padding) + "px"; })
-              .append("xhtml:body")
-                .style("font", "14px 'Helvetica Neue'")
-                .append("div")
-                .style("width", function(d) { return d.dx + "px"; })
-                .style("height", function(d) { return d.dy + "px"; })
-                .style({"text-overflow": "ellipsis", "overflow": "hidden"})
-                  .html(function(d) {
-                    return vars.accessor_data(d)[vars.var_text];
-                  })
+                 .filter(function(d, j) {
+                  return d.depth == 1 &&  d.dx > 30 && d.dy > 30;
+                 })
+                 .append("foreignObject")
+                 .attr("width", function(d) { return (d.dx - vars.padding) + "px"; })
+                 .attr("height", function(d) { return (d.dy - vars.padding) + "px"; })
+               .append("xhtml:body")
+                 .style("font", "14px 'Helvetica Neue'")
+                 .append("div")
+                 .style("width", function(d) { return d.dx + "px"; })
+                 .style("height", function(d) { return d.dy + "px"; })
+                 .style({"text-overflow": "ellipsis", "overflow": "hidden"})
+                   .html(function(d) {
+                     return vars.accessor_data(d)[vars.var_text];
+                   })
 
           // SVG wrap
           // new_items.selectAll("text").call(vistk.utils.wrap);
