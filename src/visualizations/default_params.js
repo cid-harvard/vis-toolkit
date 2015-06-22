@@ -179,6 +179,61 @@ vars.default_params["scatterplot"] = {
   y_grid_show: true
 };
 
+// Similar to scatterplot
+vars.default_params["barchart"] = {
+
+  x_scale: [{
+              name: "linear",
+              func: d3.scale.ordinal()
+                      .rangeRoundBands([0, vars.width - vars.margin.left - vars.margin.right], .1)
+                      .domain(vars.data.map(function(d) { return d[vars.var_x]; })),
+    }, {
+      name: "linear_sparkline",
+      func: d3.scale.linear()
+              .range([0, 100])
+              .domain(d3.extent(vars.data, function(d) { return d[vars.time.var_time]; })).nice()
+    }
+  ],
+
+  x_ticks: 10,
+
+  y_scale: [{
+      name: "linear",
+      func: d3.scale.linear()
+              .range([vars.height-vars.margin.top-vars.margin.bottom, vars.margin.top])
+              .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_y]; })).nice(),
+    }, {
+      name: "linear_sparkline",
+      func: d3.scale.linear()
+              .range([100, 0])
+              .domain(d3.extent(vars.data, function(d) { return d[vars.var_y]; })).nice(),
+    }
+  ],
+
+  items: [{
+    attr: "country",
+    marks: [{
+        type: "rect",
+        rotate: "0",
+        y: function(d) { return - vars.y_scale[0]["func"](d[vars.var_y]) + (vars.height - vars.margin.bottom - vars.margin.top - vars.y_scale[0]["func"](d[vars.var_y])); },
+        height: function(d) { return vars.y_scale[0]["func"](d[vars.var_y]); },
+        width: 5,//function(d) { vars.x_scale[0]["func"].rangeBand(); },
+        fill: function(d) { return vars.color(vars.accessor_items(d)[vars.var_color]); }
+      }]
+
+  }],
+
+  connect: [],
+
+  x_axis_show: true,
+  x_axis_translate: [0, vars.height - vars.margin.bottom - vars.margin.top],
+  x_grid_show: false,
+  
+  y_axis_show: true,
+  y_axis_translate: [vars.margin.left, 0],
+  y_grid_show: true
+};
+
 
 // vars.default_params["dotplot_vertical"].x_scale[0]["func"].domain(vars.default_params["dotplot_vertical"].y_scale[0]["func"].domain());
 //vars.default_params["dotplot_vertical"].x_scale[0]["func"].range(vars.default_params["dotplot_vertical"].y_scale[0]["func"].domain());
@@ -336,7 +391,7 @@ vars.default_params["linechart"] = {
       name: "linear",
       func: d3.scale.linear()
               .range([vars.height - vars.margin.top - vars.margin.bottom, vars.margin.top])
-              .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_y]; }))
+              .domain(d3.extent(Array.prototype.concat.apply([], vars.new_data.map(function(d) { return d.values; }) ), function(d) { return d[vars.var_y]; }))
   }],
 
   items: [{
@@ -414,4 +469,55 @@ vars.default_params["splot_graph"] = {
 
   layout: null // Should be a X axis
 
+};
+
+vars.default_params["stacked"] = {
+
+  accessor_values: function(d) { return d.values; },
+  accessor_items: function(d) { return d; },
+
+  x_scale: [{
+      name: "linear",
+      func: d3.time.scale()
+              .range([vars.margin.left, vars.width - vars.margin.left - vars.margin.right])
+              .domain(vars.time.interval)
+    }
+  ],
+
+  y_scale: [{
+      name: "linear",
+      func: d3.scale.linear()
+              .range([vars.margin.top, vars.height - vars.margin.top - vars.margin.bottom])
+              .domain(d3.extent(Array.prototype.concat.apply([], vars.new_data.map(function(d) { return d.values; }) ), function(d) { return d[vars.var_y]; }))
+    }
+  ],
+
+  items: [],
+
+  connect: [{
+    attr: vars.time.var_time,
+    marks: [{
+        type: "path",
+        rotate: "0",
+        fill: function(d) { return vars.color(d.name); },
+        stroke: function(d) {
+          return vars.color(vars.accessor_items(d)[vars.var_color]); 
+        },
+        func: d3.svg.area()
+                .interpolate('cardinal')
+                .x(function(d) { return vars.x_scale[0]["func"](d[vars.time.var_time]); })
+                .y0(function(d) { return vars.y_scale[0]["func"](d.y0); })
+                .y1(function(d) { return vars.y_scale[0]["func"](d.y0 + d.y); })
+      }]
+  }],
+
+  x_axis_show: true,
+  x_axis_translate: [0, vars.height - vars.margin.bottom - vars.margin.top],
+  x_grid_show: true,
+  x_ticks: vars.time.points.length,
+  x_format: d3.time.format("%Y"),
+  
+  y_axis_show: true,
+  y_axis_translate: [vars.margin.left, 0],
+  y_grid_show: true
 };
