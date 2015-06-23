@@ -51,6 +51,7 @@ d3.csv("../data/new_rankings2.csv", function(error, data) {
       var_id: "name",
       var_group: "continent",
       var_color: "continent", // TODO: color by final ranking value..
+      color: d3.scale.ordinal().domain(["Africa", "Americas", "Asia", "Europe", "Oceania"]).range(["#99237d", "#c72439", "#6bc145", "#88c7ed", "#dd9f98"]),
       var_text: "name",
       y_text: "ECI Rank",
       var_y: "rank",
