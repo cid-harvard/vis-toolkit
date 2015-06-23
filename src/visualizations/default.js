@@ -58,36 +58,44 @@
             .tickSize(-vars.width+vars.margin.left+vars.margin.right, 0, 0)
             .tickFormat(""));
 
-        connect_data = vars.new_data;
+        if(typeof vars.connect[0] !== "undefined") {
 
-        if(vars.connect[0].type == "items" && vars.type == "productspace") {
-          connect_data = vars.links;
-        } else if(vars.connect[0].type == "dimension") {
+          // By default, connecting time points
+          var connect_data = vars.new_data;
+
+          // Connecting items
+          if(vars.connect[0].type == "items" && vars.type == "productspace") {
+            connect_data = vars.links;
+
+          // Connecting dimension
+          } else if(vars.connect[0].type == "dimension") {
+
+          }
+
+          // PRE-UPDATE CONNECT
+          // TOOD: find a common join to al types of connections
+          var gConnect = vars.svg.selectAll(".connect__group")
+                          .data(connect_data);
+        
+          // ENTER CONNECT
+          var gConnect_enter = gConnect.enter()
+                          .append("g")
+                          .attr("class", "connect__group");
+
+          // APPEND AND UPDATE CONNECT MARK
+          vars.connect.forEach(function(connect) {
+
+              connect.marks.forEach(function(params) {
+                gConnect_enter.call(vistk.utils.draw_mark, params);
+                gConnect.call(vistk.utils.draw_mark, params);
+              });
+
+          });
+
+          // EXIT
+          var gConnect_exit = gConnect.exit().remove();
 
         }
-
-        // PRE-UPDATE CONNECT
-        // TOOD: find a common join to al types of connections
-        var gConnect = vars.svg.selectAll(".connect__group")
-                        .data(connect_data);
-      
-        // ENTER CONNECT
-        var gConnect_enter = gConnect.enter()
-                        .append("g")
-                        .attr("class", "connect__group");
-
-        // APPEND AND UPDATE CONNECT MARK
-        vars.connect.forEach(function(connect) {
-
-            connect.marks.forEach(function(params) {
-              gConnect_enter.call(vistk.utils.draw_mark, params);
-              gConnect.call(vistk.utils.draw_mark, params);
-            });
-
-        });
-
-        // EXIT
-        var gConnect_exit = gConnect.exit().remove();
 
         if(typeof vars.items[0] !== "undefined") {
 
