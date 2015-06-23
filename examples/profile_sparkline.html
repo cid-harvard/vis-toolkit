@@ -20,19 +20,7 @@
 <div id="viz"></div>
 <script>
 
-d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments) {
-
-  // Data pre-processing
-  departments.forEach(function(d, i) {
-
-    d.id = i;
-    d.dept_pop = +d.dept_pop;
-    d.realgdp = +d.realgdp;
-    d.realgdp_percap = +d.realgdp_percap;    
-    d["sum(export_value)"] = +d["sum(export_value)"];
-    d["value_added"] = +d["value_added"];
-
-  });
+d3.json("../data/colombia_products_location_year.json", function(error, departments) {
 
   visualization = vistk.viz()
     .params({
@@ -40,17 +28,15 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
       container: "#viz",
       width: 300,
       height: 100,
-      data: departments,
-      var_y: "realgdp",
-      var_group: "dept_name",
-      var_color: "name",
-      var_id: "dept_name",
-      ui: {default: true},
+      data: departments.data,
+      var_y: "export_value",
+      var_x: "year",
+      var_id: "department_id",
       time: {
         var_time: "year", 
         parse: d3.time.format("%Y").parse,
         interval: [],
-        current_time: "2013"
+        current_time: "2012"
       },
       items: [{
         attr: "name",
@@ -63,12 +49,7 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
           rotate: "-50"
         }]
       }],
-      var_x: "year",
-      interpolate: "linear",
-      var_text: "dept_name",
-      filter: ["Antioquia"],
-      selection: ["Antioquia"],
-      highlight: ["Antioquia"]
+      var_text: "department_id",
     });
 
   d3.select(visualization.container()).call(visualization);
