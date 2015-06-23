@@ -250,52 +250,27 @@
 
       // Create the root node
       vars.root = {};
-      vars.root.name = "root";
+      vars.root[vars.var_text]= "root";
       vars.root.depth = 0;
 
       vars.groups = [];
-/*
-      // Make sure each node has a parent attribute
-      vars.new_data.forEach(function(d) {
-        d.parent = d.var_parent;
-      });
 
-
-    // create a name: node map
-    var dataMap = exports.data.reduce(function(map, node) {
-        map[node.name] = node;
-        return map;
-    }, {});
-
-    // create the tree array
-    treeData = [];
-
-    exports.data.forEach(function(node) {
-        var parent = dataMap[node.parent];
-        if (parent) {
-            // create child array if it doesn't exist
-            (parent.children || (parent.children = []))
-                // add node to child array
-                .push(node);
-        } else {
-            // parent is null or missing
-            treeData.push(node);
-        }
-    });
-*/
       vars.unique_groups = [];
 
       // Creates the groups here
       vars.new_data.map(function(d, i) {
 
+        // If group doesn't exist, we create it
         if(vars.unique_groups.indexOf(d[vars.var_group]) < 0) {
           vars.unique_groups.push(d[vars.var_group]);
           vars.groups[vars.unique_groups.indexOf(d[vars.var_group])] = [];
         }
 
-        var n = {name: d[vars.var_text], group: d[vars.var_group], year: d.year, id: i};
+        var n = {year: d.year, id: i};
         n[vars.var_size] = d[vars.var_size];
         n[vars.var_group] = d[vars.var_group];
+        n[vars.var_id] = d[vars.var_id];
+        n[vars.var_text] = d[vars.var_text];
         vars.groups[vars.unique_groups.indexOf(d[vars.var_group])].push(n);
 
       });
@@ -307,14 +282,16 @@
       vars.root.children = vars.groups.map(function(d, i) {
 
         node = {};
-        node.name = d[0].name;
-        node.group = d[0].group;
+        node[vars.var_text] = d[0][vars.var_text];
+        node[vars.var_group] = d[0][vars.var_group];
 
         // Create the children nodes var
         node.children = d.map(function(e, j) {
-          var n = {name: e.name, group: e.group, year: e.year, id: e.id};
+          var n = {year: e.year, id: e.id};
+          n[vars.var_text] = e[vars.var_text];
           n[vars.var_size] = e[vars.var_size]; 
           n[vars.var_group] = e[vars.var_group];
+          n[vars.var_id] = e[vars.var_id];
           return n;
         });
 

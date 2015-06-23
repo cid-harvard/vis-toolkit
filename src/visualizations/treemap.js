@@ -88,20 +88,21 @@
 
           gItems_enter
                  .filter(function(d, j) {
-                  return d.depth == 1 &&  d.dx > 30 && d.dy > 30;
+                   return d.depth == 1 &&  d.dx > 30 && d.dy > 30;
                  })
                  .append("foreignObject")
                  .attr("width", function(d) { return (d.dx - vars.padding) + "px"; })
-                 .attr("height", function(d) { return (d.dy - vars.padding) + "px"; })
+                 .attr("height", function(d) { return (d.dy - 2*vars.padding) + "px"; })
                .append("xhtml:body")
                  .style("font", "14px 'Helvetica Neue'")
-                 .append("div")
-                 .style("width", function(d) { return d.dx + "px"; })
-                 .style("height", function(d) { return d.dy + "px"; })
+               .append("div")
+                 .style("padding-top", function(d) { return (vars.padding/2)+"px"; })
+                 .style("width", function(d) { return (d.dx - 2*vars.padding) + "px"; })
+                 .style("height", function(d) { return (d.dy - 2*vars.padding) + "px"; })
                  .style({"text-overflow": "ellipsis", "overflow": "hidden"})
-                   .html(function(d) {
-                     return vars.accessor_data(d)[vars.var_text];
-                   })
+                 .html(function(d) {
+                   return vars.accessor_data(d)[vars.var_text];
+                 })
 
           // SVG wrap
           // new_items.selectAll("text").call(vistk.utils.wrap);
