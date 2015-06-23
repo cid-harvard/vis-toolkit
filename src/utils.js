@@ -65,7 +65,7 @@
           }
 
 
-          // Supporting multiple text elements
+          // Supporting multipe text elements
           var mark_id = vars.items[0].marks.indexOf(params);
 
           var mark = d3.select(this).selectAll(".items__mark__text.items_"+mark_id).data([d]);
@@ -191,7 +191,7 @@
                 return "translate("+ -d.x +", "+ -d.y +")";
               })
               .style("fill", function(d, i) { 
-                return params.fill(d.data[vars.var_color]);
+                return params.fill(vars.accessor_data(d)[vars.var_color]);
               });
 
 

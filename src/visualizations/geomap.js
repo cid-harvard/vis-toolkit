@@ -22,11 +22,17 @@
               }],
           }],
 
-          connect: []
+          connect: [],
+
+          accessor_data: function(d) { return d.data; }
 
         };
 
         vars = vistk.utils.merge(vars, vars.params);
+
+        // LOAD USER PARAMS
+        vars.items = vistk.utils.merge(vars.items, vars.user_vars.items);
+      
 
         // http://techslides.com/demos/d3/d3-world-map-colors-tooltips.html
         var projection = d3.geo.mercator()
@@ -63,14 +69,16 @@
           // TODO: should merge on a more reliable join (e.g. 2-char)
           d.data = vars.new_data.filter(function(n) { return d._name === n.name; })[0];
 
+          // Two reasons why it is not defined
+          // 1/ No data
+          // 2/ Current country
+          if(typeof d.data == "undefined") {
+            var data = {}
+            data.share = 0;
+            d.data = data;
+          }
 
         });
-
-        // TODO: see above
-        countries = countries.filter(function(d) {
-          return typeof d.data != "undefined";
-        });
-
 
         // PRE-UPDATE ITEMS
         var gItems = vars.svg.selectAll(".mark__group")
@@ -85,11 +93,9 @@
                          .each(vistk.utils.items_group);
 
         // APPEND AND UPDATE ITEMS MARK
-        vars.items.forEach(function(item) {
-          item.marks.forEach(function(params) {
-            gItems_enter.call(vistk.utils.draw_mark, params);
-            gItems.call(vistk.utils.draw_mark, params);
-          });
+        vars.items[0].marks.forEach(function(params) {
+          gItems_enter.call(vistk.utils.draw_mark, params);
+          gItems.call(vistk.utils.draw_mark, params);
         });
 
 /*

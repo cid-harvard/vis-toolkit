@@ -11,17 +11,13 @@
 
 d3.json("../data/partners_usa_2012_csay.json", function(error, partners) {
 
-
   queue()
       .defer(d3.json, "../shapefiles/world/world-110m.json")
       .defer(d3.tsv, "../data/world-country-names.tsv")
       .await(ready);
 
   function ready(error, world, names) {
-
-    dd = partners;
-    n = names;
-
+    
     visualization = vistk.viz()
       .params({
         type: "geomap",
@@ -35,18 +31,35 @@ d3.json("../data/partners_usa_2012_csay.json", function(error, partners) {
         var_group: "continent",
         var_color: "share",
         vars_text: "name",
-        mark: {
-          type: 'shape',
-          width: 10,
-          height: 10
-        },
+        items: [{
+          attr: "name",
+          marks: [{
+            type: "text",
+            rotate: "0",
+            translate: [-10, -30],
+            text_anchor: "middle"
+          }, {
+            type: "shape",
+            fill: d3.scale.linear()
+              .domain([0, 1])
+              //.domain([d3.min(vars.new_data, function(d) { return d[vars.var_color]; }), d3.max(vars.new_data, function(d) { return d[vars.var_color]; })])
+              .range(["red", "green"]),
+            rotate: "0",
+            radius: 5  
+          }, {
+            var_mark: '__selected',
+            type: d3.scale.ordinal().domain([true, false]).range(["star", "none"]),
+            rotate: "0"
+          }]
+        }],
         time: {
           var_time: "year",
           current_time: 2012
         },
         ui: {
           default: true
-        }
+        },
+        selection: ["United States"],
       });
 
     d3.select("#viz").call(visualization);
