@@ -63,6 +63,7 @@
           // TODO: should merge on a more reliable join (e.g. 2-char)
           d.data = vars.new_data.filter(function(n) { return d._name === n.name; })[0];
 
+
         });
 
         // TODO: see above
@@ -77,8 +78,11 @@
 
         // ENTER ITEMS
         var gItems_enter = gItems.enter()
-                        .append("g")
-                        .each(vistk.utils.items_group)
+                       .append("g")
+                         .attr("transform", function(d) {
+                           return "translate(" + [0, 0] + ")";
+                        })
+                         .each(vistk.utils.items_group);
 
         // APPEND AND UPDATE ITEMS MARK
         vars.items.forEach(function(item) {

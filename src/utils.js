@@ -179,9 +179,21 @@
               .classed("highlighted", function(d, i) { return d.__highlighted; })
               .classed("selected", function(d, i) { return d.__selected; })
               .attr("d", vars.path)
+              .attr("transform", function(d) {
+
+                // Drawing projects comes with automatic offset
+                d.x = d3.select(this).node().getBBox().x;
+                d.y = d3.select(this).node().getBBox().y;
+
+                // Update parent with new coordinates
+                d3.select(d3.select(this).node().parentNode).attr("transform", "translate("+ d.x +", "+ d.y +")");
+
+                return "translate("+ -d.x +", "+ -d.y +")";
+              })
               .style("fill", function(d, i) { 
                 return params.fill(d.data[vars.var_color]);
               });
+
 
           break;
 
