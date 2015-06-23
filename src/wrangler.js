@@ -44,7 +44,7 @@
 
         vars.new_data = vars.new_data.filter(function(d) {
           // We don't keep values that are not in the vars.filter array
-          return vars.filter.indexOf(d[vars.var_group]) > -1;
+          return vars.filter.indexOf(d[vars.var_group]+"") > -1;
         });
 
       }
@@ -77,8 +77,8 @@
           v[vars.var_y] = d[vars.var_y];
           v[vars.var_x] = d[vars.var_x];
 
+          if(typeof vars.items !== "undefined" && JSON.stringify(vars.items) != '{}') {
 
-          if(typeof vars.items !== "undefined") {
             // Make sure we retrieve the data for nested charts (if any)
             vars.items.forEach(function(item) {
               item.marks.forEach(function(params) {
