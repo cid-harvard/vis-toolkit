@@ -7,27 +7,29 @@
 <div id="viz"></div>
 <script>
 
-d3.json("../data/exports_quinn_2012.json", function(error, exports) {
+d3.json("../data/colombia_products_location_year.json", function(error, products) {
 
   /*
-    {
-    "cog": 0.4454352986568881,
-    "coi": -0.24858148355392148,
-    "department_id": 930,
-    "distance": 0.8955484947890789,
-    "export_rca": 0,
-    "export_value": 0,
-    "import_value": 0,
-    "product_id": 114,
-    "year": 2012,
-    "name": "Live horses, asses, mules or hinnies",
-    "level": "4digit",
-    "parent_id": 16,
-    "parent_name": "Live Animals",
-    "parent_code": "01",
-    "code": "0101"
-  }
+  {
+    "data": [
+      {
+        "cog": 0.4454352986568881,
+        "coi": -0.24858148355392148,
+        "department_id": 930,
+        "distance": 0.8955484947890789,
+        "export_rca": 0,
+        "export_value": 0,
+        "import_value": 0,
+        "product_id": 114,
+        "year": 2012
+      },
   */
+
+  // Data pre-processing
+  products.data.forEach(function(d, i) {
+    d.parent_code = +(d["product_id"] + "")[0];
+    d.parent_name = "parent_name_" + (d["product_id"] + "")[0];
+  });
 
   visualization = vistk.viz()
     .params({
@@ -35,13 +37,13 @@ d3.json("../data/exports_quinn_2012.json", function(error, exports) {
       container: "#viz",
       height: 600,
       width: 900,
-      data: exports,
-      var_id: "code",
+      data: products.data,
+      var_id: "product_id",
       var_group: "parent_code",
       var_color: "parent_code",
-      title: "Export treemap",
+      title: "Export treemap for Colombia/930",
       var_size: "export_value",
-      var_text: "name",
+      var_text: "parent_name",
       color: function() { return "#eee"; },
       time: {
         var_time: "year", 

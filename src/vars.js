@@ -103,7 +103,7 @@
     duration: 1000,
     interpolate: "monotone",
 
-    padding: 5,
+    padding: 2,
 
     radius: 5,
 
