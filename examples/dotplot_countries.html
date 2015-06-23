@@ -18,8 +18,10 @@ d3.json("../data/diversification_ubiquity_hs4_1995_2012.json", function(error, c
       type: 'dotplot',      
       data: flat_years,
       container: '#viz',
+      var_id: 'name',
+      var_text: "name"
       var_x: 'avg_products',
-      x_type: 'linear',
+      var_group: 'continent',
       var_y: function() { return this.height/2; },
       x_text: null,
       x_ticks: 10,
@@ -42,9 +44,7 @@ d3.json("../data/diversification_ubiquity_hs4_1995_2012.json", function(error, c
       ui: {
         default: true,
         options: ["country", "continent", "year"]
-      },
-      var_id: 'name',
-      var_text: "name"
+      }
     });
 
     d3.select("#viz").call(visualization);

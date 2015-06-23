@@ -30,6 +30,7 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
       var_y: function() { return this.height/2; },
       x_text: null,
       x_ticks: 2,
+      var_group: 'dept_name',
       x_format: function(d) { return '$' + d3.format(".2s")(d); },
       items: [{
         attr: "name",
@@ -51,7 +52,7 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
         options: ui_options
       },
       var_id: "dept_name",
-      var_text: "dept_name", 
+      var_text: "dept_name",
       selection: ["Antioquia", "Bogotá D. C."],
       highlight: ["Antioquia"]
     });
