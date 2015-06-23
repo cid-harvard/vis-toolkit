@@ -64,7 +64,6 @@
             params.text_anchor = "start";
           }
 
-
           // Supporting multipe text elements
           var mark_id = vars.items[0].marks.indexOf(params);
 
@@ -171,9 +170,10 @@
           mark.enter().insert("path")
                         .attr("class", "country")
                         .classed('items__mark__shape', true)
-                        .attr("title", function(d,i) { 
+                        .attr("title", function(d,i) {
+                          active = d3.select(null); 
                           return d.name; 
-                        });
+                        })
 
           mark
               .classed("highlighted", function(d, i) { return d.__highlighted; })
@@ -192,8 +192,38 @@
               })
               .style("fill", function(d, i) { 
                 return params.fill(vars.accessor_data(d)[vars.var_color]);
-              });
+              })
+              .on("click", clicked);
 
+              // http://bl.ocks.org/mbostock/4699541
+              function clicked(d) {
+                if (active.node() === this) return reset();
+                active.classed("active", false);
+                active = d3.select(this).classed("active", true);
+
+                var bounds = vars.path.bounds(d),
+                    dx = bounds[1][0] - bounds[0][0],
+                    dy = bounds[1][1] - bounds[0][1],
+                    x = (bounds[0][0] + bounds[1][0]) / 2,
+                    y = (bounds[0][1] + bounds[1][1]) / 2,
+                    scale = .9 / Math.max(dx / vars.width, dy / vars.height),
+                    translate = [vars.width / 2 - scale * x, vars.height / 2 - scale * y];
+
+                vars.svg.transition()
+                    .duration(750)
+                    .style("stroke-width", 1.5 / scale + "px")
+                    .attr("transform", "translate(" + translate + ")scale(" + scale + ")");
+              }
+
+              function reset() {
+                active.classed("active", false);
+                active = d3.select(null);
+
+                vars.svg.transition()
+                    .duration(750)
+                    .style("stroke-width", "1.5px")
+                    .attr("transform", "");
+              }
 
           break;
 
@@ -210,7 +240,11 @@
               .attr("x1", function(d) { return vars.x_scale[0]["func"](d.source.x); })
               .attr("y1", function(d) { return vars.y_scale[0]["func"](d.source.y); })
               .attr("x2", function(d) { return vars.x_scale[0]["func"](d.target.x); })
-              .attr("y2", function(d) { return vars.y_scale[0]["func"](d.target.y); });
+              .attr("y2", function(d) { return vars.y_scale[0]["func"](d.target.y); })
+              //.attr("class", function(d) {
+              //  if(typeof d.source !== "undefined" && typeof d.target !== "undefined")
+              //    return "link source_"+d.source.id+" target_"+d.target.id;
+              //})
 
           break;
 
@@ -255,8 +289,7 @@
           scope.x_scale[0]["func"].domain(d3.extent(d.values, function(d) {
            return d[scope.var_x]; 
           }))
-          .range([0, 50])
-
+          .range([0, 50]);
 
           scope.connect = [{
             marks: [{

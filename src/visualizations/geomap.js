@@ -71,6 +71,7 @@
           if(typeof d.data == "undefined") {
             var data = {}
             data.share = 0;
+            data.name = "N/A"
             d.data = data;
           }
 
