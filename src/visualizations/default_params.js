@@ -469,7 +469,7 @@ vars.default_params["linechart"] = {
   y_scale: [{
       name: "linear",
       func: d3.scale.linear()
-              .range([vars.height - vars.margin.top - vars.margin.bottom, vars.margin.top])
+              .range([vars.margin.top, vars.height - vars.margin.top - vars.margin.bottom])
               .domain(d3.extent(Array.prototype.concat.apply([], vars.new_data.map(function(d) { return d.values; }) ), function(d) { return d[vars.var_y]; }))
   }],
 
