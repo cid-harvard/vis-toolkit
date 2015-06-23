@@ -32,7 +32,6 @@
 
         // LOAD USER PARAMS
         vars.items = vistk.utils.merge(vars.items, vars.user_vars.items);
-      
 
         // http://techslides.com/demos/d3/d3-world-map-colors-tooltips.html
         var projection = d3.geo.mercator()
@@ -42,9 +41,6 @@
         // This is the main function that draws the shapes later on
         vars.path = d3.geo.path()
             .projection(projection);
-
-        tooltip = d3.select(vars.container).append("div")
-            .attr("class", "tooltip");
 
         vars.gSvg = vars.svg
             .call(d3.behavior.zoom()
@@ -98,40 +94,7 @@
           gItems.call(vistk.utils.draw_mark, params);
         });
 
-/*
-        // PRE-UPDATE
-        var gItems = vars.gSvg.selectAll(".mark__group")
-                         .data(countries, function(d, i) { return i; });
+        // ITEMS EXIT
+        var gItems_exit = gItems.exit().remove();
 
-        // ENTER
-
-        // Add a group for marks
-        var gItems_enter = gItems.enter()
-                        .append("g")
-                        .each(vistk.utils.items_group);
-
-        // Add a graphical mark
-        gItems_enter.each(vistk.utils.items_mark)
-            .select("path")
-            .attr("title", function(d,i) { return d[vars.var_text]; })
-            .on("mouseenter", function(d, i) {
-             // vars.dispatch.highlightOn(d);
-              tooltip
-               .classed("hidden", false);
-            })
-            .on("mousemove", function(d,i) {
-
-              var mouse = d3.mouse(vars.gSvg.node()).map(function(d) { return parseInt(d); });
-
-              tooltip
-                .attr("style", "left:"+(mouse[0]+25)+"px;top:"+mouse[1]+"px")
-                .html(d._name);
-
-            })
-            .on("mouseleave",  function(d,i) {
-              console.log("OUT")
-          //    vars.dispatch.highlightOut(d);             
-              tooltip.classed("hidden", true);
-            });
-*/
-          break;
+      break;
