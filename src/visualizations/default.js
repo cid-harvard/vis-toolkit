@@ -9,6 +9,7 @@
 
         console.log("[init.vars.default]", vars)
 
+        // Sparkline is currenlty the only chart that can have a scope as parameter
         if(vars.type == "sparkline") {
           //scope = {};
           //scope = vistk.utils.merge(scope, vars)
@@ -57,9 +58,18 @@
             .tickSize(-vars.width+vars.margin.left+vars.margin.right, 0, 0)
             .tickFormat(""));
 
+        connect_data = vars.new_data;
+
+        if(vars.connect[0].type == "items" && vars.type == "productspace") {
+          connect_data = vars.links;
+        } else if(vars.connect[0].type == "dimension") {
+
+        }
+
         // PRE-UPDATE CONNECT
+        // TOOD: find a common join to al types of connections
         var gConnect = vars.svg.selectAll(".connect__group")
-                        .data(vars.new_data, function(d, i) { return d[vars.var_id]; });
+                        .data(connect_data);
       
         // ENTER CONNECT
         var gConnect_enter = gConnect.enter()
@@ -69,52 +79,18 @@
         // APPEND AND UPDATE CONNECT MARK
         vars.connect.forEach(function(connect) {
 
-          if(typeof connect.type == "undefined" || connect.type == "time") {
-
-          	connect.marks.forEach(function(params) {
+            connect.marks.forEach(function(params) {
               gConnect_enter.call(vistk.utils.draw_mark, params);
               gConnect.call(vistk.utils.draw_mark, params);
             });
 
-          }/* else if(connect.type == "items" && vars.type == "productspace") {
-
-            if(vars.links.length > 0 && vars.aggregate != vars.var_group) {
-
-              // Connect marks
-              var gConnect = vars.svg.selectAll(".connect__group")
-                              .data(vars.links);
-            
-              var gConnect_enter = gConnect.enter()
-                              .append("g")
-                              .attr("class", "connect__group");
-
-              connect.marks.forEach(function(d) {
-                
-                vars.connect.type = d.type;
-                vars.connect.rotate = d.rotate;
-
-                gConnect_enter.each(vistk.utils.connect_mark)
-                              .attr("class", function(d) {
-                                return "link source_"+d.source.id+" target_"+d.target.id;
-                              })
-                              .style("stroke-width", function(d) { return Math.sqrt(d.value); })
-                              .style("opacity", .4);
-
-              });
-
-            }
-        
-          } 
-          */
         });
 
         // EXIT
         var gConnect_exit = gConnect.exit().remove();
 
-
-
-
         if(typeof vars.items[0] !== "undefined") {
+
           // PRE-UPDATE ITEMS
           var gItems = vars.svg.selectAll(".mark__group")
                           .data(vars.new_data, function(d, i) { return d[vars.var_id]; });
@@ -132,7 +108,6 @@
               gItems_enter.call(vistk.utils.draw_mark, params);
               gItems.call(vistk.utils.draw_mark, params);
             });
-
 
             /* Should be as below but current params don't match this format
 
@@ -156,6 +131,8 @@
 
           // ITEMS EXIT
           var gItems_exit = gItems.exit().remove();
+
+
         }
         
         vistk.utils.background_label(vars.title);
