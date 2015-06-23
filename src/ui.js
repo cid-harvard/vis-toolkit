@@ -203,14 +203,13 @@
                    .on("click", function(d) { 
 
                      if(vars.var_sort == d)
-                       vars.var_sort_asc = !vars.var_sort_asc;
+                       vars._user_vars.var_sort_asc = !vars._user_vars.var_sort_asc;
+
+                      vars._user_vars.var_sort = d;
 
                       vars.refresh = true;
 
-                      vars.var_sort = d;
-
-                      d3.select(vars.container).call(vars.this_chart)
-
+                      d3.select(vars.container).call(vars.this_chart);
                    });
 
         label_radios.append("span")

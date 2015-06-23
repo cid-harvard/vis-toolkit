@@ -44,7 +44,6 @@
 
         vars.new_data = vars.new_data.filter(function(d) {
           // We don't keep values that are not in the vars.filter array
-          console.log(d[vars.var_group], vars.filter.indexOf(d[vars.var_group]), vars.new_data.length)
           return vars.filter.indexOf(d[vars.var_group]) > -1;
         });
 

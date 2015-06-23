@@ -7,23 +7,24 @@
         // Contain the parameters in something different than global variable
         // Use the vistk.utils.create_chart()
 
+        console.log("[init.vars.default]", vars)
+
         if(vars.type == "sparkline") {
           //scope = {};
           //scope = vistk.utils.merge(scope, vars)
-          console.log("INIT VARS", vars)
+
           scope = vars.default_params["sparkline"](vars);
           vars = vistk.utils.merge(vars, scope);
 
         } else {
 
-        // LOAD CHART PARAMS
-        vars = vistk.utils.merge(vars, vars.default_params[vars.type]);
+          // LOAD CHART PARAMS
+          vars = vistk.utils.merge(vars, vars.default_params[vars.type]);
 
-        // LOAD USER PARAMS
-        vars.items = vistk.utils.merge(vars.items, vars.user_vars.items);
+          // LOAD USER PARAMS
+          vars.items = vistk.utils.merge(vars.items, vars.user_vars.items);
         
         }
-
 
         // CREATE AXIS
         vars.svg.call(vistk.utils.x_axis);
