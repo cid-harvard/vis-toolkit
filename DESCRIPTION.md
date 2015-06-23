@@ -59,6 +59,8 @@ What to do with missing data over time?
  * Missing attributes
  * Missing time points
 
+* Color by clipping https://github.com/mbostock/d3/issues/1456
+
  * https://github.com/mozilla/metrics-graphics/blob/34e56c4a387940c3e5e58a458062389a8110c4e5/src/js/misc/process.js#L93
 
 * Then other properties, attributes, can be loaded on-demand and eventually be kept
@@ -129,6 +131,7 @@ Labels
 Legends
  * Color scale / legend (should contain the min/max values and min/max color range)
  * Should take the visual mapping as input and automatically generate it
+ * Interactive and informative legends http://bl.ocks.org/bobmonteverde/2070123
 
 ## Customization
 
@@ -402,7 +405,12 @@ D3js notebook
 * Text wrap for long names (see [d3plus word wrap](https://github.com/alexandersimoes/d3plus/wiki/Basic-Utilities#wordwrap))
  * Guaranty that exported SVG will be correct
  * Same with other export file formats
+
+* Tooltips
  * Customizable tooltips (d3plus.tooltip.create()) http://bl.ocks.org/tgk/6044254
+ * http://bl.ocks.org/d3noob/c37cb8e630aaef7df30d
+ * http://bl.ocks.org/rveciana/5181105
+
 
 * Callback once the loading is terminated
  * This is quite tricky as many things are pending
