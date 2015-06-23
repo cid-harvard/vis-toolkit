@@ -303,29 +303,51 @@ vars.default_params["vertical_ordinal"] = {
   }],
 
   y_scale: [{
-      name: "index",
-      func: d3.scale.ordinal()
-              .domain(d3.set(vars.new_data.map(function(d) { return d[vars.var_y]; })).values())
-              .rangeBands([vars.margin.left, vars.width - vars.margin.left - vars.margin.right]),
-      callback: function() {
-                  vars.new_data.sort(function ascendingKey(a, b) {
-                    return d3.ascending(a[vars.var_x], b[vars.var_x]);
-                  })
-                  .forEach(function(d, i) {
-                    d.rank = vars.x_scale[0]["func"](i);
-                  });
-      }
-    }
-  ],
+    name: "index",
+    func: d3.scale.ordinal()
+            .domain(d3.set(vars.new_data.map(function(d) { return d[vars.var_y]; })).values())
+            .rangeBands([vars.margin.left, vars.width - vars.margin.left - vars.margin.right])
+  }],
 
   items: [{
     attr: "name",
     marks: [{
       type: "circle",
       rotate: "0",
-     // r_scale: d3.scale.linear()
-     //             .range([10, 30])
-     //             .domain(d3.extent(vars.new_data, function(d) { return d[params.var_r]; }))
+    },{
+      type: "text",
+      rotate: "0"
+    }]
+  }],
+
+  connect: [],
+
+  x_axis_show: false,
+
+  y_axis_show: false
+};
+
+vars.default_params["horizontal_ordinal"] = {
+
+  x_scale: [{
+    func: d3.scale.ordinal()
+            .domain(d3.set(vars.new_data.map(function(d) { return d[vars.var_x]; })).values())
+            .rangeBands([vars.margin.left, vars.width - vars.margin.left - vars.margin.right]),
+
+  }],
+
+  y_scale: [{
+    func: d3.scale.linear()
+            .domain([0, d3.max(vars.new_data, function(d) { return d[vars.var_y]; })])
+            .range([vars.height/2, vars.height/2])
+            .nice()
+  }],
+
+  items: [{
+    attr: "name",
+    marks: [{
+      type: "circle",
+      rotate: "0",
     },{
       type: "text",
       rotate: "0"
