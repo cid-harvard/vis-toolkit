@@ -20,6 +20,8 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
 
   var ui_options = [];
 
+  var list_dimensions = ['dept_pop', 'realgdp', 'realgdp_percap', 'value_added'];
+
   visualization = vistk.viz()
     .params({
       type: 'parallel_coordinates',      
@@ -27,24 +29,40 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
       container: '#viz',
       var_x: 'dept_pop',
       x_type: 'linear',
-      var_y: ['dept_pop', 'realgdp', 'realgdp_percap', 'value_added'],
+      var_y: list_dimensions,
+      x_text: null,
+      x_ticks: list_dimensions.length,
+      x_format: function(d) { return '$' + d3.format(".2s")(d); },
+      var_x: 'dept_pop',
+      var_y: function() { return this.height/2; },
       x_text: null,
       x_ticks: 10,
       x_format: function(d) { return '$' + d3.format(".2s")(d); },
-      mark: {
-        type: 'diamond',
-        width: 10,
-        height: 10
-      },
+      items: [{
+        attr: "name",
+        marks: [{
+          type: "tick",
+          rotate: "0"
+        },{
+          type: "diamond",
+          rotate: "0"
+        },{
+          type: "text",
+          rotate: "0",
+          translate: [-10, -30],
+          text_anchor: "middle"
+        }]
+      }],
       time: {
         var_time: 'year', 
-        current_time: 2013
+        current_time: 2013,
+        parse: function(d) { return d; }
       },
       ui: {
         default: true,
         options: ui_options
       },
-      id: "name",
+      var_id: "dept_name",
       var_text: "dept_name", 
       selection: [0],
       highlight: [0]
