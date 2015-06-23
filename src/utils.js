@@ -190,15 +190,15 @@
           var mark = d3.select(this).selectAll(".connect__line").data([d]);
 
           mark.enter().append('line')
-              .classed('connect__line', true)
+              .classed('connect__line', true);
+
+          mark              
+              .classed("highlighted", function(d, i) { return d.__highlighted; })
+              .classed("selected", function(d, i) { return d.__selected; })
               .attr("x1", function(d) { return vars.x_scale[0]["func"](d.source.x); })
               .attr("y1", function(d) { return vars.y_scale[0]["func"](d.source.y); })
               .attr("x2", function(d) { return vars.x_scale[0]["func"](d.target.x); })
               .attr("y2", function(d) { return vars.y_scale[0]["func"](d.target.y); });
-
-          mark              
-              .classed("highlighted", function(d, i) { return d.__highlighted; })
-              .classed("selected", function(d, i) { return d.__selected; });
 
           break;
 
@@ -216,9 +216,7 @@
           mark              
               .classed("highlighted", function(e, j) { return e.__highlighted; })
               .classed("selected", function(e, j) { return e.__selected; })
-              .attr('d', function(e) {
-                return params["func"](e.values);
-              });
+              .attr('d', function(e) { return params["func"](e.values); });
 
         break;
 
@@ -283,9 +281,9 @@
 
         break;
 
-        case "dotplot":
+        case "dotplot_vertical":
 
-          dotplot_params = vars.default_params["dotplot"];
+          var dotplot_params = vars.default_params["dotplot_vertical"];
 
           var chart = d3.select(this).selectAll(".items__chart__dotplot").data([d]);
 
@@ -364,34 +362,12 @@
 
   }
 
-  vistk.utils.create_chart = function(params) {
+  vistk.utils.create_chart = function(_, params) {
 
-    console.log("Creating chart with params ", params, d3.select(this));
-
-    // Current group
-/*  
-    // PRE-UPDATE CONNECT
-    var gConnect = d3.select(this).append("g")
-                    .attr("class", "connect__group2");
-                 //   .data(d, function(d, i) { return d[vars.var_id]; });
-
-
-    // ENTER CONNECT
-    var gConnect_enter = gConnect.enter()
-                    .append("g")
-                    .attr("class", "connect__group");
-
-    // APPEND AND UPDATE CONNECT MARK
-    vars.connect.forEach(function(connect) {
-      connect.marks.forEach(function(params) {
-      gConnect_enter.call(vistk.utils.draw_mark, params);
-      gConnect.call(vistk.utils.draw_mark, params);
-    });
-
-    });
+    console.log("Creating chart with params", params, _, d3.select(this));
 
     // PRE-UPDATE ITEMS
-    var gItems = vars.svg.selectAll(".mark__group")
+    var gItems = _.selectAll(".mark__group")
                     .data(vars.new_data, function(d, i) { return d[vars.var_id]; });
 
     // ENTER ITEMS
@@ -399,24 +375,15 @@
                     .append("g")
                     .each(vistk.utils.items_group)
                     .attr("transform", function(d, i) {
-                      console.log(d, vars.y_scale[0]["func"](d[vars.var_y]), vars.var_y)
                       return "translate(" + vars.x_scale[0]["func"](d[vars.var_x]) + ", " + vars.y_scale[0]["func"](d[vars.var_y]) + ")";
                     });
 
     // APPEND AND UPDATE ITEMS MARK
-    vars.items[0].marks.forEach(function(params) {
+    params.items[0].marks.forEach(function(params) {
       gItems_enter.call(vistk.utils.draw_mark, params);
       gItems.call(vistk.utils.draw_mark, params);
     });
 
-    // POST-UPDATE ITEMS GROUPS
-    vars.svg.selectAll(".mark__group")
-                    .transition()
-                    .duration(vars.duration)
-                    .attr("transform", function(d, i) {
-                      return "translate(" + vars.x_scale[0]["func"](d[vars.var_x]) + ", " + vars.y_scale[0]["func"](d[vars.var_y]) + ")";
-                    });
-*/
   }
 
   vistk.utils.items_mark = function(d, i) {
