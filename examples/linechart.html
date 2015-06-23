@@ -11,49 +11,66 @@
 
 d3.csv("../data/new_rankings2.csv", function(error, data) {
 
-  var res = [];
+  d3.json("../data/countries.json", function(error, countries) {
 
-  data.forEach(function(d) {
+    var res = [];
 
-    // Create ids for countries
-    for(var k in d) {
+    function find_country(var_filter, value) {
 
-      if(k != "Country") {
-        res.push({name: d.Country, year: k, rank: +d[k], id: d.Country.replace(/ /g, "_").replace(/,/g, "").replace(/./g, ""), category: d[k]%5 + ""})
+      var metadata = countries.filter(function(d) {
+        return d['name'][var_filter] == value;
+      })
+
+      if(metadata.length == 0) {
+        return "ERROR";
+      } else {
+        return metadata[0]['region'];
       }
 
     }
-  });
 
-  visualization = vistk.viz().params({
-    type: "linechart",
-    container: "#viz",
-    height: 600,
-    width: 900,
-    margin: {top: 30, right: 100, bottom: 30, left: 10},
-    data: res,
-    var_id: "name", // Should be ["continent", "id"] to allow aggregation and filtering
-    var_group: "category",
-    var_color: "category", // TODO: color by final ranking value..
-    // title: "Countries rankings by ECI",
-    var_text: "name",
-    y_text: "ECI Rank",
-    var_y: "rank",
-    var_x: "year",
-    items: [],
-    time: {
-      parse: d3.time.format("%Y").parse,
-      var_time: 'year',
-      current_time: "2013"
-    },
-    selection: ["Japan", "Switzerland", "Germany"],
-    highlight: "France",
-    ui: {
-      default: true
-    },
-  });
+    data.forEach(function(d) {
 
-  d3.select("#viz").call(visualization);
+      // Create ids for countries
+      for(var k in d) {
+
+        if(k != "Country") {
+          res.push({name: d.Country, year: k, rank: +d[k], id: d.Country.replace(/ /g, "_").replace(/,/g, "").replace(/./g, ""), continent: find_country('common', d.Country)})
+        }
+
+      }
+    });
+
+    visualization = vistk.viz().params({
+      type: "linechart",
+      container: "#viz",
+      height: 600,
+      width: 900,
+      margin: {top: 30, right: 100, bottom: 30, left: 10},
+      data: res,
+      var_id: "name",
+      var_group: "continent",
+      var_color: "continent", // TODO: color by final ranking value..
+      var_text: "name",
+      y_text: "ECI Rank",
+      var_y: "rank",
+      var_x: "year",
+      items: [],
+      time: {
+        parse: d3.time.format("%Y").parse,
+        var_time: 'year',
+        current_time: '2013'
+      },
+      selection: ["Japan", "Switzerland", "Germany"],
+      highlight: "France",
+      ui: {
+        default: true
+      },
+    });
+
+    d3.select("#viz").call(visualization);
+
+  });
 
 });
 </script>

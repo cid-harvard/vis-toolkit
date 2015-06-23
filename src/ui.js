@@ -20,7 +20,9 @@
           label_checkboxes.append("input")
               .attr("type", "checkbox")
               .attr("value", function(d) { return d; })
-              .property("checked", false)
+              .property("checked", function(d) {
+                  return vars.filter.indexOf(d) > -1;
+               })
               .on("change", function(d) { 
 
                 vistk.utils.update_filters(this.value, this.checked);

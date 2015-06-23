@@ -40,10 +40,11 @@
       // TODO: not sure we should remove data, but add an attribute instead would better
       if(vars.filter.length > 0) {
 
-        console.log("[vars.filter]", vars.time.var_time, vars.time.current_time);
+        console.log("[vars.filter]", vars.filter);
 
         vars.new_data = vars.new_data.filter(function(d) {
           // We don't keep values that are not in the vars.filter array
+          console.log(d[vars.var_group], vars.filter.indexOf(d[vars.var_group]), vars.new_data.length)
           return vars.filter.indexOf(d[vars.var_group]) > -1;
         });
 
@@ -91,7 +92,7 @@
           return v;
         })
 
-        if(vars.filter.indexOf(item_id) < 0)
+        if(vars.filter.indexOf(d[vars.var_group]) < 0)
           d.__filtered = false;
         else
           d.__filtered = true;
