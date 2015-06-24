@@ -238,6 +238,8 @@ Map of countries that can be colored and labeled.
 
 * Circles maps http://bl.ocks.org/curran/752b97cef3f880a813ab
 
+* Squared maps http://www.martingrandjean.ch/swissleaks-map/
+
 * Choropleth map (using geojson)
 * Some flow map or graph such as [pivotgraph](http://bl.ocks.org/mbostock/4343153)
 
@@ -459,12 +461,12 @@ Storytelling
 
 * http://www.ft.com/ig/features/baseline/federer-nadal-different-paths-greatness/
 
+Widgets
+* http://ourworldindata.org/data/growth-and-distribution-of-prosperity/income-inequality/#inequality-in-latin-america-max-roserref
+
 Template
 * See http://bost.ocks.org/mike/chart/
 * See http://bost.ocks.org/mike/chart/time-series-chart.js
-
-* Chart types
- * http://www.excelcharts.com/blog/classification-chart-types/
 
 # Refs / External Resources
 

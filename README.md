@@ -22,6 +22,8 @@ Simply add the `vistk` JavaScript and CSS files as below:
 
 ## Examples
 
+The current version aims at implementing basic [chart types](http://www.excelcharts.com/blog/classification-chart-types/).
+
 * Table ([Demo](http://cid-harvard.github.io/vis-toolkit/examples/table.html) | [Source](examples/table.html))
 * Treemap ([Demo](http://cid-harvard.github.io/vis-toolkit/examples/treemap.html) | [Source](examples/treemap.html))
 * Scatterplot ([Demo](http://cid-harvard.github.io/vis-toolkit/examples/scatterplot.html) | [Source](examples/scatterplot.html))
