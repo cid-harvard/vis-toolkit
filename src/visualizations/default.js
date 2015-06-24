@@ -60,6 +60,10 @@
 
         if(typeof vars.connect[0] !== "undefined") {
 
+          // 1/ Between different items at a given time for one dimension
+          // 2/ Between same items at a given time points
+          // 2/ Between same items at multiple given times
+
           // By default, connecting time points
           var connect_data = vars.new_data;
 

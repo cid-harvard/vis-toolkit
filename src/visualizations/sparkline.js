@@ -1,49 +1,52 @@
-      case "sparkline_old":
+vars.default_params["sparkline"] = function(scope) {
 
-        // LOAD CHART PARAMS
-        vars = vistk.utils.merge(vars, vars.default_params["sparkline"]);
+  var params = {};
+  params.accessor_values = function(d) { return d.values; };
 
-        // LOAD USER PARAMS
-        vars.items = vistk.utils.merge(vars.items, vars.user_vars.items);
+  params.x_scale = [{
+    name: "linear",
+    func: d3.scale.linear()
+            .range([scope.margin.left, scope.width - scope.margin.left - scope.margin.right])
+            .domain(scope.time.interval)
+  }];
 
-        // PRE-UPDATE CONNECT
-        var gConnect = vars.svg.selectAll(".connect__group")
-                        .data(vars.new_data, function(d, i) { return d[vars.var_id]; });
-      
-        // ENTER CONNECT
-        var gConnect_enter = gConnect.enter()
-                        .append("g")
-                        .attr("class", "connect__group");
+  params.y_scale = [{
+    name: "linear",
+    func: d3.scale.linear()
+            .range([scope.height - scope.margin.top - scope.margin.bottom, scope.margin.top])
+              .domain(d3.extent(Array.prototype.concat.apply([], vars.new_data.map(function(d) { return d.values; }) ), function(d) { return d[vars.var_y]; }))
+  }];
 
-        // APPEND AND UPDATE CONNECT MARK
-        vars.connect[0].marks.forEach(function(params) {
-          gConnect_enter.call(vistk.utils.draw_mark, params);
-          gConnect.call(vistk.utils.draw_mark, params);
-        });
+  params.items = [{
+    attr: "year",
+    marks: [{
+        type: "circle",
+        rotate: "0",
+      }, {
+        type: "text",
+        rotate: "0",
+        translate: [-20, 0],
+        text_anchor: "end"
+      }]
+  }];
 
-        // PRE-UPDATE ITEMS
-        var gItems = vars.svg.selectAll(".mark__group")
-                        .data(vars.new_data, function(d, i) { return d[vars.var_id]; });
+  params.connect = [{
+    attr: scope.time.var_time,
+    marks: [{
+        type: "path",
+        rotate: "0",
+        stroke: function(d) { return "black"; },
+        func: d3.svg.line()
+             .interpolate(scope.interpolate)
+             .x(function(d) { return params.x_scale[0]["func"](d[scope.var_x]); })
+             .y(function(d) { return params.y_scale[0]["func"](d[scope.var_y]); }),
+      }]
+  }];
 
-        // ENTER ITEMS
-        var gItems_enter = gItems.enter()
-                        .append("g")
-                        .each(vistk.utils.items_group)
-                        .attr("transform", function(d, i) {
-                          return "translate(" + vars.x_scale[0]["func"](d[vars.var_x]) + ", " + vars.y_scale[0]["func"](d[vars.var_y]) + ")";
-                        });
+  params.x_axis_show = false;
 
-        // APPEND AND UPDATE ITEMS MARK
-        vars.items[0].marks.forEach(function(params) {
-          gItems_enter.call(vistk.utils.draw_mark, params);
-          gItems.call(vistk.utils.draw_mark, params);
-        });
+  params.y_axis_show = false;
 
-        // POST-UPDATE ITEMS GROUPS
-        vars.svg.selectAll(".mark__group")
-                        .transition()
-                        .duration(vars.duration)
-                        .attr("transform", function(d, i) {
-                          return "translate(" + vars.x_scale[0]["func"](d[vars.var_x]) + ", " + vars.y_scale[0]["func"](d[vars.var_y]) + ")";
-                        });
-        break;
+  return params;
+
+};
