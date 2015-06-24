@@ -281,13 +281,13 @@
 
           scope.width = scope.width / 2;
 
-          scope.y_scale[0]["func"].domain(d3.extent(d.values, function(d) {
-           return d[scope.var_y]; 
-          }))
-          .range([0, 50])
-
           scope.x_scale[0]["func"].domain(d3.extent(d.values, function(d) {
            return d[scope.var_x]; 
+          }))
+          .range([0, 50]);
+
+          scope.y_scale[0]["func"].domain(d3.extent(d.values, function(d) {
+           return d[scope.var_y]; 
           }))
           .range([0, 50]);
 
@@ -322,6 +322,49 @@
               gConnect_enter.call(vistk.utils.draw_mark, params);
               gConnect.call(vistk.utils.draw_mark, params);
             });
+          });
+
+        break;
+
+        case "dotplot":
+
+          scope = {};
+          scope = vistk.utils.merge(scope, vars);
+
+          scope = vars.default_params["dotplot"](scope);
+
+          scope.var_x = "realgdp";
+          scope.var_y = "realgdp";
+
+          scope.margin = {top: 10, right: 10, bottom: 30, left: 30};
+
+          scope.width = vars.width / 2;
+          scope.height = vars.height / 2;
+
+          scope.x_scale[0]["func"].range([scope.height/2, scope.height/2])
+            .domain([0, d3.max(vars.new_data, function(d) { return d[scope.var_x]; })])
+            .nice();
+
+          scope.y_scale[0]["func"].range([scope.margin.left, scope.width-scope.margin.left-scope.margin.right])
+            .domain([0, d3.max(vars.new_data, function(d) { return d[scope.var_y]; })])
+            .nice();
+
+          // PRE-UPDATE ITEMS
+          var gItems = d3.select(this).selectAll(".mark__group")
+                          .data(vars.new_data, function(d, i) { return d[scope.var_id]; });
+
+          // ENTER ITEMS
+          var gItems_enter = gItems.enter()
+                          .append("g")
+                          .each(vistk.utils.items_group)
+                          .attr("transform", function(d, i) {
+                            return "translate(" + scope.x_scale[0]["func"](d[scope.var_x]) + ", " + scope.y_scale[0]["func"](d[scope.var_y]) + ")";
+                          });
+
+          // APPEND AND UPDATE ITEMS MARK
+          scope.items[0].marks.forEach(function(params) {
+            gItems_enter.call(vistk.utils.draw_mark, params);
+            gItems.call(vistk.utils.draw_mark, params);
           });
 
         break;

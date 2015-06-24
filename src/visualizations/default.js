@@ -59,7 +59,7 @@
             .tickSize(-vars.width+vars.margin.left+vars.margin.right, 0, 0)
             .tickFormat(""));
 
-        if(typeof vars.connect !== "undefined") {
+        if(typeof vars.connect !== "undefined" && typeof vars.connect[0] !== "undefined") {
 
           // 1/ Between different items at a given time for one dimension
           // 2/ Between same items at a given time points
@@ -102,7 +102,7 @@
 
         }
 
-        if(typeof vars.items !== "undefined") {
+        if(typeof vars.items !== "undefined" && vars.items[0] !== "undefined") {
 
           // PRE-UPDATE ITEMS
           var gItems = vars.svg.selectAll(".mark__group")
