@@ -239,45 +239,30 @@ vars.default_params["barchart"] = {
   x_scale: [{
               name: "linear",
               func: d3.scale.ordinal()
-                      .rangeRoundBands([0, vars.width - vars.margin.left - vars.margin.right], .1)
-                      .domain(vars.data.map(function(d) { return d[vars.var_x]; })),
-    }, {
-      name: "linear_sparkline",
-      func: d3.scale.linear()
-              .range([0, 100])
-              .domain(d3.extent(vars.data, function(d) { return d[vars.time.var_time]; })).nice()
+                      .rangeRoundBands([vars.margin.left, vars.width - vars.margin.left - vars.margin.right], .1)
+                      .domain(vars.new_data.map(function(d) { return d[vars.var_x]; })),
     }
   ],
-
-  x_ticks: 10,
 
   y_scale: [{
       name: "linear",
       func: d3.scale.linear()
               .range([vars.height-vars.margin.top-vars.margin.bottom, vars.margin.top])
               .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_y]; })).nice(),
-    }, {
-      name: "linear_sparkline",
-      func: d3.scale.linear()
-              .range([100, 0])
-              .domain(d3.extent(vars.data, function(d) { return d[vars.var_y]; })).nice(),
     }
   ],
 
   items: [{
-    attr: "country",
     marks: [{
-        type: "rect",
-        rotate: "0",
-        y: function(d) { return - vars.y_scale[0]["func"](d[vars.var_y]) + (vars.height - vars.margin.bottom - vars.margin.top - vars.y_scale[0]["func"](d[vars.var_y])); },
-        height: function(d) { return vars.y_scale[0]["func"](d[vars.var_y]); },
-        width: 5,//function(d) { vars.x_scale[0]["func"].rangeBand(); },
-        fill: function(d) { return vars.color(vars.accessor_items(d)[vars.var_color]); }
-      }]
+      type: "rect",
+      rotate: "0",
+      y: function(d) { return - vars.y_scale[0]["func"](d[vars.var_y]) + (vars.height - vars.margin.bottom - vars.margin.top - vars.y_scale[0]["func"](d[vars.var_y])); },
+      height: function(d) { return vars.y_scale[0]["func"](d[vars.var_y]); },
+      width: function(d) { return vars.x_scale[0]["func"].rangeBand(); },
+      fill: function(d) { return vars.color(vars.accessor_items(d)[vars.var_color]); }
+    }]
 
   }],
-
-  connect: [],
 
   x_axis_show: true,
   x_axis_translate: [0, vars.height - vars.margin.bottom - vars.margin.top],
