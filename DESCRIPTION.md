@@ -458,7 +458,7 @@ Storytelling
 * See [Miso project](https://github.com/misoproject/storyboard)
 * Step by step widget http://nbremer.github.io/urbanization/
 * Previous work on visual decomposition
-
+* More vertical stuff http://www.bloomberg.com/graphics/2015-whats-warming-the-world/
 * http://www.ft.com/ig/features/baseline/federer-nadal-different-paths-greatness/
 
 Widgets
