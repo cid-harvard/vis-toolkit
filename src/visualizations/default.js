@@ -10,12 +10,13 @@
         console.log("[init.vars.default]", vars)
 
         // Sparkline is currenlty the only chart that can have a scope as parameter
-        if(vars.type == "sparkline") {
+        if(vars.type == "sparkline" || vars.type == "dotplot") {
           //scope = {};
           //scope = vistk.utils.merge(scope, vars)
 
-          scope = vars.default_params["sparkline"](vars);
+          scope = vars.default_params[vars.type](vars);
           vars = vistk.utils.merge(vars, scope);
+          vars.items = vistk.utils.merge(vars.items, vars.user_vars.items);
 
         } else {
 
@@ -58,7 +59,7 @@
             .tickSize(-vars.width+vars.margin.left+vars.margin.right, 0, 0)
             .tickFormat(""));
 
-        if(typeof vars.connect[0] !== "undefined") {
+        if(typeof vars.connect !== "undefined") {
 
           // 1/ Between different items at a given time for one dimension
           // 2/ Between same items at a given time points
@@ -101,7 +102,7 @@
 
         }
 
-        if(typeof vars.items[0] !== "undefined") {
+        if(typeof vars.items !== "undefined") {
 
           // PRE-UPDATE ITEMS
           var gItems = vars.svg.selectAll(".mark__group")

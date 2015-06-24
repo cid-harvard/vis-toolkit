@@ -7,39 +7,41 @@ vars.default_params.custom = {};
 // TODO
 // There should be an abstract version of the dotplot
 // And then decide weither it is horizontal or vertical
-vars.default_params["dotplot"] = {
-  x_scale: [{
+vars.default_params["dotplot"] = function(scope) {
+
+  var params = {};
+
+  params.x_scale = [{
     name: "linear",
     func: d3.scale.linear()
-            .range([vars.margin.left, vars.width-vars.margin.left-vars.margin.right])
-            .domain([0, d3.max(vars.new_data, function(d) { return d[vars.var_x]; })])
+            .range([scope.margin.left, scope.width-scope.margin.left-scope.margin.right])
+            .domain([0, d3.max(vars.new_data, function(d) { return d[scope.var_x]; })])
             .nice()
   }, {
     name: "index",
     func: d3.scale.ordinal()
             .domain(d3.range(vars.new_data.length))
-            .rangeBands([vars.margin.left, vars.width - vars.margin.left - vars.margin.right]),
+            .rangeBands([scope.margin.left, scope.width - scope.margin.left - scope.margin.right]),
     
     callback: function() {
                 vars.new_data.sort(function ascendingKey(a, b) {
-                  return d3.ascending(a[vars.var_x], b[vars.var_x]);
+                  return d3.ascending(a[scope.var_x], b[scope.var_x]);
                 })
                 .forEach(function(d, i) {
-                  d.rank = vars.x_scale[0]["func"](i);
+                  d.rank = scope.x_scale[0]["func"](i);
                 });
-      }
     }
-  ],
+  }];
 
-  y_scale: [{
+  params.y_scale = [{
     name: "linear",
     func: d3.scale.linear()
-            .range([vars.height/2, vars.height/2])
-            .domain([0, d3.max(vars.new_data, function(d) { return d[vars.var_y]; })])
+            .range([scope.height/2, scope.height/2])
+            .domain([0, d3.max(vars.new_data, function(d) { return d[scope.var_y]; })])
             .nice()
-  }],
+  }];
 
-  items: [{
+  params.items = [{
     attr: "name",
     marks: [{
       type: "circle",
@@ -48,19 +50,16 @@ vars.default_params["dotplot"] = {
       type: "text",
       rotate: "-90"
     }]
-  }],
+  }];
 
-  connect: [],
+  params.x_axis_show = true;
+  params.x_tickValues = [0, d3.max(vars.new_data, function(d) { return d[scope.var_x]; })];
+  params.x_axis_translate = [0, scope.height/2];
 
-  axes: [
-    {type: "x",
-     scale: null}
-  ],
+  params.y_axis_show = false;
 
-  x_axis_show: true,
-  x_tickValues: [0, d3.max(vars.new_data, function(d) { return d[vars.var_x]; })],
-  x_axis_translate: [0, vars.height/2],
-  y_axis_show: false
+  return params;
+
 };
 
 vars.default_params["dotplot_vertical"] = {
@@ -549,7 +548,7 @@ vars.default_params["slopegraph"].items = [{
 // TODO
 // Sequence of vertical dotplots in an horizontal layout
 // Connected with lines
-vars.default_params["parallel_coordinates"] = vars.default_params["dotplot"];
+// vars.default_params["parallel_coordinates"] = vars.default_params["dotplot"];
 
 vars.default_params["splot_graph"] = {
 
