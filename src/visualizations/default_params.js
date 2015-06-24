@@ -4,64 +4,6 @@ vars.default_params.basic = {};
 vars.default_params.composite = {};
 vars.default_params.custom = {};
 
-// TODO
-// There should be an abstract version of the dotplot
-// And then decide weither it is horizontal or vertical
-vars.default_params["dotplot"] = function(scope) {
-
-  var params = {};
-
-  params.x_scale = [{
-    name: "linear",
-    func: d3.scale.linear()
-            .range([scope.margin.left, scope.width-scope.margin.left-scope.margin.right])
-            .domain([0, d3.max(vars.new_data, function(d) { return d[scope.var_x]; })])
-            .nice()
-  }, {
-    name: "index",
-    func: d3.scale.ordinal()
-            .domain(d3.range(vars.new_data.length))
-            .rangeBands([scope.margin.left, scope.width - scope.margin.left - scope.margin.right]),
-    
-    callback: function() {
-                vars.new_data.sort(function ascendingKey(a, b) {
-                  return d3.ascending(a[scope.var_x], b[scope.var_x]);
-                })
-                .forEach(function(d, i) {
-                  d.rank = scope.x_scale[0]["func"](i);
-                });
-    }
-  }];
-
-  params.y_scale = [{
-    name: "linear",
-    func: d3.scale.linear()
-            .range([scope.height/2, scope.height/2])
-            .domain([0, d3.max(vars.new_data, function(d) { return d[scope.var_y]; })])
-            .nice()
-  }];
-
-  params.items = [{
-    attr: "name",
-    marks: [{
-      type: "circle",
-      rotate: "0"
-    },{
-      type: "text",
-      rotate: "-90"
-    }]
-  }];
-
-  params.x_axis_show = true;
-  params.x_tickValues = [0, d3.max(vars.new_data, function(d) { return d[scope.var_x]; })];
-  params.x_axis_translate = [0, scope.height/2];
-
-  params.y_axis_show = false;
-
-  return params;
-
-};
-
 vars.default_params["dotplot_vertical"] = {
   x_scale: [{
     name: "linear",
@@ -232,47 +174,6 @@ vars.default_params["productspace"] = {
   y_axis_show: false,
   y_grid_show: false
 };
-
-// Similar to scatterplot
-vars.default_params["barchart"] = {
-
-  x_scale: [{
-              name: "linear",
-              func: d3.scale.ordinal()
-                      .rangeRoundBands([vars.margin.left, vars.width - vars.margin.left - vars.margin.right], .1)
-                      .domain(vars.new_data.map(function(d) { return d[vars.var_x]; })),
-    }
-  ],
-
-  y_scale: [{
-      name: "linear",
-      func: d3.scale.linear()
-              .range([vars.height-vars.margin.top-vars.margin.bottom, vars.margin.top])
-              .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_y]; })).nice(),
-    }
-  ],
-
-  items: [{
-    marks: [{
-      type: "rect",
-      rotate: "0",
-      y: function(d) { return - vars.y_scale[0]["func"](d[vars.var_y]) + (vars.height - vars.margin.bottom - vars.margin.top - vars.y_scale[0]["func"](d[vars.var_y])); },
-      height: function(d) { return vars.y_scale[0]["func"](d[vars.var_y]); },
-      width: function(d) { return vars.x_scale[0]["func"].rangeBand(); },
-      fill: function(d) { return vars.color(vars.accessor_items(d)[vars.var_color]); }
-    }]
-
-  }],
-
-  x_axis_show: true,
-  x_axis_translate: [0, vars.height - vars.margin.bottom - vars.margin.top],
-  x_grid_show: false,
-  
-  y_axis_show: true,
-  y_axis_translate: [vars.margin.left, 0],
-  y_grid_show: true
-};
-
 
 // vars.default_params["dotplot_vertical"].x_scale[0]["func"].domain(vars.default_params["dotplot_vertical"].y_scale[0]["func"].domain());
 //vars.default_params["dotplot_vertical"].x_scale[0]["func"].range(vars.default_params["dotplot_vertical"].y_scale[0]["func"].domain());

@@ -1,49 +1,54 @@
-      case "dotplot_old":
+vars.default_params["dotplot"] = function(scope) {
 
-        vars = vistk.utils.merge(vars, vars.default_params["dotplot"]);
-        vars.items = vistk.utils.merge(vars.items, vars.user_vars.items);
+  var params = {};
 
-        // TODO: should specify this is an horizontal axis (from config)
-        vars.svg.call(vistk.utils.axis);
+  params.x_scale = [{
+    name: "linear",
+    func: d3.scale.linear()
+            .range([scope.margin.left, scope.width-scope.margin.left-scope.margin.right])
+            .domain([0, d3.max(vars.new_data, function(d) { return d[scope.var_x]; })])
+            .nice()
+  }, {
+    name: "index",
+    func: d3.scale.ordinal()
+            .domain(d3.range(vars.new_data.length))
+            .rangeBands([scope.margin.left, scope.width - scope.margin.left - scope.margin.right]),
+    
+    callback: function() {
+                vars.new_data.sort(function ascendingKey(a, b) {
+                  return d3.ascending(a[scope.var_x], b[scope.var_x]);
+                })
+                .forEach(function(d, i) {
+                  d.rank = scope.x_scale[0]["func"](i);
+                });
+    }
+  }];
 
-        // PRE-UPDATE
-        var gItems = vars.svg.selectAll(".mark__group")
-                         .data(vars.new_data, function(d, i) { return i; });
+  params.y_scale = [{
+    name: "linear",
+    func: d3.scale.linear()
+            .range([scope.height/2, scope.height/2])
+            .domain([0, d3.max(vars.new_data, function(d) { return d[scope.var_y]; })])
+            .nice()
+  }];
 
-        // ENTER
-        var gItems_enter = gItems.enter()
-                        .append("g")
-                        .each(vistk.utils.items_group)
-                        .attr("transform", function(d, i) {
-                          return "translate(" + vars.margin.left + ", " + vars.height/2 + ")";
-                        });
+  params.items = [{
+    attr: "name",
+    marks: [{
+      type: "circle",
+      rotate: "0"
+    },{
+      type: "text",
+      rotate: "-90"
+    }]
+  }];
 
-        // Add graphical marks
-        vars.items[0].marks.forEach(function(params) {
+  params.x_axis_show = true;
+  params.x_tickValues = [0, d3.max(vars.new_data, function(d) { return d[scope.var_x]; })];
+  params.x_axis_translate = [0, scope.height/2];
 
-          // Enter mark
-          gItems_enter.call(vistk.utils.draw_mark, params);
+  params.y_axis_show = false;
 
-          // Update mark
-          gItems.call(vistk.utils.draw_mark, params);
+  return params;
 
-        });
-
-        // EXIT
-        var gItems_exit = gItems.exit().style("opacity", 0.1);
-
-        // POST-UPDATE
-        vars.svg.selectAll(".mark__group")
-                        .classed("highlighted", function(d, i) { return d.__highlighted; })
-                        .transition()
-                        .delay(function(d, i) { return i / vars.data.length * 100; })
-                        .duration(vars.duration)
-                        .attr("transform", function(d, i) {
-                          if(vars.x_type === "index") {
-                            return "translate(" + d[vars.var_x] + ", " + d[vars.var_y] + ")";
-                          } else {
-                            return "translate(" + vars.x_scale[0]["func"](d[vars.var_x]) + ", " + d[vars.var_y] + ")";
-                          }
-                        });
-
-        break;
+};

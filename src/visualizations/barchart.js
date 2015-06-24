@@ -1,117 +1,37 @@
-      case "barchart_old":
+vars.default_params["barchart"]  = function(scope) {
 
-        vars.params = {
-          x_scale: [{
-              name: "linear",
-              func: d3.scale.ordinal()
-                      .rangeRoundBands([0, vars.width - vars.margin.left - vars.margin.right], .1)
-                      .domain(vars.data.map(function(d) { return d[vars.var_x]; })),
-            }
-          ],
+  var params = {};
 
-          x_ticks: 10,
+  params.x_scale = [{
+    func: d3.scale.ordinal()
+            .rangeRoundBands([scope.margin.left, scope.width - scope.margin.left - scope.margin.right], .1)
+            .domain(vars.new_data.map(function(d) { return d[scope.var_x]; }))
+  }];
 
-          y_scale: [{
-              name: "linear",
-              func: d3.scale.linear()
-                      .range([vars.height - vars.margin.top - vars.margin.bottom, 0])
-                      .domain([0, d3.max(vars.data, function(d) { return d[vars.var_y]; })]),
-            }
-          ],
+  params.y_scale = [{
+    func: d3.scale.linear()
+            .range([scope.height - scope.margin.top - scope.margin.bottom, scope.margin.top])
+            .domain(d3.extent(vars.new_data, function(d) { return d[scope.var_y]; })).nice()
+  }];
 
-          items: [{
-            attr: "country",
-            marks: [{
-                type: "rect",
-                rotate: "0"
-              }, {
-                type: "text",
-                rotate: "90",
-                translate: null,
-                anchor: "end"
-              }]
-          }, {
-            attr: "continent",
-            marks: [{
-              // Stacked bar chart
-            }]
-          }],
+  params.items = [{
+    marks: [{
+      type: "rect",
+      rotate: "0",
+      y: function(d) { return - params.y_scale[0]["func"](d[vars.var_y]) + (scope.height - scope.margin.bottom - scope.margin.top - params.y_scale[0]["func"](d[scope.var_y])); },
+      height: function(d) { return params.y_scale[0]["func"](d[scope.var_y]); },
+      width: function(d) { return params.x_scale[0]["func"].rangeBand(); },
+      fill: function(d) { return scope.color(scope.accessor_items(d)[scope.var_color]); }
+    }]
+  }];
 
-          connect: {
-            type: null
-          },
-        };
+  params.x_axis_show = true;
+  params.x_axis_translate = [0, scope.height - scope.margin.bottom - scope.margin.top];
+  params.x_grid_show = false;
 
-        vars = vistk.utils.merge(vars, vars.params);
+  params.y_axis_show = true;
+  params.y_axis_translate = [scope.margin.left, 0];
+  params.y_grid_show = true;
 
-        // REGISTER EVENTS
-        vars.evt.register("highlightOn", function(d) { });
-        vars.evt.register("highlightOut", function(d) { });
-        vars.evt.register("selection", function(d) { });
-        vars.evt.register("resize", function(d) { });
-
-        // AXIS
-        vars.svg.call(vistk.utils.axis)
-                .select(".x.axis")
-                .attr("transform", "translate(0," + (vars.height - vars.margin.bottom - vars.margin.top) + ")")
-              .append("text") // TODO: fix axis labels
-                .attr("class", "label")
-                .attr("x", vars.width-vars.margin.left-vars.margin.right)
-                .attr("y", -6)
-                .style("text-anchor", "end")
-                .text(function(d) { return vars.var_x; });                
-
-        vars.svg.call(vistk.utils.y_axis);
-
-        // PRE-UPDATE
-        gItems = vars.svg.selectAll(".mark__group")
-                         .data(vars.new_data, function(d, i) { return i; });
-
-        // ENTER
-        var gItems_enter = gItems.enter()
-                        .append("g")
-                        .each(vistk.utils.items_group)
-                        .attr("transform", function(d, i) {
-                          return "translate(" + vars.x_scale[0]["func"](d[vars.var_x]) + ", " + (vars.height - vars.margin.top - vars.margin.bottom) + ")";
-                        });
-
-        // Add graphical marks
-        vars.items[0].marks.forEach(function(d) {
-
-          vars.mark.type = d.type;
-          vars.mark.rotate = d.rotate;
-
-          gItems_enter.each(vistk.utils.items_mark)
-            .select("rect")
-       //     .attr("x", function(d) { return vars.x_scale[0]["func"](d[vars.var_x]); })
-            .attr("width", vars.x_scale[0]["func"].rangeBand())
-            .attr("y", function(d) { return - vars.y_scale[0]["func"](d[vars.var_y]); });
-          // Update each mark
-          gItems.each(vistk.utils.items_mark)
-            .select("rect")
-            .transition().duration(1000)
-       //     .attr("x", function(d) { return vars.x_scale[0]["func"](d[vars.var_x]); })
-            .attr("y", function(d) { return - vars.y_scale[0]["func"](d[vars.var_y]); })
-            .attr("height", function(d) { return vars.y_scale[0]["func"](d[vars.var_y]); })
-            .attr("width", vars.x_scale[0]["func"].rangeBand());
-
-          // Update
-          gItems.each(vistk.utils.items_mark)
-                .select("text")
-                .classed("highlighted", function(d, i) { return d.__highlighted; });
-
-        });
-
-        // EXIT
-        var gItems_exit = gItems.exit().style("opacity", 0.1);
-
-
-        // POST-UPDATE
-        gItems.transition()
-            .delay(function(d, i) { return i / vars.data.length * 100; })
-            .duration(vars.duration)
-            .attr("transform", function(d, i) {
-              return "translate(" + vars.x_scale[0]["func"](d[vars.var_x]) + ", " + (vars.height - vars.margin.top - vars.margin.bottom) + ")";
-            });
-
-      break;
+  return params;
+};
