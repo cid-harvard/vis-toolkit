@@ -1,0 +1,140 @@
+<!doctype html>
+<meta charset="utf-8">
+<script src="../js/d3.js"></script>
+<script src="../build/vistk.js"></script>
+<link href="../css/vistk.css" rel="stylesheet">
+<body>
+<div id="viz"></div>
+<script>
+
+d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments) {
+
+  // Data pre-processing
+  departments.forEach(function(d, i) {
+
+    d.id = i;
+    d.dept_pop = +d.dept_pop;
+    d.realgdp = +d.realgdp;
+    d.realgdp_percap = +d.realgdp_percap;    
+    d["sum(export_value)"] = +d["sum(export_value)"];
+    d["value_added"] = +d["value_added"];
+
+  });
+
+  visualization = vistk.viz()
+    .params({
+      type: "sparkline",
+      container: "#viz",
+      width: 300,
+      height: 100,
+      
+      data: departments,
+      var_y: "realgdp",
+      var_group: "dept_name",
+      var_color: "name",
+      var_id: "dept_name",
+      ui: {
+        default: true
+      },
+      time: {
+        var_time: "year", 
+        parse: d3.time.format("%Y").parse,
+        interval: [],
+        current_time: "2013"
+      },
+      items: [{
+        attr: "name",
+        marks: [{
+          type: "diamond",
+          width: 10,
+          height: 10
+        },{
+          type: "text",
+          rotate: "-50"
+        }]
+      }],
+      var_x: "year",
+      interpolate: "linear",
+      var_text: "dept_name",
+    });
+
+  d3.select(visualization.container()).call(visualization);
+
+  d3.select(vars.container).selectAll(".gridTransformation").data([vars.var_id]).enter().append("button")
+         .attr("type", "button")
+         .attr("class", "gridTransformation")
+         .on("click", function() {
+
+            // 1/ Move the current .connect__group marks to a different level -> mark__group
+            // 2/ Move each new mark__group to a grid layout position
+
+
+          /*
+
+            var grid = vistk.viz().params({
+              type: "grid",
+              width: 800,
+              height: 600,
+              container: "#viz",
+              data: departments,
+              var_group: "dept_name",
+              var_text: "dept_name",
+              var_id: "dept_name",
+              var_sort: "dept_name",
+              var_sort_asc: false,
+              time: {
+                var_time: "year", 
+                parse: d3.time.format("%Y").parse,
+                interval: [],
+                current_time: "2000"
+              },
+              ui: {
+                default: true,
+                sort: ["realgdp", "dept_name", "value_added"]
+              },
+              items: [{
+                attr: "name",
+                marks: [{
+                  type: "sparkline",
+                  var_x: "year",
+                  var_y: "realgdp",
+                  var_group: "dept_name",
+                  var_color: "name",
+                  var_id: "dept_name",
+                  time: {
+                    var_time: "year", 
+                    parse: d3.time.format("%Y").parse,
+                    interval: [],
+                    current_time: "2013"
+                  },
+                  items: [{
+                    attr: "name",
+                    marks: [{
+                      type: "diamond",
+                      width: 10,
+                      height: 10
+                    },{
+                      type: "text",
+                      rotate: "50"
+                    }]
+                  }],
+                  var_x: "year",
+                  interpolate: "linear",
+                },{
+                  type: "text",
+                  rotate: "30",
+                  translate: [20, 0]
+                }]
+              }],
+            });
+
+            d3.select("#viz").call(grid);
+            */
+
+            d3.select(vars.container).call(vars.this_chart);
+
+          })
+         .html("Grid transformation");
+
+});
+</script>
