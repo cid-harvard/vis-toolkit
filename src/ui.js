@@ -166,6 +166,7 @@
                    .on("change", function(d) { 
 
                       vars.aggregate = d;
+                      vars.refresh = true;
                       d3.select(vars.container).call(vars.this_chart)
 
                    });

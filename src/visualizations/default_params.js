@@ -638,7 +638,7 @@ vars.default_params["stacked"] = {
     marks: [{
         type: "path",
         rotate: "0",
-        fill: function(d) { return vars.color(vars.accessor_items(d)[vars.var_color]); },
+        fill: function(d) { return vars.color(d[vars.var_color]); },
         stroke: function(d) {
           return vars.color(vars.accessor_items(d)[vars.var_color]); 
         },

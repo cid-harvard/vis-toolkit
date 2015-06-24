@@ -106,6 +106,8 @@
         else
           d.__selected = true;
 
+        d.__aggregated = false;
+
         vars.items_data.push(d);
 
       });
@@ -154,6 +156,12 @@
           aggregation.piescatter = [];
           aggregation.piescatter[0] = {};
           aggregation.piescatter[1] = {};
+
+          aggregation.values = [];
+
+          aggregation.__aggregated = true;
+          aggregation.__selected = false;
+          aggregation.__highlighted = false;
 
           aggregation.piescatter[0][vars.var_share] = d3.sum(leaves, function(d) {
 
