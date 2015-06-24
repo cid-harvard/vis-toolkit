@@ -118,6 +118,17 @@
       vars.refresh = false;
     }
 
+    if(typeof vars.nodes != "undefined") {
+      // Merge node positions with products
+      vars.new_data.forEach(function(d, i) {
+        var node = vistk.utils.find_node_coordinates_by_id(vars.nodes, d.product_id);
+        d.x = node.x;
+        d.y = node.y;
+      });
+
+    }
+
+
     // Aggregate data
     if(vars.aggregate === vars.var_group) {
 
@@ -309,7 +320,6 @@
       });
 
     }
-
 
     if(typeof vars.var_sort !== "undefined") {
 
