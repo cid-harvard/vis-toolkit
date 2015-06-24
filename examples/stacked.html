@@ -19,9 +19,12 @@ d3.json("../data/exports_2012.json", function(error, exports) {
       data: exports.data,
       var_id: "id",
       var_y: "value",
-      var_group: "community_id",
-      var_color: "community_id",
-      ui: {default: true},
+      var_group: "community_name",
+      var_color: "community_name",
+      var_sort: 'value',
+      ui: {
+        default: true
+      },
       interpolate: "linear",
       var_text: "name",
       time: {

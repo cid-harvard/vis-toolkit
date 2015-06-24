@@ -226,8 +226,9 @@
 
       vars.stack = d3.layout.stack()
           .values(function(d) { return d.values; })
+//          .order(function(a) { console.log(a[0][0][1]); return a[0][0][1]; })
           .x(function(d) { return d[vars.time.var_time]; })          
-          .y(function(d) { return d[vars.var_y]; });
+          .y(function(d) { return d[vars.var_y]; })
 
        vars.new_data = vars.stack(vars.new_data);
     }
@@ -301,21 +302,23 @@
 
     }
 
+
+    if(typeof vars.var_sort !== "undefined") {
+
+       console.log("[updating sort]", vars.var_sort, vars.var_sort_asc, vars.user_vars)
+
+      if(typeof vars.var_sort_asc !== "undefined" && !vars.var_sort_asc) {
+        vars.new_data = vars.new_data.sort(function(a, b) { return d3.ascending(a[vars.var_sort], b[vars.var_sort]);});
+      } else {
+        vars.new_data = vars.new_data.sort(function(a, b) { return d3.descending(a[vars.var_sort], b[vars.var_sort]);});
+      }
+    }
+    
+
     // Chart specific metadata: grid
     // Generates x and y attributes to display items as a 2D grid
     if(vars.type == "grid") {
 
-      if(typeof vars.var_sort !== "undefined") {
-
-         console.log("[updating sort]", vars.var_sort, vars.var_sort_asc, vars.user_vars)
-
-        if(typeof vars.var_sort_asc !== "undefined" && !vars.var_sort_asc) {
-          vars.new_data = vars.new_data.sort(function(a, b) { return d3.ascending(a[vars.var_sort], b[vars.var_sort]);});
-        } else {
-          vars.new_data = vars.new_data.sort(function(a, b) { return d3.descending(a[vars.var_sort], b[vars.var_sort]);});
-        }
-      }
-      
       //.sort(function(a, b) { return a[vars.var_sort] - b;}) 
 
       var nb_dimension =  Math.ceil(Math.sqrt(vars.new_data.length));
