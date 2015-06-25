@@ -1,208 +1,58 @@
-      case "linechart_old":
+vars.default_params["linechart"] = function(scope) {
 
-        vars.params = {
+  var params = {};
 
-          accessor_values: function(d) { return d.values; },
-          accessor_items: function(d) { return d; },
+  params.accessor_values = function(d) { return d.values; };
 
-          x_ticks: 10,
-          x_format: d3.time.format("%Y"),
-          x_tickValues: null,
-          x_axis_orient: "top",
+  params.x_scale = [{
+      name: "linear",
+      func: d3.scale.linear()
+              .range([scope.margin.left, scope.width - scope.margin.left - scope.margin.right])
+              .domain(vars.time.interval)
+  }]
 
-          y_grid_show: true,
+  params.y_scale = [{
+      name: "linear",
+      func: d3.scale.linear()
+              .range([scope.margin.top, scope.height - scope.margin.top - scope.margin.bottom])
+              .domain(d3.extent(Array.prototype.concat.apply([], vars.new_data.map(function(d) { return d.values; }) ), function(d) { return d[vars.var_y]; }))
+  }];
 
-          x_scale: [{
-              name: "linear",
-              func: d3.time.scale()
-                  .range([0, vars.width-100])
-                  .domain(vars.time.interval)
-            }
-          ],
+  params.items = [{
+    attr: "year",
+    marks: [{
+      type: "circle",
+      rotate: "0",
+      fill: function(d) { return vars.color(vars.accessor_items(d)[vars.var_color]); }
+    },{
+      type: "text",
+      rotate: "0"
+    }]
+  }];
 
-          y_scale: [{
-              name: "linear",
-              func: d3.scale.linear()
-                      .range([0, vars.height - 4])
-                      .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_y]; }))
+  params.connect = [{
+    attr: vars.time.var_time,
+    type: "time",
+    marks: [{
+      type: "path",
+      rotate: "0",
+      stroke: function(d) { return vars.color(vars.accessor_items(d)[vars.var_color]); },
+      func: d3.svg.line()
+           .interpolate(vars.interpolate)
+           .x(function(d) { return params.x_scale[0]["func"](d[vars.var_x]); })
+           .y(function(d) { return params.y_scale[0]["func"](d[vars.var_y]); }),
+    }]
+  }];
 
-          }],
+  params.x_ticks = vars.time.points.length;
+  params.x_tickValues = null;
+  params.x_axis_orient = "top";
+  params.x_axis_show = true;
+  params.x_grid_show = true;
+  params.x_text = false
 
-          items: [{
-            attr: "year",
-            marks: [{
-                type: "circle",
-                rotate: "0",
-                fill: function(d) { return vars.color(vars.accessor_items(d)[vars.var_color]); }
-              }, {
-                type: "text",
-                rotate: "0",
-                translate: null
-              }]
-          }],
+  params.y_axis_show = false
+  params.y_grid_show = false;
 
-          connect: [{
-            attr: vars.time.var_time,
-            marks: [{
-                type: "path",
-                rotate: "0",
-                fill: function() { return "none"; },
-                stroke: function(d) {
-                  return vars.color(vars.accessor_items(d)[vars.var_color]); 
-                },
-                func: d3.svg.line()
-                     .interpolate(vars.interpolate)
-                     .x(function(d) { return vars.x_scale[0]["func"](d[vars.time.var_time]); })
-                     .y(function(d) { return vars.y_scale[0]["func"](d[vars.var_y]); })
-              }]
-          }]
-
-        };
-
-        vars = vistk.utils.merge(vars, vars.params);
-
-        vars.y_axis = d3.svg.axis()
-            .scale(vars.y_scale[0]["func"])
-            .orient("left");
-/*
-        // TODO: use the connection mark instead of the line
-        // FIX FOR MISSING VALUES
-        // https://github.com/mbostock/d3/wiki/SVG-Shapes
-        vars.line = d3.svg.line()
-        // https://gist.github.com/mbostock/3035090
-            .defined(function(d) { return d[vars.var_y] != null; })
-            .interpolate(vars.interpolate)
-            .x(function(d) { return vars.x_scale[0]["func"](d[vars.var_time]); })
-            .y(function(d) { return vars.y_scale[0]["func"](d[vars.var_y]); });
-*/
-        // TODO: fix the color scale
-        vars.color.domain(d3.keys(vars.new_data[0]).filter(function(key) { return key !== "date"; }));
-
-        // Grid layout (background)
-        vars.svg.data([vars.new_data]).enter().append("g")
-            .attr("class", "x grid")
-            .attr("transform", "translate(0," + vars.height + ")")
-            .call(vistk.utils.make_x_axis()
-            .tickSize(-vars.height, 0, 0)
-            .tickFormat(""));
-
-        vars.svg
-            .call(vistk.utils.axis)
-            .select(".x.axis")
-            .attr("transform", "translate(0," + 0+ ")");
-
-        vars.svg.data([vars.new_data]).enter().append("g")
-            .attr("class", "y axis")
-            .call(vars.y_axis)
-          .append("text")
-            .attr("transform", "rotate(-90)")
-            .attr("y", 6)
-            .attr("dy", "-1.71em")
-            .style("text-anchor", "end")
-            .text(vars.y_text);
-
-        // PRE-UPDATE CONNECT
-        var gConnect = vars.svg.selectAll(".connect__group")
-                        .data(vars.new_data.map(function(d) { return vars.accessor_values(d); }), function(d, i) { return i; });
-      
-        vars.accessor_values = function(d) { return d; };
-
-        var gConnect_enter = gConnect.enter()
-                        .append("g")
-                        .attr("class", "connect__group")
-                        .attr("id", function(d) { return d[vars.var_id]; })
-                        .style("opacity", 0.2);
-
-        vars.connect[0].marks.forEach(function(d) {
-          
-          vars.mark.type = d.type;
-          vars.mark.rotate = d.rotate;
-          vars.mark.fill = d.fill;
-          vars.mark.stroke = d.stroke;
-
-          gConnect_enter.each(vistk.utils.connect_mark)
-            .select("path")
-            .attr("id", function(d) {
-              return d[vars.var_id]; 
-            })
-            .style("stroke", d.stroke);
-
-          // Update
-          gConnect.each(vistk.utils.connect_mark)
-
-        });
-
-        var gItems = vars.svg.selectAll(".mark__group")
-                        .data(vars.new_data, function(d, i) { return i; });
-
-        // ENTER
-        var gItems_enter = gItems.enter()
-                        .append("g")
-                        .each(vistk.utils.items_group)
-                        .attr("id", function(d) { return d[vars.var_id]; })
-                        .attr("transform", function(d, i) {
-                        //  console.log(d[vars.time.var_time] == vars.time.parse(vars.time.current_time))
-                          return "translate(" + vars.x_scale[0]["func"](d[vars.time.var_time]) + ", " + vars.y_scale[0]["func"](d[vars.var_y]) + ")";
-                        })
-                        .classed("selected", function(d) {
-                          return vars.selection.indexOf(d[vars.var_id]) >= 0;
-                        });
-
-        // Add graphical marks
-        vars.items[0].marks.forEach(function(params) {
-
-          // Enter mark
-          gItems_enter.call(vistk.utils.draw_mark, params);
-
-          // Update mark
-          gItems.call(vistk.utils.draw_mark, params);
-
-        });
-
-        gItems.transition()
-          .attr("transform", function(d, i) {
-            return "translate(" + vars.x_scale[0]["func"](d[vars.time.var_time]) + ", " + vars.y_scale[0]["func"](d[vars.var_y]) + ")";
-          });
-
-/*
-        // Enter groups for items graphical marks
-        var gItems_enter = gItems.enter()
-                        .append("g")
-                        .each(vistk.utils.items_group)
-                        .attr("transform", function(d, i) {
-                          return "translate(" + vars.x_scale[0]["func"](vars.accessor_values(d)[vars.time.var_time]) + ", " + vars.y_scale(vars.accessor_values(d)[vars.var_y]) + ")";
-                        });
-
-        gItems_enter.each(vistk.utils.items_mark)
-                        .attr("transform", function(d, i) {
-                          return "translate(" + vars.x_scale[0]["func"](vars.accessor_values(d)[vars.time.var_time]) + ", " + vars.y_scale(vars.accessor_values(d)[vars.var_y]) + ")";
-                        });
-
-
-        // TODO: turn into an item mark
-        gItems_enter.append("text")
-            .datum(function(d) { 
-              d.values.sort(function(a, b) { return a.year > b.year;}); 
-              return {name: d.name, id: d[vars.var_id], value: d.values[d.values.length - 1]}; 
-            })
-            .attr("transform", function(d) { 
-              return "translate(" + vars.x_scale[0]["func"](vars.accessor_values(d)[vars.var_time]) + "," + vars.y_scale(vars.accessor_values(d)[vars.var_y]) + ")"; 
-            })
-            .attr("x", 3)
-            .attr("class", function(d) {
-
-              var c = "country text";
-
-              if(vars.selection.indexOf(d.name) >= 0)
-                c += " selected";
-
-              if(vars.highlight.indexOf(d.name) >= 0)
-                c += " highlighted";
-
-              return c;
-            })
-            .attr("dy", ".35em")
-            .attr("id", function(d) { return d[vars.var_id]; })
-            .text(function(d) { return d[vars.var_text]; })
-*/
-        break;
+  return params;
+};

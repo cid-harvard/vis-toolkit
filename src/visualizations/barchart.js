@@ -1,4 +1,4 @@
-vars.default_params["barchart"]  = function(scope) {
+vars.default_params["barchart"] = function(scope) {
 
   var params = {};
 
