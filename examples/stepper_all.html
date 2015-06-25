@@ -32,9 +32,9 @@ if(document.location.hash.substring(1) === "products") {
 }
 
 var visualization = vistk.viz().params({
-      width: 500,
-      height: 500
-    });
+  width: 500,
+  height: 500
+});
 
 d3.json(file, function(error, countries) {
 
@@ -42,11 +42,10 @@ d3.json(file, function(error, countries) {
     flat_years = vistk.utils.flatten_years(countries);
 
   visualization.params({
-      type: "none",
+      type: 'none',
+      var_id: 'name',
       container: "#viz",
       data: flat_years,
-      id: ["continent", "country"],
-      var_id: 'name',
       var_group: "continent",
       var_color: "continent",
       time: {
@@ -68,7 +67,7 @@ d3.json(file, function(error, countries) {
 d3.select("input[value='default']").on("click", function(d) {
 
   visualization.params({
-      type: "default"
+      type: "none"
     });
 
   d3.select(visualization.container()).call(visualization);
@@ -130,7 +129,6 @@ d3.select("input[value='scatterplot']").on("click", function(d) {
 
   visualization.params({
       type: "scatterplot",
-      id: ["continent", "country"],
       var_group: "continent",
       var_color: "continent",
       var_x: 'nb_products',
@@ -163,7 +161,6 @@ d3.select("input[value='barchart']").on("click", function(d) {
 
   visualization.params({
     type: "barchart",
-    id: ["continent", "country"],
     var_group: "continent",
     var_color: "continent",
     var_x: 'name',
@@ -183,7 +180,6 @@ d3.select("input[value='treemap']").on("click", function(d) {
 
   visualization.params({
     type: "treemap",
-    var_id: "name",
     var_group: "continent",
     var_color: "continent",
     var_parent: "continent",
@@ -205,7 +201,6 @@ d3.select("input[value='geomap']").on("click", function(d) {
 
  visualization.params({
     type: "scatterplot",
-    var_id: "name",
     var_group: "continent",
     var_color: "continent",
     var_parent: "continent",
@@ -236,7 +231,6 @@ d3.select("input[value='linechart']").on("click", function(d) {
 
   visualization = vistk.viz().params({
     type: "linechart",
-    var_id: "name",
     var_group: "category",
     var_color: "category", // TODO: color by final ranking value..
     title: "Line chart",
