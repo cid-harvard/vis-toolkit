@@ -263,10 +263,6 @@ path {
   font-weight: 700;
 }
 
-.items__mark__circle:not(.highlighted) {
-  stroke-width: 1.5px;
-}
-
 .items__mark__circle.highlighted {
   stroke: black;
   stroke-width: 2.5px;
@@ -284,10 +280,6 @@ path {
 .connect__path.highlighted {
   stroke-opacity: 1;
   stroke-width: 5px;  
-}
-
-.connect__path:not(.selected) {
-
 }
 
 .connect__path.selected {

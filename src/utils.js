@@ -362,7 +362,6 @@
 
           // APPEND AND UPDATE ITEMS MARK
           scope.items[0].marks.forEach(function(params) {
-            console.log("MARK", params, vars.old_data)
             gItems_enter.call(vistk.utils.draw_mark, params);
             gItems.call(vistk.utils.draw_mark, params);
           });
@@ -422,11 +421,11 @@
                       .attr("transform", "rotate(0)")
                       .attr("r", function(d) {
                         if(typeof params.var_r === "undefined") {
-                          return vars.radius;
+                          return vars.radius_max;
                         } else {
 
                           var r_scale = d3.scale.linear()
-                            .range([4, 20])
+                            .range([vars.radius_min, vars.radius_max])
                             .domain(d3.extent(vars.new_data, function(d) { return d[params.var_r]; }))
 
                           return r_scale(d[params.var_r]);

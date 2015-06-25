@@ -107,6 +107,9 @@
 
     radius: 5,
 
+    radius_min: 2,
+    radius_max: 10,
+
     mark: {
       height: 10,
       width: 10,

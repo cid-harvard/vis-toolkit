@@ -1,0 +1,88 @@
+<!doctype html>
+<meta charset="utf-8">
+<script src="../js/d3.js"></script>
+<script src="../build/vistk.js"></script>
+<style>
+  .connect__line {
+    stroke: #E1DCD6;
+    stroke-opacity: .4;
+  }
+
+  .items__mark__star {
+    fill: yellow;
+    stroke-width: .5px;
+    stroke: black;
+  }
+
+  .items__mark__star.selected {
+    stroke-width: 1px;
+  }
+
+  .items__mark__star.highlighted {
+    fill: yellow;
+    stroke-width: 1.5px;
+  }
+
+  .items__mark__circle {
+    fill: #CDC5BC;
+  }
+
+  .items__mark__circle.highlighted {
+    fill: #CDC5BC;  
+    stroke: black;
+    stroke-width: 1.5px;
+  }
+
+  .items__mark__circle.selected {
+    fill: #EA413D;
+  }
+</style>
+<body>
+<div id="viz"></div>
+<script>
+
+d3.json("../data/atlas_international_product_space.json", function(graph) {
+
+  d3.json("../data/col_dept_exports_3.json", function(exports) {
+/*
+    // cog: 0.4208957237122138 coi: 0.8067728413148435 distance: 0.8179699425486985 
+    // export_rca: 0.04472251026943858 export_value: 29700 id: 2479 import_value: 3278477
+    // product_id: "115" year: 2008  
+*/
+    visualization = vistk.viz()
+      .params({
+        type: "productspace",
+        container: "#viz",
+        nodes: graph.nodes,
+        links: graph.edges,
+        data: exports,
+        var_x: 'x',
+        var_y: 'y',
+        x_axis_show: false,
+        x_grid_show: false,
+        y_axis_show: false,
+        y_grid_show: false,
+        var_id: "product_id",
+        items: [{
+          attr: "name",
+          marks: [{
+            type: "circle",
+            var_r: "export_value"
+          }]
+        }],
+        time: {
+          var_time: "year", 
+          current_time: "2008",
+          parse: function(d) { return d; },
+          filter: "2008"
+        },
+        selection: ["115", "116", "117", "118", "119", "120", "121", "122", "123", "124", "125"],
+        highlight: ["115", "201", "202", "203", "204", "205", "206", "207", "208", "161"]
+      });
+
+    d3.select("#viz").call(visualization);
+
+  });
+
+});
+</script>
