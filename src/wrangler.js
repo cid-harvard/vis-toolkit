@@ -51,7 +51,7 @@
 
       vars.unique_items = d3.set(vars.new_data.map(function(d) { return d[vars.var_id]; })).values();
 
-      vars.items_data = [];
+      vars.unique_data = [];
 
       // Towards a unique variable for wrangled data
       vars.unique_items.forEach(function(item_id, i) {
@@ -108,11 +108,11 @@
 
         d.__aggregated = false;
 
-        vars.items_data.push(d);
+        vars.unique_data.push(d);
 
       });
 
-      vars.new_data = vars.items_data;
+      vars.new_data = vars.unique_data;
 
       // Flag that forces to re-wrangle data
       vars.refresh = false;
@@ -333,6 +333,17 @@
     }
     
 
+    if(typeof vars.view != "undefined") {
+
+      vars.old_data = vars.new_data;
+      vars.new_data = vars.view;
+
+    } else {
+
+
+    }
+
+
     // Chart specific metadata: grid
     // Generates x and y attributes to display items as a 2D grid
     if(vars.type == "grid") {
@@ -340,7 +351,7 @@
       //.sort(function(a, b) { return a[vars.var_sort] - b;}) 
 
       var nb_dimension =  Math.ceil(Math.sqrt(vars.new_data.length));
-      
+
       // Create foci for each dimension
       // TOFIX: should update children, not necessary replace
       d3.range(nb_dimension).map(function(d, i) {
@@ -354,10 +365,10 @@
             datum.x = i;
             datum.y = j;
             datum.index = index;
-
           }
         });
 
       });
 
     }
+
