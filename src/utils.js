@@ -421,7 +421,7 @@
                       .attr("transform", "rotate(0)")
                       .attr("r", function(d) {
                         if(typeof params.var_r === "undefined") {
-                          return vars.radius_max;
+                          return vars.radius;
                         } else {
 
                           var r_scale = d3.scale.linear()
@@ -431,7 +431,12 @@
                           return r_scale(d[params.var_r]);
                         }
                       })
-                      .attr("fill", params.fill);
+                      .attr("fill", params.fill)
+                      .attr("title", function(d,i) {
+                        active = d3.select(null); 
+                        return d.name; 
+                      })
+                      .call(vistk.utils.make_zoomable_on_click)
 
           mark
              // .attr("r", function(d) {return params.radius; })
@@ -446,6 +451,48 @@
       }
 
     });
+
+  }
+
+  vistk.utils.make_zoomable_on_click = function() {
+
+    this.on("click", clicked);
+
+    // http://bl.ocks.org/mbostock/4699541
+    function clicked(d) {
+      if (active.node() === this) return reset();
+      active.classed("active", false);
+      active = d3.select(this).classed("active", true);
+
+      var t = d3.transform(d3.select(this.parentNode).attr("transform")).translate
+
+      var bounds = d3.select(this).node().getBBox(),
+          dx = bounds.width,
+          dy = bounds.height,
+          x = bounds.x + dx/2 + t[0],
+          y = bounds.y + dy/2 + t[1];
+
+          console.log(dx, dy, x, y)
+
+
+          scale = .1 / Math.max(dx / vars.width, dy / vars.height),
+          translate = [vars.width / 2 - scale * x, vars.height / 2 - scale * y];
+
+      vars.svg.transition()
+          .duration(1750)
+          .style("stroke-width", 1.5 / scale + "px")
+          .attr("transform", "translate(" + translate + ")scale(" + scale + ")");
+    }
+
+    function reset() {
+      active.classed("active", false);
+      active = d3.select(null);
+
+      vars.svg.transition()
+          .duration(750)
+          .style("stroke-width", "1.5px")
+          .attr("transform", "");
+    }
 
   }
 
