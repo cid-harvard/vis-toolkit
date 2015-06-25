@@ -335,6 +335,8 @@
 
           scope.var_x = "realgdp";
           scope.var_y = "realgdp";
+          scope.var_id = "dept_name";
+          scope.var_text = "dept_name";
 
           scope.margin = {top: 10, right: 10, bottom: 30, left: 30};
 
@@ -342,27 +344,25 @@
           scope.height = vars.height / 2;
 
           scope.x_scale[0]["func"].range([scope.height/2, scope.height/2])
-            .domain([0, d3.max(vars.new_data, function(d) { return d[scope.var_x]; })])
+            .domain([0, d3.max(vars.old_data, function(d) { return d[scope.var_x]; })])
             .nice();
 
           scope.y_scale[0]["func"].range([scope.margin.left, scope.width-scope.margin.left-scope.margin.right])
-            .domain([0, d3.max(vars.new_data, function(d) { return d[scope.var_y]; })])
+            .domain([0, d3.max(vars.old_data, function(d) { return d[scope.var_y]; })])
             .nice();
 
           // PRE-UPDATE ITEMS
           var gItems = d3.select(this).selectAll(".mark__group")
-                          .data(vars.new_data, function(d, i) { return d[scope.var_id]; });
+                          .data([vars.old_data], function(d, i) { return d[scope.var_id]; });
 
           // ENTER ITEMS
           var gItems_enter = gItems.enter()
                           .append("g")
                           .each(vistk.utils.items_group)
-                          .attr("transform", function(d, i) {
-                            return "translate(" + scope.x_scale[0]["func"](d[scope.var_x]) + ", " + scope.y_scale[0]["func"](d[scope.var_y]) + ")";
-                          });
 
           // APPEND AND UPDATE ITEMS MARK
           scope.items[0].marks.forEach(function(params) {
+            console.log("MARK", params, vars.old_data)
             gItems_enter.call(vistk.utils.draw_mark, params);
             gItems.call(vistk.utils.draw_mark, params);
           });

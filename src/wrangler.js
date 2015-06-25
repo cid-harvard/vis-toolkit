@@ -332,7 +332,6 @@
       }
     }
     
-
     if(typeof vars.view != "undefined") {
 
       vars.old_data = vars.new_data;
@@ -342,7 +341,6 @@
 
 
     }
-
 
     // Chart specific metadata: grid
     // Generates x and y attributes to display items as a 2D grid
