@@ -7,13 +7,33 @@
 <div id="viz" style="width: 800px; height: 500px; float: left;"></div>
 <div id="stepper" style="float: left;">
   <ul>
-    <li><input name="radio-step" value="step1" type="radio" checked>Step 1</li>
+    <li><input name="radio-step" value="step0" type="radio" checked>Step 0 (start)</li>
+    <li><input name="radio-step" value="step1" type="radio">Step 1</li>
     <li><input name="radio-step" value="step2" type="radio">Step 2</li>
     <li><input name="radio-step" value="step3" type="radio">Step 3</li>
     <li><input name="radio-step" value="step4" type="radio">Step 4</li>
   </ul>
 </div>
 <script>
+
+// STEP 0
+// -Start/reset
+d3.select("input[value='step0']").on("click", function(d) {
+
+  visualization.params({
+      selection: [],
+      highlight: []
+    });
+
+  vistk.utils.update_filters("1", false);
+  vistk.utils.update_filters("2", false);
+  vistk.utils.update_filters("9", false);
+
+  vars.refresh = true;
+
+  d3.select(visualization.container()).call(visualization);
+
+});
 
 // STEP 1
 // https://projects.invisionapp.com/d/main#/console/3573782/78242027/preview
@@ -22,9 +42,11 @@
 d3.select("input[value='step1']").on("click", function(d) {
 
   visualization.params({
-      selection: ["115"],
-      highlight: ["115"]
-    });
+    selection: ["115", "116", "117", "118", "119", "120", "121", "122", "123", "124", "125"],
+    highlight: ["115"]
+  });
+
+  vars.refresh = true;
 
   d3.select(visualization.container()).call(visualization);
 
@@ -37,10 +59,9 @@ d3.select("input[value='step1']").on("click", function(d) {
 // -Bounding box around selected nodes
 d3.select("input[value='step2']").on("click", function(d) {
 
-  visualization.params({
-    selection: ["115", "116", "117", "118", "119", "120", "121", "122", "123", "124", "125"],
-    highlight: ["115"]
-  });
+  vistk.utils.update_filters("1", true);
+
+  vars.refresh = true;
 
   d3.select(visualization.container()).call(visualization);
 
@@ -52,10 +73,9 @@ d3.select("input[value='step2']").on("click", function(d) {
 // -Zoom out to show the rest of the graph
 d3.select("input[value='step3']").on("click", function(d) {
 
-  visualization.params({
-      selection: ["115"],
-      highlight: ["115"]
-    });
+  vistk.utils.update_filters("2", true);
+
+  vars.refresh = true;
 
   d3.select(visualization.container()).call(visualization);
 
@@ -64,12 +84,13 @@ d3.select("input[value='step3']").on("click", function(d) {
 // STEP 4
 // https://projects.invisionapp.com/d/main#/console/3573782/78462407/preview
 // -Color by complexity
-d3.select("input[value='step3']").on("click", function(d) {
+d3.select("input[value='step4']").on("click", function(d) {
 
-  visualization.params({
-      selection: ["115"],
-      highlight: ["115"]
-    });
+  vistk.utils.update_filters("2", false);
+  vistk.utils.update_filters("1", false);
+  vistk.utils.update_filters("9", true);
+
+  vars.refresh = true;
 
   d3.select(visualization.container()).call(visualization);
 
@@ -84,12 +105,18 @@ d3.json("../data/atlas_international_product_space.json", function(graph) {
     // export_rca: 0.04472251026943858 export_value: 29700 id: 2479 import_value: 3278477
     // product_id: "115" year: 2008  
 */
+
+    // Create quasi-dummy categories
+    exports.forEach(function(d) {
+      d.category = d.product_id.slice(0, 1);
+    })
+
     visualization = vistk.viz()
       .params({
         type: "productspace",
         container: "#viz",
         nodes: graph.nodes,
-        links: graph.edges,
+        //links: graph.edges,
         width: 800,
         height: 500,
         data: exports,
@@ -134,7 +161,7 @@ d3.json("../data/atlas_international_product_space.json", function(graph) {
           default: true,
           options: ["community_name", "product"]
         },
-        title: "Product Space Colombia Exports",
+        title: "Product Space Colombia Exports"
       });
 
     d3.select("#viz").call(visualization);
