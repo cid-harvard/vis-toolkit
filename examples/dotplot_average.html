@@ -16,9 +16,8 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
     d.realgdp_percap = +d.realgdp_percap;    
     d["sum(export_value)"] = +d["sum(export_value)"];
     d["value_added"] = isNaN(+d["value_added"]) ? 0: +d["value_added"];
+    d["country"] = "Colombia";
   });
-
-  var ui_options = [];
 
   visualization = vistk.viz()
     .params({
@@ -31,6 +30,10 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
       x_text: null,
       x_ticks: 2,
       x_format: function(d) { return '$' + d3.format(".2s")(d); },
+      var_group: "country",
+      var_r: 'nb_products',
+      var_share: "avg_products",
+      share_cutoff: function(d) { return d.avg_products > 30; },
       items: [{
         attr: "name",
         marks: [{
@@ -41,7 +44,7 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
           rotate: "-30"
         },{
           type: "tick",
-          rotate: "-45"
+          rotate: "0"
         }]
       }],
       time: {
@@ -51,7 +54,7 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
       },
       ui: {
         default: true,
-        options: ui_options
+        options: ["country", "department"]
       },
       var_id: "dept_name",
       var_text: "dept_name", 
