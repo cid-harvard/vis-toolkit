@@ -10,7 +10,7 @@
         console.log("[init.vars.default]", vars)
 
         // Sparkline is currenlty the only chart that can have a scope as parameter
-        if(vars.type == "sparkline" || vars.type == "dotplot" || vars.type == "barchart" || vars.type == "linechart") {
+        if(vars.type == "sparkline" || vars.type == "dotplot" || vars.type == "barchart" || vars.type == "linechart" || vars.type == "scatterplot") {
           //scope = {};
           //scope = vistk.utils.merge(scope, vars)
 
