@@ -27,7 +27,8 @@
     focus: [],
     selection: [],
     filter: [],
-
+    zoom: [],
+    
     type: "",
 
     // Default dimensions
