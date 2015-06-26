@@ -232,15 +232,15 @@
           var mark = d3.select(this).selectAll(".connect__line").data([d]);
 
           mark.enter().append('line')
-              .classed('connect__line', true);
-
-          mark              
-              .classed("highlighted", function(d, i) { return d.__highlighted; })
-              .classed("selected", function(d, i) { return d.__selected; })
+              .classed('connect__line', true)
               .attr("x1", function(d) { return vars.x_scale[0]["func"](d.source.x); })
               .attr("y1", function(d) { return vars.y_scale[0]["func"](d.source.y); })
               .attr("x2", function(d) { return vars.x_scale[0]["func"](d.target.x); })
               .attr("y2", function(d) { return vars.y_scale[0]["func"](d.target.y); })
+          mark              
+              .classed("highlighted", function(d, i) { return d.__highlighted; })
+              .classed("selected", function(d, i) { return d.__selected; })
+
               //.attr("class", function(d) {
               //  if(typeof d.source !== "undefined" && typeof d.target !== "undefined")
               //    return "link source_"+d.source.id+" target_"+d.target.id;

@@ -80,6 +80,11 @@ d3.select("input[value='step3']").on("click", function(d) {
 
   // vistk.utils.update_filters("2", true);
 
+  visualization.params({
+    selection: ["121", "122", "123", "124", "125"],
+    highlight: ["116"]
+  });
+
   vars.refresh = true;
 
   d3.select(visualization.container()).call(visualization);
@@ -126,7 +131,7 @@ d3.json("../data/atlas_international_product_space.json", function(graph) {
         type: "productspace",
         container: "#viz",
         nodes: graph.nodes,
-        links: graph.edges,
+       links: graph.edges,
         width: 800,
         height: 500,
         data: exports,
