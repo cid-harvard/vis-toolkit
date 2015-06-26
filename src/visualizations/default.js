@@ -145,8 +145,13 @@
           // ITEMS EXIT
           var gItems_exit = gItems.exit().remove();
 
-          if(vars.zoom.length > 0)
+          if(vars.zoom.length > 0) {
             vistk.utils.zoom_to_nodes(vars.zoom);
+          } else {
+            
+            vars.svg.transition()
+                    .attr("transform", "");
+          }
 
         }
         
