@@ -464,7 +464,8 @@
       active.classed("active", false);
       active = d3.select(this).classed("active", true);
 
-      var t = d3.transform(d3.select(this.parentNode).attr("transform")).translate
+      // Retrieve parent's node position
+      var t = d3.transform(d3.select(this.parentNode).attr("transform")).translate;
 
       var bounds = d3.select(this).node().getBBox(),
           dx = bounds.width,
@@ -472,12 +473,10 @@
           x = bounds.x + dx/2 + t[0],
           y = bounds.y + dy/2 + t[1];
 
-          console.log(dx, dy, x, y)
-
-
           scale = .1 / Math.max(dx / vars.width, dy / vars.height),
           translate = [vars.width / 2 - scale * x, vars.height / 2 - scale * y];
 
+      // Animate the graph
       vars.svg.transition()
           .duration(1750)
           .style("stroke-width", 1.5 / scale + "px")
@@ -495,6 +494,51 @@
     }
 
   }
+
+  vistk.utils.zoom_to_nodes = function(nodes) {
+
+    var min_x = vars.width;
+    var max_x = 0;
+    var min_y = vars.height;
+    var max_y = 0;
+
+    // Calculate nodes BBOX
+    nodes.forEach(function(node_id) {
+
+       var n = vars.svg.selectAll(".items__mark__circle").filter(function(d) {
+         return d[vars.var_id] == node_id;
+       });
+
+      // Retrieve parent's node position
+      var t = d3.transform(d3.select(n.node().parentNode).attr("transform")).translate;
+
+      var bounds = n.node().getBBox();
+
+      min_x = Math.min(min_x, bounds.x + t[0]);
+      max_x = Math.max(max_x, bounds.x + t[0]);
+
+      min_y = Math.min(min_y, bounds.y + t[1]);
+      max_y = Math.max(max_y, bounds.y + t[1]);
+
+    })
+
+    var width = (max_x - min_x) + 100;
+    var height = (max_y - min_y) + 100;
+
+    var x = min_x + (max_x - min_x) / 2;
+    var y = min_y + (max_y - min_y) / 2;
+
+    var scale = 1 / Math.max(width / vars.width, height / vars.height);
+    var translate = [vars.width / 2 - scale * x, vars.height / 2 - scale * y];
+
+    // Animate the graph
+    vars.svg.transition()
+        .duration(1750)
+        .style("stroke-width", 1.5 / scale + "px")
+        .attr("transform", "translate(" + translate + ")scale(" + scale + ")");
+
+  }
+
 
   vistk.utils.create_chart = function(_, params) {
 
