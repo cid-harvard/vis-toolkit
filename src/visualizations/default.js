@@ -29,35 +29,42 @@
         }
 
         // CREATE AXIS
-        vars.svg.call(vistk.utils.x_axis);
-        vars.svg.call(vistk.utils.y_axis)
 
-        // GRID
-        vars.svg.selectAll(".x.grid").data([vars.new_data])
-          .enter()
-            .append("g")
-            .attr("class", "x grid")
-            .style("display", function() { return vars.x_grid_show ? "block": "none"; })
-            .attr("transform", "translate(0," + (vars.height-vars.margin.top-vars.margin.bottom) + ")");
+        if(vars.x_axis_show)
+          vars.svg.call(vistk.utils.x_axis);
+  
+       if(vars.y_axis_show)
+          vars.svg.call(vistk.utils.y_axis);
 
-        vars.svg.selectAll(".x.grid").transition()
-            .duration(vars.duration)
-            .call(vistk.utils.make_x_axis()
-            .tickSize(-vars.height+vars.margin.top+vars.margin.bottom, 0, 0)
-            .tickFormat(""));
+        if(vars.x_grid_show) {
+          vars.svg.selectAll(".x.grid").data([vars.new_data])
+            .enter()
+              .append("g")
+              .attr("class", "x grid")
+              .style("display", function() { return vars.x_grid_show ? "block": "none"; })
+              .attr("transform", "translate(0," + (vars.height-vars.margin.top-vars.margin.bottom) + ")");
 
-        vars.svg.selectAll(".y.grid").data([vars.new_data])
-          .enter()
-            .append("g")
-            .attr("class", "y grid")
-            .style("display", function() { return vars.y_axis_show ? "block": "none"; })
-            .attr("transform", "translate(" + vars.margin.left + ", 0)");
+          vars.svg.selectAll(".x.grid").transition()
+              .duration(vars.duration)
+              .call(vistk.utils.make_x_axis()
+              .tickSize(-vars.height+vars.margin.top+vars.margin.bottom, 0, 0)
+              .tickFormat(""));
+        }
 
-        vars.svg.selectAll(".y.grid").transition()
-            .duration(vars.duration)
-            .call(vistk.utils.make_y_axis()
-            .tickSize(-vars.width+vars.margin.left+vars.margin.right, 0, 0)
-            .tickFormat(""));
+        if(vars.y_grid_show) {
+          vars.svg.selectAll(".y.grid").data([vars.new_data])
+            .enter()
+              .append("g")
+              .attr("class", "y grid")
+              .style("display", function() { return vars.y_axis_show ? "block": "none"; })
+              .attr("transform", "translate(" + vars.margin.left + ", 0)");
+
+          vars.svg.selectAll(".y.grid").transition()
+              .duration(vars.duration)
+              .call(vistk.utils.make_y_axis()
+              .tickSize(-vars.width+vars.margin.left+vars.margin.right, 0, 0)
+              .tickFormat(""));
+        }
 
         if(typeof vars.connect !== "undefined" && typeof vars.connect[0] !== "undefined") {
 
