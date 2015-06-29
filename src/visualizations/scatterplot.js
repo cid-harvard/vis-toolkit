@@ -59,4 +59,5 @@ vars.default_params["scatterplot"] = function(scope) {
   params.y_grid_show = true;
 
   return params;
+  
 };
