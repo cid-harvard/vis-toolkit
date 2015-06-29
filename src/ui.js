@@ -10,7 +10,7 @@
 
         if(vars.var_group) {
 
-          unique_categories = d3.set(vars.new_data.map(function(d) { return d[vars.var_group]; })).values();
+          unique_categories = d3.set(vars.new_data.map(function(d) { return vars.accessor_data(d)[vars.var_group]; })).values();
 
           label_checkboxes = d3.select(vars.container).selectAll(".checkboxes").data(unique_categories)
             .enter()
@@ -33,7 +33,7 @@
 
           label_checkboxes.append("span")
               .html(function(d) { 
-                var count = vars.new_data.filter(function(e, j) { return e[vars.var_group] == d; }).length;
+                var count = vars.new_data.filter(function(e, j) { return vars.accessor_data(e)[vars.var_group] == d; }).length;
                 return d + " (" + count + ")";
               })
 
