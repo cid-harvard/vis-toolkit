@@ -227,6 +227,40 @@
 
           break;
 
+
+        case "arc":
+
+          var arc = d3.svg.arc().outerRadius(function(d) {
+
+            if(typeof vars.var_r === "undefined") {
+              return vars.radius_max*20;
+            } else {
+
+              var r_scale = d3.scale.linear()
+                .range([vars.radius_min, vars.radius_max*20])
+                .domain(d3.extent(vars.new_data, function(d) { return d.data[vars.var_r]; }))
+
+              return r_scale(d.data[vars.var_r]);
+            }
+
+          }).innerRadius(0);
+
+          var mark = d3.select(this).selectAll(".items__mark__arc").data([d]);
+
+          mark.enter().append("path")
+              .attr("fill", function(d, i) {
+                return vars.color(d.data[vars.var_color]);
+              })
+              .style("fill-opacity", function(d, i) {
+                if(d.i == 0)
+                  return .2;
+                else
+                  return 1;
+              })          
+              .attr("d", arc);
+
+        break;
+
         case "line":
 
           var mark = d3.select(this).selectAll(".connect__line").data([d]);
@@ -236,10 +270,11 @@
               .attr("x1", function(d) { return vars.x_scale[0]["func"](d.source.x); })
               .attr("y1", function(d) { return vars.y_scale[0]["func"](d.source.y); })
               .attr("x2", function(d) { return vars.x_scale[0]["func"](d.target.x); })
-              .attr("y2", function(d) { return vars.y_scale[0]["func"](d.target.y); })
-          mark              
+              .attr("y2", function(d) { return vars.y_scale[0]["func"](d.target.y); });
+
+          mark
               .classed("highlighted", function(d, i) { return d.__highlighted; })
-              .classed("selected", function(d, i) { return d.__selected; })
+              .classed("selected", function(d, i) { return d.__selected; });
 
               //.attr("class", function(d) {
               //  if(typeof d.source !== "undefined" && typeof d.target !== "undefined")

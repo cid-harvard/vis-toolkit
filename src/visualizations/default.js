@@ -113,14 +113,14 @@
 
           // PRE-UPDATE ITEMS
           var gItems = vars.svg.selectAll(".mark__group")
-                          .data(vars.new_data, function(d, i) { return d[vars.var_id]; });
+                          .data(vars.new_data, function(d, i) { return vars.accessor_data(d)[vars.var_id]; });
 
           // ENTER ITEMS
           var gItems_enter = gItems.enter()
                           .append("g")
                           .each(vistk.utils.items_group)
                           .attr("transform", function(d, i) {
-                            return "translate(" + vars.x_scale[0]["func"](d[vars.var_x]) + ", " + vars.y_scale[0]["func"](d[vars.var_y]) + ")";
+                            return "translate(" + vars.x_scale[0]["func"](vars.accessor_data(d)[vars.var_x]) + ", " + vars.y_scale[0]["func"](vars.accessor_data(d)[vars.var_y]) + ")";
                           });
 
            // APPEND AND UPDATE ITEMS MARK
@@ -146,7 +146,7 @@
                           .transition()
                           .duration(vars.duration)
                           .attr("transform", function(d, i) {
-                            return "translate(" + vars.x_scale[0]["func"](d[vars.var_x]) + ", " + vars.y_scale[0]["func"](d[vars.var_y]) + ")";
+                            return "translate(" + vars.x_scale[0]["func"](vars.accessor_data(d)[vars.var_x]) + ", " + vars.y_scale[0]["func"](vars.accessor_data(d)[vars.var_y]) + ")";
                           });
 
           // ITEMS EXIT
