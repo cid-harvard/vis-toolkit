@@ -13,33 +13,28 @@
               }]
           }],
 
-          accesspr_data: function(d) { return d.data; }
+          accessor_data: function(d) { return d.data; }
         };
+
+        vars.accessor_data = function(d) { return d.data; }
 
         vars = vistk.utils.merge(vars, vars.params);
 
         // LOAD USER PARAMS
         vars.items = vistk.utils.merge(vars.items, vars.user_vars.items);
 
-        // Events handlers
-        vars.evt.register("highlightOn", function(d) { });
-        vars.evt.register("highlightOut", function(d) { });
-        vars.evt.register("selection", function(d) { });
-        vars.evt.register("resize", function(d) { });
-
-        var pie = d3.layout.pie().value(function(d) { return d[vars.var_share]; }); // equal share
 
         // Special arc for labels centroids
         // var arc = d3.svg.arc().outerRadius(vars.radius).innerRadius(vars.radius);
 
         // Bind data to groups
         var gItems = vars.svg.selectAll(".mark__group")
-                         .data(pie(vars.new_data), function(d, i) { return i; });
+                         .data(vars.new_data, function(d, i) { return i; });
 
         vars.r_scale.range([0, vars.width/6])
-                    .domain([0, d3.max(vars.new_data, function(d) { return d[vars.var_share]; })]);
+                    .domain([0, d3.max(vars.new_data, function(d) { return d.data[vars.var_share]; })]);
 
-        vars.radius = vars.r_scale(500);
+       
 
         // ENTER
 

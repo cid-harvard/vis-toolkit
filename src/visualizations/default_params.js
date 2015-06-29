@@ -172,7 +172,7 @@ vars.default_params["horizontal_ordinal"] = {
   y_axis_show: false
 };
 
-
+/*
 // Duplicating line chart configuration
 vars.default_params["slopegraph"] = {
 
@@ -244,3 +244,5 @@ vars.default_params["slopegraph"].items = [{
   }],
 
 }]
+
+*/

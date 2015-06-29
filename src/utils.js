@@ -633,7 +633,7 @@
 
             var r_scale = d3.scale.linear()
               .range([vars.radius_min, vars.radius_max*20])
-              .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_r]; }))
+              .domain(d3.extent(vars.new_data, function(d) { return d.data[vars.var_r]; }))
 
             return r_scale(d.data[vars.var_r]);
           }

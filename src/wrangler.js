@@ -372,6 +372,16 @@
 
     }
 
+
+    if(vars.type == "piechart") {
+
+      vars.pie = d3.layout.pie().value(function(d) { return d[vars.var_share]; });
+      vars.new_data = vars.pie(vars.new_data);
+
+    }
+
+
+
     // Chart specific metadata: grid
     // Generates x and y attributes to display items as a 2D grid
     if(vars.type == "grid") {
