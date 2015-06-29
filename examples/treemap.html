@@ -47,10 +47,15 @@ d3.json("../data/exports_quinn_2012.json", function(error, exports) {
         current_time: 2012,
         parse: function(d) { return d; }
       },
-      mark: {
-        type: 'rect',
-        width: 10,
-        height: 10
+      items: [{
+        attr: "name",
+        marks: [{
+          type: "rect",
+          rotate: "0"
+        }]
+      }],
+      ui: {
+        default: true
       },
       focus: 1121
     });

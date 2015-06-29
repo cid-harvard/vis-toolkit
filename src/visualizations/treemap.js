@@ -3,44 +3,36 @@
         vars.params = {
           x_scale: [{
               name: "linear",
-              func: d3.scale.ordinal()
-                      .rangeRoundBands([0, vars.width], .1)
-                      .domain(vars.new_data.map(function(d) { return d[vars.var_x]; })),
+              func: d3.scale.linear()
+                      .range([vars.margin.left, vars.width-vars.margin.left-vars.margin.right])
+                      .domain(vars.new_data.map(function(d) { return d.x; })),
             }
           ],
 
           x_ticks: 10,
 
           y_scale: [{
-              name: "linear",
-              func: d3.scale.linear()
-                      .range([vars.height, 0])
-                      .domain([0, d3.max(vars.new_data, function(d) { return d[vars.var_y]; })]),
-            }
-          ],
+            name: "linear",
+            func: d3.scale.linear()
+                    .range([vars.height-vars.margin.top-vars.margin.bottom, vars.margin.top])
+                    .domain([0, d3.max(vars.new_data, function(d) { return d.y; })]),
+          }],
 
           items: [{
-            attr: "depth2",
+            attr: "depth_2",
             marks: [{
-                type: "rect",
-                rotate: "0"
-              }
-/*
-                // Removed because of DIV wrap
-              ,{
-                attr: "depth1",
-                type: "text",
-                rotate: "0",
-                translate: [5, 20]
-              }
-*/
-              ]
+              type: "rect",
+              rotate: "0"
+            }]
           }],
 
           connect: [],
         };
 
         vars = vistk.utils.merge(vars, vars.params);
+
+          // LOAD USER PARAMS
+        vars.items = vistk.utils.merge(vars.items, vars.user_vars.items);
 
         vars.treemap = d3.layout.treemap()
             .padding(vars.padding)
@@ -51,7 +43,7 @@
 
         // PRE-UPDATE
         var gItems = vars.svg.data([vars.root]).selectAll("g")
-            .data(vars.treemap.nodes);
+            .data(vars.treemap.nodes, function(d, i) { return d[vars.var_id]; });
 
         // ENTER
         var gItems_enter = gItems.enter()
@@ -73,7 +65,7 @@
           vars.mark.rotate = d.rotate;
           vars.mark.translate = d.translate;
 
-          var new_items = gItems_enter
+          gItems_enter
                 .filter(function(d, j) {
                     return (vars.mark.type == "rect" && d.depth == 2) || (vars.mark.type == "text" && d.depth == 1);
                   })
@@ -86,6 +78,7 @@
                 .attr("width", function(d) { return d.dx; })
                 .attr("height", function(d) { return d.dy; });
 
+          // Only label the parents
           gItems_enter
                  .filter(function(d, j) {
                    return d.depth == 1 &&  d.dx > 30 && d.dy > 30;
@@ -108,6 +101,10 @@
           // new_items.selectAll("text").call(vistk.utils.wrap);
 
         });
+
+        // ITEMS EXIT
+        var gItems_exit = gItems.exit().remove();
+
 
         // Removed because of Div wrap
         //  vars.svg.selectAll("text")
