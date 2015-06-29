@@ -1,8 +1,13 @@
 {
   "predef": [
+    "server",
     "document",
     "window",
-    "-Promise"
+    "-Promise",
+    "d3",
+    "vistk",
+    "_",
+    "d3plus"
   ],
   "browser": true,
   "boss": true,

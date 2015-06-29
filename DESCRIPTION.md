@@ -252,6 +252,8 @@ Map of countries that can be colored and labeled.
 
 * Distance heat map http://emptypipes.org/supp/isochrone_rome/
 
+* Composite geo map http://ilya.boyandin.me/
+
 ### Scatterplot
 
 * Scatterplot http://bl.ocks.org/mbostock/3887118
