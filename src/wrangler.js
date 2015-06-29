@@ -344,6 +344,34 @@
 
     }
 
+    if(vars.type == "geomap") {
+
+      // countries contains bot the data and coordinates for shapes drawing
+      vars.countries = topojson.object(vars.topology, vars.topology.objects.countries).geometries;
+      vars.neighbors = topojson.neighbors(vars.topology, vars.countries);
+
+      vars.countries.forEach(function(d) { 
+
+        // Retrieve the country name based on its id
+        d.name = vars.names.filter(function(n) { return d.id == n.id; })[0].name; 
+
+        // TODO: should merge on a more reliable join (e.g. 2-char)
+        d.data = vars.new_data.filter(function(n) { return d.name === n.name; })[0];
+
+        // Two reasons why it is not defined
+        // 1/ No data
+        // 2/ Current country
+        if(typeof d.data == "undefined") {
+          var data = {}
+          data.share = 0;
+          data.name = "N/A"
+          d.data = data;
+        }
+
+      });
+
+    }
+
     // Chart specific metadata: grid
     // Generates x and y attributes to display items as a 2D grid
     if(vars.type == "grid") {
@@ -358,13 +386,13 @@
          d3.range(nb_dimension).map(function(e, j) {
 
           var index = i * nb_dimension + j;
+
           // To make sure we don't update more points than necessary
           if(index < vars.new_data.length) {
-            // IMPORTANT to clone the _params here
-            var datum = vars.new_data[index];
-            datum.x = i;
-            datum.y = j;
-            datum.index = index;
+
+            vars.new_data[index].x = i;
+            vars.new_data[index].y = j;
+            vars.new_data[index].index = index;
           }
         });
 

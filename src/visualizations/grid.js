@@ -1,6 +1,7 @@
 vars.default_params["grid"] = function(scope) {
 
   var params = {};
+  params.accessor_data = function(d) { return d; };
 
   params.x_scale = [{
     name: "linear",

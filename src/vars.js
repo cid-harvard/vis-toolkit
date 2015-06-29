@@ -126,6 +126,7 @@
 
     container: "#viz",
     nb_viz: nb_viz,
+    countries: [],
 
     _user_vars: {}
   };

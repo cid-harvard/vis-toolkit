@@ -28,8 +28,6 @@ d3.json("../data/partners_usa_2012_csay.json", function(error, partners) {
         topology: world,
         names: names,
         var_id: "name",
-        var_x: "x",
-        var_y: "y",
         var_group: "continent",
         var_color: "share",
         vars_text: "name",
@@ -66,9 +64,33 @@ d3.json("../data/partners_usa_2012_csay.json", function(error, partners) {
 
     d3.select("#viz").call(visualization);
 
+    d3.select(vars.container).selectAll(".gridTransformation").data([vars.var_id]).enter().append("button")
+             .attr("type", "button")
+             .attr("class", "gridTransformation")
+             .on("click", function() {
+
+                // Each mark should have a 0 offset
+
+                // Then move groups to their grid position
+
+                console.log(visualization.params())
+
+                visualization.params({
+                    type: "grid"
+                  });
+
+                vars.refresh = true;
+
+                d3.select(vars.container).call(vars.this_chart);
+
+              })
+             .html("Grid Transformation");
+
   }
 
 });
+
+
 
 </script>
 </body>

@@ -82,7 +82,7 @@
               .classed("selected", function(d, i) { return d.__selected; })   
               .transition()
               .attr("transform", "translate(" +  params.translate + ")rotate(" +  params.rotate + ")")
-              .text(function(d) { 
+              .text(function(d) {
                 return vars.accessor_data(d)[vars.var_text]; 
               });
 
