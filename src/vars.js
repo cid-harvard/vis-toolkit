@@ -37,6 +37,7 @@
     // Default Variables mapping
     var_text: "name",
     var_color: null,
+    var_sort_asc: false,
 
     // Interaction
     highlight: [],

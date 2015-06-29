@@ -41,6 +41,7 @@ d3.json("../data/exports_quinn_2012.json", function(error, exports) {
       var_color: "parent_code",
       title: "Export treemap",
       var_size: "export_value",
+      var_sort: "export_value",
       var_text: "name",
       time: {
         var_time: "year", 
@@ -55,7 +56,8 @@ d3.json("../data/exports_quinn_2012.json", function(error, exports) {
         }]
       }],
       ui: {
-        default: true
+        default: true,
+        sort: ["parent_code", "name", "export_value"]
       },
       focus: 1121
     });
