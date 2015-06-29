@@ -172,47 +172,6 @@ vars.default_params["horizontal_ordinal"] = {
   y_axis_show: false
 };
 
-
-
-vars.default_params["piechart"] = {
-
-
-  x_scale: [{
-    name: "linear",
-    func: d3.scale.linear()
-            .range([vars.width/2, vars.width/2])
-            .domain([0, d3.max(vars.new_data, function(d) { return d[vars.var_y]; })])
-            .nice()
-  }],
-
-  y_scale: [{
-    name: "linear",
-    func: d3.scale.linear()
-            .range([vars.height/2, vars.height/2])
-            .domain([0, d3.max(vars.new_data, function(d) { return d[vars.var_y]; })])
-            .nice()
-  }],
-
-  r_scale: d3.scale.linear()
-              .range([0, vars.width/6])
-              .domain([0, d3.max(vars.new_data, function(d) { return d.data[vars.var_share]; })]),
-
-  items: [{
-    marks: [{
-      type: "arc",
-      rotate: "0",
-      fill: function(d) { return vars.color(vars.accessor_items(d)[vars.var_color]); }
-    }]
-  }],
-
-  accessor_data: function(d) { return d.data; },
-
-  x_axis_show: false,
-
-  y_axis_show: false
-
-};
-
 /*
 // Duplicating line chart configuration
 vars.default_params["slopegraph"] = {
