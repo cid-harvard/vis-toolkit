@@ -9,26 +9,40 @@
 
 d3.json("../data/diversification_ubiquity_hs4_1995_2012.json", function(error, countries) {
 
-  flat_years = vistk.utils.flatten_years(countries);
 
-  visualization = vistk.viz().params({
-    type: "piechart",
-    container: "#viz",
-    data: flat_years,
-    share: "nb_products",
-    id: ["continent", "country"],
-    group: "continent",
-    var_share: "nb_products",
-    var_radius: "nb_products",
-    time: {
-      var_time: "year", 
-      current_time: 1995,
-      parse: function(d) { return d; }
-    },
-    var_color: "continent",
-    var_text: "name",
-    selection: ["Angola"]
-  });
+ var flat_years = vistk.utils.flatten_years(countries);
+
+  visualization = vistk.viz()
+    .params({
+      type: 'piechart',
+      margin: {top: 10, right: 10, bottom: 30, left: 30},
+      container: '#viz',
+      data: flat_years,
+      var_id: 'name',
+      var_group: 'continent',
+      var_color: 'continent',
+      var_x: 'nb_products',
+      var_y: 'avg_products',
+      var_r: 'nb_products',
+      var_share: "nb_products",
+      var_radius: "nb_products",
+      var_text: "name",
+      items: [{
+        marks: [{
+          type: "arc",
+          rotate: "0",
+          fill: function(d) { return vars.color(vars.accessor_items(d)[vars.var_color]); }
+        }]
+      }],
+      time: {
+        var_time: "year", 
+        current_time: 1995,
+        parse: function(d) { return d; }
+      },
+      var_color: "continent",
+      var_text: "name",
+      selection: ["Angola"]
+    });
 
   d3.select("#viz").call(visualization);
 

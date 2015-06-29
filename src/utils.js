@@ -626,12 +626,23 @@
       case "arc":
 
         var arc = d3.svg.arc().outerRadius(function(d) {
-          return vars.mark.radius;
+
+          if(typeof vars.var_r === "undefined") {
+            return vars.radius_max*20;
+          } else {
+
+            var r_scale = d3.scale.linear()
+              .range([vars.radius_min, vars.radius_max*20])
+              .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_r]; }))
+
+            return r_scale(d.data[vars.var_r]);
+          }
+
         }).innerRadius(0);
         
         d3.select(this).append("path")
             .attr("fill", function(d, i) {
-              return vars.color(d[vars.var_color]);
+              return vars.color(d.data[vars.var_color]);
             })
             .style("fill-opacity", function(d, i) {
               if(d.i == 0)

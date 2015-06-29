@@ -11,11 +11,15 @@
             marks: [{
                 type: "arc"
               }]
-          }]
+          }],
 
+          accesspr_data: function(d) { return d.data; }
         };
 
         vars = vistk.utils.merge(vars, vars.params);
+
+        // LOAD USER PARAMS
+        vars.items = vistk.utils.merge(vars.items, vars.user_vars.items);
 
         // Events handlers
         vars.evt.register("highlightOn", function(d) { });
