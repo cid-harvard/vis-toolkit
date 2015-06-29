@@ -172,43 +172,6 @@ vars.default_params["horizontal_ordinal"] = {
   y_axis_show: false
 };
 
-vars.default_params["grid"] = {
-
-  x_scale: [{
-      name: "linear",
-      func: d3.scale.linear()
-            .domain([0, nb_dimension])
-            .range([0, vars.width])
-    }
-  ],
-
-  y_scale: [{
-      name: "linear",
-      func: d3.scale.linear()
-            .domain([0, nb_dimension])
-            .range([0, vars.height])
-    }
-  ],
-
-  items: [{
-    attr: "name",
-    marks: [{
-      type: "diamond",
-      rotate: "0"
-    },{
-      type: "text",
-      rotate: "-30"
-    }]
-  }],
-
-  connect: [],
-
-  var_x: "x",
-  var_y: "y",
-
-  x_axis_show: false,
-  y_axis_show: false
-};
 
 // Duplicating line chart configuration
 vars.default_params["slopegraph"] = {
@@ -281,55 +244,3 @@ vars.default_params["slopegraph"].items = [{
   }],
 
 }]
-
-vars.default_params["stacked"] = {
-
-  accessor_values: function(d) { return d.values; },
-  accessor_items: function(d) { return d; },
-
-  x_scale: [{
-      name: "linear",
-      func: d3.time.scale()
-              .range([vars.margin.left, vars.width - vars.margin.left - vars.margin.right])
-              .domain(vars.time.interval)
-    }
-  ],
-
-  y_scale: [{
-      name: "linear",
-      func: d3.scale.linear()
-              .range([vars.margin.top, vars.height - vars.margin.top - vars.margin.bottom])
-              .domain(d3.extent(Array.prototype.concat.apply([], vars.new_data.map(function(d) { return d.values; }) ), function(d) { return d[vars.var_y]; }))
-    }
-  ],
-
-  items: [],
-
-  connect: [{
-    attr: vars.time.var_time,
-    marks: [{
-        type: "path",
-        rotate: "0",
-        fill: function(d) { return vars.color(d[vars.var_color]); },
-        stroke: function(d) {
-          return vars.color(vars.accessor_items(d)[vars.var_color]); 
-        },
-        func: d3.svg.area()
-                .interpolate('cardinal')
-                .x(function(d) { return vars.x_scale[0]["func"](d[vars.time.var_time]); })
-                .y0(function(d) { return vars.y_scale[0]["func"](d.y0); })
-                .y1(function(d) { return vars.y_scale[0]["func"](d.y0 + d.y); })
-      }]
-  }],
-
-  x_axis_show: true,
-  x_axis_translate: [0, vars.height - vars.margin.bottom - vars.margin.top],
-  x_grid_show: true,
-  x_ticks: vars.time.points.length,
-  x_format: d3.time.format("%Y"),
-  x_text: false,
-  
-  y_axis_show: true,
-  y_axis_translate: [vars.margin.left, 0],
-  y_grid_show: true
-};

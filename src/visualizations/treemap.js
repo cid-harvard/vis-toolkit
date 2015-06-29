@@ -9,8 +9,6 @@
             }
           ],
 
-          x_ticks: 10,
-
           y_scale: [{
             name: "linear",
             func: d3.scale.linear()
@@ -26,7 +24,8 @@
             }]
           }],
 
-          connect: [],
+          x_ticks: 10,
+
         };
 
         vars = vistk.utils.merge(vars, vars.params);
