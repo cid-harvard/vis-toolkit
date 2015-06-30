@@ -6,7 +6,7 @@ vars.default_params["piechart"] = function(scope) {
     name: "linear",
     func: d3.scale.linear()
             .range([scope.width/2, scope.width/2])
-            .domain([0, d3.max(vars.new_data, function(d) { return d[vars.var_y]; })])
+            .domain([0, d3.max(vars.new_data, function(d) { return d[vars.var_x]; })])
             .nice()
   }];
 

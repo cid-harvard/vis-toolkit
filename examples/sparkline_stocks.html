@@ -1,9 +1,9 @@
 <!doctype html>
 <meta charset="utf-8">
 <script src="../js/d3.js"></script>
-<script src="../js/vistk.js"></script>
+<script src="../build/vistk.js"></script>
 <link href="../css/vistk.css" rel="stylesheet">
-
+<body>
 <style>
 .sparkline {
   fill: none;
@@ -18,6 +18,7 @@
 
 <body>
 
+<div id="viz_2"></div>
 <div id="viz"></div>
 
 <script>
@@ -61,7 +62,51 @@
   }
 
   d3.csv('../data/goog.csv', function(error, data) {
-    sparkline('#viz', data);
+    sparkline('#viz_2', data);
   });
+
+  d3.csv('../data/goog.csv', function(error, data) {
+
+  // Data pre-processing
+    data.forEach(function(d) {
+      d.close = +d.Close;
+    });
+
+    console.log(data)
+
+  visualization = vistk.viz()
+    .params({
+      type: "sparkline",
+      container: "#viz",
+      width: 300,
+      height: 100,
+      data: data,
+      var_y: "close",
+      ui: {
+        default: true
+      },
+      time: {
+        var_time: "Date", 
+        parse: d3.time.format("%b %d, %Y").parse,
+        interval: [],
+        current_time: "Dec 18, 2013"
+      },
+      items: [{
+        attr: "name",
+        marks: [{
+          type: "circle",
+          r: 10,
+          height: 10
+        },{
+          type: "text",
+          rotate: "-50"
+        }]
+      }],
+      var_x: "Date"
+    });
+
+  d3.select(visualization.container()).call(visualization);
+
+});
 
 </script>

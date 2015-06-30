@@ -15,6 +15,7 @@ d3.json("../data/diversification_ubiquity_hs4_1995_2012.json", function(error, c
 
   visualization = vistk.viz()
     .params({
+      dev: true,
       type: 'dotplot',      
       data: flat_years,
       container: '#viz',

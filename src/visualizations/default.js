@@ -1,14 +1,15 @@
       default:
 
-       if(typeof vars.default_params[vars.type] === "undefined")
-          alert("No params for chart " + vars.type);
+       if(typeof vars.default_params[vars.type] === "undefined") {
+          console.log("No params for chart " + vars.type);
+       }
 
         // TODO
         // Contain the parameters in something different than global variable
         // Use the utils.create_chart()
 
         if(vars.dev) { 
-          console.log("[init.vars.default]", vars)
+          console.log("[init.vars.default]", vars);
         }
         
         // Sparkline is currenlty the only chart that can have a scope as parameter
@@ -111,7 +112,7 @@
 
         }
 
-        if(typeof vars.items !== "undefined" && vars.items[0] !== "undefined") {
+        if(typeof vars.items !== "undefined" && vars.items[0] !== "undefined" && vars.type !== "stacked") {
 
           // PRE-UPDATE ITEMS
           var gItems = vars.svg.selectAll(".mark__group")
@@ -155,11 +156,14 @@
           var gItems_exit = gItems.exit().remove();
 
           if(vars.zoom.length > 0) {
+
             utils.zoom_to_nodes(vars.zoom);
+
           } else {
             
             vars.svg.transition()
                     .attr("transform", "");
+
           }
 
         }

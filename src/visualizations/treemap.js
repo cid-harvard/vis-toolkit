@@ -33,7 +33,7 @@
           return params;
         };
 
-        t_params = treemap_params(vars);
+        var t_params = treemap_params(vars);
 
         vars = vistk.utils.merge(vars, t_params);
 
@@ -112,7 +112,4 @@
         //  vars.svg.selectAll("text")
         //      .call(vistk.utils.wrap);
 
-        utils.background_label(vars.title);
-
       break;
-      

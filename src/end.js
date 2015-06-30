@@ -1,7 +1,3 @@
-  vars.this_chart = chart;
-
-  return chart;
-}
 
  // http://stackoverflow.com/questions/171251/how-can-i-merge-properties-of-two-javascript-objects-dynamically
 vistk.utils.merge = function(d, e) {
