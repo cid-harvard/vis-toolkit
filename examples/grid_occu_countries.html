@@ -1,0 +1,59 @@
+<!doctype html>
+<meta charset="utf-8">
+<script src="../js/d3.js"></script>
+<script src="../build/vistk.js"></script>
+<link href="../css/vistk.css" rel="stylesheet">
+<body>
+<div id="viz"></div>
+<script>
+
+d3.json("../data/diversification_ubiquity_hs4_1995_2012.json", function(error, countries) {
+
+// [{"name": "Angola", "name_2char": "ao", "country_id": 4, "longitude": 13.242, "years": [{"avg_products": 61, "nb_products": 5, "year": 1995}
+
+  var flat_years = vistk.utils.flatten_years(countries);
+
+  var grid = vistk.viz().params({
+    type: "grid",
+    width: 800,
+    height: 600,
+    margin: {top: 30, right: 30, bottom: 30, left: 30},
+    container: "#viz",
+    data: flat_years,
+    var_group: 'continent',
+    var_color: 'continent',
+    var_sort: 'nb_products',
+    var_sort_asc: false,
+    var_id: 'name',
+    time: {
+      var_time: "year", 
+      parse: d3.time.format("%Y").parse,
+      interval: [],
+      current_time: "2000"
+    },
+    items: [{
+      attr: "name",
+      marks: [{
+        type: "circle",
+        rotate: "0",
+        var_r: "nb_products",
+        var_fill: "nb_products",
+        fill: function(d) { return vars.color(vars.accessor_items(d)[vars.var_color]); }
+      }, {
+        type: "text",
+        rotate: "-30",
+        translate: 10 // TODO: translate the same distance than the radius
+      }]
+    }],
+    ui: {
+      default: true,
+      sort: ["name", "nb_products", "avg_products"]
+    }
+  });
+
+  d3.select("#viz").call(grid);
+
+});
+
+</script>
+</body>
