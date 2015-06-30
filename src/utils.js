@@ -622,196 +622,6 @@
 
   }
 
-  utils.items_mark = function(d, i) {
-
-    // Default mark if not specified
-    if(typeof vars.mark === "undefined") {
-      vars.mark = {};
-      vars.mark.type = "circle";
-    }
-
-    var context = d3.select(this).property("__context__");
-
-    switch(vars.mark.type) {
-
-      case "rect":
-
-        // In case the transition comes from a dot/scatter plot
-        d3.select(this).selectAll(".items__mark__circle").remove();
-
-        var mark = d3.select(this).selectAll(".items__mark__rect").data([d]);
-
-        mark.enter()
-                .append("rect")                            
-                  .attr("x", -vars.mark.width/2)
-                  .attr("y", -vars.mark.height/2)
-                  .attr("x", vars.mark.x)
-                  .attr("y", vars.mark.y)
-                  .classed("items__mark__rect", true)
-                  .attr("transform", "rotate(0)")
-                  .style("fill", function(d) { return vars.color(d[vars.var_color]); });
-
-        mark
-            .attr("height", vars.mark.height)
-            .attr("width", vars.mark.width)
-            .attr("x", vars.mark.x)
-            .attr("y", vars.mark.y)
-            .classed("highlighted", function(d, i) { return d.__highlighted; })
-            .classed("selected", function(d, i) { return d.__selected; });
-
-        mark.exit().remove();
-
-        break;
-
-
-      case "shape":
-
-        d3.select(this).insert("path")
-                        .attr("class", "country")    
-                          .attr("title", function(d,i) { 
-                            return d.name; 
-                          })
-                          .attr("d", vars.path)
-                          .style("fill", function(d, i) { 
-                            return vars.color(d.data[vars.var_color]);
-                          });
-        break;
-
-      case "pie":
-
-        d3.select(this).insert("path")
-                        .attr("class", "country")    
-                          .attr("title", function(d,i) { 
-                            return d.name; 
-                          })
-                          .attr("d", vars.path)
-                          /*
-                          .style("fill", function(d, i) { 
-                            return vars.color(d.data[vars.var_color]);
-                          });
-                          */
-        break;
-
-      case "text":
-
-        if(typeof vars.mark.rotate === "undefined")
-          vars.mark.rotate = 0;
-
-        if(typeof vars.mark.translate === "undefined")
-          vars.mark.translate = [0, 0];
-
-        var drag = d3.behavior.drag()
-            .on("drag", dragmove);
-
-        function dragmove(d) {
-            d3.select(this)
-            .attr("transform", "translate(" + d3.event.x + "," + d3.event.y + ")rotate(" +  vars.mark.rotate + ")");
-        }
-
-       var mark = d3.select(this).selectAll(".items__mark__text").data([d]);
-
-        mark.enter().append("text")
-            .classed("items__mark__text", true)         
-            .style("text-anchor", "start")
-            .attr("x", 10)
-            .attr("y", 0)
-            .attr("dy", ".35em")
-            // .call(drag);
-
-        mark
-            .classed("highlighted", function(d, i) { return d.__highlighted; })
-            .classed("selected", function(d, i) { return d.__selected; })   
-            .transition()
-            .attr("transform", "translate(" +  vars.mark.translate + ")rotate(" +  vars.mark.rotate + ")")
-            .text(function(d) { 
-              return vars.accessor_data(d)[vars.var_text]; 
-            });
-
-  /*
-          // For pie chart wedges..
-          arcs.append("text")
-              .attr("transform", function(d) { return "translate(" + arc.centroid(d) + ")"; })
-              .attr("dy", ".35em")
-              .style("text-anchor", "middle")
-              .text(function(d) { return d[vars.var_text]; });
-  */
-
-        break;
-
-      case "circle":
-      default:
-
-        // In case other marks already exist
-        d3.select(this).selectAll(".items__mark__rect").remove();
-        d3.select(this).selectAll(".items__mark__diamond").remove();
-
-        var mark = d3.select(this).selectAll(".items__mark__circle").data([d]);
-
-        mark.enter().append("circle")
-                    .classed("items__mark__circle", true)
-                    .attr("cx", 0)
-                    .attr("cy", 0)
-                    .attr("transform", "rotate(0)");
-
-        mark
-            .attr("r", vars.mark.radius)
-            .attr("fill", vars.mark.fill)
-            .classed("highlighted", function(d, i) { return d.__highlighted; })
-            .classed("selected", function(d, i) { return d.__selected; });
-
-        break;
-
-    }
-
-  }
-
-  utils.connect_mark = function(d) {
-
-    var context = d3.select(this).property("__context__");
-
-    if(typeof vars.connect != "undefined") {
-
-      switch(vars.connect.type) {
-
-        case "line":
-
-          var mark = d3.select(this).selectAll(".connect__line").data([d]);
-
-          mark.enter().append('line')
-              .classed('connect__line', true)
-              .attr("x1", function(d) { return vars.x_scale[0]["func"](d.source.x); })
-              .attr("y1", function(d) { return vars.y_scale[0]["func"](d.source.y); })
-              .attr("x2", function(d) { return vars.x_scale[0]["func"](d.target.x); })
-              .attr("y2", function(d) { return vars.y_scale[0]["func"](d.target.y); });
-
-          mark              
-              .classed("highlighted", function(d, i) { return d.__highlighted; })
-              .classed("selected", function(d, i) { return d.__selected; });
-
-          break;
-
-        case "path":
-        default:
-
-          var mark = d3.select(this).selectAll(".connect__path").data([d]);
-
-          mark.enter().append('path')
-              .classed('connect__path', true)
-              .style("fill", vars.mark.fill)
-              .style("stroke", vars.mark.stroke);
-
-          mark              
-              .classed("highlighted", function(d, i) { return d.__highlighted; })
-              .classed("selected", function(d, i) { return d.__selected; })
-              .attr('d', function(d) {
-                return vars.connect[0].marks[0]["func"](vars.accessor_values(d));
-              });
-
-        break;
-      }
-    }
-  }
-
   utils.x_axis = function(d, i) {
 
     vars.x_axis = utils.make_x_axis();
@@ -910,8 +720,6 @@
 
   }
 
-
-
   // One way to wrap text.. but creates too many elements..
   // http://bl.ocks.org/mbostock/7555321
 
@@ -1006,7 +814,8 @@
       .transition()
         .duration(vars.duration)
         .ease("linear")
-        .attr("stroke-dashoffset", 0)
+        .attr("stroke-dashoffset", 0);
+
   }
 
   // Credits: http://bl.ocks.org/mbostock/1705868
