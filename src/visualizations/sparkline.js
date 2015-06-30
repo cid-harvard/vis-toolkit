@@ -1,7 +1,9 @@
 vars.default_params["sparkline"] = function(scope) {
 
   var params = {};
+
   params.accessor_values = function(d) { return d.values; };
+  params.accessor_data = function(d) { return d; };
 
   params.x_scale = [{
     name: "linear",

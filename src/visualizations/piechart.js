@@ -20,7 +20,7 @@ vars.default_params["piechart"] = function(scope) {
 
   params.r_scale = d3.scale.linear()
               .range([0, scope.width/6])
-              .domain([0, d3.max(vars.new_data, function(d) { return d.data[vars.var_share]; })]);
+              .domain([0, d3.max(vars.new_data, function(d) { return vars.accessor_data(d)[vars.var_share]; })]);
 
   params.items = [{
     marks: [{

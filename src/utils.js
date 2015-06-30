@@ -173,7 +173,7 @@
                         .attr("title", function(d,i) {
                           active = d3.select(null); 
                           return d.name; 
-                        })
+                        });
 
           mark
               .classed("highlighted", function(d, i) { return d.__highlighted; })
@@ -227,7 +227,6 @@
 
           break;
 
-
         case "arc":
 
           var arc = d3.svg.arc().outerRadius(function(d) {
@@ -238,10 +237,10 @@
 
               var r_scale = d3.scale.linear()
                 .range([vars.radius_min, vars.radius_max*20])
-                .domain(d3.extent(vars.new_data, function(d) { return d.data[vars.var_r]; }))
+                .domain(d3.extent(vars.new_data, function(d) { return vars.accessor_data(d)[vars.var_r]; }))
 
-              return r_scale(d.data[vars.var_r]);
-            }
+              return r_scale(vars.accessor_data(d)[vars.var_r]);
+            } 
 
           }).innerRadius(0);
 
@@ -249,7 +248,7 @@
 
           mark.enter().append("path")
               .attr("fill", function(d, i) {
-                return vars.color(d.data[vars.var_color]);
+                return vars.color(vars.accessor_data(d)[vars.var_color]);
               })
               .style("fill-opacity", function(d, i) {
                 if(d.i == 0)
@@ -257,7 +256,9 @@
                 else
                   return 1;
               })          
-              .attr("d", arc);
+            .attr("d", function(d) {
+              return arc(d);
+            });
 
         break;
 
@@ -400,6 +401,26 @@
             gItems_enter.call(vistk.utils.draw_mark, params);
             gItems.call(vistk.utils.draw_mark, params);
           });
+
+        break;
+
+        case "piechart":
+
+          scope = {};
+          scope = vistk.utils.merge(scope, vars);
+          vars.accessor_data = function(d) { return d.piescatter; }
+          var piechart_params = vars.default_params["piechart"](scope);
+
+          console.log("DARA", d)
+
+          var chart = d3.select(this).selectAll(".items__chart__piechart").data([d]);
+
+          chart.enter().append('g')
+              .classed('items__chart__piechart', true)
+              .call(vistk.utils.create_chart, piechart_params);
+
+          // Update is a bit tricky
+          // http://bl.ocks.org/mbostock/1346410
 
         break;
 
@@ -640,54 +661,6 @@
 
         break;
 
-      case "diamond":
-
-        var mark = d3.select(this).selectAll(".items__mark__diamond").data([d]);
-
-        mark.enter().append("rect")
-                  .attr("height", vars.mark.height)
-                  .attr("width", vars.mark.width)                              
-                  .attr("x", -vars.mark.width/2)
-                  .attr("y", -vars.mark.height/2)
-                  .classed("items__mark__diamond", true)
-                  .attr("transform", "rotate(45)");
-
-        mark
-            .classed("highlighted", function(d, i) { return d.__highlighted; })
-            .classed("selected", function(d, i) { return d.__selected; });
-
-        break;
-
-      case "arc":
-
-        var arc = d3.svg.arc().outerRadius(function(d) {
-
-          if(typeof vars.var_r === "undefined") {
-            return vars.radius_max*20;
-          } else {
-
-            var r_scale = d3.scale.linear()
-              .range([vars.radius_min, vars.radius_max*20])
-              .domain(d3.extent(vars.new_data, function(d) { return d.data[vars.var_r]; }))
-
-            return r_scale(d.data[vars.var_r]);
-          }
-
-        }).innerRadius(0);
-        
-        d3.select(this).append("path")
-            .attr("fill", function(d, i) {
-              return vars.color(d.data[vars.var_color]);
-            })
-            .style("fill-opacity", function(d, i) {
-              if(d.i == 0)
-                return .2;
-              else
-                return 1;
-            })          
-            .attr("d", arc);
-
-        break;
 
       case "shape":
 

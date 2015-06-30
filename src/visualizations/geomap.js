@@ -38,13 +38,13 @@
         vars.items = vistk.utils.merge(vars.items, vars.user_vars.items);
 
         // http://techslides.com/demos/d3/d3-world-map-colors-tooltips.html
-        var projection = d3.geo.mercator()
+        vars.projection = d3.geo.mercator()
                         .translate([vars.width/2, vars.height/2])
                         .scale(100);
 
         // This is the main function that draws the shapes later on
         vars.path = d3.geo.path()
-            .projection(projection);
+            .projection(vars.projection);
 
         vars.gSvg = vars.svg
             .call(d3.behavior.zoom()
@@ -57,7 +57,7 @@
 
         // PRE-UPDATE ITEMS
         var gItems = vars.svg.selectAll(".mark__group")
-                        .data(vars.countries, function(d, i) { return i; });
+                        .data(vars.new_data, function(d, i) { return i; });
 
         // ENTER ITEMS
         var gItems_enter = gItems.enter()

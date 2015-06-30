@@ -80,12 +80,12 @@
           if(typeof vars.items !== "undefined" && JSON.stringify(vars.items) != '{}') {
 
             // Make sure we retrieve the data for nested charts (if any)
-            vars.items.forEach(function(item) {
-              item.marks.forEach(function(params) {
+            for(item in vars.items) {
+              vars.items[item].marks.forEach(function(params) {
                 v[params.var_y] = d[params.var_y];
                 v[params.var_x] = d[params.var_x];
-              })
-            })
+              });
+            }
           }
 
           return v;
@@ -173,6 +173,7 @@
           aggregation.__aggregated = true;
           aggregation.__selected = false;
           aggregation.__highlighted = false;
+
 
           aggregation.piescatter[0][vars.var_share] = d3.sum(leaves, function(d) {
 
@@ -333,7 +334,8 @@
 
     }
 
-    
+    // Views are data iterators to create more complex visualizations
+    // WIP
     if(typeof vars.view != "undefined") {
 
       vars.old_data = vars.new_data;
@@ -370,6 +372,8 @@
 
       });
 
+      vars.new_data = vars.countries;
+
     }
 
 
@@ -379,7 +383,6 @@
       vars.new_data = vars.pie(vars.new_data);
 
     }
-
 
 
     // Chart specific metadata: grid
