@@ -36,9 +36,13 @@ d3.json("../data/exports_2012.json", function(error, exports) {
         rotate: "0",
         var_r: "share",
         var_fill: "community_name",
-        fill: function(d) { return vars.color(vars.accessor_items(d)[vars.var_color]); }
+        // fill: function(d) { return vars.color(vars.accessor_items(d)[vars.var_color]); }
       }]
     }],
+    ui: {
+      default: true,
+      sort: ["community_name", "share", "name"]
+    },
   });
 
   d3.select("#viz").call(grid);

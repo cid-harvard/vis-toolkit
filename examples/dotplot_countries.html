@@ -20,8 +20,9 @@ d3.json("../data/diversification_ubiquity_hs4_1995_2012.json", function(error, c
       container: '#viz',
       var_id: 'name',
       var_text: 'name',
-      var_x: 'longitude',
+      var_x: 'nb_products',
       var_group: 'continent',
+      var_color: 'continent',
       var_y: function() { return this.height/2; },
       x_text: null,
       x_ticks: 10,
@@ -29,7 +30,7 @@ d3.json("../data/diversification_ubiquity_hs4_1995_2012.json", function(error, c
       items: [{
         attr: "name",
         marks: [{
-          type: "diamond",
+          type: "circle",
           rotate: "0"
         },{
           type: "text",

@@ -81,18 +81,20 @@
           v[vars.var_y] = d[vars.var_y];
           v[vars.var_x] = d[vars.var_x];
 
+          /* Not needed anymore
           if(typeof vars.items !== "undefined" && JSON.stringify(vars.items) != '{}') {
 
             // Make sure we retrieve the data for nested charts (if any)
             vars.items.forEach(function(item) {
               item.marks.forEach(function(params) {
+
                 v[params.var_y] = d[params.var_y];
                 v[params.var_x] = d[params.var_x];
               })
             });
 
           }
-
+          */
           return v;
         })
 

@@ -3,6 +3,7 @@ vars.default_params["linechart"] = function(scope) {
   var params = {};
 
   params.accessor_values = function(d) { return d.values; };
+  params.accessor_items = function(d) { return d; };
 
   params.x_scale = [{
       name: "linear",
@@ -23,7 +24,7 @@ vars.default_params["linechart"] = function(scope) {
     marks: [{
       type: "circle",
       rotate: "0",
-      fill: function(d) { return vars.color(vars.accessor_items(d)[vars.var_color]); }
+      fill: function(d) { return vars.color(params.accessor_items(d)[vars.var_color]); }
     },{
       type: "text",
       rotate: "0"
@@ -36,7 +37,7 @@ vars.default_params["linechart"] = function(scope) {
     marks: [{
       type: "path",
       rotate: "0",
-      stroke: function(d) { return vars.color(vars.accessor_items(d)[vars.var_color]); },
+      stroke: function(d) { return vars.color(params.accessor_items(d)[vars.var_color]); },
       func: d3.svg.line()
            .interpolate(vars.interpolate)
            .x(function(d) { return params.x_scale[0]["func"](d[vars.var_x]); })
@@ -49,10 +50,11 @@ vars.default_params["linechart"] = function(scope) {
   params.x_axis_orient = "top";
   params.x_axis_show = true;
   params.x_grid_show = true;
-  params.x_text = false
+  params.x_text = false;
 
   params.y_axis_show = false
   params.y_grid_show = false;
 
   return params;
+
 };

@@ -15,6 +15,7 @@ vars.default_params["barchart"] = function(scope) {
   }];
 
   params.items = [{
+    attr: "bar",
     marks: [{
       type: "rect",
       rotate: "0",

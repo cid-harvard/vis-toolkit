@@ -6,14 +6,14 @@ vars.default_params["grid"] = function(scope) {
   params.x_scale = [{
     name: "linear",
     func: d3.scale.linear()
-          .domain([0, nb_dimension])
+          .domain([0, Math.ceil(Math.sqrt(vars.new_data.length))])
           .range([0, vars.width])
   }];
 
   params.y_scale = [{
     name: "linear",
     func: d3.scale.linear()
-          .domain([0, nb_dimension])
+          .domain([0, Math.ceil(Math.sqrt(vars.new_data.length))])
           .range([0, vars.height])
   }];
 

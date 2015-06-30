@@ -1,22 +1,25 @@
       case "geomap":
 
-        vars.params = {
 
-          x_scale: [{
+        var geomap_params = function(scope) {
+
+          var params = {};
+
+          params.x_scale = [{
             name: "linear",
             func: d3.scale.linear()
                     .range([vars.margin.left, vars.width-vars.margin.left-vars.margin.right])
                     .domain(d3.extent(vars.countries, function(d) { return d[vars.var_x]; }))
-          }],
+          }];
 
-          y_scale: [{
+          params.y_scale = [{
             name: "linear",
             func: d3.scale.linear()
                     .range([vars.height-vars.margin.top-vars.margin.bottom, vars.margin.top])
                     .domain(d3.extent(vars.countries, function(d) { return d[vars.var_y]; }))
-          }],
+          }];
 
-          items: [{
+          params.items = [{
             attr: "country",
             marks: [{
               type: "shape",
@@ -24,15 +27,17 @@
                       .domain([d3.min(vars.new_data, function(d) { return d[vars.var_color]; }), d3.max(vars.new_data, function(d) { return d[vars.var_color]; })])
                       .range(["red", "green"]),
               rotate: 0
-            }],
-          }],
+            }]
+          }];
 
-          accessor_data: function(d) { return d.data; },
-          accessor_values: function(d) { return d.data.values; }
+          params.accessor_data = function(d) { return d.data; };
+          params.accessor_values = function(d) { return d.data.values; };
+
+          return params;
 
         };
 
-        vars = vistk.utils.merge(vars, vars.params);
+        vars = vistk.utils.merge(vars, geomap_params(vars));
 
         // LOAD USER PARAMS
         vars.items = vistk.utils.merge(vars.items, vars.user_vars.items);
@@ -65,12 +70,12 @@
                          .attr("transform", function(d) {
                            return "translate(" + [0, 0] + ")";
                          })
-                         .each(vistk.utils.items_group);
+                         .each(utils.items_group);
 
         // APPEND AND UPDATE ITEMS MARK
         vars.items[0].marks.forEach(function(params) {
-          gItems_enter.call(vistk.utils.draw_mark, params);
-          gItems.call(vistk.utils.draw_mark, params);
+          gItems_enter.call(utils.draw_mark, params);
+          gItems.call(utils.draw_mark, params);
         });
 
         // ITEMS EXIT

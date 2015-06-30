@@ -100,7 +100,7 @@
                   .attr("y", -vars.mark.height/2)
                   .classed("items__mark__rect", true)
                   .attr("transform", "rotate(0)")
-                  .style("fill", function(d) { return vars.color(d[vars.var_color]); });
+                  .style("fill", function(d) { return vars.color(vars.accessor_items(d)[vars.var_color]); });
 
         mark
             .attr("height", params.height)
@@ -367,7 +367,7 @@
         case "dotplot":
 
           scope = {};
-          scope = utils.merge(scope, vars);
+          scope = vistk.utils.merge(scope, vars);
 
           scope = vars.default_params["dotplot"](scope);
 
@@ -409,7 +409,7 @@
         case "piechart":
 
           scope = {};
-          scope = utils.merge(scope, vars);
+          scope = vistk.utils.merge(scope, vars);
           vars.accessor_data = function(d) { return d.piescatter; }
           var piechart_params = vars.default_params["piechart"](scope);
 
@@ -461,7 +461,6 @@
 
         break;
 
-
         case "none":
         break;
 
@@ -487,7 +486,7 @@
                           return r_scale(d[params.var_r]);
                         }
                       })
-                      .attr("fill", params.fill)
+                      .style("fill", function(d) { return vars.color(vars.accessor_items(d)[vars.var_color]); })
                       .attr("title", function(d,i) {
                         active = d3.select(null); 
                         return d.name; 
