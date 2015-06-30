@@ -1,4 +1,4 @@
-  chart = function(selection) {
+  function chart(selection) {
 
     // Merging the various user params
     vars.user_vars = vistk.utils.merge(vars.user_vars, vars._user_vars);

@@ -15,7 +15,7 @@ module.exports = function(grunt) {
               'src/visualizations/geomap.js', 'src/visualizations/nodelink.js', 
               'src/visualizations/matrix.js', 'src/visualizations/boxplot.js', 'src/visualizations/none.js',
               'src/visualizations/default.js', 'src/ui.js', 'src/getterssetters.js', 
-              'src/end_constructor.js', 'src/end.js', 'src/utils.js'],
+              'src/end_constructor.js', 'src/utils.js', 'src/end.js'],
         dest: 'build/vistk.js',
       },
     },

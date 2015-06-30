@@ -5,7 +5,7 @@
   }
 
   // Contains parameters for the current chart
-  vars = {};
+  var vars = {};
 
   // Default parameters for all charts
   var default_vars = {
