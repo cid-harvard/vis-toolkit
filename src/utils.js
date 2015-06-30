@@ -50,8 +50,9 @@
         params_type = params.type(d[params.var_mark]);
       }
 
-      if(typeof params.rotate === "undefined")
+      if(typeof params.rotate === "undefined") {
         params.rotate = 0;
+      }
 
       if(typeof params.translate === "undefined") {
         params.translate = [0, 0];
@@ -1018,5 +1019,3 @@
       };
     };
   }
-
-

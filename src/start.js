@@ -1,4 +1,5 @@
 "use strict";
+
 var vistk = window.vistk || {};
 window.vistk = vistk;
 

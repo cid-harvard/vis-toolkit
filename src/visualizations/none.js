@@ -85,18 +85,15 @@
         // ENTER
         var gItems_enter = gItems.enter()
                         .append("g")
-                        .each(vistk.utils.items_group)
+                        .each(utils.items_group)
                         .attr("transform", function(d, i) {
                           return "translate(" + vars.margin.left + ", " + vars.height/2 + ")";
                         });
 
-        // Add graphical marks
-        vars.items[0].marks.forEach(function(d) {
-
-          vars.mark.type = d.type;
-          vars.mark.rotate = d.rotate;
-          gItems_enter.each(vistk.utils.items_mark);
-
+       // APPEND AND UPDATE ITEMS MARK
+        vars.items[0].marks.forEach(function(params) {
+          gItems_enter.call(utils.draw_mark, params);
+          gItems.call(utils.draw_mark, params);
         });
 
         // EXIT
