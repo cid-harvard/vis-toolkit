@@ -45,7 +45,7 @@
         if(vars.dev) { 
           console.log("[vars.filter]", vars.filter);
         }
-        
+
         vars.new_data = vars.new_data.filter(function(d) {
           // We don't keep values that are not in the vars.filter array
           return vars.filter.indexOf(d[vars.var_group]+"") > -1;
@@ -317,7 +317,7 @@
       });
 
       // Make sure there is no empty elements
-     vars.groups = vars.groups.filter(function(n) { return n !== "undefined"; }); 
+      vars.groups = vars.groups.filter(function(n) { return n !== "undefined"; }); 
 
       // Add group elements are root children
       vars.root.children = vars.groups.map(function(d, i) {
@@ -326,6 +326,8 @@
         node[vars.var_text] = d[0][vars.var_text];
         node[vars.var_group] = d[0][vars.var_group];
         node[vars.var_id] = d[0][vars.var_group];
+        node[vars.var_sort] = 0;
+        node[vars.var_size] = 0;
 
         // Create the children nodes var
         node.children = d.map(function(e, j) {
@@ -334,12 +336,22 @@
           n[vars.var_size] = e[vars.var_size]; 
           n[vars.var_group] = e[vars.var_group];
           n[vars.var_id] = e[vars.var_id];
+
+          node[vars.var_sort] += e[vars.var_sort];
+          node[vars.var_size] += e[vars.var_size];
+
           return n;
         });
 
         return node;
 
       });
+
+      if(typeof vars.var_sort_asc !== "undefined" && !vars.var_sort_asc) {
+        vars.root.children = vars.root.children.sort(function(a, b) { return d3.ascending(a[vars.var_sort], b[vars.var_sort]);});
+      } else {
+        vars.root.children = vars.root.children.sort(function(a, b) { return d3.descending(a[vars.var_sort], b[vars.var_sort]);});
+      }
 
     }
 
