@@ -411,8 +411,6 @@
           vars.accessor_data = function(d) { return d.piescatter; }
           var piechart_params = vars.default_params["piechart"](scope);
 
-          console.log("DARA", d)
-
           var chart = d3.select(this).selectAll(".items__chart__piechart").data([d]);
 
           chart.enter().append('g')
@@ -598,8 +596,10 @@
 
   vistk.utils.create_chart = function(_, params) {
 
-    console.log("Creating chart with params", params, _, d3.select(this));
-
+    if(vars.dev) { 
+      console.log("Creating chart with params", params, _, d3.select(this));
+    }
+    
     // PRE-UPDATE ITEMS
     var gItems = _.selectAll(".mark__group")
                     .data(vars.new_data, function(d, i) { return d[vars.var_id]; });

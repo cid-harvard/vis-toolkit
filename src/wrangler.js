@@ -28,7 +28,9 @@
 
       if(typeof vars.time.filter != "undefined" && vars.time.filter.length > 0) {
 
-        console.log("[vars.time.filter]", vars.time.filter);
+        if(vars.dev) { 
+          console.log("[vars.time.filter]", vars.time.filter);
+        }
 
         vars.new_data = vars.new_data.filter(function(d, i) {
           return vars.time.filter.indexOf(d[vars.time.var_time]) > -1;
@@ -40,8 +42,10 @@
       // TODO: not sure we should remove data, but add an attribute instead would better
       if(vars.filter.length > 0) {
 
-        console.log("[vars.filter]", vars.filter);
-
+        if(vars.dev) { 
+          console.log("[vars.filter]", vars.filter);
+        }
+        
         vars.new_data = vars.new_data.filter(function(d) {
           // We don't keep values that are not in the vars.filter array
           return vars.filter.indexOf(d[vars.var_group]+"") > -1;
@@ -80,12 +84,13 @@
           if(typeof vars.items !== "undefined" && JSON.stringify(vars.items) != '{}') {
 
             // Make sure we retrieve the data for nested charts (if any)
-            for(item in vars.items) {
-              vars.items[item].marks.forEach(function(params) {
+            vars.items.forEach(function(item) {
+              item.marks.forEach(function(params) {
                 v[params.var_y] = d[params.var_y];
                 v[params.var_x] = d[params.var_x];
-              });
-            }
+              })
+            });
+
           }
 
           return v;
@@ -132,7 +137,9 @@
     // Aggregate data
     if(vars.aggregate === vars.var_group) {
 
-      console.log("[vars.aggregate]", vars.aggregate);
+      if(vars.dev) { 
+        console.log("[vars.aggregate]", vars.aggregate);
+      }
 
       // Do the nesting
       // Should make sure it works for a generc dataset
@@ -268,7 +275,9 @@
 
     if(typeof vars.var_sort !== "undefined") {
 
-       console.log("[updating sort]", vars.var_sort, vars.var_sort_asc, vars.user_vars)
+      if(vars.dev) { 
+         console.log("[updating sort]", vars.var_sort, vars.var_sort_asc, vars.user_vars)
+      }
 
       if(typeof vars.var_sort_asc !== "undefined" && !vars.var_sort_asc) {
         vars.new_data = vars.new_data.sort(function(a, b) { return d3.ascending(a[vars.var_sort], b[vars.var_sort]);});

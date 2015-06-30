@@ -16,7 +16,7 @@
     new_data: null,
     time_data: null,
 
-    dev : true,
+    dev : false,
     id : "id",
     id_var : "id",
     var_group: null,
