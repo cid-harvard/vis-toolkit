@@ -5,7 +5,7 @@
 
         // TODO
         // Contain the parameters in something different than global variable
-        // Use the vistk.utils.create_chart()
+        // Use the utils.create_chart()
 
         if(vars.dev) { 
           console.log("[init.vars.default]", vars)
@@ -14,7 +14,7 @@
         // Sparkline is currenlty the only chart that can have a scope as parameter
         if(vars.type == "sparkline" || vars.type == "dotplot" || vars.type == "barchart" || vars.type == "linechart" || vars.type == "scatterplot" || vars.type == "grid" || vars.type == "stacked" || vars.type == "piechart" || vars.type == "slopegraph") {
           //scope = {};
-          //scope = vistk.utils.merge(scope, vars)
+          //scope = utils.merge(scope, vars)
 
           scope = vars.default_params[vars.type](vars);
           vars = vistk.utils.merge(vars, scope);
@@ -33,10 +33,10 @@
         // CREATE AXIS
 
         if(vars.x_axis_show)
-          vars.svg.call(vistk.utils.x_axis);
+          vars.svg.call(utils.x_axis);
   
        if(vars.y_axis_show)
-          vars.svg.call(vistk.utils.y_axis);
+          vars.svg.call(utils.y_axis);
 
         if(vars.x_grid_show) {
           vars.svg.selectAll(".x.grid").data([vars.new_data])
@@ -48,7 +48,7 @@
 
           vars.svg.selectAll(".x.grid").transition()
               .duration(vars.duration)
-              .call(vistk.utils.make_x_axis()
+              .call(utils.make_x_axis()
               .tickSize(-vars.height+vars.margin.top+vars.margin.bottom, 0, 0)
               .tickFormat(""));
         }
@@ -63,7 +63,7 @@
 
           vars.svg.selectAll(".y.grid").transition()
               .duration(vars.duration)
-              .call(vistk.utils.make_y_axis()
+              .call(utils.make_y_axis()
               .tickSize(-vars.width+vars.margin.left+vars.margin.right, 0, 0)
               .tickFormat(""));
         }
@@ -100,8 +100,8 @@
           vars.connect.forEach(function(connect) {
 
               connect.marks.forEach(function(params) {
-                gConnect_enter.call(vistk.utils.draw_mark, params);
-                gConnect.call(vistk.utils.draw_mark, params);
+                gConnect_enter.call(utils.draw_mark, params);
+                gConnect.call(utils.draw_mark, params);
               });
 
           });
@@ -120,15 +120,15 @@
           // ENTER ITEMS
           var gItems_enter = gItems.enter()
                           .append("g")
-                          .each(vistk.utils.items_group)
+                          .each(utils.items_group)
                           .attr("transform", function(d, i) {
                             return "translate(" + vars.x_scale[0]["func"](vars.accessor_data(d)[vars.var_x]) + ", " + vars.y_scale[0]["func"](vars.accessor_data(d)[vars.var_y]) + ")";
                           });
 
            // APPEND AND UPDATE ITEMS MARK
             vars.items[0].marks.forEach(function(params) {
-              gItems_enter.call(vistk.utils.draw_mark, params);
-              gItems.call(vistk.utils.draw_mark, params);
+              gItems_enter.call(utils.draw_mark, params);
+              gItems.call(utils.draw_mark, params);
             });
 
             /* Should be as below but current params don't match this format
@@ -136,8 +136,8 @@
               // APPEND AND UPDATE ITEMS MARK
               vars.items.forEach(function(item) {
                 item.marks.forEach(function(params) {
-                  gItems_enter.call(vistk.utils.draw_mark, params);
-                  gItems.call(vistk.utils.draw_mark, params);
+                  gItems_enter.call(utils.draw_mark, params);
+                  gItems.call(utils.draw_mark, params);
                 });
               });
 
@@ -155,7 +155,7 @@
           var gItems_exit = gItems.exit().remove();
 
           if(vars.zoom.length > 0) {
-            vistk.utils.zoom_to_nodes(vars.zoom);
+            utils.zoom_to_nodes(vars.zoom);
           } else {
             
             vars.svg.transition()
@@ -164,6 +164,6 @@
 
         }
         
-        vistk.utils.background_label(vars.title);
+        utils.background_label(vars.title);
 
       break;

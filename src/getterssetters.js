@@ -26,7 +26,7 @@
 
         if( (d[vars.var_join] == e[vars.var_join]) && (d.year == 2011)) {
 
-          return  vistk.utils.merge(d, e);
+          return  utils.merge(d, e);
 
         }
       });

@@ -25,7 +25,7 @@
                })
               .on("change", function(d) { 
 
-                vistk.utils.update_filters(this.value, this.checked);
+                utils.update_filters(this.value, this.checked);
                 vars.refresh = true;
                 d3.select(vars.container).call(vars.this_chart);
 

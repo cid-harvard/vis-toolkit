@@ -1,4 +1,5 @@
-  vistk.utils.items_group = function(d, i) {
+
+  utils.items_group = function(d, i) {
 
     d3.select(this).attr("class", "mark__group")
                     .classed("highlighted", function(d, i) { return d.__highlighted; })
@@ -15,7 +16,7 @@
 
   }
 
-  vistk.utils.connect_group = function(d, i) {
+  utils.connect_group = function(d, i) {
 
     d3.select(this).attr("class", "connect__group")
                     .classed("highlighted", function(d, i) { return d.__highlighted; })
@@ -38,7 +39,7 @@
     params contains the parameters for the current graphical mark to draw 
     e.g. scales, type of mark, radius, color function, ..
   */
-  vistk.utils.draw_mark = function(selection, params) {
+  utils.draw_mark = function(selection, params) {
 
     selection.each(function(d) {
 
@@ -308,7 +309,7 @@
           // LOAD CHART PARAMS
 
           scope = {};
-          scope = vistk.utils.merge(scope, vars)
+          scope = utils.merge(scope, vars)
 
           scope = vars.default_params["sparkline"](scope);
 
@@ -355,8 +356,8 @@
           // APPEND CONNECT MARK
           scope.connect.forEach(function(connect) {
             connect.marks.forEach(function(params) {
-              gConnect_enter.call(vistk.utils.draw_mark, params);
-              gConnect.call(vistk.utils.draw_mark, params);
+              gConnect_enter.call(utils.draw_mark, params);
+              gConnect.call(utils.draw_mark, params);
             });
           });
 
@@ -365,7 +366,7 @@
         case "dotplot":
 
           scope = {};
-          scope = vistk.utils.merge(scope, vars);
+          scope = utils.merge(scope, vars);
 
           scope = vars.default_params["dotplot"](scope);
 
@@ -394,12 +395,12 @@
           // ENTER ITEMS
           var gItems_enter = gItems.enter()
                           .append("g")
-                          .each(vistk.utils.items_group)
+                          .each(utils.items_group)
 
           // APPEND AND UPDATE ITEMS MARK
           scope.items[0].marks.forEach(function(params) {
-            gItems_enter.call(vistk.utils.draw_mark, params);
-            gItems.call(vistk.utils.draw_mark, params);
+            gItems_enter.call(utils.draw_mark, params);
+            gItems.call(utils.draw_mark, params);
           });
 
         break;
@@ -407,7 +408,7 @@
         case "piechart":
 
           scope = {};
-          scope = vistk.utils.merge(scope, vars);
+          scope = utils.merge(scope, vars);
           vars.accessor_data = function(d) { return d.piescatter; }
           var piechart_params = vars.default_params["piechart"](scope);
 
@@ -415,7 +416,7 @@
 
           chart.enter().append('g')
               .classed('items__chart__piechart', true)
-              .call(vistk.utils.create_chart, piechart_params);
+              .call(utils.create_chart, piechart_params);
 
           // Update is a bit tricky
           // http://bl.ocks.org/mbostock/1346410
@@ -430,7 +431,7 @@
 
           chart.enter().append('g')
               .classed('items__chart__dotplot', true)
-              .call(vistk.utils.create_chart, dotplot_params);
+              .call(utils.create_chart, dotplot_params);
 
           // Adjust the parameters it inehrited
 
@@ -490,7 +491,7 @@
                         active = d3.select(null); 
                         return d.name; 
                       })
-                      .call(vistk.utils.make_zoomable_on_click)
+                      .call(utils.make_zoomable_on_click)
 
           mark
              // .attr("r", function(d) {return params.radius; })
@@ -508,7 +509,7 @@
 
   }
 
-  vistk.utils.make_zoomable_on_click = function() {
+  utils.make_zoomable_on_click = function() {
 
     this.on("click", clicked);
 
@@ -549,7 +550,7 @@
 
   }
 
-  vistk.utils.zoom_to_nodes = function(nodes) {
+  utils.zoom_to_nodes = function(nodes) {
 
     var min_x = vars.width;
     var max_x = 0;
@@ -594,7 +595,7 @@
   }
 
 
-  vistk.utils.create_chart = function(_, params) {
+  utils.create_chart = function(_, params) {
 
     if(vars.dev) { 
       console.log("Creating chart with params", params, _, d3.select(this));
@@ -607,20 +608,20 @@
     // ENTER ITEMS
     var gItems_enter = gItems.enter()
                     .append("g")
-                    .each(vistk.utils.items_group)
+                    .each(utils.items_group)
                     .attr("transform", function(d, i) {
                       return "translate(" + vars.x_scale[0]["func"](d[vars.var_x]) + ", " + vars.y_scale[0]["func"](d[vars.var_y]) + ")";
                     });
 
     // APPEND AND UPDATE ITEMS MARK
     params.items[0].marks.forEach(function(params) {
-      gItems_enter.call(vistk.utils.draw_mark, params);
-      gItems.call(vistk.utils.draw_mark, params);
+      gItems_enter.call(utils.draw_mark, params);
+      gItems.call(utils.draw_mark, params);
     });
 
   }
 
-  vistk.utils.items_mark = function(d, i) {
+  utils.items_mark = function(d, i) {
 
     // Default mark if not specified
     if(typeof vars.mark === "undefined") {
@@ -763,7 +764,7 @@
 
   }
 
-  vistk.utils.connect_mark = function(d) {
+  utils.connect_mark = function(d) {
 
     var context = d3.select(this).property("__context__");
 
@@ -810,9 +811,9 @@
     }
   }
 
-  vistk.utils.x_axis = function(d, i) {
+  utils.x_axis = function(d, i) {
 
-    vars.x_axis = vistk.utils.make_x_axis();
+    vars.x_axis = utils.make_x_axis();
 
     vars.svg.selectAll(".x.axis").data([vars.new_data])
       .enter()
@@ -841,9 +842,9 @@
 
   }
 
-  vistk.utils.y_axis = function(d, i) {
+  utils.y_axis = function(d, i) {
 
-    vars.y_axis = vistk.utils.make_y_axis();
+    vars.y_axis = utils.make_y_axis();
 
     vars.svg.selectAll(".y.axis").data([vars.new_data])
       .enter()
@@ -870,7 +871,7 @@
 
   }
 
-  vistk.utils.make_x_axis = function() {        
+  utils.make_x_axis = function() {        
     return d3.svg.axis()
         .scale(vars.x_scale[0]["func"])
         .ticks(vars.x_ticks)
@@ -882,7 +883,7 @@
         .orient(vars.x_axis_orient);
   }
 
-  vistk.utils.make_y_axis = function() {        
+  utils.make_y_axis = function() {        
     return d3.svg.axis()
         .scale(vars.y_scale[0]["func"])
         .ticks(vars.y_ticks)
@@ -894,7 +895,7 @@
         .orient("left");
   }
 
-  vistk.utils.background_label = function() {
+  utils.background_label = function() {
 
     vars.svg.selectAll(".title")
         .data([vars.new_data])
@@ -908,29 +909,12 @@
 
   }
 
-  // UTILS FUNCTIONS
 
-  // http://stackoverflow.com/questions/171251/how-can-i-merge-properties-of-two-javascript-objects-dynamically
-  vistk.utils.merge = function(d, e) {
-
-      var obj = {},
-          i = 0,
-          il = arguments.length,
-          key;
-      for (; i < il; i++) {
-          for (key in arguments[i]) {
-              if (arguments[i].hasOwnProperty(key)) {
-                  obj[key] = arguments[i][key];
-              }
-          }
-      }
-      return obj;
-  };
 
   // One way to wrap text.. but creates too many elements..
   // http://bl.ocks.org/mbostock/7555321
 
-  vistk.utils.wrap = function(node) {
+  utils.wrap = function(node) {
 
     node.each(function() {
 
@@ -962,29 +946,7 @@
     });
   }
 
-  vistk.utils.find_node_by_id = function(id) {
-    var res = vars.nodes.filter(function(d) {
-      return d.id == id;
-    })[0];
-
-    // if(typeof res == "undefined")
-     // console.log("id not found", id)
-
-    return res;
-  }
-
-  vistk.utils.find_data_by_id = function(id) {
-    var res = vars.new_data.filter(function(d) {
-      return d[vars.var_id] == +id;
-    })[0];
-
-    // if(typeof res == "undefined")
-    //  console.log("Data id not found", id)
-
-    return res;
-  }
-
-  vistk.utils.update_filters = function(value, add) {
+  utils.update_filters = function(value, add) {
     if(vars.dev) {
       console.log("[update_filters]", value);
     }
@@ -999,28 +961,6 @@
       if(index > -1)
         vars.filter.splice(index, 1);
     }
-  }
-
-  // TODO: add accessor as argument and var_time
-  vistk.utils.flatten_years = function(data) {
-      var flat = [];
-
-      //for each country
-      data.forEach(function(root) {
-        
-          //for each year in each country
-          root.years.forEach(function(year) {
-              //extend the year object with the common properties stored just once in the country object
-
-            var current_year = vistk.utils.merge(root, year);
-            delete current_year.years;
-
-              //add it to the final flat array
-              flat.push(current_year);
-          })
-      });
-
-      return flat;
   }
 
   // UTIS FUNCTIONS
@@ -1055,7 +995,7 @@
     });
   }
 
-  vistk.utils.animate_trajectory = function(path, start_time, duration) {
+  utils.animate_trajectory = function(path, start_time, duration) {
 
     var totalLength = path.node().getTotalLength();
 
@@ -1069,7 +1009,7 @@
   }
 
   // Credits: http://bl.ocks.org/mbostock/1705868
-  vistk.utils.translate_along = function(path, duration) {
+  utils.translate_along = function(path, duration) {
     var l = path.node().getTotalLength();
     return function(d, i, a) {
       return function(t) {
@@ -1079,18 +1019,4 @@
     };
   }
 
-  vistk.utils.find_node_coordinates_by_id = function(nodes, id) {
-
-    var res = nodes.filter(function(d) {
-      return d.id == id;
-    })[0];
-
-    // If we can't find product in the graph, put it in the corner
-    if(typeof res == "undefined") {
-      // res = {x: 500+Math.random()*400, y: 1500+Math.random()*400};
-       res = {x: 1095, y: 1675};
-    }
-
-    return res;
-  } 
 

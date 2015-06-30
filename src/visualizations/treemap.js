@@ -47,7 +47,7 @@
         // ENTER
         var gItems_enter = gItems.enter()
                       .insert("g", ":first-child")
-                        .each(vistk.utils.items_group)
+                        .each(utils.items_group)
                         .attr("transform", function(d) { 
                           return "translate(" + d.x + "," + d.y + ")"; 
                         });
@@ -68,7 +68,7 @@
                 .filter(function(d, j) {
                     return (vars.mark.type == "rect" && d.depth == 2) || (vars.mark.type == "text" && d.depth == 1);
                   })
-                .each(vistk.utils.items_mark)
+                .each(utils.items_mark)
 
           gItems.select("rect")
                 .transition().duration(vars.duration)
@@ -109,7 +109,7 @@
         //  vars.svg.selectAll("text")
         //      .call(vistk.utils.wrap);
 
-        vistk.utils.background_label(vars.title);
+        utils.background_label(vars.title);
 
       break;
       
