@@ -22,8 +22,6 @@ d3.json("../data/atlas_international_product_space.json", function(graph) {
 
   d3.json("../data/col_dept_exports_3.json", function(exports) {
 
-    console.log(exports)
-
     // Adding a category attribute to the data
     exports.forEach(function(node){
       node.category = node.product_id.slice(0, 1);      

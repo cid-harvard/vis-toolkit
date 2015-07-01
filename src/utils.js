@@ -332,6 +332,8 @@
           }))
           .range([0, 50]);
 
+          console.log(d)
+
           scope.connect = [{
             marks: [{
                 type: "path",
