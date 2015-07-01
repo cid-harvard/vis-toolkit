@@ -464,6 +464,24 @@
 
         break;
 
+        case "marker":
+
+          var mark = d3.select(this).selectAll(".items__mark__marker").data([d]);
+
+          mark.enter().append('path')
+              .classed('items__mark__marker', true)
+              .attr("fill", "#ED4036")
+              .attr("stroke-width", 0)
+              .attr('d', "M10,0L0,10l10,25.4L20,10L10,0z M10,14.6c-2.1,0-3.8-1.7-3.8-3.8c0-2.1,1.7-3.8,3.8-3.8 c2.1,0,3.8,1.7,3.8,3.8C13.8,12.9,12.1,14.6,10,14.6z");
+
+          mark
+              .classed("highlighted", function(d, i) { return d.__highlighted; })
+              .classed("selected", function(d, i) { return d.__selected; });
+
+          mark.exit().remove();
+
+        break;
+
         case "none":
         break;
 
