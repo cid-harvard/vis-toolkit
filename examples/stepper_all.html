@@ -76,7 +76,7 @@ d3.select("input[value='default']").on("click", function(d) {
 
 d3.select("input[value='grid']").on("click", function(d) {
 
-  vars.svg.selectAll(".x, .y").remove();
+  visualization.params().svg.selectAll(".x, .y").remove();
   d3.selectAll(".items__mark__diamond").remove();
 
   visualization.params({
@@ -99,7 +99,7 @@ d3.select("input[value='grid']").on("click", function(d) {
 
 d3.select("input[value='dotplot']").on("click", function(d) {
 
-  vars.svg.selectAll(".x, .y").remove();
+  visualization.params().svg.selectAll(".x, .y").remove();
   d3.selectAll(".items__mark__rect").remove();
   d3.selectAll(".items__mark__circle").remove();
 
@@ -124,6 +124,7 @@ d3.select("input[value='dotplot']").on("click", function(d) {
 
 d3.select("input[value='scatterplot']").on("click", function(d) {
 
+  visualization.params().svg.selectAll(".x, .y").remove();
   d3.selectAll(".items__mark__rect").remove();
   d3.selectAll(".items__mark__diamond").remove();
 
@@ -175,7 +176,7 @@ d3.select("input[value='barchart']").on("click", function(d) {
 
 d3.select("input[value='treemap']").on("click", function(d) {
 
-  vars.svg.selectAll(".x, .y").remove();
+  visualization.params().svg.selectAll(".x, .y").remove();
   d3.selectAll(".items__mark__text").remove();
 
   visualization.params({
@@ -231,17 +232,17 @@ d3.select("input[value='linechart']").on("click", function(d) {
 
   visualization = vistk.viz().params({
     type: "linechart",
-    var_group: "category",
-    var_color: "category", // TODO: color by final ranking value..
+    var_group: "continent",
+    var_color: "continent", // TODO: color by final ranking value..
     title: "Line chart",
     var_text: "name",
     y_text: "ECI Rank",
-    var_y: "rank",
+    var_y: "nb_products",
     var_x: "year",
     time: {
       parse: function(d) { return d; },
       var_time: 'year',
-      current_time: 1995      
+      current_time: 2012      
     },
     selection: ["Japan", "Switzerland", "Germany"],
     highlight: "France"

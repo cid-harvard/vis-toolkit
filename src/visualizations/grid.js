@@ -7,14 +7,14 @@ vars.default_params["grid"] = function(scope) {
     name: "linear",
     func: d3.scale.linear()
           .domain([0, Math.ceil(Math.sqrt(vars.new_data.length))])
-          .range([0, vars.width])
+          .range([0, scope.width])
   }];
 
   params.y_scale = [{
     name: "linear",
     func: d3.scale.linear()
           .domain([0, Math.ceil(Math.sqrt(vars.new_data.length))])
-          .range([0, vars.height])
+          .range([0, scope.height])
   }];
 
   params.items = [{
@@ -28,8 +28,8 @@ vars.default_params["grid"] = function(scope) {
     }]
   }];
 
-  params.var_x = "x";
-  params.var_y = "y";
+  params.var_x = "grid_x";
+  params.var_y = "grid_y";
 
   params.x_axis_show = false;
   params.y_axis_show = false;

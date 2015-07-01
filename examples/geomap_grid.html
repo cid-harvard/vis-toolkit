@@ -64,7 +64,7 @@ d3.json("../data/partners_usa_2012_csay.json", function(error, partners) {
 
     d3.select("#viz").call(visualization);
 
-    d3.select(vars.container).selectAll(".gridTransformation").data([vars.var_id]).enter().append("button")
+    d3.select(visualization.container()).selectAll(".gridTransformation").data(["var_id"]).enter().append("button")
              .attr("type", "button")
              .attr("class", "gridTransformation")
              .on("click", function() {
@@ -72,6 +72,7 @@ d3.json("../data/partners_usa_2012_csay.json", function(error, partners) {
                 // Each mark should have a 0 offset
 
                 // Then move groups to their grid position
+                visualization.param("refresh", true);
 
                 console.log(visualization.params())
 
@@ -79,9 +80,8 @@ d3.json("../data/partners_usa_2012_csay.json", function(error, partners) {
                     type: "grid"
                   });
 
-                vars.refresh = true;
 
-                d3.select(vars.container).call(vars.this_chart);
+                d3.select(visualization.container()).call(visualization);
 
               })
              .html("Grid Transformation");
