@@ -95,8 +95,9 @@
 
           }
           */
+
           return v;
-        })
+        });
 
         if(vars.filter.indexOf(d[vars.var_group]) < 0)
           d.__filtered = false;
@@ -161,9 +162,12 @@
 
           aggregation[vars.var_group] = leaves[0][vars.var_group];
 
-          aggregation[vars.var_x] = d3.mean(leaves, function(d) {
-            return d[vars.var_x];
-          });
+          // Quick fix in case var_x is an ordinal scale
+          if(vars.var_x !== vars.var_id) {
+            aggregation[vars.var_x] = d3.mean(leaves, function(d) {
+              return d[vars.var_x];
+            });
+          }
 
           aggregation[vars.var_y] = d3.mean(leaves, function(d) {
             return d[vars.var_y];
@@ -177,7 +181,9 @@
           aggregation.piescatter[0] = {};
           aggregation.piescatter[1] = {};
 
+          // TODO: also aggregate temporal values
           aggregation.values = [];
+          console.log("AGG", aggregation, vars.var_id, vars.var_text)
 
           aggregation.__aggregated = true;
           aggregation.__selected = false;
@@ -222,6 +228,8 @@
 
       // Transform key/value into values tab only
       vars.new_data = nested_data.map(function(d) { return d.values; });
+
+      console.log("NEW DATA", vars.new_data)
 
     }
 
@@ -380,18 +388,17 @@
       vars.countries.forEach(function(d) { 
 
         // Retrieve the country name based on its id
-        d.name = vars.names.filter(function(n) { return d.id == n.id; })[0].name; 
+        d[vars.var_id] = vars.names.filter(function(n) { return d.id == n.id; })[0][vars.var_id];
 
         // TODO: should merge on a more reliable join (e.g. 2-char)
-        d.data = vars.new_data.filter(function(n) { return d.name === n.name; })[0];
+        d.data = vars.new_data.filter(function(n) { return d[vars.var_id] === n[vars.var_id]; })[0];
 
         // Two reasons why it is not defined
         // 1/ No data
         // 2/ Current country
         if(typeof d.data == "undefined") {
           var data = {}
-          data.share = 0;
-          data.name = "N/A"
+          data[vars.var_id] = "N/A"
           d.data = data;
         }
 

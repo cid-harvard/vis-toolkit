@@ -162,7 +162,7 @@
                    .attr("id", "id")  
                    .attr("value", function(d) { return d; })
                    .attr("name", "radio-nest")
-                   .property("checked", true)
+                   .property("checked", function(d) { return vars.aggregate === d; })
                    .on("change", function(d) { 
 
                       vars.aggregate = d;

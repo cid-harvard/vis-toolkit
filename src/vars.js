@@ -35,7 +35,7 @@
     highlight: [],
     selection: [],
     filter: [],
-    aggregate: [],
+    aggregate: null,
 
     time: {
       var_time: null, 
