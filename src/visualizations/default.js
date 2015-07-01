@@ -13,10 +13,9 @@
         }
         
         // Sparkline is currenlty the only chart that can have a scope as parameter
-        if(vars.type == "sparkline" || vars.type == "dotplot" || vars.type == "barchart" || vars.type == "linechart" || vars.type == "scatterplot" || vars.type == "grid" || vars.type == "stacked" || vars.type == "piechart" || vars.type == "slopegraph") {
+        if(vars.type == "sparkline" || vars.type == "dotplot" || vars.type == "barchart" || vars.type == "linechart" || vars.type == "scatterplot" || vars.type == "grid" || vars.type == "stacked" || vars.type == "piechart" || vars.type == "slopegraph" || vars.type == "productspace") {
           //scope = {};
           //scope = utils.merge(scope, vars)
-
           scope = vars.default_params[vars.type](vars);
           vars = vistk.utils.merge(vars, scope);
           vars.items = vistk.utils.merge(vars.items, vars.user_vars.items);

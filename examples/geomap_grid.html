@@ -61,7 +61,7 @@ d3.json("../data/partners_usa_2012_csay.json", function(error, partners) {
 
     d3.select("#viz").call(visualization);
 
-    d3.select(visualization.container()).selectAll(".gridTransformation").data(["var_id"]).enter().append("button")
+    d3.select(visualization.container()).selectAll(".gridTransformation").data(["button_grid"]).enter().append("button")
              .attr("type", "button")
              .attr("class", "gridTransformation")
              .on("click", function() {
@@ -69,7 +69,6 @@ d3.json("../data/partners_usa_2012_csay.json", function(error, partners) {
                 // Then move groups to their grid position
                 visualization.param("refresh", true);
 
-                console.log(visualization.params())
                 visualization.params({
                   type: "grid",
                   items: [{
@@ -84,13 +83,45 @@ d3.json("../data/partners_usa_2012_csay.json", function(error, partners) {
                 d3.select(visualization.container()).call(visualization);
 
               })
-             .html("Grid Transformation");
+             .html("To Grid");
 
+    d3.select(visualization.container()).selectAll(".geomapTransformation").data(["button_geomap"]).enter().append("button")
+             .attr("type", "button")
+             .attr("class", "gridTransformation")
+             .on("click", function() {
+
+                // Then move groups to their grid position
+                visualization.param("refresh", true);
+
+                visualization.params({
+                  type: "geomap",
+                  items: [{
+                    attr: "name",
+                    marks: [{
+                      type: "shape",
+                      fill: d3.scale.linear()
+                        .domain([0, 1])
+                        //.domain([d3.min(vars.new_data, function(d) { return d[vars.var_color]; }), d3.max(vars.new_data, function(d) { return d[vars.var_color]; })])
+                        .range(["red", "green"]),
+                      rotate: "0",
+                      radius: 5  
+                    }, {
+                      type: "text",
+                      rotate: "0",
+                      translate: [-10, -30],
+                      text_anchor: "middle"
+                    }]
+                  }]
+                });
+
+                d3.select(visualization.container()).call(visualization);
+
+
+              })
+             .html("To Map");
   }
 
 });
-
-
 
 </script>
 </body>

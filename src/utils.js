@@ -175,12 +175,14 @@
                         .attr("title", function(d,i) {
                           active = d3.select(null); 
                           return d.name; 
-                        });
+                        })
+                        .on("click", clicked);
 
           mark
               .classed("highlighted", function(d, i) { return d.__highlighted; })
               .classed("selected", function(d, i) { return d.__selected; })
               .attr("d", vars.path)
+              .transition().duration(vars.duration)
               .attr("transform", function(d) {
 
                 // Drawing projects comes with automatic offset
@@ -195,7 +197,6 @@
               .style("fill", function(d, i) { 
                 return params.fill(vars.accessor_data(d)[vars.var_color]);
               })
-              .on("click", clicked);
 
               // http://bl.ocks.org/mbostock/4699541
               function clicked(d) {
@@ -300,6 +301,8 @@
           mark              
               .classed("highlighted", function(e, j) { return e.__highlighted; })
               .classed("selected", function(e, j) { return e.__selected; })
+              .style("fill", params.fill)
+              .style("stroke", params.stroke)
               .attr('d', function(e) { return params["func"](e.values); });
 
         break;

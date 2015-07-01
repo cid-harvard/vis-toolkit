@@ -183,24 +183,27 @@
           aggregation.__selected = false;
           aggregation.__highlighted = false;
 
+          if(typeof vars.share_cutoff != "undefined") {
 
-          aggregation.piescatter[0][vars.var_share] = d3.sum(leaves, function(d) {
+            aggregation.piescatter[0][vars.var_share] = d3.sum(leaves, function(d) {
 
-            if(vars.share_cutoff(d)) {
-              return 1;
-            } else {
-              return 0;
-            }
-          });
+              if(vars.share_cutoff(d)) {
+                return 1;
+              } else {
+                return 0;
+              }
+            });
 
-          aggregation.piescatter[1][vars.var_share] = d3.sum(leaves, function(d) {
+            aggregation.piescatter[1][vars.var_share] = d3.sum(leaves, function(d) {
 
-            if(!vars.share_cutoff(d)) {
-              return 1;
-            } else {
-              return 0;
-            }
-          });
+              if(!vars.share_cutoff(d)) {
+                return 1;
+              } else {
+                return 0;
+              }
+            });
+
+          }
 
           vars.columns.forEach(function(c) {
 
@@ -255,9 +258,8 @@
 
       vars.stack = d3.layout.stack()
           .values(function(d) { return d.values; })
-//          .order(function(a) { console.log(a[0][0][1]); return a[0][0][1]; })
           .x(function(d) { return d[vars.time.var_time]; })          
-          .y(function(d) { return d[vars.var_y]; })
+          .y(function(d) { return d[vars.var_y]; });
 
        vars.new_data = vars.stack(vars.new_data);
     }
