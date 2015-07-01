@@ -399,7 +399,6 @@
 
     }
 
-
     if(vars.type == "piechart") {
 
       vars.pie = d3.layout.pie().value(function(d) { return d[vars.var_share]; });
@@ -407,12 +406,9 @@
 
     }
 
-
     // Chart specific metadata: grid
     // Generates x and y attributes to display items as a 2D grid
     if(vars.type == "grid") {
-
-      //.sort(function(a, b) { return a[vars.var_sort] - b;}) 
 
       var nb_dimension =  Math.ceil(Math.sqrt(vars.new_data.length));
 
@@ -426,9 +422,10 @@
           // To make sure we don't update more points than necessary
           if(index < vars.new_data.length) {
 
-            vars.new_data[index].x = i;
-            vars.new_data[index].y = j;
-            vars.new_data[index].index = index;
+            vars.new_data[index].grid_x = i;
+            vars.new_data[index].grid_y = j;
+            vars.new_data[index].grid_index = index;
+
           }
         });
 

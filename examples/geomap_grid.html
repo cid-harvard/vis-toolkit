@@ -34,11 +34,6 @@ d3.json("../data/partners_usa_2012_csay.json", function(error, partners) {
         items: [{
           attr: "name",
           marks: [{
-            type: "text",
-            rotate: "0",
-            translate: [-10, -30],
-            text_anchor: "middle"
-          }, {
             type: "shape",
             fill: d3.scale.linear()
               .domain([0, 1])
@@ -47,9 +42,10 @@ d3.json("../data/partners_usa_2012_csay.json", function(error, partners) {
             rotate: "0",
             radius: 5  
           }, {
-            var_mark: '__selected',
-            type: d3.scale.ordinal().domain([true, false]).range(["star", "none"]),
-            rotate: "0"
+            type: "text",
+            rotate: "0",
+            translate: [-10, -30],
+            text_anchor: "middle"
           }]
         }],
         time: {
@@ -57,7 +53,8 @@ d3.json("../data/partners_usa_2012_csay.json", function(error, partners) {
           current_time: 2012
         },
         ui: {
-          default: true
+          default: true,
+          sort: ["continent", "share", "value"]
         },
         selection: ["United States"],
       });
@@ -69,17 +66,20 @@ d3.json("../data/partners_usa_2012_csay.json", function(error, partners) {
              .attr("class", "gridTransformation")
              .on("click", function() {
 
-                // Each mark should have a 0 offset
-
                 // Then move groups to their grid position
                 visualization.param("refresh", true);
 
                 console.log(visualization.params())
-
                 visualization.params({
-                    type: "grid"
-                  });
-
+                  type: "grid",
+                  items: [{
+                    attr: "name",
+                    marks: [{
+                      type: "rect",
+                      rotate: "0"
+                    }]
+                  }],
+                });
 
                 d3.select(visualization.container()).call(visualization);
 

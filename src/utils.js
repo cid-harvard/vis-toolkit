@@ -310,7 +310,7 @@
           // LOAD CHART PARAMS
 
           scope = {};
-          scope = utils.merge(scope, vars)
+          scope = vistk.utils.merge(scope, vars)
 
           scope = vars.default_params["sparkline"](scope);
 
