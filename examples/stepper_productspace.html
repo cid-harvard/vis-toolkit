@@ -29,7 +29,7 @@ d3.select("input[value='step0']").on("click", function(d) {
   // vistk.utils.update_filters("2", false);
   // vistk.utils.update_filters("9", false);
 
-  vars.refresh = true;
+  visualization.params().refresh = true;
 
   d3.select(visualization.container()).call(visualization);
 
@@ -47,7 +47,7 @@ d3.select("input[value='step1']").on("click", function(d) {
     zoom: ["115", "116"]
   });
 
-  vars.refresh = true;
+  visualization.params().refresh = true;
 
   d3.select(visualization.container()).call(visualization);
 
@@ -66,7 +66,7 @@ d3.select("input[value='step2']").on("click", function(d) {
     zoom: ["117"]
   });
 
-  vars.refresh = true;
+  visualization.params().refresh = true;
 
   d3.select(visualization.container()).call(visualization);
 
@@ -85,7 +85,7 @@ d3.select("input[value='step3']").on("click", function(d) {
     highlight: ["116"]
   });
 
-  vars.refresh = true;
+  visualization.params().refresh = true;
 
   d3.select(visualization.container()).call(visualization);
 
@@ -104,8 +104,7 @@ d3.select("input[value='step4']").on("click", function(d) {
     zoom: []
   });
 
-
-  vars.refresh = true;
+  visualization.params().refresh = true;
 
   d3.select(visualization.container()).call(visualization);
 
@@ -142,6 +141,7 @@ d3.json("../data/atlas_international_product_space.json", function(graph) {
         var_group: 'category',
         var_r: 'export_value',
         var_share: "export_rca",
+        var_text: "product_id",
         share_cutoff: function(d) { return d.export_rca > 1; },
         x_axis_show: false,
         x_grid_show: false,
@@ -158,11 +158,11 @@ d3.json("../data/atlas_international_product_space.json", function(graph) {
             var_r: "export_value"
           }, {
             var_mark: '__selected',
-            type: d3.scale.ordinal().domain([true, false]).range(["star", "none"]),
+            type: d3.scale.ordinal().domain([true, false]).range(["text", "none"]),
             rotate: "0"
           }, {
             var_mark: '__highlighted',
-            type: "text",
+            type: d3.scale.ordinal().domain([true, false]).range(["text", "none"]),
             rotate: "-30"
           }]
         }],

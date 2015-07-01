@@ -1,73 +1,64 @@
+vars.default_params["productspace"] = function(scope) {
+
+  var params = {};
+
+  params.x_scale = [{
+    name: "linear",
+    func: d3.scale.linear()
+            .range([vars.margin.left, vars.width-vars.margin.left-vars.margin.right])
+            .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_x]; })).nice()
+  }];
+
+  params.y_scale = [{
+    name: "linear",
+    func: d3.scale.linear()
+            .range([vars.height-vars.margin.top-vars.margin.bottom, vars.margin.top])
+            .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_y]; })).nice(),
+  }];
+
+  params.r_scale = d3.scale.linear()
+              .range([10, 30])
+              .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_r]; }));
+
+  params.items = [{
+    attr: "country",
+    marks: [{
+      type: "circle",
+      rotate: "0",
+      r_scale: d3.scale.linear()
+                  .range([10, 30])
+                  .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_r]; })),
+      fill: function(d) { return vars.color(vars.accessor_items(d)[vars.var_color]); }
+    }, {
+      type: "text",
+      rotate: "30",
+      translate: null
+    }]
+  }];
+
+  params.connect = [{
+    attr: "links",
+    type: "items",
+    marks: [{
+      type: "line",
+      rotate: "0",
+      func: null,
+    }]
+  }];
+
+  params.x_axis_show = false;
+  params.x_grid_show = false;
+  
+  params.y_axis_show = false;
+  params.y_grid_show = false;
+
+  return params;
+
+};
+
+/*
       case "nodelink":
 
-        var min_x = Infinity, max_x = 0, min_y = Infinity, max_y = 0;
-
-        vars.nodes.forEach(function(d, i) {
-
-          if(d.x < min_x) {
-            min_x = d.x;
-          }
-
-          if(d.y < min_y) {
-            min_y = d.y;
-          }
-
-          if(d.x > max_x) {
-            max_x = d.x;
-          }
-
-          if(d.y > max_y) {
-            max_y = d.y;
-          }
-
-          // Find the value in vars.data
-          d.data = vistk.utils.find_data_by_id(d.id);
-
-          if(typeof d.data === "undefined") {
-            d.data = {};
-            d.data.category = 0;
-          }
-
-        });
-
-        vars.params = {
-
-          x_scale: [{
-              name: "linear",
-              func: d3.scale.linear()
-                      .range([0, vars.width])
-                      .domain([min_x, max_x])
-          }],
-
-          y_scale: [{
-              name: "linear",
-              func: d3.scale.linear()
-                    .range([0, vars.height])
-                    .domain([min_y, max_y])
-          }],
-
-          items: [{
-            attr: "year",
-            marks: [{
-                type: "circle",
-                rotate: "0",
-              }, {
-                type: "text",
-                rotate: "30",
-                translate: null
-              }]
-          }],
-
-          connect: [{
-            attr: "",
-            marks: [{
-                type: "line",
-                rotate: "0",
-                func: null,
-              }]
-          }],
-
-        };
 
         vars = vistk.utils.merge(vars, vars.params);
 
@@ -169,3 +160,4 @@
         var gItems_exit = gItems.exit().style({opacity: 0.1});
 
       break;
+*/
