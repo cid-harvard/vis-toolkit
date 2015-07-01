@@ -18,14 +18,15 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
     d["value_added"] = isNaN(+d["value_added"]) ? 0: +d["value_added"];
   });
 
-  var ui_options = [];
-
   visualization = vistk.viz()
     .params({
       type: 'dotplot',      
       data: departments,
       container: '#viz',
+      var_id: "dept_name",
+      var_text: "dept_name",
       var_x: 'dept_pop',
+      var_group: 'dept_name',
       x_type: 'linear',
       var_y: function() { return this.height/2; },
       x_text: null,
@@ -53,10 +54,8 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
       },
       ui: {
         default: true,
-        options: ui_options
-      },
-      var_id: "dept_name",
-      var_text: "dept_name", 
+        options: ["country", "continent", "year"]
+      }, 
 //      filter: ["Antioquia", "Bogotá D. C."],
       selection: ["Antioquia", "Bogotá D. C."],
       highlight: ["Antioquia"]

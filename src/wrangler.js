@@ -183,7 +183,6 @@
 
           // TODO: also aggregate temporal values
           aggregation.values = [];
-          console.log("AGG", aggregation, vars.var_id, vars.var_text)
 
           aggregation.__aggregated = true;
           aggregation.__selected = false;
@@ -228,8 +227,6 @@
 
       // Transform key/value into values tab only
       vars.new_data = nested_data.map(function(d) { return d.values; });
-
-      console.log("NEW DATA", vars.new_data)
 
     }
 

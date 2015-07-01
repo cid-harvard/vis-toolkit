@@ -19,9 +19,11 @@ d3.json("../data/exports_2012.json", function(error, exports) {
     var_text: 'name',
     var_id: "code",
     var_color: "community_name",
+    var_group: 'community_name',
     var_sort: "share",
     var_sort_asc: true,
     var_text: 'name',
+    var_r: 'share',
     share_cutoff: function(d) { return d.rca < 1; },
     time: {
       var_time: "year", 
@@ -41,7 +43,8 @@ d3.json("../data/exports_2012.json", function(error, exports) {
     }],
     ui: {
       default: true,
-      sort: ["community_name", "share", "name"]
+      sort: ["community_name", "share", "name"],
+      option: ["community_name", "name"],
     },
   });
 

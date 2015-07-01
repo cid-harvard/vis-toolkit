@@ -18,8 +18,6 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
     d["value_added"] = isNaN(+d["value_added"]) ? 0: +d["value_added"];
   });
 
-  var ui_options = [];
-
   visualization = vistk.viz()
     .params({
       type: 'dotplot',      
@@ -49,7 +47,7 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
       },
       ui: {
         default: true,
-        options: ui_options
+        options: []
       },
       var_id: "dept_name",
       var_text: "dept_name",

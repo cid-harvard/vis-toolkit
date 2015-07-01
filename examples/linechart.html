@@ -35,7 +35,7 @@ d3.csv("../data/new_rankings2.csv", function(error, data) {
       for(var k in d) {
 
         if(k != "Country") {
-          res.push({name: d.Country, year: k, rank: +d[k], id: d.Country.replace(/ /g, "_").replace(/,/g, "").replace(/./g, ""), continent: find_country('common', d.Country)})
+          res.push({name: d.Country, year: k, rank: +d[k], continent: find_country('common', d.Country)})
         }
 
       }
@@ -65,8 +65,9 @@ d3.csv("../data/new_rankings2.csv", function(error, data) {
       selection: ["Japan", "Switzerland", "Germany"],
       highlight: "France",
       ui: {
-        default: true
-      },
+        default: true,
+        options: ["country", "continent"]
+      }
     });
 
     d3.select("#viz").call(visualization);

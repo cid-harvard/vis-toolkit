@@ -13,7 +13,7 @@ d3.json("../data/diversification_ubiquity_hs4_1995_2012.json", function(error, c
 
   var flat_years = vistk.utils.flatten_years(countries);
 
-  scatterplot = vistk.viz()
+  visualization = vistk.viz()
     .params({
       type: 'scatterplot',
       margin: {top: 10, right: 10, bottom: 30, left: 30},
@@ -48,9 +48,9 @@ d3.json("../data/diversification_ubiquity_hs4_1995_2012.json", function(error, c
           rotate: "0"
         }, {
           var_mark: '__aggregated',
-          type: d3.scale.ordinal().domain([true, false]).range(["piechart", "none"]),
-          height: 10,
-          width: 10,
+          type: d3.scale.ordinal().domain([true, false]).range(["circle", "none"]),
+          var_r: "nb_products",
+          var_fill: "nb_products",
           rotate: 0,
           var_share: "avg_products"
         }, {
@@ -60,14 +60,14 @@ d3.json("../data/diversification_ubiquity_hs4_1995_2012.json", function(error, c
       }],
       ui: {
         default: true,
-        options: ["country", "continent", "year"]
+        options: ["country", "continent"]
       },
       selection: ["France"],
       highlight: ["France", "Germany"],      
       title: "World Countries"
     });
 
-  d3.select("#viz").call(scatterplot);
+  d3.select("#viz").call(visualization);
 
 });
 </script>
