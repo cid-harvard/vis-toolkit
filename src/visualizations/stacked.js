@@ -24,7 +24,7 @@ vars.default_params["stacked"] = function(scope) {
     marks: [{
         type: "path",
         rotate: "0",
-        fill: function(d) { return d.color; },
+        fill: function(d) { return vars.color(params.accessor_items(d)[vars.var_color]); },
         stroke: function(d) {
           return "black"; 
         },

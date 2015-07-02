@@ -2,6 +2,9 @@ vars.default_params["piechart"] = function(scope) {
 
   var params = {};
 
+  params.accessor_data = function(d) { return d.data; };
+  params.accessor_items = function(d) { return d; };
+
   params.x_scale = [{
     name: "linear",
     func: d3.scale.linear()
@@ -30,8 +33,12 @@ vars.default_params["piechart"] = function(scope) {
     }]
   }];
 
-  params.accessor_data = function(d) { return d.data; };
-
+  params.x_axis_show = false;
+  params.x_grid_show = false;
+  
+  params.y_axis_show = false;
+  params.y_grid_show = false;
+  
   return params;
 
 };

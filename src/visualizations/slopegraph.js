@@ -7,14 +7,14 @@ vars.default_params["slopegraph"] = function(scope) {
   params.x_scale = [{
     name: "linear",
     func: d3.scale.linear()
-            .range([vars.margin.left, vars.width - vars.margin.left - vars.margin.right])
-            .domain(vars.time.interval)
+            .range([scope.margin.left, scope.width - scope.margin.left - scope.margin.right])
+            .domain(scope.time.interval)
   }];
 
   params.y_scale = [{
     name: "linear",
     func: d3.scale.linear()
-            .range([vars.height - vars.margin.top - vars.margin.bottom, vars.margin.top])
+            .range([scope.height - scope.margin.top - scope.margin.bottom, scope.margin.top])
             .domain(d3.extent(Array.prototype.concat.apply([], vars.new_data.map(function(d) { return d.values; }) ), function(d) { return d[vars.var_y]; }))
   }];
 
@@ -31,7 +31,7 @@ vars.default_params["slopegraph"] = function(scope) {
       type: "text", // Text on the left (oldest)
       rotate: "0",
       text_anchor: "end",
-      translate: [-(vars.width-vars.margin.left-vars.margin.right-vars.margin.left+20), 0]
+      translate: [-(scope.width-scope.margin.left-scope.margin.right-scope.margin.left+20), 0]
     }]
   }];
 
