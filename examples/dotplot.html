@@ -20,6 +20,7 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
 
   visualization = vistk.viz()
     .params({
+      dev: true,
       type: 'dotplot',      
       data: departments,
       container: '#viz',

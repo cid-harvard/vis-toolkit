@@ -19,7 +19,7 @@
   opacity: 1;
 }
 
-.items__mark__text {
+.items__mark__text.selected {
   display: none;
 }
 
@@ -53,23 +53,32 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
 
   visualization = vistk.viz()
     .params({
-      type: 'dotplot',      
+      dev: true,
+      type: 'dotplot',
       data: departments,
       container: '#viz',
       var_x: 'dept_pop',
-      x_type: 'linear',
       var_y: function() { return this.height+this.margin.bottom/2; },
       x_text: null,
       x_ticks: 2,
+      var_group: 'dept_name',
       x_format: function(d) { return '$' + d3.format(".2s")(d); },
       items: [{
-        attr: "name",
         marks: [{
           type: "diamond",
           rotate: "0"
-        },{
-          type: "text",
-          rotate: "-30"
+        }, {
+          var_mark: '__highlighted',
+          type: d3.scale.ordinal().domain([true, false]).range(["text", "none"]),
+          rotate: "0",
+          translate: [0, -15],
+          text_anchor: function(d) {
+            var parentGroup = d3.select(this.parentNode);
+            var parentSVG = d3.select(this.parentNode.parentNode.parentNode);
+            var parentX = d3.transform(parentGroup.attr("transform")).translate[0];
+            var svgWidth = +parentSVG.attr("width");
+            return parentX < svgWidth/2 ? "start": "end";
+          }
         }]
       }],
       time: {
