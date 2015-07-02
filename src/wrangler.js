@@ -181,8 +181,27 @@
           aggregation.piescatter[0] = {};
           aggregation.piescatter[1] = {};
 
-          // TODO: also aggregate temporal values
-          aggregation.values = [];
+          // Assuming all the time values are present in all items
+          aggregation.values = d3.range(leaves[0].values.length).map(function(d, i) { 
+            var d = {};
+            if(vars.var_x === vars.time.var_time)
+              d[vars.var_x] = leaves[0].values[i][vars.var_x];
+            else
+              d[vars.var_x] = 0;
+            d[vars.var_y] = 0;
+            d[vars.var_r] = 0;
+            return d;
+          });
+
+          // Assuming we only aggregate var_x, var_y, var_r
+          leaves.forEach(function(d, i) { 
+            d.values.forEach(function(e, j) {
+              if(vars.var_x !== vars.time.var_time)
+                aggregation.values[j][vars.var_x] += e[vars.var_x];
+              aggregation.values[j][vars.var_y] += e[vars.var_y];
+              aggregation.values[j][vars.var_r] += e[vars.var_r];
+            });
+          });
 
           aggregation.__aggregated = true;
           aggregation.__selected = false;

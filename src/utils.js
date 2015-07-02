@@ -45,8 +45,11 @@
 
       var params_type = params.type;
 
+      var mark_id = 0;
+
       // Supporting multipe similar elements
-      var mark_id = vars.items[0].marks.indexOf(params);
+      if(typeof vars.items != "undefined" && vars.items.length > 0)
+        mark_id = vars.items[0].marks.indexOf(params);
 
       // In case a function determines the type of mark to be used
       if(typeof params_type === "function") {
