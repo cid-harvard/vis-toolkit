@@ -1,6 +1,5 @@
       case "geomap":
 
-
         var geomap_params = function(scope) {
 
           var params = {};

@@ -101,6 +101,9 @@
                 .append("rect")                            
                   .attr("x", -vars.mark.width/2)
                   .attr("y", -vars.mark.height/2)
+                  .attr("height", params.height)
+                  .attr("width", params.width)
+                  .attr("y", params.y)
                   .classed("items__mark__rect", true)
                   .attr("transform", "rotate(0)")
                   .style("fill", function(d) { return vars.color(vars.accessor_items(d)[vars.var_color]); });

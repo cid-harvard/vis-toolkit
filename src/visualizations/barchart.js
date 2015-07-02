@@ -23,14 +23,6 @@ vars.default_params["barchart"] = function(scope) {
       height: function(d) { return params.y_scale[0]["func"](d[scope.var_y]); },
       width: function(d) { return params.x_scale[0]["func"].rangeBand(); },
       fill: function(d) { return scope.color(scope.accessor_items(d)[scope.var_color]); }
-    }, {
-      type: "rect",
-      var_mark: '__aggregated',
-      rotate: "0",
-      y: function(d) { return - params.y_scale[0]["func"](d[vars.var_y]) + (scope.height - scope.margin.bottom - scope.margin.top - params.y_scale[0]["func"](d[scope.var_y])); },
-      height: function(d) { return params.y_scale[0]["func"](d[scope.var_y]); },
-      width: function(d) { return params.x_scale[0]["func"].rangeBand(); },
-      fill: function(d) { return scope.color(scope.accessor_items(d)[scope.var_color]); }
     }]
   }];
 

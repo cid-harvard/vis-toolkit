@@ -6,36 +6,31 @@
 <div id="viz"></div>
 <script>
 
-d3.json("../data/diversification_ubiquity_hs4_1995_2012.json", function(error, countries) {
-
-  var flat_years = vistk.utils.flatten_years(countries);
+d3.json("../data/exports_2012.json", function(error, exports) {
 
   visualization = vistk.viz()
     .params({
       type: 'barchart',
       margin: {top: 10, right: 10, bottom: 30, left: 30},
       container: '#viz',
-      data: flat_years,
+      data: exports.data,
       var_id: 'name',
-      var_group: 'continent',
-      var_color: 'continent',
+      var_group: 'community_name',
+      var_color: 'community_name',
       var_x: 'name',
       var_sort: 'name',
-      var_y: 'avg_products',
+      var_y: 'share',
       var_text: 'name',
       time: {
-        var_time: "year",
-        current_time: "1995",
+        var_time: 'year',
+        current_time: '2000',
         parse: function(d) { return d; }
       },
       ui: {
         default: true,
-        options: ["country", "continent", "year"],
-        sort: ['continent', "name", 'avg_products', 'nb_products']
+        options: ['name', 'community_name'],
+        sort: ['community_name', 'name', 'share']
       },
-      selection: ["France"],
-      highlight: ["France", "Germany"],      
-      title: "World Countries"
 
     });
 
