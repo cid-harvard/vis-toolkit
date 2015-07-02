@@ -45,8 +45,7 @@
 
       var params_type = params.type;
 
-
-      // Supporting multipe text elements
+      // Supporting multipe similar elements
       var mark_id = vars.items[0].marks.indexOf(params);
 
       // In case a function determines the type of mark to be used
@@ -70,7 +69,7 @@
             params.text_anchor = "start";
           }
 
-          var items_mark_text = d3.select(this).selectAll(".items__mark__text.items_"+mark_id).data([d]);
+          var items_mark_text = d3.select(this).selectAll(".items__mark__text.items_" + mark_id).data([d]);
 
           items_mark_text.enter().append("text")
               .classed("items__mark__text", true)
@@ -78,16 +77,19 @@
               .style("text-anchor", params.text_anchor)
               .attr("x", 10)
               .attr("y", 0)
-              .attr("dy", ".35em");
+              .attr("dy", ".35em")
+              .attr("transform", "translate(" +  params.translate + ")rotate(" +  params.rotate + ")");
 
           items_mark_text
               .classed("highlighted", function(d, i) { return d.__highlighted; })
               .classed("selected", function(d, i) { return d.__selected; })   
-              .transition()
+              .transition().duration(vars.duration)
               .attr("transform", "translate(" +  params.translate + ")rotate(" +  params.rotate + ")")
               .text(function(d) {
                 return vars.accessor_data(d)[vars.var_text]; 
               });
+
+        items_mark_text.exit().remove();
 
         break;
 
@@ -284,11 +286,6 @@
               .classed("highlighted", function(d, i) { return d.__highlighted; })
               .classed("selected", function(d, i) { return d.__selected; });
 
-              //.attr("class", function(d) {
-              //  if(typeof d.source !== "undefined" && typeof d.target !== "undefined")
-              //    return "link source_"+d.source.id+" target_"+d.target.id;
-              //})
-
           break;
 
         case "path":
@@ -426,25 +423,6 @@
               .classed('items__chart__piechart', true)
               .call(utils.create_chart, piechart_params);
 
-          // Update is a bit tricky
-          // http://bl.ocks.org/mbostock/1346410
-
-        break;
-
-        case "dotplot_vertical":
-
-          var dotplot_params = vars.default_params["dotplot_vertical"];
-
-          var chart = d3.select(this).selectAll(".items__chart__dotplot").data([d]);
-
-          chart.enter().append('g')
-              .classed('items__chart__dotplot', true)
-              .call(utils.create_chart, dotplot_params);
-
-          // Adjust the parameters it inehrited
-
-          // Trigger the cart creation function
-
         break;
 
         case "star":
@@ -487,6 +465,10 @@
         break;
 
         case "none":
+
+          // To make sure we removed __highlighted and __selected nodes
+          d3.select(this).selectAll(".items_" + mark_id).remove();
+
         break;
 
         case "circle":
@@ -618,7 +600,6 @@
         .attr("transform", "translate(" + translate + ")scale(" + scale + ")");
 
   }
-
 
   utils.create_chart = function(_, params) {
 
