@@ -38,16 +38,7 @@ vars.default_params["piechart"] = function(scope) {
   
   params.y_axis_show = false;
   params.y_grid_show = false;
-  
+
   return params;
 
 };
-
-/*
-        // Add a graphical mark
-        gPoints_enter.each(vistk.utils.items_mark)
-                        .select("*")
-                        .attr("transform", function(d) { 
-                          return "translate(" + arc.centroid(d) + ")"; 
-                        });
-*/

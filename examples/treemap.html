@@ -31,6 +31,7 @@ d3.json("../data/exports_quinn_2012.json", function(error, exports) {
 
   visualization = vistk.viz()
     .params({
+      dev: true,
       type: "treemap",
       container: "#viz",
       height: 600,

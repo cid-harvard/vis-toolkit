@@ -49,18 +49,15 @@
 
   vars.evt.register("highlightOn", function(d) {
     d.__highlighted = true;
-    if(vars.type !== "treemap")
       d3.select(vars.container).call(vars.this_chart);
   });
 
   vars.evt.register("highlightOut", function(d) {
     d.__highlighted = false;
-    if(vars.type !== "treemap")
-      d3.select(vars.container).call(vars.this_chart);
+    d3.select(vars.container).call(vars.this_chart);
   });
 
   vars.evt.register("selection", function(d) {
     d.__selected = !d.__selected;
-    if(vars.type !== "treemap")
-      d3.select(vars.container).call(vars.this_chart);
+    d3.select(vars.container).call(vars.this_chart);
   });
