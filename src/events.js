@@ -32,8 +32,6 @@
       }
     });
   };
-  
-  nb_viz++;
 
   if (!vars.data) { vars.data = []; }
 

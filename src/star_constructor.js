@@ -22,4 +22,4 @@
             .style({height: vars.height+"px", width: vars.width+"px", overflow: "scroll"});
 
       }
-    }
+   }

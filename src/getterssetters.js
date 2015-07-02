@@ -16,4 +16,3 @@
     vars.container = x;
     return chart;
   };
-  

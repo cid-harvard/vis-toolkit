@@ -1,5 +1,6 @@
+// PUBLIC FUNCTIONS
 
- // http://stackoverflow.com/questions/171251/how-can-i-merge-properties-of-two-javascript-objects-dynamically
+// http://stackoverflow.com/questions/171251/how-can-i-merge-properties-of-two-javascript-objects-dynamically
 vistk.utils.merge = function(d, e) {
 
   var obj = {},
@@ -73,4 +74,4 @@ vistk.utils.find_node_coordinates_by_id = function(nodes, id) {
   }
 
   return res;
-} 
+}

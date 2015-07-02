@@ -15,7 +15,7 @@
           label_checkboxes = d3.select(vars.container).selectAll(".checkboxes").data(unique_categories)
             .enter()
               .append("label")
-              .attr("class", "checkboxes")
+              .attr("class", "checkboxes");
 
           label_checkboxes.append("input")
               .attr("type", "checkbox")
@@ -29,13 +29,13 @@
                 vars.refresh = true;
                 d3.select(vars.container).call(vars.this_chart);
 
-              })
+              });
 
           label_checkboxes.append("span")
               .html(function(d) { 
                 var count = vars.new_data.filter(function(e, j) { return vars.accessor_data(e)[vars.var_group] == d; }).length;
                 return d + " (" + count + ")";
-              })
+              });
 
         }
 
@@ -44,7 +44,7 @@
           var label_radios = d3.select(vars.container).selectAll(".aggregations").data(vars.var_id)
             .enter()
               .append("label")
-              .attr("class", "aggregations")
+              .attr("class", "aggregations");
 
           // TODO: find levels of aggregation
           label_radios.append("input")
@@ -125,7 +125,7 @@
             var label_radios = d3.select(vars.container).selectAll(".aggregations").data(["index", "linear"])
               .enter()
                 .append("label")
-                .attr("class", "aggregations")
+                .attr("class", "aggregations");
 
             // TODO: find levels of aggregation
             label_radios.append("input")
@@ -223,13 +223,13 @@
           .enter()
             .append("span")
             .classed("label_highlight", true)
-            .html("<br>Select/highlight")
+            .html("<br>Select/highlight");
 
       // Highlight 
       var label_litems = d3.select(vars.container).selectAll(".items").data([vars.var_id])
         .enter()
           .append("label")
-          .attr("class", "items")
+          .attr("class", "items");
 
       label_litems.append("select")
         .attr("id", "select_items")
@@ -278,24 +278,3 @@
 
   });
 }
-
-/* LOADING DATASETS
-
-      var label_loader = d3.select(vars.container).selectAll(".loader").data([vars.var_id])
-        .enter()
-          .append("label")
-          .attr("class", "loader")
-
-      label_loader.append("select")
-        .attr("id", "select_var_x")
-        .on("change", function(d) {
-          vars.var_x = this.value;
-          ds.update(vars.current_view);
-        })
-        .selectAll("option")
-        .data(["../data/exports_2012.json"])
-      .enter()
-        .append("option")
-        .attr("value", function(d) { return d; })
-        .html(function(d) { return d; })
-*/

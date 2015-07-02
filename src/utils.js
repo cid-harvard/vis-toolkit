@@ -45,6 +45,10 @@
 
       var params_type = params.type;
 
+
+      // Supporting multipe text elements
+      var mark_id = vars.items[0].marks.indexOf(params);
+
       // In case a function determines the type of mark to be used
       if(typeof params_type === "function") {
         params_type = params.type(d[params.var_mark]);
@@ -66,20 +70,17 @@
             params.text_anchor = "start";
           }
 
-          // Supporting multipe text elements
-          var mark_id = vars.items[0].marks.indexOf(params);
+          var items_mark_text = d3.select(this).selectAll(".items__mark__text.items_"+mark_id).data([d]);
 
-          var mark = d3.select(this).selectAll(".items__mark__text.items_"+mark_id).data([d]);
-
-          mark.enter().append("text")
+          items_mark_text.enter().append("text")
               .classed("items__mark__text", true)
-              .classed("items_"+mark_id, true)
+              .classed("items_" + mark_id, true)
               .style("text-anchor", params.text_anchor)
               .attr("x", 10)
               .attr("y", 0)
               .attr("dy", ".35em");
 
-          mark
+          items_mark_text
               .classed("highlighted", function(d, i) { return d.__highlighted; })
               .classed("selected", function(d, i) { return d.__selected; })   
               .transition()
@@ -92,9 +93,9 @@
 
       case "rect":
 
-        var mark = d3.select(this).selectAll(".items__mark__rect").data([d]);
+        var items_mark_rect = d3.select(this).selectAll(".items__mark__rect").data([d]);
 
-        mark.enter()
+        items_mark_rect.enter()
                 .append("rect")                            
                   .attr("x", -vars.mark.width/2)
                   .attr("y", -vars.mark.height/2)
@@ -102,7 +103,7 @@
                   .attr("transform", "rotate(0)")
                   .style("fill", function(d) { return vars.color(vars.accessor_items(d)[vars.var_color]); });
 
-        mark
+        items_mark_rect
             .attr("height", params.height)
             .attr("width", params.width)
 //            .attr("x", -vars.mark.width/2)
@@ -110,15 +111,15 @@
             .classed("highlighted", function(d, i) { return d.__highlighted; })
             .classed("selected", function(d, i) { return d.__selected; });
 
-        mark.exit().remove();
+        items_mark_rect.exit().remove();
 
         break;
 
         case "diamond":
 
-          var mark = d3.select(this).selectAll(".items__mark__diamond").data([d]);
+          var items_mark_diamond = d3.select(this).selectAll(".items__mark__diamond").data([d]);
 
-          mark.enter().append("rect")
+          items_mark_diamond.enter().append("rect")
                     .attr("height", vars.mark.height)
                     .attr("width", vars.mark.width)                              
                     .attr("x", -vars.mark.width/2)
@@ -126,29 +127,28 @@
                     .classed("items__mark__diamond", true)
                     .attr("transform", "rotate(45)");
 
-          mark
+          items_mark_diamond
               .classed("highlighted", function(d, i) { return d.__highlighted; })
               .classed("selected", function(d, i) { return d.__selected; });
+
+          items_mark_diamond.exit().remove();
 
         break;
 
         case "tick":
 
-          // Supporting multiple ticks marks
-          var mark_id = vars.items[0].marks.indexOf(params);
+          var items_mark_tick = d3.select(this).selectAll(".items__mark__tick.items_"+mark_id).data([d]);
 
-          var mark = d3.select(this).selectAll(".items__mark__tick.items_"+mark_id).data([d]);
-
-          mark.enter().append('line')
+          items_mark_tick.enter().append('line')
               .classed('items__mark__tick', true)
-              .classed("items_"+mark_id, true)
+              .classed("items_" + mark_id, true)
               .attr("x1", function(d) { return 0; })
               .attr("y1", function(d) { return -20; })
               .attr("x2", function(d) { return 0; })
               .attr("y2", function(d) { return 20; })
               .attr("transform", "translate(0,0)rotate(0)");
 
-          mark              
+          items_mark_tick              
               .classed("highlighted", function(d, i) { return d.__highlighted; })
               .classed("selected", function(d, i) { return d.__selected; })
               .transition().duration(vars.duration)
@@ -163,13 +163,15 @@
                 return "translate(" +  params_translate + ")rotate(" +  params.rotate + ")";
               });
 
+          items_mark_tick.exit().remove();
+
         break;
 
         case "shape":
 
-          var mark = d3.select(this).selectAll(".items__mark__shape").data([d]);
+          var items_mark_shape = d3.select(this).selectAll(".items__mark__shape").data([d]);
 
-          mark.enter().insert("path")
+          mitems_mark_shapeark.enter().insert("path")
                         .attr("class", "country")
                         .classed('items__mark__shape', true)
                         .attr("title", function(d,i) {
@@ -178,7 +180,7 @@
                         })
                         .on("click", clicked);
 
-          mark
+          items_mark_shape
               .classed("highlighted", function(d, i) { return d.__highlighted; })
               .classed("selected", function(d, i) { return d.__selected; })
               .attr("d", vars.path)
@@ -227,6 +229,8 @@
                     .style("stroke-width", "1.5px")
                     .attr("transform", "");
               }
+
+            items_mark_shape.exit().remove();
 
           break;
 
@@ -331,8 +335,6 @@
            return d[scope.var_y]; 
           }))
           .range([0, 50]);
-
-          console.log(d)
 
           scope.connect = [{
             marks: [{
@@ -778,6 +780,7 @@
   }
 
   utils.update_filters = function(value, add) {
+   
     if(vars.dev) {
       console.log("[update_filters]", value);
     }
@@ -789,8 +792,9 @@
       }
     } else {
       var index = vars.filter.indexOf(value)
-      if(index > -1)
+      if(index > -1) {
         vars.filter.splice(index, 1);
+      }
     }
   }
 
