@@ -138,7 +138,7 @@
 
 
     // Aggregate data
-    if(vars.aggregate === vars.var_group) {
+    if(vars.aggregate === vars.var_group && vars.var_group != null) {
 
       if(vars.dev) { 
         console.log("[vars.aggregate]", vars.aggregate);

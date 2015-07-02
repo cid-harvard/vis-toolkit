@@ -179,7 +179,7 @@
 
           var items_mark_shape = d3.select(this).selectAll(".items__mark__shape").data([d]);
 
-          mitems_mark_shapeark.enter().insert("path")
+          items_mark_shape.enter().insert("path")
                         .attr("class", "country")
                         .classed('items__mark__shape', true)
                         .attr("title", function(d,i) {
@@ -491,7 +491,6 @@
                         if(typeof params.var_r === "undefined") {
                           return vars.radius;
                         } else {
-
                           var r_scale = d3.scale.linear()
                             .range([vars.radius_min, vars.radius_max])
                             .domain(d3.extent(vars.new_data, function(d) { return d[params.var_r]; }))
