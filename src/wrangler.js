@@ -199,6 +199,9 @@
             // Init values
             d[vars.var_y] = 0;
             d[vars.var_r] = 0;
+
+            // Time var
+            d[vars.time.var_time] = leaves[0].values[i][vars.time.var_time];
             return d;
           });
 

@@ -315,19 +315,17 @@
 
         case "sparkline":
 
-          // TODO: pass custom parameters in there (grid sparkline)
-          // LOAD CHART PARAMS
-
-          scope = {};
+          var scope = {};
           scope = vistk.utils.merge(scope, vars)
 
           scope = vars.default_params["sparkline"](scope);
 
-          scope.var_x = "year"
-          scope.var_y = "realgdp"
+          scope.var_x = 'year';
+          scope.var_y = vars.var_y;
 
           scope.width = scope.width / 2;
 
+          // Update scales
           scope.x_scale[0]["func"].domain(d3.extent(d.values, function(d) {
            return d[scope.var_x]; 
           }))
@@ -348,28 +346,13 @@
                      .x(function(d) { return scope.x_scale[0]["func"](d[scope.var_x]); })
                      .y(function(d) { return scope.y_scale[0]["func"](d[scope.var_y]); }),
               }]
-          }]
+          }];
 
-          // PRE-UPDATE CONNECT
-          var gConnect = d3.select(this).selectAll(".connect__group")
-                          .data([d], function(d, i) { return i; })
-        
-          // ENTER CONNECT
-          var gConnect_enter = gConnect.enter()
-                          .append("g")
-                          .attr("class", "connect__group")
-                          .attr("transform", "translate(0,0)")
-                         // .attr("transform", function(d) {
-                         //   return "translate(" + (vars.x_scale[0]["func"](d.values[0][vars.var_x])-5) + ", " + (vars.y_scale[0]["func"](d.values[0][vars.var_y])/1.25-5) + ")";
-                         // });
+          var chart = d3.select(this).selectAll(".items__chart__sparkline").data([d]);
 
-          // APPEND CONNECT MARK
-          scope.connect.forEach(function(connect) {
-            connect.marks.forEach(function(params) {
-              gConnect_enter.call(utils.draw_mark, params);
-              gConnect.call(utils.draw_mark, params);
-            });
-          });
+          chart.enter().append('g')
+              .classed('items__chart__sparkline', true)
+              .call(utils.create_chart, scope, d);
 
         break;
 
@@ -417,16 +400,16 @@
 
         case "piechart":
 
-          scope = {};
+          var scope = {};
           scope = vistk.utils.merge(scope, vars);
-          vars.accessor_data = function(d) { return d.piescatter; }
+
           var piechart_params = vars.default_params["piechart"](scope);
 
           var chart = d3.select(this).selectAll(".items__chart__piechart").data([d]);
 
           chart.enter().append('g')
               .classed('items__chart__piechart', true)
-              .call(utils.create_chart, piechart_params);
+              .call(utils.create_chart, piechart_params, d);
 
         break;
 
@@ -605,15 +588,34 @@
 
   }
 
-  utils.create_chart = function(_, params) {
+  utils.create_chart = function(_, params, data) {
 
     if(vars.dev) { 
-      console.log("Creating chart with params", params, _, d3.select(this));
+      console.log("Creating chart with params", params, _, data);
     }
-    
+
+    // PRE-UPDATE CONNECT
+    var gConnect = _.selectAll(".connect__group")
+                    .data([data], function(d, i) { return i; })
+  
+    // ENTER CONNECT
+    var gConnect_enter = gConnect.enter()
+                    .append("g")
+                    .attr("class", "connect__group")
+                    .attr("transform", "translate(0, 0)")
+
+    // APPEND CONNECT MARK
+    if(typeof vars.connect !== "undefined" && typeof vars.connect[0] !== "undefined") {
+      params.connect.forEach(function(connect) {
+        connect.marks.forEach(function(params) {
+          gConnect_enter.call(utils.draw_mark, params);
+          gConnect.call(utils.draw_mark, params);
+        });
+      });
+    }
     // PRE-UPDATE ITEMS
     var gItems = _.selectAll(".mark__group")
-                    .data(vars.new_data, function(d, i) { return d[vars.var_id]; });
+                    .data([data], function(d, i) { return d[vars.var_id]; });
 
     // ENTER ITEMS
     var gItems_enter = gItems.enter()

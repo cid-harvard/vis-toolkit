@@ -12,7 +12,7 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
   dimensions = ["dept_code", "value_added", "sum(export_value)", "realgdp_percap", "realgdp", "dept_pop"];
 
   dimensions = dimensions.map(function(d, i) {
-    return {'dimension': d, index: i};
+    return {dimension: d, index: i};
   })
 
   departments.forEach(function(d, i) {
@@ -30,7 +30,7 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
       .params({
         height: 500,
         width: 500,
-        type: 'horizontal_ordinal',
+        type: 'ordinal_horizontal',
         data: dimensions,
         container: '#viz',
         var_y: 'index',
