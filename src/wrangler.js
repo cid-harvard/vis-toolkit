@@ -162,15 +162,21 @@
           aggregation[vars.var_group] = leaves[0][vars.var_group];
 
           // Quick fix in case var_x is an ordinal scale
-          if(vars.var_x !== vars.var_id) {
+          if(vars.var_x !== vars.var_id && vars.var_x !== vars.time.var_time) {
             aggregation[vars.var_x] = d3.mean(leaves, function(d) {
               return d[vars.var_x];
             });
+          } else {
+            aggregation[vars.var_x] = leaves[0][vars.var_x];
           }
 
-          aggregation[vars.var_y] = d3.mean(leaves, function(d) {
-            return d[vars.var_y];
-          });
+          if(vars.var_y !== vars.var_id && vars.var_y !== vars.time.var_time) {
+            aggregation[vars.var_y] = d3.mean(leaves, function(d) {
+              return d[vars.var_y];
+            });
+          } else {
+            aggregation[vars.var_y] = leaves[0][vars.var_y];
+          }
 
           aggregation[vars.var_r] = d3.sum(leaves, function(d) {
             return d[vars.var_r];
@@ -190,6 +196,7 @@
               d[vars.var_x] = 0;
             }
             
+            // Init values
             d[vars.var_y] = 0;
             d[vars.var_r] = 0;
             return d;
