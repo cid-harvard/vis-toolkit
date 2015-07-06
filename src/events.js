@@ -8,11 +8,11 @@
     }
 
     evt.forEach(function(e) {
-      if(typeof global.evt[e] === "undefined") {
-        global.evt[e] = [];
+      if(typeof vars.evt[e] === "undefined") {
+        vars.evt[e] = [];
       }
       
-      global.evt[e].push([f,d]);
+      vars.evt[e].push([f,d]);
     });
   };
 
@@ -20,13 +20,13 @@
 
     if(vars.dev) { console.log("[vars.evt.call]", evt, a); }
 
-    if(typeof global.evt[evt] === "undefined") {
+    if(typeof vars.evt[evt] === "undefined") {
       if(vars.dev) { console.warn("No callback for event", evt, a); }
       return;
     }
 
-    global.evt[evt].forEach(function(e) {
-      if(global.dev) { console.log("[calling evt]", e); }
+    vars.evt[evt].forEach(function(e) {
+      if(vars.dev) { console.log("[calling evt]", e); }
       if(typeof(e[0]) !== "undefined") {
         e[0](a);
       }

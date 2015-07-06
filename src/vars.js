@@ -117,7 +117,6 @@
     accessor_items: function(d) { return d; },
 
     container: "#viz",
-    nb_viz: nb_viz,
     countries: [],
 
     _user_vars: {},
@@ -125,4 +124,3 @@
   };
 
   vars = vistk.utils.merge(vars, default_vars);
-
