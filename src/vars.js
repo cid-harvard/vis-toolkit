@@ -35,7 +35,7 @@
     highlight: [],
     selection: [],
     filter: [],
-    aggregate: null,
+    aggregate: "",
 
     time: {
       var_time: null, 
@@ -120,7 +120,8 @@
     nb_viz: nb_viz,
     countries: [],
 
-    _user_vars: {}
+    _user_vars: {},
+    default_params: {}
   };
 
   vars = vistk.utils.merge(vars, default_vars);
