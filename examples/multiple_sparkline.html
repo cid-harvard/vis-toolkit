@@ -8,6 +8,9 @@
 
 d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments) {
 
+  var width = document.body.clientWidth;
+  var height = width * 0.7;
+
   // Data pre-processing
   departments.forEach(function(d, i) {
 
@@ -37,8 +40,8 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
       var vis = vistk.viz().params({
         type: "sparkline",
         container: "#"+viz_id,
-        width: 300,
-        height: 100,
+        width: 100,
+        height: 60,
         data: departments,
         var_y: dim,
         var_group: "dept_name",

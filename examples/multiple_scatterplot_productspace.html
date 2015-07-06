@@ -16,17 +16,17 @@ d3.json("../data/atlas_international_product_space.json", function(graph) {
 */
 
   var width = document.body.clientWidth;
-  var height = width * 0.7;
+  var height = width * 0.6;
 
-  var dimensions = ["A", "B"];
+  var configs = [{name: "A", zoom: "115"}, {name: "B", zoom: "116"}];
 
-  dimensions.forEach(function(dim, i) {
+  configs.forEach(function(conf, i) {
 
-    var viz_id = "viz_" + dim;
+    var viz_id = "viz_" + conf.name;
 
     d3.select("body").append("div").attr("id", viz_id).style("float", "left");
 
-    visualization = vistk.viz()
+    var visualization = vistk.viz()
       .params({
         type: "productspace",
         container: "#" + viz_id,
@@ -77,13 +77,12 @@ d3.json("../data/atlas_international_product_space.json", function(graph) {
         },
         title: "Product Space Colombia Exports",
         selection: ["115", "116", "117", "118", "119", "120", "121", "122", "123", "124", "125"],
-        highlight: ["115"]
+        zoom: [conf.zoom]
       });
 
     d3.select("#"+viz_id).call(visualization);
 
   });
-
 
   });
 
