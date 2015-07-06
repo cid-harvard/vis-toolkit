@@ -10,7 +10,7 @@
 d3.json("../data/diversification_ubiquity_hs4_1995_2012.json", function(error, countries) {
 
   var flat_years = vistk.utils.flatten_years(countries);
-console.log(flat_years)
+
   visualization = vistk.viz()
     .params({
       dev: true,
@@ -22,6 +22,7 @@ console.log(flat_years)
       data: flat_years,
       var_id: "name",
       var_y: "nb_products",
+      var_x: 'year',
       var_group: "continent",
       var_color: "continent",
       var_sort: 'nb_products',
@@ -33,7 +34,7 @@ console.log(flat_years)
         options: ["continent", "name"]
       },
       time: {
-        parse: function(d) { return d3.time.format("%Y").parse(d+""); },
+        parse: function(d) { return d; },
         var_time: 'year',
         current_time: 1995
       }
@@ -42,4 +43,5 @@ console.log(flat_years)
   d3.select(visualization.container()).call(visualization);
 
 });
+
 </script>

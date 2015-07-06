@@ -310,7 +310,7 @@
               .classed("selected", function(e, j) { return e.__selected; })
               .style("fill", params.fill)
               .style("stroke", params.stroke)
-              .attr('d', function(e) { return params["func"](e.values); });
+              .attr('d', function(e) { return params["func"](this_accessor_values(e)); });
 
         break;
 

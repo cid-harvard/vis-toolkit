@@ -9,8 +9,9 @@
 
 d3.json("../data/exports_2012.json", function(error, exports) {
 
-  var visualization = vistk.viz()
+  visualization = vistk.viz()
     .params({
+      dev: true,
       type: "stacked",
       container: "#viz",
       width: 960,
@@ -19,18 +20,21 @@ d3.json("../data/exports_2012.json", function(error, exports) {
       data: exports.data,
       var_id: "id",
       var_y: "value",
+      var_x: 'year',
       var_group: "community_name",
       var_color: "community_name",
       var_sort: 'value',
       ui: {
-        default: true
+        default: true,
+        sort: ["community_name", "name", "value"],
+        options: ["community_id", "name"]
       },
       interpolate: "linear",
       var_text: "name",
       time: {
         parse: function(d) { return d3.time.format("%Y").parse(d+""); },
-        var_time: "year",
-        current_time: "2012"
+        var_time: 'year',
+        current_time: '2012'
       }
     });
 
