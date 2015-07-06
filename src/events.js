@@ -49,7 +49,7 @@
 
   vars.evt.register("highlightOn", function(d) {
     d.__highlighted = true;
-      d3.select(vars.container).call(vars.this_chart);
+    d3.select(vars.container).call(vars.this_chart);
   });
 
   vars.evt.register("highlightOut", function(d) {

@@ -100,8 +100,7 @@
 
         var items_mark_rect = d3.select(this).selectAll(".items__mark__rect").data([d]);
 
-        items_mark_rect.enter()
-                .append("rect")                            
+        items_mark_rect.enter().append("rect")                            
                   .attr("x", -vars.mark.width/2)
                   .attr("y", -vars.mark.height/2)
                   .attr("height", params.height)

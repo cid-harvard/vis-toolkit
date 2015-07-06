@@ -122,7 +122,6 @@
           // ENTER ITEMS
           var gItems_enter = gItems.enter()
                           .append("g")
-                          .each(utils.items_group)
                           .attr("transform", function(d, i) {
                             return "translate(" + vars.x_scale[0]["func"](vars.accessor_data(d)[vars.var_x]) + ", " + vars.y_scale[0]["func"](vars.accessor_data(d)[vars.var_y]) + ")";
                           });
@@ -132,6 +131,9 @@
               gItems_enter.call(utils.draw_mark, params);
               gItems.call(utils.draw_mark, params);
             });
+
+            // Bind events to groups after marks have been created
+            gItems.each(utils.items_group);
 
             /* Should be as below but current params don't match this format
 
