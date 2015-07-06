@@ -19,6 +19,7 @@ module.exports = function(grunt) {
         dest: 'build/vistk.js',
       },
     },
+
     jshint: {
       files: ['Gruntfile.js', 'build/vistk.js'],
    
@@ -29,18 +30,25 @@ module.exports = function(grunt) {
        jshintrc: true
       }
     },
+
     watch: {
       concat: {
         files: ['src/*.js', 'src/visualizations/*.js'],
         tasks: ['concat']
       }
-    }
+    },
 
+    jasmine : {
+      src : ['js/d3.js', 'build/vistk.js'],
+      specs : 'test/specs/*.js',
+      helpers : 'test/specs/helpers/*.js'
+    }
   });
 
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-jshint');
+  grunt.loadNpmTasks('grunt-contrib-jasmine');
 
-  grunt.registerTask('default', ['concat']);
+  grunt.registerTask('default', 'jasmine', ['concat']);
 };
