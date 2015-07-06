@@ -1,6 +1,6 @@
     vars.items_data = [];
 
-    // In case we use custom variables as X/Y variables 
+    // In case we use functions for X/Y variables 
     if(typeof vars.var_x !== "string" && typeof vars.var_x === "function") {
       vars.data.forEach(function(d, i) {
         d._var_x = vars.var_x();
@@ -139,9 +139,7 @@
     // Aggregate data
     if(vars.aggregate === vars.var_group && vars.var_group != null) {
 
-      if(vars.dev) { 
-        console.log("[vars.aggregate]", vars.aggregate);
-      }
+      if(vars.dev) { console.log("[vars.aggregate]", vars.aggregate); }
 
       // Do the nesting
       // Should make sure it works for a generc dataset

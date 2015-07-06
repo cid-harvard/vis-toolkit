@@ -280,6 +280,10 @@
 
           var mark = d3.select(this).selectAll(".connect__line").data([d]);
 
+          // Make sure we have data for links
+          if(typeof d.source == "undefined"  || typeof d.target == "undefined")
+            return;
+
           mark.enter().append('line')
               .classed('connect__line', true)
               .attr("x1", function(d) { return vars.x_scale[0]["func"](d.source.x); })

@@ -56,7 +56,7 @@
             .append("g");
 
         function redraw() {
-            vars.gSvg.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+          vars.gSvg.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
         }
 
         // PRE-UPDATE ITEMS

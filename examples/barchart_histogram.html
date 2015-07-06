@@ -10,11 +10,21 @@ d3.json("../data/diversification_ubiquity_hs4_1995_2012.json", function(error, c
 
   var flat_years = vistk.utils.flatten_years(countries);
 
-  var data = d3.layout.histogram()
-      .bins(x.ticks(20))
-      (values);
-
   var visualization = vistk.viz()
+
+    /* WIP
+    .set({
+      dimension: 'bin',
+      func: function() {
+
+        var layout = d3.layout.histogram()
+            .bins(params.x_scale[0]["func"].ticks(20))
+            (values);
+
+        return 0;
+      }
+    })
+*/
     .params({
       type: 'barchart',
       margin: {top: 10, right: 10, bottom: 30, left: 30},

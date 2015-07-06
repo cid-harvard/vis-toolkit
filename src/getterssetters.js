@@ -1,13 +1,19 @@
 
+  chart.set = function(fn) {
+    console.log(fn["func"])
+//    fn.apply(thisArg, [argsArray])
+    return chart;
+  };
+
   chart.params = function(x) {
     if(!arguments.length) return vars;
-    vars._user_vars = x;    
+    vars._user_vars = x;
     return chart;
   };
 
   chart.param = function(attr, value) {
     if(arguments.length < 2) return vars["attr"];
-    vars[attr] = value;    
+    vars[attr] = value;
     return chart;
   };
 

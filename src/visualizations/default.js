@@ -33,7 +33,6 @@
         }
 
         // CREATE AXIS
-
         if(vars.x_axis_show)
           vars.svg.call(utils.x_axis);
   
