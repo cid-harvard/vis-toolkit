@@ -22,8 +22,6 @@
           vars = vistk.utils.merge(vars, scope);
           vars.items = vistk.utils.merge(vars.items, vars.user_vars.items);
 
-          console.log("VAR", vars)
-
         } else {
 
           // LOAD CHART PARAMS
@@ -69,53 +67,6 @@
               .call(utils.make_y_axis()
               .tickSize(-vars.width+vars.margin.left+vars.margin.right, 0, 0)
               .tickFormat(""));
-        }
-
-        if(typeof vars.connect !== "undefined" && typeof vars.connect[0] !== "undefined") {
-
-          // 1/ Between different items at a given time for one dimension
-          // 2/ Between same items at a given time points
-          // 2/ Between same items at multiple given times
-
-          // By default, connecting time points
-          var connect_data = vars.new_data;
-
-          // Connecting items
-          if(vars.connect[0].type == "items" && vars.type == "productspace") {
-            connect_data = vars.links;
-
-          // Connecting dimension
-          } else if(vars.connect[0].type == "dimension") {
-
-          }
-
-          // PRE-UPDATE CONNECT
-          // TOOD: find a common join to al types of connections
-          var gConnect = vars.svg.selectAll(".connect__group")
-                          .data(connect_data);
-        
-          // ENTER CONNECT
-          var gConnect_enter = gConnect.enter()
-                          .append("g")
-                          .attr("class", "connect__group");
-
-          // APPEND AND UPDATE CONNECT MARK
-          vars.connect.forEach(function(connect) {
-
-              connect.marks.forEach(function(params) {
-            
-                if(typeof params.filter == "undefined")
-                  params.filter = function() { return true; };
-
-                gConnect_enter.filter(params.filter).call(utils.draw_mark, params);
-                gConnect.filter(params.filter).call(utils.draw_mark, params);
-              });
-
-          });
-
-          // EXIT
-          var gConnect_exit = gConnect.exit().remove();
-
         }
 
         if(typeof vars.items !== "undefined" && vars.items[0] !== "undefined" && vars.type !== "stacked") {
@@ -179,7 +130,54 @@
           }
 
         }
+
+        if(typeof vars.connect !== "undefined" && typeof vars.connect[0] !== "undefined") {
+
+          // 1/ Between different items at a given time for one dimension
+          // 2/ Between same items at a given time points
+          // 2/ Between same items at multiple given times
+
+          // By default, connecting time points
+          var connect_data = vars.new_data;
+
+          // Connecting items
+          if(vars.connect[0].type == "items" && vars.type == "productspace") {
+            connect_data = vars.links;
+
+          // Connecting dimension
+          } else if(vars.connect[0].type == "dimension") {
+
+          }
+
+          // PRE-UPDATE CONNECT
+          // TOOD: find a common join to al types of connections
+          var gConnect = vars.svg.selectAll(".connect__group")
+                          .data(connect_data);
         
+          // ENTER CONNECT
+          var gConnect_enter = gConnect.enter()
+                          .insert("g", ":first-child")
+                          .attr("class", "connect__group");
+
+          // APPEND AND UPDATE CONNECT MARK
+          vars.connect.forEach(function(connect) {
+
+              connect.marks.forEach(function(params) {
+            
+                if(typeof params.filter == "undefined")
+                  params.filter = function() { return true; };
+
+                gConnect_enter.filter(params.filter).call(utils.draw_mark, params);
+                gConnect.filter(params.filter).call(utils.draw_mark, params);
+              });
+
+          });
+
+          // EXIT
+          var gConnect_exit = gConnect.exit().remove();
+
+        }
+
         utils.background_label(vars.title);
 
       break;
