@@ -96,9 +96,30 @@
 
         break;
 
-      case "rect":
+        case "divtext":
 
-        console.log("RECT", params)
+          var items_mark_divtext = d3.select(this).selectAll(".items__mark__text").data([d]);
+
+          items_mark_divtext.enter().append("foreignObject")
+                 .classed("items__mark__text", true)
+                 .attr("width", function(d) { return (d.dx - vars.padding) + "px"; })
+                 .attr("height", function(d) { return (d.dy - 2*vars.padding) + "px"; })
+               .append("xhtml:body")
+                 .style("font", "14px 'Helvetica Neue'")
+               .append("div")
+                 .style("padding-top", function(d) { return (vars.padding/2)+"px"; })
+                 .style("width", function(d) { return (d.dx - 2*vars.padding) + "px"; })
+                 .style("height", function(d) { return (d.dy - 2*vars.padding) + "px"; })
+                 .style({"text-overflow": "ellipsis", "overflow": "hidden"})
+                 .html(function(d) {
+                   return vars.accessor_data(d)[vars.var_text];
+                 });
+
+          items_mark_divtext.exit().remove();
+
+        break;
+
+      case "rect":
 
         var items_mark_rect = d3.select(this).selectAll(".items__mark__rect").data([d]);
 
