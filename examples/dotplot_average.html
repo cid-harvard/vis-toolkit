@@ -21,6 +21,7 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
 
   visualization = vistk.viz()
     .params({
+      dev: true,
       type: 'dotplot',      
       data: departments,
       container: '#viz',
@@ -37,14 +38,21 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
       items: [{
         attr: "name",
         marks: [{
-          type: "diamond",
-          rotate: "0"
-        },{
-          type: "text",
+          var_mark: '__aggregated',
+          type: d3.scale.ordinal().domain([true, false]).range(["none", "diamond"]),
+        }, {
+          var_mark: '__aggregated',
+          type: d3.scale.ordinal().domain([true, false]).range(["tick", "none"]),
+        }, {
+          var_mark: '__aggregated',
+          type: d3.scale.ordinal().domain([true, false]).range(["none", "text"]),
           rotate: "-30"
-        },{
-          type: "tick",
-          rotate: "0"
+        }, {
+          var_mark: '__aggregated',
+          type: d3.scale.ordinal().domain([true, false]).range(["text", "none"]),
+          rotate: "0",
+          translate: [-10, 30],
+          text_anchor: "middle"
         }]
       }],
       time: {
@@ -60,7 +68,15 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
       var_text: "dept_name", 
       selection: ["Antioquia", "Bogotá D. C."],
       highlight: ["Antioquia"]
-    });
+    })
+    .set('__aggregated', function() {
+      // Aggregate all the nodes
+
+      // Create a new element
+
+      // Calculate the average for it
+
+    })
 
   d3.select("#viz").call(visualization);
 });
