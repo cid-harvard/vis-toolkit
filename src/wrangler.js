@@ -125,14 +125,36 @@
     }
 
     if(typeof vars.nodes != "undefined") {
+
       // Merge node positions with products
       vars.new_data.forEach(function(d, i) {
         var node = vistk.utils.find_node_coordinates_by_id(vars.nodes, d.product_id);
-        d.x = node.x;
-        d.y = node.y;
+
+        // If we can't find product in the graph, put it in the corner
+        // if(typeof node == "undefined") {
+        // // res = {x: 500+Math.random()*400, y: 1500+Math.random()*400};
+        //   res = {x: 1095, y: 1675};
+        // }
+
+        if(typeof node == "undefined") {
+
+          d.__missing = true;
+
+        } else {
+
+          d.x = node.x;
+          d.y = node.y;
+
+        }
+
       });
 
     }
+
+    // Remove missing nodes
+    vars.new_data = vars.new_data.filter(function(d) {
+      return (typeof d.__missing === "undefined" || !d.__missing);
+    })
 
     // Aggregate data
     if(vars.set.length > 0 && vars.set[0][0] === '__aggregated') {

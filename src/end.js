@@ -67,11 +67,5 @@ vistk.utils.find_node_coordinates_by_id = function(nodes, id) {
     return d.id == id;
   })[0];
 
-  // If we can't find product in the graph, put it in the corner
-  if(typeof res == "undefined") {
-    // res = {x: 500+Math.random()*400, y: 1500+Math.random()*400};
-     res = {x: 1095, y: 1675};
-  }
-
   return res;
 }
