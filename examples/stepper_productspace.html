@@ -5,13 +5,13 @@
 <link href="../css/vistk.css" rel="stylesheet">
 <body>
 <div id="viz" style="width: 800px; height: 500px; float: left;"></div>
-<div id="stepper" style="float: left;">
+<div id="stepper" style="float: left; width: 300px">
   <ul>
-    <li><input name="radio-step" value="step0" type="radio" checked>Step 0 (start)</li>
-    <li><input name="radio-step" value="step1" type="radio">Step 1</li>
-    <li><input name="radio-step" value="step2" type="radio">Step 2</li>
-    <li><input name="radio-step" value="step3" type="radio">Step 3</li>
-    <li><input name="radio-step" value="step4" type="radio">Step 4</li>
+    <li><input name="radio-step" value="step0" type="radio" checked><b>Step 0 (start)</b></li>
+    <li><input name="radio-step" value="step1" type="radio"><b>Step 1:</b> This circle represents bananas. Think of it as a container for all the capabilities needed to extract and transport bananas.</li>
+    <li><input name="radio-step" value="step2" type="radio"><b>Step 2:</b> Bananas are lucrative, but the capabilities needed to extract it can't be used to make many other products. That's why bananas are a low opportunity product.</li>
+    <li><input name="radio-step" value="step3" type="radio"><b>Step 3:</b> Here we arrange products by the similarity of the capabilities required in their production, given international patterns. 's current exports are circled in blue. Follow the links from those exports to see more products that could start exporting.</li>
+    <li><input name="radio-step" value="step4" type="radio"><b>Step 4:</b> But doesn't just want more products, it wants complex products that require sophisticated capabilities that are not common to many countries. This is not the case of bananas, which is produced by almost every country that has banana trees. We shade products green by their complexity—that is, how many countries export them.</li>
   </ul>
 </div>
 <script>
@@ -31,7 +31,6 @@ d3.select("input[value='step0']").on("click", function(d) {
   // vistk.utils.update_filters("9", false);
 
   visualization.params().refresh = true;
-
   d3.select(visualization.container()).call(visualization);
 
 });
@@ -43,9 +42,9 @@ d3.select("input[value='step0']").on("click", function(d) {
 d3.select("input[value='step1']").on("click", function(d) {
 
   visualization.params({
-    selection: ["115", "116", "117", "118", "119", "120", "121", "122", "123", "124", "125"],
-    highlight: ["115"],
-    zoom: ["115", "116"]
+    selection: ["178"],
+    highlight: ["178"],
+    zoom: ["178"]
   });
 
   visualization.params().refresh = true;
@@ -64,7 +63,9 @@ d3.select("input[value='step2']").on("click", function(d) {
   // vistk.utils.update_filters("1", true);
 
   visualization.params({
-    zoom: ["117"]
+    selection: ["178"],
+    highlight: ["178", "118", "606"],
+    zoom: ["178", "118", "606"]
   });
 
   visualization.params().refresh = true;
@@ -82,8 +83,9 @@ d3.select("input[value='step3']").on("click", function(d) {
   // vistk.utils.update_filters("2", true);
 
   visualization.params({
-    selection: ["121", "122", "123", "124", "125"],
-    highlight: ["116"]
+    selection: ["837", "233"],
+    highlight: ["837", "233"],
+    zoom: ["837", "233"]
   });
 
   visualization.params().refresh = true;
@@ -102,6 +104,8 @@ d3.select("input[value='step4']").on("click", function(d) {
   // vistk.utils.update_filters("9", true);
 
   visualization.params({
+    selection: ["837", "233"],
+    highlight: ["837", "233"],
     zoom: []
   });
 
@@ -111,89 +115,113 @@ d3.select("input[value='step4']").on("click", function(d) {
 
 });
 
+d3.json("../data/colombia_product_space.json", function(graph) {
+  d3.json("../data/colombia_products_location930_2012.json", function(exports) {
+    d3.json("../data/colombia_products_metadata.json", function(metadata) {
+  /* 
+  
+    PRODUCT
+      "cog": 0.0,
+      "coi": 181.64991760253906,
+      "department_id": 930,
+      "distance": 0.7403764128684998,
+      "export_rca": 4.932032108306885,
+      "export_value": 13300384,
+      "import_value": null,
+      "product_id": 420,
+      "year": 2012
 
-d3.json("../data/atlas_international_product_space.json", function(graph) {
+    METADATA
+      "code": "106",
+      "description_en": null,
+      "description_es": null,
+      "id": 0,
+      "level": "section",
+      "name_en": "Animal & Animal Products",
+      "name_es": null,
+      "name_short_en": null,
+      "name_short_es": null,
+      "parent_id": null 
+  */
 
-  d3.json("../data/col_dept_exports_3.json", function(exports) {
-/*
-    // cog: 0.4208957237122138 coi: 0.8067728413148435 distance: 0.8179699425486985 
-    // export_rca: 0.04472251026943858 export_value: 29700 id: 2479 import_value: 3278477
-    // product_id: "115" year: 2008  
-*/
+      // Create quasi-dummy categories
+      exports.data.forEach(function(d) {
 
-    // Create quasi-dummy categories
-    exports.forEach(function(d) {
-      d.category = d.product_id.slice(0, 1);
-    })
+        var m = metadata.data.filter(function(e) {
+          return e.id == d.product_id;
+        })[0];
 
-    visualization = vistk.viz()
-      .params({
-        type: "productspace",
-        container: "#viz",
-        nodes: graph.nodes,
-        links: graph.edges,
-        width: 800,
-        height: 500,
-        data: exports,
-        var_x: 'x',
-        var_y: 'y',
-        var_color: 'category',
-        color: d3.scale.ordinal().domain([0, 9]).range(["#3182bd", "#6baed6", "#9ecae1", "#c6dbef", "#e6550d", "#fd8d3c", "#fdae6b", "#fdd0a2", "#31a354", "#74c476", "#a1d99b", "#c7e9c0", "#756bb1", "#9e9ac8", "#bcbddc", "#dadaeb", "#636363", "#969696", "#bdbdbd", "#d9d9d9"]),
-        var_group: 'category',
-        var_r: 'export_value',
-        var_share: "export_rca",
-        var_text: "product_id",
-        share_cutoff: function(d) { return d.export_rca > 1; },
-        x_axis_show: false,
-        x_grid_show: false,
-        y_axis_show: false,
-        y_grid_show: false,
-        var_id: "product_id",
-        r_cutoff: function(d) { return d.export_rca < 1; },
-        items: [{
-          attr: "name",
-          marks: [{
-            type: "circle",
-            rotate: "0",
-            fill: function(d) { return vars.color(vars.accessor_items(d)[vars.var_color]); },
-            var_r: "export_value"
-          }, {
-            var_mark: '__selected',
-            type: d3.scale.ordinal().domain([true, false]).range(["text", "none"]),
-            rotate: "0"
-          }, {
-            var_mark: '__selected',
-            type: d3.scale.ordinal().domain([true, false]).range(["marker", "none"]),
-            rotate: "0"
-          }, {
-            var_mark: '__aggregated',
-            type: d3.scale.ordinal().domain([true, false]).range(["text", "none"]),
-            rotate: "0"
-          }, {
-            var_mark: '__aggregated',
-            type: d3.scale.ordinal().domain([true, false]).range(["star", "none"]),
-            rotate: "0",
-            translate: [-10, 30],
-            text_anchor: "middle"
-          }]
-        }],
-        time: {
-          var_time: "year", 
-          current_time: "2008",
-          parse: function(d) { return d; },
-          filter: "2008"
-        },
-        ui: {
-          default: true,
-          options: ["community_name", "product"]
-        },
-        title: "Product Space Colombia Exports"
+        d["name_en"] = m["name_en"];
+       // d.category = d.product_id.slice(0, 1);
       })
-      .set('__aggregated', true);
 
-    d3.select("#viz").call(visualization);
+      visualization = vistk.viz()
+        .params({
+          type: "productspace",
+          container: "#viz",
+          nodes: graph.nodes,
+          links: graph.edges,
+          width: 800,
+          height: 500,
+          data: exports.data,
+          var_x: 'x',
+          var_y: 'y',
+          var_color: 'category',
+          color: d3.scale.ordinal().domain([0, 9]).range(["#3182bd", "#6baed6", "#9ecae1", "#c6dbef", "#e6550d", "#fd8d3c", "#fdae6b", "#fdd0a2", "#31a354", "#74c476", "#a1d99b", "#c7e9c0", "#756bb1", "#9e9ac8", "#bcbddc", "#dadaeb", "#636363", "#969696", "#bdbdbd", "#d9d9d9"]),
+          var_group: 'parent_id',
+          var_r: 'export_value',
+          var_share: "export_rca",
+          var_text: "name_en",
+          share_cutoff: function(d) { return d.export_rca > 1; },
+          x_axis_show: false,
+          x_grid_show: false,
+          y_axis_show: false,
+          y_grid_show: false,
+          var_id: "product_id",
+          r_cutoff: function(d) { return d.export_rca < 1; },
+          items: [{
+            attr: "name",
+            marks: [{
+              type: "circle",
+              rotate: "0",
+              fill: function(d) { return vars.color(vars.accessor_items(d)[vars.var_color]); },
+              var_r: "export_value"
+            }, {
+              var_mark: '__highlighted',
+              type: d3.scale.ordinal().domain([true, false]).range(["text", "none"]),
+              rotate: "0"
+            }, {
+              var_mark: '__selected',
+              type: d3.scale.ordinal().domain([true, false]).range(["none", "none"]),
+              rotate: "0"
+            }, {
+              var_mark: '__aggregated',
+              type: d3.scale.ordinal().domain([true, false]).range(["text", "none"]),
+              rotate: "0"
+            }, {
+              var_mark: '__aggregated',
+              type: d3.scale.ordinal().domain([true, false]).range(["star", "none"]),
+              rotate: "0",
+              translate: [-10, 30],
+              text_anchor: "middle"
+            }]
+          }],
+          time: {
+            var_time: "year",
+            current_time: 2012,
+            parse: function(d) { return d; }
+          },
+          ui: {
+            default: true,
+            options: ["community_name", "product"]
+          },
+          title: "Product Space Colombia Exports"
+        })
+        .set('__aggregated', true);
 
+      d3.select("#viz").call(visualization);
+
+    });
   });
-
 });
 </script>
