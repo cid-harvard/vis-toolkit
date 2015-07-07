@@ -98,23 +98,24 @@
 
       case "rect":
 
+        console.log("RECT", params)
+
         var items_mark_rect = d3.select(this).selectAll(".items__mark__rect").data([d]);
 
         items_mark_rect.enter().append("rect")                            
-                  .attr("x", -vars.mark.width/2)
-                  .attr("y", -vars.mark.height/2)
+                  .attr("x", params.x)
+                  .attr("y", params.y)
                   .attr("height", params.height)
                   .attr("width", params.width)
-                  .attr("y", params.y)
                   .classed("items__mark__rect", true)
                   .attr("transform", "rotate(0)")
                   .style("fill", function(d) { return vars.color(vars.accessor_items(d)[vars.var_color]); });
 
         items_mark_rect
+            .attr("x", params.x)
+            .attr("y", params.y)            
             .attr("height", params.height)
             .attr("width", params.width)
-//            .attr("x", -vars.mark.width/2)
-            .attr("y", params.y)
             .classed("highlighted", function(d, i) { return d.__highlighted; })
             .classed("selected", function(d, i) { return d.__selected; });
 

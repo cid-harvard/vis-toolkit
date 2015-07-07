@@ -119,6 +119,7 @@
     container: "#viz",
     countries: [],
 
+    refresh: true,
     _user_vars: {},
     default_params: {}
   };
