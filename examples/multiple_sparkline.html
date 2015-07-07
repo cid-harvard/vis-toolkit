@@ -39,7 +39,7 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
 
       var vis = vistk.viz().params({
         type: "sparkline",
-        container: "#"+viz_id,
+        container: "#" + viz_id,
         width: 100,
         height: 60,
         data: departments,
@@ -77,7 +77,7 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
         refresh: true
       });
 
-      d3.select("#"+viz_id).call(vis);
+      d3.select("#" + viz_id).call(vis);
 
     });
 
