@@ -285,6 +285,19 @@
 
     }
 
+    if(typeof vars.var_sort !== "undefined") {
+
+      if(vars.dev) { 
+         console.log("[updating sort]", vars.var_sort, vars.var_sort_asc, vars.user_vars)
+      }
+
+      if(typeof vars.var_sort_asc !== "undefined" && !vars.var_sort_asc) {
+        vars.new_data = vars.new_data.sort(function(a, b) { return d3.ascending(a[vars.var_sort], b[vars.var_sort]);});
+      } else {
+        vars.new_data = vars.new_data.sort(function(a, b) { return d3.descending(a[vars.var_sort], b[vars.var_sort]);});
+      }
+    } 
+
     // Chart specific metadata: stacked
     if(vars.type === "stacked") {
 
@@ -336,19 +349,6 @@
       });
 
     }
-
-    if(typeof vars.var_sort !== "undefined") {
-
-      if(vars.dev) { 
-         console.log("[updating sort]", vars.var_sort, vars.var_sort_asc, vars.user_vars)
-      }
-
-      if(typeof vars.var_sort_asc !== "undefined" && !vars.var_sort_asc) {
-        vars.new_data = vars.new_data.sort(function(a, b) { return d3.ascending(a[vars.var_sort], b[vars.var_sort]);});
-      } else {
-        vars.new_data = vars.new_data.sort(function(a, b) { return d3.descending(a[vars.var_sort], b[vars.var_sort]);});
-      }
-    } 
 
     // Chart specific metadata: treemap
     if(vars.type === "treemap" && vars.refresh) {
