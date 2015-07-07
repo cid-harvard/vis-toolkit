@@ -50,3 +50,43 @@ vars.default_params["stacked"] = function(scope) {
   return params;
 
 };
+
+vars.default_params["treemap"] = function(scope) {
+
+  var params = {};
+
+  params.x_scale = [{
+    name: "linear",
+    func: d3.scale.linear()
+            .range([scope.margin.left, scope.width - scope.margin.left - scope.margin.right])
+            .domain(d3.extent(vars.new_data, function(d) { return d.x; })),
+  }];
+
+  params.y_scale = [{
+    name: "linear",
+    func: d3.scale.linear()
+            .range([scope.height - scope.margin.top - scope.margin.bottom, scope.margin.top])
+            .domain(d3.extent(vars.new_data, function(d) { return d.y; })),
+  }];
+
+  params.items = [{
+    attr: "bar",
+    marks: [{
+      type: "rect",
+      rotate: "10",
+      filter: function(d, i) { return false; },
+      x: 0,
+      y: 0,
+      width: function(d) { return d.dx; },
+      height: function(d) { return d.dy; }
+    }, {
+      type: "text",
+      filter: function(d, i) { return d.depth == 1; }
+    }]
+  }];
+
+  params.var_x = 'x';
+  params.var_y = 'y';
+
+  return params;
+};

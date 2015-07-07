@@ -1,37 +1,5 @@
-      case "treemap":
+      case "treemap_old":
 
-        var treemap_params = function(scope) {
-
-          var params = {};
-
-          params.x_scale = [{
-            name: "linear",
-            func: d3.scale.linear()
-                    .range([vars.margin.left, vars.width-vars.margin.left-vars.margin.right])
-                    .domain(vars.new_data.map(function(d) { return d.x; })),
-          }];
-
-          params.y_scale = [{
-            name: "linear",
-            func: d3.scale.linear()
-                    .range([vars.height-vars.margin.top-vars.margin.bottom, vars.margin.top])
-                    .domain([0, d3.max(vars.new_data, function(d) { return d.y; })]),
-          }];
-
-          params.items = [{
-            marks: [{
-              type: "rect",
-              rotate: "0",
-            }, {
-              type: "circle",
-              rotate: "0"
-            }]
-          }];
-
-          params.x_ticks = 10;
-
-          return params;
-        };
 
         var t_params = treemap_params(vars);
 
@@ -40,16 +8,9 @@
         // LOAD USER PARAMS
         vars.items = vistk.utils.merge(vars.items, vars.user_vars.items);
 
-        vars.treemap = d3.layout.treemap()
-            .padding(vars.padding)
-            .sticky(true)
-            .sort(function(a,b) { return a[vars.var_sort] - b[vars.var_sort]; })
-            .size([vars.width, vars.height])
-            .value(function(d) { return d[vars.var_size]; });
-
         // PRE-UPDATE
-        var gItems = vars.svg.data([vars.root]).selectAll("g")
-            .data(vars.treemap.nodes, function(d, i) { return d[vars.var_id]; });
+        var gItems = vars.svg.selectAll("g")
+            .data(vars.new_data, function(d, i) { return d[vars.var_id]; });
 
         // ENTER
         var gItems_enter = gItems.enter()
@@ -70,7 +31,7 @@
           gItems_enter
                 .filter(function(d, j) {
                     return (params.type == "rect" && d.depth == 2) || (params.type == "text" && d.depth == 1);
-                  })
+                })
                 .call(utils.draw_mark, params);
 
           gItems.select("rect")
@@ -97,19 +58,11 @@
                  .style({"text-overflow": "ellipsis", "overflow": "hidden"})
                  .html(function(d) {
                    return vars.accessor_data(d)[vars.var_text];
-                 })
-
-            // SVG wrap
-            // new_items.selectAll("text").call(vistk.utils.wrap);
+                 });
 
         });
 
         // ITEMS EXIT
         var gItems_exit = gItems.exit().remove();
-
-
-        // Removed because of Div wrap
-        //  vars.svg.selectAll("text")
-        //      .call(vistk.utils.wrap);
 
       break;

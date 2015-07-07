@@ -122,8 +122,6 @@
 
       vars.new_data = vars.unique_data;
 
-      // Flag that forces to re-wrangle data
-      vars.refresh = false;
     }
 
     if(typeof vars.nodes != "undefined") {
@@ -324,10 +322,10 @@
       } else {
         vars.new_data = vars.new_data.sort(function(a, b) { return d3.descending(a[vars.var_sort], b[vars.var_sort]);});
       }
-    }
+    } 
 
     // Chart specific metadata: treemap
-    if(vars.type === "treemap") {
+    if(vars.type === "treemap" && vars.refresh) {
 
       // Create the root node
       vars.root = {};
@@ -392,6 +390,15 @@
       } else {
         vars.root.children = vars.root.children.sort(function(a, b) { return d3.descending(a[vars.var_sort], b[vars.var_sort]);});
       }
+
+      vars.treemap = d3.layout.treemap()
+          .padding(vars.padding)
+          .sticky(true)
+          .sort(function(a,b) { return a[vars.var_sort] - b[vars.var_sort]; })
+          .size([vars.width, vars.height])
+          .value(function(d) { return d[vars.var_size]; });
+
+      vars.new_data = vars.treemap.nodes(vars.root);
 
     }
 
@@ -470,3 +477,5 @@
 
     }
 
+    // Flag that forces to re-wrangle data
+    vars.refresh = false;

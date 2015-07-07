@@ -15,12 +15,14 @@
         var scope = {};
 
         // Sparkline is currenlty the only chart that can have a scope as parameter
-        if(vars.type == "sparkline" || vars.type == "dotplot" || vars.type == "barchart" || vars.type == "linechart" || vars.type == "scatterplot" || vars.type == "grid" || vars.type == "stacked" || vars.type == "piechart" || vars.type == "slopegraph" || vars.type == "productspace") {
+        if(vars.type == "sparkline" || vars.type == "dotplot" || vars.type == "barchart" || vars.type == "linechart" || vars.type == "scatterplot" || vars.type == "grid" || vars.type == "stacked" || vars.type == "piechart" || vars.type == "slopegraph" || vars.type == "productspace" || vars.type == "treemap") {
           //scope = {};
           //scope = utils.merge(scope, vars)
           scope = vars.default_params[vars.type](vars);
           vars = vistk.utils.merge(vars, scope);
           vars.items = vistk.utils.merge(vars.items, vars.user_vars.items);
+
+          console.log("VAR", vars)
 
         } else {
 
@@ -101,8 +103,12 @@
           vars.connect.forEach(function(connect) {
 
               connect.marks.forEach(function(params) {
-                gConnect_enter.call(utils.draw_mark, params);
-                gConnect.call(utils.draw_mark, params);
+            
+                if(typeof params.filter == "undefined")
+                  params.filter = function() { return true; };
+
+                gConnect_enter.filter(params.filter).call(utils.draw_mark, params);
+                gConnect.filter(params.filter).call(utils.draw_mark, params);
               });
 
           });
@@ -127,8 +133,12 @@
 
            // APPEND AND UPDATE ITEMS MARK
             vars.items[0].marks.forEach(function(params) {
-              gItems_enter.call(utils.draw_mark, params);
-              gItems.call(utils.draw_mark, params);
+          
+              if(typeof params.filter == "undefined")
+                params.filter = function() { return true; };
+
+              gItems_enter.filter(params.filter).call(utils.draw_mark, params);
+              gItems.filter(params.filter).call(utils.draw_mark, params);
             });
 
             // Bind events to groups after marks have been created
