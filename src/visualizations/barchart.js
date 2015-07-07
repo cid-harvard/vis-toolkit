@@ -19,6 +19,7 @@ vars.default_params["barchart"] = function(scope) {
     marks: [{
       type: "rect",
       rotate: "0",
+      x: function() { return -vars.mark.width/2; },
       y: function(d) { return - params.y_scale[0]["func"](d[vars.var_y]) + (scope.height - scope.margin.bottom - scope.margin.top - params.y_scale[0]["func"](d[scope.var_y])); },
       height: function(d) { return params.y_scale[0]["func"](d[scope.var_y]); },
       width: function(d) { return params.x_scale[0]["func"].rangeBand(); },

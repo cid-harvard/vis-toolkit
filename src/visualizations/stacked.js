@@ -59,29 +59,29 @@ vars.default_params["treemap"] = function(scope) {
     name: "linear",
     func: d3.scale.linear()
             .range([scope.margin.left, scope.width - scope.margin.left - scope.margin.right])
-            .domain(d3.extent(vars.new_data, function(d) { return d.x; })),
+            .domain([0, d3.max(vars.new_data, function(d) { return d.x; })]),
   }];
 
   params.y_scale = [{
     name: "linear",
     func: d3.scale.linear()
-            .range([scope.height - scope.margin.top - scope.margin.bottom, scope.margin.top])
-            .domain(d3.extent(vars.new_data, function(d) { return d.y; })),
+            .range([scope.margin.top, scope.height - scope.margin.top - scope.margin.bottom])
+            .domain([0, d3.max(vars.new_data, function(d) { return d.y; })]),
   }];
 
   params.items = [{
     attr: "bar",
     marks: [{
+      type: "text",
+      filter: function(d, i) { return d.depth == 1; }
+    }, {
       type: "rect",
       rotate: "10",
-      filter: function(d, i) { return false; },
+      filter: function(d, i) { return d.depth == 2; },
       x: 0,
       y: 0,
       width: function(d) { return d.dx; },
       height: function(d) { return d.dy; }
-    }, {
-      type: "text",
-      filter: function(d, i) { return d.depth == 1; }
     }]
   }];
 

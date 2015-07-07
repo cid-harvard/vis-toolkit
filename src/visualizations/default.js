@@ -126,7 +126,7 @@
 
           // ENTER ITEMS
           var gItems_enter = gItems.enter()
-                          .append("g")
+                          .insert("g", ":first-child")
                           .attr("transform", function(d, i) {
                             return "translate(" + vars.x_scale[0]["func"](vars.accessor_data(d)[vars.var_x]) + ", " + vars.y_scale[0]["func"](vars.accessor_data(d)[vars.var_y]) + ")";
                           });
