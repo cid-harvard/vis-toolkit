@@ -165,9 +165,19 @@
                    .property("checked", function(d) { return vars.aggregate === d; })
                    .on("change", function(d) { 
 
-                      vars.aggregate = d;
+                    if(d === vars.var_id) {
+
+                      vars.set = [];
                       vars.refresh = true;
                       d3.select(vars.container).call(vars.this_chart)
+
+                    } else if(d === vars.var_group) {
+
+                      vars.this_chart.set('__aggregated', false);
+                      vars.refresh = true;
+                      d3.select(vars.container).call(vars.this_chart)
+
+                    }
 
                    });
 

@@ -255,7 +255,10 @@
         .entries(vars.new_data);
 
       // Transform key/value into values tab only
-      vars.new_data = vars.new_data.concat(nested_data.map(function(d) { return d.values; }));
+      if(vars.set[0][1])
+        vars.new_data = vars.new_data.concat(nested_data.map(function(d) { return d.values; }));
+      else
+        vars.new_data = nested_data.map(function(d) { return d.values; });
 
     }
 

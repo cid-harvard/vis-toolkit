@@ -69,14 +69,7 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
       selection: ["Antioquia", "Bogotá D. C."],
       highlight: ["Antioquia"]
     })
-    .set('__aggregated', function() {
-      // Aggregate all the nodes
-
-      // Create a new element
-
-      // Calculate the average for it
-
-    })
+    .set('__aggregated', true)
 
   d3.select("#viz").call(visualization);
 });

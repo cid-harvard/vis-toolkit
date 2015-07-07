@@ -49,12 +49,12 @@ vars.default_params["scatterplot"] = function(scope) {
   }];
 
   params.x_axis_show = true;
-  params.x_axis_translate = [0, vars.height - vars.margin.bottom - vars.margin.top];
+  params.x_axis_translate = [0, scope.height - scope.margin.bottom - scope.margin.top];
   params.x_grid_show = true;
   params.x_ticks = 10;
   
   params.y_axis_show = true;
-  params.y_axis_translate = [vars.margin.left, 0];
+  params.y_axis_translate = [scope.margin.left, 0];
   params.y_grid_show = true;
 
   return params;
