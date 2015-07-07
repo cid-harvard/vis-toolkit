@@ -1,7 +1,6 @@
 
-  chart.set = function(fn) {
-    console.log(fn["func"])
-//    fn.apply(thisArg, [argsArray])
+  chart.set = function(attr, fn) {
+    vars.set.push([attr, fn]);
     return chart;
   };
 
