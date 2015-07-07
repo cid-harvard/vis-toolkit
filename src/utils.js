@@ -48,8 +48,9 @@
       var mark_id = 0;
 
       // Supporting multipe similar elements
-      if(typeof vars.items != "undefined" && vars.items.length > 0)
+      if(typeof vars.items != "undefined") {
         mark_id = vars.items[0].marks.indexOf(params);
+      }
 
       // In case a function determines the type of mark to be used
       if(typeof params_type === "function") {
@@ -98,10 +99,10 @@
 
         case "divtext":
 
-          var items_mark_divtext = d3.select(this).selectAll(".items__mark__text").data([d]);
+          var items_mark_divtext = d3.select(this).selectAll(".items__mark__divtext").data([d]);
 
           items_mark_divtext.enter().append("foreignObject")
-                 .classed("items__mark__text", true)
+                 .classed("items__mark__divtext", true)
                  .attr("width", function(d) { return (d.dx - vars.padding) + "px"; })
                  .attr("height", function(d) { return (d.dy - 2*vars.padding) + "px"; })
                .append("xhtml:body")
@@ -144,33 +145,34 @@
 
         break;
 
-        case "diamond":
+      case "diamond":
 
-          var items_mark_diamond = d3.select(this).selectAll(".items__mark__diamond").data([d]);
+        var items_mark_diamond = d3.select(this).selectAll(".items__mark__diamond.items_" + mark_id).data([d]);
 
-          items_mark_diamond.enter().append("rect")
-                    .attr("height", vars.mark.height)
-                    .attr("width", vars.mark.width)                              
-                    .attr("x", -vars.mark.width/2)
-                    .attr("y", -vars.mark.height/2)
-                    .classed("items__mark__diamond", true)
-                    .attr("transform", "rotate(45)");
+        items_mark_diamond.enter().append("rect")
+            .classed("items__mark__diamond", true)
+            .classed("items_" + mark_id, true)
+            .attr("height", vars.mark.height)
+            .attr("width", vars.mark.width)                              
+            .attr("x", -vars.mark.width/2)
+            .attr("y", -vars.mark.height/2)
+            .attr("transform", "rotate(45)");
 
-          items_mark_diamond
-              .classed("highlighted", function(d, i) { return d.__highlighted; })
-              .classed("selected", function(d, i) { return d.__selected; });
+        items_mark_diamond
+            .classed("highlighted", function(d, i) { return d.__highlighted; })
+            .classed("selected", function(d, i) { return d.__selected; });
 
-          items_mark_diamond.exit().remove();
+        items_mark_diamond.exit().remove();
 
         break;
 
         case "tick":
 
-          var items_mark_tick = d3.select(this).selectAll(".items__mark__tick.items_"+mark_id).data([d]);
+          var items_mark_tick = d3.select(this).selectAll(".items__mark__tick.items_" + mark_id).data([d]);
 
           items_mark_tick.enter().append('line')
               .classed('items__mark__tick', true)
-              .classed("items_" + mark_id, true)
+         //     .classed("items_" + mark_id, true)
               .attr("x1", function(d) { return 0; })
               .attr("y1", function(d) { return -20; })
               .attr("x2", function(d) { return 0; })

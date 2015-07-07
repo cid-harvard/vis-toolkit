@@ -135,7 +135,7 @@
     }
 
     // Aggregate data
-    if(vars.aggregate === vars.var_group && vars.var_group != null) {
+    if(vars.set.length > 0 && vars.set[0][0] === '__aggregated') {
 
       if(vars.dev) { console.log("[vars.aggregate]", vars.aggregate); }
 
@@ -255,7 +255,7 @@
         .entries(vars.new_data);
 
       // Transform key/value into values tab only
-      vars.new_data = nested_data.map(function(d) { return d.values; });
+      vars.new_data = vars.new_data.concat(nested_data.map(function(d) { return d.values; }));
 
     }
 

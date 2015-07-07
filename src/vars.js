@@ -121,7 +121,8 @@
 
     refresh: true,
     _user_vars: {},
-    default_params: {}
+    default_params: {},
+    set: []
   };
 
   vars = vistk.utils.merge(vars, default_vars);
