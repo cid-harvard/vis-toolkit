@@ -17,8 +17,6 @@ The above selections do not change the data. The ones below do but do not add an
 
 * `.filter()` removes items based on a similar attribute (e.g. defined by a `.group()`)
 
-
-
 * `.time()` changes the current time point
 
 Finally, the ones below add new data (usually derived from existing data):
@@ -142,6 +140,12 @@ Mostly done using the `.params()` helper
 
 * Customized visual design
  * Default CSS but should allow this to be overloaded
+
+
+## Add a new visualizations
+
+1. Create a new configuration in `src/visualization/`
+2. 
 
 ## Visualizations
 

@@ -15,9 +15,10 @@
         var scope = {};
 
         // Sparkline is currenlty the only chart that can have a scope as parameter
-        if(vars.type == "sparkline" || vars.type == "dotplot" || vars.type == "barchart" || vars.type == "linechart" || vars.type == "scatterplot" || vars.type == "grid" || vars.type == "stacked" || vars.type == "piechart" || vars.type == "slopegraph" || vars.type == "productspace" || vars.type == "treemap") {
+        if(vars.type == "sparkline" || vars.type == "dotplot" || vars.type == "barchart" || vars.type == "linechart" || vars.type == "scatterplot" || vars.type == "grid" || vars.type == "stacked" || vars.type == "piechart" || vars.type == "slopegraph" || vars.type == "productspace" || vars.type == "treemap" || vars.type == "stackedbar") {
           //scope = {};
           //scope = utils.merge(scope, vars)
+
           scope = vars.default_params[vars.type](vars);
           vars = vistk.utils.merge(vars, scope);
 
@@ -32,43 +33,6 @@
           // LOAD USER PARAMS
           vars.items = vistk.utils.merge(vars.items, vars.user_vars.items);
         
-        }
-
-        // CREATE AXIS
-        if(vars.x_axis_show)
-          vars.svg.call(utils.x_axis);
-  
-       if(vars.y_axis_show)
-          vars.svg.call(utils.y_axis);
-
-        if(vars.x_grid_show) {
-          vars.svg.selectAll(".x.grid").data([vars.new_data])
-            .enter()
-              .append("g")
-              .attr("class", "x grid")
-              .style("display", function() { return vars.x_grid_show ? "block": "none"; })
-              .attr("transform", "translate(0," + (vars.height-vars.margin.top-vars.margin.bottom) + ")");
-
-          vars.svg.selectAll(".x.grid").transition()
-              .duration(vars.duration)
-              .call(utils.make_x_axis()
-              .tickSize(-vars.height+vars.margin.top+vars.margin.bottom, 0, 0)
-              .tickFormat(""));
-        }
-
-        if(vars.y_grid_show) {
-          vars.svg.selectAll(".y.grid").data([vars.new_data])
-            .enter()
-              .append("g")
-              .attr("class", "y grid")
-              .style("display", function() { return vars.y_axis_show ? "block": "none"; })
-              .attr("transform", "translate(" + vars.margin.left + ", 0)");
-
-          vars.svg.selectAll(".y.grid").transition()
-              .duration(vars.duration)
-              .call(utils.make_y_axis()
-              .tickSize(-vars.width+vars.margin.left+vars.margin.right, 0, 0)
-              .tickFormat(""));
         }
 
         if(typeof vars.items !== "undefined" && vars.items[0] !== "undefined" && vars.type !== "stacked") {
@@ -178,6 +142,43 @@
           // EXIT
           var gConnect_exit = gConnect.exit().remove();
 
+        }
+
+        // CREATE AXIS
+        if(vars.x_axis_show)
+          vars.svg.call(utils.x_axis);
+  
+       if(vars.y_axis_show)
+          vars.svg.call(utils.y_axis);
+
+        if(vars.x_grid_show) {
+          vars.svg.selectAll(".x.grid").data([vars.new_data])
+            .enter()
+              .append("g")
+              .attr("class", "x grid")
+              .style("display", function() { return vars.x_grid_show ? "block": "none"; })
+              .attr("transform", "translate(0," + (vars.height-vars.margin.top-vars.margin.bottom) + ")");
+
+          vars.svg.selectAll(".x.grid").transition()
+              .duration(vars.duration)
+              .call(utils.make_x_axis()
+              .tickSize(-vars.height+vars.margin.top+vars.margin.bottom, 0, 0)
+              .tickFormat(""));
+        }
+
+        if(vars.y_grid_show) {
+          vars.svg.selectAll(".y.grid").data([vars.new_data])
+            .enter()
+              .append("g")
+              .attr("class", "y grid")
+              .style("display", function() { return vars.y_axis_show ? "block": "none"; })
+              .attr("transform", "translate(" + vars.margin.left + ", 0)");
+
+          vars.svg.selectAll(".y.grid").transition()
+              .duration(vars.duration)
+              .call(utils.make_y_axis()
+              .tickSize(-vars.width+vars.margin.left+vars.margin.right, 0, 0)
+              .tickFormat(""));
         }
 
         utils.background_label(vars.title);
