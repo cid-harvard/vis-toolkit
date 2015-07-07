@@ -45,10 +45,11 @@
 
       var params_type = params.type;
 
+      // Default id for marks
       var mark_id = 0;
 
       // Supporting multipe similar elements
-      if(typeof vars.items != "undefined") {
+      if(typeof vars.items !== "undefined") {
         mark_id = vars.items[0].marks.indexOf(params);
       }
 

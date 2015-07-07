@@ -124,7 +124,7 @@
 
     }
 
-    if(typeof vars.nodes != "undefined") {
+    if(typeof vars.nodes != "undefined" && vars.refresh) {
 
       // Merge node positions with products
       vars.new_data.forEach(function(d, i) {
@@ -149,15 +149,16 @@
 
       });
 
+
+      // Remove missing nodes
+      vars.new_data = vars.new_data.filter(function(d) {
+        return (typeof d.__missing === "undefined" || !d.__missing);
+      })
+
     }
 
-    // Remove missing nodes
-    vars.new_data = vars.new_data.filter(function(d) {
-      return (typeof d.__missing === "undefined" || !d.__missing);
-    })
-
     // Aggregate data
-    if(vars.set.length > 0 && vars.set[0][0] === '__aggregated') {
+    if(vars.set.length > 0 && vars.set[0][0] === '__aggregated'  && vars.refresh) {
 
       if(vars.dev) { console.log("[vars.aggregate]", vars.aggregate); }
 

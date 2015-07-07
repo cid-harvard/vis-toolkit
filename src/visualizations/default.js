@@ -20,7 +20,9 @@
           //scope = utils.merge(scope, vars)
           scope = vars.default_params[vars.type](vars);
           vars = vistk.utils.merge(vars, scope);
-          vars.items = vistk.utils.merge(vars.items, vars.user_vars.items);
+
+          if(vars.type !== "stacked")
+            vars.items = vistk.utils.merge(vars.items, vars.user_vars.items);
 
         } else {
 
