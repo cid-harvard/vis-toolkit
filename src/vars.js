@@ -53,6 +53,8 @@
     x_ticks: 5,
     x_axis: null,
     x_format: function(d) { return d; },
+    x_tickSize: 10,
+    x_tickPadding: 0,
     x_tickValues: null,
     x_axis_show: false,
     x_axis_orient: "bottom",
@@ -76,9 +78,6 @@
 
     r_scale: null,
     r_cutoff: function(d) { return d > 30; },
-
-    tickSize: 10,
-    tickPadding: 0,
 
     // Automatically generate UI elements
     ui: true,

@@ -729,8 +729,8 @@
         // Quick fix to get max value
         .tickValues(vars.x_tickValues)
         .tickFormat(vars.x_format)
-        .tickSize(vars.tickSize)
-        .tickPadding(vars.tickPadding)
+        .tickSize(vars.x_tickSize)
+        .tickPadding(vars.x_tickPadding)
         .orient(vars.x_axis_orient);
   }
 
