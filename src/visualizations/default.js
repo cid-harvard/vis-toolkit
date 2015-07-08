@@ -8,17 +8,12 @@
         // Contain the parameters in something different than global variable
         // Use the utils.create_chart()
 
-        if(vars.dev) { 
-          console.log("[init.vars.default]", vars);
-        }
+        if(vars.dev) { console.log("[init.vars.default]", vars); }
         
-        var scope = {};
-
         // Sparkline is currenlty the only chart that can have a scope as parameter
-        if(vars.type == "sparkline" || vars.type == "dotplot" || vars.type == "barchart" || vars.type == "linechart" || vars.type == "scatterplot" || vars.type == "grid" || vars.type == "stacked" || vars.type == "piechart" || vars.type == "slopegraph" || vars.type == "productspace" || vars.type == "treemap" || vars.type == "stackedbar" || vars.type == "ordinal_vertical"  || vars.type == "ordinal_horizontal") {
-          //scope = {};
-          //scope = utils.merge(scope, vars)
+        if(vars.list_params.indexOf(vars.type) > 0) {
 
+          var scope = {};
           scope = vars.default_params[vars.type](vars);
           vars = vistk.utils.merge(vars, scope);
 
@@ -91,7 +86,8 @@
           } else {
             
             vars.svg.transition()
-                    .attr("transform", "");
+                    .duration(vars.duration)
+                    .attr("transform", "translate(" + vars.margin.left + "," + vars.margin.top + ")");
 
           }
 

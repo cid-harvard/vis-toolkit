@@ -121,7 +121,10 @@
     refresh: true,
     init: true,
     _user_vars: {},
+
+    list_params: ["sparkline", "dotplot", "barchart", "linechart", "scatterplot", "grid", "stacked", "piechart", "slopegraph", "productspace", "treemap", "stackedbar", "ordinal_vertical", "ordinal_horizontal"],
     default_params: {},
+
     set: []
   };
 
