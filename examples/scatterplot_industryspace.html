@@ -1,0 +1,77 @@
+<!doctype html>
+<meta charset="utf-8">
+<script src="../js/d3.js"></script>
+<script src="../build/vistk.js"></script>
+<link href="../css/vistk.css" rel="stylesheet">
+<body>
+<div id="viz"></div>
+<script>
+
+d3.json("../data/industry-data-neave-150707.json", function(data) {
+
+    data.nodes.forEach(function(d) {
+
+      d.color_rgb = d.attributes.color;
+      d.emp12_ind = d.attributes.emp12_ind;
+      d.emp12_ind_copy = d.attributes.emp12_ind_copy;
+      d.name = d.attributes.name;  // "Manufacturing"
+      d.pname = d.attributes.pname;  // "Sawing, Planing E Impregnacion Of Wood"
+
+    })
+
+//  d3.json("../data/col_dept_exports_3.json", function(exports) {
+/*
+    // cog: 0.4208957237122138 coi: 0.8067728413148435 distance: 0.8179699425486985 
+    // export_rca: 0.04472251026943858 export_value: 29700 id: 2479 import_value: 3278477
+    // product_id: "115" year: 2008  
+*/
+    visualization = vistk.viz()
+      .params({
+        type: "productspace",
+        container: "#viz",
+        nodes: data.nodes,
+        links: data.edges,
+        data: data.nodes,
+        var_x: 'x',
+        var_y: 'y',
+        var_color: 'color',
+        var_group: 'name',
+        var_share: "export_rca",
+        x_axis_show: false,
+        x_grid_show: false,
+        y_axis_show: false,
+        y_grid_show: false,
+        var_text: 'pname',
+        var_id: "id",
+        // share_cutoff: function(d) { return d.export_rca > 1; },
+        // r_cutoff: function(d) { return d.export_rca < 1; },
+        items: [{
+          attr: "name",
+          marks: [{
+            type: "circle",
+            rotate: "0",
+            var_color: 'category',
+            var_r: "size"
+          }, {
+            var_mark: '__selected',
+            type: d3.scale.ordinal().domain([true, false]).range(["text", "none"]),
+            rotate: "0"
+          }, {
+            var_mark: '__highlighted',
+            type: d3.scale.ordinal().domain([true, false]).range(["text", "none"]),
+            rotate: "0"
+          }]
+        }],
+        ui: {
+          default: true,
+          options: ["community_name", "product"]
+        },
+        title: "Industry Space Colombia"
+      });
+
+    d3.select("#viz").call(visualization);
+
+//  });
+
+});
+</script>
