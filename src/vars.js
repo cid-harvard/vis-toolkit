@@ -119,6 +119,7 @@
     countries: [],
 
     refresh: true,
+    init: true,
     _user_vars: {},
     default_params: {},
     set: []

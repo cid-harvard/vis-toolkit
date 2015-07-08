@@ -124,7 +124,20 @@
 
     }
 
-    if(typeof vars.nodes != "undefined" && vars.refresh) {
+    // Links between items
+    // Used for product space
+    if(vars.links !== null && vars.init) {
+
+      vars.links.forEach(function(d, i) {
+
+        d.source = vistk.utils.find_node_by_id(vars.nodes, d.source);
+        d.target = vistk.utils.find_node_by_id(vars.nodes, d.target);
+
+      });
+
+    }
+
+    if(typeof vars.nodes != "undefined" && vars.init) {
 
       // Merge node positions with products
       vars.new_data.forEach(function(d, i) {
@@ -137,7 +150,7 @@
         // }
 
         if(typeof node == "undefined") {
-
+          console.log("MISSING")
           d.__missing = true;
 
         } else {
@@ -149,11 +162,10 @@
 
       });
 
-
       // Remove missing nodes
-      vars.new_data = vars.new_data.filter(function(d) {
-        return (typeof d.__missing === "undefined" || !d.__missing);
-      })
+     // vars.new_data = vars.new_data.filter(function(d) {
+     //   return (typeof d.__missing === "undefined" || !d.__missing);
+     // })
 
     }
 
@@ -351,19 +363,6 @@
 
     }
 
-    // Links between items
-    // Used for product space
-    if(vars.links !== null) {
-
-      vars.links.forEach(function(d, i) {
-
-        d.source = vistk.utils.find_node_by_id(vars.nodes, d.source);
-        d.target = vistk.utils.find_node_by_id(vars.nodes, d.target);
-
-      });
-
-    }
-
     // Chart specific metadata: treemap
     if(vars.type === "treemap" && vars.refresh) {
 
@@ -519,3 +518,4 @@
 
     // Flag that forces to re-wrangle data
     vars.refresh = false;
+    vars.init = false;
