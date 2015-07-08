@@ -355,7 +355,7 @@
        vars.new_data = vars.stack(vars.new_data);
     }
 
-    if(vars.type === "stackedbar" && vars.refresh) {
+    if(vars.type === "stackedbar") {
 
       var y0 = 0;
 
@@ -366,6 +366,8 @@
        // d[vars.var_y] = y0;
 
       });
+      
+      vars.var_y = "y0";
 
     }
 

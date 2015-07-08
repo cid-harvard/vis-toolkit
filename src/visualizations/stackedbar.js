@@ -12,17 +12,17 @@ vars.default_params["stackedbar"] = function(scope) {
   params.y_scale = [{
     func: d3.scale.linear()
             .range([scope.height - scope.margin.top - scope.margin.bottom, scope.margin.top])
-            .domain([0, d3.max(vars.new_data, function(d) { return d["y0"]; })])
+            .domain([d3.max(vars.new_data, function(d) { return d["y0"]; }), 0])
   }];
 
   params.items = [{
     attr: "bar",
     marks: [{
-      type: "circle",
+      type: "rect",
       rotate: "0",
       x: function() { return -vars.mark.width/2; },
-      y: function(d) { return params.y_scale[0]["func"](d["y0"]); },
-     // height: function(d) { return params.y_scale[0]["func"](d[vars.var_y]); },
+     // y: function(d) { return - params.y_scale[0]["func"](d["y0"]); },
+      height: function(d) { return params.y_scale[0]["func"](d[vars.var_height]); },
       width: function(d) { return vars.mark.width*10; },
       fill: function(d) { return scope.color(scope.accessor_items(d)[scope.var_color]); }
     }]
