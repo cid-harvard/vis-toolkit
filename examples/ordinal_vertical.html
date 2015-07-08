@@ -9,11 +9,7 @@
 
 d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments) {
 
-  dimensions = ["dept_code", "value_added", "sum(export_value)", "realgdp_percap", "realgdp", "dept_pop"];
-
-  dimensions = dimensions.map(function(d, i) {
-    return {dimension: d, index: i};
-  })
+  var dimensions = ["dept_code", "value_added", "sum(export_value)", "realgdp_percap", "realgdp", "dept_pop"];
 
   departments.forEach(function(d, i) {
     d.dept_pop = +d.dept_pop;
@@ -26,46 +22,49 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
 
   var ui_options = [];
 
-  var vertical_ordinal = vistk.viz()
+  visualization = vistk.viz()
       .params({
+        dev: true,
         height: 500,
         width: 500,
-        type: 'ordinal_horizontal',
-        data: dimensions,
+        type: 'ordinal_vertical',
+        data: departments,
         container: '#viz',
-        var_y: 'index',
-        var_x: 'dimension', // not necessary
+        var_y: 'dept_name',
+        var_x: 'realgdp', // not necessary
         x_type: 'linear',
         x_text: null,
         x_ticks: 10,
+        var_sort: 'realgdp',
+        x_format: function(d) { return '$' + d3.format(".2s")(d); },
         items: [{
           attr: "name",
           marks: [{
-            type: "dotplot_vertical",
+            type: "rect",
             rotate: "0",
             width: 10,
             height: 10
           },{
             type: "text",
-            rotate: "90"
+            rotate: "0"
           }]
         }],
-        /*
         time: {
           var_time: 'year', 
           current_time: 2013,
           parse: function(d) { return d; }
         },
-        */
         ui: {
-          default: false,
+          default: true,
           options: ui_options
         },
-        var_id: "dimension",
-        var_text: "dimension"
+        var_id: "dept_name",
+        var_text: "dept_name", 
+        selection: ["Antioquia"],
+        highlight: ["Antioquia"]
       });
 
-    d3.select("#viz").call(vertical_ordinal);
+    d3.select("#viz").call(visualization);
 
   })
 
