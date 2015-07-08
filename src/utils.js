@@ -511,7 +511,7 @@
 
           var mark = d3.select(this).selectAll(".items__mark__circle").data([d]);
 
-          mark.enter().append("circle")
+          var mark_enter = mark.enter().append("circle")
                       .classed("items__mark__circle", true)
                       .attr("cx", 0)
                       .attr("cy", 0)
@@ -527,12 +527,14 @@
                           return r_scale(d[params.var_r]);
                         }
                       })
-                      .style("fill", function(d) { return vars.color(vars.accessor_items(d)[vars.var_color]); })
                       .attr("title", function(d,i) {
                         active = d3.select(null); 
                         return d.name; 
                       })
                       .call(utils.make_zoomable_on_click)
+
+          if(vars.var_color !== null)
+            mark_enter.style("fill", function(d) { return vars.color(vars.accessor_items(d)[vars.var_color]); });
 
           mark
              // .attr("r", function(d) {return params.radius; })
