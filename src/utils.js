@@ -322,6 +322,24 @@
 
           break;
 
+
+        case "line_horizontal":
+
+          var mark = d3.select(this).selectAll(".mark__line_horizontal").data([d]);
+
+          mark.enter().append('line')
+              .classed('mark__line_horizontal', true)
+              .attr("x1", function(d) { return vars.x_scale[0]["func"].range()[0]; })
+              .attr("y1", function(d) { return vars.y_scale[0]["func"](d[vars.var_y]); })
+              .attr("x2", function(d) { return vars.x_scale[0]["func"].range()[1]; })
+              .attr("y2", function(d) { return vars.y_scale[0]["func"](d[vars.var_y]); });
+
+          mark
+              .classed("highlighted", function(d, i) { return d.__highlighted; })
+              .classed("selected", function(d, i) { return d.__selected; });
+
+          break;
+
         case "path":
 
           var this_accessor_values = function(d) { return d.values; };
