@@ -3,8 +3,47 @@
 <script src="../js/d3.js"></script>
 <script src="../build/vistk.js"></script>
 <link href="../css/vistk.css" rel="stylesheet">
+<style>
+#legend {
+    padding: 1.5em 0 0 1.5em;
+}
+
+li.key {
+    border-top-width: 15px;
+    border-top-style: solid;
+    font-size: .75em;
+    width: 10%;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.list-inline>li {
+  display: inline-block;
+}
+
+.list-inline {
+  padding-left: 0;
+  list-style: none;
+}
+
+ul, ol {
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+
+path.land {
+    fill: #eee;
+    stroke: #ddd;
+}
+
+path.state {
+    stroke: #eee;
+    stroke-width: 1;
+}
+</style>
 <body>
 <div id="viz"></div>
+<div id="legend"></div>
 <script>
 
 d3.json("../data/atlas_international_product_space.json", function(graph) {
@@ -84,6 +123,30 @@ d3.json("../data/atlas_international_product_space.json", function(graph) {
       });
 
     d3.select("#viz").call(visualization);
+
+    // Export / Non-export / Similarity link
+
+    // Complexity: Low / Med / High
+    var complexity = ["Low", "Medium", "High"];
+
+    var colors = d3.scale.quantize()
+        .range(["lightgray", "gray", "darkgray"]);
+
+    var legend = d3.select('#legend')
+      .append('ul')
+        .attr('class', 'list-inline');
+
+    var keys = legend.selectAll('li.key')
+        .data(colors.range());
+
+    keys.enter().append('li')
+        .attr('class', 'key')
+        .style('border-top-color', String)
+        .text(function(d, i) {
+            var r = colors.invertExtent(d);
+            return complexity[i];
+            // return r[0];
+        });
 
   });
 
