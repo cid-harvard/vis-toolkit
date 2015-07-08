@@ -1,0 +1,101 @@
+<!doctype html>
+<meta charset="utf-8">
+<script src="../js/d3.js" charset="utf-8"></script>
+<script src="../build/vistk.js"></script>
+<link href="../css/vistk.css" rel="stylesheet">
+<body>
+<div id="viz"></div>
+<script>
+
+d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments) {
+
+  departments.forEach(function(d, i) {
+    d.dept_pop = +d.dept_pop;
+    d.year = +d.year;
+    d.realgdp = +d.realgdp;
+    d.realgdp_percap = +d.realgdp_percap;    
+    d["sum(export_value)"] = +d["sum(export_value)"];
+    d["value_added"] = isNaN(+d["value_added"]) ? 0: +d["value_added"];
+  });
+
+  visualization = vistk.viz()
+    .params({
+      dev: true,
+      type: 'dotplot',    
+      data: departments,
+      container: '#viz',
+      var_x: 'dept_pop',
+      x_type: 'linear',
+      var_y: function() { return this.height/2; },
+      x_text: null,
+      x_ticks: 2,
+      var_group: 'dept_name',
+      x_format: function(d) { return '$' + d3.format(".2s")(d); },
+      items: [{
+        attr: "name",
+        marks: [{
+          type: "diamond",
+          rotate: "0"
+        },{
+          type: "text",
+          rotate: "-30"
+        }]
+      }],
+      time: {
+        var_time: 'year', 
+        current_time: 2013,
+        parse: function(d) { return d; }
+      },
+      ui: {
+        default: true,
+        options: []
+      },
+      var_id: "dept_name",
+      var_text: "dept_name",
+      selection: ["Antioquia", "Bogotá D. C."],
+      highlight: ["Antioquia"]
+    });
+
+  d3.select("#viz").call(visualization);
+
+
+  d3.select(visualization.container()).selectAll(".geomapTransformation").data(["button_geomap"]).enter().append("button")
+           .attr("type", "button")
+           .attr("class", "gridTransformation")
+           .on("click", function() {
+
+              // Then move groups to their grid position
+              visualization.param("refresh", true);
+
+              visualization.params({
+                type: 'ordinal_horizontal',
+                var_sort: 'dept_pop'
+              });
+
+              d3.select(visualization.container()).call(visualization);
+
+
+            })
+           .html("To Ordinal Scale");
+
+  d3.select(visualization.container()).selectAll(".circleTransformation").data(["button_circle"]).enter().append("button")
+           .attr("type", "button")
+           .attr("class", "circleTransformation")
+           .on("click", function() {
+
+              // Then move groups to their grid position
+              visualization.param("refresh", true);
+
+              visualization.params({
+                type: 'dotplot'
+              });
+
+              d3.select(visualization.container()).call(visualization);
+
+
+            })
+           .html("To Linear Scale");
+
+});
+
+</script>
