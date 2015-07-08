@@ -173,7 +173,7 @@
 
           items_mark_tick.enter().append('line')
               .classed('items__mark__tick', true)
-         //     .classed("items_" + mark_id, true)
+              .classed("items_" + mark_id, true)
               .attr("x1", function(d) { return 0; })
               .attr("y1", function(d) { return -20; })
               .attr("x2", function(d) { return 0; })

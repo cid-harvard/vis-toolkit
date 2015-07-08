@@ -258,6 +258,8 @@ Map of countries that can be colored and labeled.
 
 * Composite geo map http://ilya.boyandin.me/
 
+* Transition to cartograms http://www.citylab.com/housing/2015/07/mapping-the-us-by-property-value-instead-of-land-area/397841/
+
 ### Scatterplot
 
 * Scatterplot http://bl.ocks.org/mbostock/3887118
@@ -273,7 +275,12 @@ Horizontal scatterplot without a Y-axis:
 * Dot chart http://bl.ocks.org/nrabinowitz/2034281
 * Dots transition http://www.economist.com/blogs/graphicdetail/2015/06/daily-chart-14?fsrc=permar|image2
 
-#### Bubble plot 
+
+#### Dot Chart
+
+* http://www.nytimes.com/interactive/2013/03/29/sports/baseball/Strikeouts-Are-Still-Soaring.html?_r=1&
+
+* X-axis
 
 ### Matrix
 
@@ -331,6 +338,10 @@ Area chart with stacked shapes on top of each other (the previous layer being th
 * Stacked graph http://bl.ocks.org/mbostock/4060954 
 
 * Transition to [small multiples](http://bl.ocks.org/mbostock/9490516) and [here too](http://bl.ocks.org/mbostock/3885211)
+
+### Stacked Bar
+
+* http://bl.ocks.org/mbostock/3886208#index.html
 
 
 ### Parallel Coordinates
@@ -427,9 +438,14 @@ D3js notebook
  * Other custom transitions, physical simulation, etc.
  * Dispatching other events
 
+### Legends
+
 * Legend: should be informative on the mapping and the quantity of attributes, also actionable for filtering. 
  * Multiple selections should be allowed
  * Automatically generated
+
+* HTML / DIV
+ * http://eyeseast.github.io/visible-data/2013/08/27/responsive-legends-with-d3/
  
 Interesting reading on D3 modular/reusable
 

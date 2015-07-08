@@ -13,7 +13,7 @@ d3.json("../data/diversification_ubiquity_hs4_1995_2012.json", function(error, c
 
   var flat_years = vistk.utils.flatten_years(countries);
 
-  scatterplot = vistk.viz()
+  visualization = vistk.viz()
     .params({
       type: 'scatterplot',
       margin: {top: 10, right: 10, bottom: 30, left: 30},
@@ -42,11 +42,11 @@ d3.json("../data/diversification_ubiquity_hs4_1995_2012.json", function(error, c
           type: "tick",
           rotate: "90",
           translate: function(d) { return [-vars.x_scale[0]["func"](d[vars.var_x])+30, 0]; }
-        },{
+        }, {
           type: "tick",
           rotate: "0",
           translate: function(d) { return [0, -vars.y_scale[0]["func"](d[vars.var_y]) + vars.height - vars.margin.bottom - vars.margin.top]; }
-        },{
+        }, {
           type: "circle",
           rotate: "0",
           fill: function(d) { return vars.color(vars.accessor_items(d)[vars.var_color]); }
@@ -68,7 +68,7 @@ d3.json("../data/diversification_ubiquity_hs4_1995_2012.json", function(error, c
       title: "World Countries"
     });
 
-  d3.select("#viz").call(scatterplot);
+  d3.select("#viz").call(visualization);
 
 });
 </script>
