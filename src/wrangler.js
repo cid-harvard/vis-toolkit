@@ -158,7 +158,7 @@
     }
 
     // Aggregate data
-    if(vars.set.length > 0 && vars.set[0][0] === '__aggregated'  && vars.refresh) {
+    if(vars.set.length > 0 && vars.set[0][0] === '__aggregated' && vars.refresh) {
 
       if(vars.dev) { console.log("[vars.aggregate]", vars.aggregate); }
 
@@ -299,7 +299,7 @@
     } 
 
     // Chart specific metadata: stacked
-    if(vars.type === "stacked") {
+    if(vars.type === "stacked" && vars.refresh) {
 
       // Make sure all items and all ranks are there
       vars.new_data.forEach(function(c) {
@@ -335,6 +335,20 @@
           .y(function(d) { return d[vars.var_y]; });
 
        vars.new_data = vars.stack(vars.new_data);
+    }
+
+    if(vars.type === "stackedbar" && vars.refresh) {
+
+      var y0 = 0;
+
+      vars.new_data.forEach(function(d) {
+
+        d["y0"] = y0;
+        y0 += d[vars.var_y];
+       // d[vars.var_y] = y0;
+
+      });
+
     }
 
     // Links between items

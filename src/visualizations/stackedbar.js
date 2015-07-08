@@ -12,7 +12,7 @@ vars.default_params["stackedbar"] = function(scope) {
   params.y_scale = [{
     func: d3.scale.linear()
             .range([scope.height - scope.margin.top - scope.margin.bottom, scope.margin.top])
-            .domain(d3.extent(vars.new_data, function(d) { return d[scope.var_y]; })).nice()
+            .domain([0, d3.max(vars.new_data, function(d) { return d["y0"]; })])
   }];
 
   params.items = [{
@@ -21,9 +21,9 @@ vars.default_params["stackedbar"] = function(scope) {
       type: "rect",
       rotate: "0",
       x: function() { return -vars.mark.width/2; },
-      y: function(d) { return - params.y_scale[0]["func"](d[vars.var_y]) + (scope.height - scope.margin.bottom - scope.margin.top - params.y_scale[0]["func"](d[scope.var_y])); },
-      height: function(d) { return params.y_scale[0]["func"](d[scope.var_y]); },
-      width: function(d) { return vars.mark.width*5; },
+      y: function(d) { return -params.y_scale[0]["func"](d["y0"]); },
+      height: function(d) { return params.y_scale[0]["func"](d[vars.var_y]); },
+      width: function(d) { return vars.mark.width*10; },
       fill: function(d) { return scope.color(scope.accessor_items(d)[scope.var_color]); }
     }]
   }];
@@ -39,4 +39,3 @@ vars.default_params["stackedbar"] = function(scope) {
   return params;
 
 };
-
