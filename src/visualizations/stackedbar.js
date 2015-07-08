@@ -18,11 +18,11 @@ vars.default_params["stackedbar"] = function(scope) {
   params.items = [{
     attr: "bar",
     marks: [{
-      type: "rect",
+      type: "circle",
       rotate: "0",
       x: function() { return -vars.mark.width/2; },
-      y: function(d) { return -params.y_scale[0]["func"](d["y0"]); },
-      height: function(d) { return params.y_scale[0]["func"](d[vars.var_y]); },
+      y: function(d) { return params.y_scale[0]["func"](d["y0"]); },
+     // height: function(d) { return params.y_scale[0]["func"](d[vars.var_y]); },
       width: function(d) { return vars.mark.width*10; },
       fill: function(d) { return scope.color(scope.accessor_items(d)[scope.var_color]); }
     }]
