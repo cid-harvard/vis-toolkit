@@ -130,8 +130,13 @@
 
       vars.links.forEach(function(d, i) {
 
-        d.source = vistk.utils.find_node_by_id(vars.nodes, d.source);
-        d.target = vistk.utils.find_node_by_id(vars.nodes, d.target);
+        if(typeof d.source === "string") {
+          d.source = vistk.utils.find_node_by_id(vars.nodes, d.source);
+        }
+
+        if(typeof d.target === "string") {
+          d.target = vistk.utils.find_node_by_id(vars.nodes, d.target);
+        }
 
       });
 
@@ -141,7 +146,8 @@
 
       // Merge node positions with products
       vars.new_data.forEach(function(d, i) {
-        var node = vistk.utils.find_node_coordinates_by_id(vars.nodes, d.product_id);
+
+        var node = vistk.utils.find_node_coordinates_by_id(vars.nodes, d[vars.var_id]);
 
         // If we can't find product in the graph, put it in the corner
         // if(typeof node == "undefined") {
@@ -149,8 +155,8 @@
         //   res = {x: 1095, y: 1675};
         // }
 
-        if(typeof node == "undefined") {
-          console.log("MISSING")
+        if(typeof node === "undefined") {
+
           d.__missing = true;
 
         } else {
@@ -163,9 +169,9 @@
       });
 
       // Remove missing nodes
-     // vars.new_data = vars.new_data.filter(function(d) {
-     //   return (typeof d.__missing === "undefined" || !d.__missing);
-     // })
+      vars.new_data = vars.new_data.filter(function(d) {
+        return (typeof d.__missing === "undefined");
+      });
 
     }
 
