@@ -9,16 +9,12 @@ vars.default_params["piechart"] = function(scope) {
     name: "linear",
     func: d3.scale.linear()
             .range([scope.width/2, scope.width/2])
-            .domain([0, d3.max(vars.new_data, function(d) { return d[vars.var_x]; })])
-            .nice()
   }];
 
   params.y_scale = [{
     name: "linear",
     func: d3.scale.linear()
             .range([scope.height/2, scope.height/2])
-            .domain([0, d3.max(vars.new_data, function(d) { return d[vars.var_y]; })])
-            .nice()
   }];
 
   params.r_scale = d3.scale.linear()

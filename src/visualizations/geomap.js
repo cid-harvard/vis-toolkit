@@ -7,15 +7,15 @@
           params.x_scale = [{
             name: "linear",
             func: d3.scale.linear()
-                    .range([vars.margin.left, vars.width-vars.margin.left-vars.margin.right])
                     .domain(d3.extent(vars.countries, function(d) { return d[vars.var_x]; }))
+                    .range([scope.margin.left, scope.width - scope.margin.left - scope.margin.right])
           }];
 
           params.y_scale = [{
             name: "linear",
             func: d3.scale.linear()
-                    .range([vars.height-vars.margin.top-vars.margin.bottom, vars.margin.top])
                     .domain(d3.extent(vars.countries, function(d) { return d[vars.var_y]; }))
+                    .range([scope.height - vars.margin.top - vars.margin.bottom, scope.margin.top])
           }];
 
           params.items = [{

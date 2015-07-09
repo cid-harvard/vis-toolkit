@@ -5,14 +5,13 @@ vars.default_params["ordinal_horizontal"] = function(scope) {
   params.x_scale = [{
     func: d3.scale.ordinal()
             .domain(d3.set(vars.new_data.map(function(d) { return d[vars.var_x]; })).values())
-            .rangeBands([vars.margin.left, vars.width - vars.margin.left - vars.margin.right]),
+            .rangeBands([scope.margin.left, scope.width - scope.margin.left - scope.margin.right]),
 
   }];
 
   params.y_scale = [{
     func: d3.scale.linear()
-            .domain([0, d3.max(vars.new_data, function(d) { return d[vars.var_y]; })])
-            .range([vars.height/2, vars.height/2])
+            .range([scope.height/2, scope.height/2])
             .nice()
   }];
 
