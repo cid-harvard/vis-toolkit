@@ -11,7 +11,7 @@
         if(vars.dev) { console.log("[init.vars.default]", vars); }
         
         // Sparkline is currenlty the only chart that can have a scope as parameter
-        if(vars.list_params.indexOf(vars.type) > 0) {
+        if(vars.list_params.indexOf(vars.type) >= 0) {
 
           var scope = {};
           scope = vars.default_params[vars.type](vars);
