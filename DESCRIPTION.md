@@ -126,10 +126,6 @@ Labels
 
 * Connecting labels to items
 
-Legends
- * Color scale / legend (should contain the min/max values and min/max color range)
- * Should take the visual mapping as input and automatically generate it
- * Interactive and informative legends http://bl.ocks.org/bobmonteverde/2070123
 
 ## Customization
 
@@ -429,7 +425,7 @@ D3js notebook
  * Customizable tooltips (d3plus.tooltip.create()) http://bl.ocks.org/tgk/6044254
  * http://bl.ocks.org/d3noob/c37cb8e630aaef7df30d
  * http://bl.ocks.org/rveciana/5181105
-
+ * http://bl.ocks.org/bobmonteverde/2070123
 
 * Callback once the loading is terminated
  * This is quite tricky as many things are pending
@@ -443,6 +439,11 @@ D3js notebook
 * Legend: should be informative on the mapping and the quantity of attributes, also actionable for filtering. 
  * Multiple selections should be allowed
  * Automatically generated
+ * Color scale / legend (should contain the min/max values and min/max color range)
+ * Should take the visual mapping as input and automatically generate it
+ * Interactive and informative legends http://bl.ocks.org/bobmonteverde/2070123
+
+---
 
 * HTML / DIV
  * http://eyeseast.github.io/visible-data/2013/08/27/responsive-legends-with-d3/
