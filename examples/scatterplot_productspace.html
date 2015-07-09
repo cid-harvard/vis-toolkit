@@ -113,10 +113,6 @@ d3.json("../data/atlas_international_product_space.json", function(graph) {
           parse: function(d) { return d; },
           filter: "2008"
         },
-        ui: {
-          default: true,
-          options: ["community_name", "product"]
-        },
         title: "Product Space Colombia Exports",
         selection: ["115", "116", "117", "118", "119", "120", "121", "122", "123", "124", "125"],
         highlight: ["115"]
@@ -124,7 +120,56 @@ d3.json("../data/atlas_international_product_space.json", function(graph) {
 
     d3.select("#viz").call(visualization);
 
+    var width = 50;
+
+    var legend =  d3.select("#viz").append("svg")
+      .attr("width", 400)
+      .attr("height", 100)
+    .selectAll(".legend")
+        .data(visualization.params().color.domain())
+      .enter().append("g")
+        .attr("class", "legend")
+        .attr("transform", function(d, i) { return "translate(" + i * 50 + ", 0)"; });
+
+    legend.append("rect")
+        .attr("x", width - 18)
+        .attr("width", 18)
+        .attr("height", 18)
+        .style("fill", visualization.params().color);
+
+    legend.append("text")
+        .attr("x", width - 24)
+        .attr("y", 9)
+        .attr("dy", ".35em")
+        .style("text-anchor", "end")
+        .text(function(d) { return d;})
+
+/*
     // Export / Non-export / Similarity link
+    var complexity = ["Export", "Non-Export", "Similarity Link"];
+
+    var colors = d3.scale.quantize()
+        .range(["lightgray", "gray", "darkgray"]);
+
+    // Add corresponding graphical mark
+
+    var legend = d3.select('#viz')
+      .append('ul')
+        .attr('class', 'list-inline');
+
+    var keys = legend.selectAll('li.marks')
+        .data(colors.range());
+
+    keys.enter().append('li')
+        .attr('class', 'marks')
+        .style('border-top-color', String)
+        .text(function(d, i) {
+            var r = colors.invertExtent(d);
+            return complexity[i];
+            // return r[0];
+        });
+
+    // Add inline text
 
     // Complexity: Low / Med / High
     var complexity = ["Low", "Medium", "High"];
@@ -132,7 +177,7 @@ d3.json("../data/atlas_international_product_space.json", function(graph) {
     var colors = d3.scale.quantize()
         .range(["lightgray", "gray", "darkgray"]);
 
-    var legend = d3.select('#legend')
+    var legend = d3.select('#viz')
       .append('ul')
         .attr('class', 'list-inline');
 
@@ -148,6 +193,7 @@ d3.json("../data/atlas_international_product_space.json", function(graph) {
             // return r[0];
         });
 
+*/
   });
 
 });
