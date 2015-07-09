@@ -142,6 +142,7 @@
 
     }
 
+    // Flagging missing nodes with __missing true attribute
     if(typeof vars.nodes != "undefined" && vars.init) {
 
       // Merge node positions with products
@@ -161,6 +162,7 @@
 
         } else {
 
+          d.__missing = false;
           d.x = node.x;
           d.y = node.y;
 
@@ -168,12 +170,12 @@
 
       });
 
-      // Remove missing nodes
-      vars.new_data = vars.new_data.filter(function(d) {
-        return (typeof d.__missing === "undefined");
-      });
-
     }
+
+    // Remove missing nodes
+    vars.new_data = vars.new_data.filter(function(d) {
+     return !d.__missing; 
+    });
 
     // Aggregate data
     if(vars.set.length > 0 && vars.set[0][0] === '__aggregated' && vars.refresh) {
@@ -366,7 +368,7 @@
        // d[vars.var_y] = y0;
 
       });
-      
+
       vars.var_y = "y0";
 
     }
