@@ -286,5 +286,101 @@
 
     }
 
+
+    // Sorting option
+    if(vars.ui.legend) {
+
+      var width = vars.width;
+      var legend_offset = vars.width / 3;
+
+      var legend =  d3.select(vars.container).selectAll(".svg_legend").data(["legend"]).enter()
+        .append("svg")
+        .attr("class", "svg_legend")
+        .attr("width", vars.width)
+        .attr("height", 100)
+
+      var nb_color = 3; // visualization.params().color.domain().length
+
+      var items_mark_color = ["Low", "", "High"];
+      var x_offset = legend_offset / nb_color;
+
+      var legend_items_mark_color = legend.selectAll(".legend_items_mark_color")
+          .data(items_mark_color)
+        .enter().append("g")
+          .attr("class", "legend_items_mark_color")
+          .attr("transform", function(d, i) { return "translate(" + (i * x_offset) + ", 0)"; });
+
+      legend_items_mark_color.append("rect")
+          .attr("x", 0)
+          .attr("width", x_offset)
+          .attr("height", 18)
+          .style("fill", function(d, i) { return vars.color(i); });
+
+      legend_items_mark_color.append("text")
+          .attr("x", 5)
+          .attr("y", 9)
+          .attr("dy", ".35em")
+          .style("text-anchor", "start")
+          .text(function(d) { return d; });
+
+      // Item marks and different stylings
+      // Export / Non-export
+      var items_mark = ["Export", "Non-Export"];
+      x_offset = legend_offset / nb_color;
+
+      var legend_items_mark = legend.selectAll(".legend_items_mark")
+          .data(items_mark)
+        .enter().append("g")
+          .attr("class", "legend_items_mark")
+          .attr("transform", function(d, i) { return "translate(" + (legend_offset + i * x_offset) + ", 0)"; })
+          .on("mouseover", function(d) {
+            // Filter by attribute
+          });
+
+      legend_items_mark.append("circle")
+          .attr("cx", 10)
+          .attr("cy", 10)
+          .attr("r", 8)
+          .style("fill", vars.color(0))
+          .style("stroke-width", "5")
+          .style("stroke", function(d, i) { return vars.color(i); });
+
+      legend_items_mark.append("text")
+          .attr("x", 25)
+          .attr("y", 9)
+          .attr("dy", ".35em")
+          .style("text-anchor", "start")
+          .text(function(d) { return d;});
+
+      // Connect marks and different stylings
+      var connect_mark = ["Similarity link"];
+
+      var width = 100;
+      x_offset = legend_offset / vars.color.domain().length;
+
+      var legend_connect_mark = legend.selectAll(".legend_connect_mark")
+          .data(connect_mark)
+        .enter().append("g")
+          .attr("class", "legend_connect_mark")
+          .attr("transform", function(d, i) { return "translate(" + (2 * legend_offset + i * x_offset) + ", 0)"; });
+
+      legend_connect_mark.append("line")
+          .attr("x1", 0)
+          .attr("x2", 20)
+          .attr("y1", 20)
+          .attr("y2", 0)
+          .style("stroke-width", "4")
+          .style("stroke", "black");
+
+      legend_connect_mark.append("text")
+          .attr("x", 20)
+          .attr("y", 9)
+          .attr("dy", ".35em")
+          .style("text-anchor", "start")
+          .text(function(d) { return d;});
+
+    }
+
+
   });
 }
