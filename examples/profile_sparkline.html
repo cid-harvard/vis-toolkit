@@ -22,20 +22,37 @@
 
 d3.json("../data/colombia_products_location_year.json", function(error, departments) {
 
+  /*
+    "cog": 0.4454352986568881,
+    "coi": -0.24858148355392148,
+    "department_id": 930,
+    "distance": 0.8955484947890789,
+    "export_rca": 0,
+    "export_value": 0,
+    "import_value": 0,
+    "product_id": 114,
+    "year": 2012
+  */
+
+  departments.data.forEach(function(d) {
+
+    d.department_id = d.department_id + "";
+  })
+
   visualization = vistk.viz()
     .params({
       type: "sparkline",
       container: "#viz",
       width: 300,
       height: 100,
+      margin: {top: 10, right: 10, bottom: 10, left: 10},
       data: departments.data,
-      var_y: "export_value",
       var_x: "year",
+      var_y: "export_value",
       var_id: "department_id",
+      var_group: "department_id",
       time: {
-        var_time: "year", 
-        parse: d3.time.format("%Y").parse,
-        interval: [],
+        var_time: "year",
         current_time: "2012"
       },
       items: [{
@@ -44,15 +61,16 @@ d3.json("../data/colombia_products_location_year.json", function(error, departme
           type: "diamond",
           width: 10,
           height: 10
-        },{
-          type: "text",
-          rotate: "-50"
         }]
       }],
+      ui:{
+        default: true
+      },
       var_text: "department_id",
     });
 
   d3.select(visualization.container()).call(visualization);
 
 });
+
 </script>
