@@ -54,6 +54,8 @@ d3.json("../data/atlas_international_product_space.json", function(graph) {
       .params({
         type: "productspace",
         container: "#viz",
+        width: 800,
+        height: 500,
         nodes: graph.nodes,
         links: graph.edges,
         data: exports,
@@ -72,6 +74,10 @@ d3.json("../data/atlas_international_product_space.json", function(graph) {
           current_time: "2008",
           parse: function(d) { return d; },
           filter: "2008"
+        },
+        ui: {
+          default: false,
+          legend: true
         },
         selection: ["115", "116", "117", "118", "119", "120", "121", "122", "123", "124", "125"],
         highlight: ["115", "201", "202", "203", "204", "205", "206", "207", "208", "161"]

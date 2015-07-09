@@ -27,7 +27,6 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
       container: "#viz",
       width: 300,
       height: 100,
-      
       data: departments,
       var_y: "realgdp",
       var_group: "dept_name",
@@ -39,9 +38,27 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
       time: {
         var_time: "year", 
         parse: d3.time.format("%Y").parse,
-        interval: [],
         current_time: "2013"
       },
+      items: [{
+        marks: [{
+          type: "diamond",
+          rotate: "0"
+        }, {
+          var_mark: '__highlighted',
+          type: d3.scale.ordinal().domain([true, false]).range(["text", "none"]),
+          rotate: "0",
+          translate: [0, -15],
+          text_anchor: function(d) {
+            var parentGroup = d3.select(this.parentNode);
+            var parentSVG = d3.select(this.parentNode.parentNode.parentNode);
+            var parentX = d3.transform(parentGroup.attr("transform")).translate[0];
+            var svgWidth = +parentSVG.attr("width");
+            return parentX < svgWidth/2 ? "start": "end";
+          }
+        }]
+      }],
+/*
       items: [{
         attr: "name",
         marks: [{
@@ -53,12 +70,12 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
           rotate: "-50"
         }]
       }],
+*/
       var_x: "year",
       interpolate: "linear",
       var_text: "dept_name",
       filter: ["Antioquia", "Bogotá D. C."],
-      selection: ["Antioquia"],
-      highlight: ["Antioquia"]
+      selection: ["Antioquia"]
     });
 
   d3.select(visualization.container()).call(visualization);
