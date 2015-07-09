@@ -74,6 +74,10 @@
             params.text_anchor = "start";
           }
 
+          if(typeof params.translate === "undefined" || params.translate == null) {
+            params.translate = [0, 0];
+          }
+
           var items_mark_text = d3.select(this).selectAll(".items__mark__text.items_" + mark_id).data([d]);
 
           items_mark_text.enter().append("text")

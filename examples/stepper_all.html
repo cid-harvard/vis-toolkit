@@ -66,6 +66,12 @@ d3.json(file, function(error, countries) {
 
 d3.select("input[value='default']").on("click", function(d) {
 
+  d3.selectAll(".items__mark__diamond").remove();
+  d3.selectAll(".items__mark__rect").remove();
+  d3.selectAll(".items__mark__circle").remove();
+
+  visualization.params().refresh = true;
+
   visualization.params({
       type: "none"
     });
@@ -78,6 +84,10 @@ d3.select("input[value='grid']").on("click", function(d) {
 
   visualization.params().svg.selectAll(".x, .y").remove();
   d3.selectAll(".items__mark__diamond").remove();
+  d3.selectAll(".items__mark__rect").remove();
+  d3.selectAll(".items__mark__circle").remove();
+
+  visualization.params().refresh = true;
 
   visualization.params({
     type: "grid",
@@ -85,6 +95,8 @@ d3.select("input[value='grid']").on("click", function(d) {
       attr: "name",
       marks: [{
         type: "rect",
+        width: "10",
+        height: "10",
         rotate: "0"
       },{
         type: "text",
@@ -102,6 +114,8 @@ d3.select("input[value='dotplot']").on("click", function(d) {
   visualization.params().svg.selectAll(".x, .y").remove();
   d3.selectAll(".items__mark__rect").remove();
   d3.selectAll(".items__mark__circle").remove();
+
+  visualization.params().refresh = true;
 
   visualization.params({
       type: "dotplot",
@@ -127,6 +141,8 @@ d3.select("input[value='scatterplot']").on("click", function(d) {
   visualization.params().svg.selectAll(".x, .y").remove();
   d3.selectAll(".items__mark__rect").remove();
   d3.selectAll(".items__mark__diamond").remove();
+
+  visualization.params().refresh = true;
 
   visualization.params({
       type: "scatterplot",
@@ -159,15 +175,21 @@ d3.select("input[value='scatterplot']").on("click", function(d) {
 d3.select("input[value='barchart']").on("click", function(d) {
 
   d3.selectAll(".items__mark__diamond").remove();
+  d3.selectAll(".items__mark__rect").remove();
+  d3.selectAll(".items__mark__diamond").remove();
+  d3.selectAll(".items__mark__circle").remove();
+console.log("HERE")
+  visualization.params().refresh = true;
 
   visualization.params({
     type: "barchart",
-    var_group: "continent",
-    var_color: "continent",
+    var_id: 'name',
+    var_group: 'continent',
+    var_color: 'continent',
     var_x: 'name',
+    var_sort: 'name',
     var_y: 'avg_products',
-    var_color: "continent",
-    var_text: "name"
+    var_text: 'name',
   });
 
   d3.select(visualization.container()).call(visualization);
@@ -178,20 +200,22 @@ d3.select("input[value='treemap']").on("click", function(d) {
 
   visualization.params().svg.selectAll(".x, .y").remove();
   d3.selectAll(".items__mark__text").remove();
+  d3.selectAll(".items__mark__diamond").remove();
+  d3.selectAll(".items__mark__rect").remove();
+  d3.selectAll(".items__mark__diamond").remove();
+  d3.selectAll(".items__mark__circle").remove();
+
+  visualization.params().refresh = true;
 
   visualization.params({
     type: "treemap",
+    var_id: "name",
+    var_sort: "nb_products",
     var_group: "continent",
     var_color: "continent",
-    var_parent: "continent",
     title: "Countries",
     var_size: "nb_products",
-    var_text: "name",
-    mark: {
-      type: 'rect',
-      width: 10,
-      height: 10
-    }
+    var_text: "continent",
   });
 
   d3.select(visualization.container()).call(visualization);
@@ -200,7 +224,9 @@ d3.select("input[value='treemap']").on("click", function(d) {
 
 d3.select("input[value='geomap']").on("click", function(d) {
 
- visualization.params({
+  visualization.params().refresh = true;
+
+  visualization.params({
     type: "scatterplot",
     var_group: "continent",
     var_color: "continent",
@@ -230,22 +256,21 @@ d3.select("input[value='geomap']").on("click", function(d) {
 
 d3.select("input[value='linechart']").on("click", function(d) {
 
-  visualization = vistk.viz().params({
+  visualization.params().init = true;
+  visualization.params().refresh = true;
+
+
+  visualization.params({
     type: "linechart",
+    var_id: "name",
     var_group: "continent",
     var_color: "continent", // TODO: color by final ranking value..
-    title: "Line chart",
+    color: d3.scale.ordinal().domain(["Africa", "Americas", "Asia", "Europe", "Oceania"]).range(["#99237d", "#c72439", "#6bc145", "#88c7ed", "#dd9f98"]),
     var_text: "name",
     y_text: "ECI Rank",
-    var_y: "nb_products",
-    var_x: "year",
-    time: {
-      parse: function(d) { return d; },
-      var_time: 'year',
-      current_time: 2012      
-    },
-    selection: ["Japan", "Switzerland", "Germany"],
-    highlight: "France"
+    var_y: "rank",
+    var_x: 'year',
+    items: [],
   });
 
   d3.select(visualization.container()).call(visualization);
