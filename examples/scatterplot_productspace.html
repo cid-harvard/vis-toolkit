@@ -120,33 +120,94 @@ d3.json("../data/atlas_international_product_space.json", function(graph) {
 
     d3.select("#viz").call(visualization);
 
-    var width = 50;
+    var width = 200;
+    var x_offset = width / visualization.params().color.domain().length;
+
+    var items_mark_color = ["Low", "", "High"];
 
     var legend =  d3.select("#viz").append("svg")
-      .attr("width", 400)
+      .attr("width", width)
       .attr("height", 100)
     .selectAll(".legend")
-        .data(visualization.params().color.domain())
+        .data(items_mark_color)
       .enter().append("g")
         .attr("class", "legend")
-        .attr("transform", function(d, i) { return "translate(" + i * 50 + ", 0)"; });
+        .attr("transform", function(d, i) { return "translate(" + i * x_offset + ", 0)"; });
 
     legend.append("rect")
-        .attr("x", width - 18)
-        .attr("width", 18)
+        .attr("x", 0)
+        .attr("width", x_offset)
         .attr("height", 18)
-        .style("fill", visualization.params().color);
+        .style("fill", function(d, i) { return visualization.params().color(i); });
 
     legend.append("text")
-        .attr("x", width - 24)
+        .attr("x", 5)
         .attr("y", 9)
         .attr("dy", ".35em")
-        .style("text-anchor", "end")
-        .text(function(d) { return d;})
+        .style("text-anchor", "start")
+        .text(function(d) { return d;});
+
+    // Item marks and different stylings
+    // Export / Non-export
+    var items_mark = ["Export", "Non-Export"];
+
+    var width = 300;
+    var x_offset = width / visualization.params().color.domain().length;
+
+    var legend =  d3.select("#viz").append("svg")
+      .attr("width", width)
+      .attr("height", 100)
+    .selectAll(".legend")
+        .data(items_mark)
+      .enter().append("g")
+        .attr("class", "legend")
+        .attr("transform", function(d, i) { return "translate(" + i * x_offset + ", 0)"; });
+
+    legend.append("circle")
+        .attr("cx", 10)
+        .attr("cy", 10)
+        .attr("r", 10)
+        .style("fill", function(d, i) { return visualization.params().color(i); });
+
+    legend.append("text")
+        .attr("x", 25)
+        .attr("y", 9)
+        .attr("dy", ".35em")
+        .style("text-anchor", "start")
+        .text(function(d) { return d;});
+
+    // Connect marks and different stylings
+    var connect_mark = ["Similarity link"];
+
+    var width = 100;
+    var x_offset = width / visualization.params().color.domain().length;
+
+    var legend =  d3.select("#viz").append("svg")
+      .attr("width", width)
+      .attr("height", 100)
+    .selectAll(".legend")
+        .data(connect_mark)
+      .enter().append("g")
+        .attr("class", "legend")
+        .attr("transform", function(d, i) { return "translate(" + i * x_offset + ", 0)"; });
+
+    legend.append("line")
+        .attr("x1", 0)
+        .attr("x2", 20)
+        .attr("y1", 20)
+        .attr("y2", 0)
+        .style("stroke", "black");
+
+    legend.append("text")
+        .attr("x", 20)
+        .attr("y", 9)
+        .attr("dy", ".35em")
+        .style("text-anchor", "start")
+        .text(function(d) { return d;});
+
 
 /*
-    // Export / Non-export / Similarity link
-    var complexity = ["Export", "Non-Export", "Similarity Link"];
+
 
     var colors = d3.scale.quantize()
         .range(["lightgray", "gray", "darkgray"]);
