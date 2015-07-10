@@ -341,9 +341,12 @@
           .attr("cx", 10)
           .attr("cy", 10)
           .attr("r", 8)
-          .style("fill", vars.color(0))
-          .style("stroke-width", "5")
-          .style("stroke", function(d, i) { return vars.color(i); });
+          .attr("class", "items__mark__circle")
+          .classed("highlighted", function(d, i) {
+            return i == 0;
+          })
+          .style("stroke-width", "5");
+
 
       legend_items_mark.append("text")
           .attr("x", 25)
@@ -369,8 +372,8 @@
           .attr("x2", 20)
           .attr("y1", 20)
           .attr("y2", 0)
-          .style("stroke-width", "4")
-          .style("stroke", "black");
+          .attr("class", "connect__line")
+          .style("stroke-width", "4");
 
       legend_connect_mark.append("text")
           .attr("x", 20)
@@ -380,7 +383,6 @@
           .text(function(d) { return d;});
 
     }
-
 
   });
 }

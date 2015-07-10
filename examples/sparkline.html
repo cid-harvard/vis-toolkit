@@ -42,8 +42,7 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
       },
       items: [{
         marks: [{
-          type: "diamond",
-          rotate: "0"
+          type: "diamond"
         }, {
           var_mark: '__highlighted',
           type: d3.scale.ordinal().domain([true, false]).range(["text", "none"]),
@@ -58,19 +57,6 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
           }
         }]
       }],
-/*
-      items: [{
-        attr: "name",
-        marks: [{
-          type: "diamond",
-          width: 10,
-          height: 10
-        },{
-          type: "text",
-          rotate: "-50"
-        }]
-      }],
-*/
       var_x: "year",
       interpolate: "linear",
       var_text: "dept_name",
