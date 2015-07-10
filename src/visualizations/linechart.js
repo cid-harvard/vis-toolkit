@@ -23,11 +23,9 @@ vars.default_params["linechart"] = function(scope) {
     attr: "year",
     marks: [{
       type: "circle",
-      rotate: "0",
       fill: function(d) { return vars.color(params.accessor_items(d)[vars.var_color]); }
     }, {
-      type: "text",
-      rotate: "0"
+      type: "text"
     }]
   }];
 
@@ -36,7 +34,6 @@ vars.default_params["linechart"] = function(scope) {
     type: "time",
     marks: [{
       type: "path",
-      rotate: "0",
       stroke: function(d) { return vars.color(params.accessor_items(d)[vars.var_color]); },
       func: d3.svg.line()
            .interpolate(vars.interpolate)

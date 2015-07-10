@@ -14,14 +14,12 @@ vars.default_params["grid"] = function(scope) {
     name: "linear",
     func: d3.scale.linear()
           .domain([0, Math.ceil(Math.sqrt(vars.new_data.length))])
-          .range([scope.height - vars.margin.top - vars.margin.bottom, scope.margin.top])
+          .range([scope.height - scope.margin.top - scope.margin.bottom, scope.margin.top])
   }];
 
   params.items = [{
-    attr: "name",
     marks: [{
       type: "diamond",
-      rotate: "0"
     }, {
       type: "text",
       rotate: "-30"

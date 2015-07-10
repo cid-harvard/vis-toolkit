@@ -18,11 +18,9 @@ vars.default_params["ordinal_horizontal"] = function(scope) {
   params.items = [{
     attr: "name",
     marks: [{
-      type: "circle",
-      rotate: "0",
+      type: "circle"
     },{
-      type: "text",
-      rotate: "0"
+      type: "text"
     }]
   }];
 

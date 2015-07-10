@@ -19,7 +19,6 @@ vars.default_params["stackedbar"] = function(scope) {
     attr: "bar",
     marks: [{
       type: "rect",
-      rotate: "0",
       x: function() { return -vars.mark.width/2; },
      // y: function(d) { return - params.y_scale[0]["func"](d["y0"]); },
       height: function(d) { return params.y_scale[0]["func"](d[vars.var_height]); },

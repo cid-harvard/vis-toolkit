@@ -24,7 +24,6 @@ vars.default_params["piechart"] = function(scope) {
   params.items = [{
     marks: [{
       type: "arc",
-      rotate: "0",
       fill: function(d) { return vars.color(vars.accessor_items(d)[vars.var_color]); }
     }]
   }];

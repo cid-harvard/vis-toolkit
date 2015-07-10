@@ -23,7 +23,6 @@ vars.default_params["stacked"] = function(scope) {
     attr: vars.time.var_time,
     marks: [{
         type: "path",
-        rotate: "0",
         fill: function(d) { return vars.color(params.accessor_items(d)[vars.var_color]); },
         stroke: function(d) {
           return "black"; 
