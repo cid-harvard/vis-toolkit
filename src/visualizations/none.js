@@ -1,34 +1,29 @@
       case "none":
 
-        vars.params = {
+        var none_params = function(scope) {
 
-          x_scale: [{
-              name: "linear",
-              func: d3.scale.linear()
-                      .range([vars.margin.left, vars.width-vars.margin.left-vars.margin.right])
-                      .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_x]; })).nice()
-            }
-          ],
+          var params = {};
+          params.accessor_data = function(d) { return d; };
 
-          x_ticks: 10,
+          params.x_scale = [{
+            name: "linear",
+            func: d3.scale.linear()
+                    .range([scope.margin.left, scope.width - scope.margin.left - scope.margin.right])
+                    .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_x]; })).nice()
+          }];
 
-          y_scale: [{
-              name: "linear",
-              func: d3.scale.linear()
-                      .range([vars.height-vars.margin.top-vars.margin.bottom, vars.margin.top])
-                      .domain(d3.extent(vars.data, function(d) { return d[vars.var_y]; })).nice(),
-            }
-          ],
+          params.y_scale = [{
+            name: "linear",
+            func: d3.scale.linear()
+                    .range([scope.height - scope.margin.top - scope.margin.bottom, scope.margin.top])
+                    .domain(d3.extent(vars.data, function(d) { return d[vars.var_y]; })).nice(),
+          }];
 
-          r_scale: d3.scale.linear(),
+          params.r_scale = d3.scale.linear();
 
-          var_r: "total_piescatter",
+          params.var_r = "total_piescatter";
 
-          connect: {
-            type: null
-          },
-
-          items: [{
+          params.items = [{
             attr: "country",
             marks: [{
                 type: "circle",
@@ -53,11 +48,16 @@
                 rotate: "-30",
                 translate: null
             }]
-          }]
+          }];
+
+          return params;
 
         };
 
-        vars = vistk.utils.merge(vars, vars.params);
+        vars = vistk.utils.merge(vars, none_params(vars));
+
+        // LOAD USER PARAMS
+        vars.items = vistk.utils.merge(vars.items, vars.user_vars.items);
 
         // In case we don't have (x, y) coordinates for nodes'
         vars.force = d3.layout.force()
@@ -65,8 +65,12 @@
             .charge(-50)
             .linkDistance(10)
             .on("tick", tick)
-            .on("start", function(d) {})
-            .on("end", function(d) {})
+            .on("start", function(d) {
+              // TODO: register the clearAnimation here
+            })
+            .on("end", function(d) {
+              // TODO: un-register the clearAnimation here
+            })
 
         vars.var_x = 'x';
         vars.var_y = 'y';
@@ -109,8 +113,5 @@
                           });
 
         }
-
-        // Remove grid and axes
-        vars.svg.selectAll(".x, .y").remove();
 
       break;
