@@ -61,6 +61,7 @@
     x_grid_show: false,
     x_text: true,
     x_axis_translate: [0, 0],
+    x_invert: false,
 
     // SCATTERPLOT (INCLUDES DOTPLOT)
     y_type: "linear",
@@ -75,6 +76,7 @@
     y_grid_show: false,
     y_text: true,
     y_axis_translate: [0, 0],
+    y_invert: false,
 
     r_scale: null,
     r_cutoff: function(d) { return d > 30; },

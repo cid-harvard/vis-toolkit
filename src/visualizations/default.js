@@ -30,6 +30,14 @@
         
         }
 
+        if(vars.x_invert) {
+          vars.x_scale[0]["func"].range([vars.x_scale[0]["func"].range()[1], vars.x_scale[0]["func"].range()[0]]);
+        }
+
+        if(vars.y_invert) {
+          vars.y_scale[0]["func"].range([vars.y_scale[0]["func"].range()[1], vars.y_scale[0]["func"].range()[0]]);
+        }
+
         if(typeof vars.items !== "undefined" && vars.items[0] !== "undefined" && vars.type !== "stacked") {
 
           // PRE-UPDATE ITEMS
