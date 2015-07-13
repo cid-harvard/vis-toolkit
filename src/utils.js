@@ -86,7 +86,7 @@
 
           items_mark_text
               .classed("highlighted", function(d, i) { return d.__highlighted; })
-              .classed("selected", function(d, i) { return d.__selected; })   
+              .classed("selected", function(d, i) { return d.__selected; })
               .transition().duration(vars.duration)
               .attr("transform", "translate(" +  params.translate + ")rotate(" +  params.rotate + ")")
               .text(function(d) {
@@ -109,6 +109,7 @@
 
           items_mark_divtext.enter().append("foreignObject")
                  .classed("items__mark__divtext", true)
+                 .classed("items_" + mark_id, true)
                  .attr("width", function(d) { return (d.dx - vars.padding) + "px"; })
                  .attr("height", function(d) { return (d.dy - 2*vars.padding) + "px"; })
                .append("xhtml:body")
@@ -131,11 +132,12 @@
         var items_mark_rect = d3.select(this).selectAll(".items__mark__rect").data([d]);
 
         items_mark_rect.enter().append("rect")                            
+                  .classed("items__mark__rect", true)
+                  .classed("items_" + mark_id, true)
                   .attr("x", params.x)
                   .attr("y", params.y)
                   .attr("height", params.height)
                   .attr("width", params.width)
-                  .classed("items__mark__rect", true)
                   .attr("transform", "rotate(0)")
                   .style("fill", function(d) { return vars.color(vars.accessor_items(d)[vars.var_color]); });
 
@@ -210,13 +212,14 @@
           var items_mark_shape = d3.select(this).selectAll(".items__mark__shape").data([d]);
 
           items_mark_shape.enter().insert("path")
-                        .attr("class", "country")
-                        .classed('items__mark__shape', true)
-                        .attr("title", function(d,i) {
-                          active = d3.select(null); 
-                          return d.name; 
-                        })
-                        .on("click", clicked);
+              .classed('items__mark__shape', true)
+              .classed("items_" + mark_id, true)
+              .attr("class", "country")
+              .attr("title", function(d,i) {
+                active = d3.select(null); 
+                return d.name; 
+              })
+              .on("click", clicked);
 
           items_mark_shape
               .classed("highlighted", function(d, i) { return d.__highlighted; })
@@ -292,6 +295,8 @@
           var mark = d3.select(this).selectAll(".items__mark__arc").data([d]);
 
           mark.enter().append("path")
+              .classed("items_" + mark_id, true)
+              .classed("items__mark__arc", true)
               .attr("fill", function(d, i) {
                 return vars.color(vars.accessor_data(d)[vars.var_color]);
               })
@@ -317,6 +322,7 @@
 
           mark.enter().append('line')
               .classed('connect__line', true)
+              .classed("items_" + mark_id, true)
               .attr("x1", function(d) { return vars.x_scale[0]["func"](d.source.x); })
               .attr("y1", function(d) { return vars.y_scale[0]["func"](d.source.y); })
               .attr("x2", function(d) { return vars.x_scale[0]["func"](d.target.x); })
@@ -335,6 +341,7 @@
 
           mark.enter().append('line')
               .classed('mark__line_horizontal', true)
+              .classed("items_" + mark_id, true)
               .attr("x1", function(d) { return vars.x_scale[0]["func"].range()[0]; })
               .attr("y1", function(d) { return vars.y_scale[0]["func"](d[vars.var_y]); })
               .attr("x2", function(d) { return vars.x_scale[0]["func"].range()[1]; })
@@ -361,6 +368,7 @@
 
           mark.enter().append('path')
               .classed('connect__path', true)
+              .classed("items_" + mark_id, true)
               .style("fill", params.fill)
               .style("stroke", params.stroke);
 
@@ -484,6 +492,7 @@
           var mark = d3.select(this).selectAll(".items__mark__star").data([d]);
 
           mark.enter().append('path')
+              .classed("items_" + mark_id, true)
               .classed('items__mark__star', true)
               .attr('d', star);
 
@@ -500,6 +509,7 @@
           var mark = d3.select(this).selectAll('.items__mark__polygon').data([d]);
 
           mark.enter().append('polygon')
+              .classed("items_" + mark_id, true)
               .classed('items__mark__polygon', true)
               .attr('fill', '#ED4036')
               .attr('stroke-width', 0)
@@ -518,6 +528,7 @@
           var mark = d3.select(this).selectAll(".items__mark__marker").data([d]);
 
           mark.enter().append('path')
+              .classed("items_" + mark_id, true)
               .classed('items__mark__marker', true)
               .attr("fill", "#ED4036")
               .attr("stroke-width", 0)
@@ -544,26 +555,27 @@
           var mark = d3.select(this).selectAll(".items__mark__circle").data([d]);
 
           var mark_enter = mark.enter().append("circle")
-                      .classed("items__mark__circle", true)
-                      .attr("cx", 0)
-                      .attr("cy", 0)
-                      .attr("transform", "rotate(0)")
-                      .attr("r", function(d) {
-                        if(typeof params.var_r === "undefined") {
-                          return vars.radius;
-                        } else {
-                          var r_scale = d3.scale.linear()
-                            .range([vars.radius_min, vars.radius_max])
-                            .domain(d3.extent(vars.new_data, function(d) { return d[params.var_r]; }))
+              .classed("items_" + mark_id, true)
+              .classed("items__mark__circle", true)
+              .attr("cx", 0)
+              .attr("cy", 0)
+              .attr("transform", "rotate(0)")
+              .attr("r", function(d) {
+                if(typeof params.var_r === "undefined") {
+                  return vars.radius;
+                } else {
+                  var r_scale = d3.scale.linear()
+                    .range([vars.radius_min, vars.radius_max])
+                    .domain(d3.extent(vars.new_data, function(d) { return d[params.var_r]; }))
 
-                          return r_scale(d[params.var_r]);
-                        }
-                      })
-                      .attr("title", function(d,i) {
-                        active = d3.select(null); 
-                        return d.name; 
-                      })
-                      .call(utils.make_zoomable_on_click)
+                  return r_scale(d[params.var_r]);
+                }
+              })
+              .attr("title", function(d,i) {
+                active = d3.select(null); 
+                return d.name; 
+              })
+              .call(utils.make_zoomable_on_click)
 
           if(typeof params.fill !== "undefined") {
 
@@ -686,6 +698,9 @@
         .duration(1750)
         .style("stroke-width", 1.5 / scale + "px")
         .attr("transform", "translate(" + translate + ")scale(" + scale + ")");
+
+    d3.selectAll("circle").style("stroke-width", (1.5 / scale) + "px")
+    d3.selectAll("text").style("font-size", (1/scale) + "rem")
 
   }
 
