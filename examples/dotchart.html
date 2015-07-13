@@ -25,18 +25,12 @@ d3.json("../data/diversification_ubiquity_hs4_1995_2012.json", function(error, c
       var_color: 'continent',
       var_x: 'nb_products',
       var_y: 'avg_products',
-      var_r: 'nb_products',
-      var_share: "avg_products",
-      share_cutoff: function(d) { return d.avg_products > 30; },
       var_text: 'name_2char',
       time: {
         var_time: "year",
         current_time: "1995",
         parse: function(d) { return d; }
       },
-      x_scale: [{
-        domain: [0, 700]
-      }],
       items: function(param) {
         return param.time.points.map(function(time) {
           return {
@@ -53,8 +47,7 @@ d3.json("../data/diversification_ubiquity_hs4_1995_2012.json", function(error, c
         });
       },
       ui: {
-        default: true,
-        options: ["country", "continent"]
+        default: true
       },
       selection: ["France"],
       highlight: ["France", "Germany"],      
