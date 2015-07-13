@@ -55,8 +55,8 @@ d3.csv("../data/new_rankings2.csv", function(error, data) {
       var_text: "name",
       y_text: "ECI Rank",
       var_y: "rank",
+      y_invert: true,
       var_x: "year",
-      items: [],
       time: {
         parse: d3.time.format("%Y").parse,
         var_time: 'year',
