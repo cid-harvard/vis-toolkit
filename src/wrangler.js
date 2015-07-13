@@ -20,9 +20,6 @@
     // 2/ The metadata for each items
     if(vars.new_data === null || vars.refresh) {
 
-      vars.time.interval = d3.extent(vars.data, function(d) { return d[vars.time.var_time]; });
-      vars.time.points = d3.set(vars.data.map(function(d) { return d[vars.time.var_time]; })).values();
-
       // Get a copy of the whole dataset
       vars.new_data = vars.data;
 
@@ -37,6 +34,21 @@
         });
        
       }
+
+      if(typeof vars.time.filter_interval != "undefined" && vars.time.filter_interval.length == 2) {
+
+        if(vars.dev) { 
+          console.log("[vars.time.interval]", vars.time.filter_interval);
+        }
+
+        vars.new_data = vars.new_data.filter(function(d, i) {
+          return (d[vars.time.var_time] >= vars.time.filter_interval[0]) && (d[vars.time.var_time] <= vars.time.filter_interval[1]);
+        });
+       
+      }
+
+      vars.time.interval = d3.extent(vars.new_data, function(d) { return d[vars.time.var_time]; });
+      vars.time.points = d3.set(vars.data.map(function(d) { return d[vars.time.var_time]; })).values();
 
       // Filter data by attribute
       // TODO: not sure we should remove data, but add an attribute instead would better
@@ -182,7 +194,7 @@
     });
 
     // Aggregate data
-    if(vars.set.length > 0 && vars.set[0][0] === '__aggregated' && vars.refresh) {
+      if(typeof vars.set['__aggregated'] !== 'undefined' && vars.refresh) {
 
       if(vars.dev) { 
         console.log("[vars.aggregate]", vars.aggregate); 
@@ -305,9 +317,9 @@
           return aggregation;
         })
         .entries(vars.new_data);
-
+        console.log("AAAA", vars.set)
       // Transform key/value into values tab only
-      if(vars.set[0][1]) {
+      if(typeof vars.set['__aggregated'] !== 'undefined' && vars.set['__aggregated']) {
         vars.new_data = vars.new_data.concat(nested_data.map(function(d) { return d.values; }));
       } else {
         vars.new_data = nested_data.map(function(d) { return d.values; });

@@ -38,7 +38,8 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
       time: {
         var_time: "year", 
         parse: d3.time.format("%Y").parse,
-        current_time: "2013"
+        current_time: '2012',
+        filter_interval: ['2000', '2012']
       },
       items: [{
         marks: [{
@@ -54,6 +55,10 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
             var parentX = d3.transform(parentGroup.attr("transform")).translate[0];
             var svgWidth = +parentSVG.attr("width");
             return parentX < svgWidth/2 ? "start": "end";
+          },
+          text: function(d) {
+            var format = function(d) { return '$' + d3.format(".2s")(d); };
+            return d['dept_name'] + ' (' + format(d['realgdp']) + ')';
           }
         }]
       }],
