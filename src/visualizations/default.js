@@ -1,12 +1,8 @@
       default:
 
-       if(typeof vars.default_params[vars.type] === "undefined") {
-          console.log("No params for chart " + vars.type);
-       }
-
-        // TODO
-        // Contain the parameters in something different than global variable
-        // Use the utils.create_chart()
+        if(typeof vars.default_params[vars.type] === "undefined") {
+           console.log("No params for chart " + vars.type);
+        }
 
         if(vars.dev) { console.log("[init.vars.default]", vars); }
         
@@ -17,8 +13,14 @@
           scope = vars.default_params[vars.type](vars);
           vars = vistk.utils.merge(vars, scope);
 
-          if(vars.type !== "stacked")
-            vars.items = vistk.utils.merge(vars.items, vars.user_vars.items);
+          // Disabled since merging is more complex than that
+          //if(vars.type !== "stacked")
+          //  vars.items = vistk.utils.merge(vars.items, vars.user_vars.items);
+
+          // Enabling a more simple option
+          if(typeof vars.user_vars.items !== "undefined") {
+            vars.items = vars.user_vars.items;
+          }
 
         } else {
 
@@ -40,52 +42,62 @@
 
         if(typeof vars.items !== "undefined" && vars.items[0] !== "undefined" && vars.type !== "stacked") {
 
-          // PRE-UPDATE ITEMS
-          var gItems = vars.svg.selectAll(".mark__group")
-                          .data(vars.new_data, function(d, i) { return vars.accessor_data(d)[vars.var_id]; });
+          vars.items.forEach(function(item, index_item) {
 
-          // ENTER ITEMS
-          var gItems_enter = gItems.enter()
-                          .insert("g", ":first-child")
-                          .attr("transform", function(d, i) {
-                            return "translate(" + vars.x_scale[0]["func"](vars.accessor_data(d)[vars.var_x]) + ", " + vars.y_scale[0]["func"](vars.accessor_data(d)[vars.var_y]) + ")";
-                          });
+            // PRE-UPDATE ITEMS
+            var gItems = vars.svg.selectAll(".mark__group")
+                            .data(vars.new_data, function(d, i) { 
+                              return vars.accessor_data(d)[vars.var_id]; 
+                            });
 
-           // APPEND AND UPDATE ITEMS MARK
-            vars.items[0].marks.forEach(function(params) {
-          
-              if(typeof params.filter == "undefined")
-                params.filter = function() { return true; };
+            // ENTER ITEMS
+            var gItems_enter = gItems.enter()
+                            .insert("g", ":first-child")
+                            .attr("transform", function(d, i) {
+                              return "translate(" + vars.x_scale[0]["func"](vars.accessor_data(d)[vars.var_x]) + ", " + vars.y_scale[0]["func"](vars.accessor_data(d)[vars.var_y]) + ")";
+                            });
 
-              gItems_enter.filter(params.filter).call(utils.draw_mark, params);
-              gItems.filter(params.filter).call(utils.draw_mark, params);
-            });
+             // APPEND AND UPDATE ITEMS MARK
+              item.marks.forEach(function(params, index_mark) {
+            
+                if(typeof params.filter == "undefined")
+                  params.filter = function() { return true; };
 
-            // Bind events to groups after marks have been created
-            gItems.each(utils.items_group);
+                // Supporting multipe similar elements
+                params._mark_id = index_item + "_" + index_mark;
 
-            /* Should be as below but current params don't match this format
-
-              // APPEND AND UPDATE ITEMS MARK
-              vars.items.forEach(function(item) {
-                item.marks.forEach(function(params) {
-                  gItems_enter.call(utils.draw_mark, params);
-                  gItems.call(utils.draw_mark, params);
-                });
+                gItems_enter.filter(params.filter).call(utils.draw_mark, params);
+                gItems.filter(params.filter).call(utils.draw_mark, params);
               });
 
-            */
+              // Bind events to groups after marks have been created
+              gItems.each(utils.items_group);
 
-          // POST-UPDATE ITEMS GROUPS
-          vars.svg.selectAll(".mark__group")
-                          .transition()
-                          .duration(vars.duration)
-                          .attr("transform", function(d, i) {
-                            return "translate(" + vars.x_scale[0]["func"](vars.accessor_data(d)[vars.var_x]) + ", " + vars.y_scale[0]["func"](vars.accessor_data(d)[vars.var_y]) + ")";
-                          });
+              /* Should be as below but current params don't match this format
 
-          // ITEMS EXIT
-          var gItems_exit = gItems.exit().remove();
+                // APPEND AND UPDATE ITEMS MARK
+                vars.items.forEach(function(item) {
+                  item.marks.forEach(function(params) {
+                    gItems_enter.call(utils.draw_mark, params);
+                    gItems.call(utils.draw_mark, params);
+                  });
+                });
+
+              */
+
+            // POST-UPDATE ITEMS GROUPS
+            vars.svg.selectAll(".mark__group")
+                            .transition()
+                            .duration(vars.duration)
+                            .attr("transform", function(d, i) {
+                              return "translate(" + vars.x_scale[0]["func"](vars.accessor_data(d)[vars.var_x]) + ", " + vars.y_scale[0]["func"](vars.accessor_data(d)[vars.var_y]) + ")";
+                            });
+
+            // ITEMS EXIT
+            var gItems_exit = gItems.exit().remove();
+
+
+          });
 
           if(vars.zoom.length > 0) {
 
