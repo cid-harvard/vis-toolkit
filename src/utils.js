@@ -554,8 +554,28 @@
                       })
                       .call(utils.make_zoomable_on_click)
 
-          if(vars.var_color !== null)
-            mark_enter.style("fill", function(d) { return vars.color(vars.accessor_items(d)[vars.var_color]); });
+          if(typeof params.fill !== "undefined") {
+
+            mark_enter.style("fill", function(d) {
+              return params.fill()(vars.accessor_items(d)[vars.var_color]); 
+            });
+
+          } else if(vars.var_color !== null) {
+
+            mark_enter.style("fill", function(d) { 
+              return vars.color(vars.accessor_items(d)[vars.var_color]); 
+            });
+          
+          }
+
+          if(typeof params.stroke !== "undefined") {
+
+            mark_enter.style("stroke", function(d) {
+              return params.stroke(vars.accessor_items(d)); 
+            })
+            .style("stroke-width", '1.5px')
+
+          }
 
           mark
              // .attr("r", function(d) {return params.radius; })
