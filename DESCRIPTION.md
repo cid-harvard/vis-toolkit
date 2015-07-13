@@ -239,6 +239,7 @@ Map of countries that can be colored and labeled.
 * Circles maps http://bl.ocks.org/curran/752b97cef3f880a813ab
 
 * Squared maps http://www.martingrandjean.ch/swissleaks-map/
+* Timezones map http://cartographerswithoutborders.org/post/54754735827/just-time-zones
 
 * Choropleth map (using geojson)
 * Some flow map or graph such as [pivotgraph](http://bl.ocks.org/mbostock/4343153)
@@ -271,12 +272,22 @@ Horizontal scatterplot without a Y-axis:
 * Dot chart http://bl.ocks.org/nrabinowitz/2034281
 * Dots transition http://www.economist.com/blogs/graphicdetail/2015/06/daily-chart-14?fsrc=permar|image2
 
+* Alternative designs for dotplots http://thesocietypages.org/graphicsociology/tag/time-line/
 
 #### Dot Chart
 
 * http://www.nytimes.com/interactive/2013/03/29/sports/baseball/Strikeouts-Are-Still-Soaring.html?_r=1&
 
-* X-axis
+* Line aggreation for dots http://fivethirtyeight.com/datalab/change-doesnt-usually-come-this-fast/
+
+
+
+#### Box plot 
+
+* http://bl.ocks.org/mbostock/4061502
+
+* Show distribution http://www.theatlantic.com/business/archive/2015/07/college-major-rich-families-liberal-arts/397439/
+
 
 ### Matrix
 
@@ -324,8 +335,6 @@ Combination of a matrix with nested scatterplots within each cell. The matrix be
 Just some kind of bar chart combined with a binning function
 
 * Histogram with line chart overlay
-
-* Box plot http://bl.ocks.org/mbostock/4061502
 
 ### Stacked Graph
 
