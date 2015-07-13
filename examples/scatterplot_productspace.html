@@ -100,7 +100,7 @@ d3.json("../data/atlas_international_product_space.json", function(graph) {
         data: exports,
         var_x: 'x',
         var_y: 'y',
-        var_color: 'category',
+        var_color: 'coi',
         color: d3.scale.ordinal().domain([0, 1, 2]).range(["#DDDDDD", "#AAAAAA", "#777777"]),
         var_group: 'category',
         var_share: "export_rca",
@@ -117,7 +117,7 @@ d3.json("../data/atlas_international_product_space.json", function(graph) {
           marks: [{
             type: "circle",
             rotate: "0",
-            var_color: 'category',
+            var_color: 'coi',
             var_r: "export_value"
           }, {
             var_mark: '__selected',

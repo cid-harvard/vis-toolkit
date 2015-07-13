@@ -104,8 +104,9 @@
         else
           d.__filtered = true;
 
-        if(vars.highlight.indexOf(item_id) < 0)
+        if(vars.highlight.indexOf(item_id) < 0) {
           d.__highlighted = false;
+        }
         else
           d.__highlighted = true;
 
