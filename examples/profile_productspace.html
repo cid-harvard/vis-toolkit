@@ -62,6 +62,7 @@ d3.json("../data/atlas_international_product_space.json", function(graph) {
         var_x: 'x',
         var_y: 'y',
         var_id: "product_id",
+        var_text: 'product_id',
 //        var_r: "export_value",
         var_color: 'coi',
         color: d3.scale.ordinal().domain([0, 1, 2]).range(["#DDDDDD", "#AAAAAA", "#777777"]),
@@ -69,6 +70,12 @@ d3.json("../data/atlas_international_product_space.json", function(graph) {
           attr: "name",
           marks: [{
             type: "circle"
+          }, {
+            var_mark: '__highlighted',
+            type: d3.scale.ordinal().domain([true, false]).range(["text", "none"])
+          }, {
+            var_mark: '__aggregated',
+            type: d3.scale.ordinal().domain([true, false]).range(["star", "none"])
           }]
         }],
         time: {
@@ -83,7 +90,8 @@ d3.json("../data/atlas_international_product_space.json", function(graph) {
         },
         selection: ["115", "116", "117", "118", "119", "120", "121", "122", "123", "124", "125"],
         highlight: ["115", "201", "202", "203", "204", "205", "206", "207", "208", "161"]
-      });
+      })
+      .set('__aggregated', true);
 
     d3.select("#viz").call(visualization);
 

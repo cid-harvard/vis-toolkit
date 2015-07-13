@@ -82,88 +82,136 @@ path.state {
 <div id="legend"></div>
 <script>
 
-d3.json("../data/atlas_international_product_space.json", function(graph) {
+//d3.json("../data/atlas_international_product_space.json", function(graph) {
 
-  d3.json("../data/col_dept_exports_3.json", function(exports) {
+//  d3.json("../data/col_dept_exports_3.json", function(exports) {
 /*
     // cog: 0.4208957237122138 coi: 0.8067728413148435 distance: 0.8179699425486985 
     // export_rca: 0.04472251026943858 export_value: 29700 id: 2479 import_value: 3278477
     // product_id: "115" year: 2008  
 */
-    visualization = vistk.viz()
-      .params({
-        type: "productspace",
-        container: "#viz",
-        width: 800,
-        height: 500,
-        nodes: graph.nodes,
-        links: graph.edges,
-        data: exports,
-        var_x: 'x',
-        var_y: 'y',
-        var_color: 'coi',
-        color: d3.scale.ordinal().domain([0, 0.5, 1]).range(["#DDDDDD", "#AAAAAA", "#777777"]),
-        var_group: 'category',
-        var_share: "export_rca",
-        share_cutoff: function(d) { return d.export_rca > 1; },
-        x_axis_show: false,
-        x_grid_show: false,
-        y_axis_show: false,
-        y_grid_show: false,
-        y_invert: true,
-        radius: 4,
-        var_id: "product_id",
-        r_cutoff: function(d) { return d.export_rca < 1; },
-        items: [{
-          attr: "name",
-          marks: [{
-            var_mark: '__selected',
-            type: d3.scale.ordinal().domain([true, false]).range(["star", "circle"]),
-            fill: d3.scale.linear()
-                      .domain(d3.extent(exports, function(d) { return d['coi']; }))
-                      .range(["#DDDDDD", "#AAAAAA", "#777777"])
-            ,
-            stroke: function(d) { 
-                    return d['export_rca'] > 1 ? "black": "none";
-            }
-          }, {
-          var_mark: '__highlighted',
-          type: d3.scale.ordinal().domain([true, false]).range(["text", "none"]),
-          rotate: "0"
-          }]
-        }],
-        /*
-        mark: {
-          type: "circle",
-          radius: function(d) { var c = d3.scale.linear()
-                  .domain(d3.extent(exports, function(d) { return vars.accessor_values(d).export_rca; }))
-                  .range([2, 10]);
-                  return c(d["export_rca"]);
-          },
-          fill: function(d) { 
-                  var c = d3.scale.linear()
-                    .domain(d3.extent(exports, function(d) { return vars.accessor_values(d).export_rca; }))
-                    .range(["lightgray", "red"]);
-                  return c(d["export_rca"]);
-          }
-        },
-        */
-        time: {
-          var_time: "year", 
-          current_time: "2008",
-          parse: function(d) { return d; },
-          filter: "2008"
-        },
-        ui: {
-          default: false,
-          legend: true
-        },
-        title: "Product Space Colombia Exports",
-        selection: ["115", "116", "117", "118", "119", "120", "121", "122", "123", "124", "125"],
-        highlight: ["115"]
-      });
 
-    d3.select("#viz").call(visualization);
+d3.json("../data/colombia_product_space.json", function(graph) {
+  d3.json("../data/colombia_products_location930_2012.json", function(exports) {
+    d3.json("../data/colombia_products_metadata.json", function(metadata) {
+  /* 
+  
+    PRODUCT
+      "cog": 0.0,
+      "coi": 181.64991760253906,
+      "department_id": 930,
+      "distance": 0.7403764128684998,
+      "export_rca": 4.932032108306885,
+      "export_value": 13300384,
+      "import_value": null,
+      "product_id": 420,
+      "year": 2012
+
+    METADATA
+      "code": "106",
+      "description_en": null,
+      "description_es": null,
+      "id": 0,
+      "level": "section",
+      "name_en": "Animal & Animal Products",
+      "name_es": null,
+      "name_short_en": null,
+      "name_short_es": null,
+      "parent_id": null 
+  */
+
+      // Create quasi-dummy categories
+      exports.data.forEach(function(d) {
+
+        var m = metadata.data.filter(function(e) {
+          return e.id == d.product_id;
+        })[0];
+
+        d["name_en"] = m["name_en"];
+       // d.category = d.product_id.slice(0, 1);
+      })
+
+      visualization = vistk.viz()
+        .params({
+          dev: true,
+          type: "productspace",
+          container: "#viz",
+          width: 800,
+          height: 500,
+          nodes: graph.nodes,
+          links: graph.edges,
+          data: exports.data,
+          var_x: 'x',
+          var_y: 'y',
+          var_color: 'coi',
+          color: d3.scale.ordinal().domain([0, 0.5, 1]).range(["#DDDDDD", "#AAAAAA", "#777777"]),
+          var_group: 'category',
+          var_share: "export_rca",
+          share_cutoff: function(d) { return d.export_rca > 1; },
+          x_axis_show: false,
+          x_grid_show: false,
+          y_axis_show: false,
+          y_grid_show: false,
+          y_invert: true,
+          radius: 4,
+          var_id: "product_id",
+          var_text: 'name_en',
+          r_cutoff: function(d) { return d.export_rca < 1; },
+          items: [{
+            attr: "name",
+            marks: [{
+              var_mark: '__selected',
+              type: d3.scale.ordinal().domain([true, false]).range(["star", "circle"]),
+              fill: d3.scale.linear()
+                        .domain(d3.extent(exports, function(d) { return d['coi']; }))
+                        .range(["#DDDDDD", "#AAAAAA", "#777777"])
+              ,
+              stroke: function(d) { 
+                      return d['export_rca'] > 1 ? "black": "none";
+              }
+            }, {
+              var_mark: '__highlighted',
+              type: d3.scale.ordinal().domain([true, false]).range(["text", "none"])
+            }, {
+              var_mark: '__selected',
+              type: d3.scale.ordinal().domain([true, false]).range(["text", "none"])
+            }]
+          }],
+          /*
+          mark: {
+            type: "circle",
+            radius: function(d) { var c = d3.scale.linear()
+                    .domain(d3.extent(exports, function(d) { return vars.accessor_values(d).export_rca; }))
+                    .range([2, 10]);
+                    return c(d["export_rca"]);
+            },
+            fill: function(d) { 
+                    var c = d3.scale.linear()
+                      .domain(d3.extent(exports, function(d) { return vars.accessor_values(d).export_rca; }))
+                      .range(["lightgray", "red"]);
+                    return c(d["export_rca"]);
+            }
+          },
+          */
+          time: {
+            var_time: "year", 
+            current_time: "2012",
+            parse: function(d) { return d; },
+            filter: "2012"
+          },
+          ui: {
+            default: false,
+            legend: true
+          },
+          title: "Product Space Colombia Exports",
+          selection: ["115", "116", "117", "118", "119", "120", "121", "122", "123", "124", "125"],
+          highlight: ["115"]
+        });
+
+      d3.select("#viz").call(visualization);
+
+
+    });
 
   });
 
