@@ -3,6 +3,7 @@ vars.default_params["slopegraph"] = function(scope) {
   var params = {};
 
   params.accessor_values = function(d) { return d.values; };
+  params.accessor_items = function(d) { return d.values; };
 
   params.x_scale = [{
     name: "linear",
@@ -19,19 +20,25 @@ vars.default_params["slopegraph"] = function(scope) {
   }];
 
   params.items = [{
-    attr: "name",
+    attr: "right_label",
     marks: [{
-      type: "rect",
-      rotate: "0",
-      fill: function(d) { return vars.color(vars.accessor_items(d)[vars.var_color]); }
-    }, {
-      type: "text", // Text on the right (newest)
-      rotate: "0"
-    }, {
-      type: "text", // Text on the left (oldest)
-      rotate: "0",
+      type: "text",
+      text_anchor: "start"
+    }]
+  }, {
+    attr: "left_label",
+    accessor_data: function(d) {
+      console.log("DD", d)
+      var r = d.values.filter(function(e) {
+        return e.year == "2003";
+      })[0];
+      return r;
+    },
+    marks: [{
+      type: "text",
       text_anchor: "end",
-      translate: [-(scope.width-scope.margin.left-scope.margin.right-scope.margin.left+20), 0]
+      translate: [- 20, 0]
+      // translate: [-(scope.width-scope.margin.left-scope.margin.right-scope.margin.left+20), 0]
     }]
   }];
 
