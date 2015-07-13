@@ -58,7 +58,7 @@
         params.rotate = 0;
       }
 
-      if(typeof params.translate === "undefined") {
+      if(typeof params.translate === "undefined" || params.translate == null) {
         params.translate = [0, 0];
       }
 
@@ -71,10 +71,6 @@
 
           if(typeof params.text_anchor === "undefined") {
             params.text_anchor = "start";
-          }
-
-          if(typeof params.translate === "undefined" || params.translate == null) {
-            params.translate = [0, 0];
           }
 
           var items_mark_text = d3.select(this).selectAll(".items__mark__text.items_" + mark_id).data([d]);
@@ -305,9 +301,9 @@
                 else
                   return 1;
               })          
-            .attr("d", function(d) {
-              return arc(d);
-            });
+              .attr("d", function(d) {
+                return arc(d);
+              });
 
         break;
 
@@ -354,6 +350,13 @@
 
           var this_accessor_values = function(d) { return d.values; };
           
+          if(typeof params['func'] == 'undefined') {
+              params['func'] = d3.svg.line()
+               .interpolate('linear')
+               .x(function(d) { return vars.x_scale[0]["func"](d[vars.var_x]); })
+               .y(function(d) { return vars.y_scale[0]["func"](d[vars.var_y]); });
+          }
+
           var mark = d3.select(this).selectAll(".connect__path").data([d]);
 
           mark.enter().append('path')
@@ -366,7 +369,8 @@
               .classed("selected", function(e, j) { return e.__selected; })
               .style("fill", params.fill)
               .style("stroke", params.stroke)
-              .attr('d', function(e) { return params["func"](this_accessor_values(e)); });
+              .attr('d', function(e) {
+               return params["func"](this_accessor_values(e)); });
 
         break;
 
