@@ -317,7 +317,7 @@
           return aggregation;
         })
         .entries(vars.new_data);
-        console.log("AAAA", vars.set)
+
       // Transform key/value into values tab only
       if(typeof vars.set['__aggregated'] !== 'undefined' && vars.set['__aggregated']) {
         vars.new_data = vars.new_data.concat(nested_data.map(function(d) { return d.values; }));
@@ -326,6 +326,11 @@
       }
 
     }
+
+    vars.set.forEach(function(d, i) {
+      // console.log("SET", d)
+    })
+    
 
     if(typeof vars.var_sort !== "undefined") {
 
@@ -514,7 +519,7 @@
 
     }
 
-    if(vars.type == "piechart") {
+    if(vars.type == "piechart" && vars.refresh) {
 
       vars.pie = d3.layout.pie().value(function(d) { return d[vars.var_share]; });
       vars.new_data = vars.pie(vars.new_data);
