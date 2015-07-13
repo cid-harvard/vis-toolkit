@@ -484,6 +484,27 @@
 
         break;
 
+        case "polygon":
+
+          var mark = d3.select(this).selectAll('.items__mark__polygon').data([d]);
+
+          mark.enter().append('polygon')
+              .classed('items__mark__polygon', true)
+              .attr('fill', '#ED4036')
+              .attr('stroke-width', 0)
+              .attr('points','4.569,2.637 0,5.276 -4.569,2.637 -4.569,-2.637 0,-5.276 4.569,-2.637');
+
+          mark
+              .classed('highlighted', function(d, i) { return d.__highlighted; })
+              .classed('selected', function(d, i) { return d.__selected; });
+
+          mark.exit().remove();
+
+        break;
+
+
+
+
         case "marker":
 
           var mark = d3.select(this).selectAll(".items__mark__marker").data([d]);
