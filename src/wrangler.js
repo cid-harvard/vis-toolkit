@@ -184,7 +184,9 @@
     // Aggregate data
     if(vars.set.length > 0 && vars.set[0][0] === '__aggregated' && vars.refresh) {
 
-      if(vars.dev) { console.log("[vars.aggregate]", vars.aggregate); }
+      if(vars.dev) { 
+        console.log("[vars.aggregate]", vars.aggregate); 
+      }
 
       // Do the nesting
       // Should make sure it works for a generc dataset
@@ -305,10 +307,11 @@
         .entries(vars.new_data);
 
       // Transform key/value into values tab only
-      if(vars.set[0][1])
+      if(vars.set[0][1]) {
         vars.new_data = vars.new_data.concat(nested_data.map(function(d) { return d.values; }));
-      else
+      } else {
         vars.new_data = nested_data.map(function(d) { return d.values; });
+      }
 
     }
 

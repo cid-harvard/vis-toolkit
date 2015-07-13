@@ -502,9 +502,6 @@
 
         break;
 
-
-
-
         case "marker":
 
           var mark = d3.select(this).selectAll(".items__mark__marker").data([d]);
