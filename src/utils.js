@@ -557,7 +557,7 @@
           if(typeof params.fill !== "undefined") {
 
             mark_enter.style("fill", function(d) {
-              return params.fill()(vars.accessor_items(d)[vars.var_color]); 
+              return params.fill(vars.accessor_items(d)[vars.var_color]); 
             });
 
           } else if(vars.var_color !== null) {

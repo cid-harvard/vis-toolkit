@@ -23,7 +23,7 @@ vars.default_params["linechart"] = function(scope) {
     attr: "year",
     marks: [{
       type: "circle",
-      fill: function(d) { return vars.color(params.accessor_items(d)[vars.var_color]); }
+     // fill: function(d) { return vars.color(params.accessor_items(d)[vars.var_color]); }
     }, {
       type: "text"
     }],

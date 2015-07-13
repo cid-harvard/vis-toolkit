@@ -119,11 +119,10 @@ d3.json("../data/atlas_international_product_space.json", function(graph) {
           marks: [{
             var_mark: '__selected',
             type: d3.scale.ordinal().domain([true, false]).range(["star", "circle"]),
-            fill: function(d) { 
-                    return d3.scale.linear()
+            fill: d3.scale.linear()
                       .domain(d3.extent(exports, function(d) { return d['coi']; }))
-                      .range(["#DDDDDD", "#AAAAAA", "#777777"]);
-            },
+                      .range(["#DDDDDD", "#AAAAAA", "#777777"])
+            ,
             stroke: function(d) { 
                     return d['export_rca'] > 1 ? "black": "none";
             }
