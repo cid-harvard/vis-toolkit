@@ -1,7 +1,7 @@
 
   utils.items_group = function(d, i) {
 
-    d3.select(this).attr("class", "mark__group")
+    d3.select(this).attr("class", "mark__group_" + d._index_item)
                     .classed("highlighted", function(d, i) { return d.__highlighted; })
                     .classed("selected", function(d, i) { return d.__selected; })
                     .on("mouseover",function(d) {
@@ -30,6 +30,7 @@
                     .on("click", function(d) {
                        vars.evt.call("selection", d);
                     });
+
   }
   /*
     Main function to draw marks 
@@ -60,6 +61,9 @@
       if(typeof params.translate === "undefined") {
         params.translate = [0, 0];
       }
+
+      // Use the global accessor
+      var accessor_data = vars.accessor_data;
 
       switch(params_type) {
 
