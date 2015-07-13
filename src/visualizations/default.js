@@ -40,6 +40,12 @@
           vars.y_scale[0]["func"].range([vars.y_scale[0]["func"].range()[1], vars.y_scale[0]["func"].range()[0]]);
         }
 
+        // In case items are programmatically generated
+        if(typeof vars.items == "function") {
+          console.log(vars.items(vars))
+          vars.items = vars.items(vars);
+        }
+
         if(typeof vars.items !== "undefined" && vars.items[0] !== "undefined" && vars.type !== "stacked") {
 
           vars.items.forEach(function(item, index_item) {
