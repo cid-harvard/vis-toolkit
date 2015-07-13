@@ -26,7 +26,12 @@ vars.default_params["linechart"] = function(scope) {
       fill: function(d) { return vars.color(params.accessor_items(d)[vars.var_color]); }
     }, {
       type: "text"
-    }]
+    }],
+    accessor_data: function(d) {
+      return d.values.filter(function(e) {
+        return e.year == vars.time.current_time;
+      })[0];
+    }
   }];
 
   params.connect = [{

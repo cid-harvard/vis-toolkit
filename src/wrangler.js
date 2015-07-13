@@ -81,6 +81,9 @@
           v[vars.var_y] = d[vars.var_y];
           v[vars.var_x] = d[vars.var_x];
 
+          // TODO: this is metadata, should not be duplicated every year
+          v[vars.var_id] = d[vars.var_id];
+
           /* Not needed anymore
           if(typeof vars.items !== "undefined" && JSON.stringify(vars.items) != '{}') {
 
@@ -239,6 +242,9 @@
             // Init values
             d[vars.var_y] = 0;
             d[vars.var_r] = 0;
+
+            // TODO: this is metadata, should not be duplicated every year
+            d[vars.var_id] = leaves[0].values[i][vars.var_id];
 
             // Time var
             d[vars.time.var_time] = leaves[0].values[i][vars.time.var_time];

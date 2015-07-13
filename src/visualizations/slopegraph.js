@@ -28,11 +28,9 @@ vars.default_params["slopegraph"] = function(scope) {
   }, {
     attr: "left_label",
     accessor_data: function(d) {
-      console.log("DD", d)
-      var r = d.values.filter(function(e) {
+      return d.values.filter(function(e) {
         return e.year == "2003";
       })[0];
-      return r;
     },
     marks: [{
       type: "text",
