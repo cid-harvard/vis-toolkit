@@ -1,6 +1,6 @@
 
   chart.set = function(attr, concat) {
-    vars.set.push([attr, concat]);
+    vars.set[attr] = concat;
     return chart;
   };
 

@@ -94,7 +94,13 @@
               .transition().duration(vars.duration)
               .attr("transform", "translate(" +  params.translate + ")rotate(" +  params.rotate + ")")
               .text(function(d) {
-                return vars.accessor_data(d)[vars.var_text]; 
+
+                if(typeof params.text !== "undefined") {
+                  return params.text(d);
+                } else {
+                  return vars.accessor_data(d)[vars.var_text]; 
+                }
+
               });
 
         items_mark_text.exit().remove();

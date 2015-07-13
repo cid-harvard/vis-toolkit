@@ -167,13 +167,13 @@
 
                     if(d === vars.var_id) {
 
-                      vars.set = [];
+                      delete vars.set['__aggregated'];
                       vars.refresh = true;
                       d3.select(vars.container).call(vars.this_chart)
 
                     } else if(d === vars.var_group) {
 
-                      vars.this_chart.set('__aggregated', false);
+                      vars.set['__aggregated'] = false;
                       vars.refresh = true;
                       d3.select(vars.container).call(vars.this_chart)
 
