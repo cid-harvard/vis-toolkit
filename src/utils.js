@@ -144,12 +144,13 @@
                   .style("fill", function(d) { return vars.color(vars.accessor_items(d)[vars.var_color]); });
 
         items_mark_rect
+            .classed("highlighted", function(d, i) { return d.__highlighted; })
+            .classed("selected", function(d, i) { return d.__selected; })
+            .transition().duration(vars.duration)
             .attr("x", params.x)
             .attr("y", params.y)            
             .attr("height", params.height)
-            .attr("width", params.width)
-            .classed("highlighted", function(d, i) { return d.__highlighted; })
-            .classed("selected", function(d, i) { return d.__selected; });
+            .attr("width", params.width);
 
         items_mark_rect.exit().remove();
 
