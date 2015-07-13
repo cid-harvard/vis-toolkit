@@ -286,12 +286,16 @@
 
     }
 
-
-    // Sorting option
+    // Legend for product space
     if(vars.ui.legend) {
 
       var width = vars.width;
-      var legend_offset = vars.width / 3;
+      var legend_offset = vars.width / 4;
+
+      var nb_color = 3; // visualization.params().color.domain().length
+
+      var items_mark_color = ["Low", "", "High"];
+      var x_offset = legend_offset / nb_color;
 
       var legend =  d3.select(vars.container).selectAll(".svg_legend").data(["legend"]).enter()
         .append("svg")
@@ -299,16 +303,20 @@
         .attr("width", vars.width)
         .attr("height", 100)
 
-      var nb_color = 3; // visualization.params().color.domain().length
-
-      var items_mark_color = ["Low", "", "High"];
-      var x_offset = legend_offset / nb_color;
+      var legend_items_mark_text = legend.selectAll(".legend_items_mark_text")
+          .data(["Complexity"])
+        .enter().append("g")
+          .attr("class", "legend_items_mark_text")
+          .attr("transform", function(d, i) { return "translate(" + (legend_offset + i * x_offset) + ", 12)"; })
+          .append('text')
+          .style("text-anchor", 'end')
+          .text(function(d) { return d; });
 
       var legend_items_mark_color = legend.selectAll(".legend_items_mark_color")
           .data(items_mark_color)
         .enter().append("g")
           .attr("class", "legend_items_mark_color")
-          .attr("transform", function(d, i) { return "translate(" + (i * x_offset) + ", 0)"; });
+          .attr("transform", function(d, i) { return "translate(" + (legend_offset + i * x_offset) + ", 0)"; });
 
       legend_items_mark_color.append("rect")
           .attr("x", 0)
@@ -332,7 +340,7 @@
           .data(items_mark)
         .enter().append("g")
           .attr("class", "legend_items_mark")
-          .attr("transform", function(d, i) { return "translate(" + (legend_offset + i * x_offset) + ", 0)"; })
+          .attr("transform", function(d, i) { return "translate(" + (2 * legend_offset + i * x_offset) + ", 0)"; })
           .on("mouseover", function(d) {
             // Filter by attribute
           });
@@ -365,7 +373,7 @@
           .data(connect_mark)
         .enter().append("g")
           .attr("class", "legend_connect_mark")
-          .attr("transform", function(d, i) { return "translate(" + (2 * legend_offset + i * x_offset) + ", 0)"; });
+          .attr("transform", function(d, i) { return "translate(" + (3 * legend_offset + i * x_offset) + ", 0)"; });
 
       legend_connect_mark.append("line")
           .attr("x1", 0)
