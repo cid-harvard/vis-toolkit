@@ -155,10 +155,9 @@ d3.json("../data/colombia_product_space.json", function(graph) {
           data: exports.data,
           var_x: 'x',
           var_y: 'y',
-          var_color: 'coi',
-          color: d3.scale.linear().domain([0, 2]).range(["#DDDDDD", "#777777"]),
+          var_color: 'export_rca',
+          color: d3.scale.linear().domain(d3.extent(exports.data, function(d) { return d['export_rca']; })).range(["#DDDDDD", "#777777"]),
           var_group: 'group_name_en',
-          var_share: "export_rca",
           share_cutoff: function(d) { return d.export_rca > 1; },
           x_axis_show: false,
           x_grid_show: false,
@@ -177,10 +176,7 @@ d3.json("../data/colombia_product_space.json", function(graph) {
             }, {
               var_mark: '__selected',
               type: d3.scale.ordinal().domain([true, false]).range(["star", "circle"]),
-              fill: d3.scale.linear()
-                        .domain(d3.extent(exports, function(d) { return d['coi']; }))
-                        .range(["#DDDDDD", "#AAAAAA", "#777777"])
-              ,
+              
               stroke: function(d) { 
                       return d['export_rca'] > 1 ? "black": "none";
               }
@@ -190,6 +186,9 @@ d3.json("../data/colombia_product_space.json", function(graph) {
             }]
           }],
           /*
+              fill: d3.scale.linear()
+                        .domain(d3.extent(exports, function(d) { return d['coi']; }))
+                        .range(["#DDDDDD", "#AAAAAA", "#777777"])
           mark: {
             type: "circle",
             radius: function(d) { var c = d3.scale.linear()
