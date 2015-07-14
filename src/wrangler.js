@@ -193,7 +193,7 @@
      return !d.__missing; 
     });
 
-    // Aggregate data
+      // Aggregate data
       if(typeof vars.set['__aggregated'] !== 'undefined' && vars.refresh) {
 
       if(vars.dev) { 

@@ -215,6 +215,11 @@
               .tickFormat(""));
         }
 
+        // POST-RENDERING STUFF
+        if(vars.type == "productspace") {
+          vars.svg.selectAll('.mark__group').sort(function(a, b) { return a.__aggregated ;})
+        }
+
         utils.background_label(vars.title);
 
       break;
