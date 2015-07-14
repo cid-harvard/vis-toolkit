@@ -64,12 +64,13 @@ path.state {
 
 .items__mark__circle {
   fill: #CCC1B9;
+  stroke-width: .5px;
 }
 
 .items__mark__circle.highlighted {
   fill: #191914;  
   stroke: black;
-  stroke-width: 1.5px;
+  stroke-width: .5px;
 }
 
 .items__mark__circle.selected {
@@ -176,10 +177,12 @@ d3.json("../data/colombia_product_space.json", function(graph) {
               type: d3.scale.ordinal().domain([true, false]).range(["text", "none"])
             }, {
               var_mark: '__selected',
-              type: d3.scale.ordinal().domain([true, false]).range(["star", "circle"]),
-              
+              type: d3.scale.ordinal().domain([true, false]).range(["star", "circle"]),              
               stroke: function(d) { 
-                      return d['export_rca'] > 1 ? "black": "none";
+                      return d['export_rca'] > 1 ? "black": "black";
+              },
+              stroke_width: function(d) { 
+                      return d['export_rca'] > 1 ? '1.5px': '0.5px';
               }
             }, {
               var_mark: '__highlighted',
@@ -222,6 +225,17 @@ d3.json("../data/colombia_product_space.json", function(graph) {
 
       d3.select("#viz").call(visualization);
 
+      visualization.params().evt.register("highlightOn", function(d) {
+        if(d.__aggregated) {
+          visualization.params().svg.selectAll('.items__mark__circle').filter(function(e) {
+                  return e['group_name_en'] !== d['group_name_en'];
+                }).style('display', 'none');
+        }
+      });
+
+      visualization.params().evt.register("highlightOut", function(d) {
+        visualization.params().svg.selectAll('.items__mark__circle').style('display', 'block');
+      });
 
     });
 

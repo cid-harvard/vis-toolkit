@@ -600,7 +600,15 @@
             mark_enter.style("stroke", function(d) {
               return params.stroke(vars.accessor_items(d)); 
             })
-            .style("stroke-width", '1.5px')
+    
+          }
+
+          if(typeof params.stroke_width !== "undefined") {
+
+            mark_enter.style("stroke-width", function(d) {
+              return params.stroke_width(vars.accessor_items(d)); 
+            })
+    
 
           }
 
@@ -674,6 +682,9 @@
        var n = vars.svg.selectAll(".items__mark__circle").filter(function(d) {
          return d[vars.var_id] == node_id;
        });
+
+       if(typeof n === "undefined")
+        return;
 
       // Retrieve parent's node position
       var t = d3.transform(d3.select(n.node().parentNode).attr("transform")).translate;
