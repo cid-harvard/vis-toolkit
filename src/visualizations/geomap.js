@@ -1,36 +1,44 @@
-      case "geomap":
+ vars.default_params["geomap"] = function(scope) {
+
+  var params = {};
+
+  params.x_scale = [{
+    name: "linear",
+    func: d3.scale.linear()
+            .domain(d3.extent(vars.countries, function(d) { return d[vars.var_x]; }))
+            .range([scope.margin.left, scope.width - scope.margin.left - scope.margin.right])
+  }];
+
+  params.y_scale = [{
+    name: "linear",
+    func: d3.scale.linear()
+            .domain(d3.extent(vars.countries, function(d) { return d[vars.var_y]; }))
+            .range([scope.height - vars.margin.top - vars.margin.bottom, scope.margin.top])
+  }];
+
+  params.items = [{
+    attr: "country",
+    marks: [{
+      type: "shape",
+      fill: d3.scale.linear()
+              .domain([d3.min(vars.new_data, function(d) { return d[vars.var_color]; }), d3.max(vars.new_data, function(d) { return d[vars.var_color]; })])
+              .range(["red", "green"]),
+      rotate: 0
+    }]
+  }];
+
+  params.accessor_data = function(d) { return d.data; };
+  params.accessor_values = function(d) { return d.data.values; };
+
+  return params;
+
+};
+
+/*
 
         var geomap_params = function(scope) {
 
-          var params = {};
 
-          params.x_scale = [{
-            name: "linear",
-            func: d3.scale.linear()
-                    .domain(d3.extent(vars.countries, function(d) { return d[vars.var_x]; }))
-                    .range([scope.margin.left, scope.width - scope.margin.left - scope.margin.right])
-          }];
-
-          params.y_scale = [{
-            name: "linear",
-            func: d3.scale.linear()
-                    .domain(d3.extent(vars.countries, function(d) { return d[vars.var_y]; }))
-                    .range([scope.height - vars.margin.top - vars.margin.bottom, scope.margin.top])
-          }];
-
-          params.items = [{
-            attr: "country",
-            marks: [{
-              type: "shape",
-              fill: d3.scale.linear()
-                      .domain([d3.min(vars.new_data, function(d) { return d[vars.var_color]; }), d3.max(vars.new_data, function(d) { return d[vars.var_color]; })])
-                      .range(["red", "green"]),
-              rotate: 0
-            }]
-          }];
-
-          params.accessor_data = function(d) { return d.data; };
-          params.accessor_values = function(d) { return d.data.values; };
 
           return params;
 
@@ -41,23 +49,17 @@
         // LOAD USER PARAMS
         vars.items = vistk.utils.merge(vars.items, vars.user_vars.items);
 
-        // http://techslides.com/demos/d3/d3-world-map-colors-tooltips.html
-        vars.projection = d3.geo.mercator()
-                        .translate([vars.width/2, vars.height/2])
-                        .scale(100);
 
-        // This is the main function that draws the shapes later on
-        vars.path = d3.geo.path()
-            .projection(vars.projection);
 
-        vars.gSvg = vars.svg
-            .call(d3.behavior.zoom()
-            .on("zoom", redraw))
-            .append("g");
-
-        function redraw() {
-          vars.gSvg.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
-        }
+//
+//        vars.gSvg = vars.svg
+//            .call(d3.behavior.zoom()
+//            .on("zoom", redraw))
+//            .append("g");
+//
+//        function redraw() {
+//          vars.gSvg.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+//        }
 
         // PRE-UPDATE ITEMS
         var gItems = vars.svg.selectAll(".mark__group")
@@ -81,3 +83,5 @@
         var gItems_exit = gItems.exit().remove();
 
       break;
+
+      */

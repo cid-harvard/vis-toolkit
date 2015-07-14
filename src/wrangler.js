@@ -517,6 +517,15 @@
 
       vars.new_data = vars.countries;
 
+      // http://techslides.com/demos/d3/d3-world-map-colors-tooltips.html
+      vars.projection = d3.geo.mercator()
+                     // .translate([vars.width/2, vars.height/2])
+                      .scale(100);
+
+      // This is the main function that draws the shapes later on
+      vars.path = d3.geo.path()
+          .projection(vars.projection);
+
     }
 
     if(vars.type == "piechart" && vars.refresh) {

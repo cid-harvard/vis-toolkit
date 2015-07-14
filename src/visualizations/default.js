@@ -29,7 +29,7 @@
 
           // LOAD USER PARAMS
           vars.items = vistk.utils.merge(vars.items, vars.user_vars.items);
-        
+
         }
 
         if(vars.x_invert) {
