@@ -704,8 +704,8 @@
         .style("stroke-width", 1.5 / scale + "px")
         .attr("transform", "translate(" + translate + ")scale(" + scale + ")");
 
-    d3.selectAll("circle").style("stroke-width", (1.5 / scale) + "px")
-    d3.selectAll("text").style("font-size", (1/scale) + "rem")
+    vars.svg.selectAll("circle").style("stroke-width", (1.5 / scale) + "px")
+    vars.svg.selectAll("text").style("font-size", (1/scale) + "rem")
 
   }
 

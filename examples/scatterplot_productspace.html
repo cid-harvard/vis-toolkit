@@ -124,11 +124,19 @@ d3.json("../data/colombia_product_space.json", function(graph) {
       exports.data.forEach(function(d) {
 
         var m = metadata.data.filter(function(e) {
-          return e.id == d.product_id;
+          return d.product_id == e.id;
         })[0];
 
-        d["name_en"] = m["name_en"];
-       // d.category = d.product_id.slice(0, 1);
+        var p = metadata.data.filter(function(e) {
+          return m.parent_id == e.id;
+        })[0];
+
+        var q = metadata.data.filter(function(e) {
+          return p.parent_id == e.id;
+        })[0];
+
+        d["group_name_en"] = q["name_en"];
+
       })
 
       visualization = vistk.viz()
@@ -145,7 +153,7 @@ d3.json("../data/colombia_product_space.json", function(graph) {
           var_y: 'y',
           var_color: 'coi',
           color: d3.scale.ordinal().domain([0, 0.5, 1]).range(["#DDDDDD", "#AAAAAA", "#777777"]),
-          var_group: 'category',
+          var_group: 'group_name_en',
           var_share: "export_rca",
           share_cutoff: function(d) { return d.export_rca > 1; },
           x_axis_show: false,
@@ -160,6 +168,9 @@ d3.json("../data/colombia_product_space.json", function(graph) {
           items: [{
             attr: "name",
             marks: [{
+              var_mark: '__aggregated',
+              type: d3.scale.ordinal().domain([true, false]).range(["text", "none"])
+            }, {
               var_mark: '__selected',
               type: d3.scale.ordinal().domain([true, false]).range(["star", "circle"]),
               fill: d3.scale.linear()
@@ -171,9 +182,6 @@ d3.json("../data/colombia_product_space.json", function(graph) {
               }
             }, {
               var_mark: '__highlighted',
-              type: d3.scale.ordinal().domain([true, false]).range(["text", "none"])
-            }, {
-              var_mark: '__selected',
               type: d3.scale.ordinal().domain([true, false]).range(["text", "none"])
             }]
           }],
@@ -205,8 +213,8 @@ d3.json("../data/colombia_product_space.json", function(graph) {
           },
           title: "Product Space Colombia Exports",
           selection: ["115", "116", "117", "118", "119", "120", "121", "122", "123", "124", "125"],
-          highlight: ["115"]
-        });
+        })
+        .set('__aggregated', true)
 
       d3.select("#viz").call(visualization);
 
