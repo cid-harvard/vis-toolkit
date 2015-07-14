@@ -1,7 +1,7 @@
 
   utils.items_group = function(d, i) {
 
-    d3.select(this).attr("class", "mark__group_" + d._index_item)
+    d3.select(this).attr("class", "mark__group mark__group_" + d._index_item)
                     .classed("highlighted", function(d, i) { return d.__highlighted; })
                     .classed("selected", function(d, i) { return d.__selected; })
                     .on("mouseover",function(d) {
