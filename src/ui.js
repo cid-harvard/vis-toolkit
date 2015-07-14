@@ -304,6 +304,7 @@
         .attr("height", 100)
         .append("g")
         .attr("transform", "translate(20, 0)")
+        .attr("class", "legend_group")
 
       var legend_items_mark_text = legend.selectAll(".legend_items_mark_text")
           .data(["Complexity"])
