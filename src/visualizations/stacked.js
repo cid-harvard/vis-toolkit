@@ -16,7 +16,11 @@ vars.default_params["stacked"] = function(scope) {
     name: "linear",
     func: d3.scale.linear()
             .range([scope.height - scope.margin.top - scope.margin.bottom, scope.margin.top])
-            .domain(d3.extent(Array.prototype.concat.apply([], vars.new_data.map(function(d) { return d.values; }) ), function(d) { return d.y+d.y0; }))
+            .domain(d3.extent(Array.prototype.concat.apply([], vars.new_data.map(function(d) { 
+              return d.values; 
+            })), function(d) { 
+              return d.y + d.y0;
+            }))
   }];
 
   params.connect = [{
