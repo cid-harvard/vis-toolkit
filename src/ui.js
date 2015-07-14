@@ -316,13 +316,41 @@
           .data(items_mark_color)
         .enter().append("g")
           .attr("class", "legend_items_mark_color")
-          .attr("transform", function(d, i) { return "translate(" + (legend_offset + i * x_offset) + ", 0)"; });
+          .attr("transform", function(d, i) { return "translate(" + (legend_offset + i * x_offset) + ", 0)"; })
+          .on('mouseover', function(_, i) {
+            var interval = vars.color.domain()[1] - vars.color.domain()[0];
+            if(i == 0) {
+              vars.svg.selectAll('.items__mark__circle').filter(function(d) {
+                return d[vars.var_color] > interval / 3;
+              }).style('display', 'none');
+            } else if(i == 1) {
+              vars.svg.selectAll('.items__mark__circle').filter(function(d) {
+                return (d[vars.var_color] <= interval / 3) || (d[vars.var_color] > 2 * interval / 3);
+              }).style('display', 'none');
+            } else {
+              vars.svg.selectAll('.items__mark__circle').filter(function(d) {
+                return d[vars.var_color] <= 2 * interval / 3;
+              }).style('display', 'none');
+            }
+          })
+          .on('mouseleave', function(d, i) {
+            vars.svg.selectAll('.items__mark__circle').style('display', 'block');
+          })
 
       legend_items_mark_color.append("rect")
           .attr("x", 0)
           .attr("width", x_offset)
           .attr("height", 18)
-          .style("fill", function(d, i) { return vars.color(i); });
+          .style("fill", function(d, i) { 
+            if(i === 0) {
+              return vars.color(vars.color.domain()[0])
+            } else if(i === 1) {
+              return vars.color((vars.color.domain()[1] - vars.color.domain()[0]) / 2);
+            } else {
+              return vars.color(vars.color.domain()[1]); 
+            }
+
+          });
 
       legend_items_mark_color.append("text")
           .attr("x", 5)
