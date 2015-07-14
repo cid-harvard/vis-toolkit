@@ -156,7 +156,7 @@ d3.json("../data/colombia_product_space.json", function(graph) {
           var_x: 'x',
           var_y: 'y',
           var_color: 'coi',
-          color: d3.scale.ordinal().domain([0, 0.5, 1]).range(["#DDDDDD", "#AAAAAA", "#777777"]),
+          color: d3.scale.linear().domain([0, 2]).range(["#DDDDDD", "#777777"]),
           var_group: 'group_name_en',
           var_share: "export_rca",
           share_cutoff: function(d) { return d.export_rca > 1; },

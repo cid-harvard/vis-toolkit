@@ -341,20 +341,31 @@
         .enter().append("g")
           .attr("class", "legend_items_mark")
           .attr("transform", function(d, i) { return "translate(" + (2 * legend_offset + i * x_offset) + ", 0)"; })
-          .on("mouseover", function(d) {
-            // Filter by attribute
-          });
+          .on('mouseover', function(d, i) {
+            if(i == 0) {
+              vars.svg.selectAll('.items__mark__circle').filter(function(d) {
+                return d['export_rca'] <= 1;
+              }).style('display', 'none');
+            } else {
+              vars.svg.selectAll('.items__mark__circle').filter(function(d) {
+                return d['export_rca'] > 1;
+              }).style('display', 'none');
+            }
+          })
+          .on('mouseleave', function(d, i) {
+            vars.svg.selectAll('.items__mark__circle').style('display', 'block');
+          })
 
       legend_items_mark.append("circle")
           .attr("cx", 10)
           .attr("cy", 10)
           .attr("r", 8)
           .attr("class", "items__mark__circle")
-          .classed("highlighted", function(d, i) {
+          .style("fill", function(d, i) { return vars.color(0); })
+          .classed("selected", function(d, i) {
             return i == 0;
           })
           .style("stroke-width", "5");
-
 
       legend_items_mark.append("text")
           .attr("x", 25)
@@ -373,7 +384,13 @@
           .data(connect_mark)
         .enter().append("g")
           .attr("class", "legend_connect_mark")
-          .attr("transform", function(d, i) { return "translate(" + (3 * legend_offset + i * x_offset) + ", 0)"; });
+          .attr("transform", function(d, i) { return "translate(" + (3 * legend_offset + i * x_offset) + ", 0)"; })
+          .on('mouseover', function() {
+            vars.svg.selectAll('.mark__group > circle').style('display', 'none');
+          })
+          .on('mouseleave', function() {
+            vars.svg.selectAll('.mark__group > circle').style('display', 'block');
+          })
 
       legend_connect_mark.append("line")
           .attr("x1", 0)
