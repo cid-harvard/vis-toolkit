@@ -56,7 +56,7 @@ d3.json("../data/diversification_ubiquity_hs4_1995_2012.json", function(error, c
           }],
           selection: ["France"],
           highlight: ["France", "Germany"],      
-          title: "World Countries"
+          title: "World Countries " + dim + " / " + dam
         });
 
       d3.select("#"+viz_id).call(visualization);

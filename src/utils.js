@@ -305,7 +305,12 @@
                   return .2;
                 else
                   return 1;
-              })          
+              });
+
+          mark
+              .classed("highlighted", function(d, i) { return d.__highlighted; })
+              .classed("selected", function(d, i) { return d.__selected; })
+              .transition().duration(vars.duration)
               .attr("d", function(d) {
                 return arc(d);
               });
