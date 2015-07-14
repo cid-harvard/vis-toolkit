@@ -564,7 +564,6 @@
               .classed("items__mark__circle", true)
               .attr("cx", 0)
               .attr("cy", 0)
-              .attr("transform", "rotate(0)")
               .attr("r", function(d) {
                 if(typeof params.var_r === "undefined") {
                   return vars.radius;
@@ -576,11 +575,11 @@
                   return r_scale(d[params.var_r]);
                 }
               })
-              .attr("title", function(d,i) {
-                active = d3.select(null); 
-                return d.name; 
-              })
-              .call(utils.make_zoomable_on_click)
+             //.attr("title", function(d,i) {
+             //  active = d3.select(null); 
+             //  return d.name; 
+             //})
+             //.call(utils.make_zoomable_on_click)
 
           if(typeof params.fill !== "undefined") {
 

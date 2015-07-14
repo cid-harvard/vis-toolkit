@@ -124,7 +124,8 @@ d3.json("../data/colombia_product_space.json", function(graph) {
       "parent_id": null 
   */
 
-      // Create quasi-dummy categories
+      // Re-creating dataset used on the Colombian atlas
+      // https://github.com/cid-harvard/atlas-colombia/blob/41595dfc06b58384caaf296f04e3242dc616746e/app/routes/application.js
       exports.data.forEach(function(d) {
 
         var m = metadata.data.filter(function(e) {
