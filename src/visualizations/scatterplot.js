@@ -24,7 +24,6 @@ vars.default_params["scatterplot"] = function(scope) {
     attr: "country",
     marks: [{
         type: "circle",
-        rotate: "0",
         r_scale: d3.scale.linear()
                     .range([10, 30])
                     .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_r]; })),
@@ -38,7 +37,6 @@ vars.default_params["scatterplot"] = function(scope) {
     attr: "continent",
     marks: [{
         type: "circle",
-        rotate: "0",
         radius: 20,
         fill: function(d) { return vars.color(vars.accessor_items(d)[vars.var_color]); }
     }, {

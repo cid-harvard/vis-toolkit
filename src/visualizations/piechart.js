@@ -6,13 +6,11 @@ vars.default_params["piechart"] = function(scope) {
   params.accessor_items = function(d) { return d; };
 
   params.x_scale = [{
-    name: "linear",
     func: d3.scale.linear()
             .range([scope.width/2, scope.width/2])
   }];
 
   params.y_scale = [{
-    name: "linear",
     func: d3.scale.linear()
             .range([scope.height/2, scope.height/2])
   }];
