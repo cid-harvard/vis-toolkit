@@ -141,11 +141,13 @@
           var connect_data = vars.new_data;
 
           // Connecting items
-          if(vars.connect[0].type == "items" && vars.type == "productspace") {
-            connect_data = vars.links;
+          if(vars.type == "productspace") {
 
-          // Connecting dimension
-          } else if(vars.connect[0].type == "dimension") {
+            vars.links.forEach(function(d, i) {
+              d[vars.var_id] = i;
+            });
+
+            connect_data = vars.links;
 
           }
 
@@ -164,7 +166,7 @@
             var gConnect = vars.svg.selectAll(".connect__group")
                             .data(connect_data, function(d, i) {
                               d._index_item = index_item;
-                              return accessor_data(d)[vars.var_id] + "_" + index_item;
+                              return d[vars.var_id] + "_" + index_item;
                             });
           
             // ENTER CONNECT
