@@ -115,7 +115,7 @@ d3.select("input[value='step4']").on("click", function(d) {
 
 });
 
-d3.json("../data/colombia_product_space.json", function(graph) {
+d3.json("../data/atlas_international_product_space_hs4_codes.json", function(graph) {
   d3.json("../data/colombia_products_location930_2012.json", function(exports) {
     d3.json("../data/colombia_products_metadata.json", function(metadata) {
   /* 
@@ -193,7 +193,7 @@ d3.json("../data/colombia_product_space.json", function(graph) {
               rotate: "0"
             }, {
               var_mark: '__selected',
-              type: d3.scale.ordinal().domain([true, false]).range(["none", "none"]),
+              type: d3.scale.ordinal().domain([true, false]).range(["text", "none"]),
               rotate: "0"
             }, {
               var_mark: '__aggregated',
