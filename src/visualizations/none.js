@@ -6,48 +6,22 @@
           params.accessor_data = function(d) { return d; };
 
           params.x_scale = [{
-            name: "linear",
-            func: d3.scale.linear()
-                    .range([scope.margin.left, scope.width - scope.margin.left - scope.margin.right])
-                    .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_x]; })).nice()
+            func: d3.scale.identity()
           }];
 
           params.y_scale = [{
-            name: "linear",
-            func: d3.scale.linear()
-                    .range([scope.height - scope.margin.top - scope.margin.bottom, scope.margin.top])
-                    .domain(d3.extent(vars.data, function(d) { return d[vars.var_y]; })).nice(),
+            func: d3.scale.identity(),
           }];
 
-          params.r_scale = d3.scale.linear();
-
-          params.var_r = "total_piescatter";
-
           params.items = [{
-            attr: "country",
             marks: [{
                 type: "circle",
-                rotate: "0",
-                radius: 5                
+                radius: 5
               }, {
                 type: "text",
                 rotate: "30",
                 translate: null
               }]
-            }, {
-            attr: "continent",
-            marks: [{
-                type: "circle",
-                rotate: "0",
-                radius: 20,
-                fill: "#fff"
-            }, {
-              type: "arc"
-            }, {
-                type: "text",
-                rotate: "-30",
-                translate: null
-            }]
           }];
 
           return params;
@@ -101,7 +75,7 @@
         });
 
         // EXIT
-        var gItems_exit = gItems.exit().style("opacity", 0.1);
+        var gItems_exit = gItems.exit().remove()  ;
 
         // POST-UPDATE
 
