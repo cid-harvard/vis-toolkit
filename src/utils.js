@@ -369,10 +369,11 @@
                .y(function(d) { return vars.y_scale[0]["func"](d[vars.var_y]); });
           }
 
-          var mark = d3.select(this).selectAll(".connect__path").data([d]);
+          var mark = d3.select(this).selectAll(".connect__path_" + mark_id).data([d]);
 
           mark.enter().append('path')
               .classed('connect__path', true)
+              .classed('connect__path_' + mark_id, true)
               .classed("items_" + mark_id, true)
               .style("fill", params.fill)
               .style("stroke", params.stroke);
@@ -380,10 +381,12 @@
           mark              
               .classed("highlighted", function(e, j) { return e.__highlighted; })
               .classed("selected", function(e, j) { return e.__selected; })
+              .transition().duration(vars.duration)
               .style("fill", params.fill)
               .style("stroke", params.stroke)
               .attr('d', function(e) {
-               return params["func"](this_accessor_values(e)); });
+                return params["func"](this_accessor_values(e)); 
+              });
 
         break;
 
