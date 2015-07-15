@@ -1,5 +1,20 @@
 module.exports = function(grunt) {
   grunt.initConfig({
+
+    'string-replace': {
+      version: {
+        files: {
+          './': 'build/vistk.js',
+        },
+        options: {
+          replacements: [{
+            pattern: /{{ VERSION }}/g,
+            replacement: '<%= pkg.version %>'
+          }]
+        }
+      }
+    },
+
     pkg: grunt.file.readJSON('package.json'),
 
     concat: {
@@ -34,7 +49,7 @@ module.exports = function(grunt) {
     watch: {
       concat: {
         files: ['src/*.js', 'src/visualizations/*.js'],
-        tasks: ['concat']
+        tasks: ['concat', 'string-replace']
       }
     },
 
@@ -49,6 +64,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-jasmine');
+  grunt.loadNpmTasks('grunt-string-replace');
 
   grunt.registerTask('default', 'jasmine', ['concat']);
 };

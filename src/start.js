@@ -3,7 +3,7 @@
 var vistk = window.vistk || {};
 window.vistk = vistk;
 
-vistk.version = "0.2";
+vistk.version = "{{ VERSION }}";
 vistk.utils = {};
 
 vistk.viz = function() {
