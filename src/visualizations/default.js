@@ -149,18 +149,29 @@
 
           }
 
-          // PRE-UPDATE CONNECT
-          // TOOD: find a common join to al types of connections
-          var gConnect = vars.svg.selectAll(".connect__group")
-                          .data(connect_data);
-        
-          // ENTER CONNECT
-          var gConnect_enter = gConnect.enter()
-                          .insert("g", ":first-child")
-                          .attr("class", "connect__group");
-
           // APPEND AND UPDATE CONNECT MARK
-          vars.connect.forEach(function(connect) {
+          vars.connect.forEach(function(connect, index_item) {
+
+            // Use the global accessor, unless specif one has been set
+            var accessor_data = vars.accessor_data;
+
+            if(typeof connect.accessor_data !== "undefined") {
+              accessor_data = connect.accessor_data;
+            }
+
+            // PRE-UPDATE CONNECT
+            // TOOD: find a common join to al types of connections
+            var gConnect = vars.svg.selectAll(".connect__group")
+                            .data(connect_data, function(d, i) {
+                              d._index_item = index_item;
+                              return accessor_data(d)[vars.var_id] + "_" + index_item;
+                            });
+          
+            // ENTER CONNECT
+            var gConnect_enter = gConnect.enter()
+                            .insert("g", ":first-child")
+                            .attr("class", "connect__group");
+
 
               connect.marks.forEach(function(params) {
             
@@ -171,10 +182,11 @@
                 gConnect.filter(params.filter).call(utils.draw_mark, params);
               });
 
+            // EXIT
+            var gConnect_exit = gConnect.exit().remove();
+
           });
 
-          // EXIT
-          var gConnect_exit = gConnect.exit().remove();
 
         }
 
