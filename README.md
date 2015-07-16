@@ -39,7 +39,7 @@ Work-In-Progress
 
 * Geo Map ([Demo](http://cid-harvard.github.io/vis-toolkit/examples/geomap.html) | [Source](examples/geomap.html))
 
-## HOWTO
+## HOWTO: Charts
 
 ### Default Chart
 
@@ -96,8 +96,34 @@ var visualization = vistk.viz()
 
 ### Scatterplot
 
-
 ### Product Space
+
+## HOWTO: Chart Customizations
+
+### Items
+
+```json
+params.items = [{
+  attr: "name",
+  marks: [{
+    type: "circle",
+  },{
+    type: "text",
+    rotate: "-90"
+  }]
+}];
+```
+
+### Connections
+
+## HOWTO: Interaction
+
+### Attributes
+
+* `__highlighted`
+
+
+### Mapping
 
 
 ## Roadmap

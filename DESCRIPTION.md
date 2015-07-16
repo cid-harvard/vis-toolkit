@@ -349,6 +349,12 @@ Area chart with stacked shapes on top of each other (the previous layer being th
 * http://bl.ocks.org/mbostock/3886208#index.html
 
 
+### Small Multiples
+
+* Tableau http://healthintelligence.drupalgardens.com/content/trends-overweight-and-obesity-country-level
+
+* http://projects.fivethirtyeight.com/2016-endorsement-primary/
+
 ### Parallel Coordinates
 
 * Parallel coordinates http://bl.ocks.org/syntagmatic/42d5b54c5cfe002e7dd8
