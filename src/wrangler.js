@@ -23,6 +23,15 @@
       // Get a copy of the whole dataset
       vars.new_data = JSON.parse(JSON.stringify(vars.data));
 
+      if(typeof vars.var_id === 'undefined') {
+
+        vars.new_data.forEach(function(d, i) {
+          d.__id = i;
+        })
+
+        vars.var_id = '__id';
+      }
+
       if(typeof vars.time.filter != "undefined" && vars.time.filter.length > 0) {
 
         if(vars.dev) { 
