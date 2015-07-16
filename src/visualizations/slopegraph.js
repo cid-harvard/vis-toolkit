@@ -6,14 +6,12 @@ vars.default_params["slopegraph"] = function(scope) {
   params.accessor_items = function(d) { return d.values; };
 
   params.x_scale = [{
-    name: "linear",
     func: d3.scale.linear()
             .range([scope.margin.left, scope.width - scope.margin.left - scope.margin.right])
             .domain(scope.time.interval)
   }];
 
   params.y_scale = [{
-    name: "linear",
     func: d3.scale.linear()
             .range([scope.height - scope.margin.top - scope.margin.bottom, scope.margin.top])
             .domain(d3.extent(Array.prototype.concat.apply([], vars.new_data.map(function(d) { return d.values; }) ), function(d) { return d[vars.var_y]; }))

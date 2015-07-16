@@ -22,7 +22,6 @@ vars.default_params["dotplot"] = function(scope) {
     attr: "name",
     marks: [{
       type: "circle",
-      rotate: "0"
     },{
       type: "text",
       rotate: "-90"

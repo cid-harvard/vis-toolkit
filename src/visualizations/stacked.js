@@ -6,14 +6,12 @@ vars.default_params["stacked"] = function(scope) {
   params.accessor_items = function(d) { return d; };
 
   params.x_scale = [{
-    name: "linear",
     func: d3.time.scale()
             .range([scope.margin.left, scope.width - scope.margin.left - scope.margin.right])
             .domain([vars.time.parse(vars.time.interval[0]), vars.time.parse(vars.time.interval[1])])
   }];
 
   params.y_scale = [{
-    name: "linear",
     func: d3.scale.linear()
             .range([scope.height - scope.margin.top - scope.margin.bottom, scope.margin.top])
             .domain(d3.extent(Array.prototype.concat.apply([], vars.new_data.map(function(d) { 
@@ -26,17 +24,17 @@ vars.default_params["stacked"] = function(scope) {
   params.connect = [{
     attr: vars.time.var_time,
     marks: [{
-        type: "path",
-        fill: function(d) { return vars.color(params.accessor_items(d)[vars.var_color]); },
-        stroke: function(d) {
-          return "black"; 
-        },
-        func: d3.svg.area()
-                .interpolate('cardinal')
-                .x(function(d) { return params.x_scale[0]["func"](vars.time.parse(d[vars.time.var_time])); })
-                .y0(function(d) { return params.y_scale[0]["func"](d.y0); })
-                .y1(function(d) { return params.y_scale[0]["func"](d.y0 + d.y); })
-      }]
+      type: "path",
+      fill: function(d) { return vars.color(params.accessor_items(d)[vars.var_color]); },
+      stroke: function(d) {
+        return "black"; 
+      },
+      func: d3.svg.area()
+              .interpolate('cardinal')
+              .x(function(d) { return params.x_scale[0]["func"](vars.time.parse(d[vars.time.var_time])); })
+              .y0(function(d) { return params.y_scale[0]["func"](d.y0); })
+              .y1(function(d) { return params.y_scale[0]["func"](d.y0 + d.y); })
+    }]
   }];
 
   params.x_axis_show = true;

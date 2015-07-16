@@ -3,14 +3,12 @@ vars.default_params["scatterplot"] = function(scope) {
   var params = {};
 
   params.x_scale = [{
-    name: "linear",
     func: d3.scale.linear()
             .range([scope.margin.left, scope.width - scope.margin.left - scope.margin.right])
             .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_x]; })).nice()
   }];
 
   params.y_scale = [{
-    name: "linear",
     func: d3.scale.linear()
             .range([scope.height - scope.margin.top - scope.margin.bottom, scope.margin.top])
             .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_y]; })).nice(),
@@ -21,7 +19,6 @@ vars.default_params["scatterplot"] = function(scope) {
               .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_r]; })),
 
   params.items = [{
-    attr: "country",
     marks: [{
         type: "circle",
         r_scale: d3.scale.linear()

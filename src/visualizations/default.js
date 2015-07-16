@@ -193,26 +193,28 @@
         }
 
         // CREATE AXIS
-        if(vars.x_axis_show)
+        if(vars.x_axis_show) {
           vars.svg.call(utils.x_axis);
-  
-       if(vars.y_axis_show)
-          vars.svg.call(utils.y_axis);
-
-        if(vars.x_grid_show) {
-          vars.svg.selectAll(".x.grid").data([vars.new_data])
-            .enter()
-              .append("g")
-              .attr("class", "x grid")
-              .style("display", function() { return vars.x_grid_show ? "block": "none"; })
-              .attr("transform", "translate(0," + (vars.height-vars.margin.top-vars.margin.bottom) + ")");
-
-          vars.svg.selectAll(".x.grid").transition()
-              .duration(vars.duration)
-              .call(utils.make_x_axis()
-              .tickSize(-vars.height+vars.margin.top+vars.margin.bottom, 0, 0)
-              .tickFormat(""));
         }
+  
+         if(vars.y_axis_show) {
+            vars.svg.call(utils.y_axis);
+         }
+  
+         if(vars.x_grid_show) {
+           vars.svg.selectAll(".x.grid").data([vars.new_data])
+             .enter()
+               .append("g")
+               .attr("class", "x grid")
+               .style("display", function() { return vars.x_grid_show ? "block": "none"; })
+               .attr("transform", "translate(0," + (vars.height-vars.margin.top-vars.margin.bottom) + ")");
+  
+           vars.svg.selectAll(".x.grid").transition()
+               .duration(vars.duration)
+               .call(utils.make_x_axis()
+               .tickSize(-vars.height+vars.margin.top+vars.margin.bottom, 0, 0)
+               .tickFormat(""));
+         }
 
         if(vars.y_grid_show) {
           vars.svg.selectAll(".y.grid").data([vars.new_data])
