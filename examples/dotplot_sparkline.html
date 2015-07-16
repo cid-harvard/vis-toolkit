@@ -114,9 +114,25 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
   // Hover on dot plot updates the sparkline
   dotplot.params().evt.register("highlightOn", function(d) {
 
-    sparkline.params().filter.push(d["dept_name"]);
-    sparkline.params().refresh = true;
-    d3.select("#viz_sparkline").call(sparkline);
+    var index = sparkline.params().filter.indexOf(d["dept_name"]);
+
+    if (index < 0) {
+
+
+      sparkline.params().filter.push(d["dept_name"]);
+      sparkline.params().refresh = true;
+      d3.select("#viz_sparkline").call(sparkline);
+
+
+      console.log("DOES NOT", index, d["dept_name"], sparkline.params().filter)
+
+    } else {
+
+      console.log("DOES", index, d["dept_name"])
+
+      sparkline.params().filter.splice(index, 1);
+
+    }
 
   });
 
