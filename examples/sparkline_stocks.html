@@ -71,8 +71,10 @@
     data.forEach(function(d) {
       d.close = +d.Close;
       d.company = "GOOG";
+      d.time = d3.time.format("%b %d, %Y").parse(d["Date"]); 
     });
 
+    dd = data;
   visualization = vistk.viz()
     .params({
       type: "sparkline",
@@ -81,15 +83,13 @@
       height: 100,
       data: data,
       var_y: "close",
-      var_x: "Date",
-      var_id: "company",
-      var_group: "company",
+      var_x: "time",
       ui: {
         default: true
       },
       time: {
         var_time: "Date",
-        parse: d3.time.format("%b %d, %Y").parse,
+        parse: function(d) { return d; },
         current_time: "Dec 18, 2013"
       },
       items: [{
