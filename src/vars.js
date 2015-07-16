@@ -20,14 +20,11 @@
     selection: [],
     filter: [],
     zoom: [],
-    
-    type: "",
 
     // Default dimensions
     margin: {top: 10, right: 10, bottom: 10, left: 10},
 
     // Default Variables mapping
-    var_text: "name",
     var_color: null,
     var_sort_asc: false,
 

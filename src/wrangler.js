@@ -25,12 +25,33 @@
 
       if(typeof vars.var_id === 'undefined') {
 
-        vars.new_data.forEach(function(d, i) {
+        vars.new_data = vars.new_data.map(function(d, i) {
+
+          if(typeof d !== 'object') {
+            var e = {}
+            e.__id = i;
+            e.value = d;
+            d = e;
+          }
+
           d.__id = i;
+          return d;
+ 
         })
 
         vars.var_id = '__id';
+
+        if(typeof vars.var_text === 'undefined') {
+          vars.var_text = '__id';
+        }
+
       }
+
+      if(typeof vars.type === 'undefined') {
+
+        vars.type = 'none';
+
+      };
 
       if(typeof vars.time.filter != "undefined" && vars.time.filter.length > 0) {
 
