@@ -50,6 +50,11 @@
   vars.evt.register("highlightOn", function(d) {
     d.__highlighted = true;
     d3.select(vars.container).call(vars.this_chart);
+
+    // Make sure the highlighted node is above other nodes
+    if(vars.type == "productspace") {
+      vars.svg.selectAll('.mark__group').sort(function(a, b) { return a.__highlighted ;})
+    }
   });
 
   vars.evt.register("highlightOut", function(d) {
