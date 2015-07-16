@@ -1,0 +1,18 @@
+<!doctype html>
+<meta charset="utf-8">
+<script src="../js/d3.js"></script>
+<script src="../build/vistk.js"></script>
+<link href="../css/vistk.css" rel="stylesheet">
+<body>
+<div id="viz"></div>
+<script>
+
+var  visualization = vistk.viz()
+    .params({
+      container: "#viz",
+      data: [0, 1, 2, 3],
+    });
+
+  d3.select("#viz").call(visualization);
+
+</script>
