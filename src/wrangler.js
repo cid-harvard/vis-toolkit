@@ -21,7 +21,7 @@
     if(vars.new_data === null || vars.refresh) {
 
       // Get a copy of the whole dataset
-      vars.new_data = vars.data;
+      vars.new_data = JSON.parse(JSON.stringify(vars.data));
 
       if(typeof vars.time.filter != "undefined" && vars.time.filter.length > 0) {
 
@@ -142,7 +142,7 @@
 
     // Links between items
     // Used for product space
-    if(vars.links !== null && vars.init) {
+    if(vars.links !== null) {
 
       vars.links.forEach(function(d, i) {
 
@@ -159,7 +159,7 @@
     }
 
     // Flagging missing nodes with __missing true attribute
-    if(typeof vars.nodes != "undefined" && vars.refresh) {
+    if(typeof vars.nodes != "undefined") {
 
       // Adding coordinates to data
       vars.new_data.forEach(function(d, i) {
@@ -187,25 +187,25 @@
       });
 
       // Making sure we display all the nodes
-      vars.nodes.forEach(function(d, i) {
+      // vars.nodes.forEach(function(d, i) {
 
-        var node = vistk.utils.find_node_coordinates_by_id(vars.new_data, vars.var_id, d['id']);
+      //   var node = vistk.utils.find_node_coordinates_by_id(vars.new_data, vars.var_id, d['id']);
 
-        if(typeof node === "undefined") {
+      //   if(typeof node === "undefined") {
 
-          d.values = [];
-          d[vars.var_r] = 0;
-          d[vars.var_id] = d.id;
-          d.__aggregated = false;
-          d.__selected = false;
-          d.__highlighted = false;
-          d.__missing = false;
-          vars.new_data.push(d);
+      //     d.values = [];
+      //     d[vars.var_r] = 0;
+      //     d[vars.var_id] = d.id;
+      //     d.__aggregated = false;
+      //     d.__selected = false;
+      //     d.__highlighted = false;
+      //     d.__missing = false;
+      //     vars.new_data.push(d);
 
-        }
+      //   }
 
 
-      })
+      // })
 
 
     }
@@ -348,11 +348,6 @@
       }
 
     }
-
-    vars.set.forEach(function(d, i) {
-      // console.log("SET", d)
-    })
-    
 
     if(typeof vars.var_sort !== "undefined") {
 
