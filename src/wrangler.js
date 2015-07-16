@@ -217,26 +217,24 @@
       });
 
       // Making sure we display all the nodes
-      // vars.nodes.forEach(function(d, i) {
+      vars.nodes.forEach(function(d, i) {
 
-      //   var node = vistk.utils.find_node_coordinates_by_id(vars.new_data, vars.var_id, d['id']);
+        var node = vistk.utils.find_node_coordinates_by_id(vars.new_data, vars.var_id, d['id']);
 
-      //   if(typeof node === "undefined") {
+        if(typeof node === "undefined") {
 
-      //     d.values = [];
-      //     d[vars.var_r] = 0;
-      //     d[vars.var_id] = d.id;
-      //     d.__aggregated = false;
-      //     d.__selected = false;
-      //     d.__highlighted = false;
-      //     d.__missing = false;
-      //     vars.new_data.push(d);
+          d.values = [];
+          d[vars.var_r] = 0;
+          d[vars.var_id] = d.id;
+          d.__aggregated = false;
+          d.__selected = false;
+          d.__highlighted = false;
+          d.__missing = false;
+          vars.new_data.push(d);
 
-      //   }
+        }
 
-
-      // })
-
+      })
 
     }
 
