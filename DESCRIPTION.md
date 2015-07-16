@@ -124,7 +124,7 @@ Annotations
 Labels
 * http://bl.ocks.org/dbuezas/9306799
 
-* Connecting labels to items
+* Connecting labels to items http://bl.ocks.org/mbostock/3886394
 
 
 ## Customization
@@ -271,7 +271,7 @@ Horizontal scatterplot without a Y-axis:
 
 * Dot chart http://bl.ocks.org/nrabinowitz/2034281
 * Dots transition http://www.economist.com/blogs/graphicdetail/2015/06/daily-chart-14?fsrc=permar|image2
-
+* Vertical stacks for dots http://stattrek.com/statistics/charts/dot-plot.aspx
 * Alternative designs for dotplots http://thesocietypages.org/graphicsociology/tag/time-line/
 
 #### Dot Chart
