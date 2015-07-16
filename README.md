@@ -16,46 +16,51 @@ Simply add the `vistk` JavaScript and CSS files as below:
 ### Dependencies
 
 * **D3** version `3.4.10` (not tested with other versions, but no reason why not)
-* Eventually some `topojson.js`, `queue.js` dependencies for the geomap
-* Also relies on world shape files for maps (should be avoided in the future?)
-* Plus metadata (e.g. product space nodes and links)
+* Eventually some `topojson.js`, `queue.js` dependencies for the [geo-map](http://cid-harvard.github.io/vis-toolkit/examples/geomap.html) as well as world shape files 
+* Metadata (e.g. product space nodes and links)
 
 ## Examples
 
-The current version aims at implementing basic [chart types](http://www.excelcharts.com/blog/classification-chart-types/).
-
-* Table ([Demo](http://cid-harvard.github.io/vis-toolkit/examples/table.html) | [Source](examples/table.html))
 * Treemap ([Demo](http://cid-harvard.github.io/vis-toolkit/examples/treemap.html) | [Source](examples/treemap.html))
 * Scatterplot ([Demo](http://cid-harvard.github.io/vis-toolkit/examples/scatterplot.html) | [Source](examples/scatterplot.html))
-* Node-Link ([Demo](http://cid-harvard.github.io/vis-toolkit/examples/nodelink.html) | [Source](examples/nodelink.html))
+
 * Line Chart ([Demo](http://cid-harvard.github.io/vis-toolkit/examples/linechart.html) | [Source](examples/linechart.html))
-* Sparkline ([Demo](http://cid-harvard.github.io/vis-toolkit/examples/sparkline.html) | [Source](examples/sparkline.html))
+
+Colombian Profile charts
+
 * Dot plot ([Demo](http://cid-harvard.github.io/vis-toolkit/examples/dotplot.html) | [Source](examples/dotplot.html))
+* Sparkline ([Demo](http://cid-harvard.github.io/vis-toolkit/examples/sparkline.html) | [Source](examples/sparkline.html))
+
 * Geo Map ([Demo](http://cid-harvard.github.io/vis-toolkit/examples/geomap.html) | [Source](examples/geomap.html))
 
-Composite examples (using coordinated views)
+## How to
 
-* Profile overview ([Demo](http://cid-harvard.github.io/vis-toolkit/examples/profile_overview.html)
-* Profile complexity ([Demo](http://cid-harvard.github.io/vis-toolkit/examples/profile_complexity.html)
-* Profile exports ([Demo](http://cid-harvard.github.io/vis-toolkit/examples/profile_exports.html)
-* Profile possibilities ([Demo](http://cid-harvard.github.io/vis-toolkit/examples/profile_possibilities.html )
-
-Re-creation of standard examples
-
-* Anscombe quartet ([Demo](http://cid-harvard.github.io/vis-toolkit/examples/anscombe.html)
-
-Look a the [various examples](http://cid-harvard.github.io/vis-toolkit/examples/).
-
-## Customization
+Create a new chart and attach it to DOM element (e.g. `#viz`):
 
 ```json
 var visualization = vistk.viz()
-      .params({})
+      .params({
+        container: "#viz"
+        data: [0, 1, 2]
+      })
 ```
 
-* Default charts configs
-* Charts customize default config themself
-* User customization
+By default, it creates a chart of `none` type as a self-organizing chart with 3 `items`. An `item` is a row in the dataset and should be identified by a unique `id`. By default, if no `id` exist, it will automatically create one using the index of each raw. 
+
+To create a chart using one of the templates in (located in `src/visualizations/*.js`), then a a `type` paramter (e.g. )
+
+```json
+var visualization = vistk.viz()
+      .params({
+        container: "#viz"
+        data: [{id: 0}, {id: 1}, {id: 2}],
+        type: 'dotplot'
+        var_id: 'id',
+        var_x: 'id'
+      })
+```
+
+
 
 ### Default charts configs
 
@@ -63,11 +68,16 @@ var visualization = vistk.viz()
 
 ### Charts configs
 
-* All the files in `src/visualizations/*.js` are 
 
-### User configs
+* Table ([Demo](http://cid-harvard.github.io/vis-toolkit/examples/table.html) | [Source](examples/table.html))
 
-* Everything that is in the HTML file
+### Roadmap
+
+* Cover implemetation of basic [chart types](http://www.excelcharts.com/blog/classification-chart-types/).
+
+* VisTK show reel similar to [D3 show reel](http://bl.ocks.org/mbostock/1256572) to demonstrate transitions between charts
+
+
 
 
 
