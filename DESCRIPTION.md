@@ -179,6 +179,10 @@ Instance of a table, plus some ordering features:
 
 * Show the rank?
 
+### Network
+
+* http://elijahmeeks.com/networkviz/
+
 
 ### Treemap
 
@@ -273,6 +277,7 @@ Horizontal scatterplot without a Y-axis:
 * Dots transition http://www.economist.com/blogs/graphicdetail/2015/06/daily-chart-14?fsrc=permar|image2
 * Vertical stacks for dots http://stattrek.com/statistics/charts/dot-plot.aspx
 * Alternative designs for dotplots http://thesocietypages.org/graphicsociology/tag/time-line/
+* http://www.theatlantic.com/business/archive/2015/07/college-major-rich-families-liberal-arts/397439/
 
 #### Dot Chart
 
@@ -360,6 +365,9 @@ Area chart with stacked shapes on top of each other (the previous layer being th
 * Parallel coordinates http://bl.ocks.org/syntagmatic/42d5b54c5cfe002e7dd8
 
 ### Other charts
+
+Cool ones
+* http://multimedia.scmp.com/china-overseas-investments/
 
 Listing of charts
 * http://www.niceone.org/infodesignpatterns/index.php5#/patterns.php5
@@ -457,6 +465,7 @@ D3js notebook
  * Color scale / legend (should contain the min/max values and min/max color range)
  * Should take the visual mapping as input and automatically generate it
  * Interactive and informative legends http://bl.ocks.org/bobmonteverde/2070123
+ * http://d3-legend.susielu.com/
 
 ---
 
