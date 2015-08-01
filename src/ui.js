@@ -55,7 +55,7 @@
                      .property("checked", true)
                      .on("change", function(d) { 
 
-                       vars.aggregate=d;
+                       vars.aggregate = d;
                        vars.refresh = true;
                        d3.select(vars.container).call(vars.this_chart);
 
@@ -81,7 +81,19 @@
           .attr("class", "slider");
 
         // Assuming we have continuous years
-        unique_years = d3.set(vars.data.map(function(d) { return d[vars.time.var_time];})).values();
+        // unique_years = d3.set(vars.data.map(function(d) { return d[vars.time.var_time];})).values();
+
+        all_values = vars.data.map(function(d) { return d[vars.time.var_time];});
+
+         var u = {};
+        unique_years = [];
+         for(var i = 0, l = all_values.length; i < l; ++i){
+            if(u.hasOwnProperty(all_values[i])) {
+               continue;
+            }
+            unique_years.push(all_values[i]);
+            u[all_values[i]] = 1;
+         }
 
         // TODO: find time range
         label_slider.append("input")
