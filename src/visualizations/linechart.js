@@ -26,7 +26,7 @@ vars.default_params["linechart"] = function(scope) {
     }],
     accessor_data: function(d) {
       return d.values.filter(function(e) {
-        return e.year == vars.time.current_time;
+        return e[vars.time.var_time] == vars.time.current_time;
       })[0];
     }
   }];
