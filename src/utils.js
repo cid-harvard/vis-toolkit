@@ -127,6 +127,25 @@
 
         break;
 
+
+        case "image":
+
+          var items_mark_image = d3.select(this).selectAll(".items__mark__image").data([d]);
+
+          items_mark_image.enter().append("image")
+                 .classed("items__mark__image", true)
+                 .classed("items_" + mark_id, true)
+             //    .attr("xmlns:xlink", "http://www.w3.org/1999/xlink")
+                 .attr("xlink:href", params.href) 
+                 .attr("x", 0)
+                 .attr("y", 0)
+                 .attr("width", 60)
+                 .attr("height", 30);
+
+          items_mark_image.exit().remove();
+
+        break;
+
       case "rect":
 
         var items_mark_rect = d3.select(this).selectAll(".items__mark__rect").data([d]);
