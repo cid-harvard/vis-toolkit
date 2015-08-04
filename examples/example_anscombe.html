@@ -36,34 +36,68 @@ d3.csv("../data/anscombe.csv", function(graph) {
   groups.forEach(function(d) {
 
     // Create a table
-    var t = vistk.viz()
-      .type("table")
-      .width(800)
-      .height(300)
-      .container("#viz")
-      .data(data.filter(function(e) { return e["Group"] == d; }))
-      .columns(['Group', 'x', 'y'])
-      .group('Group')
-      .title("Raw Data")
-      .ui(false)
+    var table = vistk.viz()
+      .params({
+          type: "table",
+          width: 800,
+          height: 600,
+          container: "#viz",
+          data: data.filter(function(e) { return e["Group"] == d; }),
+          columns: ['community_name', 'name', 'distance', 'pci', 'rca', 'share', 'year'],
+          id: ["community_name", "name"],
+          group: "community_name",
+          text: "name",
+          time: {
+            var_time: "year", 
+            current_time: 1995
+          },
+          title: "Products",
+          var_color: "community_name"
+        });
 
-    d3.select("#viz").call(t)
+    d3.select("#viz").call(table);
 
-    // Create a scatterplot
-    var v = vistk.viz()
-      .type("scatterplot")
-      .container("#viz")
-      .width(200)
-      .height(150)
-      .data(data.filter(function(e) { return e["Group"] == d; }))
-      .x_var("x")
-      .y_var("y")
-      .id(["continent", "country"])
-      .group("continent")
-      .color("continent")
-      .ui(false)
+    var scatterplot = vistk.viz()
+      .params({
+        dev: true,
+        type: 'scatterplot',
+        margin: {top: 10, right: 10, bottom: 30, left: 30},
+        container: '#viz',
+        data: data.filter(function(e) { return e["Group"] == d; }),
+        var_id: 'name',
+        var_group: 'continent',
+        var_color: 'continent',
+        var_x: 'nb_products',
+        var_y: 'avg_products',
+        var_r: 'nb_products',
+        var_share: "avg_products",
+        share_cutoff: function(d) { return d.avg_products > 30; },
+        var_text: 'name_2char',
+        time: {
+          var_time: "year",
+          current_time: "1995",
+          parse: function(d) { return d; }
+        },
+        x_scale: [{
+          domain: [0, 700]
+        }],
+        items: [{
+          attr: "name",
+          marks: [{
+            type: 'circle'
+          }]
+        }],
+        ui: {
+          default: true,
+          options: ["country", "continent"]
+        },
+        selection: ["France"],
+        highlight: ["France", "Germany"],      
+        title: "World Countries"
+      });
 
-    d3.select("#viz").call(v)
+    d3.select("#viz").call(scatterplot)
+
 
   })
 
