@@ -35,4 +35,5 @@ vars.default_params["barchart"] = function(scope) {
   params.y_grid_show = true;
 
   return params;
+  
 };
