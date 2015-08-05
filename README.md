@@ -41,11 +41,9 @@ Work-In-Progress
 
 ## HOWTO: Create a Chart
 
-The philosophy behind `vistk` is to use a configuration file that instantiate a chart template  (e.g. "sparkline", "dotplot", "barchart", "linechart", "scatterplot", "grid", "stacked", "piechart", "slopegraph", "productspace", "treemap", "geomap", "stackedbar", "ordinal_vertical" or "ordinal_horizontal").
+The philosophy behind `vistk` is to use a configuration file / JavaScript obejct that instantiate a chart template. The `type` parameter defines the template to be used (e.g. "sparkline", "dotplot", "barchart", "linechart", "scatterplot", "grid", "stacked", "piechart", "slopegraph", "productspace", "treemap", "geomap", "stackedbar", "ordinal_vertical" or "ordinal_horizontal"). The chart templates are located in `src/visualizations/*.js`.
 
-This is one of the many charts template (located in `src/visualizations/*.js`). Such a template can either be applied when creating the chart, or to update an existing chart. To add the `dotplot` template simply add a `type` parameter.
-
-### Boilerplate
+### Boilerplate Code
 
 ```html
 <div id="viz"></div>
@@ -58,6 +56,8 @@ d3.select("#viz").call(visualization);
 
 </script>
 ```html
+
+With `.params({})` the configuration of the chart
 
 ### Minimal Chart
 
@@ -171,35 +171,3 @@ Custom attributes can be created
 Custom event dispatches as well
 
 ### Data Mapping to Marks
-
-
-## Roadmap
-
-* Implement more basic [chart types](http://www.excelcharts.com/blog/classification-chart-types/).
-* Polish existing examples
-* Create more cross overs
-
-### Roadmap
-
-0.0.3
-* Fix geo map
-* Fix transition geo map to grid
-* Fix treemap blank squares #3
-
-0.0.4
-* Aggregation for treemap
-* Highlight product space links when node is highlighted
-* Filter product space links
-* Fix table ([Demo](http://cid-harvard.github.io/vis-toolkit/examples/table.html) | [Source](examples/table.html))
-
-
-0.1
-
-* Chart nesting function
-* Views (aka a mechanism to duplicate items)
-* Testing: non-regression, performances, .. and fully automated
-* Custom `group by` function
-
-0.2
-
-* Create a [show reel](http://cid-harvard.github.io/vis-toolkit/examples/stepper_all.html) similar to [D3 show reel](http://bl.ocks.org/mbostock/1256572) to demonstrate transitions between charts
