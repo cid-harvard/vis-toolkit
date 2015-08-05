@@ -286,6 +286,7 @@ Horizontal scatterplot without a Y-axis:
 * Line aggreation for dots http://fivethirtyeight.com/datalab/change-doesnt-usually-come-this-fast/
 
 
+* http://www.socialprogressimperative.org/en/data/spi/components/com2#performance/countries/idr2/com3,com4,idr2
 
 #### Box plot 
 
@@ -396,66 +397,6 @@ D3js notebook
 
 * http://neuralengr.com/asifr/journals/
 
-## Roadmap
-
-* Tests
- * Should provide a series of tests (client or server)
- * Using releveant datasets in terms of size, number of attributes, missing data, etc.
-  * http://jonsadka.com/blog/how-to-create-live-updating-and-flexible-d3-line-charts-using-pseudo-data/
- * Unit testings
-  * Cross Browser Compatibility
-  * Cross Device Compatibility
-  * Use strict mode https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Strict_mode
-
-* Build your own graph environment
- * Using an editor 
-  * Rich text edit envs http://ace.c9.io/#nav=about
-  * http://trifacta.github.io/vega/editor/index.html?spec=barley
-  * Example using Vega http://bl.ocks.org/timelyportfolio/5342818
-  * Teaching / demos / snippets http://tributary.io/inlet/4653053
- * Build your own grid
- * Customize charts interactively
- * Derive values? E.g. active or not for the rca value
-
-* Misc
- * Testing (using Travis?)
- * Sample datasets we will be using
- * Consistent input file format
- * Possibility to customize rendering: svg, png, .. (see [rasterize](http://cburgmer.github.io/rasterizeHTML.js/))
-
-* Should be fast (e.g. only requires attributes to be loaded once)
- * More importantly: we should be able to measure the performances
- * Benchmark with other toolkits for similar visualizations
-* Able to create multiple instances of visualizations on the same page
- * And eventually coordinate them (e.g brushing one filters another one)
- * Should also share some similar attributes/properties
-
-* Default values should be coherent
- * Default parameters
- * Especially when transitioning
- * Enable minimal set of parameters to begin with
-
-* Make sure it works for all types of data
- * But should make sure an input format has been defined
- * Dealing/robust even with missing data
- * Should be visually reflected too
-
-* Text wrap for long names (see [d3plus word wrap](https://github.com/alexandersimoes/d3plus/wiki/Basic-Utilities#wordwrap))
- * Guaranty that exported SVG will be correct
- * Same with other export file formats
-
-* Tooltips
- * Customizable tooltips (d3plus.tooltip.create()) http://bl.ocks.org/tgk/6044254
- * http://bl.ocks.org/d3noob/c37cb8e630aaef7df30d
- * http://bl.ocks.org/rveciana/5181105
- * http://bl.ocks.org/bobmonteverde/2070123
-
-* Callback once the loading is terminated
- * This is quite tricky as many things are pending
- * enter, update and exit
- * Other transitions (e.g. attrTween)
- * Other custom transitions, physical simulation, etc.
- * Dispatching other events
 
 ### Legends
 
@@ -524,6 +465,8 @@ Template
 
 ## Existing D3 toolkits
 
+* Exhaustive list - https://github.com/wbkd/awesome-d3
+
 * [NVd3](http://nvd3.org/) 
  * Some reusable components like `axis` with `http://tenxer.github.io/xcharts/`
  * Utils functions `nv.utils.defaultColor()`
@@ -533,6 +476,7 @@ Template
 * C3.js - http://c3js.org/ 
  * Configuration file https://github.com/masayuki0812/c3/blob/master/src/config.js
 
+* Plotly - https://plot.ly/javascript-graphing-library/getting-started/ 
 * xCharts - http://tenxer.github.io/xcharts/ 
 * Rickshaw - http://code.shutterstock.com/rickshaw/
 * D3 Charts - https://github.com/ndarville/d3-charts
@@ -555,10 +499,10 @@ Data management
 * http://square.github.io/crossfilter/
 * http://facetjs.org/
 
+* Incremental file loading http://bl.ocks.org/curran/baab51d65ffe28b1afdb
+
 * http://sigfried.github.io/supergroup/
 * https://github.com/gka/d3-jetpack#selectionon
-
-* Show uncertainty - http://www.velir.com/blog/index.php/2013/07/11/visualizing-data-uncertainty-an-experiment-with-d3-js/
 
 * Processing http://p5js.org/learn/examples/Math_Noise_Wave.php
 
@@ -570,3 +514,4 @@ Data management
 * http://bl.ocks.org/curran/raw/9aafca5fba0c7fde13aa/
 * http://mobileinfovis.com/smartphone
 * http://www.scmp.com/infographics/article/1461850/here-comes-rain-again-hong-kongs-rainfall-patterns-1997
+* Voronoi for hover http://www.visualcinnamon.com/2015/07/voronoi.html
