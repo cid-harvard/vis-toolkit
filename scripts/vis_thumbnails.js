@@ -116,6 +116,6 @@ var createGallery = function() {
 
 var index = 0; 
 
-// getAllExamples();
+getAllExamples();
 takeScreenshot(URLS[index]);
 createGallery();

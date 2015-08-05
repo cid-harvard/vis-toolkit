@@ -46,7 +46,9 @@ An `item` is a row in the dataset and should be identified by a unique `id` set 
 
 If no id in the dataset, then it considers each rows as an item and creates a `var__id` attribute which value is the index of the row.
 
-### var_id
+`aggregated` data are appended to the original dataset with a `__aggregated` attribute set to true. This means those two datasets will co-habit together.
+
+### `var_id`
 
 The attribute being used to identify each item in the dataset.
 
@@ -94,27 +96,24 @@ The `current_time` can defined to a specific value, or be set using `vistk.utils
 #### Templates and Mark properties
 
 `var_color` is the attribute being used
-`var_x` mapping to the x axis
-`var_y` 'avg_products',
+`var_x`     mapping to the x-axis
+`var_y`     mapping to the y-axis
+`var_sort`  soring
+`var_text`  
 
-`var_sort` soring
-
-`var_text` 'name',
-
-### ui 
+### `ui`
 
 Specify which UI element to be used.
 
 #### Format
 
-```html
+```js
 {
   default: true,
   options: ["country", "continent", "year"],
   sort: ['continent', "name", 'avg_products', 'nb_products']
 }
 ```
-
 
 ### `selection`
 
@@ -141,7 +140,7 @@ Creates custom variables when instantiating the chart
 
 #### Example
 
-`.set('aggregated', true)` creates aggregates with the
+`.set('aggregated', true)` creates aggregates data with a `__aggregated` set to true
 
 
 # Utils
@@ -157,7 +156,7 @@ Returns the min value
 
 Returns the max value
 
-### `translate_along`
+### `vistk.utils.translate_along`
 
 Transition between item and connect marks
 
