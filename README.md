@@ -23,12 +23,29 @@ Simply add the `vistk` JavaScript and CSS files as below:
 
 Current Colombian Atlas Profile charts
 
-* Dot plot ([Demo](http://cid-harvard.github.io/vis-toolkit/examples/dotplot.html) | [Source](examples/dotplot.html))
-* Sparkline ([Demo](http://cid-harvard.github.io/vis-toolkit/examples/sparkline.html) | [Source](examples/sparkline.html))
+### Dot plot 
+
+([Demo](http://cid-harvard.github.io/vis-toolkit/examples/dotplot.html) | [Source](examples/dotplot.html))
+
+<img src='img/dotplot.png' />
+
+### Sparkline 
+
+([Demo](http://cid-harvard.github.io/vis-toolkit/examples/sparkline.html) | [Source](examples/sparkline.html))
 
 <img src='img/sparkline.png' />
 
-* Treemap ([Demo](http://cid-harvard.github.io/vis-toolkit/examples/treemap.html) | [Source](examples/treemap.html))
+### Treemap 
+
+([Demo](http://cid-harvard.github.io/vis-toolkit/examples/treemap.html) | [Source](examples/treemap.html))
+
+<img src='img/treemap.png' />
+
+
+### Bar Chart
+
+<img src='img/barchart.png' />
+
 * Product Space ([Demo](http://cid-harvard.github.io/vis-toolkit/examples/scatterplot_productspace.html))
 
 Other Charts
