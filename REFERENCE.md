@@ -54,13 +54,12 @@ The attribute being used to identify each item in the dataset.
 #### Example
 
 
-##### Note
+#### Note
 
 
 ### `var_group`
 
 The variable use to create groups of items
-
 
 
 #### Example 
@@ -74,13 +73,19 @@ Makes a dataset temporal.
 
 #### Format
 
-```json
+```html
 time: {
   var_time: 'year', 
   current_time: 2012,
   parse: function(d) { return d; }
 }
 ```
+
+#### Default
+
+No time is given
+
+The `current_time` can defined to a specific value, or be set using `vistk.utils.min` which is a public function to retrieve
 
 ### `items`
 
@@ -102,7 +107,7 @@ Specify which UI element to be used.
 
 #### Format
 
-```json
+```html
 {
   default: true,
   options: ["country", "continent", "year"],
@@ -111,13 +116,13 @@ Specify which UI element to be used.
 ```
 
 
-### selection
+### `selection`
 
-Selected items
+Selected items, which differ from the highlight as tt is more persitent.
 
 #### Example
 
-["France"],
+["France"]
 
 
 ### `highlight`
@@ -128,4 +133,28 @@ Highlighted items
 
 ["France", "Germany"]
 
+#### Default
+
+### `set`
+
+Creates custom variables when instantiating the chart
+
+
+
+# Utils
+
+A list of public functions
+
+
+### `vistk.utils.min`
+
+Returns the min value
+
+### `vistk.utils.max`
+
+Returns the max value
+
+### `translate_along`
+
+Transition between item and connect marks
 

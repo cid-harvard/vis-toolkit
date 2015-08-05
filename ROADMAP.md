@@ -35,6 +35,8 @@
 
 ## TODO
 
+* Annotations
+
 * Tests
  * Should provide a series of tests (client or server)
  * Using releveant datasets in terms of size, number of attributes, missing data, etc.
