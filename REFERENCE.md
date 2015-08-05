@@ -139,6 +139,9 @@ Highlighted items
 
 Creates custom variables when instantiating the chart
 
+#### Example
+
+`.set('aggregated', true)` creates aggregates with the
 
 
 # Utils

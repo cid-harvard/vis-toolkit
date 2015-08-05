@@ -60,11 +60,17 @@ Simply add the `vistk` JavaScript and CSS files as below:
 
 Industry Space ([Demo](http://cid-harvard.github.io/vis-toolkit/examples/scatterplot_industryspace.html))
 
-### Line Chart 
+### Line Chart
 
 ([Demo](http://cid-harvard.github.io/vis-toolkit/examples/linechart.html) | [Source](examples/linechart.html))
 
 <img src='img/linechart.png' />
+
+### Stacked Graph
+
+([Demo](http://cid-harvard.github.io/vis-toolkit/examples/stacked.html) | [Source](examples/stacked.html))
+
+<img src='img/stacked.png' />
 
 Work-In-Progress
 
@@ -113,7 +119,7 @@ d3.select("#viz").call(visualization);
 
 Each chart in `vistk` has a `type` and for the default chart it is called `none`. 
 
-```jsons
+```js
 .params({
   container: "#viz",
   data: [{id: 0, value: 10}, {id: 1, value: 20}, {id: 2, value: 30}, {id: 3, value: 40}],
