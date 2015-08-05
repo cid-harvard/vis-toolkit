@@ -491,6 +491,7 @@ Template
 * Quadrigram http://www.quadrigram.com/#gallery
 * DC.js https://dc-js.github.io/dc.js/
 * Polychart https://www.polychart.com/demo
+* EZ-D3 http://mikejestes.github.io/ez-d3-graphs/
 
 ## Misc
 

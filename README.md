@@ -115,21 +115,33 @@ The attribute being used to identify each item in the dataset.
 ##### Note
 
 
-### var_group
+### `var_group`
 
-The 
+The variable use to create groups of items
+
+
 
 #### Example 
- itemps can be grouped by *continent*.
 
-**time** Makes a dataset temporal.
+Countries can be grouped by *continent*
 
-**time.var_time** The variable that identifies each item as a snapshot. 
-*E.g. year, date.*
 
-  current_time: "1995",
+### `time`
+
+Makes a dataset temporal.
+
+#### Format
+
+```json
+time: {
+  var_time: 'year', 
+  current_time: 2012,
   parse: function(d) { return d; }
-},
+}
+```
+
+### `items`
+
 
 
 #### Templates and Mark properties
@@ -142,21 +154,43 @@ The
 
 `var_text` 'name',
 
-
-
 ### ui 
 
+Specify which UI element to be used.
+
+#### Format
+
+```json
 {
   default: true,
   options: ["country", "continent", "year"],
   sort: ['continent', "name", 'avg_products', 'nb_products']
-},
+}
+```
 
 
-`selection` ["France"],
-`highlight` ["France", "Germany"],      
+### selection
+
+Selected items
+
+#### Example
+
+["France"],
+
+
+### `highlight`
+
+Highlighted items
+
+#### Example
+
+["France", "Germany"]
+
+
+
 
 ## Examples
+
 
 ### Minimal Chart
 
