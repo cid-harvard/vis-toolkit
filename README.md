@@ -56,21 +56,36 @@ d3.select("#viz").call(visualization);
 
 With `.params({})` the configuration of the chart
 
-### Parameters
+## Reference
 
 
-#### General
+### type 
 
-`type` visualization template to be used ('barchart', "sparkline", "dotplot", "barchart", "linechart", "scatterplot", "grid", "stacked", "piechart", "slopegraph", "productspace", "treemap", "geomap", "stackedbar", "ordinal_vertical" or "ordinal_horizontal")
+Type of template being used for the visualization
 
-`margin` {top: 10, right: 10, bottom: 30, left: 30}
+#### Example
 
-`container` '#viz'
+'barchart', "sparkline", "dotplot", "barchart", "linechart", "scatterplot", "grid", "stacked", "piechart", "slopegraph", "productspace", "treemap", "geomap", "stackedbar", "ordinal_vertical" "ordinal_horizontal".
 
-`title` 'World Countries'
+#### Note
+
+The list of all templates is available in ..
+
+#### margin
+
+ {top: 10, right: 10, bottom: 30, left: 30}
+
+#### container
 
 
-#### data
+##### default
+
+'#viz'
+
+#### title
+
+
+### data
 
 The dataset being used.
 
@@ -88,18 +103,18 @@ An `item` is a row in the dataset and should be identified by a unique `id` set 
 
 If no id in the dataset, then it considers each rows as an item and creates a `var__id` attribute which value is the index of the row.
 
-#### var_id
+### var_id
 
 The attribute being used to identify each item in the dataset.
 
 
-##### Example
+#### Example
 
 
 ##### Note
 
 
-#### var_group
+### var_group
 
 The 
 
@@ -127,13 +142,16 @@ The
 `var_text` 'name',
 
 
-#### UI elements
 
-`ui` {
+### ui 
+
+{
   default: true,
   options: ["country", "continent", "year"],
   sort: ['continent', "name", 'avg_products', 'nb_products']
 },
+
+
 `selection` ["France"],
 `highlight` ["France", "Germany"],      
 
