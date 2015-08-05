@@ -69,16 +69,42 @@ With `.params({})` the configuration of the chart
 
 `title` 'World Countries'
 
-#### Data
 
-**data** - The dataset being used.<br>
+#### data
+
+The dataset being used.
+
 An `item` is a row in the dataset and should be identified by a unique `id` set with **var_id**. By default, if no `id` exist, it will automatically create one using the index of each raw and set the `var_id` parameter to the `__id` attribute.<br>
-*E.g. `[0, 1, 2, 3]` with no item `id`, or `[{id: 0, value: 10}, {id: 1, value: 20}, {id: 2, value: 30}, {id: 3, value: 40}]` with `id` as **var_id**.
 
-**var_id** 
+##### Example
+
+`[0, 1, 2, 3]` with no item `id`, or `[{id: 0, value: 10}, {id: 1, value: 20}, {id: 2, value: 30}, {id: 3, value: 40}]` with `id` as **var_id**.
+
+##### Default
+
+`{}`
+
+##### Note
+
+If no id in the dataset, then it considers each rows as an item and creates a `var__id` attribute which value is the index of the row.
+
+#### var_id
+
 The attribute being used to identify each item in the dataset.
 
-**var_group** For instance, itemps can be grouped by *continent*.
+
+##### Example
+
+
+##### Note
+
+
+#### var_group
+
+The 
+
+##### Example 
+ itemps can be grouped by *continent*.
 
 **time** Makes a dataset temporal.
 
