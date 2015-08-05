@@ -36,6 +36,15 @@ d3.json("../data/diversification_ubiquity_hs4_1995_2012.json", function(error, c
         },{
           type: "text",
           rotate: "-30"
+        }, {
+          var_mark: '__aggregated',
+          type: d3.scale.ordinal().domain([true, false]).range(["tick", "none"]),
+        }, {
+          var_mark: '__aggregated',
+          type: d3.scale.ordinal().domain([true, false]).range(["text", "none"]),
+          rotate: "0",
+          translate: [-10, 30],
+          text_anchor: "middle"
         }]
       }],
       time: {
@@ -47,7 +56,8 @@ d3.json("../data/diversification_ubiquity_hs4_1995_2012.json", function(error, c
         default: true,
         options: ["country", "continent", "year"]
       }
-    });
+    })
+    .set('__aggregated', true);
 
     d3.select("#viz").call(visualization);
 });
