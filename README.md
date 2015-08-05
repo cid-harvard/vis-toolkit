@@ -41,18 +41,29 @@ Current Colombian Atlas Profile charts
 
 <img src='img/treemap.png' />
 
-
 ### Bar Chart
 
 <img src='img/barchart.png' />
 
-* Product Space ([Demo](http://cid-harvard.github.io/vis-toolkit/examples/scatterplot_productspace.html))
+### Scatterplot 
 
-Other Charts
+([Demo](http://cid-harvard.github.io/vis-toolkit/examples/scatterplot.html) | [Source](examples/scatterplot.html))
 
-* Scatterplot ([Demo](http://cid-harvard.github.io/vis-toolkit/examples/scatterplot.html) | [Source](examples/scatterplot.html))
-* Line Chart ([Demo](http://cid-harvard.github.io/vis-toolkit/examples/linechart.html) | [Source](examples/linechart.html))
-* Industry Space ([Demo](http://cid-harvard.github.io/vis-toolkit/examples/scatterplot_industryspace.html))
+<img src='img/scatterplot.png' />
+
+### Product Space 
+
+([Demo](http://cid-harvard.github.io/vis-toolkit/examples/scatterplot_productspace.html) | [Source](examples/scatterplot_productspace.html))
+
+<img src='img/scatterplot_productspace.png' />
+
+Industry Space ([Demo](http://cid-harvard.github.io/vis-toolkit/examples/scatterplot_industryspace.html))
+
+### Line Chart 
+
+([Demo](http://cid-harvard.github.io/vis-toolkit/examples/linechart.html) | [Source](examples/linechart.html))
+
+<img src='img/linechart.png' />
 
 Work-In-Progress
 
