@@ -71,8 +71,10 @@ With `.params({})` the configuration of the chart
 
 #### Data
 
-`data` dataset
-`var_id` 'name',
+*data:* is the dataset being used. An `item` is a row in the dataset and should be identified by a unique `id` set with **var_id**. By default, if no `id` exist, it will automatically create one using the index of each raw and set the `var_id` parameter to the `__id` attribute.
+
+*var_id* is the unique identifier for items in the dataset.
+
 `var_group` 'continent',
 
 `time` {
@@ -124,7 +126,7 @@ d3.select("#viz").call(visualization);
 </script>
 ```
 
-Each chart in `vistk` has a `type` and for the default chart it is called `none`. An `item` is a row in the dataset and should be identified by a unique `id`. By default, if no `id` exist, it will automatically create one using the index of each raw and set the `var_id` parameter to the `__id` attribute.
+Each chart in `vistk` has a `type` and for the default chart it is called `none`. 
 
 ```jsons
 .params({
