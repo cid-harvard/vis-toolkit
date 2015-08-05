@@ -1,10 +1,12 @@
 
-var URLS = ['dotplot', 'sparkline', 'treemap', 'barchart', 'scatterplot_productspace', 'scatterplot', 'linechart', 'stacked', 'grid_occu', 'piechart', 'slopgraph', 'table', 'default'];
+var URLS = ['dotplot', 'sparkline', 'treemap', 'barchart', 'scatterplot_productspace', 'scatterplot', 'linechart', 'stacked', 'grid_occu', 'piechart', 'slopegraph', 'default'];
 var STATIC_URL = 'http://cid-harvard.github.io/vis-toolkit/examples/';
-var OUTPUT_DIR = '../img/'
+var THUMBS_DIR = '../thumbs/'
 var SCREENSHOT_WIDTH = 800; 
 var SCREENSHOT_HEIGHT = 600; 
-var LOAD_WAIT_TIME = 5000; 
+var LOAD_WAIT_TIME = 2000; 
+
+var fs = require('fs');
 
 var getPageTitle = function(page){
     var documentTitle = page.evaluate(function(){
@@ -27,13 +29,13 @@ var renderPage = function(page, element) {
     var pageHeight = getPageHeight(page); 
 
     page.clipRect = {
-        top:0,
-        left:0, 
+        top: 0,
+        left: 0, 
         width: SCREENSHOT_WIDTH, 
         height: pageHeight
     };
 
-    page.render(OUTPUT_DIR + element + ".png");
+    page.render(THUMBS_DIR + element + ".png");
     
     console.log("rendered:", element + ".png")
 }
@@ -41,7 +43,7 @@ var renderPage = function(page, element) {
 var exitIfLast = function(index,array){
     console.log(array.length - index-1, "more screenshots to go!")
     console.log("~~~~~~~~~~~~~~")
-    if (index == array.length-1){
+    if (index == array.length-1) {
         console.log("exiting phantomjs")
         phantom.exit();
     }
@@ -60,26 +62,42 @@ var takeScreenshot = function(element){
     console.log("waiting for page to load...")
 
     page.onLoadFinished = function() {
-        setTimeout(function(){
-            console.log("that's long enough")
-            renderPage(page, element)
-            exitIfLast(index,URLS)
-            index++; 
-            takeScreenshot(URLS[index]);
-        }, LOAD_WAIT_TIME)
+      setTimeout(function(){
+          console.log("that's long enough")
+          renderPage(page, element)
+          exitIfLast(index,URLS)
+          index++; 
+          takeScreenshot(URLS[index]);
+      }, LOAD_WAIT_TIME)
     }
+
+}
+
+var getAllExamples = function() {
+
+  URLS = [];
+
+  var path = "../examples/";
+
+  var list = fs.list(path);
+
+  for(var x = 0; x < list.length; x++) {
+
+      var file = path + list[x];
+      if(fs.isFile(file)) {
+        var name = file.replace('../examples/', '').replace('.html', '');
+        URLS.push(name)
+      }
+  }
 
 }
 
 var createGallery = function() {
 
-  var fs = require('fs');
-
-
   var html = '<html><body>';
 
   URLS.forEach(function(d) {
-    html += '<img src="img/' + d + '.png" style="width: 400; height: 300" />';
+    html += '<a href="examples/' + d + '.html"><img src="thumbs/' + d + '.png" style="width: 400; height: 300" /></a>';
   })
 
   html += '</body></html>';
@@ -94,10 +112,10 @@ var createGallery = function() {
 
   }); 
 
-//  phantom.exit();
 }
 
 var index = 0; 
 
+// getAllExamples();
 takeScreenshot(URLS[index]);
 createGallery();
