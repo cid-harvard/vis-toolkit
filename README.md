@@ -28,7 +28,6 @@ Current Colombian Atlas Profile charts
 * Treemap ([Demo](http://cid-harvard.github.io/vis-toolkit/examples/treemap.html) | [Source](examples/treemap.html))
 * Product Space ([Demo](http://cid-harvard.github.io/vis-toolkit/examples/scatterplot_productspace.html))
 
-
 Other Charts
 
 * Scatterplot ([Demo](http://cid-harvard.github.io/vis-toolkit/examples/scatterplot.html) | [Source](examples/scatterplot.html))
@@ -40,8 +39,6 @@ Work-In-Progress
 * Geo Map ([Demo](http://cid-harvard.github.io/vis-toolkit/examples/geomap.html) | [Source](examples/geomap.html))
 
 ## HOWTO: Create a Chart
-
-The philosophy behind `vistk` is to use a configuration file / JavaScript obejct that instantiate a chart template. The `type` parameter defines the template to be used (e.g. "sparkline", "dotplot", "barchart", "linechart", "scatterplot", "grid", "stacked", "piechart", "slopegraph", "productspace", "treemap", "geomap", "stackedbar", "ordinal_vertical" or "ordinal_horizontal"). The chart templates are located in `src/visualizations/*.js`.
 
 ### Boilerplate Code
 
@@ -58,6 +55,55 @@ d3.select("#viz").call(visualization);
 ```html
 
 With `.params({})` the configuration of the chart
+
+### Parameters
+
+
+#### General
+
+`type` visualization template to be used ('barchart', "sparkline", "dotplot", "barchart", "linechart", "scatterplot", "grid", "stacked", "piechart", "slopegraph", "productspace", "treemap", "geomap", "stackedbar", "ordinal_vertical" or "ordinal_horizontal")
+
+`margin` {top: 10, right: 10, bottom: 30, left: 30}
+
+`container` '#viz'
+
+`title` 'World Countries'
+
+#### Data
+
+`data` dataset
+`var_id` 'name',
+`var_group` 'continent',
+
+`time` {
+  var_time: "year",
+  current_time: "1995",
+  parse: function(d) { return d; }
+},
+
+
+#### Templates and Mark properties
+
+`var_color` is the attribute being used
+`var_x` mapping to the x axis
+`var_y` 'avg_products',
+
+`var_sort` soring
+
+`var_text` 'name',
+
+
+#### UI elements
+
+`ui` {
+  default: true,
+  options: ["country", "continent", "year"],
+  sort: ['continent', "name", 'avg_products', 'nb_products']
+},
+`selection` ["France"],
+`highlight` ["France", "Germany"],      
+
+## Examples
 
 ### Minimal Chart
 
@@ -88,55 +134,6 @@ Each chart in `vistk` has a `type` and for the default chart it is called `none`
   var_text: 'value'
 });
 ```
-
-### Dot Plot
-
-
-```json
-.params({
-  container: "#viz"
-  data: [10, 20, 30, 40],
-  type: 'dotplot'
-  var_id: 'id',
-  var_x: 'value',
-  var_text: 'value'
-})
-```
-
-### Sparkline
-
-> A small line chart showing variations of a measure without any axis.
-
-```json
-.params({
-  type: "sparkline",
-  container: "#viz",
-  var_y: "realgdp",
-  time: {
-    var_time: "year", 
-    parse: d3.time.format("%Y").parse,
-    current_time: '2012',
-    filter_interval: ['2000', '2012']
-  },
-  items: [{
-    marks: [{
-      type: "diamond"
-    }, {
-      var_mark: '__highlighted',
-    }]
-  }],
-  var_x: "year"
-});
-```
-
-### Treemap
-
-
-### Scatterplot
-
-> 
-
-### Product Space
 
 ## HOWTO: Chart Customizations
 
