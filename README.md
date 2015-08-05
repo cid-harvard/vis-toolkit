@@ -71,14 +71,17 @@ With `.params({})` the configuration of the chart
 
 #### Data
 
-**data** is the dataset being used. An `item` is a row in the dataset and should be identified by a unique `id` set with **var_id**. By default, if no `id` exist, it will automatically create one using the index of each raw and set the `var_id` parameter to the `__id` attribute.
+**data:** The dataset being used. An `item` is a row in the dataset and should be identified by a unique `id` set with **var_id**. By default, if no `id` exist, it will automatically create one using the index of each raw and set the `var_id` parameter to the `__id` attribute.
 
-*var_id* is the unique identifier for items in the dataset.
+**var_id** The attribute being used to identify each item in the dataset.
 
-`var_group` 'continent',
+**var_group** For instance, itemps can be grouped by *continent*.
 
-`time` {
-  var_time: "year",
+**time** Makes a dataset temporal.
+
+**time.var_time** The variable that identifies each item as a snapshot. 
+*E.g. year, date.*
+
   current_time: "1995",
   parse: function(d) { return d; }
 },
