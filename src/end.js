@@ -69,3 +69,13 @@ vistk.utils.find_node_coordinates_by_id = function(nodes, var_id, id) {
 
   return res;
 }
+
+vistk.utils.max = function(data) {
+  var var_time = this.var_time;
+  return d3.max(data, function(d) { return d[var_time] });
+}
+
+vistk.utils.min = function(data) {
+  var var_time = this.var_time;
+  return d3.min(data, function(d) { return d[var_time] });
+}

@@ -80,6 +80,12 @@
       vars.time.interval = d3.extent(vars.new_data, function(d) { return d[vars.time.var_time]; });
       vars.time.points = d3.set(vars.data.map(function(d) { return d[vars.time.var_time]; })).values();
 
+
+      // In case the current_time is set dynamically
+      if(typeof vars.time.current_time === "function") {
+        vars.time.current_time = vars.time.current_time(vars.data)
+      }
+
       // Filter data by attribute
       // TODO: not sure we should remove data, but add an attribute instead would better
       if(vars.filter.length > 0) {
