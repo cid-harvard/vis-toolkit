@@ -41,9 +41,25 @@ Work-In-Progress
 
 ## HOWTO: Create a Chart
 
-The philosophy behind `vistk`
+The philosophy behind `vistk` is to use a configuration file that instantiate a chart template  (e.g. "sparkline", "dotplot", "barchart", "linechart", "scatterplot", "grid", "stacked", "piechart", "slopegraph", "productspace", "treemap", "geomap", "stackedbar", "ordinal_vertical" or "ordinal_horizontal").
 
-### Default Chart
+This is one of the many charts template (located in `src/visualizations/*.js`). Such a template can either be applied when creating the chart, or to update an existing chart. To add the `dotplot` template simply add a `type` parameter.
+
+### Boilerplate
+
+```html
+<div id="viz"></div>
+<script>
+
+var  visualization = vistk.viz()
+    .params({});
+
+d3.select("#viz").call(visualization);
+
+</script>
+```html
+
+### Minimal Chart
 
 A [default chart](http://cid-harvard.github.io/vis-toolkit/examples/default_minimal.html) is a minimal representation with no mapping besides showing each row as a dot. For instance, the dataset `[0, 1, 2, 3]` is plotted as a self-organized graph within the SVG canvas boundaries (position doesn't encode anything(. The SVG canvas is attached to a parent DOM element (e.g. `#viz`) as follows:
 
@@ -75,9 +91,6 @@ Each chart in `vistk` has a `type` and for the default chart it is called `none`
 
 ### Dot Plot
 
-> A dotplot consists of data points plotted on a simple linear scale (horizontal or vertical). 
-
-This is one of the many charts template (located in `src/visualizations/*.js`). Such a template can either be applied when creating the chart, or to update an existing chart. To add the `dotplot` template simply add a `type` parameter (e.g. "sparkline", "dotplot", "barchart", "linechart", "scatterplot", "grid", "stacked", "piechart", "slopegraph", "productspace", "treemap", "geomap", "stackedbar", "ordinal_vertical" or "ordinal_horizontal"):
 
 ```json
 .params({
@@ -94,11 +107,34 @@ This is one of the many charts template (located in `src/visualizations/*.js`). 
 
 > A small line chart showing variations of a measure without any axis.
 
+```json
+.params({
+  type: "sparkline",
+  container: "#viz",
+  var_y: "realgdp",
+  time: {
+    var_time: "year", 
+    parse: d3.time.format("%Y").parse,
+    current_time: '2012',
+    filter_interval: ['2000', '2012']
+  },
+  items: [{
+    marks: [{
+      type: "diamond"
+    }, {
+      var_mark: '__highlighted',
+    }]
+  }],
+  var_x: "year"
+});
+```
+
 ### Treemap
 
->
 
 ### Scatterplot
+
+> 
 
 ### Product Space
 
@@ -134,7 +170,7 @@ Custom attributes can be created
 
 Custom event dispatches as well
 
-### Mapping
+### Data Mapping to Marks
 
 
 ## Roadmap
@@ -143,20 +179,19 @@ Custom event dispatches as well
 * Polish existing examples
 * Create more cross overs
 
-Polish existing examples:
-
-* Table ([Demo](http://cid-harvard.github.io/vis-toolkit/examples/table.html) | [Source](examples/table.html))
-
 ### Roadmap
 
 0.0.3
-* Fixing geo map
-* Fixing transition geo map to grid
+* Fix geo map
+* Fix transition geo map to grid
 * Fix treemap blank squares #3
 
 0.0.4
 * Aggregation for treemap
-* Filter product space links as well
+* Highlight product space links when node is highlighted
+* Filter product space links
+* Fix table ([Demo](http://cid-harvard.github.io/vis-toolkit/examples/table.html) | [Source](examples/table.html))
+
 
 0.1
 
@@ -165,6 +200,6 @@ Polish existing examples:
 * Testing: non-regression, performances, .. and fully automated
 * Custom `group by` function
 
-TODO
+0.2
 
 * Create a [show reel](http://cid-harvard.github.io/vis-toolkit/examples/stepper_all.html) similar to [D3 show reel](http://bl.ocks.org/mbostock/1256572) to demonstrate transitions between charts
