@@ -52,7 +52,7 @@ var  visualization = vistk.viz()
 d3.select("#viz").call(visualization);
 
 </script>
-```html
+```
 
 With `.params({})` the configuration of the chart
 
