@@ -1,5 +1,5 @@
 
-var URLS = ['dotplot', 'sparkline', 'treemap', 'barchart', 'scatterplot_productspace', 'scatterplot', 'linechart', 'default'];
+var URLS = ['dotplot', 'sparkline', 'treemap', 'barchart', 'scatterplot_productspace', 'scatterplot', 'linechart', 'stacked', 'grid_occu', 'piechart', 'slopgraph', 'table', 'default'];
 var STATIC_URL = 'http://cid-harvard.github.io/vis-toolkit/examples/';
 var OUTPUT_DIR = '../img/'
 var SCREENSHOT_WIDTH = 800; 
@@ -66,11 +66,38 @@ var takeScreenshot = function(element){
             exitIfLast(index,URLS)
             index++; 
             takeScreenshot(URLS[index]);
-        },LOAD_WAIT_TIME)
+        }, LOAD_WAIT_TIME)
     }
 
+}
+
+var createGallery = function() {
+
+  var fs = require('fs');
+
+
+  var html = '<html><body>';
+
+  URLS.forEach(function(d) {
+    html += '<img src="img/' + d + '.png" style="width: 400; height: 300" />';
+  })
+
+  html += '</body></html>';
+
+  fs.write("../gallery.html", html, function(err) {
+
+    if(err) {
+      return console.log(err);
+    }
+
+    console.log("The file was saved!");
+
+  }); 
+
+//  phantom.exit();
 }
 
 var index = 0; 
 
 takeScreenshot(URLS[index]);
+createGallery();
