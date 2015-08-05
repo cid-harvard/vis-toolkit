@@ -59,7 +59,7 @@ With `.params({})` the configuration of the chart
 ## Reference
 
 
-### type 
+### `type`
 
 Type of template being used for the visualization
 
@@ -71,21 +71,22 @@ Type of template being used for the visualization
 
 The list of all templates is available in ..
 
-#### margin
+
+### `margin`
 
  {top: 10, right: 10, bottom: 30, left: 30}
 
-#### container
+### `container`
 
 
-##### default
+#### default
 
 '#viz'
 
 #### title
 
 
-### data
+### `data`
 
 The dataset being used.
 
@@ -118,7 +119,7 @@ The attribute being used to identify each item in the dataset.
 
 The 
 
-##### Example 
+#### Example 
  itemps can be grouped by *continent*.
 
 **time** Makes a dataset temporal.
