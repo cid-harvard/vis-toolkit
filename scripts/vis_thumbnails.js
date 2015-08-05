@@ -1,5 +1,5 @@
 
-var URLS = ['dotplot', 'sparkline', 'treemap', 'barchart', 'scatterplot_productspace', 'scatterplot', 'linechart'];
+var URLS = ['dotplot', 'sparkline', 'treemap', 'barchart', 'scatterplot_productspace', 'scatterplot', 'linechart', 'default'];
 var STATIC_URL = 'http://cid-harvard.github.io/vis-toolkit/examples/';
 var OUTPUT_DIR = '../img/'
 var SCREENSHOT_WIDTH = 800; 

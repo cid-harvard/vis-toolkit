@@ -21,13 +21,14 @@ Simply add the `vistk` JavaScript and CSS files as below:
 
 ## Examples
 
-Current Colombian Atlas Profile charts
-
 ### Dot plot 
 
 ([Demo](http://cid-harvard.github.io/vis-toolkit/examples/dotplot.html) | [Source](examples/dotplot.html))
 
 <img src='img/dotplot.png' />
+
+* Adding averages
+* 
 
 ### Sparkline 
 
@@ -85,15 +86,15 @@ d3.select("#viz").call(visualization);
 </script>
 ```
 
-With `.params({})` the configuration of the chart
-
+Where `.params({})` is the configuration of the chart.
 
 ## Examples
-
 
 ### Minimal Chart
 
 A [default chart](http://cid-harvard.github.io/vis-toolkit/examples/default_minimal.html) is a minimal representation with no mapping besides showing each row as a dot. For instance, the dataset `[0, 1, 2, 3]` is plotted as a self-organized graph within the SVG canvas boundaries (position doesn't encode anything(. The SVG canvas is attached to a parent DOM element (e.g. `#viz`) as follows:
+
+<img src='img/default.png' />
 
 ```html
 <div id="viz"></div>
@@ -125,7 +126,7 @@ Each chart in `vistk` has a `type` and for the default chart it is called `none`
 
 ### Items
 
-```json
+```js
 params.items = [{
   attr: "name",
   marks: [{
