@@ -71,11 +71,27 @@ vistk.utils.find_node_coordinates_by_id = function(nodes, var_id, id) {
 }
 
 vistk.utils.max = function(data) {
+  
   var var_time = this.var_time;
   return d3.max(data, function(d) { return d[var_time] });
 }
 
 vistk.utils.min = function(data) {
+  
   var var_time = this.var_time;
   return d3.min(data, function(d) { return d[var_time] });
+}
+
+vistk.utils.decode_url = function() {
+  
+  // Variables from query string
+  var queryParameters = {}, queryString = location.search.substring(1),
+      re = /([^&=]+)=([^&]*)/g, m, queryActivated = false;
+
+  // Creates a map with the query string parameters
+  while (m = re.exec(queryString)) {
+    queryParameters[decodeURIComponent(m[1])] = decodeURIComponent(m[2]);
+  }
+
+  return queryParameters;
 }
