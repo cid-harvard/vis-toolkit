@@ -1,0 +1,60 @@
+<!doctype html>
+<meta charset="utf-8">
+<script src="../js/d3.js"></script>
+<script src="../build/vistk.js"></script>
+<link href="../css/vistk.css" rel="stylesheet">
+<body>
+<div id="viz"></div>
+<body>
+<script src="../js/d3.js"></script>
+<script>
+
+
+d3.csv("../data/stocks.csv", function(error, data) {
+
+  // symbol,date,price
+  // MSFT,Jan 2000,39.81
+  // MSFT,Feb 2000,36.35
+  // MSFT,Mar 2000,43.22
+  // MSFT,Apr 2000,28.37
+
+  // PRE-PROCESSING
+  data.forEach(function(d) {
+    d.price = +d.price;
+  })
+
+  visualization = vistk.viz().params({
+    type: "linechart",
+    container: "#viz",
+    height: 600,
+    width: 900,
+    margin: {top: 30, right: 100, bottom: 30, left: 10},
+    data: data,
+    var_id: "symbol",
+    var_group: "symbol",
+    var_color: "symbol", // TODO: color by final ranking value..
+    var_text: "symbol",
+    var_y: "price",
+    var_x: 'date',
+    time: {
+      parse: d3.time.format("%b %Y").parse,
+      var_time: 'date',
+      current_time: 'Jan 2000',
+      filter: ['Jan 2000', 'Feb 2000']
+    },
+    selection: ["MSFT"],
+    highlight: "MSFT",
+    selection: ["Japan", "Switzerland", "Germany"],
+    highlight: "France",
+    ui: {
+      default: true,
+      options: ["country", "continent"]
+    }
+  });
+
+  d3.select("#viz").call(visualization);
+
+});
+
+
+</script>
