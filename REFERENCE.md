@@ -5,31 +5,31 @@
 
 > Type of template being used for the visualization
 
-Default: 'none'
+**Default:** 'none'
 
-Example: barchart, sparkline, dotplot, barchart, linechart, scatterplot, grid, stacked, piechart, slopegraph, productspace, treemap, geomap, stackedbar, ordinal_vertical, ordinal_horizontal.
+**Example:** barchart, sparkline, dotplot, barchart, linechart, scatterplot, grid, stacked, piechart, slopegraph, productspace, treemap, geomap, stackedbar, ordinal_vertical, ordinal_horizontal.
 
-Note: The list of all templates is available in `src/visualizations/`
+**Note:** The list of all templates is available in `src/visualizations/`
 
 ### `margin`
 
 > Defines the margins for the chart within the SVG
 
-Default: 
+**Default:** 
 
-Example: {top: 10, right: 10, bottom: 30, left: 30}
+**Example:** `{top: 10, right: 10, bottom: 30, left: 30}`
 
-Note: follows the [D3 margin convention](http://bl.ocks.org/mbostock/3019563)
+**Note:** follows the [D3 margin convention](http://bl.ocks.org/mbostock/3019563)
 
 ### `container`
 
 > The selector for the DOM element being used to append the visualization to
 
-Default: `#viz`
+**Default:** `#viz`
 
-Example: `#viz`
+**Example:** `#viz`
 
-Note: ..
+**Note:** ..
 
 #### `title`
 
@@ -47,11 +47,11 @@ Note: ..
 
 An `item` is a row in the dataset and should be identified by a unique `id` set with **var_id**. By default, if no `id` exist, it will automatically create one using the index of each raw and set the `var_id` parameter to the `__id` attribute.<br>
 
-Default: []
+**Default:** []
 
-Example: `[0, 1, 2, 3]` with no item `id`, or `[{id: 0, value: 10}, {id: 1, value: 20}, {id: 2, value: 30}, {id: 3, value: 40}]` with `id` as **var_id**.
+**Example:** `[0, 1, 2, 3]` with no item `id`, or `[{id: 0, value: 10}, {id: 1, value: 20}, {id: 2, value: 30}, {id: 3, value: 40}]` with `id` as **var_id**.
 
-Note: If no id in the dataset, then it considers each rows as an item and creates a `var__id` attribute which value is the index of the row.
+**Note:** If no id in the dataset, then it considers each rows as an item and creates a `var__id` attribute which value is the index of the row.
 
 `aggregated` data are appended to the original dataset with a `__aggregated` attribute set to true. This means those two datasets will co-habit together.
 
@@ -91,12 +91,11 @@ time: {
 
 #### Default
 
-No time is given
+>
 
 The `current_time` can defined to a specific value, or be set using `vistk.utils.min` which is a public function to retrieve
 
 ### `items`
-
 
 
 #### Templates and Mark properties
