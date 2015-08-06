@@ -1,11 +1,14 @@
 
 # Reference
 
-## Global chart
+
+
+
+## Global
 
 ### `type`
 
-> Type of template being used for the visualization
+> Type of template being used for the visualization.
 
 **Default:** 'none'
 
@@ -37,13 +40,19 @@
 
 > The title to use for the visualization (in case it features a space for the title)
 
-Default:
+**Default:**
 
-Example:
+**Example:**
 
-Note: ..
+**Note:** ..
 
-## Data Specific
+
+
+
+
+
+
+## Data
 
 ### `data`
 
@@ -63,25 +72,77 @@ An `item` is a row in the dataset and should be identified by a unique `id` set 
 
 > The attribute being used to identify each item in the dataset.
 
-Default:
+**Default:** `__id`
 
-Example:
+**Example:** 
 
-Note: ..
+Note: The `__id` is automatically created in case no `var_id` is set.
 
 ### `var_group`
 
-The variable use to create groups of items
+> The variable to be used to create groups of items
+
+**Default:** none
 
 **Note:** Right now, only one level of hierarchy is provided.
 
 **Example:** Countries can be grouped by *continent*
 
+### `set`
+
+> Creates custom variables when instantiating the chart
+
+**Default:** none
+
+**Example:** `.set('aggregated', true)` creates aggregates data with a `__aggregated` set to true
+
+**Note:** ..
+
+## Items and Connect
+
+### `items`
+
+>
+
+**Default:**
+
+**Example:**
+
+**Note:** ..
+
+
+### `items.marks`
+
+>
+
+**Default:**
+
+**Example:**
+
+**Note:** ..
+
+**Default:**
+
+### `items.marks.type`
+
+> The type of the graphical mark
+
+**Default:**
+
+**Example:**
+
+**Note:** Can be a function
+
+
+### `connect`
+
+
+
 ## Time
 
 ### `time`
 
-> Makes a dataset temporal.
+> If set, informs a dataset into a temporal.
 
 #### Format
 
@@ -93,13 +154,10 @@ time: {
 }
 ```
 
-#### Default
+**Default:**
 
->
+**Note:** The `current_time` can defined to a specific value, or be set using `vistk.utils.min` which is a public function to retrieve
 
-The `current_time` can defined to a specific value, or be set using `vistk.utils.min` which is a public function to retrieve
-
-### `items`
 
 
 #### Templates and Mark properties
@@ -110,9 +168,13 @@ The `current_time` can defined to a specific value, or be set using `vistk.utils
 `var_sort`  soring
 `var_text`  
 
+
+
+## UI
+
 ### `ui`
 
-Specify which UI element to be used.
+> Specify which UI element to be used.
 
 #### Format
 
@@ -126,46 +188,60 @@ Specify which UI element to be used.
 
 ### `selection`
 
-Selected items, which differ from the highlight as tt is more persitent.
+> Selected items, which differ from the highlight as tt is more persitent
 
-#### Example
+**Example:** If using the ['France'].
 
-["France"]
-
+**Default:** []
 
 ### `highlight`
 
-Highlighted items
+> Highlighted items
 
-#### Example
+**Example:** If using the countries dataset `["France", "Germany"]`
 
-["France", "Germany"]
+**Default:** `[]`
 
-#### Default
-
-### `set`
-
-Creates custom variables when instantiating the chart
-
-#### Example
-
-`.set('aggregated', true)` creates aggregates data with a `__aggregated` set to true
+**Note:** Values are defined according to the `var_id` parameter
 
 
-# Utils
 
-A list of public functions
 
+
+## Utils
+
+A list of public functions made available mostly to be used by the parameters.
 
 ### `vistk.utils.min`
 
-Returns the min value
+> Returns the min value
+
+**Default:**
+
+**Example:**
+
+**Note:** ..
+
 
 ### `vistk.utils.max`
 
-Returns the max value
+> Returns the max value
+
+**Default:**
+
+**Example:**
+
+**Note:** ..
+
 
 ### `vistk.utils.translate_along`
 
-Transition between item and connect marks
+> Transition between item and connect marks
+
+
+**Default:**
+
+**Example:**
+
+**Note:** ..
 
