@@ -882,14 +882,16 @@
 
   utils.background_label = function() {
 
-    vars.svg.selectAll(".title")
+    vars.svg.selectAll(".background_label")
         .data([vars.new_data])
       .enter()
         .insert("text")
-        .attr("class", "title")
+        .attr("class", "background_label")
         .attr("text-anchor", "middle")
         .attr("y", 0)
-        .attr("x", vars.width/2)
+        .attr("x", vars.width/2);
+
+    vars.svg.selectAll(".background_label")
         .text(vars.title);
 
   }
