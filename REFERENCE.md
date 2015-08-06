@@ -1,34 +1,43 @@
 
 # Reference
 
+> Definition
 
+**Default:** Most default values are located in <a href='src/vars.js'>src/vars.js</a>
 
+**Example:** Most examples are issued from the examples located in <a href='src/visualizations/'>src/visualizations/</a>.
 
-## Global
+## General
+
+All the parameters that impact a whole chart, and will propagate to all the marks being drawn.
 
 ### `type`
 
 > Type of template being used for the visualization.
 
-**Default:** 'none'
+The template includes 
 
-**Example:** barchart, sparkline, dotplot, barchart, linechart, scatterplot, grid, stacked, piechart, slopegraph, productspace, treemap, geomap, stackedbar, ordinal_vertical, ordinal_horizontal.
+**Default:** &empty;
 
-**Note:** The list of all templates is available in `src/visualizations/`
+**Example:** barchart, sparkline, dotplot, barchart, linechart, scatterplot, etc.
+
+**Note:** The full list of templates is available in <a href='src/visualizations/'>src/visualizations/</a>.
+
+To create a new template just add it in this folder and refer to it in the 
 
 ### `margin`
 
-> Defines the margins for the chart within the SVG
+> Defines the margins for the chart within the SVG.
 
-**Default:** No margins `{top: 0, right: 0, bottom: 0, left: 0}`
+**Default:** Zero margin e.g. `{top: 0, right: 0, bottom: 0, left: 0}`
 
 **Example:** `{top: 10, right: 10, bottom: 30, left: 30}`
 
-**Note:** Follows the [D3 margin convention](http://bl.ocks.org/mbostock/3019563)
+**Note:** Follows the [D3 margin convention](http://bl.ocks.org/mbostock/3019563) for the sake of consistency with D3 examples.
 
 ### `container`
 
-> The selector for the DOM element being used to append the visualization to
+> The selector for the DOM element being used to append the visualization to.
 
 **Default:** `#viz`
 
@@ -46,9 +55,32 @@
 
 **Note:** ..
 
+### `var_color`
+
+> Adds color to the chart using the specified attribute
+
+**Example:** Continent grouping countries with the same color ([line chart](http://cid-harvard.github.io/vis-toolkit/examples/linechart.html)).
+
+A custom function can be passed  `var_color: 'rank'` and `color: d3.scale.linear().domain([0, 123]).range(['red', 'blue'])`.
+
+**Note:** Using the **color** parameter as color scale.
+
+### `color`
+
+> Color scale function
+
+**Default:** `d3.scale.category20c()`.
+
+**Example:** d3.scale.ordinal().domain(["Africa", "Americas", "Asia", "Europe", "Oceania"]).range(["#99237d", "#c72439", "#6bc145", "#88c7ed", "#dd9f98"]),
 
 
+### `var_text`
 
+> Sets the variable when drawing text
+
+**Default:**  &empty;
+
+**Note:**
 
 
 
@@ -82,7 +114,7 @@ Note: The `__id` is automatically created in case no `var_id` is set.
 
 > The variable to be used to create groups of items
 
-**Default:** none
+**Default:**  &empty;
 
 **Note:** Right now, only one level of hierarchy is provided.
 
@@ -92,11 +124,17 @@ Note: The `__id` is automatically created in case no `var_id` is set.
 
 > Creates custom variables when instantiating the chart
 
-**Default:** none
+**Default:**  &empty;
 
 **Example:** `.set('aggregated', true)` creates aggregates data with a `__aggregated` set to true
 
 **Note:** ..
+
+
+
+
+
+
 
 ## Items and Connect
 
@@ -157,16 +195,6 @@ time: {
 **Default:**
 
 **Note:** The `current_time` can defined to a specific value, or be set using `vistk.utils.min` which is a public function to retrieve
-
-
-
-#### Templates and Mark properties
-
-`var_color` is the attribute being used
-`var_x`     mapping to the x-axis
-`var_y`     mapping to the y-axis
-`var_sort`  soring
-`var_text`  
 
 
 
@@ -238,6 +266,15 @@ A list of public functions made available mostly to be used by the parameters.
 
 > Transition between item and connect marks
 
+**Default:**
+
+**Example:**
+
+**Note:** ..
+
+### `utils.draw_mark`
+
+> Draws a mark
 
 **Default:**
 
