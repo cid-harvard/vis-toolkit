@@ -1,5 +1,7 @@
 
-## Reference
+# Reference
+
+## Global chart
 
 ### `type`
 
@@ -15,11 +17,11 @@
 
 > Defines the margins for the chart within the SVG
 
-**Default:** 
+**Default:** No margins `{top: 0, right: 0, bottom: 0, left: 0}`
 
 **Example:** `{top: 10, right: 10, bottom: 30, left: 30}`
 
-**Note:** follows the [D3 margin convention](http://bl.ocks.org/mbostock/3019563)
+**Note:** Follows the [D3 margin convention](http://bl.ocks.org/mbostock/3019563)
 
 ### `container`
 
@@ -40,6 +42,8 @@ Default:
 Example:
 
 Note: ..
+
+## Data Specific
 
 ### `data`
 
@@ -69,15 +73,15 @@ Note: ..
 
 The variable use to create groups of items
 
+**Note:** Right now, only one level of hierarchy is provided.
 
-#### Example 
+**Example:** Countries can be grouped by *continent*
 
-Countries can be grouped by *continent*
-
+## Time
 
 ### `time`
 
-Makes a dataset temporal.
+> Makes a dataset temporal.
 
 #### Format
 
