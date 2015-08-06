@@ -7,60 +7,63 @@
 
 Default: 'none'
 
-Ex: barchart, sparkline, dotplot, barchart, "linechart", "scatterplot", "grid", "stacked", "piechart", "slopegraph", "productspace", "treemap", "geomap", "stackedbar", "ordinal_vertical" "ordinal_horizontal".
+Example: barchart, sparkline, dotplot, barchart, linechart, scatterplot, grid, stacked, piechart, slopegraph, productspace, treemap, geomap, stackedbar, ordinal_vertical, ordinal_horizontal.
 
-
-The list of all templates is available in
-
+Note: The list of all templates is available in `src/visualizations/`
 
 ### `margin`
 
-> Defines
+> Defines the margins for the chart within the SVG
 
+Default: 
 
+Example: {top: 10, right: 10, bottom: 30, left: 30}
 
- {top: 10, right: 10, bottom: 30, left: 30}
+Note: follows the [D3 margin convention](http://bl.ocks.org/mbostock/3019563)
 
 ### `container`
 
+> The selector for the DOM element being used to append the visualization to
 
-#### default
+Default: `#viz`
 
-'#viz'
+Example: `#viz`
 
-#### title
+Note: ..
 
+#### `title`
+
+> The title to use for the visualization (in case it features a space for the title)
+
+Default:
+
+Example:
+
+Note: ..
 
 ### `data`
 
-The dataset being used.
+> The dataset being used.
 
 An `item` is a row in the dataset and should be identified by a unique `id` set with **var_id**. By default, if no `id` exist, it will automatically create one using the index of each raw and set the `var_id` parameter to the `__id` attribute.<br>
 
-##### Example
+Default: []
 
-`[0, 1, 2, 3]` with no item `id`, or `[{id: 0, value: 10}, {id: 1, value: 20}, {id: 2, value: 30}, {id: 3, value: 40}]` with `id` as **var_id**.
+Example: `[0, 1, 2, 3]` with no item `id`, or `[{id: 0, value: 10}, {id: 1, value: 20}, {id: 2, value: 30}, {id: 3, value: 40}]` with `id` as **var_id**.
 
-##### Default
-
-`{}`
-
-##### Note
-
-If no id in the dataset, then it considers each rows as an item and creates a `var__id` attribute which value is the index of the row.
+Note: If no id in the dataset, then it considers each rows as an item and creates a `var__id` attribute which value is the index of the row.
 
 `aggregated` data are appended to the original dataset with a `__aggregated` attribute set to true. This means those two datasets will co-habit together.
 
 ### `var_id`
 
-The attribute being used to identify each item in the dataset.
+> The attribute being used to identify each item in the dataset.
 
+Default:
 
-#### Example
+Example:
 
-
-#### Note
-
+Note: ..
 
 ### `var_group`
 
