@@ -15,11 +15,6 @@
     data: [],
     links: [],
     title: "",
-    
-    focus: [],
-    selection: [],
-    filter: [],
-    zoom: [],
 
     // Default dimensions
     margin: {top: 10, right: 10, bottom: 10, left: 10},
@@ -30,9 +25,9 @@
 
     // Interaction
     highlight: [],
-    selection: [],
+    selection: [],  
     filter: [],
-    aggregate: "",
+    zoom: [],
 
     time: {
       var_time: null, 
