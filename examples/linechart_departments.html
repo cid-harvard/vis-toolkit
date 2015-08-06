@@ -33,7 +33,7 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
     var_id: 'dept_name', // Should be ["continent", "id"] to allow aggregation and filtering
     var_group: "name",
     var_color: "id", // TODO: color by final ranking value..
-    title: "Products",
+    title: "Departments",
     var_text: "dept_name",
     var_y: "realgdp",
     var_x: "year",
@@ -47,6 +47,37 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
   });
 
   d3.select("#viz").call(visualization);
+
+
+  d3.select(visualization.container()).selectAll(".alignLines").data(["align_lines"]).enter().append("button")
+           .attr("type", "button")
+           .attr("class", "alignLines")
+           .on("click", function() {
+
+
+              departments.forEach(function(d, i) {
+
+                d["value_added_aligned"] = +d["value_added"];
+
+              });
+
+              // Then move groups to their grid position
+              visualization.param("refresh", true);
+
+              visualization.params({
+                x_axis_show: true,
+                y_axis_show: true,
+                var_y: 'value_added_aligned',
+                title: "Aligned departments"
+              });
+
+              visualization.params().refresh = true;
+              visualization.params().init = true;
+
+              d3.select(visualization.container()).call(visualization);
+
+            })
+           .html("Align");
 
 });
 </script>

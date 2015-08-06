@@ -9,7 +9,6 @@
 <script src="../js/d3.js"></script>
 <script>
 
-
 d3.csv("../data/stocks.csv", function(error, data) {
 
   // symbol,date,price
@@ -34,7 +33,7 @@ d3.csv("../data/stocks.csv", function(error, data) {
     var_group: "symbol",
     var_color: "symbol", // TODO: color by final ranking value..
     var_text: "symbol",
-    var_y: "price",
+    var_y: 'price',
     var_x: 'date',
     time: {
       parse: d3.time.format("%b %Y").parse,
@@ -44,17 +43,13 @@ d3.csv("../data/stocks.csv", function(error, data) {
     },
     selection: ["MSFT"],
     highlight: "MSFT",
-    selection: ["Japan", "Switzerland", "Germany"],
-    highlight: "France",
     ui: {
-      default: true,
-      options: ["country", "continent"]
+      default: true
     }
   });
 
   d3.select("#viz").call(visualization);
 
 });
-
 
 </script>
