@@ -7,6 +7,11 @@ var SCREENSHOT_HEIGHT = 600;
 var LOAD_WAIT_TIME = 2000; 
 
 var fs = require('fs');
+var system = require('system');
+var args = system.args;
+
+var groupby = false;
+var aggregate = true;
 
 var getPageTitle = function(page){
     var documentTitle = page.evaluate(function(){
@@ -57,6 +62,14 @@ var takeScreenshot = function(element){
 
     page.viewportSize = {width: SCREENSHOT_WIDTH, height: SCREENSHOT_HEIGHT};
 
+    // Build the URL query string here
+
+    var query_string = '';
+
+    if(aggregate) {
+      query_string = '?aggregate=continent';
+    }
+
     page.open(STATIC_URL + element); 
 
     console.log("waiting for page to load...")
@@ -97,7 +110,12 @@ var createGallery = function() {
   var html = '<html><body>';
 
   URLS.forEach(function(d) {
-    html += '<a href="examples/' + d + '.html"><img src="thumbs/' + d + '.png" style="width: 400; height: 300" /></a>';
+
+    if(groupby) {
+      html += '<h2>' + d + '</h2>';
+    }
+
+    html += '<a href="examples/' + d + '.html"><img src="thumbs/' + d + '.png" style="max-height: 300" /></a>';
   })
 
   html += '</body></html>';
@@ -116,6 +134,31 @@ var createGallery = function() {
 
 var index = 0; 
 
-getAllExamples();
+if (args.length === 1) {
+
+  console.log('No argument found, running with default params');
+
+} else {
+
+  args.forEach(function(arg, i) {
+
+    if(arg === 'all') {
+      console.log('Generate thumbnails for all examples');
+      getAllExamples();
+    }
+
+    if(arg === 'groupby') {
+      console.log('Grouping examples by type of visualization');
+      groupby = true;
+    }
+
+    if(arg === 'aggregate') {
+      console.log('Aggregation actived');
+      aggregate = true;
+    }
+
+  });
+}
+
 takeScreenshot(URLS[index]);
 createGallery();
