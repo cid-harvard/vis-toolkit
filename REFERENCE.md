@@ -3,18 +3,21 @@
 
 ### `type`
 
-Type of template being used for the visualization
+> Type of template being used for the visualization
 
-#### Example
+Default: 'none'
 
-'barchart', "sparkline", "dotplot", "barchart", "linechart", "scatterplot", "grid", "stacked", "piechart", "slopegraph", "productspace", "treemap", "geomap", "stackedbar", "ordinal_vertical" "ordinal_horizontal".
+Ex: barchart, sparkline, dotplot, barchart, "linechart", "scatterplot", "grid", "stacked", "piechart", "slopegraph", "productspace", "treemap", "geomap", "stackedbar", "ordinal_vertical" "ordinal_horizontal".
 
-#### Note
 
-The list of all templates is available in ..
+The list of all templates is available in
 
 
 ### `margin`
+
+> Defines
+
+
 
  {top: 10, right: 10, bottom: 30, left: 30}
 
