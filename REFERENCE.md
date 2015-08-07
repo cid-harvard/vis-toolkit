@@ -1,15 +1,17 @@
 
 # Reference
 
-> Definition
+> Lists all the vistk parameters.
 
 **Default:** Most default values are located in <a href='src/vars.js'>src/vars.js</a>
 
 **Example:** Most examples are issued from the examples located in <a href='src/visualizations/'>src/visualizations/</a>.
 
+**Note:** This is a work-in-progress.
+
 ## General
 
-All the parameters that impact a whole chart, and will propagate to all the marks being drawn.
+The following parameters that impact a whole chart, and will propagate to all the marks being drawn.
 
 ### `type`
 
@@ -71,7 +73,7 @@ A custom function can be passed  `var_color: 'rank'` and `color: d3.scale.linear
 
 **Default:** `d3.scale.category20c()`.
 
-**Example:** `d3.scale.ordinal().domain(["Africa", "Americas", "Asia", "Europe", "Oceania"]).range(["#99237d", "#c72439", "#6bc145", "#88c7ed", "#dd9f98"])`
+**Example:** Custom color scales can be created such as `d3.scale.ordinal().domain(["Africa", "Americas", "Asia", "Europe", "Oceania"]).range(["#99237d", "#c72439", "#6bc145", "#88c7ed", "#dd9f98"])`
 
 
 ### `var_text`
@@ -80,14 +82,18 @@ A custom function can be passed  `var_color: 'rank'` and `color: d3.scale.linear
 
 **Default:**  &empty;
 
-**Note:** 
+**Example:**
+
+**Note:** Not all graphical marks contain text to be displayed.
 
 
 ## Data
 
+All parameters related to making vistk aware of the semantic of the dataset.
+
 ### `data`
 
-> The dataset being used.
+> The dataset to be used across all the visualizations.
 
 An `item` is a row in the dataset and should be identified by a unique `id` set with **var_id**. By default, if no `id` exist, it will automatically create one using the index of each raw and set the `var_id` parameter to the `__id` attribute.<br>
 
@@ -135,7 +141,9 @@ Note: The `__id` is automatically created in case no `var_id` is set.
 ### `y_scale`
 
 
-## Items and Connect
+## Items and Connect Marks
+
+A chart is made of items and connect marks that will enable to create complex charts.
 
 ### `items`
 
@@ -147,7 +155,7 @@ Note: The `__id` is automatically created in case no `var_id` is set.
 
 **Note:**
 
-* `title` property allows to create a new element to show tiltips
+* `title` property allows to create a new element to show tooltips
 
 ### `items.marks`
 
