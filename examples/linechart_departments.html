@@ -54,6 +54,7 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
            .attr("class", "alignLines")
            .on("click", function() {
 
+              // Find value for time baseline
 
               departments.forEach(function(d, i) {
 
@@ -68,7 +69,10 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
                 x_axis_show: true,
                 y_axis_show: true,
                 var_y: 'value_added_aligned',
-                title: "Aligned departments"
+                title: "Aligned departments",
+                ui: {
+                  default: true
+                }
               });
 
               visualization.params().refresh = true;

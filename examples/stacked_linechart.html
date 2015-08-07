@@ -85,6 +85,7 @@ d3.json("../data/diversification_ubiquity_hs4_1995_2012.json", function(error, c
                 x_axis_show: false,
                 y_axis_show: false,
                 y_axis: 'nb_products',
+                var_y: "nb_products",
                 time: {
                   parse: function(d) { return d3.time.format("%Y").parse(d+""); },
                   var_time: 'year',
