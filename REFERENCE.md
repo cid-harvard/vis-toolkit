@@ -145,8 +145,9 @@ Note: The `__id` is automatically created in case no `var_id` is set.
 
 **Example:**
 
-**Note:** ..
+**Note:**
 
+* `title` property allows to create a new element to show tiltips
 
 ### `items.marks`
 
