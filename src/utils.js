@@ -677,6 +677,12 @@
 
           }
 
+          if(typeof params.class !== "undefined") {
+
+            mark_enter.classed(params.class(vars.accessor_items(d)), true);
+
+          }
+
           mark
              // .attr("r", function(d) {return params.radius; })
              // .attr("fill", params.fill)

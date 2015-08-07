@@ -183,6 +183,9 @@ d3.json("../data/colombia_product_space.json", function(graph) {
               },
               stroke_width: function(d) { 
                       return d['export_rca'] > 1 ? '1.5px': '0.5px';
+              },
+              class: function(d) { 
+                return d['export_rca'] > 1 ? 'circle__export': 'circle__non__export';
               }
             }, {
               var_mark: '__highlighted',
