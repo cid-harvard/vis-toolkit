@@ -644,6 +644,18 @@
 
           }
 
+          if(typeof params.title !== "undefined") {
+
+            mark_enter.append("title").text(function(d) {
+              return params.title(vars.accessor_items(d));
+            });
+
+            mark.append("title").text(function(d) {
+              return params.title(vars.accessor_items(d));
+            });
+
+          }
+
           mark
              // .attr("r", function(d) {return params.radius; })
              // .attr("fill", params.fill)

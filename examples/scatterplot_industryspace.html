@@ -54,7 +54,8 @@ d3.json("../data/industry-data-neave-150707.json", function(data) {
             type: "circle",
             rotate: "0",
             var_color: 'category',
-            var_r: "size"
+            var_r: "size",
+            title: function(d) { return d['pname']; }
           }, {
             var_mark: '__selected',
             type: d3.scale.ordinal().domain([true, false]).range(["text", "none"]),
