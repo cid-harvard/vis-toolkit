@@ -64,6 +64,10 @@ d3.json("../data/industry-data-neave-150707.json", function(data) {
             var_mark: '__highlighted',
             type: d3.scale.ordinal().domain([true, false]).range(["text", "none"]),
             rotate: "0"
+          }, {
+            var_mark: '__selected',
+            type: d3.scale.ordinal().domain([true, false]).range(["divtext", "none"]),
+            rotate: "0"
           }]
         }],
         ui: {

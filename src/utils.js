@@ -32,7 +32,7 @@
                     });
 
   }
-  
+
   /*
     Main function to draw marks 
     Invoked from a .each() call passing in the current datum d and index i, 
@@ -111,14 +111,38 @@
           items_mark_divtext.enter().append("foreignObject")
                  .classed("items__mark__divtext", true)
                  .classed("items_" + mark_id, true)
-                 .attr("width", function(d) { return (d.dx - vars.padding) + "px"; })
-                 .attr("height", function(d) { return (d.dy - 2*vars.padding) + "px"; })
+                 .attr("width", function(d) {
+                   if(typeof d.dx !== "undefined") {
+                     return (d.dx - vars.padding) + "px";
+                   } else {
+                     return "150px";
+                   }
+                 })
+                 .attr("height", function(d) {
+                   if(typeof d.dy !== "undefined") {
+                      return (d.dy - 2*vars.padding) + "px";
+                    } else {
+                      return "50px";
+                    }
+                  })
                .append("xhtml:body")
                  .style("font", "14px 'Helvetica Neue'")
                .append("div")
                  .style("padding-top", function(d) { return (vars.padding/2)+"px"; })
-                 .style("width", function(d) { return (d.dx - 2*vars.padding) + "px"; })
-                 .style("height", function(d) { return (d.dy - 2*vars.padding) + "px"; })
+                 .style("width", function(d) { 
+                   if(typeof d.dx !== "undefined") {
+                     return (d.dx - 2*vars.padding) + "px";
+                   } else {
+                     return "150px";
+                   }
+                  })
+                 .style("height", function(d) { 
+                   if(typeof d.dy !== "undefined") {
+                     return (d.dx - 2*vars.padding) + "px";
+                   } else {
+                    return "50px"; 
+                  }
+                  })
                  .style({"text-overflow": "ellipsis", "overflow": "hidden"})
                  .html(function(d) {
                    return vars.accessor_data(d)[vars.var_text];
@@ -648,10 +672,6 @@
           if(typeof params.title !== "undefined") {
 
             mark_enter.append("title").text(function(d) {
-              return params.title(vars.accessor_items(d));
-            });
-
-            mark.append("title").text(function(d) {
               return params.title(vars.accessor_items(d));
             });
 
