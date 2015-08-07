@@ -184,6 +184,9 @@
                 gConnect.filter(params.filter).call(utils.draw_mark, params);
               });
 
+            // Bind events to groups after marks have been created
+            gConnect.each(utils.connect_group);
+
             // EXIT
             var gConnect_exit = gConnect.exit().remove();
 

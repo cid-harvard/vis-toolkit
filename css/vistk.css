@@ -78,6 +78,11 @@ circle.node {
   stroke-opacity: .6;
 }
 
+.connect__line.highlighted {
+  stroke-width: 2.5px;
+  stroke-opacity: .6;
+}
+
 /* linechart */
 
 

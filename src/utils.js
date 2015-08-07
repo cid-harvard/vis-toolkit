@@ -32,6 +32,7 @@
                     });
 
   }
+  
   /*
     Main function to draw marks 
     Invoked from a .each() call passing in the current datum d and index i, 
