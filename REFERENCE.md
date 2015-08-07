@@ -67,11 +67,11 @@ A custom function can be passed  `var_color: 'rank'` and `color: d3.scale.linear
 
 ### `color`
 
-> Color scale function
+> Color scale function used when drawing marks
 
 **Default:** `d3.scale.category20c()`.
 
-**Example:** d3.scale.ordinal().domain(["Africa", "Americas", "Asia", "Europe", "Oceania"]).range(["#99237d", "#c72439", "#6bc145", "#88c7ed", "#dd9f98"]),
+**Example:** `d3.scale.ordinal().domain(["Africa", "Americas", "Asia", "Europe", "Oceania"]).range(["#99237d", "#c72439", "#6bc145", "#88c7ed", "#dd9f98"])`
 
 
 ### `var_text`
@@ -80,8 +80,7 @@ A custom function can be passed  `var_color: 'rank'` and `color: d3.scale.linear
 
 **Default:**  &empty;
 
-**Note:**
-
+**Note:** 
 
 
 ## Data
@@ -131,9 +130,9 @@ Note: The `__id` is automatically created in case no `var_id` is set.
 **Note:** ..
 
 
+### `x_scale`
 
-
-
+### `y_scale`
 
 
 ## Items and Connect

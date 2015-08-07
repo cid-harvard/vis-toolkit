@@ -493,6 +493,8 @@ Template
 * Polychart https://www.polychart.com/demo
 * EZ-D3 http://mikejestes.github.io/ez-d3-graphs/
 
+* Tufte design graphics http://motioninsocial.com/tufte/
+
 ## Misc
 
 Data management
