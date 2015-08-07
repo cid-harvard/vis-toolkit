@@ -9,7 +9,7 @@ vars.default_params["linechart"] = function(scope) {
     func: d3.scale.linear()
             .range([scope.margin.left, scope.width - scope.margin.left - scope.margin.right])
             .domain(vars.time.interval)
-  }]
+  }];
 
   params.y_scale = [{
     func: d3.scale.linear()
@@ -32,8 +32,6 @@ vars.default_params["linechart"] = function(scope) {
   }];
 
   params.connect = [{
-    attr: vars.time.var_time,
-    type: "time",
     marks: [{
       type: "path",
       stroke: function(d) { return vars.color(params.accessor_items(d)[vars.var_color]); },

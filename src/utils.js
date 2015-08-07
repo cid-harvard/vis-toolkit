@@ -805,7 +805,6 @@
         .insert("g", ":first-child")
         .attr("class", "x axis")
         .attr("transform", "translate(" + vars.x_axis_translate + ")")
-        .style("display", function() { return vars.x_axis_show ? "block": "none"; })
       .append("text")
         .attr("class", "label")
         .attr("x", vars.width-vars.margin.left-vars.margin.right)
@@ -823,6 +822,7 @@
 
     vars.svg.selectAll(".x.axis").transition()
         .duration(vars.duration)
+        .style("display", function() { return vars.x_axis_show ? "block": "none"; })
         .call(vars.x_axis);
 
   }
@@ -836,7 +836,6 @@
         .insert("g", ":first-child")
         .attr("class", "y axis")
         .attr("transform", "translate(" + vars.y_axis_translate + ")")
-        .style("display", function() { return vars.y_axis_show ? "block": "none"; })
       .append("text")
         .attr("class", "label")
         .attr("transform", "rotate(-90)")
@@ -852,6 +851,7 @@
 
     vars.svg.selectAll(".y.axis").transition()
         .duration(vars.duration)
+        .style("display", function() { return vars.y_axis_show ? "block": "none"; })
         .call(vars.y_axis);
 
   }

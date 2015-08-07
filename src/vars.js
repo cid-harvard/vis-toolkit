@@ -110,7 +110,6 @@
     accessor_items: function(d) { return d; },
 
     container: "#viz",
-    countries: [],
 
     refresh: true,
     init: true,
