@@ -49,16 +49,36 @@
 
   vars.evt.register("highlightOn", function(d) {
     d.__highlighted = true;
-    d3.select(vars.container).call(vars.this_chart);
 
     // Make sure the highlighted node is above other nodes
     if(vars.type == "productspace") {
       vars.svg.selectAll('.mark__group').sort(function(a, b) { return a.__highlighted ;})
+
+      // Find all the connect marks which source or targets are linked to the current item
+      vars.links.forEach(function(e) {
+        if(e.source[vars.var_id] === d[vars.var_id] || e.target[vars.var_id] === d[vars.var_id]) {
+          console.log("TRRUE", d, e)
+          e.__highlighted = true;
+        }
+      })
     }
+
+    d3.select(vars.container).call(vars.this_chart);
+
   });
 
   vars.evt.register("highlightOut", function(d) {
     d.__highlighted = false;
+
+    // Make sure the highlighted node is above other nodes
+    if(vars.type == "productspace") {
+
+      // Find all the connect marks which source or targets are linked to the current item
+      vars.links.forEach(function(e) {
+        e.__highlighted = false;
+      })
+    }
+
     d3.select(vars.container).call(vars.this_chart);
   });
 
