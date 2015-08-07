@@ -160,5 +160,8 @@ if (args.length === 1) {
   });
 }
 
+fs.removeTree(THUMBS_DIR);
+fs.makeDirectory(THUMBS_DIR);
+
 takeScreenshot(URLS[index]);
 createGallery();

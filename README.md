@@ -12,6 +12,7 @@ Simply add the `vistk` JavaScript and CSS files as below:
 
 * Install project dependencies with `npm install`
 * Build version `build/vistk.js` with `grunt` and watch changes with `grunt watch`
+* To generate the <a href='gallery.html'>thumbnails gallery</a>, install phantomjs and run `phantomjs scripts/vis_thumbnails.js`
 
 ### Dependencies
 

@@ -492,6 +492,7 @@ Template
 * DC.js https://dc-js.github.io/dc.js/
 * Polychart https://www.polychart.com/demo
 * EZ-D3 http://mikejestes.github.io/ez-d3-graphs/
+* Taucharts http://taucharts.com/
 
 * Tufte design graphics http://motioninsocial.com/tufte/
 
