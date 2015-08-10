@@ -7,7 +7,7 @@
 <div id="viz"></div>
 <script>
 
-var data = ["rect", "circle", "tick", "star"];
+var data = ["rect", "circle", "tick", "star", "diamond", "polygon", "marker", "shape", "image"];
 
 var visualization = vistk.viz()
     .params({
@@ -20,17 +20,16 @@ var visualization = vistk.viz()
       var_x: '__id',
       items: [{
         marks: [{
-          type: "tick",
-          rotate: 0,
+          var_mark: 'value',
+          type: function(d) { return d; }
         }, {
           type: "text",
-          rotate: "90",
-          translate: [0, 10]
+          rotate: 0,
+          text_anchor: 'middle',
+          translate: [0, 20]
         }]
       }],
-//      var_id: "__id",
-//      var_group: "__id",
-      var_text:  "__id"
+      var_text:  "value"
     });
 
 d3.select("#viz").call(visualization);

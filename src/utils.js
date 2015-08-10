@@ -160,7 +160,6 @@
           items_mark_image.enter().append("image")
                  .classed("items__mark__image", true)
                  .classed("items_" + mark_id, true)
-             //    .attr("xmlns:xlink", "http://www.w3.org/1999/xlink")
                  .attr("xlink:href", params.href) 
                  .attr("x", 0)
                  .attr("y", 0)
