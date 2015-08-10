@@ -1,4 +1,3 @@
-
 # Reference
 
 > Lists all the vistk parameters.
@@ -7,7 +6,7 @@
 
 **Example:** Most examples are issued from the examples located in <a href='src/visualizations/'>src/visualizations/</a>.
 
-**Note:** This is a work-in-progress.
+**Note:** This is a work-in-progress, there might be missing or incomplete sections.
 
 ## General
 
@@ -17,21 +16,21 @@ The following parameters that impact a whole chart, and will propagate to all th
 
 > Type of template being used for the visualization.
 
-The template includes 
+This is by far the most important parameter as it will automatically pre-generate a set of parameters (marks, layout, etc.)
 
-**Default:** &empty;
+**Default:** `none`, which is a self-organized layout (see [/examples/default_minimal.html](/examples/default_minimal.html) with no position encoding and marks are circles.)
 
-**Example:** barchart, sparkline, dotplot, barchart, linechart, scatterplot, etc.
+**Example:** `barchart`, `sparkline`, `dotplot`, `barchart`, `linechart`, `scatterplot`, etc.
 
-**Note:** The full list of templates is available in <a href='src/visualizations/'>src/visualizations/</a>.
+**Note:** The full list of templates is available in <a href='src/visualizations/'>src/visualizations/</a>. To create your own template just add it in this folder and refer to it in the `Gruntfile.js`.
 
-To create a new template just add it in this folder and refer to it in the 
+**Important:** All further parameter will override the original template.
 
 ### `margin`
 
 > Defines the margins for the chart within the SVG.
 
-**Default:** Zero margin e.g. `{top: 0, right: 0, bottom: 0, left: 0}`
+**Default:** No margin e.g. `{top: 0, right: 0, bottom: 0, left: 0}`
 
 **Example:** `{top: 10, right: 10, bottom: 30, left: 30}`
 
@@ -43,7 +42,7 @@ To create a new template just add it in this folder and refer to it in the
 
 **Default:** `#viz`
 
-**Example:** `#viz`
+**Example:** `#viz_barchart`
 
 **Note:** ..
 
@@ -51,11 +50,11 @@ To create a new template just add it in this folder and refer to it in the
 
 > The title to use for the visualization (in case it features a space for the title)
 
-**Default:**
+**Default:** &empty;
 
-**Example:**
+**Example:** "This is a bar chart"
 
-**Note:** ..
+**Note:** Some chart templates feature a title, some others don't.
 
 ### `var_color`
 
@@ -75,35 +74,33 @@ A custom function can be passed  `var_color: 'rank'` and `color: d3.scale.linear
 
 **Example:** Custom color scales can be created such as `d3.scale.ordinal().domain(["Africa", "Americas", "Asia", "Europe", "Oceania"]).range(["#99237d", "#c72439", "#6bc145", "#88c7ed", "#dd9f98"])`
 
-
 ### `var_text`
 
-> Sets the variable when drawing text
+> Sets the variable to draw text
 
-**Default:**  &empty;
+**Default:** &empty;
 
-**Example:**
+**Example:** `name`
 
-**Note:** Not all graphical marks contain text to be displayed.
+**Note:** Not all graphical marks contain text to be displayed. Naturally the `text` one requires one.
 
+If no id has been set, then `var_text` defaults to `__id`.
 
 ## Data
 
-All parameters related to making vistk aware of the semantic of the dataset.
+All parameters related to the semantic of the dataset.
 
 ### `data`
 
 > The dataset to be used across all the visualizations.
 
-An `item` is a row in the dataset and should be identified by a unique `id` set with **var_id**. By default, if no `id` exist, it will automatically create one using the index of each raw and set the `var_id` parameter to the `__id` attribute.<br>
+We consider a dataset made `items`, which are unique objects being drawn. Sometimes each row of a dataset refers to those objects with a unique `id`. By default, if no `id` exist, it will automatically create one using the index of each raw and set the `var_id` parameter to the `__id` attribute. 
 
 **Default:** []
 
-**Example:** `[0, 1, 2, 3]` with no item `id`, or `[{id: 0, value: 10}, {id: 1, value: 20}, {id: 2, value: 30}, {id: 3, value: 40}]` with `id` as **var_id**.
+**Example:** `[0, 1, 2, 3]` is a dataset with no id, contrary to `[{id: 0, value: 10}, {id: 1, value: 20}, {id: 2, value: 30}, {id: 3, value: 40}]` and in this cans the is defined using **var_id**.
 
-**Note:** If no id in the dataset, then it considers each rows as an item and creates a `var__id` attribute which value is the index of the row.
-
-`aggregated` data are appended to the original dataset with a `__aggregated` attribute set to true. This means those two datasets will co-habit together.
+**Note:** If no id in the dataset, then it considers each rows as an item and creates a `var__id` attribute which value is the index of the row. Thus, the previous dataset `[0, 1, 2, 3]` can be used, and **var_id** will implicitly be set to `__id`.
 
 ### `var_id`
 
@@ -139,6 +136,10 @@ Note: The `__id` is automatically created in case no `var_id` is set.
 ### `x_scale`
 
 ### `y_scale`
+
+### `aggregated`
+
+`aggregated` data are appended to the original dataset with a `__aggregated` attribute set to true. This means those two datasets will co-habit together.
 
 
 ## Items and Connect Marks
