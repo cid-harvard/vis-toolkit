@@ -55,7 +55,7 @@ This is by far the most important parameter as it will automatically pre-generat
 
 **Note:** ..
 
-#### `title` (String)
+### `title` (String)
 
 > The title to use for the visualization (in case it features a space for the title)
 
@@ -65,7 +65,7 @@ This is by far the most important parameter as it will automatically pre-generat
 
 **Note:** Some chart templates feature a title, some others don't.
 
-### `var_color`
+### `var_color` (String)
 
 > Adds color to the chart using the specified attribute
 
@@ -75,7 +75,7 @@ A custom function can be passed  `var_color: 'rank'` and `color: d3.scale.linear
 
 **Note:** Using the **color** parameter as color scale.
 
-### `color`
+### `color` (Function)
 
 > Color scale function used when drawing marks
 
@@ -83,7 +83,7 @@ A custom function can be passed  `var_color: 'rank'` and `color: d3.scale.linear
 
 **Example:** Custom color scales can be created such as `d3.scale.ordinal().domain(["Africa", "Americas", "Asia", "Europe", "Oceania"]).range(["#99237d", "#c72439", "#6bc145", "#88c7ed", "#dd9f98"])`
 
-### `var_text`
+### `var_text` (String)
 
 > Sets the variable to draw text
 
@@ -99,7 +99,7 @@ If no id has been set, then `var_text` defaults to `__id`.
 
 All parameters related to the semantic of the dataset.
 
-### `data`
+### `data` (Array)
 
 > The dataset to be used across all the visualizations.
 
@@ -111,7 +111,7 @@ We consider a dataset made `items`, which are unique objects being drawn. Someti
 
 **Note:** If no id in the dataset, then it considers each rows as an item and creates a `var__id` attribute which value is the index of the row. Thus, the previous dataset `[0, 1, 2, 3]` can be used, and **var_id** will implicitly be set to `__id`.
 
-### `var_id`
+### `var_id` (String)
 
 > The attribute being used to identify each item in the dataset.
 
@@ -121,7 +121,7 @@ We consider a dataset made `items`, which are unique objects being drawn. Someti
 
 Note: The `__id` is automatically created in case no `var_id` is set.
 
-### `var_group`
+### `var_group` (String)
 
 > The variable to be used to create groups of items
 
@@ -211,6 +211,16 @@ A chart is made of items and connect marks that will enable to create complex ch
 
 **Note:** Can be a function
 
+### `items.marks.title`
+
+> Appends a SVG title element and sets its value
+
+**Default:** &empty;
+
+**Example:** 
+
+**Note:**
+
 
 ### `connect`
 
@@ -220,7 +230,7 @@ A chart is made of items and connect marks that will enable to create complex ch
 
 ### `time` (Object)
 
-> If set, informs a dataset into a temporal.
+> Informs that the dataset is temporal.
 
 #### Format
 
@@ -233,6 +243,8 @@ time: {
 ```
 
 ### `time.var_time`
+
+* The variable that sets time
 
 ### `time.current_time`
 
@@ -256,7 +268,7 @@ Some time-related values are internally created:
 
 ### `ui` (Object)
 
-> Specify which UI element to be used.
+> Specify which UI element to be created.
 
 #### Format
 
