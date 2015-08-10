@@ -178,10 +178,10 @@
         items_mark_rect.enter().append("rect")                            
                   .classed("items__mark__rect", true)
                   .classed("items_" + mark_id, true)
-                  .attr("x", params.x)
-                  .attr("y", params.y)
-                  .attr("height", params.height)
-                  .attr("width", params.width)
+                  .attr("x", params.x || 0)
+                  .attr("y", params.y || 0)
+                  .attr("height", params.height || 10)
+                  .attr("width", params.width || 10)
                   .attr("transform", "rotate(0)")
                   .style("fill", function(d) { return vars.color(vars.accessor_items(d)[vars.var_color]); });
 
@@ -189,10 +189,11 @@
             .classed("highlighted", function(d, i) { return d.__highlighted; })
             .classed("selected", function(d, i) { return d.__selected; })
             .transition().duration(vars.duration)
-            .attr("x", params.x)
-            .attr("y", params.y)            
-            .attr("height", params.height)
-            .attr("width", params.width);
+            .attr("x", params.x || 0)
+            .attr("y", params.y || 0)
+            .attr("height", params.height || 10)
+            .attr("width", params.width || 10)
+            .style("fill", function(d) { return vars.color(vars.accessor_items(d)[vars.var_color]); });
 
         items_mark_rect.exit().remove();
 
