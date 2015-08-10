@@ -1,0 +1,38 @@
+<!doctype html>
+<meta charset="utf-8">
+<script src="../js/d3.js" charset="utf-8"></script>
+<script src="../build/vistk.js"></script>
+<link href="../css/vistk.css" rel="stylesheet">
+<body>
+<div id="viz"></div>
+<script>
+
+var data = ["rect", "circle", "tick", "star"];
+
+var visualization = vistk.viz()
+    .params({
+      dev: true,
+      height: 200,
+      width: 500,
+      type: 'ordinal_horizontal',
+      data: data,
+      container: '#viz',
+      var_x: '__id',
+      items: [{
+        marks: [{
+          type: "tick",
+          rotate: 0,
+        }, {
+          type: "text",
+          rotate: "90",
+          translate: [0, 10]
+        }]
+      }],
+//      var_id: "__id",
+//      var_group: "__id",
+      var_text:  "__id"
+    });
+
+d3.select("#viz").call(visualization);
+
+</script>
