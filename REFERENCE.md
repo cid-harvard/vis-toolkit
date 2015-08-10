@@ -181,7 +181,7 @@ A chart is made of items and connect marks that will enable to create complex ch
 
 >
 
-**Default:**
+**Default:**  
 
 **Example:**
 
@@ -211,9 +211,13 @@ A chart is made of items and connect marks that will enable to create complex ch
 
 **Note:** Can be a function
 
+### `items.marks.var_type`
+
+> Variable to customize the type of mark to be used.
+
 ### `items.marks.title`
 
-> Appends a SVG title element and sets its value
+> Appends a SVG title element and sets its value.
 
 **Default:** &empty;
 
@@ -221,6 +225,9 @@ A chart is made of items and connect marks that will enable to create complex ch
 
 **Note:**
 
+### `items.marks.class`
+
+> To create custom classes for the marks.
 
 ### `connect`
 
