@@ -137,15 +137,22 @@ Note: The `__id` is automatically created in case no `var_id` is set.
 
 **Default:**  &empty;
 
-**Example:** `.set('aggregated', true)` creates aggregates data with a `__aggregated` set to true
+**Example:** `.set('aggregated', true)` creates aggregates data with a `__aggregated` set to true. Then, it is possible to draw graphical marks specifically for those data:
 
-**Note:** ..
+```js
+{
+  var_mark: '__aggregated',
+  type: d3.scale.ordinal().domain([true, false]).range(["tick", "none"]),
+}
+```
 
-### `aggregated`
+**Note:** New data are appended to the current dataset, with a `__aggregated` attribute set to `true`.
+
+### `aggregated` (Array)
 
 `aggregated` data are appended to the original dataset with a `__aggregated` attribute set to true. This means those two datasets will co-habit together.
 
-### `selection`
+### `selection` (Array)
 
 > Selected items, which differ from the highlight as tt is more persitent
 
@@ -153,9 +160,9 @@ Note: The `__id` is automatically created in case no `var_id` is set.
 
 **Default:** []
 
-### `highlight`
+### `highlight` (Array)
 
-> Highlighted items
+> Highlights items
 
 **Example:** If using the countries dataset `["France", "Germany"]`
 
@@ -163,15 +170,26 @@ Note: The `__id` is automatically created in case no `var_id` is set.
 
 **Note:** Values are defined according to the `var_id` parameter
 
+### Axis / Layout mapping
 
-### `var_x`
+Below are several variables aimed at customizing the chart's template:
 
-### `var_y`
-
-### `x_scale`
-
-### `y_scale`
-
+* `var_x`
+* `x_scale`
+* `x_type` "linear",
+* `x_scale: [],
+* `x_ticks: 5,
+* `x_axis: null,
+* `x_format: function(d) { return d; },
+* `x_tickSize: 10,
+* `x_tickPadding: 0,
+* `x_tickValues: null,
+* `x_axis_show: false,
+* `x_axis_orient: "bottom",
+* `x_grid_show: false,
+* `x_text: true,
+* `x_axis_translate: [0, 0],
+* `x_invert: false,
 
 ## Marks
 
@@ -179,7 +197,7 @@ A chart is made of items and connect marks that will enable to create complex ch
 
 ### `items` (Object)
 
->
+> Draws a graphical mark on the screen and defines some of its properties.
 
 **Default:**  
 
@@ -223,11 +241,33 @@ A chart is made of items and connect marks that will enable to create complex ch
 
 **Example:** 
 
+```js
+marks: [{
+  type: "circle",
+  rotate: "0",
+  var_color: 'category',
+  var_r: "size",
+  title: function(d) { return d['pname']; }
+}
+```
+
+* [examples/scatterplot_industryspace.html](http://cid-harvard.github.io/vis-toolkit/examples/scatterplot_industryspace.html)
+
 **Note:**
 
 ### `items.marks.class`
 
 > To create custom classes for the marks.
+
+### `items.marks.fill` (String | Function)
+
+> Fills the mark with the desired color.
+
+**Default:** &empty;
+
+**Example:** `#fff`, `function() { return '#000'; }`
+
+**Note:** Works with `circle` marks, not for all other marks.
 
 ### `connect`
 
