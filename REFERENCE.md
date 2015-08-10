@@ -1,18 +1,27 @@
 # Reference
 
-> Lists all the vistk parameters.
+* [General](#general)
+* [Data](#data)
+* [Marks](#marks)
+* [Time](#time)
+* [UI](#ui)
+* [Utils](#utils)
 
-**Default:** Most default values are located in <a href='src/vars.js'>src/vars.js</a>
+> This document lists all the parameters to create and customize visualizations.
+
+**Default:** Default values related to charts are located in <a href='src/vars.js'>src/vars.js</a>. Defaults parameters for graphical marks are in <a href='src/utils.js'>src/utils.js</a>.
 
 **Example:** Most examples are issued from the examples located in <a href='src/visualizations/'>src/visualizations/</a>.
 
 **Note:** This is a work-in-progress, there might be missing or incomplete sections.
 
+Most of the parameters are of type String or Object, but functions can also be used.
+
 ## General
 
 The following parameters that impact a whole chart, and will propagate to all the marks being drawn.
 
-### `type`
+### `type` (String)
 
 > Type of template being used for the visualization.
 
@@ -26,7 +35,7 @@ This is by far the most important parameter as it will automatically pre-generat
 
 **Important:** All further parameter will override the original template.
 
-### `margin`
+### `margin` (Object)
 
 > Defines the margins for the chart within the SVG.
 
@@ -36,7 +45,7 @@ This is by far the most important parameter as it will automatically pre-generat
 
 **Note:** Follows the [D3 margin convention](http://bl.ocks.org/mbostock/3019563) for the sake of consistency with D3 examples.
 
-### `container`
+### `container` (String)
 
 > The selector for the DOM element being used to append the visualization to.
 
@@ -46,7 +55,7 @@ This is by far the most important parameter as it will automatically pre-generat
 
 **Note:** ..
 
-#### `title`
+#### `title` (String)
 
 > The title to use for the visualization (in case it features a space for the title)
 
@@ -132,21 +141,43 @@ Note: The `__id` is automatically created in case no `var_id` is set.
 
 **Note:** ..
 
+### `aggregated`
+
+`aggregated` data are appended to the original dataset with a `__aggregated` attribute set to true. This means those two datasets will co-habit together.
+
+### `selection`
+
+> Selected items, which differ from the highlight as tt is more persitent
+
+**Example:** If using the ['France'].
+
+**Default:** []
+
+### `highlight`
+
+> Highlighted items
+
+**Example:** If using the countries dataset `["France", "Germany"]`
+
+**Default:** `[]`
+
+**Note:** Values are defined according to the `var_id` parameter
+
+
+### `var_x`
+
+### `var_y`
 
 ### `x_scale`
 
 ### `y_scale`
 
-### `aggregated`
 
-`aggregated` data are appended to the original dataset with a `__aggregated` attribute set to true. This means those two datasets will co-habit together.
-
-
-## Items and Connect Marks
+## Marks
 
 A chart is made of items and connect marks that will enable to create complex charts.
 
-### `items`
+### `items` (Object)
 
 >
 
@@ -187,7 +218,7 @@ A chart is made of items and connect marks that will enable to create complex ch
 
 ## Time
 
-### `time`
+### `time` (Object)
 
 > If set, informs a dataset into a temporal.
 
@@ -201,15 +232,29 @@ time: {
 }
 ```
 
+### `time.var_time`
+
+### `time.current_time`
+
 **Default:**
 
 **Note:** The `current_time` can defined to a specific value, or be set using `vistk.utils.min` which is a public function to retrieve
 
+Some time-related values are internally created:
+
+* `time.points`: all the time points found in the dataset
+* `time.interval` the min and the max of time points
+
+### `time.parse` (Function)
+
+* Parses the time
+
+**Example**: 
 
 
 ## UI
 
-### `ui`
+### `ui` (Object)
 
 > Specify which UI element to be used.
 
@@ -223,23 +268,6 @@ time: {
 }
 ```
 
-### `selection`
-
-> Selected items, which differ from the highlight as tt is more persitent
-
-**Example:** If using the ['France'].
-
-**Default:** []
-
-### `highlight`
-
-> Highlighted items
-
-**Example:** If using the countries dataset `["France", "Germany"]`
-
-**Default:** `[]`
-
-**Note:** Values are defined according to the `var_id` parameter
 
 
 
