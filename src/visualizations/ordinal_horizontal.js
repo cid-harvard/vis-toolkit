@@ -2,6 +2,8 @@ vars.default_params["ordinal_horizontal"] = function(scope) {
 
   var params = {};
 
+  params.var_y = "__id",
+
   params.x_scale = [{
     func: d3.scale.ordinal()
             .domain(d3.set(vars.new_data.map(function(d) { return d[vars.var_x]; })).values())

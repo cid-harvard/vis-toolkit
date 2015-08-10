@@ -2,6 +2,8 @@ vars.default_params["ordinal_vertical"] = function(scope) {
 
   var params = {};
 
+  params.var_x = "__id",
+
   params.x_scale = [{
     func: d3.scale.linear()
             .range([scope.width/2, scope.width/2])
