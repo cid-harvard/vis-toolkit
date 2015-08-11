@@ -87,9 +87,11 @@ A custom function can be passed  `var_color: 'rank'` and `color: d3.scale.linear
 
 **Example:** Custom color scales can be created such as `d3.scale.ordinal().domain(["Africa", "Americas", "Asia", "Europe", "Oceania"]).range(["#99237d", "#c72439", "#6bc145", "#88c7ed", "#dd9f98"])`
 
-### `var_text` (String)
+### `var_text`
 
 > Sets the variable to draw text
+
+**Type:** `String`
 
 **Default:** &empty;
 
@@ -103,11 +105,13 @@ If no id has been set, then `var_text` defaults to `__id`.
 
 All parameters related to the semantic of the dataset.
 
-### `data` (Array)
+### `data`
 
 > The dataset to be used across all the visualizations.
-
+&nbsp;
 We consider a dataset made `items`, which are unique objects being drawn. Sometimes each row of a dataset refers to those objects with a unique `id`. By default, if no `id` exist, it will automatically create one using the index of each raw and set the `var_id` parameter to the `__id` attribute. 
+
+**Type:** `Array`
 
 **Default:** []
 
@@ -135,9 +139,11 @@ Note: The `__id` is automatically created in case no `var_id` is set.
 
 **Example:** Countries can be grouped by *continent*
 
-### `set` (String, Boolean)
+### `set`
 
 > Creates custom attributes for the dataset.
+
+**Type:** `String`, `Boolean`
 
 **Default:**  &empty;
 
@@ -152,21 +158,27 @@ Note: The `__id` is automatically created in case no `var_id` is set.
 
 **Note:** New data are appended to the current dataset, with a `__aggregated` attribute set to `true`.
 
-### `aggregated` (Array)
+### `aggregated`
 
 `aggregated` data are appended to the original dataset with a `__aggregated` attribute set to true. This means those two datasets will co-habit together.
 
-### `selection` (Array)
+**Type:** `Array`
+
+### `selection`
 
 > Selected items, which differ from the highlight as tt is more persitent
 
-**Example:** If using the ['France'].
+**Type:** `Array`
+
+**Example:**
 
 **Default:** []
 
-### `highlight` (Array)
+### `highlight`
 
 > Highlights items
+
+**Type:** `Array`
 
 **Example:** If using the countries dataset `["France", "Germany"]`
 
@@ -214,51 +226,57 @@ Below are several variables aimed at customizing the chart's template. Those are
 * `var_x` (String) The data attribute being used for most of the scale mappings.
 * `x_scale`
 * `x_type` (Default: linear)
-* `x_scale: (Default: [])
+* `x_scale` (Default: [])
 * `x_ticks` (Integer) Number of ticks (Default: 5). Note: if set to 2, the first and last tick labels anchor are respectively set to start and end.
-* `x_axis: (Default: null)
-* `x_format: function(d) { return d; },
-* `x_tickSize: (Default: 10)
-* `x_tickPadding: (Default: 0)
-* `x_tickValues: (Default: null)
-* `x_axis_show: (Default: false)
-* `x_axis_orient: (Default: "bottom")
-* `x_grid_show: (Default: false)
+* `x_axis` (Default: null)
+* `x_format` function(d) { return d; },
+* `x_tickSize` (Default: 10)
+* `x_tickPadding` (Default: 0)
+* `x_tickValues` (Default: null)
+* `x_axis_show` (Default: false)
+* `x_axis_orient` (Default: "bottom")
+* `x_grid_show` (Default: false)
 * `x_text` (Boolean) Displays the text on the axis (Default: true). 
-* `x_axis_translate: (Default: [0, 0])
-* `x_invert: (Default: false)
+* `x_axis_translate` (Default: [0, 0])
+* `x_invert` (Default: false)
 
 ## Marks
 
 A chart is made of items and connect marks that will enable to create complex charts.
 
-### `items` (Array)
+### `items`
 
 > Draws a graphical mark on the screen and defines some of its properties.
 
-**Default:**  
+**Type:** `Array`
+
+**Default:** `[]`
 
 **Example:**
 
 **Note:**
 
-* `title` property allows to create a new element to show tooltips
 
-### `items.marks` (Object)
 
->
+### `items.marks`
+
+> Creates a new `<SVG>`  group that will contain marks.
+
+**Type:** `Array`
 
 **Default:**
 
 **Example:**
 
-**Note:** ..
+**Note:**
 
 **Default:**
 
 ### `items.marks.type`
 
-> The type of the graphical mark
+> The type of the graphical mark.
+
+**Type:**
 
 **Default:**
 
@@ -269,6 +287,14 @@ A chart is made of items and connect marks that will enable to create complex ch
 ### `items.marks.var_type`
 
 > Variable to customize the type of mark to be used.
+
+**Type:**
+
+**Default:**
+
+**Example:**
+
+**Note:**
 
 ### `items.marks.title`
 
@@ -296,9 +322,19 @@ marks: [{
 
 > To create custom classes for the marks.
 
-### `items.marks.fill` (String | Function)
+**Type:**
+
+**Default:**
+
+**Example:**
+
+**Note:**
+
+### `items.marks.fill`
 
 > Fills the mark with the desired color.
+
+**Type:** `String` | `function`
 
 **Default:** &empty;
 
@@ -306,15 +342,41 @@ marks: [{
 
 **Note:** Works with `circle` marks, not for all other marks.
 
+### `items.marks.enter`
+
+> Customizing the enter function for marks.
+
+**Type:**
+
+**Default:** The final mark.
+
+**Example:**
+
+**Note:**
+
+### `items.marks.exit`
+
+> Customizing the exit function for marks.
+
+**Type:**
+
+**Default:** The original mark.
+
+**Example:**
+
+**Note:**
+
 ### `connect`
 
-
+> Second type of graphical mark that aims at connecting items.
 
 ## Time
 
-### `time` (Object)
+### `time`
 
 > Informs that the dataset is temporal.
+
+**Type:** `Object`
 
 #### Format
 
