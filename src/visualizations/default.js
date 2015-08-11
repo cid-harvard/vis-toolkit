@@ -66,47 +66,47 @@
 
             // ENTER ITEMS
             var gItems_enter = gItems.enter()
-                            .insert("g", ":first-child")
-                            .attr("transform", function(d, i) {
-                              return "translate(" + vars.x_scale[0]["func"](accessor_data(d)[vars.var_x]) + ", " + vars.y_scale[0]["func"](accessor_data(d)[vars.var_y]) + ")";
-                            });
+                            .insert("g", ":first-child");
 
-             // APPEND AND UPDATE ITEMS MARK
-              item.marks.forEach(function(params, index_mark) {
-            
-                if(typeof params.filter == "undefined") {
-                  params.filter = function() { 
-                    return true; 
-                  }
-                }
-
-                // Supporting multipe similar elements
-                params._mark_id = index_item + "_" + index_mark;
-
-                gItems_enter.filter(params.filter).call(utils.draw_mark, params);
-                gItems.filter(params.filter).call(utils.draw_mark, params);
-
+            // IN CASE OF CUSTOME ENTER FOR ITEMS
+            if(typeof item.enter !== "undefined") {
+              gItems_enter.call(item.enter, vars)
+            } else {
+              gItems_enter.attr("transform", function(d, i) {
+                return "translate(" + vars.x_scale[0]["func"](accessor_data(d)[vars.var_x]) + ", " + vars.y_scale[0]["func"](accessor_data(d)[vars.var_y]) + ")";
               });
+            }
 
-              // Bind events to groups after marks have been created
-              gItems.each(utils.items_group);
-
-              /* Should be as below but current params don't match this format
-
-                // APPEND AND UPDATE ITEMS MARK
-                vars.items.forEach(function(item) {
-                  item.marks.forEach(function(params) {
-                    gItems_enter.call(utils.draw_mark, params);
-                    gItems.call(utils.draw_mark, params);
-                  });
+           // APPEND AND UPDATE ITEMS MARK
+            item.marks.forEach(function(params, index_mark) {
+           
+              if(typeof params.filter == "undefined") {
+                params.filter = function() { 
+                  return true; 
+                }
+              } 
+              // Supporting multipe similar elements
+              params._mark_id = index_item + "_" + index_mark; 
+              gItems_enter.filter(params.filter).call(utils.draw_mark, params);
+              gItems.filter(params.filter).call(utils.draw_mark, params); 
+            }); 
+            // Bind events to groups after marks have been created
+            gItems.each(utils.items_group); 
+            /* Should be as below but current params don't match this format 
+              // APPEND AND UPDATE ITEMS MARK
+              vars.items.forEach(function(item) {
+                item.marks.forEach(function(params) {
+                  gItems_enter.call(utils.draw_mark, params);
+                  gItems.call(utils.draw_mark, params);
                 });
-
-              */
+              }); 
+            */
 
             // POST-UPDATE ITEMS GROUPS
             vars.svg.selectAll(".mark__group" + "_" + index_item)
                             .transition()
                             .duration(vars.duration)
+                            .ease('none')
                             .attr("transform", function(d, i) {
                               return "translate(" + vars.x_scale[0]["func"](accessor_data(d)[vars.var_x]) + ", " + vars.y_scale[0]["func"](accessor_data(d)[vars.var_y]) + ")";
                             });
