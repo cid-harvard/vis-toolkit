@@ -49,7 +49,7 @@ module.exports = function(grunt) {
     watch: {
       concat: {
         files: ['src/*.js', 'src/visualizations/*.js'],
-        tasks: ['concat', 'string-replace']
+        tasks: ['string-replace', 'concat']
       }
     },
 
@@ -66,5 +66,5 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-jasmine');
   grunt.loadNpmTasks('grunt-string-replace');
 
-  grunt.registerTask('default', 'jasmine', ['concat']);
+  grunt.registerTask('default', 'jasmine', ['concat', 'string-replace']);
 };
