@@ -29,7 +29,7 @@ vars.default_params["dotplot"] = function(scope) {
   }];
 
   params.x_axis_show = true;
-  params.x_tickValues = [0, d3.max(vars.new_data, function(d) { return d[scope.var_x]; })];
+  params.x_tickValues = [params.x_scale[0]["func"].domain()[0], params.x_scale[0]["func"].domain()[1]];
   params.x_axis_translate = [0, scope.height/2];
 
   params.y_axis_show = false;
