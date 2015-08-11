@@ -202,7 +202,7 @@
 
         var items_mark_diamond = d3.select(this).selectAll(".items__mark__diamond.items_" + mark_id).data([d]);
 
-        items_mark_diamond.enter().append("rect")
+        var items_mark_diamond_enter = items_mark_diamond.enter().append("rect")
             .classed("items__mark__diamond", true)
             .classed("items_" + mark_id, true)
             .attr("height", vars.mark.height)
@@ -210,6 +210,12 @@
             .attr("x", -vars.mark.width/2)
             .attr("y", -vars.mark.height/2)
             .attr("transform", "rotate(45)");
+
+          if(typeof params.class !== "undefined") {
+            
+            items_mark_diamond_enter.classed(params.class(vars.accessor_items(d)), true);
+
+          }
 
         items_mark_diamond
             .classed("highlighted", function(d, i) { return d.__highlighted; })
