@@ -112,7 +112,15 @@
                             });
 
             // ITEMS EXIT
-            var gItems_exit = gItems.exit().remove();
+            var gItems_exit = gItems.exit();
+
+            // IN CASE OF CUSTOME ENTER FOR ITEMS
+            if(typeof item.exit !== "undefined") {
+              gItems_exit.call(item.exit, vars)
+            } else {
+              gItems_exit.remove();
+            }
+            
 
 
           });

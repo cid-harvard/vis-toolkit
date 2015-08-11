@@ -42,14 +42,17 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
         }],
         enter: function(data, vars) {
           this.attr("transform", function(d, i) {
-              return "translate(" + vars.x_scale[0]["func"](vars.accessor_data(d)[vars.var_x]) + ", 0)";
-            })
+            return "translate(" + vars.x_scale[0]["func"](vars.accessor_data(d)[vars.var_x]) + ", 0)";
+          })
         },
-        exit: function() {
-
+        exit: function(data, vars) {
+          this.transition().attr("transform", function(d, i) {
+            return "translate(" + vars.x_scale[0]["func"](vars.accessor_data(d)[vars.var_x]) + ", " + vars.height + ")";
+          })
+          .remove();
         },
         update: function() {
-
+          
         }
       }],
       time: {
