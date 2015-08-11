@@ -28,9 +28,6 @@ Simply add the `vistk` JavaScript and CSS files as below:
 
 <img src='img/dotplot.png' />
 
-* Adding averages
-* 
-
 ### Sparkline 
 
 ([Demo](http://cid-harvard.github.io/vis-toolkit/examples/sparkline.html) | [Source](examples/sparkline.html))

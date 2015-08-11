@@ -131,9 +131,9 @@ Note: The `__id` is automatically created in case no `var_id` is set.
 
 **Example:** Countries can be grouped by *continent*
 
-### `set`
+### `set` (String, Boolean)
 
-> Creates custom variables when instantiating the chart
+> Creates custom attributes for the dataset.
 
 **Default:**  &empty;
 
@@ -166,36 +166,69 @@ Note: The `__id` is automatically created in case no `var_id` is set.
 
 **Example:** If using the countries dataset `["France", "Germany"]`
 
+Highligthing can condition the display of a mark or not. In the example below, it displays a text item mark when the mouse hovers an existing mark:
+
+```js
+marks: [{
+  var_mark: '__highlighted',
+  type: d3.scale.ordinal().domain([true, false]).range(["text", "none"]),
+  rotate: "0"
+}
+```
+
+Further conditions can be set on the mark for example to update its `text-anchor` property based on the current position of the mark:
+
+```js
+ marks: [{
+  var_mark: '__highlighted',
+  type: d3.scale.ordinal().domain([true, false]).range(["text", "none"]),
+  rotate: "0",
+  translate: [0, -15],
+  text_anchor: function(d) {
+    var parentGroup = d3.select(this.parentNode);
+    var parentSVG = d3.select(this.parentNode.parentNode.parentNode);
+    var parentX = d3.transform(parentGroup.attr("transform")).translate[0];
+    var svgWidth = +parentSVG.attr("width");
+    if(parentX < svgWidth/3) {
+      return "start";
+    } else if(parentX > 2 * svgWidth/3) {
+      return "end";
+    } else {
+      return "middle";
+    }
+  }
+}
+```
 **Default:** `[]`
 
 **Note:** Values are defined according to the `var_id` parameter
 
-### Axis / Layout mapping
+### Axis / Layout Mapping
 
-Below are several variables aimed at customizing the chart's template:
+Below are several variables aimed at customizing the chart's template. Those are only given for the `x` axis, but also works for the `y` axis.
 
-* `var_x`
+* `var_x` (String) The data attribute being used for most of the scale mappings.
 * `x_scale`
-* `x_type` "linear",
-* `x_scale: [],
-* `x_ticks: 5,
-* `x_axis: null,
+* `x_type` (Default: linear)
+* `x_scale: (Default: [])
+* `x_ticks` (Integer) Number of ticks (Default: 5). Note: if set to 2, the first and last tick labels anchor are respectively set to start and end.
+* `x_axis: (Default: null)
 * `x_format: function(d) { return d; },
-* `x_tickSize: 10,
-* `x_tickPadding: 0,
-* `x_tickValues: null,
-* `x_axis_show: false,
-* `x_axis_orient: "bottom",
-* `x_grid_show: false,
-* `x_text: true,
-* `x_axis_translate: [0, 0],
-* `x_invert: false,
+* `x_tickSize: (Default: 10)
+* `x_tickPadding: (Default: 0)
+* `x_tickValues: (Default: null)
+* `x_axis_show: (Default: false)
+* `x_axis_orient: (Default: "bottom")
+* `x_grid_show: (Default: false)
+* `x_text` (Boolean) Displays the text on the axis (Default: true). 
+* `x_axis_translate: (Default: [0, 0])
+* `x_invert: (Default: false)
 
 ## Marks
 
 A chart is made of items and connect marks that will enable to create complex charts.
 
-### `items` (Object)
+### `items` (Array)
 
 > Draws a graphical mark on the screen and defines some of its properties.
 
@@ -207,7 +240,7 @@ A chart is made of items and connect marks that will enable to create complex ch
 
 * `title` property allows to create a new element to show tooltips
 
-### `items.marks`
+### `items.marks` (Object)
 
 >
 
