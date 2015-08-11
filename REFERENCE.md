@@ -1,7 +1,5 @@
 # Reference
 
-Jump to:
-
 * [General](#general)
 * [Data](#data)
 * [Marks](#marks)
@@ -11,41 +9,45 @@ Jump to:
 
 > This document lists all the parameters to create and customize visualizations.
 
-**Default:** Default values related to charts are located in <a href='src/vars.js'>src/vars.js</a>. Defaults parameters for graphical marks are in <a href='src/utils.js'>src/utils.js</a>.
+* **Default:** Default values related to charts are located in <a href='src/vars.js'>src/vars.js</a>. Defaults parameters for graphical marks are in <a href='src/utils.js'>src/utils.js</a>.
 
-**Example:** Most examples are issued from the examples located in <a href='src/visualizations/'>src/visualizations/</a>.
+* **Example:** Most examples are issued from the examples located in <a href='src/visualizations/'>src/visualizations/</a>.
 
-**Note:** This is a work-in-progress, there might be missing or incomplete sections.
-
-Most of the parameters are of `String` or `Object` types, but functions can also be used.
+* **Note:** This is a work-in-progress, there might be missing or incomplete sections.
+&nbsp;
+Most of the parameters are of type `String` or `Object`, but functions can also be used.
 
 ## General
 
-The following parameters that impact a whole chart, and will propagate to all the marks being drawn.
+The following set of parameters that impact a whole chart, and will propagate to all the marks being drawn.
 
-### `type` (String)
+### `type`
 
 > Type of template being used for the visualization.
 
+* **Type:** `String`
+
+* **Default:** `none`, which is a self-organized layout (see [/examples/default_minimal.html](/examples/default_minimal.html) with no position encoding and marks are circles.)
+&nbsp;
 This is by far the most important parameter as it will automatically pre-generate a set of parameters (marks, layout, etc.)
 
-**Default:** `none`, which is a self-organized layout (see [/examples/default_minimal.html](/examples/default_minimal.html) with no position encoding and marks are circles.)
+* **Example:** `barchart`, `sparkline`, `dotplot`, `barchart`, `linechart`, `scatterplot`, etc.
 
-**Example:** `barchart`, `sparkline`, `dotplot`, `barchart`, `linechart`, `scatterplot`, etc.
+* **Note:** The full list of templates is available in <a href='src/visualizations/'>src/visualizations/</a>. To create your own template just add it in this folder and refer to it in the `Gruntfile.js`.
 
-**Note:** The full list of templates is available in <a href='src/visualizations/'>src/visualizations/</a>. To create your own template just add it in this folder and refer to it in the `Gruntfile.js`.
+* **Important:** All further parameter will override the original template.
 
-**Important:** All further parameter will override the original template.
-
-### `margin` (Object)
+### `margin`
 
 > Defines the margins for the chart within the SVG.
 
-**Default:** No margin e.g. `{top: 0, right: 0, bottom: 0, left: 0}`
+* **Type:** `Object`
 
-**Example:** `{top: 10, right: 10, bottom: 30, left: 30}`
+* **Default:** `{}` or no margin e.g. `{top: 0, right: 0, bottom: 0, left: 0}`
 
-**Note:** Follows the [D3 margin convention](http://bl.ocks.org/mbostock/3019563) for the sake of consistency with D3 examples.
+* **Example:** `{top: 10, right: 10, bottom: 30, left: 30}`
+
+* **Note:** Follows the [D3 margin convention](http://bl.ocks.org/mbostock/3019563) for the sake of consistency with D3 examples.
 
 ### `container` (String)
 
@@ -71,7 +73,7 @@ This is by far the most important parameter as it will automatically pre-generat
 
 > Adds color to the chart using the specified attribute
 
-**Example:** Continent grouping countries with the same color (See [line chart](http://cid-harvard.github.io/vis-toolkit/examples/linechart.html)).
+**Example:** Continent grouping countries with the same color ([line chart](http://cid-harvard.github.io/vis-toolkit/examples/linechart.html)).
 
 A custom function can be passed  `var_color: 'rank'` and `color: d3.scale.linear().domain([0, 123]).range(['red', 'blue'])`.
 
@@ -150,38 +152,17 @@ Note: The `__id` is automatically created in case no `var_id` is set.
 
 **Note:** New data are appended to the current dataset, with a `__aggregated` attribute set to `true`.
 
-A chart can display both aggregated and non-aggregated values at the same time.
+### `aggregated` (Array)
+
+`aggregated` data are appended to the original dataset with a `__aggregated` attribute set to true. This means those two datasets will co-habit together.
 
 ### `selection` (Array)
 
-> Selected items, which differ from the highlight as it is more persitent
+> Selected items, which differ from the highlight as tt is more persitent
 
-**Example:** 
+**Example:** If using the ['France'].
 
-```js
-{
-  var_id: "dept_name",
-  var_text: "dept_name",
-  selection: ["Antioquia", "Bogotá D. C."],
-}
-```
-
-**Default:** [] (empty selection, nothing is selected and all attributes `__selected` are set to `false`).
-
-**Note:** Selection can be manually set by the user with the above parameters, but is also set when clicking on a mark, which then dispatches a chart update.
-
-From [src/events.js](https://github.com/cid-harvard/vis-toolkit/blob/master/src/events.js):
-
-```js
-  vars.evt.register("selection", function(d) {
-    d.__selected = !d.__selected;
-    d3.select(vars.container).call(vars.this_chart);
-  });
-```
-
-And the event callback is triggered from [src/utils.js](https://github.com/cid-harvard/vis-toolkit/blob/master/src/utils.js).
-
-The current visual behavior is defined in [css/vistk.css](https://github.com/cid-harvard/vis-toolkit/blob/master/css/vistk.css).
+**Default:** []
 
 ### `highlight` (Array)
 
@@ -231,9 +212,9 @@ Further conditions can be set on the mark for example to update its `text-anchor
 Below are several variables aimed at customizing the chart's template. Those are only given for the `x` axis, but also works for the `y` axis.
 
 * `var_x` (String) The data attribute being used for most of the scale mappings.
-* `x_scale` (Array) Contains the scale functions
+* `x_scale`
 * `x_type` (Default: linear)
-* `x_scale` (Default: [])
+* `x_scale: (Default: [])
 * `x_ticks` (Integer) Number of ticks (Default: 5). Note: if set to 2, the first and last tick labels anchor are respectively set to start and end.
 * `x_axis: (Default: null)
 * `x_format: function(d) { return d; },
@@ -313,37 +294,7 @@ marks: [{
 
 ### `items.marks.class`
 
-> Creates custom classes for the marks.
-
-**Parameter:** Mark data object.
-
-**Default:** &empty; (except that `aggregated` and `selected` classes are automatically added to marks based on user interaction)
-
-**Example:** 
-
-See [examples/profile_dotplot.html]((http://cid-harvard.github.io/vis-toolkit/examples/profile_dotplot.html))
-
-```js
-items: [{
-  marks: [{
-    type: "diamond",
-    class: function(d) {
-      if(d['dept_name'] === 'Antioquia') {
-        return "preselected";
-      }
-    }
-  }]
-}]
-```
-With a CSS as follows:
-```css
-.items__mark__diamond.preselected {
-  fill: red;
-  opacity: 1;
-}
-```
-
-**Note:** Only works for diamond and circle marks.
+> To create custom classes for the marks.
 
 ### `items.marks.fill` (String | Function)
 
