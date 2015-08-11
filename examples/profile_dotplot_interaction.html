@@ -2,24 +2,21 @@
 <meta charset="utf-8">
 <script src="../js/d3.js" charset="utf-8"></script>
 <script src="../build/vistk.js"></script>
+<link href="../css/vistk.css" rel="stylesheet">
 <style>
 .items__mark__diamond {
     fill: gray;
     opacity: .1;
 }
 
-.items__mark__diamond.preselected {
+.items__mark__diamond.highlighted {
   stroke: black;
   opacity: 1;
  }
 
-.items__mark__diamond.preselected {
+.items__mark__diamond.selected {
   fill: red;
   opacity: 1;
-}
-
-.items__mark__diamond.selected {
-
 }
 
 .axis > .label {
@@ -66,11 +63,7 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
       items: [{
         marks: [{
           type: "diamond",
-          class: function(d) {
-            if(d['dept_name'] === 'Antioquia') {
-              return "preselected";
-            }
-          }
+          rotate: "0"
         }, {
           var_mark: '__highlighted',
           type: d3.scale.ordinal().domain([true, false]).range(["text", "none"]),
@@ -97,7 +90,8 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
         parse: function(d) { return d; }
       },
       var_id: "dept_name",
-      var_text: "dept_name"
+      var_text: "dept_name", 
+      selection: ["Antioquia"]
     });
 
   d3.select("#viz").call(visualization);
