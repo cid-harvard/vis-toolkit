@@ -1,5 +1,15 @@
 
-var URLS = ['dotplot', 'sparkline', 'treemap', 'barchart', 'scatterplot_productspace', 'scatterplot', 'linechart', 'stacked', 'grid_occu', 'piechart', 'slopegraph', 'default'];
+var URLS_GALLERY = ['dotplot', 'sparkline', 'treemap', 'barchart', 'scatterplot_productspace', 
+'scatterplot', 'linechart', 'stacked', 'grid_occu', 'piechart', 'slopegraph', 'default', 'example_marks'];
+var URLS_COLOMBIA = ['dotplot', 'sparkline'];
+
+/*
+
+  sortby realgdp
+  sortby dept_name value_added
+
+*/
+
 var STATIC_URL = 'http://cid-harvard.github.io/vis-toolkit/examples/';
 var THUMBS_DIR = '../thumbs/'
 var SCREENSHOT_WIDTH = 800; 
@@ -133,6 +143,7 @@ var createGallery = function() {
 }
 
 var index = 0; 
+var URLS = URLS_GALLERY;
 
 if (args.length === 1) {
 
@@ -155,6 +166,11 @@ if (args.length === 1) {
     if(arg === 'aggregate') {
       console.log('Aggregation actived');
       aggregate = true;
+    }
+
+    if(arg === 'colombia') {
+      console.log('Generates tests for Colombian');
+      URLS = URLS_COLOMBIA;
     }
 
   });

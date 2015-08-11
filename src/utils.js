@@ -786,7 +786,7 @@
         .attr("transform", "translate(" + translate + ")scale(" + scale + ")");
 
     vars.svg.selectAll("circle").style("stroke-width", (1.5 / scale) + "px")
-    vars.svg.selectAll("text").style("font-size", (1/scale) + "rem")
+    vars.svg.selectAll("text").style("font-size", (1 / scale) + "rem")
 
   }
 
@@ -851,10 +851,11 @@
         .style({
           "text-anchor": "end",
           "display": function(d) {
-            if(vars.x_text)
+            if(vars.x_text) {
               return "block";
-            else
+            } else {
               return "none";
+            }
           }
         })
         .text(vars.var_x);
@@ -862,7 +863,19 @@
     vars.svg.selectAll(".x.axis").transition()
         .duration(vars.duration)
         .style("display", function() { return vars.x_axis_show ? "block": "none"; })
-        .call(vars.x_axis);
+        .call(vars.x_axis)
+        .selectAll(".tick text")
+        .style("text-anchor", function(d, i) {
+          if(vars.x_ticks === 2) {
+            if(i === 0) {
+              return "start";
+            } else {
+              return "end";
+            }
+          } else {
+            return "middle";
+          }
+        })
 
   }
 
