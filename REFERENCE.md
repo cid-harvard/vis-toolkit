@@ -1,5 +1,7 @@
 # Reference
 
+Jump to:
+
 * [General](#general)
 * [Data](#data)
 * [Marks](#marks)
@@ -15,7 +17,7 @@
 
 **Note:** This is a work-in-progress, there might be missing or incomplete sections.
 
-Most of the parameters are of type String or Object, but functions can also be used.
+Most of the parameters are of `String` or `Object` types, but functions can also be used.
 
 ## General
 
@@ -148,17 +150,36 @@ Note: The `__id` is automatically created in case no `var_id` is set.
 
 **Note:** New data are appended to the current dataset, with a `__aggregated` attribute set to `true`.
 
-### `aggregated` (Array)
-
-`aggregated` data are appended to the original dataset with a `__aggregated` attribute set to true. This means those two datasets will co-habit together.
+A chart can display both aggregated and non-aggregated values at the same time.
 
 ### `selection` (Array)
 
-> Selected items, which differ from the highlight as tt is more persitent
+> Selected items, which differ from the highlight as it is more persitent
 
-**Example:** If using the ['France'].
+**Example:** 
 
-**Default:** []
+```js
+{
+  var_id: "dept_name",
+  var_text: "dept_name",
+  selection: ["Antioquia", "Bogotá D. C."],
+}
+```
+
+**Default:** [] (empty selection, nothing is selected and all attributes `__selected` are set to `false`).
+
+**Note:** Selection can be manually set by the user with the above parameters, but is also set when clicking on a mark, which then dispatches a chart update.
+
+From [src/events.js](https://github.com/cid-harvard/vis-toolkit/blob/master/src/events.js):
+
+```js
+  vars.evt.register("selection", function(d) {
+    d.__selected = !d.__selected;
+    d3.select(vars.container).call(vars.this_chart);
+  });
+```
+
+And the event callback is triggered from [src/utils.js](https://github.com/cid-harvard/vis-toolkit/blob/master/src/utils.js).
 
 ### `highlight` (Array)
 
@@ -208,9 +229,9 @@ Further conditions can be set on the mark for example to update its `text-anchor
 Below are several variables aimed at customizing the chart's template. Those are only given for the `x` axis, but also works for the `y` axis.
 
 * `var_x` (String) The data attribute being used for most of the scale mappings.
-* `x_scale`
+* `x_scale` (Array) Contains the scale functions
 * `x_type` (Default: linear)
-* `x_scale: (Default: [])
+* `x_scale` (Default: [])
 * `x_ticks` (Integer) Number of ticks (Default: 5). Note: if set to 2, the first and last tick labels anchor are respectively set to start and end.
 * `x_axis: (Default: null)
 * `x_format: function(d) { return d; },
