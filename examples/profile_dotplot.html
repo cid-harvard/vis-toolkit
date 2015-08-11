@@ -59,7 +59,7 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
       x_tickSize: 0,
       x_tickPadding: 10,
       var_group: 'dept_name',
-      x_format: function(d) { return '$' + d3.format(".2s")(d); },
+      x_format: function(d) { return '$' + d3.format(".0s")(d); },
       items: [{
         marks: [{
           type: "diamond",
