@@ -71,7 +71,7 @@ This is by far the most important parameter as it will automatically pre-generat
 
 > Adds color to the chart using the specified attribute
 
-**Example:** Continent grouping countries with the same color ([line chart](http://cid-harvard.github.io/vis-toolkit/examples/linechart.html)).
+**Example:** Continent grouping countries with the same color (See [line chart](http://cid-harvard.github.io/vis-toolkit/examples/linechart.html)).
 
 A custom function can be passed  `var_color: 'rank'` and `color: d3.scale.linear().domain([0, 123]).range(['red', 'blue'])`.
 
@@ -180,6 +180,8 @@ From [src/events.js](https://github.com/cid-harvard/vis-toolkit/blob/master/src/
 ```
 
 And the event callback is triggered from [src/utils.js](https://github.com/cid-harvard/vis-toolkit/blob/master/src/utils.js).
+
+The current visual behavior is defined in [css/vistk.css](https://github.com/cid-harvard/vis-toolkit/blob/master/css/vistk.css).
 
 ### `highlight` (Array)
 
@@ -311,7 +313,37 @@ marks: [{
 
 ### `items.marks.class`
 
-> To create custom classes for the marks.
+> Creates custom classes for the marks.
+
+**Parameter:** Mark data object.
+
+**Default:** &empty; (except that `aggregated` and `selected` classes are automatically added to marks based on user interaction)
+
+**Example:** 
+
+See [examples/profile_dotplot.html]((http://cid-harvard.github.io/vis-toolkit/examples/profile_dotplot.html))
+
+```js
+items: [{
+  marks: [{
+    type: "diamond",
+    class: function(d) {
+      if(d['dept_name'] === 'Antioquia') {
+        return "preselected";
+      }
+    }
+  }]
+}]
+```
+With a CSS as follows:
+```css
+.items__mark__diamond.preselected {
+  fill: red;
+  opacity: 1;
+}
+```
+
+**Note:** Only works for diamond and circle marks.
 
 ### `items.marks.fill` (String | Function)
 
