@@ -126,7 +126,6 @@
 
         // TIME VALUES
         d.values = vars.new_data.filter(function(e) {
-          console.log(item_id, e[vars.var_id], item_id === e[vars.var_id])
           return item_id === e[vars.var_id];
         })
         .map(function(d) {
