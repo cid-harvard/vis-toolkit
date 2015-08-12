@@ -68,7 +68,7 @@
             var gItems_enter = gItems.enter()
                             .insert("g", ":first-child");
 
-            // IN CASE OF CUSTOME ENTER FOR ITEMS
+            // IN CASE OF CUSTOM ENTER FOR ITEMS
             if(typeof item.enter !== "undefined") {
               gItems_enter.call(item.enter, vars)
             } else {
@@ -102,6 +102,11 @@
               }); 
             */
 
+            // IN CASE OF CUSTOM UPDATE FOR ITEMS
+            if(typeof item.update !== "undefined") {
+              console.log("CUSTOM UPDATRE")
+              vars.svg.selectAll(".mark__group" + "_" + index_item).call(item.update, vars)
+            } else {
             // POST-UPDATE ITEMS GROUPS
             vars.svg.selectAll(".mark__group" + "_" + index_item)
                             .transition()
@@ -110,11 +115,12 @@
                             .attr("transform", function(d, i) {
                               return "translate(" + vars.x_scale[0]["func"](accessor_data(d)[vars.var_x]) + ", " + vars.y_scale[0]["func"](accessor_data(d)[vars.var_y]) + ")";
                             });
+            }
 
             // ITEMS EXIT
             var gItems_exit = gItems.exit();
 
-            // IN CASE OF CUSTOME ENTER FOR ITEMS
+            // IN CASE OF CUSTOM EXIT FOR ITEMS
             if(typeof item.exit !== "undefined") {
               gItems_exit.call(item.exit, vars)
             } else {
