@@ -108,7 +108,7 @@
 
           var items_mark_divtext = d3.select(this).selectAll(".items__mark__divtext").data([d]);
 
-          items_mark_divtext.enter().append("foreignObject")
+          var items_mark_divtext_enter = items_mark_divtext.enter().append("foreignObject")
                  .classed("items__mark__divtext", true)
                  .classed("items_" + mark_id, true)
                  .attr("width", function(d) {
@@ -122,7 +122,7 @@
                    if(typeof d.dy !== "undefined") {
                       return (d.dy - 2*vars.padding) + "px";
                     } else {
-                      return "50px";
+                      return "100%";
                     }
                   })
                .append("xhtml:body")
@@ -140,13 +140,19 @@
                    if(typeof d.dy !== "undefined") {
                      return (d.dx - 2*vars.padding) + "px";
                    } else {
-                    return "50px"; 
+                    return "100%"; 
                   }
                   })
                  .style({"text-overflow": "ellipsis", "overflow": "hidden"})
                  .html(function(d) {
                    return vars.accessor_data(d)[vars.var_text];
                  });
+
+          if(typeof params.class !== "undefined") {
+
+            items_mark_divtext_enter.classed(params.class(vars.accessor_items(d)), true);
+
+          }
 
           items_mark_divtext.exit().remove();
 
