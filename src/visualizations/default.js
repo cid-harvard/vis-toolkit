@@ -188,15 +188,16 @@
                             .insert("g", ":first-child")
                             .attr("class", "connect__group");
 
+            connect.marks.forEach(function(params, index_mark) {
+          
+              if(typeof params.filter == "undefined")
+                params.filter = function() { return true; };
 
-              connect.marks.forEach(function(params) {
-            
-                if(typeof params.filter == "undefined")
-                  params.filter = function() { return true; };
-
-                gConnect_enter.filter(params.filter).call(utils.draw_mark, params);
-                gConnect.filter(params.filter).call(utils.draw_mark, params);
-              });
+              // Supporting multipe similar elements
+              params._mark_id = index_item + "_" + index_mark;
+              gConnect_enter.filter(params.filter).call(utils.draw_mark, params);
+              gConnect.filter(params.filter).call(utils.draw_mark, params);
+            });
 
             // Bind events to groups after marks have been created
             gConnect.each(utils.connect_group);

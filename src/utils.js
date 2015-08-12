@@ -18,7 +18,7 @@
 
   utils.connect_group = function(d, i) {
 
-    d3.select(this).attr("class", "connect__group")
+    d3.select(this).attr("class", "connect__group connect__group_" + d._index_item)
                     .classed("highlighted", function(d, i) { return d.__highlighted; })
                     .classed("selected", function(d, i) { return d.__selected; })
                     .on("mouseover",function(d) {
@@ -49,6 +49,7 @@
 
       // Default id for marks
       var mark_id = params._mark_id;
+      console.log("MARK_ID", params._mark_id)
 
       // In case a function determines the type of mark to be used
       if(typeof params_type === "function") {
