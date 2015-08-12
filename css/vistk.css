@@ -167,6 +167,7 @@ div.hidden {
   fill: none;
   stroke: #000;
   stroke-width: 1.5px;
+  opacity: 1;
 }
 
 /* Dot plot */
@@ -268,9 +269,31 @@ path {
   font-weight: 700;
 }
 
-.items__mark__circle.highlighted {
+.items__mark__circle.highlighted__adjacent {
+  stroke: black;
+  stroke-width: 1.5px;
+}
+
+g:hover .items__mark__circle:not(.highlighted__adjacent) {
+  -webkit-transition:0.3s;
+  transition:0.3s;
+  opacity: 0.5;
+}
+
+.items__mark__circle:.highlighted__adjacent {
+  opacity: 1;
+}
+
+g:hover .connect__path:not(.highlighted) {
+  -webkit-transition:0.3s;
+  transition:0.3s;
+  opacity: 0.5;
+}
+
+g:hover  .items__mark__circle.highlighted {
   stroke: black;
   stroke-width: 2.5px;
+  opacity: 1;
 }
 
 .items__mark__circle.selected {
