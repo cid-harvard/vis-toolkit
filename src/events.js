@@ -56,9 +56,33 @@
 
       // Find all the connect marks which source or targets are linked to the current item
       vars.links.forEach(function(e) {
-        if(e.source[vars.var_id] === d[vars.var_id] || e.target[vars.var_id] === d[vars.var_id]) {
+
+        if(e.source[vars.var_id] === d[vars.var_id]) {
+
           e.__highlighted = true;
+
+          vars.new_data.forEach(function(f, k) {
+            if(f[vars.var_id] === e.target[vars.var_id]) {
+              f.__highlighted__adjacent = true;
+            }
+
+          });
+
         }
+         
+        if(e.target[vars.var_id] === d[vars.var_id]) {
+
+          e.__highlighted = true;
+
+          vars.new_data.forEach(function(f, k) {
+            if(f[vars.var_id] === e.source[vars.var_id]) {
+              f.__highlighted__adjacent = true;
+            }
+
+          });
+
+        }
+
       })
     }
 
@@ -75,6 +99,11 @@
       // Reset all the highlighted nodes
       vars.links.forEach(function(e) {
         e.__highlighted = false;
+      })
+
+      // Reset all the highlighted adjacent nodes
+      vars.new_data.forEach(function(e) {
+        e.__highlighted__adjacent = false;
       })
     }
 
