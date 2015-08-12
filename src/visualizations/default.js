@@ -57,6 +57,7 @@
             }
 
             // PRE-UPDATE ITEMS
+            // Join is based on the curren_time value
             var gItems = vars.svg.selectAll(".mark__group" +  "_" + index_item)
                             .data(vars.new_data, function(d, i) {
                               d._index_item = index_item;
@@ -207,13 +208,17 @@
 
         }
 
-        // CREATE AXIS
+        // CREATE / UPDATE / REMOVE AXIS
         if(vars.x_axis_show) {
           vars.svg.call(utils.x_axis);
-        }
+        } else {
+            vars.svg.selectAll(".x.axis").remove();
+         }
   
          if(vars.y_axis_show) {
             vars.svg.call(utils.y_axis);
+         } else {
+            vars.svg.selectAll(".y.axis").remove();
          }
   
          if(vars.x_grid_show) {

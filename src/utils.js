@@ -438,7 +438,10 @@
               .classed('connect__path_' + mark_id, true)
               .classed("items_" + mark_id, true)
               .style("fill", params.fill)
-              .style("stroke", params.stroke);
+              .style("stroke", params.stroke)
+              .attr('d', function(e) {
+                return params["func"](this_accessor_values(e)); 
+              });
 
           mark              
               .classed("highlighted", function(e, j) { return e.__highlighted; })

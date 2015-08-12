@@ -82,16 +82,11 @@ d3.csv("../data/new_rankings2.csv", function(error, data) {
         }
       }],
       connect: [{
+        time: {
+          interval: [vistk.min, vistk.utils.time.current]
+        },
         marks: [{
-          type: "path",
-          rotate: "0",
-          var_r: "realgdp",
-          var_fill: "realgdp",
-  //        fill: function(d) { return vars.color(vars.accessor_items(d)[vars.var_color]); }
-        }, {
-          type: "text",
-          rotate: "-30",
-          translate: 10 // TODO: translate the same distance than the radius
+          type: "path"
         }]
       }],
       time: {
