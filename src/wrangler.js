@@ -107,7 +107,7 @@
         if(typeof(unique[vars.new_data[i][vars.var_id]]) == "undefined"){
           vars.unique_items.push(vars.new_data[i][vars.var_id]);
         }
-        unique[unique[vars.new_data[i][vars.var_id]]] = 0;
+        unique[vars.new_data[i][vars.var_id]] = 0;
       }
 
       vars.unique_data = [];
@@ -126,6 +126,7 @@
 
         // TIME VALUES
         d.values = vars.new_data.filter(function(e) {
+          console.log(item_id, e[vars.var_id], item_id === e[vars.var_id])
           return item_id === e[vars.var_id];
         })
         .map(function(d) {
