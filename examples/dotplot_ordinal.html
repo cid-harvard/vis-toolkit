@@ -58,7 +58,6 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
 
   d3.select("#viz").call(visualization);
 
-
   d3.select(visualization.container()).selectAll(".geomapTransformation").data(["button_geomap"]).enter().append("button")
            .attr("type", "button")
            .attr("class", "gridTransformation")
@@ -91,7 +90,6 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
               });
 
               d3.select(visualization.container()).call(visualization);
-
 
             })
            .html("To Linear Scale");

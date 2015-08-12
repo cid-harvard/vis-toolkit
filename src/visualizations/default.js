@@ -42,7 +42,6 @@
 
         // In case items are programmatically generated
         if(typeof vars.items == "function") {
-          console.log(vars.items(vars))
           vars.items = vars.items(vars);
         }
 
@@ -104,7 +103,6 @@
 
             // IN CASE OF CUSTOM UPDATE FOR ITEMS
             if(typeof item.update !== "undefined") {
-              console.log("CUSTOM UPDATRE")
               vars.svg.selectAll(".mark__group" + "_" + index_item).call(item.update, vars)
             } else {
             // POST-UPDATE ITEMS GROUPS
@@ -206,7 +204,6 @@
             var gConnect_exit = gConnect.exit().remove();
 
           });
-
 
         }
 

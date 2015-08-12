@@ -49,7 +49,6 @@
 
       // Default id for marks
       var mark_id = params._mark_id;
-      console.log("MARK_ID", params._mark_id)
 
       // In case a function determines the type of mark to be used
       if(typeof params_type === "function") {
