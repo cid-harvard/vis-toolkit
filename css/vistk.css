@@ -152,6 +152,13 @@ text.selected {
   opacity: 1;
 }
 
+.mark__line_horizontal {
+  fill: none;
+  stroke: #000;
+  stroke-width: 1.5px;
+  stroke-dasharray: 5,5;
+  opacity: 1;
+}
 /* Dot plot */
 
 .items__mark__diamond {

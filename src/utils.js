@@ -400,17 +400,23 @@
 
           var mark = d3.select(this).selectAll(".mark__line_horizontal").data([d]);
 
+          var t = d3.transform(d3.select(this).attr("transform")).translate;
+
           mark.enter().append('line')
               .classed('mark__line_horizontal', true)
               .classed("items_" + mark_id, true)
-              .attr("x1", function(d) { return vars.x_scale[0]["func"].range()[0]; })
-              .attr("y1", function(d) { return vars.y_scale[0]["func"](d[vars.var_y]); })
+              .attr("x1", function(d) { return -t[0] + vars.margin.left; })
+              .attr("y1", function(d) { return 0; })
               .attr("x2", function(d) { return vars.x_scale[0]["func"].range()[1]; })
-              .attr("y2", function(d) { return vars.y_scale[0]["func"](d[vars.var_y]); });
+              .attr("y2", function(d) { return 0; });
 
           mark
               .classed("highlighted", function(d, i) { return d.__highlighted; })
-              .classed("selected", function(d, i) { return d.__selected; });
+              .classed("selected", function(d, i) { return d.__selected; })
+              .attr("x1", function(d) { return -t[0] + vars.margin.left; })
+              .attr("y1", function(d) { return 0; })
+              .attr("x2", function(d) { return vars.x_scale[0]["func"].range()[1]; })
+              .attr("y2", function(d) { return 0; });
 
           break;
 
