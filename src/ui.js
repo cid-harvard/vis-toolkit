@@ -71,7 +71,7 @@
 
         }
 
-      if(vars.time) {
+      if(vars.time.var_time !== null) {
 
         var label_slider = d3.select(vars.container)
           .selectAll(".slider")
