@@ -218,6 +218,8 @@ Further conditions can be set on the mark for example to update its `text-anchor
 **Default:** `[]`
 
 **Note:** Values are defined according to the `var_id` parameter
+&nbsp;
+The `productspace` chart type also generates highlights for its metadata: the links are hilighted with `__highlighted` attribute and the adjacent nodes to the currently highlighed one are have a `highlighted__adjacent` flag on.
 
 ### Axis / Layout Mapping
 
@@ -264,7 +266,7 @@ A chart is made of items and connect marks that will enable to create complex ch
 
 **Type:** `Array`
 
-**Default:**
+**Default:** `{}` no mark is being drawing (unless specified by the type).
 
 **Example:**
 
@@ -369,6 +371,15 @@ marks: [{
 ### `connect`
 
 > Second type of graphical mark that aims at connecting items.
+
+**Type:** `Object`
+
+**Default:** `{}` no connect mark is being drawing (unless specified by the type).
+
+**Example:**
+
+**Note:**
+
 
 ## Time
 

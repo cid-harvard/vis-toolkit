@@ -693,6 +693,7 @@
              // .attr("r", function(d) {return params.radius; })
              // .attr("fill", params.fill)
               .classed("highlighted", function(d, i) { return d.__highlighted; })
+              .classed("highlighted__adjacent", function(d, i) { return d.__highlighted__adjacent; })
               .classed("selected", function(d, i) { return d.__selected; });
 
           mark.exit().remove();
