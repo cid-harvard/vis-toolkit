@@ -1054,14 +1054,3 @@
         .attr("stroke-dashoffset", 0);
 
   }
-
-  // Credits: http://bl.ocks.org/mbostock/1705868
-  utils.translate_along = function(path, duration) {
-    var l = path.node().getTotalLength();
-    return function(d, i, a) {
-      return function(t) {
-        var p = path.node().getPointAtLength(t * l);
-        return "translate(" + p.x + "," + p.y + ")";
-      };
-    };
-  }

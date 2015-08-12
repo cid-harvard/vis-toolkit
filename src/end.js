@@ -95,3 +95,14 @@ vistk.utils.decode_url = function() {
 
   return queryParameters;
 }
+
+// Credits: http://bl.ocks.org/mbostock/1705868
+vistk.utils.translate_along = function(path) {
+  var l = path.node().getTotalLength();
+  return function(d, i, a) {
+    return function(t) {
+      var p = path.node().getPointAtLength(t * l);
+      return "translate(" + p.x + "," + p.y + ")";
+    };
+  };
+}
