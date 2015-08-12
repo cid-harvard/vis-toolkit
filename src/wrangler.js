@@ -80,7 +80,6 @@
       vars.time.interval = d3.extent(vars.new_data, function(d) { return d[vars.time.var_time]; });
       vars.time.points = d3.set(vars.data.map(function(d) { return d[vars.time.var_time]; })).values();
 
-
       // In case the current_time is set dynamically
       if(typeof vars.time.current_time === "function") {
         vars.time.current_time = vars.time.current_time(vars.data)
@@ -101,7 +100,15 @@
 
       }
 
-      vars.unique_items = d3.set(vars.new_data.map(function(d) { return d[vars.var_id]; })).values();
+      vars.unique_items = [];
+      var unique = {};
+
+      for(var i in vars.new_data){
+        if(typeof(unique[vars.new_data[i][vars.var_id]]) == "undefined"){
+          vars.unique_items.push(vars.new_data[i][vars.var_id]);
+        }
+        unique[unique[vars.new_data[i][vars.var_id]]] = 0;
+      }
 
       vars.unique_data = [];
 
