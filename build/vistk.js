@@ -4,13 +4,13 @@
 var vistk = window.vistk || {};
 window.vistk = vistk;
 
-vistk.version = "0.0.5";
+vistk.version = "0.0.6";
 vistk.utils = {};
 
 vistk.viz = function() {
 
-  // Contains parameters for the current chart
-  var vars = {}, utils ={};
+// Contains parameters for the current chart
+var vars = {}, utils ={};
 
 
   utils.items_group = function(d, i) {
@@ -32,7 +32,7 @@ vistk.viz = function() {
 
   utils.connect_group = function(d, i) {
 
-    d3.select(this).attr("class", "connect__group")
+    d3.select(this).attr("class", "connect__group connect__group_" + d._index_item)
                     .classed("highlighted", function(d, i) { return d.__highlighted; })
                     .classed("selected", function(d, i) { return d.__selected; })
                     .on("mouseover",function(d) {
@@ -58,6 +58,10 @@ vistk.viz = function() {
   utils.draw_mark = function(selection, params) {
 
     selection.each(function(d) {
+
+      if(!d.__redraw) {
+        return;
+      }
 
       var params_type = params.type;
 
@@ -122,7 +126,7 @@ vistk.viz = function() {
 
           var items_mark_divtext = d3.select(this).selectAll(".items__mark__divtext").data([d]);
 
-          items_mark_divtext.enter().append("foreignObject")
+          var items_mark_divtext_enter = items_mark_divtext.enter().append("foreignObject")
                  .classed("items__mark__divtext", true)
                  .classed("items_" + mark_id, true)
                  .attr("width", function(d) {
@@ -136,7 +140,7 @@ vistk.viz = function() {
                    if(typeof d.dy !== "undefined") {
                       return (d.dy - 2*vars.padding) + "px";
                     } else {
-                      return "50px";
+                      return "100%";
                     }
                   })
                .append("xhtml:body")
@@ -154,13 +158,19 @@ vistk.viz = function() {
                    if(typeof d.dy !== "undefined") {
                      return (d.dx - 2*vars.padding) + "px";
                    } else {
-                    return "50px"; 
+                    return "100%"; 
                   }
                   })
                  .style({"text-overflow": "ellipsis", "overflow": "hidden"})
                  .html(function(d) {
                    return vars.accessor_data(d)[vars.var_text];
                  });
+
+          if(typeof params.class !== "undefined") {
+
+            items_mark_divtext_enter.classed(params.class(vars.accessor_items(d)), true);
+
+          }
 
           items_mark_divtext.exit().remove();
 
@@ -408,17 +418,23 @@ vistk.viz = function() {
 
           var mark = d3.select(this).selectAll(".mark__line_horizontal").data([d]);
 
+          var t = d3.transform(d3.select(this).attr("transform")).translate;
+
           mark.enter().append('line')
               .classed('mark__line_horizontal', true)
               .classed("items_" + mark_id, true)
-              .attr("x1", function(d) { return vars.x_scale[0]["func"].range()[0]; })
-              .attr("y1", function(d) { return vars.y_scale[0]["func"](d[vars.var_y]); })
+              .attr("x1", function(d) { return -t[0] + vars.margin.left; })
+              .attr("y1", function(d) { return 0; })
               .attr("x2", function(d) { return vars.x_scale[0]["func"].range()[1]; })
-              .attr("y2", function(d) { return vars.y_scale[0]["func"](d[vars.var_y]); });
+              .attr("y2", function(d) { return 0; });
 
           mark
               .classed("highlighted", function(d, i) { return d.__highlighted; })
-              .classed("selected", function(d, i) { return d.__selected; });
+              .classed("selected", function(d, i) { return d.__selected; })
+              .attr("x1", function(d) { return -t[0] + vars.margin.left; })
+              .attr("y1", function(d) { return 0; })
+              .attr("x2", function(d) { return vars.x_scale[0]["func"].range()[1]; })
+              .attr("y2", function(d) { return 0; });
 
           break;
 
@@ -440,7 +456,10 @@ vistk.viz = function() {
               .classed('connect__path_' + mark_id, true)
               .classed("items_" + mark_id, true)
               .style("fill", params.fill)
-              .style("stroke", params.stroke);
+              .style("stroke", params.stroke)
+              .attr('d', function(e) {
+                return params["func"](this_accessor_values(e)); 
+              });
 
           mark              
               .classed("highlighted", function(e, j) { return e.__highlighted; })
@@ -1069,17 +1088,6 @@ vistk.viz = function() {
 
   }
 
-  // Credits: http://bl.ocks.org/mbostock/1705868
-  utils.translate_along = function(path, duration) {
-    var l = path.node().getTotalLength();
-    return function(d, i, a) {
-      return function(t) {
-        var p = path.node().getPointAtLength(t * l);
-        return "translate(" + p.x + "," + p.y + ")";
-      };
-    };
-  }
-
 
   // Default parameters for all charts
   var default_vars = {
@@ -1256,6 +1264,7 @@ vistk.viz = function() {
 
   vars.evt.register("highlightOn", function(d) {
     d.__highlighted = true;
+    d.__redraw = true;
 
     // Make sure the highlighted node is above other nodes
     if(vars.type == "productspace") {
@@ -1267,10 +1276,12 @@ vistk.viz = function() {
         if(e.source[vars.var_id] === d[vars.var_id]) {
 
           e.__highlighted = true;
+          e.__redraw = true;
 
           vars.new_data.forEach(function(f, k) {
             if(f[vars.var_id] === e.target[vars.var_id]) {
               f.__highlighted__adjacent = true;
+              f.__redraw = true;
             }
 
           });
@@ -1280,10 +1291,12 @@ vistk.viz = function() {
         if(e.target[vars.var_id] === d[vars.var_id]) {
 
           e.__highlighted = true;
+          e.__redraw = true;
 
           vars.new_data.forEach(function(f, k) {
             if(f[vars.var_id] === e.source[vars.var_id]) {
               f.__highlighted__adjacent = true;
+              f.__redraw = true;
             }
 
           });
@@ -1299,6 +1312,7 @@ vistk.viz = function() {
 
   vars.evt.register("highlightOut", function(d) {
     d.__highlighted = false;
+    d.__redraw = true;
 
     // Make sure the highlighted node is above other nodes
     if(vars.type == "productspace") {
@@ -1306,11 +1320,13 @@ vistk.viz = function() {
       // Reset all the highlighted nodes
       vars.links.forEach(function(e) {
         e.__highlighted = false;
+        e.__redraw = true;
       })
 
       // Reset all the highlighted adjacent nodes
       vars.new_data.forEach(function(e) {
         e.__highlighted__adjacent = false;
+        e.__redraw = true;
       })
     }
 
@@ -1430,7 +1446,6 @@ vistk.viz = function() {
       vars.time.interval = d3.extent(vars.new_data, function(d) { return d[vars.time.var_time]; });
       vars.time.points = d3.set(vars.data.map(function(d) { return d[vars.time.var_time]; })).values();
 
-
       // In case the current_time is set dynamically
       if(typeof vars.time.current_time === "function") {
         vars.time.current_time = vars.time.current_time(vars.data)
@@ -1451,7 +1466,15 @@ vistk.viz = function() {
 
       }
 
-      vars.unique_items = d3.set(vars.new_data.map(function(d) { return d[vars.var_id]; })).values();
+      vars.unique_items = [];
+      var unique = {};
+
+      for(var i in vars.new_data){
+        if(typeof(unique[vars.new_data[i][vars.var_id]]) == "undefined"){
+          vars.unique_items.push(vars.new_data[i][vars.var_id]);
+        }
+        unique[vars.new_data[i][vars.var_id]] = 0;
+      }
 
       vars.unique_data = [];
 
@@ -1518,6 +1541,8 @@ vistk.viz = function() {
 
         d.__aggregated = false;
 
+        d.__redraw = true;
+
         vars.unique_data.push(d);
 
       });
@@ -1528,7 +1553,7 @@ vistk.viz = function() {
 
     // Links between items
     // Used for product space
-    if(vars.links !== null) {
+    if(vars.links !== null && vars.init) {
 
       vars.links.forEach(function(d, i) {
 
@@ -1540,12 +1565,14 @@ vistk.viz = function() {
           d.target = vistk.utils.find_node_by_id(vars.nodes, d.target);
         }
 
+        d.__redraw = true;
+
       });
 
     }
 
     // Flagging missing nodes with __missing true attribute
-    if(typeof vars.nodes != "undefined") {
+    if(typeof vars.nodes != "undefined" && vars.init) {
 
       // Adding coordinates to data
       vars.new_data.forEach(function(d, i) {
@@ -1686,6 +1713,7 @@ vistk.viz = function() {
           aggregation.__aggregated = true;
           aggregation.__selected = false;
           aggregation.__highlighted = false;
+          aggregation.__redraw = true;
 
           if(typeof vars.share_cutoff != "undefined") {
 
@@ -1877,6 +1905,8 @@ vistk.viz = function() {
 
       vars.new_data = vars.treemap.nodes(vars.root);
 
+      vars.new_data.forEach(function(d) { d.__redraw = true; });
+
     }
 
     // Views are data iterators to create more complex visualizations
@@ -1963,9 +1993,6 @@ vistk.viz = function() {
 
     }
 
-    // Flag that forces to re-wrangle data
-    vars.refresh = false;
-    vars.init = false;
 
 vars.default_params["sparkline"] = function(scope) {
 
@@ -2588,8 +2615,6 @@ vars.default_params["ordinal_vertical"] = function(scope) {
 
   var params = {};
 
-  params.var_x = "__id",
-
   params.x_scale = [{
     func: d3.scale.linear()
             .range([scope.width/2, scope.width/2])
@@ -2624,8 +2649,6 @@ vars.default_params["ordinal_horizontal"] = function(scope) {
 
   var params = {};
 
-  params.var_y = "__id",
-
   params.x_scale = [{
     func: d3.scale.ordinal()
             .domain(d3.set(vars.new_data.map(function(d) { return d[vars.var_x]; })).values())
@@ -2633,8 +2656,10 @@ vars.default_params["ordinal_horizontal"] = function(scope) {
   }];
 
   params.y_scale = [{
+    name: "linear",
     func: d3.scale.linear()
             .range([scope.height/2, scope.height/2])
+            .domain([0, d3.max(vars.new_data, function(d) { return d[scope.var_y]; })])
             .nice()
   }];
 
@@ -3073,7 +3098,6 @@ vars.default_params["ordinal_horizontal"] = function(scope) {
 
         // In case items are programmatically generated
         if(typeof vars.items == "function") {
-          console.log(vars.items(vars))
           vars.items = vars.items(vars);
         }
 
@@ -3089,6 +3113,7 @@ vars.default_params["ordinal_horizontal"] = function(scope) {
             }
 
             // PRE-UPDATE ITEMS
+            // Join is based on the curren_time value
             var gItems = vars.svg.selectAll(".mark__group" +  "_" + index_item)
                             .data(vars.new_data, function(d, i) {
                               d._index_item = index_item;
@@ -3099,7 +3124,7 @@ vars.default_params["ordinal_horizontal"] = function(scope) {
             var gItems_enter = gItems.enter()
                             .insert("g", ":first-child");
 
-            // IN CASE OF CUSTOME ENTER FOR ITEMS
+            // IN CASE OF CUSTOM ENTER FOR ITEMS
             if(typeof item.enter !== "undefined") {
               gItems_enter.call(item.enter, vars)
             } else {
@@ -3133,6 +3158,10 @@ vars.default_params["ordinal_horizontal"] = function(scope) {
               }); 
             */
 
+            // IN CASE OF CUSTOM UPDATE FOR ITEMS
+            if(typeof item.update !== "undefined") {
+              vars.svg.selectAll(".mark__group" + "_" + index_item).call(item.update, vars)
+            } else {
             // POST-UPDATE ITEMS GROUPS
             vars.svg.selectAll(".mark__group" + "_" + index_item)
                             .transition()
@@ -3141,17 +3170,21 @@ vars.default_params["ordinal_horizontal"] = function(scope) {
                             .attr("transform", function(d, i) {
                               return "translate(" + vars.x_scale[0]["func"](accessor_data(d)[vars.var_x]) + ", " + vars.y_scale[0]["func"](accessor_data(d)[vars.var_y]) + ")";
                             });
+            }
 
             // ITEMS EXIT
             var gItems_exit = gItems.exit();
 
-            // IN CASE OF CUSTOME ENTER FOR ITEMS
+            // IN CASE OF CUSTOM EXIT FOR ITEMS
             if(typeof item.exit !== "undefined") {
               gItems_exit.call(item.exit, vars)
             } else {
               gItems_exit.remove();
             }
             
+            if(vars.type == "productspace") {
+              vars.new_data.forEach(function(d) { d.__redraw = false; });
+            }
 
 
           });
@@ -3170,7 +3203,7 @@ vars.default_params["ordinal_horizontal"] = function(scope) {
 
         }
 
-        if(typeof vars.connect !== "undefined" && typeof vars.connect[0] !== "undefined") {
+        if(typeof vars.connect !== "undefined" && typeof vars.connect[0] !== "undefined" && vars.init) {
 
           // 1/ Between different items at a given time for one dimension
           // 2/ Between same items at a given time points
@@ -3213,15 +3246,16 @@ vars.default_params["ordinal_horizontal"] = function(scope) {
                             .insert("g", ":first-child")
                             .attr("class", "connect__group");
 
+            connect.marks.forEach(function(params, index_mark) {
+          
+              if(typeof params.filter == "undefined")
+                params.filter = function() { return true; };
 
-              connect.marks.forEach(function(params) {
-            
-                if(typeof params.filter == "undefined")
-                  params.filter = function() { return true; };
-
-                gConnect_enter.filter(params.filter).call(utils.draw_mark, params);
-                gConnect.filter(params.filter).call(utils.draw_mark, params);
-              });
+              // Supporting multipe similar elements
+              params._mark_id = index_item + "_" + index_mark;
+              gConnect_enter.filter(params.filter).call(utils.draw_mark, params);
+              gConnect.filter(params.filter).call(utils.draw_mark, params);
+            });
 
             // Bind events to groups after marks have been created
             gConnect.each(utils.connect_group);
@@ -3231,16 +3265,23 @@ vars.default_params["ordinal_horizontal"] = function(scope) {
 
           });
 
+          if(vars.type == "productspace") {
+            connect_data.forEach(function(d) { d.__redraw = false; });
+          }
 
         }
 
-        // CREATE AXIS
+        // CREATE / UPDATE / REMOVE AXIS
         if(vars.x_axis_show) {
           vars.svg.call(utils.x_axis);
-        }
+        } else {
+            vars.svg.selectAll(".x.axis").remove();
+         }
   
          if(vars.y_axis_show) {
             vars.svg.call(utils.y_axis);
+         } else {
+            vars.svg.selectAll(".y.axis").remove();
          }
   
          if(vars.x_grid_show) {
@@ -3279,6 +3320,11 @@ vars.default_params["ordinal_horizontal"] = function(scope) {
         }
 
         utils.background_label(vars.title);
+
+        // Flag that forces to re-wrangle data
+        vars.refresh = false;
+        vars.init = false;
+
 
       break;
 
@@ -3355,7 +3401,7 @@ vars.default_params["ordinal_horizontal"] = function(scope) {
 
         }
 
-      if(vars.time) {
+      if(vars.time.var_time !== null) {
 
         var label_slider = d3.select(vars.container)
           .selectAll(".slider")
@@ -3770,6 +3816,7 @@ vars.default_params["ordinal_horizontal"] = function(scope) {
   return chart;
 }
 
+
 // PUBLIC FUNCTIONS
 
 // http://stackoverflow.com/questions/171251/how-can-i-merge-properties-of-two-javascript-objects-dynamically
@@ -3843,15 +3890,19 @@ vistk.utils.find_node_coordinates_by_id = function(nodes, var_id, id) {
 }
 
 vistk.utils.max = function(data) {
-  
   var var_time = this.var_time;
   return d3.max(data, function(d) { return d[var_time] });
 }
 
 vistk.utils.min = function(data) {
-  
   var var_time = this.var_time;
   return d3.min(data, function(d) { return d[var_time] });
+}
+
+vistk.utils.time = {};
+
+vistk.utils.time.current = function(data) {
+  return vars.current_time;
 }
 
 vistk.utils.decode_url = function() {
@@ -3866,4 +3917,15 @@ vistk.utils.decode_url = function() {
   }
 
   return queryParameters;
+}
+
+// Credits: http://bl.ocks.org/mbostock/1705868
+vistk.utils.translate_along = function(path) {
+  var l = path.node().getTotalLength();
+  return function(d, i, a) {
+    return function(t) {
+      var p = path.node().getPointAtLength(t * l);
+      return "translate(" + p.x + "," + p.y + ")";
+    };
+  };
 }
