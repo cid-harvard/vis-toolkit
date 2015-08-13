@@ -1,6 +1,6 @@
 {
   "name": "vis-toolkit",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "vis-toolkit ===================",
   "main": "\"\"",
   "scripts": {
@@ -25,7 +25,8 @@
     "grunt-contrib-watch": "~0.6.1",
     "grunt-contrib-jshint": "~0.11.2",
     "grunt-contrib-jasmine": "*",
-    "grunt-string-replace": "*"
+    "grunt-string-replace": "*",
+    "grunt-gh-pages": "~0.10.0"
   },
   "dependencies": {}
 }

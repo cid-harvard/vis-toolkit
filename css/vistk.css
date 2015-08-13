@@ -133,24 +133,6 @@ text.selected {
   font-weight: 800;
 }
 
-
-/* Geomap */
-
-div.tooltip {
-  color: #222; 
-  background: #fff; 
-  padding: .5em; 
-  text-shadow: #f5f5f5 0 1px 0;
-  border-radius: 2px; 
-  box-shadow: 0px 0px 2px 0px #a6a6a6; 
-  opacity: 0.9; 
-  position: absolute;
-}
-
-div.hidden {
-  display: none;
-}
-
 /* Bar chart */
 
 .bar {
@@ -170,6 +152,13 @@ div.hidden {
   opacity: 1;
 }
 
+.mark__line_horizontal {
+  fill: none;
+  stroke: #000;
+  stroke-width: 1.5px;
+  stroke-dasharray: 5,5;
+  opacity: 1;
+}
 /* Dot plot */
 
 .items__mark__diamond {

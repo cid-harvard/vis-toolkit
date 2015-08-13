@@ -42,7 +42,6 @@
 
         // In case items are programmatically generated
         if(typeof vars.items == "function") {
-          console.log(vars.items(vars))
           vars.items = vars.items(vars);
         }
 
@@ -58,6 +57,7 @@
             }
 
             // PRE-UPDATE ITEMS
+            // Join is based on the curren_time value
             var gItems = vars.svg.selectAll(".mark__group" +  "_" + index_item)
                             .data(vars.new_data, function(d, i) {
                               d._index_item = index_item;
@@ -68,7 +68,7 @@
             var gItems_enter = gItems.enter()
                             .insert("g", ":first-child");
 
-            // IN CASE OF CUSTOME ENTER FOR ITEMS
+            // IN CASE OF CUSTOM ENTER FOR ITEMS
             if(typeof item.enter !== "undefined") {
               gItems_enter.call(item.enter, vars)
             } else {
@@ -102,6 +102,10 @@
               }); 
             */
 
+            // IN CASE OF CUSTOM UPDATE FOR ITEMS
+            if(typeof item.update !== "undefined") {
+              vars.svg.selectAll(".mark__group" + "_" + index_item).call(item.update, vars)
+            } else {
             // POST-UPDATE ITEMS GROUPS
             vars.svg.selectAll(".mark__group" + "_" + index_item)
                             .transition()
@@ -110,17 +114,21 @@
                             .attr("transform", function(d, i) {
                               return "translate(" + vars.x_scale[0]["func"](accessor_data(d)[vars.var_x]) + ", " + vars.y_scale[0]["func"](accessor_data(d)[vars.var_y]) + ")";
                             });
+            }
 
             // ITEMS EXIT
             var gItems_exit = gItems.exit();
 
-            // IN CASE OF CUSTOME ENTER FOR ITEMS
+            // IN CASE OF CUSTOM EXIT FOR ITEMS
             if(typeof item.exit !== "undefined") {
               gItems_exit.call(item.exit, vars)
             } else {
               gItems_exit.remove();
             }
             
+            if(vars.type == "productspace") {
+              vars.new_data.forEach(function(d) { d.__redraw = false; });
+            }
 
 
           });
@@ -139,7 +147,7 @@
 
         }
 
-        if(typeof vars.connect !== "undefined" && typeof vars.connect[0] !== "undefined") {
+        if(typeof vars.connect !== "undefined" && typeof vars.connect[0] !== "undefined" && vars.init) {
 
           // 1/ Between different items at a given time for one dimension
           // 2/ Between same items at a given time points
@@ -182,15 +190,16 @@
                             .insert("g", ":first-child")
                             .attr("class", "connect__group");
 
+            connect.marks.forEach(function(params, index_mark) {
+          
+              if(typeof params.filter == "undefined")
+                params.filter = function() { return true; };
 
-              connect.marks.forEach(function(params) {
-            
-                if(typeof params.filter == "undefined")
-                  params.filter = function() { return true; };
-
-                gConnect_enter.filter(params.filter).call(utils.draw_mark, params);
-                gConnect.filter(params.filter).call(utils.draw_mark, params);
-              });
+              // Supporting multipe similar elements
+              params._mark_id = index_item + "_" + index_mark;
+              gConnect_enter.filter(params.filter).call(utils.draw_mark, params);
+              gConnect.filter(params.filter).call(utils.draw_mark, params);
+            });
 
             // Bind events to groups after marks have been created
             gConnect.each(utils.connect_group);
@@ -200,16 +209,23 @@
 
           });
 
+          if(vars.type == "productspace") {
+            connect_data.forEach(function(d) { d.__redraw = false; });
+          }
 
         }
 
-        // CREATE AXIS
+        // CREATE / UPDATE / REMOVE AXIS
         if(vars.x_axis_show) {
           vars.svg.call(utils.x_axis);
-        }
+        } else {
+            vars.svg.selectAll(".x.axis").remove();
+         }
   
          if(vars.y_axis_show) {
             vars.svg.call(utils.y_axis);
+         } else {
+            vars.svg.selectAll(".y.axis").remove();
          }
   
          if(vars.x_grid_show) {
@@ -248,5 +264,10 @@
         }
 
         utils.background_label(vars.title);
+
+        // Flag that forces to re-wrangle data
+        vars.refresh = false;
+        vars.init = false;
+
 
       break;
