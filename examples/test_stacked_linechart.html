@@ -1,0 +1,106 @@
+<!doctype html>
+<meta charset="utf-8">
+<script src="../js/d3.js"></script>
+<script src="../build/vistk.js"></script>
+<link href="../css/vistk.css" rel="stylesheet">
+<body>
+<div id="viz"></div>
+<script>
+
+  function random_data() {
+    return d3.range(Math.random()*100).map(function(d, i) {
+      return {t:i, v: Math.random()*100}
+    })
+  }
+
+  visualization = vistk.viz()
+    .params({
+      dev: true,
+      type: 'stacked',
+      container: "#viz",
+      width: 960,
+      height: 500,
+      margin: {top: 30, right: 30, bottom: 30, left: 30},
+      data: random_data(),
+      var_y: 'v',
+      var_x: 't',
+      var_group: '__id',
+      var_color: '__id',
+      var_id: '__id',
+//      y_invert: true,
+      time: {
+        parse: function(d) { return d; },
+        var_time: 't',
+        current_time: 0
+      },
+      ui: {
+        default: true
+      }
+    });
+
+  d3.select(visualization.container()).call(visualization);
+
+  d3.select(visualization.container()).selectAll(".stackedTransformation").data(["stackedTransformation"]).enter().append("button")
+           .attr("type", "button")
+           .attr("class", "stackedTransformation")
+           .on("click", function() {
+
+              // Then move groups to their grid position
+              visualization.param("refresh", true);
+
+              visualization.params({
+                type: "stacked",
+                y_invert: false
+              });
+
+              visualization.params().refresh = true;
+              visualization.params().init = true;
+
+              d3.select(visualization.container()).call(visualization);
+
+            })
+           .html("To Stacked Graph");
+
+  d3.select(visualization.container()).selectAll(".lineTransformation").data(["lineTransformation"]).enter().append("button")
+           .attr("type", "button")
+           .attr("class", "stackedTransformation")
+           .on("click", function() {
+
+              // Then move groups to their grid position
+              visualization.param("refresh", true);
+
+              visualization.params({
+                type: "linechart",
+                y_invert: true
+              });
+
+              visualization.params().refresh = true;
+              visualization.params().init = true;
+
+              d3.select(visualization.container()).call(visualization);
+
+            })
+           .html("To Line Graph");
+
+
+  d3.select(visualization.container()).selectAll(".randomData").data(["randomData"]).enter().append("button")
+           .attr("type", "button")
+           .attr("class", "randomData")
+           .on("click", function() {
+
+              // Then move groups to their grid position
+              visualization.param("refresh", true);
+
+              visualization.params({
+                data: random_data()
+              });
+
+              visualization.params().refresh = true;
+              visualization.params().init = true;
+
+              d3.select(visualization.container()).call(visualization);
+
+            })
+           .html("Random Data");
+
+</script>

@@ -80,7 +80,6 @@
       vars.time.interval = d3.extent(vars.new_data, function(d) { return d[vars.time.var_time]; });
       vars.time.points = d3.set(vars.data.map(function(d) { return d[vars.time.var_time]; })).values();
 
-
       // In case the current_time is set dynamically
       if(typeof vars.time.current_time === "function") {
         vars.time.current_time = vars.time.current_time(vars.data)
@@ -101,7 +100,15 @@
 
       }
 
-      vars.unique_items = d3.set(vars.new_data.map(function(d) { return d[vars.var_id]; })).values();
+      vars.unique_items = [];
+      var unique = {};
+
+      for(var i in vars.new_data){
+        if(typeof(unique[vars.new_data[i][vars.var_id]]) == "undefined"){
+          vars.unique_items.push(vars.new_data[i][vars.var_id]);
+        }
+        unique[vars.new_data[i][vars.var_id]] = 0;
+      }
 
       vars.unique_data = [];
 
@@ -168,6 +175,8 @@
 
         d.__aggregated = false;
 
+        d.__redraw = true;
+
         vars.unique_data.push(d);
 
       });
@@ -178,7 +187,7 @@
 
     // Links between items
     // Used for product space
-    if(vars.links !== null) {
+    if(vars.links !== null && vars.init) {
 
       vars.links.forEach(function(d, i) {
 
@@ -190,12 +199,14 @@
           d.target = vistk.utils.find_node_by_id(vars.nodes, d.target);
         }
 
+        d.__redraw = true;
+
       });
 
     }
 
     // Flagging missing nodes with __missing true attribute
-    if(typeof vars.nodes != "undefined") {
+    if(typeof vars.nodes != "undefined" && vars.init) {
 
       // Adding coordinates to data
       vars.new_data.forEach(function(d, i) {
@@ -336,6 +347,7 @@
           aggregation.__aggregated = true;
           aggregation.__selected = false;
           aggregation.__highlighted = false;
+          aggregation.__redraw = true;
 
           if(typeof vars.share_cutoff != "undefined") {
 
@@ -527,6 +539,8 @@
 
       vars.new_data = vars.treemap.nodes(vars.root);
 
+      vars.new_data.forEach(function(d) { d.__redraw = true; });
+
     }
 
     // Views are data iterators to create more complex visualizations
@@ -613,6 +627,3 @@
 
     }
 
-    // Flag that forces to re-wrangle data
-    vars.refresh = false;
-    vars.init = false;

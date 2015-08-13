@@ -71,15 +71,19 @@ vistk.utils.find_node_coordinates_by_id = function(nodes, var_id, id) {
 }
 
 vistk.utils.max = function(data) {
-  
   var var_time = this.var_time;
   return d3.max(data, function(d) { return d[var_time] });
 }
 
 vistk.utils.min = function(data) {
-  
   var var_time = this.var_time;
   return d3.min(data, function(d) { return d[var_time] });
+}
+
+vistk.utils.time = {};
+
+vistk.utils.time.current = function(data) {
+  return vars.current_time;
 }
 
 vistk.utils.decode_url = function() {
@@ -94,4 +98,15 @@ vistk.utils.decode_url = function() {
   }
 
   return queryParameters;
+}
+
+// Credits: http://bl.ocks.org/mbostock/1705868
+vistk.utils.translate_along = function(path) {
+  var l = path.node().getTotalLength();
+  return function(d, i, a) {
+    return function(t) {
+      var p = path.node().getPointAtLength(t * l);
+      return "translate(" + p.x + "," + p.y + ")";
+    };
+  };
 }

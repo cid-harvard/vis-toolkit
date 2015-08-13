@@ -56,17 +56,37 @@ d3.csv("../data/new_rankings2.csv", function(error, data) {
       y_text: "ECI Rank",
       var_y: "rank",
       var_x: 'year',
-      connect: [{
+      items: [{
+        attr: "name",
         marks: [{
-          type: "path",
-          rotate: "0",
-          var_r: "realgdp",
-          var_fill: "realgdp",
-  //        fill: function(d) { return vars.color(vars.accessor_items(d)[vars.var_color]); }
+          type: "diamond",
+          rotate: "0"
         }, {
           type: "text",
-          rotate: "-30",
-          translate: 10 // TODO: translate the same distance than the radius
+          rotate: "0"
+        }],
+        enter: function(data, vars) {
+          this.attr("transform", function(d, i) {
+            return "translate(0, " +  vars.y_scale[0]["func"](vars.accessor_data(d)[vars.var_y]) + ")";
+          })
+        },
+        update: function(data, vars) {
+          
+          // Make sure the connect mark already exist
+          if(d3.select(".connect__path").node() == null)
+            return;
+
+          this.transition().duration(1000)
+              .attrTween("transform",  vistk.utils.translate_along(d3.select(".connect__path")));
+
+        }
+      }],
+      connect: [{
+        time: {
+          interval: [vistk.min, vistk.utils.time.current]
+        },
+        marks: [{
+          type: "path"
         }]
       }],
       time: {

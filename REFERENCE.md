@@ -1,11 +1,47 @@
 # Reference
 
 * [General](#general)
+  * [`type`](#type)
+  * [`margin`](#margin)
+  * [`container`](#container)
+  * [`title`](#title)
+  * [`var_color`](#var_color)
+  * [`color`](#color)
+  * [`var_text`](#var_text)
 * [Data](#data)
+  * [`data`](#data)
+  * [`var_id`](#var_id)
+  * [`var_group`](#var_group)
+  * [`set`](#set)
+  * [`aggregated`](#aggregated)
+  * [`selection`](#selection)
+  * [`highlight`](#highlight)
+  * [Axis / Layout Mapping](#axis--layout-mapping)
 * [Marks](#marks)
+  * [`items`](#items)
+  * [`items.marks`](#itemsmarks)
+  * [`items.marks.type`](#itemsmarkstype)
+  * [`items.marks.var_type`](#itemsmarksvar_type)
+  * [`items.marks.title`](#itemsmarkstitle)
+  * [`items.marks.class`](#itemsmarksclass)
+  * [`items.marks.fill`](#itemsmarksfill)
+  * [`items.marks.enter`](#itemsmarksenter)
+  * [`items.marks.exit`](#itemsmarksexit)
+  * [`connect`](#connect)
 * [Time](#time)
+  * [`time`](#time)
+    * [Format](#format)
+  * [`time.var_time`](#timevar_time)
+  * [`time.current_time`](#timecurrent_time)
+  * [`time.parse` (Function)](#timeparse-function)
 * [UI](#ui)
+  * [`ui`](#ui)
+    * [Format](#format-1)
 * [Utils](#utils)
+  * [`vistk.utils.min`](#vistkutilsmin)
+  * [`vistk.utils.max`](#vistkutilsmax)
+  * [`vistk.utils.translate_along`](#vistkutilstranslate_along)
+  * [`utils.draw_mark`](#utilsdraw_mark)
 
 > This document lists all the parameters to create and customize visualizations.
 
@@ -49,39 +85,47 @@ This is by far the most important parameter as it will automatically pre-generat
 
 * **Note:** Follows the [D3 margin convention](http://bl.ocks.org/mbostock/3019563) for the sake of consistency with D3 examples.
 
-### `container` (String)
+### `container`
 
 > The selector for the DOM element being used to append the visualization to.
 
-**Default:** `#viz`
+* **Type:** `String`
 
-**Example:** `#viz_barchart`
+* **Default:** `#viz`
 
-**Note:** ..
+* **Example:** `#viz_barchart`
 
-### `title` (String)
+* **Note:** ..
+
+### `title`
 
 > The title to use for the visualization (in case it features a space for the title)
 
-**Default:** &empty;
+* **Type:** `String`
 
-**Example:** "This is a bar chart"
+* **Default:** &empty;
 
-**Note:** Some chart templates feature a title, some others don't.
+* **Example:** "This is a bar chart"
 
-### `var_color` (String)
+* **Note:** Some chart templates feature a title, some others don't.
+
+### `var_color`
 
 > Adds color to the chart using the specified attribute
 
-**Example:** Continent grouping countries with the same color ([line chart](http://cid-harvard.github.io/vis-toolkit/examples/linechart.html)).
+* **Type:** `String`
+
+* **Example:** Continent grouping countries with the same color ([line chart](http://cid-harvard.github.io/vis-toolkit/examples/linechart.html)).
 
 A custom function can be passed  `var_color: 'rank'` and `color: d3.scale.linear().domain([0, 123]).range(['red', 'blue'])`.
 
 **Note:** Using the **color** parameter as color scale.
 
-### `color` (Function)
+### `color`
 
 > Color scale function used when drawing marks
+
+* **Type:** `Function`
 
 **Default:** `d3.scale.category20c()`.
 
@@ -119,9 +163,11 @@ We consider a dataset made `items`, which are unique objects being drawn. Someti
 
 **Note:** If no id in the dataset, then it considers each rows as an item and creates a `var__id` attribute which value is the index of the row. Thus, the previous dataset `[0, 1, 2, 3]` can be used, and **var_id** will implicitly be set to `__id`.
 
-### `var_id` (String)
+### `var_id`
 
 > The attribute being used to identify each item in the dataset.
+
+* **Type:** `String`
 
 **Default:** `__id`
 
@@ -129,9 +175,11 @@ We consider a dataset made `items`, which are unique objects being drawn. Someti
 
 Note: The `__id` is automatically created in case no `var_id` is set.
 
-### `var_group` (String)
+### `var_group`
 
 > The variable to be used to create groups of items
+
+* **Type:** `String`
 
 **Default:**  &empty;
 
@@ -221,7 +269,7 @@ Further conditions can be set on the mark for example to update its `text-anchor
 &nbsp;
 The `productspace` chart type also generates highlights for its metadata: the links are hilighted with `__highlighted` attribute and the adjacent nodes to the currently highlighed one are have a `highlighted__adjacent` flag on.
 
-### Axis / Layout Mapping
+## Axis / Layout Mapping
 
 Below are several variables aimed at customizing the chart's template. Those are only given for the `x` axis, but also works for the `y` axis.
 
@@ -256,7 +304,8 @@ A chart is made of items and connect marks that will enable to create complex ch
 
 **Example:**
 
-**Note:**
+**Note:** Each item creates a `<SVG>` group of marks of class `.mark__group`. This group handles the position of the marks with a `transform` attribute.
+&nbsp;
 
 
 
@@ -389,8 +438,6 @@ marks: [{
 
 **Type:** `Object`
 
-#### Format
-
 ```html
 time: {
   var_time: 'year', 
@@ -423,11 +470,13 @@ Some time-related values are internally created:
 
 ## UI
 
-### `ui` (Object)
+### `ui`
 
 > Specify which UI element to be created.
 
-#### Format
+* **Type:** `Object`
+
+* **Example:**
 
 ```js
 {
@@ -436,9 +485,6 @@ Some time-related values are internally created:
   sort: ['continent', "name", 'avg_products', 'nb_products']
 }
 ```
-
-
-
 
 
 

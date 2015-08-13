@@ -393,8 +393,9 @@ D3js notebook
 
 * http://charliepark.org/slopegraphs/
 
-### Occugrid alternatives
+### Occugrid
 
+* Waffle charts http://bl.ocks.org/tomcardoso/1d44732cc7f3d97d6bf7
 * http://neuralengr.com/asifr/journals/
 
 

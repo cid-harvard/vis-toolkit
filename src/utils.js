@@ -18,7 +18,7 @@
 
   utils.connect_group = function(d, i) {
 
-    d3.select(this).attr("class", "connect__group")
+    d3.select(this).attr("class", "connect__group connect__group_" + d._index_item)
                     .classed("highlighted", function(d, i) { return d.__highlighted; })
                     .classed("selected", function(d, i) { return d.__selected; })
                     .on("mouseover",function(d) {
@@ -44,6 +44,10 @@
   utils.draw_mark = function(selection, params) {
 
     selection.each(function(d) {
+
+      if(!d.__redraw) {
+        return;
+      }
 
       var params_type = params.type;
 
@@ -108,7 +112,7 @@
 
           var items_mark_divtext = d3.select(this).selectAll(".items__mark__divtext").data([d]);
 
-          items_mark_divtext.enter().append("foreignObject")
+          var items_mark_divtext_enter = items_mark_divtext.enter().append("foreignObject")
                  .classed("items__mark__divtext", true)
                  .classed("items_" + mark_id, true)
                  .attr("width", function(d) {
@@ -122,7 +126,7 @@
                    if(typeof d.dy !== "undefined") {
                       return (d.dy - 2*vars.padding) + "px";
                     } else {
-                      return "50px";
+                      return "100%";
                     }
                   })
                .append("xhtml:body")
@@ -140,13 +144,19 @@
                    if(typeof d.dy !== "undefined") {
                      return (d.dx - 2*vars.padding) + "px";
                    } else {
-                    return "50px"; 
+                    return "100%"; 
                   }
                   })
                  .style({"text-overflow": "ellipsis", "overflow": "hidden"})
                  .html(function(d) {
                    return vars.accessor_data(d)[vars.var_text];
                  });
+
+          if(typeof params.class !== "undefined") {
+
+            items_mark_divtext_enter.classed(params.class(vars.accessor_items(d)), true);
+
+          }
 
           items_mark_divtext.exit().remove();
 
@@ -394,17 +404,23 @@
 
           var mark = d3.select(this).selectAll(".mark__line_horizontal").data([d]);
 
+          var t = d3.transform(d3.select(this).attr("transform")).translate;
+
           mark.enter().append('line')
               .classed('mark__line_horizontal', true)
               .classed("items_" + mark_id, true)
-              .attr("x1", function(d) { return vars.x_scale[0]["func"].range()[0]; })
-              .attr("y1", function(d) { return vars.y_scale[0]["func"](d[vars.var_y]); })
+              .attr("x1", function(d) { return -t[0] + vars.margin.left; })
+              .attr("y1", function(d) { return 0; })
               .attr("x2", function(d) { return vars.x_scale[0]["func"].range()[1]; })
-              .attr("y2", function(d) { return vars.y_scale[0]["func"](d[vars.var_y]); });
+              .attr("y2", function(d) { return 0; });
 
           mark
               .classed("highlighted", function(d, i) { return d.__highlighted; })
-              .classed("selected", function(d, i) { return d.__selected; });
+              .classed("selected", function(d, i) { return d.__selected; })
+              .attr("x1", function(d) { return -t[0] + vars.margin.left; })
+              .attr("y1", function(d) { return 0; })
+              .attr("x2", function(d) { return vars.x_scale[0]["func"].range()[1]; })
+              .attr("y2", function(d) { return 0; });
 
           break;
 
@@ -426,7 +442,10 @@
               .classed('connect__path_' + mark_id, true)
               .classed("items_" + mark_id, true)
               .style("fill", params.fill)
-              .style("stroke", params.stroke);
+              .style("stroke", params.stroke)
+              .attr('d', function(e) {
+                return params["func"](this_accessor_values(e)); 
+              });
 
           mark              
               .classed("highlighted", function(e, j) { return e.__highlighted; })
@@ -1053,15 +1072,4 @@
         .ease("linear")
         .attr("stroke-dashoffset", 0);
 
-  }
-
-  // Credits: http://bl.ocks.org/mbostock/1705868
-  utils.translate_along = function(path, duration) {
-    var l = path.node().getTotalLength();
-    return function(d, i, a) {
-      return function(t) {
-        var p = path.node().getPointAtLength(t * l);
-        return "translate(" + p.x + "," + p.y + ")";
-      };
-    };
   }

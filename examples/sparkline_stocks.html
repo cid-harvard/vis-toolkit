@@ -71,7 +71,6 @@
     data.forEach(function(d) {
       d.close = +d.Close;
       d.company = "GOOG";
-      d.time = d3.time.format("%b %d, %Y").parse(d["Date"]); 
     });
 
     dd = data;
@@ -84,12 +83,13 @@
       data: data,
       var_y: "close",
       var_x: "time",
+      var_id: '__id',
       ui: {
         default: true
       },
       time: {
         var_time: "Date",
-        parse: function(d) { return d; },
+        parse: d3.time.format("%b %d, %Y"),
         current_time: "Dec 18, 2013"
       },
       items: [{
