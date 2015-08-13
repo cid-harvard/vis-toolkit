@@ -45,6 +45,10 @@
 
     selection.each(function(d) {
 
+      if(!d.__redraw) {
+        return;
+      }
+
       var params_type = params.type;
 
       // Default id for marks
