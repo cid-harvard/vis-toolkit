@@ -49,6 +49,7 @@
 
   vars.evt.register("highlightOn", function(d) {
     d.__highlighted = true;
+    d.__redraw = true;
 
     // Make sure the highlighted node is above other nodes
     if(vars.type == "productspace") {
@@ -60,10 +61,12 @@
         if(e.source[vars.var_id] === d[vars.var_id]) {
 
           e.__highlighted = true;
+          e.__redraw = true;
 
           vars.new_data.forEach(function(f, k) {
             if(f[vars.var_id] === e.target[vars.var_id]) {
               f.__highlighted__adjacent = true;
+              f.__redraw = true;
             }
 
           });
@@ -73,10 +76,12 @@
         if(e.target[vars.var_id] === d[vars.var_id]) {
 
           e.__highlighted = true;
+          e.__redraw = true;
 
           vars.new_data.forEach(function(f, k) {
             if(f[vars.var_id] === e.source[vars.var_id]) {
               f.__highlighted__adjacent = true;
+              f.__redraw = true;
             }
 
           });
@@ -92,6 +97,7 @@
 
   vars.evt.register("highlightOut", function(d) {
     d.__highlighted = false;
+    d.__redraw = true;
 
     // Make sure the highlighted node is above other nodes
     if(vars.type == "productspace") {
@@ -99,11 +105,13 @@
       // Reset all the highlighted nodes
       vars.links.forEach(function(e) {
         e.__highlighted = false;
+        e.__redraw = true;
       })
 
       // Reset all the highlighted adjacent nodes
       vars.new_data.forEach(function(e) {
         e.__highlighted__adjacent = false;
+        e.__redraw = true;
       })
     }
 
