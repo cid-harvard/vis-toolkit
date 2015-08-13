@@ -126,6 +126,9 @@
               gItems_exit.remove();
             }
             
+            if(vars.type == "productspace") {
+              vars.new_data.forEach(function(d) { d.__redraw = false; });
+            }
 
 
           });
@@ -144,7 +147,7 @@
 
         }
 
-        if(typeof vars.connect !== "undefined" && typeof vars.connect[0] !== "undefined") {
+        if(typeof vars.connect !== "undefined" && typeof vars.connect[0] !== "undefined" && vars.init) {
 
           // 1/ Between different items at a given time for one dimension
           // 2/ Between same items at a given time points
@@ -206,6 +209,10 @@
 
           });
 
+          if(vars.type == "productspace") {
+            connect_data.forEach(function(d) { d.__redraw = false; });
+          }
+
         }
 
         // CREATE / UPDATE / REMOVE AXIS
@@ -257,5 +264,10 @@
         }
 
         utils.background_label(vars.title);
+
+        // Flag that forces to re-wrangle data
+        vars.refresh = false;
+        vars.init = false;
+
 
       break;
