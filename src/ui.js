@@ -306,7 +306,7 @@
 
       var nb_color = 3; // visualization.params().color.domain().length
 
-      var items_mark_color = [[vars.locales[vars.lang]['low']], "", [vars.locales[vars.lang]['high']]];
+      var items_mark_color = [vars.locales[vars.lang]['low'], "", vars.locales[vars.lang]['high']];
       var x_offset = legend_offset / nb_color;
 
       var legend =  d3.select(vars.container).selectAll(".svg_legend").data(["legend"]);
@@ -335,7 +335,7 @@
       var legend_items_mark_color = legend.selectAll(".legend_items_mark_color")
           .data(items_mark_color);
 
-      legend_items_mark_color.enter().append("g")
+      var legend_items_mark_color_enter = legend_items_mark_color.enter().append("g")
           .attr("class", "legend_items_mark_color")
           .attr("transform", function(d, i) { return "translate(" + (legend_offset / 2 + i * x_offset) + ", 0)"; })
           .on('mouseover', function(_, i) {
@@ -358,7 +358,7 @@
             vars.svg.selectAll('.items__mark__circle').style('display', 'block');
           })
 
-      legend_items_mark_color.append("rect")
+      legend_items_mark_color_enter.append("rect")
           .attr("x", 0)
           .attr("width", x_offset)
           .attr("height", 18)
@@ -373,23 +373,23 @@
 
           });
 
-      legend_items_mark_color.append("text")
+      legend_items_mark_color_enter.append("text")
           .attr("x", 5)
           .attr("y", 9)
           .attr("dy", ".35em")
           .style("text-anchor", "start");
 
-
       legend_items_mark_color.select('text').text(function(d) { return d; });
 
       // Item marks and different stylings
       // Export / Non-export
-      var items_mark = [[vars.locales[vars.lang]['export']], [vars.locales[vars.lang]['non-export']]];
+      var data_items_mark = [vars.locales[vars.lang]['export'], vars.locales[vars.lang]['non-export']];
       x_offset = legend_offset / nb_color;
 
       var legend_items_mark = legend.selectAll(".legend_items_mark")
-          .data(items_mark)
-        .enter().append("g")
+          .data(data_items_mark);
+
+      var legend_items_mark_enter = legend_items_mark.enter().append("g")
           .attr("class", "legend_items_mark")
           .attr("transform", function(d, i) { return "translate(" + (1.75 * legend_offset + i * x_offset * 1.5) + ", 0)"; })
           .on('mouseover', function(d, i) {
@@ -407,7 +407,7 @@
             vars.svg.selectAll('.items__mark__circle').style('display', 'block');
           })
 
-      legend_items_mark.append("circle")
+      legend_items_mark_enter.append("circle")
           .attr("cx", 10)
           .attr("cy", 10)
           .attr("r", 8)
@@ -418,24 +418,24 @@
           })
           .style("stroke-width", "5");
 
-      legend_items_mark.append("text")
+      legend_items_mark_enter.append("text")
           .attr("x", 25)
           .attr("y", 9)
           .attr("dy", ".35em")
           .style("text-anchor", "start");
 
-
       legend_items_mark.select('text').text(function(d) { return d;});
 
       // Connect marks and different stylings
-      var connect_mark = [[vars.locales[vars.lang]['similarity_link']]];
+      var connect_mark = [vars.locales[vars.lang]['similarity_link']];
 
       var width = 100;
       x_offset = legend_offset / vars.color.domain().length;
 
       var legend_connect_mark = legend.selectAll(".legend_connect_mark")
-          .data(connect_mark)
-        .enter().append("g")
+          .data(connect_mark);
+
+      var legend_connect_mark_enter = legend_connect_mark.enter().append("g")
           .attr("class", "legend_connect_mark")
           .attr("transform", function(d, i) { return "translate(" + (3 * legend_offset + i * x_offset) + ", 0)"; })
           .on('mouseover', function() {
@@ -445,7 +445,7 @@
             vars.svg.selectAll('.mark__group > circle').style('display', 'block');
           })
 
-      legend_connect_mark.append("line")
+      legend_connect_mark_enter.append("line")
           .attr("x1", 0)
           .attr("x2", 20)
           .attr("y1", 20)
@@ -453,12 +453,13 @@
           .attr("class", "connect__line")
           .style("stroke-width", "4");
 
-      legend_connect_mark.append("text")
+      legend_connect_mark_enter.append("text")
           .attr("x", 20)
           .attr("y", 9)
           .attr("dy", ".35em")
-          .style("text-anchor", "start")
-          .text(function(d) { return d;});
+          .style("text-anchor", "start");
+
+      legend_connect_mark.text(function(d) { return d;});
 
     }
 
