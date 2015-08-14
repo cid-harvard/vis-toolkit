@@ -306,10 +306,12 @@
 
       var nb_color = 3; // visualization.params().color.domain().length
 
-      var items_mark_color = ["Low", "", "High"];
+      var items_mark_color = [[vars.locales[vars.lang]['low']], "", [vars.locales[vars.lang]['high']]];
       var x_offset = legend_offset / nb_color;
 
-      var legend =  d3.select(vars.container).selectAll(".svg_legend").data(["legend"]).enter()
+      var legend =  d3.select(vars.container).selectAll(".svg_legend").data(["legend"]);
+
+      legend.enter()
         .append("svg")
         .attr("class", "svg_legend")
         .attr("width", vars.width)
@@ -319,18 +321,21 @@
         .attr("class", "legend_group")
 
       var legend_items_mark_text = legend.selectAll(".legend_items_mark_text")
-          .data(["Complexity"])
-        .enter().append("g")
+          .data([vars.locales[vars.lang]['complexity']]);
+
+      legend_items_mark_text.enter().append("g")
           .attr("class", "legend_items_mark_text")
           .attr("transform", function(d, i) { return "translate(" + (legend_offset / 2) + ", 12)"; })
           .append('text')
           .style("text-anchor", 'end')
-          .attr("transform", "translate(-10, 0)")
-          .text(function(d) { return d; });
+          .attr("transform", "translate(-10, 0)");
+
+      legend_items_mark_text.select('text').text(function(d) { return d; });
 
       var legend_items_mark_color = legend.selectAll(".legend_items_mark_color")
-          .data(items_mark_color)
-        .enter().append("g")
+          .data(items_mark_color);
+
+      legend_items_mark_color.enter().append("g")
           .attr("class", "legend_items_mark_color")
           .attr("transform", function(d, i) { return "translate(" + (legend_offset / 2 + i * x_offset) + ", 0)"; })
           .on('mouseover', function(_, i) {
@@ -372,12 +377,14 @@
           .attr("x", 5)
           .attr("y", 9)
           .attr("dy", ".35em")
-          .style("text-anchor", "start")
-          .text(function(d) { return d; });
+          .style("text-anchor", "start");
+
+
+      legend_items_mark_color.select('text').text(function(d) { return d; });
 
       // Item marks and different stylings
       // Export / Non-export
-      var items_mark = ["Export", "Non-Export"];
+      var items_mark = [[vars.locales[vars.lang]['export']], [vars.locales[vars.lang]['non-export']]];
       x_offset = legend_offset / nb_color;
 
       var legend_items_mark = legend.selectAll(".legend_items_mark")
@@ -415,11 +422,13 @@
           .attr("x", 25)
           .attr("y", 9)
           .attr("dy", ".35em")
-          .style("text-anchor", "start")
-          .text(function(d) { return d;});
+          .style("text-anchor", "start");
+
+
+      legend_items_mark.select('text').text(function(d) { return d;});
 
       // Connect marks and different stylings
-      var connect_mark = ["Similarity link"];
+      var connect_mark = [[vars.locales[vars.lang]['similarity_link']]];
 
       var width = 100;
       x_offset = legend_offset / vars.color.domain().length;
