@@ -46,6 +46,11 @@ path.state {
   stroke-opacity: .4;
 }
 
+.connect__line.highlighted {
+  fill: yellow;
+  stroke-width: 1.5px;
+}
+
 .items__mark__star {
   fill: #CBC0B8;
   stroke-width: .5px;
@@ -146,7 +151,8 @@ d3.json("../data/colombia_product_space.json", function(graph) {
         if(typeof metadata_export === "undefined") {
 
           d["name_en"] = "undefined";
-          d["name_en"] = "indefinido";          
+          d["name_en"] = "indefinido";
+
         } else {
 
           d["name_en"] = metadata_export["name_en"];
@@ -234,6 +240,7 @@ d3.json("../data/colombia_product_space.json", function(graph) {
             default: false,
             legend: true
           },
+          lang: 'es_ES',
           title: "Product Space Colombia Exports",
           selection: ["115", "116", "117", "118", "119", "120", "121", "122", "123", "124", "125"],
         })
@@ -264,8 +271,11 @@ d3.json("../data/colombia_product_space.json", function(graph) {
 
                   var new_lang = visualization.params().var_text == "name_en" ? "name_es" : "name_en";
 
+                  var new_lang_param = visualization.params().var_text == "name_en" ? "en_US" : "es_ES";
+
                   visualization.params({
                     var_text: new_lang,
+                    lang: new_lang_param
                   });
 
                   d3.select(this).html(function() {
@@ -274,6 +284,7 @@ d3.json("../data/colombia_product_space.json", function(graph) {
 
                   // visualization.params().refresh = true;
                   // visualization.params().init = true;
+
 
                   d3.select(visualization.container()).call(visualization);
 
