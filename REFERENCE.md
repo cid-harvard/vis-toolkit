@@ -505,6 +505,20 @@ Some time-related values are internally created:
 ```
 
 
+## Misc
+
+### `lang`
+
+> Changes the current language of the UI.
+
+* **Type:** `String`
+
+* **Default:** 'en_US'
+
+* **Example:** 'es_ES', 'fr_FR'
+
+* **Note:** Translations are currently built-in, should be made available separately.
+
 ## Utils (Public)
 
 A list of public functions made available mostly to be used by the parameters.
