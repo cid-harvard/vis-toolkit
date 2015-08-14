@@ -147,7 +147,7 @@
 
         }
 
-        if(typeof vars.connect !== "undefined" && typeof vars.connect[0] !== "undefined" && vars.init) {
+        if(typeof vars.connect !== "undefined" && typeof vars.connect[0] !== "undefined") {
 
           // 1/ Between different items at a given time for one dimension
           // 2/ Between same items at a given time points
@@ -159,9 +159,11 @@
           // Connecting items
           if(vars.type == "productspace") {
 
-            vars.links.forEach(function(d, i) {
-              d[vars.var_id] = i;
-            });
+            if(vars.init) {
+              vars.links.forEach(function(d, i) {
+                d[vars.var_id] = i;
+              });
+            }
 
             connect_data = vars.links;
 
@@ -179,6 +181,8 @@
 
             // PRE-UPDATE CONNECT
             // TOOD: find a common join to al types of connections
+
+
             var gConnect = vars.svg.selectAll(".connect__group")
                             .data(connect_data, function(d, i) {
                               d._index_item = index_item;
@@ -197,7 +201,11 @@
 
               // Supporting multipe similar elements
               params._mark_id = index_item + "_" + index_mark;
-              gConnect_enter.filter(params.filter).call(utils.draw_mark, params);
+
+              if(vars.init) {
+                gConnect_enter.filter(params.filter).call(utils.draw_mark, params);
+              }
+              
               gConnect.filter(params.filter).call(utils.draw_mark, params);
             });
 
