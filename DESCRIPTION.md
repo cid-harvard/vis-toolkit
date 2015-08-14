@@ -279,6 +279,10 @@ Horizontal scatterplot without a Y-axis:
 * Alternative designs for dotplots http://thesocietypages.org/graphicsociology/tag/time-line/
 * http://www.theatlantic.com/business/archive/2015/07/college-major-rich-families-liberal-arts/397439/
 
+Alternatives
+
+* Stacked bumb chart http://roadtolarissa.com/stacked-bump/
+
 #### Dot Chart
 
 * http://www.nytimes.com/interactive/2013/03/29/sports/baseball/Strikeouts-Are-Still-Soaring.html?_r=1&
@@ -408,7 +412,7 @@ D3js notebook
  * Should take the visual mapping as input and automatically generate it
  * Interactive and informative legends http://bl.ocks.org/bobmonteverde/2070123
  * http://d3-legend.susielu.com/
-
+* Circle legend http://bl.ocks.org/aubergene/4723857
 ---
 
 * HTML / DIV
@@ -494,7 +498,8 @@ Template
 * Polychart https://www.polychart.com/demo
 * EZ-D3 http://mikejestes.github.io/ez-d3-graphs/
 * Taucharts http://taucharts.com/
-
+* MPLD3 http://mpld3.github.io/
+* D4 http://visible.io/index.html
 * Tufte design graphics http://motioninsocial.com/tufte/
 
 ## Misc

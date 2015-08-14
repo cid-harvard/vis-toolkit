@@ -484,7 +484,7 @@ Some time-related values are internally created:
 `"2008"` &rarr; `d3.time.format("%Y").parse`&nbsp;
 `"Apr 2000"` &rarr; `d3.time.format("%b %d, %Y")`&nbsp;
 
-* **Note:** (Explain here where in the code it is needed).
+* **Note:** See the [D3 time formatting](https://github.com/mbostock/d3/wiki/Time-Formatting) documentation.
 
 ## UI
 
