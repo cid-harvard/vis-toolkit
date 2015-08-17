@@ -67,6 +67,11 @@
         params.translate = [0, 0];
       }
 
+      if(typeof params.text !== "undefined" && typeof params.text === "function") {
+        params_text = params.text(d);
+      }
+
+
       // Use the global accessor
       var accessor_data = vars.accessor_data;
 
@@ -112,7 +117,7 @@
 
           var items_mark_divtext = d3.select(this).selectAll(".items__mark__divtext").data([d]);
 
-          var items_mark_divtext_enter = items_mark_divtext.enter().append("foreignObject")
+          var items_mark_divtext_enter = items_mark_divtext.enter().insert("foreignObject")
                  .classed("items__mark__divtext", true)
                  .classed("items_" + mark_id, true)
                  .attr("width", function(d) {
@@ -132,7 +137,7 @@
                .append("xhtml:body")
                  .style("font", "14px 'Helvetica Neue'")
                .append("div")
-                 .style("padding-top", function(d) { return (vars.padding/2)+"px"; })
+                 .style("padding-top", function(d) { return -200+"px"; })
                  .style("width", function(d) { 
                    if(typeof d.dx !== "undefined") {
                      return (d.dx - 2*vars.padding) + "px";
@@ -149,7 +154,11 @@
                   })
                  .style({"text-overflow": "ellipsis", "overflow": "hidden"})
                  .html(function(d) {
-                   return vars.accessor_data(d)[vars.var_text];
+                    if(typeof params_text !== "undefined") {
+                      return params_text;
+                    } else {
+                      return vars.accessor_data(d)[vars.var_text]; 
+                    }
                  });
 
           if(typeof params.class !== "undefined") {
