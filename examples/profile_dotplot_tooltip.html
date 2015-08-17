@@ -20,6 +20,7 @@
 
 .items__mark__diamond.highlighted {
   stroke: black;
+  stroke-width: 1.5px;
   opacity: 1;
 }
 
@@ -32,7 +33,7 @@
   stroke-dasharray: 1,1
 }
 
-.tooltip {
+.items__mark__divtext__tooltip {
     background: #333;
     background: rgba(0,0,0,.8);
     border-radius: 5px;
@@ -58,8 +59,6 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
     d["sum(export_value)"] = +d["sum(export_value)"];
     d["value_added"] = +d["value_added"];
   });
-
-  var ui_options = [];
 
   visualization = vistk.viz()
     .params({
@@ -88,21 +87,10 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
         }, {
           var_mark: '__highlighted',
           type: d3.scale.ordinal().domain([true, false]).range(["divtext", "none"]),
-          translate: [0, 15],
-          text_anchor: function(d) {
-            var parentGroup = d3.select(this.parentNode);
-            var parentSVG = d3.select(this.parentNode.parentNode.parentNode);
-            var parentX = d3.transform(parentGroup.attr("transform")).translate[0];
-            var svgWidth = +parentSVG.attr("width");
-            if(parentX < svgWidth/3) {
-              return "start";
-            } else if(parentX > 2 * svgWidth/3) {
-              return "end";
-            } else {
-              return "middle";
-            }
-          },
-          class: function() { return "tooltip"; }
+          class: function() { return "items__mark__divtext__tooltip"; },
+          text: function(d) {
+            return d["dept_name"];
+          }
         }]
       }],
       time: {
@@ -111,7 +99,7 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
         parse: function(d) { return d; }
       },
       var_id: "dept_name",
-      var_text: "dept_name"
+     // var_text: "dept_name"
     });
 
   d3.select("#viz").call(visualization);
