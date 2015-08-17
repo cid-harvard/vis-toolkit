@@ -123,7 +123,7 @@ Annotations
 
 Labels
 * http://bl.ocks.org/dbuezas/9306799
-
+* Auto-labeling with simulated annealing http://tinker10.github.io/D3-Labeler/
 * Connecting labels to items http://bl.ocks.org/mbostock/3886394
 
 
@@ -278,6 +278,7 @@ Horizontal scatterplot without a Y-axis:
 * Vertical stacks for dots http://stattrek.com/statistics/charts/dot-plot.aspx
 * Alternative designs for dotplots http://thesocietypages.org/graphicsociology/tag/time-line/
 * http://www.theatlantic.com/business/archive/2015/07/college-major-rich-families-liberal-arts/397439/
+* Aggregated line http://www.nytimes.com/2015/08/16/upshot/is-hillary-clinton-really-in-danger-of-losing-the-primary.html
 
 Alternatives
 
