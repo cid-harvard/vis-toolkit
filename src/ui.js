@@ -106,6 +106,11 @@
                       .on("input", function() {
                         vars.time.current_time = +this.value;
                         vars.refresh = true;
+
+                        if(vars.dev) { 
+                          console.log("[time.slider.update]", vars.time.current_time);
+                        }
+
                         d3.select(vars.container).call(vars.this_chart);
                       })
                       .style("width", "100px");
@@ -295,6 +300,37 @@
 
               })
              .html("Clear highlight");
+
+
+
+      d3.select(vars.container).selectAll(".toggleLanguage").data(["toggleLanguage"]).enter().append("button")
+               .attr("type", "button")
+               .attr("class", "toggleLanguage")
+               .on("click", function() {
+
+                  // Then move groups to their grid position
+                  // visualization.param("refresh", true);
+
+                  var new_lang = visualization.params().var_text == "name_en" ? "name_es" : "name_en";
+
+                  var new_lang_param = visualization.params().var_text == "name_en" ? "en_US" : "es_ES";
+
+                  visualization.params({
+                    var_text: new_lang,
+                    lang: new_lang_param
+                  });
+
+                  // visualization.params().refresh = true;
+                  // visualization.params().init = true;
+
+                  d3.select(visualization.container()).call(visualization);
+
+                  d3.select(this).html(function() {
+                    return "Current language: " + visualization.params().lang; 
+                  })
+
+                })
+               .html("Current language: " + visualization.params().lang);
 
     }
 

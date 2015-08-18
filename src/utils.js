@@ -238,7 +238,8 @@
 
         items_mark_diamond
             .classed("highlighted", function(d, i) { return d.__highlighted; })
-            .classed("selected", function(d, i) { return d.__selected; });
+            .classed("selected", function(d, i) { return d.__selected; })
+            .transition().duration(vars.duration);
 
         items_mark_diamond.exit().remove();
 
