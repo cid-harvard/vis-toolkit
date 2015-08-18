@@ -60,7 +60,7 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
 
   d3.select(visualization.container()).call(visualization);
 
-  d3.select(vars.container).selectAll(".gridTransformation").data([vars.var_id]).enter().append("button")
+  d3.select(visualization.container()).selectAll(".gridTransformation").data([visualization.var_id]).enter().append("button")
          .attr("type", "button")
          .attr("class", "gridTransformation")
          .on("click", function() {
@@ -131,7 +131,7 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
             d3.select("#viz").call(grid);
             */
 
-            d3.select(vars.container).call(vars.this_chart);
+            d3.select(visualization.container).call(visualization.this_chart);
 
           })
          .html("Grid transformation");
