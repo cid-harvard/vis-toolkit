@@ -237,13 +237,15 @@
          }
   
          if(vars.x_grid_show) {
+
            vars.svg.selectAll(".x.grid").data([vars.new_data])
              .enter()
                .append("g")
                .attr("class", "x grid")
                .style("display", function() { return vars.x_grid_show ? "block": "none"; })
-               .attr("transform", "translate(0," + (vars.height-vars.margin.top-vars.margin.bottom) + ")");
+               .attr("transform", "translate(0," + (vars.margin.top) + ")");
   
+
            vars.svg.selectAll(".x.grid").transition()
                .duration(vars.duration)
                .call(utils.make_x_axis()
@@ -252,6 +254,7 @@
          }
 
         if(vars.y_grid_show) {
+          
           vars.svg.selectAll(".y.grid").data([vars.new_data])
             .enter()
               .append("g")
