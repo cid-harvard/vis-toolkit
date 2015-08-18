@@ -66,10 +66,6 @@ d3.json(file, function(error, countries) {
 
 d3.select("input[value='default']").on("click", function(d) {
 
-  d3.selectAll(".items__mark__diamond").remove();
-  d3.selectAll(".items__mark__rect").remove();
-  d3.selectAll(".items__mark__circle").remove();
-
   visualization.params().refresh = true;
 
   visualization.params({
@@ -83,10 +79,6 @@ d3.select("input[value='default']").on("click", function(d) {
 d3.select("input[value='grid']").on("click", function(d) {
 
   visualization.params().svg.selectAll(".x, .y").remove();
-  d3.selectAll(".items__mark__diamond").remove();
-  d3.selectAll(".items__mark__rect").remove();
-  d3.selectAll(".items__mark__circle").remove();
-
   visualization.params().refresh = true;
 
   visualization.params({

@@ -10,6 +10,16 @@
 
 d3.jsonp('http://api.wunderground.com/api/9826b4cafb59f38d/history_20140912/q/UK/Edinburgh.json?callback={callback}', function (data) {
 
+  //
+  // date: Object
+  // hour: "00"
+  // mday: "12"
+  // min: "20"
+  // mon: "09"
+  // pretty: "12:20 AM BST on September 12, 2014"
+  // tzname: "Europe/London"
+  year: "2014"
+
   // Data pre-processing
   data.history.observations.forEach(function(d, i) {
 
@@ -19,6 +29,7 @@ d3.jsonp('http://api.wunderground.com/api/9826b4cafb59f38d/history_20140912/q/UK
 
   });
 
+console.log("ddd", data.history.observations)
   visualization = vistk.viz()
     .params({
       type: "linechart",

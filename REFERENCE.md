@@ -548,7 +548,6 @@ A list of public functions made available mostly to be used by the parameters.
 
 * **Note:** ..
 
-
 ### `vistk.utils.translate_along`
 
 > Transition between item and connect marks
