@@ -230,7 +230,7 @@ Map of countries that can be colored and labeled.
 * http://techslides.com/demos/d3/d3-world-map-mouse-zoom.html
 * https://github.com/yaph/d3-geomap/blob/master/src/coffee/choropleth.coffee
 * http://d3-geomap.github.io/map/choropleth/world/
-
+* Choropleth in Python http://prooffreaderplus.blogspot.com/2015/08/a-python-script-to-make-choropleth-grid.html?spref=tw
 * Click and zoom on country http://techslides.com/d3-world-maps-tooltips-zooming-and-queue
  * http://stackoverflow.com/questions/14492284/center-a-map-in-d3-given-a-geojson-object
  * http://techslides.com/responsive-d3-map-with-zoom-and-pan-limits

@@ -68,36 +68,39 @@
   d3.csv('../data/goog.csv', function(error, data) {
 
   // Data pre-processing
-    data.forEach(function(d) {
+    data.forEach(function(d, i) {
       d.close = +d.Close;
+      d.date = +d3.time.format("%b %d, %Y").parse(d.Date);
       d.company = "GOOG";
+      d.i = i;
     });
 
-    dd = data;
   visualization = vistk.viz()
     .params({
       type: "sparkline",
       container: "#viz",
-      width: 300,
-      height: 100,
+      width: 100,
+      height: 25,
+      margin: {top:0, bottom: 0, left: 0, right: 0},
       data: data,
       var_y: "close",
-      var_x: "time",
-      var_id: '__id',
+      var_x: "date",
+      var_id: 'company',
       ui: {
         default: true
       },
       time: {
-        var_time: "Date",
+        var_time: "date",
         parse: d3.time.format("%b %d, %Y"),
-        current_time: "Dec 18, 2013"
+        current_time: vistk.utils.max
       },
       items: [{
         attr: "name",
         marks: [{
           type: "circle",
           r: 10,
-          height: 10
+          height: 10,
+          fill: function() { return "red"; }
         }, {
           type: "text",
           rotate: "-50"
