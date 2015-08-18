@@ -89,7 +89,9 @@
               params._mark_id = index_item + "_" + index_mark; 
               gItems_enter.filter(params.filter).call(utils.draw_mark, params);
               gItems.filter(params.filter).call(utils.draw_mark, params); 
+
             }); 
+
             // Bind events to groups after marks have been created
             gItems.each(utils.items_group); 
             /* Should be as below but current params don't match this format 
@@ -254,7 +256,7 @@
          }
 
         if(vars.y_grid_show) {
-          
+
           vars.svg.selectAll(".y.grid").data([vars.new_data])
             .enter()
               .append("g")

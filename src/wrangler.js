@@ -15,6 +15,7 @@
       vars.var_y = "_var_y";
     }
 
+
     // Calculate vars.new_data which should contain two things
     // 1/ The list of all items (e.g. countries, products)
     // 2/ The metadata for each items
@@ -592,7 +593,7 @@
 
       vars.pie = d3.layout.pie().value(function(d) { return d[vars.var_share]; });
       vars.new_data = vars.pie(vars.new_data);
-
+      vars.new_data.forEach(function(d) { d.__redraw = true; });
     }
 
     // Chart specific metadata: grid

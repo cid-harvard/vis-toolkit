@@ -508,7 +508,7 @@
 
           chart.enter().append('g')
               .classed('items__chart__sparkline', true)
-              .call(utils.create_chart, scope, d);
+              .call(utils.draw_chart, scope, d);
 
         break;
 
@@ -565,7 +565,7 @@
 
           chart.enter().append('g')
               .classed('items__chart__piechart', true)
-              .call(utils.create_chart, piechart_params, d);
+              .call(utils.draw_chart, piechart_params, d);
 
         break;
 
@@ -826,7 +826,7 @@
 
   }
 
-  utils.create_chart = function(_, params, data) {
+  utils.draw_chart = function(_, params, data) {
 
     if(vars.dev) { 
       console.log("Creating chart with params", params, _, data);
