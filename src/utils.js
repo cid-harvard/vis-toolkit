@@ -469,13 +469,56 @@
 
         break;
 
+        case "sparkline2":
+
+          var scope = {};
+
+          scope = vistk.utils.merge(scope, vars);
+
+          /*
+          scope.margin = vars.margin;
+          scope.time = vars.time;
+
+          scope = vars.default_params["sparkline"](scope);
+
+          scope.margin = vars.margin;
+          scope.time = vars.time;
+
+          scope.type = "sparkline";
+          scope.var_x = "year";
+          scope.var_y = "realgdp";
+          scope.svg  = d3.select(this);
+          scope.new_data = vars.new_data;
+          //scope = vistk.utils.merge(scope, vars)
+
+
+          scope.x_scale = vars.x_scale;
+          scope.y_scale = vars.y_scale;
+          scope.zoom = vars.zoom;
+          // Update scales
+          scope.x_scale[0]["func"].domain(d3.extent(d.values, function(d) {
+           return d[scope.var_x]; 
+          }))
+          .range([0, 50]);
+
+          scope.y_scale[0]["func"].domain(d3.extent(d.values, function(d) {
+           return d[scope.var_y]; 
+          }))
+          .range([0, 50]);
+
+          console.log("USING SCOPE", scope.time)
+*/
+         // utils.draw_chart(scope);
+
+        break;
+
+
         case "sparkline":
 
           var scope = {};
           scope = vistk.utils.merge(scope, vars)
 
           scope = vars.default_params["sparkline"](scope);
-
           scope.var_x = 'year';
           scope.var_y = vars.var_y;
 
@@ -511,7 +554,7 @@
               .call(utils.draw_chart, scope, d);
 
         break;
-
+/*
         case "dotplot":
 
           scope = {};
@@ -553,7 +596,7 @@
           });
 
         break;
-
+*/
         case "piechart":
 
           var scope = {};
@@ -826,8 +869,259 @@
 
   }
 
-  utils.draw_chart = function(_, params, data) {
+  utils.draw_chart = function(context, data) {
 
+    var vars = context;
+    vars.new_data = data;
+
+    if(vars.x_invert) {
+      vars.x_scale[0]["func"].range([vars.x_scale[0]["func"].range()[1], vars.x_scale[0]["func"].range()[0]]);
+    }
+
+    if(vars.y_invert) {
+      vars.y_scale[0]["func"].range([vars.y_scale[0]["func"].range()[1], vars.y_scale[0]["func"].range()[0]]);
+    }
+
+    // In case items are programmatically generated
+    if(typeof vars.items == "function") {
+      vars.items = vars.items(vars);
+    }
+
+    if(typeof vars.items !== "undefined" && vars.items[0] !== "undefined" && vars.type !== "stacked") {
+
+      vars.items.forEach(function(item, index_item) {
+
+        // Use the global accessor, unless specif one has been set
+        var accessor_data = vars.accessor_data;
+
+        if(typeof item.accessor_data !== "undefined") {
+          accessor_data = item.accessor_data;
+        }
+
+        // PRE-UPDATE ITEMS
+        // Join is based on the curren_time value
+        var gItems = vars.svg.selectAll(".mark__group" +  "_" + index_item)
+                        .data(vars.new_data, function(d, i) {
+                          d._index_item = index_item;
+                          return accessor_data(d)[vars.var_id] + "_" + index_item;
+                        });
+
+        // ENTER ITEMS
+        var gItems_enter = gItems.enter()
+                        .insert("g", ":first-child");
+
+        // IN CASE OF CUSTOM ENTER FOR ITEMS
+        if(typeof item.enter !== "undefined") {
+          gItems_enter.call(item.enter, vars)
+        } else {
+          gItems_enter.attr("transform", function(d, i) {
+            return "translate(" + vars.x_scale[0]["func"](accessor_data(d)[vars.var_x]) + ", " + vars.y_scale[0]["func"](accessor_data(d)[vars.var_y]) + ")";
+          });
+        }
+
+       // APPEND AND UPDATE ITEMS MARK
+        item.marks.forEach(function(params, index_mark) {
+
+          if(typeof params.filter == "undefined") {
+            params.filter = function() { 
+              return true; 
+            }
+          } 
+          // Supporting multipe similar elements
+          params._mark_id = index_item + "_" + index_mark; 
+          gItems_enter.filter(params.filter).call(utils.draw_mark, params);
+          gItems.filter(params.filter).call(utils.draw_mark, params); 
+        }); 
+        // Bind events to groups after marks have been created
+        gItems.each(utils.items_group); 
+        /* Should be as below but current params don't match this format 
+          // APPEND AND UPDATE ITEMS MARK
+          vars.items.forEach(function(item) {
+            item.marks.forEach(function(params) {
+              gItems_enter.call(utils.draw_mark, params);
+              gItems.call(utils.draw_mark, params);
+            });
+          }); 
+        */
+
+        // IN CASE OF CUSTOM UPDATE FOR ITEMS
+        if(typeof item.update !== "undefined") {
+          vars.svg.selectAll(".mark__group" + "_" + index_item).call(item.update, vars)
+        } else {
+        // POST-UPDATE ITEMS GROUPS
+        vars.svg.selectAll(".mark__group" + "_" + index_item)
+                        .transition()
+                        .duration(vars.duration)
+                        .ease('none')
+                        .attr("transform", function(d, i) {
+                          return "translate(" + vars.x_scale[0]["func"](accessor_data(d)[vars.var_x]) + ", " + vars.y_scale[0]["func"](accessor_data(d)[vars.var_y]) + ")";
+                        });
+        }
+
+        // ITEMS EXIT
+        var gItems_exit = gItems.exit();
+
+        // IN CASE OF CUSTOM EXIT FOR ITEMS
+        if(typeof item.exit !== "undefined") {
+          gItems_exit.call(item.exit, vars)
+        } else {
+          gItems_exit.remove();
+        }
+        
+        if(vars.type == "productspace") {
+          vars.new_data.forEach(function(d) { d.__redraw = false; });
+        }
+
+
+      });
+
+      if(vars.zoom.length > 0) {
+
+        utils.zoom_to_nodes(vars.zoom);
+
+      } else {
+        
+        vars.svg.transition()
+                .duration(vars.duration)
+                .attr("transform", "translate(" + vars.margin.left + "," + vars.margin.top + ")");
+
+      }
+
+    }
+
+    if(typeof vars.connect !== "undefined" && typeof vars.connect[0] !== "undefined") {
+
+      // 1/ Between different items at a given time for one dimension
+      // 2/ Between same items at a given time points
+      // 2/ Between same items at multiple given times
+
+      // By default, connecting time points
+      var connect_data = vars.new_data;
+
+      // Connecting items
+      if(vars.type == "productspace") {
+
+        if(vars.init) {
+          vars.links.forEach(function(d, i) {
+            d[vars.var_id] = i;
+          });
+        }
+
+        connect_data = vars.links;
+
+      }
+
+      // APPEND AND UPDATE CONNECT MARK
+      vars.connect.forEach(function(connect, index_item) {
+
+        // Use the global accessor, unless specif one has been set
+        var accessor_data = vars.accessor_data;
+
+        if(typeof connect.accessor_data !== "undefined") {
+          accessor_data = connect.accessor_data;
+        }
+
+        // PRE-UPDATE CONNECT
+        // TOOD: find a common join to al types of connections
+
+
+        var gConnect = vars.svg.selectAll(".connect__group")
+                        .data(connect_data, function(d, i) {
+                          d._index_item = index_item;
+                          return d[vars.var_id] + "_" + index_item;
+                        });
+      
+        // ENTER CONNECT
+        var gConnect_enter = gConnect.enter()
+                        .insert("g", ":first-child")
+                        .attr("class", "connect__group");
+
+        connect.marks.forEach(function(params, index_mark) {
+      
+          if(typeof params.filter == "undefined")
+            params.filter = function() { return true; };
+
+          // Supporting multipe similar elements
+          params._mark_id = index_item + "_" + index_mark;
+
+          if(vars.init) {
+            gConnect_enter.filter(params.filter).call(utils.draw_mark, params);
+          }
+          
+          gConnect.filter(params.filter).call(utils.draw_mark, params);
+        });
+
+        // Bind events to groups after marks have been created
+        gConnect.each(utils.connect_group);
+
+        // EXIT
+        var gConnect_exit = gConnect.exit().remove();
+
+      });
+
+      if(vars.type == "productspace") {
+        connect_data.forEach(function(d) { d.__redraw = false; });
+      }
+
+    }
+
+    // CREATE / UPDATE / REMOVE AXIS
+    if(vars.x_axis_show) {
+      vars.svg.call(utils.x_axis);
+    } else {
+        vars.svg.selectAll(".x.axis").remove();
+     }
+
+     if(vars.y_axis_show) {
+        vars.svg.call(utils.y_axis);
+     } else {
+        vars.svg.selectAll(".y.axis").remove();
+     }
+
+     if(vars.x_grid_show) {
+
+       vars.svg.selectAll(".x.grid").data([vars.new_data])
+         .enter()
+           .append("g")
+           .attr("class", "x grid")
+           .style("display", function() { return vars.x_grid_show ? "block": "none"; })
+           .attr("transform", "translate(0," + (vars.margin.top) + ")");
+
+
+       vars.svg.selectAll(".x.grid").transition()
+           .duration(vars.duration)
+           .call(utils.make_x_axis()
+           .tickSize(-vars.height+vars.margin.top+vars.margin.bottom, 0, 0)
+           .tickFormat(""));
+     }
+
+    if(vars.y_grid_show) {
+
+      vars.svg.selectAll(".y.grid").data([vars.new_data])
+        .enter()
+          .append("g")
+          .attr("class", "y grid")
+          .style("display", function() { return vars.y_axis_show ? "block": "none"; })
+          .attr("transform", "translate(" + vars.margin.left + ", 0)");
+
+      vars.svg.selectAll(".y.grid").transition()
+          .duration(vars.duration)
+          .call(utils.make_y_axis()
+          .tickSize(-vars.width+vars.margin.left+vars.margin.right, 0, 0)
+          .tickFormat(""));
+    }
+
+    // POST-RENDERING STUFF
+    if(vars.type == "productspace") {
+      vars.svg.selectAll('.mark__group').sort(function(a, b) { return a.__aggregated ;})
+    }
+
+    utils.background_label(vars.title);
+
+    // Flag that forces to re-wrangle data
+    vars.refresh = false;
+    vars.init = false;
+/*
     if(vars.dev) { 
       console.log("Creating chart with params", params, _, data);
     }
@@ -842,10 +1136,15 @@
                     .attr("class", "connect__group")
                     .attr("transform", "translate(0, 0)")
 
+     vars.connect = vars.default_params.sparkline(params);
+     console.log("aasss", vars.connect)
+
     // APPEND CONNECT MARK
     if(typeof vars.connect !== "undefined" && typeof vars.connect[0] !== "undefined") {
+      console.log("DRAWW")
       params.connect.forEach(function(connect) {
         connect.marks.forEach(function(params) {
+
           gConnect_enter.call(utils.draw_mark, params);
           gConnect.call(utils.draw_mark, params);
         });
@@ -869,6 +1168,7 @@
       gItems.call(utils.draw_mark, params);
     });
 
+*/
   }
 
   utils.x_axis = function(d, i) {
