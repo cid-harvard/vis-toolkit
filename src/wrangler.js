@@ -206,7 +206,7 @@
     }
 
     // Flagging missing nodes with __missing true attribute
-    if(typeof vars.nodes != "undefined" && vars.init) {
+    if(typeof vars.nodes != "undefined") {
 
       // Adding coordinates to data
       vars.new_data.forEach(function(d, i) {
