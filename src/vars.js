@@ -86,6 +86,14 @@
           'non-export': 'Non-Export',
           'similarity_link': 'Similarity Link'
         },
+        'en_EN': {
+          'complexity': 'Complexity',
+          'low': 'Low',
+          'high': 'High',
+          'export': 'Export',
+          'non-export': 'Non-Export',
+          'similarity_link': 'Similarity Link'
+        },
         'es_ES': {
           'complexity': 'Complejidad',
           'low': 'Bajo',
