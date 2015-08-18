@@ -78,7 +78,7 @@
       }
 
       vars.time.interval = d3.extent(vars.new_data, function(d) { return d[vars.time.var_time]; });
-      vars.time.points = d3.set(vars.data.map(function(d) { return d[vars.time.var_time]; })).values();
+      vars.time.points = vistk.utils.find_unique_values(vars.new_data, vars.time.var_time);
 
       // In case the current_time is set dynamically
       if(typeof vars.time.current_time === "function") {
@@ -100,15 +100,7 @@
 
       }
 
-      vars.unique_items = [];
-      var unique = {};
-
-      for(var i in vars.new_data){
-        if(typeof(unique[vars.new_data[i][vars.var_id]]) == "undefined"){
-          vars.unique_items.push(vars.new_data[i][vars.var_id]);
-        }
-        unique[vars.new_data[i][vars.var_id]] = 0;
-      }
+      vars.unique_items = vistk.utils.find_unique_values(vars.new_data, vars.var_id);
 
       vars.unique_data = [];
 
