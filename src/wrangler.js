@@ -223,6 +223,8 @@
 
         }
 
+        d.__redraw = true;
+
       });
 
       // Making sure we display all the nodes
@@ -239,6 +241,7 @@
           d.__selected = false;
           d.__highlighted = false;
           d.__missing = false;
+          d.__redraw = true;
           vars.new_data.push(d);
 
         }

@@ -79,7 +79,7 @@
 
            // APPEND AND UPDATE ITEMS MARK
             item.marks.forEach(function(params, index_mark) {
-           
+
               if(typeof params.filter == "undefined") {
                 params.filter = function() { 
                   return true; 
@@ -276,6 +276,5 @@
         // Flag that forces to re-wrangle data
         vars.refresh = false;
         vars.init = false;
-
 
       break;
