@@ -2,7 +2,60 @@
 <meta charset="utf-8">
 <script src="../js/d3.js"></script>
 <script src="../build/vistk.js"></script>
-<link href="../css/vistk.css" rel="stylesheet">
+<style>
+
+.connect__line {
+  stroke: #999;
+  stroke-opacity: .6;
+}
+
+.connect__line.highlighted {
+  stroke-width: 2.5px;
+  stroke-opacity: .6;
+}
+
+g:hover .items__mark__circle:not(.highlighted__adjacent) {
+  -webkit-transition:0.3s;
+  transition:0.3s;
+  opacity: 0.5;
+}
+
+.items__mark__circle:.highlighted__adjacent {
+  opacity: 1;
+}
+
+g:hover .connect__path:not(.highlighted) {
+  -webkit-transition:0.3s;
+  transition:0.3s;
+  opacity: 0.5;
+}
+
+g:hover  .items__mark__circle.highlighted {
+  stroke: black;
+  stroke-width: 2.5px;
+  opacity: 1;
+}
+
+.items__mark__circle.selected {
+  stroke: black;
+  stroke-width: 1.5px;
+}
+
+.connect__path:not(.highlighted) {
+  stroke-width: 1px;  
+}
+
+.connect__path.highlighted {
+  stroke-opacity: 1;
+  stroke-width: 5px;  
+}
+
+.connect__path.selected {
+  stroke-opacity: 1;
+  stroke-width: 3px;  
+}
+
+</style>
 <body>
 <div id="viz"></div>
 <script>
