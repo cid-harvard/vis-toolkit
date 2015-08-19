@@ -913,6 +913,7 @@
         // IN CASE OF CUSTOM ENTER FOR ITEMS
         if(typeof item.enter !== "undefined") {
           gItems_enter.call(item.enter, vars)
+          console.log("EBTER");
         } else {
           gItems_enter.attr("transform", function(d, i) {
             return "translate(" + vars.x_scale[0]["func"](accessor_data(d)[vars.var_x]) + ", " + vars.y_scale[0]["func"](accessor_data(d)[vars.var_y]) + ")";
@@ -932,6 +933,7 @@
           gItems_enter.filter(params.filter).call(utils.draw_mark, params);
           gItems.filter(params.filter).call(utils.draw_mark, params); 
         }); 
+        
         // Bind events to groups after marks have been created
         gItems.each(utils.items_group); 
         /* Should be as below but current params don't match this format 
