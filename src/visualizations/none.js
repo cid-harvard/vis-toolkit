@@ -56,9 +56,15 @@
           vars.force.nodes(vars.new_data).stop();
         });
 
+        var index_item = 0;
+        var accessor_data = function(d) { return d; };
+
         // PRE-UPDATE
         var gItems = vars.svg.selectAll(".mark__group")
-                         .data(vars.new_data, function(d, i) { return i; });
+                        .data(vars.new_data, function(d, i) {
+                          d._index_item = index_item;
+                          return accessor_data(d)[vars.var_id] + "_" + index_item;
+                        });
 
         // ENTER
         var gItems_enter = gItems.enter()

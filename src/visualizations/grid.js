@@ -18,7 +18,7 @@ vars.default_params["grid"] = function(scope) {
 
   params.items = [{
     marks: [{
-      type: "diamond",
+      type: "rect",
     }, {
       type: "text",
       rotate: "-30"

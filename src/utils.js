@@ -952,7 +952,7 @@
         vars.svg.selectAll(".mark__group" + "_" + index_item)
                         .transition()
                         .duration(vars.duration)
-                        .ease('none')
+                        //.ease('none')
                         .attr("transform", function(d, i) {
                           return "translate(" + vars.x_scale[0]["func"](accessor_data(d)[vars.var_x]) + ", " + vars.y_scale[0]["func"](accessor_data(d)[vars.var_y]) + ")";
                         });
