@@ -16,7 +16,8 @@ d3.json("../data/diversification_ubiquity_hs4_1995_2012.json", function(error, c
       type: "none",
       container: "#viz",
       data: flat_years,
-      id: ["continent", "country"],
+      var_id: "name",
+      var_text: "name",
       var_group: "continent",
       var_color: "continent",
       time: {
