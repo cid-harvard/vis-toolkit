@@ -161,6 +161,23 @@
                     }
                  });
 
+          items_mark_divtext.select('div')
+                 .transition()
+                 .style("width", function(d) { 
+                   if(typeof d.dx !== "undefined") {
+                     return (d.dx - 2*vars.padding) + "px";
+                   } else {
+                     return "150px";
+                   }
+                  })
+                 .style("height", function(d) { 
+                   if(typeof d.dy !== "undefined") {
+                     return (d.dx - 2*vars.padding) + "px";
+                   } else {
+                    return "100%"; 
+                  }
+                  });
+
           if(typeof params.class !== "undefined") {
 
             items_mark_divtext_enter.classed(params.class(vars.accessor_items(d)), true);
@@ -657,16 +674,29 @@
 
           var mark = d3.select(this).selectAll(".items__mark__marker").data([d]);
 
-          mark.enter().append('path')
+          var mark_enter = mark.enter().append('path')
               .classed("items_" + mark_id, true)
               .classed('items__mark__marker', true)
               .attr("fill", "#ED4036")
               .attr("stroke-width", 0)
               .attr('d', "M10,0L0,10l10,25.4L20,10L10,0z M10,14.6c-2.1,0-3.8-1.7-3.8-3.8c0-2.1,1.7-3.8,3.8-3.8 c2.1,0,3.8,1.7,3.8,3.8C13.8,12.9,12.1,14.6,10,14.6z");
 
+          // IN CASE OF CUSTOM ENTER FOR ITEMS
+          if(typeof params.enter !== "undefined") {
+            mark_enter.call(params.enter, vars);
+          }
+
           mark
               .classed("highlighted", function(d, i) { return d.__highlighted; })
               .classed("selected", function(d, i) { return d.__selected; });
+
+          d3.select(this).selectAll(".items__mark__marker")
+                          .transition()
+                          .duration(vars.duration)
+                          .ease('bounce')
+                          .attr("transform", function(d, i) {
+                            return "translate(-10, -40)";
+                          });
 
           mark.exit().remove();
 
