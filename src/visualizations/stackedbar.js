@@ -2,6 +2,22 @@ vars.default_params["stackedbar"] = function(scope) {
 
   var params = {};
 
+  if(vars.refresh) {
+
+    var y0 = 0;
+
+    vars.new_data.forEach(function(d) {
+
+      d["y0"] = y0;
+      y0 += d[vars.var_y];
+     // d[vars.var_y] = y0;
+
+    });
+
+    vars.var_y = "y0";
+
+  }
+
   params.x_scale = [{
     func: d3.scale.linear()
             .range([scope.height/2, scope.height/2])

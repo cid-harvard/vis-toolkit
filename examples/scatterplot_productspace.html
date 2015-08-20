@@ -237,7 +237,7 @@ d3.json("../data/colombia_product_space.json", function(graph) {
             filter: "2012"
           },
           ui: {
-            default: false,
+            default: true,
             legend: true
           },
           lang: 'es_ES',
@@ -259,37 +259,6 @@ d3.json("../data/colombia_product_space.json", function(graph) {
       visualization.params().evt.register("highlightOut", function(d) {
         visualization.params().svg.selectAll('.items__mark__circle').style('display', 'block');
       });
-
-
-      d3.select(visualization.container()).selectAll(".toggleLanguage").data(["toggleLanguage"]).enter().append("button")
-               .attr("type", "button")
-               .attr("class", "toggleLanguage")
-               .on("click", function() {
-
-                  // Then move groups to their grid position
-                  // visualization.param("refresh", true);
-
-                  var new_lang = visualization.params().var_text == "name_en" ? "name_es" : "name_en";
-
-                  var new_lang_param = visualization.params().var_text == "name_en" ? "en_US" : "es_ES";
-
-                  visualization.params({
-                    var_text: new_lang,
-                    lang: new_lang_param
-                  });
-
-                  d3.select(this).html(function() {
-                    return "Current language: " + new_lang; 
-                  })
-
-                  // visualization.params().refresh = true;
-                  // visualization.params().init = true;
-
-
-                  d3.select(visualization.container()).call(visualization);
-
-                })
-               .html("Current language: " + visualization.params().var_text);
 
     });
 

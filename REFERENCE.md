@@ -70,6 +70,8 @@ This is by far the most important parameter as it will automatically pre-generat
 * **Example:** `barchart`, `sparkline`, `dotplot`, `barchart`, `linechart`, `scatterplot`, etc.
 
 * **Note:** The full list of templates is available in <a href='src/visualizations/'>src/visualizations/</a>. To create your own template just add it in this folder and refer to it in the `Gruntfile.js`.
+&nbsp;
+A template file usually describes the graphical marks to be used as well as the pre-processing to be done before drawing those.
 
 * **Important:** All further parameter will override the original template.
 
@@ -559,7 +561,7 @@ A list of public functions made available mostly to be used by the parameters.
 
 * **Example:**
 
-* **Note:** ..
+* **Note:** The function allows
 
 ## Utils (Private)
 
@@ -569,9 +571,22 @@ A list of public functions made available mostly to be used by the parameters.
 
 * **Type:** `Function`
 
-* **Default:**
+* **Default:** `circle`
 
-* **Example:**
+* **Example:** `rect`, `tick`, `star`, ..
+
+* **Note:**
+
+
+### `utils.draw_chart`
+
+> Draws a chart
+
+* **Type:** `Function`
+
+* **Default:** `none`
+
+* **Example:** `barchart`, `linechart`, ..
 
 * **Note:** ..
 

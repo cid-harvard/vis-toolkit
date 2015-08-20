@@ -43,7 +43,10 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
       current_time: '2013'
     },
     selection: ["Antioquia", "Valle", "Bogotá D. C."],
-    highlight: "Bogotá D. C."
+    highlight: "Bogotá D. C.",
+    ui: {
+      default: true
+    }
   });
 
   d3.select("#viz").call(visualization);
@@ -54,13 +57,26 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
            .attr("class", "alignLines")
            .on("click", function() {
 
+              // find the current time
+
+              var dept_baseline = Array();
               // Find value for time baseline
+              departments.forEach(function(d, i) {
+
+                if(d['year'] == 2000) {
+
+                  dept_baseline[d['dept_name']] = d["realgdp"];
+
+                }
+
+              });
 
               departments.forEach(function(d, i) {
 
-                d["value_added_aligned"] = +d["value_added"];
+                d["realgdp_aligned"] = +d["realgdp"] - dept_baseline[d['dept_name']];
 
               });
+
 
               // Then move groups to their grid position
               visualization.param("refresh", true);
@@ -68,11 +84,8 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
               visualization.params({
                 x_axis_show: true,
                 y_axis_show: true,
-                var_y: 'value_added_aligned',
-                title: "Aligned departments",
-                ui: {
-                  default: true
-                }
+                var_y: 'realgdp_aligned',
+                title: "Aligned departments"
               });
 
               visualization.params().refresh = true;
