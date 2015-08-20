@@ -1,0 +1,115 @@
+<!doctype html>
+<meta charset="utf-8">
+<script src="../js/d3.js"></script>
+<script src="../build/vistk.js"></script>
+<style>
+.items__mark__circle.highlighted__adjacent {
+  stroke: black;
+  stroke-width: 1.5px;
+}
+
+g:hover .items__mark__circle:not(.highlighted__adjacent) {
+  -webkit-transition:0.3s;
+  transition:0.3s;
+  opacity: 0.5;
+}
+
+.items__mark__circle:.highlighted__adjacent {
+  opacity: 1;
+}
+
+g:hover .connect__path:not(.highlighted) {
+  -webkit-transition:0.3s;
+  transition:0.3s;
+  opacity: 0.5;
+}
+
+g:hover .items__mark__circle.highlighted {
+  stroke: black;
+  stroke-width: 2.5px;
+  opacity: 1;
+}
+
+.items__mark__circle.selected {
+  stroke: black;
+  stroke-width: 1.5px;
+}
+
+.connect__path:not(.highlighted) {
+  stroke-width: 1px;  
+}
+
+.connect__path.highlighted {
+  stroke-opacity: 1;
+  stroke-width: 5px;  
+}
+</style>
+<body>
+<div id="viz"></div>
+<script>
+
+d3.json("../data/atlas_international_product_space.json", function(graph) {
+
+  d3.json("../data/col_dept_exports_3.json", function(exports) {
+/*
+    // cog: 0.4208957237122138 coi: 0.8067728413148435 distance: 0.8179699425486985 
+    // export_rca: 0.04472251026943858 export_value: 29700 id: 2479 import_value: 3278477
+    // product_id: "115" year: 2008  
+*/
+    visualization = vistk.viz()
+      .params({
+        type: "productspace",
+        container: "#viz",
+        width: 800,
+        height: 500,
+        nodes: graph.nodes,
+        links: graph.edges,
+        data: exports,
+        var_x: 'x',
+        var_y: 'y',
+        var_id: "product_id",
+        var_text: 'product_id',
+        var_color: 'coi',
+        y_invert: true,
+        color: d3.scale.ordinal().domain([0, 1, 2]).range(["#DDDDDD", "#AAAAAA", "#777777"]),
+        items: [{
+          attr: "name",
+          marks: [{
+            type: "circle",
+            rotate: "0",
+            var_color: 'category',
+            title: function(d) { return d['pname']; }
+          }, {
+            var_mark: '__highlighted',
+            type: d3.scale.ordinal().domain([true, false]).range(["text", "none"]),
+            rotate: "0"
+          }, {
+            var_mark: '__selected',
+            type: d3.scale.ordinal().domain([true, false]).range(["marker", "none"]),
+            rotate: "0",  
+            enter: function(data, vars) {
+              this.attr("transform", function(d, i) {
+                return "translate(-10, " + (-vars.y_scale[0]["func"](vars.accessor_data(d)[vars.var_y]) - 40) + ")";
+              })
+            },
+          }]
+        }],
+        time: {
+          var_time: "year", 
+          current_time: "2008",
+          parse: function(d) { return d; },
+          filter: "2008"
+        },
+        ui: {
+          default: false,
+          legend: true
+        }
+      })
+      .set('__aggregated', true);
+
+    d3.select("#viz").call(visualization);
+
+  });
+
+});
+</script>
