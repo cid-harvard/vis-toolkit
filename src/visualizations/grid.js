@@ -4,6 +4,33 @@ vars.default_params["grid"] = function(scope) {
 
   params.accessor_data = function(d) { return d; };
 
+  // Chart specific metadata: grid
+  // Generates x and y attributes to display items as a 2D grid
+  if(vars.refresh) {
+
+    var nb_dimension =  Math.ceil(Math.sqrt(vars.new_data.length));
+
+    // Create foci for each dimension
+    // TOFIX: should update children, not necessary replace
+    d3.range(nb_dimension).map(function(d, i) {
+       d3.range(nb_dimension).map(function(e, j) {
+
+        var index = i * nb_dimension + j;
+
+        // To make sure we don't update more points than necessary
+        if(index < vars.new_data.length) {
+
+          vars.new_data[index].grid_x = i;
+          vars.new_data[index].grid_y = j;
+          vars.new_data[index].grid_index = index;
+
+        }
+      });
+
+    });
+
+  }
+
   params.x_scale = [{
     func: d3.scale.linear()
           .domain([0, Math.ceil(Math.sqrt(vars.new_data.length))])

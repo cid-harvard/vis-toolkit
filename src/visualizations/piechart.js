@@ -5,6 +5,14 @@ vars.default_params["piechart"] = function(scope) {
   params.accessor_data = function(d) { return d.data; };
   params.accessor_items = function(d) { return d; };
 
+  if(vars.refresh) {
+
+    scope.pie = d3.layout.pie().value(function(d) { return d[scope.var_share]; });
+    scope.new_data = scope.pie(scope.new_data);
+    scope.new_data.forEach(function(d) { d.__redraw = true; });
+
+  }
+
   params.x_scale = [{
     func: d3.scale.linear()
             .range([scope.width/2, scope.width/2])

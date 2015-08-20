@@ -11,6 +11,7 @@
 
           var scope = {};
           scope = vars.default_params[vars.type](vars);
+
           vars = vistk.utils.merge(vars, scope);
 
           // Disabled since merging is more complex than that
@@ -23,6 +24,8 @@
           }
 
         } else {
+
+
 
           // LOAD CHART PARAMS
           vars = vistk.utils.merge(vars, vars.default_params[vars.type]);
