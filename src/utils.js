@@ -564,11 +564,13 @@
               }]
           }];
 
+          scope.svg = vars.svg;
+
           var chart = d3.select(this).selectAll(".items__chart__sparkline").data([d]);
 
           chart.enter().append('g')
               .classed('items__chart__sparkline', true)
-              .call(utils.draw_chart, scope, d);
+              .call(utils.draw_chart, scope, [d]);
 
         break;
 /*
@@ -899,11 +901,16 @@
 
   }
 
-  utils.draw_chart = function(context, data) {
+  utils.draw_chart = function(_, context, params) {
+
+    if(context.dev) {
+      console.log("[utils.draw_chart] drawing chart of type ", context, params);
+    }
 
     var vars = context;
-    vars.new_data = data;
-
+    vars.new_data = params;
+ //   vars.new_data = data;
+//console.log("CAAA1", context, params)
     if(vars.x_invert) {
       vars.x_scale[0]["func"].range([vars.x_scale[0]["func"].range()[1], vars.x_scale[0]["func"].range()[0]]);
     }
@@ -1098,10 +1105,10 @@
 
     // CREATE / UPDATE / REMOVE AXIS
     if(vars.x_axis_show) {
-      vars.svg.call(utils.x_axis);
+      context.svg.call(utils.x_axis);
     } else {
-        vars.svg.selectAll(".x.axis").remove();
-     }
+      context.svg.selectAll(".x.axis").remove();
+    }
 
      if(vars.y_axis_show) {
         vars.svg.call(utils.y_axis);
@@ -1152,6 +1159,7 @@
     // Flag that forces to re-wrangle data
     vars.refresh = false;
     vars.init = false;
+
 /*
     if(vars.dev) { 
       console.log("Creating chart with params", params, _, data);

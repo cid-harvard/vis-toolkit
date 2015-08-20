@@ -25,8 +25,6 @@
 
         } else {
 
-
-
           // LOAD CHART PARAMS
           vars = vistk.utils.merge(vars, vars.default_params[vars.type]);
 
@@ -35,6 +33,8 @@
 
         }
 
-        utils.draw_chart(vars, vars.new_data);
+        vars.svg.call(utils.draw_chart, vars, vars.new_data);
+
+//        vars.svg.calutils.draw_chart(vars, vars.new_data);
 
       break;
