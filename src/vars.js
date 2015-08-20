@@ -76,6 +76,41 @@
     // Automatically generate UI elements
     ui: true,
 
+    lang: 'en_US', // 'es_ES, fr_FR'
+    locales: {
+        'en_US': {
+          'complexity': 'Complexity',
+          'low': 'Low',
+          'high': 'High',
+          'export': 'Export',
+          'non-export': 'Non-Export',
+          'similarity_link': 'Similarity Link'
+        },
+        'en_EN': {
+          'complexity': 'Complexity',
+          'low': 'Low',
+          'high': 'High',
+          'export': 'Export',
+          'non-export': 'Non-Export',
+          'similarity_link': 'Similarity Link'
+        },
+        'es_ES': {
+          'complexity': 'Complejidad',
+          'low': 'Bajo',
+          'high': 'Alto',
+          'export': 'Exportación',
+          'non-export': 'No-Exportación',
+          'similarity_link': 'Enlar de similitud'
+        },
+        'fr_FR': {
+          'complexity': 'Complexité',
+          'low': 'Basse',
+          'high': 'Haute',
+          'export': 'Export',
+          'non-export': 'Non-Export',
+          'similarity_link': 'Lien de similarité'
+        }
+    },
     // Graphical properties for graphical marks
     color: d3.scale.category20c(),
     size: d3.scale.linear(),

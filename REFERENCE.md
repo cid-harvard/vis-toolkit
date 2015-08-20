@@ -70,6 +70,8 @@ This is by far the most important parameter as it will automatically pre-generat
 * **Example:** `barchart`, `sparkline`, `dotplot`, `barchart`, `linechart`, `scatterplot`, etc.
 
 * **Note:** The full list of templates is available in <a href='src/visualizations/'>src/visualizations/</a>. To create your own template just add it in this folder and refer to it in the `Gruntfile.js`.
+&nbsp;
+A template file usually describes the graphical marks to be used as well as the pre-processing to be done before drawing those.
 
 * **Important:** All further parameter will override the original template.
 
@@ -119,7 +121,7 @@ This is by far the most important parameter as it will automatically pre-generat
 
 A custom function can be passed  `var_color: 'rank'` and `color: d3.scale.linear().domain([0, 123]).range(['red', 'blue'])`.
 
-**Note:** Using the **color** parameter as color scale.
+* **Note:** Using the **color** parameter as color scale.
 
 ### `color`
 
@@ -127,21 +129,21 @@ A custom function can be passed  `var_color: 'rank'` and `color: d3.scale.linear
 
 * **Type:** `Function`
 
-**Default:** `d3.scale.category20c()`.
+* **Default:** `d3.scale.category20c()`.
 
-**Example:** Custom color scales can be created such as `d3.scale.ordinal().domain(["Africa", "Americas", "Asia", "Europe", "Oceania"]).range(["#99237d", "#c72439", "#6bc145", "#88c7ed", "#dd9f98"])`
+* **Example:** Custom color scales can be created such as `d3.scale.ordinal().domain(["Africa", "Americas", "Asia", "Europe", "Oceania"]).range(["#99237d", "#c72439", "#6bc145", "#88c7ed", "#dd9f98"])`
 
 ### `var_text`
 
 > Sets the variable to draw text
 
-**Type:** `String`
+* Type:** `String`
 
-**Default:** &empty;
+* **Default:** &empty;
 
-**Example:** `name`
+* **Example:** `name`
 
-**Note:** Not all graphical marks contain text to be displayed. Naturally the `text` one requires one.
+* **Note:** Not all graphical marks contain text to be displayed. Naturally the `text` one requires one.
 
 If no id has been set, then `var_text` defaults to `__id`.
 
@@ -155,13 +157,13 @@ All parameters related to the semantic of the dataset.
 &nbsp;
 We consider a dataset made `items`, which are unique objects being drawn. Sometimes each row of a dataset refers to those objects with a unique `id`. By default, if no `id` exist, it will automatically create one using the index of each raw and set the `var_id` parameter to the `__id` attribute. 
 
-**Type:** `Array`
+* **Type:** `Array`
 
-**Default:** []
+* **Default:** []
 
-**Example:** `[0, 1, 2, 3]` is a dataset with no id, contrary to `[{id: 0, value: 10}, {id: 1, value: 20}, {id: 2, value: 30}, {id: 3, value: 40}]` and in this cans the is defined using **var_id**.
+* **Example:** `[0, 1, 2, 3]` is a dataset with no id, contrary to `[{id: 0, value: 10}, {id: 1, value: 20}, {id: 2, value: 30}, {id: 3, value: 40}]` and in this cans the is defined using **var_id**.
 
-**Note:** If no id in the dataset, then it considers each rows as an item and creates a `var__id` attribute which value is the index of the row. Thus, the previous dataset `[0, 1, 2, 3]` can be used, and **var_id** will implicitly be set to `__id`.
+* **Note:** If no id in the dataset, then it considers each rows as an item and creates a `var__id` attribute which value is the index of the row. Thus, the previous dataset `[0, 1, 2, 3]` can be used, and **var_id** will implicitly be set to `__id`.
 
 ### `var_id`
 
@@ -169,9 +171,9 @@ We consider a dataset made `items`, which are unique objects being drawn. Someti
 
 * **Type:** `String`
 
-**Default:** `__id`
+* **Default:** `__id`
 
-**Example:** 
+* **Example:** 
 
 Note: The `__id` is automatically created in case no `var_id` is set.
 
@@ -181,21 +183,21 @@ Note: The `__id` is automatically created in case no `var_id` is set.
 
 * **Type:** `String`
 
-**Default:**  &empty;
+* **Default:**  &empty;
 
-**Note:** Right now, only one level of hierarchy is provided.
+* **Note:** Right now, only one level of hierarchy is provided.
 
-**Example:** Countries can be grouped by *continent*
+* **Example:** Countries can be grouped by *continent*
 
 ### `set`
 
 > Creates custom attributes for the dataset.
 
-**Type:** `String`, `Boolean`
+* **Type:** `String`, `Boolean`
 
-**Default:**  &empty;
+* **Default:**  &empty;
 
-**Example:** `.set('aggregated', true)` creates aggregates data with a `__aggregated` set to true. Then, it is possible to draw graphical marks specifically for those data:
+* **Example:** `.set('aggregated', true)` creates aggregates data with a `__aggregated` set to true. Then, it is possible to draw graphical marks specifically for those data:
 
 ```js
 {
@@ -204,31 +206,31 @@ Note: The `__id` is automatically created in case no `var_id` is set.
 }
 ```
 
-**Note:** New data are appended to the current dataset, with a `__aggregated` attribute set to `true`.
+* **Note:** New data are appended to the current dataset, with a `__aggregated` attribute set to `true`.
 
 ### `aggregated`
 
 `aggregated` data are appended to the original dataset with a `__aggregated` attribute set to true. This means those two datasets will co-habit together.
 
-**Type:** `Array`
+* **Type:** `Array`
 
 ### `selection`
 
 > Selected items, which differ from the highlight as tt is more persitent
 
-**Type:** `Array`
+* **Type:** `Array`
 
-**Example:**
+* **Example:**
 
-**Default:** []
+* **Default:** []
 
 ### `highlight`
 
 > Highlights items
 
-**Type:** `Array`
+* **Type:** `Array`
 
-**Example:** If using the countries dataset `["France", "Germany"]`
+* **Example:** If using the countries dataset `["France", "Germany"]`
 
 Highligthing can condition the display of a mark or not. In the example below, it displays a text item mark when the mouse hovers an existing mark:
 
@@ -263,9 +265,9 @@ Further conditions can be set on the mark for example to update its `text-anchor
   }
 }
 ```
-**Default:** `[]`
+* **Default:** `[]`
 
-**Note:** Values are defined according to the `var_id` parameter
+* **Note:** Values are defined according to the `var_id` parameter
 &nbsp;
 The `productspace` chart type also generates highlights for its metadata: the links are hilighted with `__highlighted` attribute and the adjacent nodes to the currently highlighed one are have a `highlighted__adjacent` flag on.
 
@@ -298,13 +300,13 @@ A chart is made of items and connect marks that will enable to create complex ch
 
 > Draws a graphical mark on the screen and defines some of its properties.
 
-**Type:** `Array`
+* **Type:** `Array`
 
-**Default:** `[]`
+* **Default:** `[]`
 
-**Example:**
+* **Example:**
 
-**Note:** Each item creates a `<SVG>` group of marks of class `.mark__group`. This group handles the position of the marks with a `transform` attribute.
+* **Note:** Each item creates a `<SVG>` group of marks of class `.mark__group`. This group handles the position of the marks with a `transform` attribute.
 &nbsp;
 
 
@@ -313,47 +315,47 @@ A chart is made of items and connect marks that will enable to create complex ch
 
 > Creates a new `<SVG>`  group that will contain marks.
 
-**Type:** `Array`
+* **Type:** `Array`
 
-**Default:** `{}` no mark is being drawing (unless specified by the type).
+* **Default:** `{}` no mark is being drawing (unless specified by the type).
 
-**Example:**
+* **Example:**
 
-**Note:**
+* **Note:**
 
-**Default:**
+* **Default:**
 
 ### `items.marks.type`
 
 > The type of the graphical mark.
 
-**Type:**
+* **Type:**
 
-**Default:**
+* **Default:**
 
-**Example:**
+* **Example:**
 
-**Note:** Can be a function
+* **Note:** Can be a function
 
 ### `items.marks.var_type`
 
 > Variable to customize the type of mark to be used.
 
-**Type:**
+* **Type:**
 
-**Default:**
+* **Default:**
 
-**Example:**
+* **Example:**
 
-**Note:**
+* **Note:**
 
 ### `items.marks.title`
 
 > Appends a SVG title element and sets its value.
 
-**Default:** &empty;
+* **Default:** &empty;
 
-**Example:** 
+* **Example:** 
 
 ```js
 marks: [{
@@ -367,67 +369,67 @@ marks: [{
 
 * [examples/scatterplot_industryspace.html](http://cid-harvard.github.io/vis-toolkit/examples/scatterplot_industryspace.html)
 
-**Note:**
+* **Note:**
 
 ### `items.marks.class`
 
 > To create custom classes for the marks.
 
-**Type:**
+* **Type:**
 
-**Default:**
+* **Default:**
 
-**Example:**
+* **Example:**
 
-**Note:**
+* **Note:**
 
 ### `items.marks.fill`
 
 > Fills the mark with the desired color.
 
-**Type:** `String` | `function`
+* **Type:** `String` | `function`
 
-**Default:** &empty;
+* **Default:** &empty;
 
-**Example:** `#fff`, `function() { return '#000'; }`
+* **Example:** `#fff`, `function() { return '#000'; }`
 
-**Note:** Works with `circle` marks, not for all other marks.
+* **Note:** Works with `circle` marks, not for all other marks.
 
 ### `items.marks.enter`
 
 > Customizing the enter function for marks.
 
-**Type:**
+* **Type:**
 
-**Default:** The final mark.
+* **Default:** The final mark.
 
-**Example:**
+* **Example:**
 
-**Note:**
+* **Note:**
 
 ### `items.marks.exit`
 
 > Customizing the exit function for marks.
 
-**Type:**
+* **Type:**
 
-**Default:** The original mark.
+* **Default:** The original mark.
 
-**Example:**
+* **Example:**
 
-**Note:**
+* **Note:**
 
 ### `connect`
 
 > Second type of graphical mark that aims at connecting items.
 
-**Type:** `Object`
+* **Type:** `Object`
 
-**Default:** `{}` no connect mark is being drawing (unless specified by the type).
+* **Default:** `{}` no connect mark is being drawing (unless specified by the * **pe).
 
-**Example:**
+* **Example:**
 
-**Note:**
+* **Note:**
 
 
 ## Time
@@ -436,7 +438,7 @@ marks: [{
 
 > Informs that the dataset is temporal.
 
-**Type:** `Object`
+* **Type:** `Object`
 
 ```html
 time: {
@@ -448,25 +450,43 @@ time: {
 
 ### `time.var_time`
 
-* The variable that sets time
+> The variable that sets time.
+
+* **Type:** `String`
+
+* **Default:** &empty:
+
+* **Example:** `year`
+
+* **Note:** ..
 
 ### `time.current_time`
 
-**Default:**
+* **Default:**
 
-**Note:** The `current_time` can defined to a specific value, or be set using `vistk.utils.min` which is a public function to retrieve
+* **Example:**
+
+* **Note:** The `current_time` can defined to a specific value, or be set using `vistk.utils.min` which is a public function to retrieve
 
 Some time-related values are internally created:
 
 * `time.points`: all the time points found in the dataset
 * `time.interval` the min and the max of time points
 
-### `time.parse` (Function)
+### `time.parse`
 
-* Parses the time
+> Parses the time values from the dataset.
 
-**Example**: 
+* **Type:** `Function`
 
+* **Default:** `function(d) { return d; }`
+
+* **Example**: Depends on the way time values are formated in the dataset.
+&nbsp;
+`"2008"` &rarr; `d3.time.format("%Y").parse`&nbsp;
+`"Apr 2000"` &rarr; `d3.time.format("%b %d, %Y")`&nbsp;
+
+* **Note:** See the [D3 time formatting](https://github.com/mbostock/d3/wiki/Time-Formatting) documentation.
 
 ## UI
 
@@ -487,8 +507,21 @@ Some time-related values are internally created:
 ```
 
 
+## Misc
 
-## Utils
+### `lang`
+
+> Changes the current language of the UI.
+
+* **Type:** `String`
+
+* **Default:** 'en_US'
+
+* **Example:** 'es_ES', 'fr_FR'
+
+* **Note:** Translations are currently built-in, should be made available separately.
+
+## Utils (Public)
 
 A list of public functions made available mostly to be used by the parameters.
 
@@ -496,41 +529,64 @@ A list of public functions made available mostly to be used by the parameters.
 
 > Returns the min value
 
-**Default:**
+* **Type:** `Function`
 
-**Example:**
+* **Default:**
 
-**Note:** ..
+* **Example:**
+
+* **Note:** ..
 
 
 ### `vistk.utils.max`
 
 > Returns the max value
 
-**Default:**
+* **Type:** `Function`
 
-**Example:**
+* **Default:**
 
-**Note:** ..
+* **Example:**
+
+* **Note:** ..
 
 
 ### `vistk.utils.translate_along`
 
 > Transition between item and connect marks
 
-**Default:**
+* **Type:** `Function`
 
-**Example:**
+* **Default:**
 
-**Note:** ..
+* **Example:**
+
+* **Note:** The function allows
+
+## Utils (Private)
 
 ### `utils.draw_mark`
 
 > Draws a mark
 
-**Default:**
+* **Type:** `Function`
 
-**Example:**
+* **Default:** `circle`
 
-**Note:** ..
+* **Example:** `rect`, `tick`, `star`, ..
+
+* **Note:**
+
+
+### `utils.draw_chart`
+
+> Draws a chart
+
+* **Type:** `Function`
+
+* **Default:** `none`
+
+* **Example:** `barchart`, `linechart`, ..
+
+* **Note:** ..
 

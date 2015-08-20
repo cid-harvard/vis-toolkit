@@ -1,0 +1,111 @@
+<!doctype html>
+<meta charset="utf-8">
+<script src="../js/d3.js" charset="utf-8"></script>
+<script src="../build/vistk.js"></script>
+<style>
+.items__mark__diamond {
+    fill: gray;
+    opacity: .1;
+}
+
+.items__mark__diamond.preselected {
+  stroke: black;
+  opacity: 1;
+ }
+
+.items__mark__diamond.preselected {
+  fill: red;
+  opacity: 1;
+}
+
+.items__mark__diamond.highlighted {
+  stroke: black;
+  stroke-width: 1.5px;
+  opacity: 1;
+}
+
+.axis > .label {
+  display: none;
+}
+
+.axis > .domain {
+  stroke: #000;
+  stroke-dasharray: 1,1
+}
+
+.items__mark__divtext__tooltip {
+    background: #333;
+    background: rgba(0,0,0,.8);
+    border-radius: 5px;
+    height: 100%;
+    color: #fff;
+    padding: 5px 15px;
+    z-index: 100;
+    width: 220px;
+}
+
+</style>
+<body>
+<div id="viz" style="position: absolute; top:100px; left: 200px; overflow:visible;"></div>
+<script>
+
+d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments) {
+
+  departments.forEach(function(d, i) {
+    d.dept_pop = +d.dept_pop;
+    d.year = +d.year;
+    d.realgdp = +d.realgdp;
+    d.realgdp_percap = +d.realgdp_percap;    
+    d["sum(export_value)"] = +d["sum(export_value)"];
+    d["value_added"] = +d["value_added"];
+  });
+
+  visualization = vistk.viz()
+    .params({
+      dev: true,
+      height: 50,
+      width: 100,
+      type: 'dotplot',
+      data: departments,
+      container: '#viz',
+      var_x: 'dept_pop',
+      var_y: function() { return this.height+this.margin.bottom/2; },
+      x_text: null,
+      x_ticks: 2,
+      x_tickSize: 0,
+      x_tickPadding: 10,
+      var_group: 'dept_name',
+      x_format: function(d) { return '$' + d3.format(".0s")(d); },
+      items: [{
+        marks: [{
+          type: "diamond",
+          class: function(d) {
+            if(d['dept_name'] === 'Antioquia') {
+              return "preselected";
+            }
+          }
+        }, {
+          var_mark: '__highlighted',
+          type: d3.scale.ordinal().domain([true, false]).range(["divtext", "none"]),
+          class: function() { return "items__mark__divtext__tooltip"; },
+          text: function(d) {
+            return d["dept_name"];
+          }
+        }]
+      }],
+      time: {
+        var_time: 'year', 
+        current_time: 2013,
+        parse: function(d) { return d; }
+      },
+      var_id: "dept_name",
+     // var_text: "dept_name"
+    });
+
+  d3.select("#viz").call(visualization);
+
+  d3.select('svg').style('overflow', 'visible');
+
+});
+
+</script>

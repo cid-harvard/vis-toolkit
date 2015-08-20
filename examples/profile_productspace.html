@@ -3,40 +3,46 @@
 <script src="../js/d3.js"></script>
 <script src="../build/vistk.js"></script>
 <style>
-.connect__line {
-  stroke: #E1DCD6;
-  stroke-opacity: .4;
-}
-
-.items__mark__star {
-  fill: yellow;
-  stroke-width: .5px;
-  stroke: black;
-}
-
-.items__mark__star.selected {
-  stroke-width: 1px;
-}
-
-.items__mark__star.highlighted {
-  fill: yellow;
-  stroke-width: 1.5px;
-}
-
-.items__mark__circle {
-  fill: #CDC5BC;
-}
-
-.items__mark__circle.highlighted {
-  fill: #CDC5BC;  
+.items__mark__circle.highlighted__adjacent {
   stroke: black;
   stroke-width: 1.5px;
+}
+
+g:hover .items__mark__circle:not(.highlighted__adjacent) {
+  -webkit-transition:0.3s;
+  transition:0.3s;
+  opacity: 0.5;
+}
+
+.items__mark__circle:.highlighted__adjacent {
+  opacity: 1;
+}
+
+g:hover .connect__path:not(.highlighted) {
+  -webkit-transition:0.3s;
+  transition:0.3s;
+  opacity: 0.5;
+}
+
+g:hover .items__mark__circle.highlighted {
+  stroke: black;
+  stroke-width: 2.5px;
+  opacity: 1;
 }
 
 .items__mark__circle.selected {
-  fill: #EA413D;
+  stroke: black;
+  stroke-width: 1.5px;
 }
 
+.connect__path:not(.highlighted) {
+  stroke-width: 1px;  
+}
+
+.connect__path.highlighted {
+  stroke-opacity: 1;
+  stroke-width: 5px;  
+}
 </style>
 <body>
 <div id="viz"></div>
@@ -63,19 +69,29 @@ d3.json("../data/atlas_international_product_space.json", function(graph) {
         var_y: 'y',
         var_id: "product_id",
         var_text: 'product_id',
-//        var_r: "export_value",
         var_color: 'coi',
+        y_invert: true,
         color: d3.scale.ordinal().domain([0, 1, 2]).range(["#DDDDDD", "#AAAAAA", "#777777"]),
         items: [{
           attr: "name",
           marks: [{
-            type: "circle"
+            type: "circle",
+            rotate: "0",
+            var_color: 'category',
+            title: function(d) { return d['pname']; }
           }, {
             var_mark: '__highlighted',
-            type: d3.scale.ordinal().domain([true, false]).range(["text", "none"])
+            type: d3.scale.ordinal().domain([true, false]).range(["text", "none"]),
+            rotate: "0"
           }, {
-            var_mark: '__aggregated',
-            type: d3.scale.ordinal().domain([true, false]).range(["star", "none"])
+            var_mark: '__selected',
+            type: d3.scale.ordinal().domain([true, false]).range(["marker", "none"]),
+            rotate: "0",
+            enter: function(data, vars) {
+              this.attr("transform", function(d, i) {
+                return "translate(-10, " + (-vars.y_scale[0]["func"](vars.accessor_data(d)[vars.var_y]) - 40) + ")";
+              })
+            },
           }]
         }],
         time: {
@@ -87,9 +103,7 @@ d3.json("../data/atlas_international_product_space.json", function(graph) {
         ui: {
           default: false,
           legend: true
-        },
-        selection: ["115", "116", "117", "118", "119", "120", "121", "122", "123", "124", "125"],
-        highlight: ["115", "201", "202", "203", "204", "205", "206", "207", "208", "161"]
+        }
       })
       .set('__aggregated', true);
 

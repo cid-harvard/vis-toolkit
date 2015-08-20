@@ -110,3 +110,20 @@ vistk.utils.translate_along = function(path) {
     };
   };
 }
+
+vistk.utils.find_unique_values = function(data, key) {
+
+  var unique = {};
+  var result = [];
+
+  for(var i in data){
+    if(typeof(unique[data[i][key]]) == "undefined"){
+      result.push(data[i][key]);
+    }
+    unique[data[i][key]] = 0;
+  }
+
+  return result;
+
+}
+

@@ -46,6 +46,11 @@ path.state {
   stroke-opacity: .4;
 }
 
+.connect__line.highlighted {
+  fill: yellow;
+  stroke-width: 1.5px;
+}
+
 .items__mark__star {
   fill: #CBC0B8;
   stroke-width: .5px;
@@ -113,26 +118,27 @@ d3.json("../data/colombia_product_space.json", function(graph) {
       "year": 2012
 
     METADATA
-      "code": "106",
-      "description_en": null,
-      "description_es": null,
-      "id": 0,
-      "level": "section",
-      "name_en": "Animal & Animal Products",
-      "name_es": null,
-      "name_short_en": null,
-      "name_short_es": null,
-      "parent_id": null 
+      code: "0101"
+      description_en: null
+      description_es: null
+      id: 2
+      level: "4digit"
+      name_en: "Live horses, asses, mules or hinnies"
+      name_es: "Caballos, asnos, mulos y burdéganos, vivos."
+      name_short_en: "Horses"
+      name_short_es: "Caballos"
+      parent_id: 1
   */
 
       // Re-creating dataset used on the Colombian atlas
       // https://github.com/cid-harvard/atlas-colombia/blob/41595dfc06b58384caaf296f04e3242dc616746e/app/routes/application.js
       exports.data.forEach(function(d) {
 
-        var m = metadata.data.filter(function(e) {
+        var metadata_export = metadata.data.filter(function(e) {
           return d.product_id == e.id;
         })[0];
 
+/*
         var p = metadata.data.filter(function(e) {
           return m.parent_id == e.id;
         })[0];
@@ -140,10 +146,23 @@ d3.json("../data/colombia_product_space.json", function(graph) {
         var q = metadata.data.filter(function(e) {
           return p.parent_id == e.id;
         })[0];
+*/
+  
+        if(typeof metadata_export === "undefined") {
 
-        d["group_name_en"] = q["name_en"];
+          d["name_en"] = "undefined";
+          d["name_en"] = "indefinido";
+
+        } else {
+
+          d["name_en"] = metadata_export["name_en"];
+          d["name_es"] = metadata_export["name_es"];
+
+        }
 
       })
+
+      console.log(metadata)
 
       visualization = vistk.viz()
         .params({
@@ -218,9 +237,10 @@ d3.json("../data/colombia_product_space.json", function(graph) {
             filter: "2012"
           },
           ui: {
-            default: false,
+            default: true,
             legend: true
           },
+          lang: 'es_ES',
           title: "Product Space Colombia Exports",
           selection: ["115", "116", "117", "118", "119", "120", "121", "122", "123", "124", "125"],
         })

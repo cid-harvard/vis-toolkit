@@ -123,7 +123,7 @@ Annotations
 
 Labels
 * http://bl.ocks.org/dbuezas/9306799
-
+* Auto-labeling with simulated annealing http://tinker10.github.io/D3-Labeler/
 * Connecting labels to items http://bl.ocks.org/mbostock/3886394
 
 
@@ -230,7 +230,7 @@ Map of countries that can be colored and labeled.
 * http://techslides.com/demos/d3/d3-world-map-mouse-zoom.html
 * https://github.com/yaph/d3-geomap/blob/master/src/coffee/choropleth.coffee
 * http://d3-geomap.github.io/map/choropleth/world/
-
+* Choropleth in Python http://prooffreaderplus.blogspot.com/2015/08/a-python-script-to-make-choropleth-grid.html?spref=tw
 * Click and zoom on country http://techslides.com/d3-world-maps-tooltips-zooming-and-queue
  * http://stackoverflow.com/questions/14492284/center-a-map-in-d3-given-a-geojson-object
  * http://techslides.com/responsive-d3-map-with-zoom-and-pan-limits
@@ -278,6 +278,11 @@ Horizontal scatterplot without a Y-axis:
 * Vertical stacks for dots http://stattrek.com/statistics/charts/dot-plot.aspx
 * Alternative designs for dotplots http://thesocietypages.org/graphicsociology/tag/time-line/
 * http://www.theatlantic.com/business/archive/2015/07/college-major-rich-families-liberal-arts/397439/
+* Aggregated line http://www.nytimes.com/2015/08/16/upshot/is-hillary-clinton-really-in-danger-of-losing-the-primary.html
+
+Alternatives
+
+* Stacked bumb chart http://roadtolarissa.com/stacked-bump/
 
 #### Dot Chart
 
@@ -408,7 +413,7 @@ D3js notebook
  * Should take the visual mapping as input and automatically generate it
  * Interactive and informative legends http://bl.ocks.org/bobmonteverde/2070123
  * http://d3-legend.susielu.com/
-
+* Circle legend http://bl.ocks.org/aubergene/4723857
 ---
 
 * HTML / DIV
@@ -494,7 +499,8 @@ Template
 * Polychart https://www.polychart.com/demo
 * EZ-D3 http://mikejestes.github.io/ez-d3-graphs/
 * Taucharts http://taucharts.com/
-
+* MPLD3 http://mpld3.github.io/
+* D4 http://visible.io/index.html
 * Tufte design graphics http://motioninsocial.com/tufte/
 
 ## Misc

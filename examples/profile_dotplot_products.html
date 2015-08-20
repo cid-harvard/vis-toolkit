@@ -1,0 +1,132 @@
+<!doctype html>
+<meta charset="utf-8">
+<script src="../js/d3.js" charset="utf-8"></script>
+<script src="../build/vistk.js"></script>
+<style>
+.items__mark__diamond {
+    fill: gray;
+    opacity: .1;
+}
+
+.items__mark__diamond.preselected {
+  stroke: black;
+  opacity: 1;
+ }
+
+.items__mark__diamond.preselected {
+  fill: red;
+  opacity: 1;
+}
+
+.items__mark__diamond.selected {
+
+}
+
+.axis > .label {
+  display: none;
+}
+
+.axis > .domain {
+  stroke: #000;
+  stroke-dasharray: 1,1
+}
+
+</style>
+<body>
+<div id="viz"></div>
+<script>
+
+d3.json("../data/colombia_metadata_products_4digit.json", function(error, products) {
+
+  products.data.forEach(function(d, i) {
+    d.export = Math.random() * 100;
+    d.year = 2013;
+  });
+
+  var ui_options = [];
+
+  visualization = vistk.viz()
+    .params({
+      dev: true,
+      height: 200,
+      width: 600,
+      type: 'dotplot',
+      data: products.data,
+      container: '#viz',
+      var_x: 'export',
+      var_y: function() { return this.height+this.margin.bottom/2; },
+      x_text: 'value (random)',
+      x_ticks: 2,
+      x_tickSize: 0,
+      x_tickPadding: 10,
+      var_group: 'dept_name',
+      x_format: function(d) { return '$' + d3.format(".0s")(d); },
+      items: [{
+        marks: [{
+          type: "diamond",
+          class: function(d) {
+            if(d['dept_name'] === 'Antioquia') {
+              return "preselected";
+            }
+          }
+        }, {
+          var_mark: '__highlighted',
+          type: d3.scale.ordinal().domain([true, false]).range(["text", "none"]),
+          rotate: "0",
+          translate: [0, -15],
+          text_anchor: function(d) {
+            var parentGroup = d3.select(this.parentNode);
+            var parentSVG = d3.select(this.parentNode.parentNode.parentNode);
+            var parentX = d3.transform(parentGroup.attr("transform")).translate[0];
+            var svgWidth = +parentSVG.attr("width");
+            if(parentX < svgWidth/3) {
+              return "start";
+            } else if(parentX > 2 * svgWidth/3) {
+              return "end";
+            } else {
+              return "middle";
+            }
+          }
+        }]
+      }],
+      time: {
+        var_time: 'year', 
+        current_time: 2013,
+        parse: function(d) { return d; }
+      },
+      var_id: "code",
+      var_text: "name_en"
+    });
+
+  d3.select("#viz").call(visualization);
+
+  d3.select(visualization.container()).selectAll(".toggleLanguage").data(["toggleLanguage"]).enter().append("button")
+           .attr("type", "button")
+           .attr("class", "toggleLanguage")
+           .on("click", function() {
+
+              // Then move groups to their grid position
+              // visualization.param("refresh", true);
+
+              var new_lang = visualization.params().var_text == "name_en" ? "name_es" : "name_en";
+
+              visualization.params({
+                var_text: new_lang,
+              });
+
+              d3.select(this).html(function() {
+                return "Current language: " + new_lang; 
+              })
+
+              // visualization.params().refresh = true;
+              // visualization.params().init = true;
+
+              d3.select(visualization.container()).call(visualization);
+
+            })
+           .html("Current language: " + visualization.params().var_text);
+
+
+});
+
+</script>

@@ -1,0 +1,67 @@
+<!doctype html>
+<meta charset="utf-8">
+<script src="../js/d3.js"></script>
+<script src="../js/jsonp.js"></script>
+<script src="../build/vistk.js"></script>
+<link href="../css/vistk.css" rel="stylesheet">
+<body>
+<div id="viz"></div>
+<script>
+
+d3.jsonp('http://api.wunderground.com/api/9826b4cafb59f38d/history_20140912/q/UK/Edinburgh.json?callback={callback}', function (data) {
+
+  //
+  // date: Object
+  // hour: "00"
+  // mday: "12"
+  // min: "20"
+  // mon: "09"
+  // pretty: "12:20 AM BST on September 12, 2014"
+  // tzname: "Europe/London"
+  year: "2014"
+
+  // Data pre-processing
+  data.history.observations.forEach(function(d, i) {
+
+    d.city = "Edinburgh";
+    d.tempi = +d.tempi;
+    d.time = i;
+
+  });
+
+console.log("ddd", data.history.observations)
+  visualization = vistk.viz()
+    .params({
+      type: "linechart",
+      container: "#viz",
+      width: 300,
+      height: 100,
+      data: data.history.observations,
+      var_y: "tempi",
+      var_x: "time",
+      var_id: "city",
+      ui: {
+        default: true
+      },
+      time: {
+        var_time: "time",
+        parse: d3.time.format("%Y").parse,
+        current_time: vistk.utils.max,
+      },
+      items: [{
+        marks: [{
+          type: "diamond"
+        }, {
+          var_mark: '__highlighted',
+          type: d3.scale.ordinal().domain([true, false]).range(["text", "none"]),
+          rotate: "0"
+        }]
+      }],
+      interpolate: "linear",
+      var_text: "time",
+    });
+
+  d3.select(visualization.container()).call(visualization);
+
+});
+</script>
