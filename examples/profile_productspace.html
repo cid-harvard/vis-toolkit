@@ -85,8 +85,13 @@ d3.json("../data/atlas_international_product_space.json", function(graph) {
             rotate: "0"
           }, {
             var_mark: '__selected',
-            type: d3.scale.ordinal().domain([true, false]).range(["divtext", "none"]),
-            rotate: "0"
+            type: d3.scale.ordinal().domain([true, false]).range(["marker", "none"]),
+            rotate: "0",
+            enter: function(data, vars) {
+              this.attr("transform", function(d, i) {
+                return "translate(-10, " + (-vars.y_scale[0]["func"](vars.accessor_data(d)[vars.var_y]) - 40) + ")";
+              })
+            },
           }]
         }],
         time: {
