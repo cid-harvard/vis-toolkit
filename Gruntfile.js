@@ -15,14 +15,6 @@ module.exports = function(grunt) {
       }
     },
 
-   'gh-pages': {
-      options: {
-        dotfiles: true,
-        message: 'Auto-generated commit'
-      },
-      src: '**/*'
-   },
-
     pkg: grunt.file.readJSON('package.json'),
 
     concat: {
@@ -73,7 +65,6 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-jasmine');
   grunt.loadNpmTasks('grunt-string-replace');
-  grunt.loadNpmTasks('grunt-gh-pages');
 
   grunt.registerTask('default', ['concat', 'string-replace']);
 };
