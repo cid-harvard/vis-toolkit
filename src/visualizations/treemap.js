@@ -3,7 +3,7 @@ vars.default_params["treemap"] = function(scope) {
   var params = {};
 
   if(vars.refresh) {
-
+    console.log("REFRES")
     // Create the root node
     vars.root = {};
     vars.root[vars.var_text]= "root";
