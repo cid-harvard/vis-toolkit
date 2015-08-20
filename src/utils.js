@@ -43,6 +43,10 @@
   */
   utils.draw_mark = function(selection, params) {
 
+    if(vars.dev) {
+      console.log("[utils.draw_mark]", params.type)
+    }
+
     selection.each(function(d) {
 
       if(!d.__redraw) {
@@ -532,10 +536,12 @@
 
         case "sparkline":
 
+/*
           var scope = {};
           scope = vistk.utils.merge(scope, vars)
 
           scope = vars.default_params["sparkline"](scope);
+
           scope.var_x = 'year';
           scope.var_y = vars.var_y;
 
@@ -565,6 +571,17 @@
           }];
 
           scope.svg = vars.svg;
+*/
+          if(vars.dev) {
+            console.log("[draw_mark] sparkline");
+          }
+
+          var scope = {};
+          scope = vars.default_params["sparkline"](vars);
+
+          scope = vistk.utils.merge(vars, scope);
+
+          scope.type = "sparkline";
 
           var chart = d3.select(this).selectAll(".items__chart__sparkline").data([d]);
 
@@ -901,16 +918,15 @@
 
   }
 
-  utils.draw_chart = function(_, context, params) {
+  utils.draw_chart = function(vars_svg, context, params) {
 
     if(context.dev) {
-      console.log("[utils.draw_chart] drawing chart of type ", context, params);
+      console.log("[utils.draw_chart] drawing chart of type", context.type, context.connect);
     }
 
     var vars = context;
     vars.new_data = params;
- //   vars.new_data = data;
-//console.log("CAAA1", context, params)
+
     if(vars.x_invert) {
       vars.x_scale[0]["func"].range([vars.x_scale[0]["func"].range()[1], vars.x_scale[0]["func"].range()[0]]);
     }
@@ -937,7 +953,7 @@
 
         // PRE-UPDATE ITEMS
         // Join is based on the curren_time value
-        var gItems = vars.svg.selectAll(".mark__group" +  "_" + index_item)
+        var gItems = vars_svg.selectAll(".mark__group" +  "_" + index_item)
                         .data(vars.new_data, function(d, i) {
                           d._index_item = index_item;
                           return accessor_data(d)[vars.var_id] + "_" + index_item;
@@ -964,6 +980,7 @@
               return true; 
             }
           } 
+
           // Supporting multipe similar elements
           params._mark_id = index_item + "_" + index_mark; 
           gItems_enter.filter(params.filter).call(utils.draw_mark, params);
@@ -984,10 +1001,10 @@
 
         // IN CASE OF CUSTOM UPDATE FOR ITEMS
         if(typeof item.update !== "undefined") {
-          vars.svg.selectAll(".mark__group" + "_" + index_item).call(item.update, vars)
+          vars_svg.selectAll(".mark__group" + "_" + index_item).call(item.update, vars)
         } else {
         // POST-UPDATE ITEMS GROUPS
-        vars.svg.selectAll(".mark__group" + "_" + index_item)
+          vars_svg.selectAll(".mark__group" + "_" + index_item)
                         .transition()
                         .duration(vars.duration)
                         //.ease('none')
@@ -1019,7 +1036,7 @@
 
       } else {
         
-        vars.svg.transition()
+        vars_svg.transition()
                 .duration(vars.duration)
                 .attr("transform", "translate(" + vars.margin.left + "," + vars.margin.top + ")");
 
@@ -1062,8 +1079,7 @@
         // PRE-UPDATE CONNECT
         // TOOD: find a common join to al types of connections
 
-
-        var gConnect = vars.svg.selectAll(".connect__group")
+        var gConnect = vars_svg.selectAll(".connect__group")
                         .data(connect_data, function(d, i) {
                           d._index_item = index_item;
                           return d[vars.var_id] + "_" + index_item;
@@ -1110,39 +1126,38 @@
       context.svg.selectAll(".x.axis").remove();
     }
 
-     if(vars.y_axis_show) {
-        vars.svg.call(utils.y_axis);
-     } else {
-        vars.svg.selectAll(".y.axis").remove();
-     }
+    if(vars.y_axis_show) {
+       vars_svg.call(utils.y_axis);
+    } else {
+       vars_svg.selectAll(".y.axis").remove();
+    }
 
-     if(vars.x_grid_show) {
+    if(vars.x_grid_show) {
 
-       vars.svg.selectAll(".x.grid").data([vars.new_data])
-         .enter()
-           .append("g")
-           .attr("class", "x grid")
-           .style("display", function() { return vars.x_grid_show ? "block": "none"; })
-           .attr("transform", "translate(0," + (vars.margin.top) + ")");
+      vars_svg.selectAll(".x.grid").data([vars.new_data])
+        .enter()
+          .append("g")
+          .attr("class", "x grid")
+          .style("display", function() { return vars.x_grid_show ? "block": "none"; })
+          .attr("transform", "translate(0," + (vars.margin.top) + ")");
 
-
-       vars.svg.selectAll(".x.grid").transition()
-           .duration(vars.duration)
-           .call(utils.make_x_axis()
-           .tickSize(-vars.height+vars.margin.top+vars.margin.bottom, 0, 0)
-           .tickFormat(""));
-     }
+      vars_svg.selectAll(".x.grid").transition()
+          .duration(vars.duration)
+          .call(utils.make_x_axis()
+          .tickSize(-vars.height+vars.margin.top+vars.margin.bottom, 0, 0)
+          .tickFormat(""));
+    }
 
     if(vars.y_grid_show) {
 
-      vars.svg.selectAll(".y.grid").data([vars.new_data])
+      vars_svg.selectAll(".y.grid").data([vars.new_data])
         .enter()
           .append("g")
           .attr("class", "y grid")
           .style("display", function() { return vars.y_axis_show ? "block": "none"; })
           .attr("transform", "translate(" + vars.margin.left + ", 0)");
 
-      vars.svg.selectAll(".y.grid").transition()
+      vars_svg.selectAll(".y.grid").transition()
           .duration(vars.duration)
           .call(utils.make_y_axis()
           .tickSize(-vars.width+vars.margin.left+vars.margin.right, 0, 0)
@@ -1151,7 +1166,7 @@
 
     // POST-RENDERING STUFF
     if(vars.type == "productspace") {
-      vars.svg.selectAll('.mark__group').sort(function(a, b) { return a.__aggregated ;})
+      vars_svg.selectAll('.mark__group').sort(function(a, b) { return a.__aggregated ;})
     }
 
     utils.background_label(vars.title);
