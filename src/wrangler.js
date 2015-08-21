@@ -1,28 +1,50 @@
+    
+
+    // 1 - Init and define default values [INIT]
+    // 2 - Duplicates the dataset [INIT, REFRESH]
+    // Filter by time values
+    // Filter by attribute/ Selection
+    // Find unique values from dataset
+    // Remove missing data
+    // Aggregates the data [REFRESH]
+    // Sorts the data
+
+    // 1 - Init and define default parameters
     vars.items_data = [];
 
     // In case we use functions for X/Y variables 
     if(typeof vars.var_x !== "string" && typeof vars.var_x === "function") {
       vars.data.forEach(function(d, i) {
-        d._var_x = vars.var_x();
+        d.__var_x = vars.var_x();
       });
-      vars.var_x = "_var_x";
+      vars.var_x = "___var_x";
     }
 
     if(typeof vars.var_y !== "string" && typeof vars.var_y === "function") {
       vars.data.forEach(function(d, i) {
-        d._var_y = vars.var_y();
+        d.__var_y = vars.var_y();
       });
-      vars.var_y = "_var_y";
+      vars.var_y = "__var_y";
+    }
+
+    if(typeof vars.type === 'undefined') {
+      vars.type = 'none';
+    };
+
+    // In case the current_time is set dynamically
+    if(typeof vars.time.current_time === "function") {
+      vars.time.current_time = vars.time.current_time(vars.data)
     }
 
     // Calculate vars.new_data which should contain two things
     // 1/ The list of all items (e.g. countries, products)
     // 2/ The metadata for each items
-    if(vars.new_data === null || vars.refresh) {
+    if(vars.init || vars.refresh) {
 
       // Get a copy of the whole dataset
       vars.new_data = JSON.parse(JSON.stringify(vars.data));
 
+      // Creates default ids `__id` and `__value` for dataset without any id
       if(typeof vars.var_id === 'undefined') {
 
         vars.new_data = vars.new_data.map(function(d, i) {
@@ -30,7 +52,7 @@
           if(typeof d !== 'object') {
             var e = {}
             e.__id = i;
-            e.value = d;
+            e.__value = d;
             d = e;
           }
 
@@ -47,24 +69,21 @@
 
       }
 
-      if(typeof vars.type === 'undefined') {
-
-        vars.type = 'none';
-
-      };
-
+      // If time filter parameter is set, then keep values for this time
       if(typeof vars.time.filter != "undefined" && vars.time.filter.length > 0) {
 
         if(vars.dev) { 
           console.log("[vars.time.filter]", vars.time.filter);
         }
 
+        ;;
         vars.new_data = vars.new_data.filter(function(d, i) {
           return vars.time.filter.indexOf(d[vars.time.var_time]) > -1;
         });
        
       }
 
+      // If time filter interval is set, then keep values from this interval
       if(typeof vars.time.filter_interval != "undefined" && vars.time.filter_interval.length == 2) {
 
         if(vars.dev) { 
@@ -77,13 +96,11 @@
        
       }
 
+      // Find unique values for various parameters
       vars.time.interval = d3.extent(vars.new_data, function(d) { return d[vars.time.var_time]; });
       vars.time.points = vistk.utils.find_unique_values(vars.new_data, vars.time.var_time);
+      vars.unique_items = vistk.utils.find_unique_values(vars.new_data, vars.var_id);
 
-      // In case the current_time is set dynamically
-      if(typeof vars.time.current_time === "function") {
-        vars.time.current_time = vars.time.current_time(vars.data)
-      }
 
       // Filter data by attribute
       // TODO: not sure we should remove data, but add an attribute instead would better
@@ -100,11 +117,8 @@
 
       }
 
-      vars.unique_items = vistk.utils.find_unique_values(vars.new_data, vars.var_id);
 
       vars.unique_data = [];
-
-      // Towards a unique variable for wrangled data
       vars.unique_items.forEach(function(item_id, i) {
 
         // METADATA
@@ -131,21 +145,6 @@
           // TODO: this is metadata, should not be duplicated every year
           v[vars.var_id] = d[vars.var_id];
 
-          /* Not needed anymore
-          if(typeof vars.items !== "undefined" && JSON.stringify(vars.items) != '{}') {
-
-            // Make sure we retrieve the data for nested charts (if any)
-            vars.items.forEach(function(item) {
-              item.marks.forEach(function(params) {
-
-                v[params.var_y] = d[params.var_y];
-                v[params.var_x] = d[params.var_x];
-              })
-            });
-
-          }
-          */
-
           return v;
         });
 
@@ -164,6 +163,7 @@
           d.__selected = false;
         else
           d.__selected = true;
+
 
         d.__aggregated = false;
 
@@ -198,7 +198,7 @@
     }
 
     // Flagging missing nodes with __missing true attribute
-    if(typeof vars.nodes != "undefined") {
+    if(typeof vars.nodes !== "undefined" && vars.init) {
 
       // Adding coordinates to data
       vars.new_data.forEach(function(d, i) {
@@ -255,8 +255,8 @@
      return !d.__missing; 
     });
 
-      // Aggregate data
-      if(typeof vars.set['__aggregated'] !== 'undefined' && vars.refresh) {
+    // Aggregate data
+    if(typeof vars.set['__aggregated'] !== 'undefined' && vars.refresh) {
 
       if(vars.dev) { 
         console.log("[vars.aggregate]", vars.aggregate); 
@@ -390,7 +390,8 @@
 
     }
 
-    if(typeof vars.var_sort !== "undefined") {
+    // Sorting the dataset
+    if(typeof vars.var_sort !== "undefined" && vars.refresh) {
 
       if(vars.dev) { 
          console.log("[updating sort]", vars.var_sort, vars.var_sort_asc, vars.user_vars)
@@ -402,15 +403,3 @@
         vars.new_data = vars.new_data.sort(function(a, b) { return d3.descending(a[vars.var_sort], b[vars.var_sort]);});
       }
     } 
-
-    // Views are data iterators to create more complex visualizations
-    // WIP
-    if(typeof vars.view != "undefined") {
-
-      vars.old_data = vars.new_data;
-      vars.new_data = vars.view;
-
-    } else {
-
-
-    }
