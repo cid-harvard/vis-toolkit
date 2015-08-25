@@ -1,4 +1,6 @@
+  // LIST OF PRIVATE UTILS FUNCTIONS
 
+  // Create SVG groups for items marks
   utils.items_group = function(d, i) {
 
     d3.select(this).attr("class", "mark__group mark__group_" + d._index_item)
@@ -16,6 +18,7 @@
 
   }
 
+  // Create SVG groups for connect marks
   utils.connect_group = function(d, i) {
 
     d3.select(this).attr("class", "connect__group connect__group_" + d._index_item)
@@ -33,14 +36,13 @@
 
   }
 
-  /*
-    Main function to draw marks 
-    Invoked from a .each() call passing in the current datum d and index i, 
-    with the this context of the current DOM element
-
-    params contains the parameters for the current graphical mark to draw 
-    e.g. scales, type of mark, radius, color function, ..
-  */
+  
+  //  Main function to draw marks 
+  //  Invoked from a .each() call passing in the current datum d and index i, 
+  //  with the this context of the current DOM element
+  //
+  //  params contains the parameters for the current graphical mark to draw 
+  //  e.g. scales, type of mark, radius, color function, ..
   utils.draw_mark = function(selection, params) {
 
     if(vars.dev) {
@@ -76,7 +78,7 @@
       }
 
 
-      // Use the global accessor
+      // Use the default accessor
       var accessor_data = vars.accessor_data;
 
       switch(params_type) {
@@ -590,49 +592,7 @@
               .call(utils.draw_chart, scope, [d]);
 
         break;
-/*
-        case "dotplot":
 
-          scope = {};
-          scope = vistk.utils.merge(scope, vars);
-
-          scope = vars.default_params["dotplot"](scope);
-
-          scope.var_x = "realgdp";
-          scope.var_y = "realgdp";
-          scope.var_id = "dept_name";
-          scope.var_text = "dept_name";
-
-          scope.margin = {top: 10, right: 10, bottom: 30, left: 30};
-
-          scope.width = vars.width / 2;
-          scope.height = vars.height / 2;
-
-          scope.x_scale[0]["func"].range([scope.height/2, scope.height/2])
-            .domain([0, d3.max(vars.old_data, function(d) { return d[scope.var_x]; })])
-            .nice();
-
-          scope.y_scale[0]["func"].range([scope.margin.left, scope.width-scope.margin.left-scope.margin.right])
-            .domain([0, d3.max(vars.old_data, function(d) { return d[scope.var_y]; })])
-            .nice();
-
-          // PRE-UPDATE ITEMS
-          var gItems = d3.select(this).selectAll(".mark__group")
-                          .data([vars.old_data], function(d, i) { return d[scope.var_id]; });
-
-          // ENTER ITEMS
-          var gItems_enter = gItems.enter()
-                          .append("g")
-                          .each(utils.items_group)
-
-          // APPEND AND UPDATE ITEMS MARK
-          scope.items[0].marks.forEach(function(params) {
-            gItems_enter.call(utils.draw_mark, params);
-            gItems.call(utils.draw_mark, params);
-          });
-
-        break;
-*/
         case "piechart":
 
           var scope = {};
@@ -1322,6 +1282,7 @@
         .orient("left");
   }
 
+  // Displays text as a background (e.g. current year in scatterplots)
   utils.background_label = function() {
 
     vars.svg.selectAll(".background_label")
@@ -1338,9 +1299,9 @@
 
   }
 
-  // One way to wrap text.. but creates too many elements..
+  // One way to wrap text but creates too many elements
+  // Alternative is to use the divtext graphical mark which wraps and ellipsis
   // http://bl.ocks.org/mbostock/7555321
-
   utils.wrap = function(node) {
 
     node.each(function() {
@@ -1392,38 +1353,7 @@
     }
   }
 
-  // UTIS FUNCTIONS
-
-  // One way to wrap text.. but creates too many elements..
-  // http://bl.ocks.org/mbostock/7555321
-  function wrap(text, width) {
-
-    text.each(function() {
-
-      width = d3.select(this).data()[0].dx;
-
-      var text = d3.select(this),
-          words = text.text().split(/\s+/).reverse(),
-          word,
-          line = [],
-          lineNumber = 0,
-          lineHeight = 1.1, // ems
-          y = text.attr("y"),
-          dy = parseFloat(text.attr("dy")),
-          tspan = text.text(null).append("tspan").attr("x", 0).attr("y", y).attr("dy", dy + "em");
-      while (word = words.pop()) {
-        line.push(word);
-        tspan.text(line.join(" "));
-        if (tspan.node().getComputedTextLength() > width) {
-          line.pop();
-          tspan.text(line.join(" "));
-          line = [word];
-          tspan = text.append("tspan").attr("x", 0).attr("y", y).attr("dy", ++lineNumber * lineHeight + dy + "em").text(word);
-        }
-      }
-    });
-  }
-
+  // Moves a graphical mark along a SVG path
   utils.animate_trajectory = function(path, start_time, duration) {
 
     var totalLength = path.node().getTotalLength();

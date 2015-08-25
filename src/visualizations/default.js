@@ -38,3 +38,5 @@
 //        vars.svg.calutils.draw_chart(vars, vars.new_data);
 
       break;
+
+    }
