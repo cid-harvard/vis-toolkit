@@ -1,4 +1,6 @@
-      }
+
+      // FUNCTIONS TO CREATE UI ELEMENTS
+      // Those functions are companion to the charts, not required
 
       if(vars.ui.default) {
 

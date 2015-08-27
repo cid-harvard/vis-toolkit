@@ -8,5 +8,8 @@ vistk.utils = {};
 
 vistk.viz = function() {
 
-// Contains parameters for the current chart
-var vars = {}, utils ={};
+// Init parameters for the current chart
+var vars = {};
+
+// Private functions
+var utils ={};

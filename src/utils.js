@@ -1,4 +1,6 @@
+  // LIST OF PRIVATE UTILS FUNCTIONS
 
+  // Create SVG groups for items marks
   utils.items_group = function(d, i) {
 
     d3.select(this).attr("class", "mark__group mark__group_" + d._index_item)
@@ -16,6 +18,7 @@
 
   }
 
+  // Create SVG groups for connect marks
   utils.connect_group = function(d, i) {
 
     d3.select(this).attr("class", "connect__group connect__group_" + d._index_item)
@@ -33,15 +36,18 @@
 
   }
 
-  /*
-    Main function to draw marks 
-    Invoked from a .each() call passing in the current datum d and index i, 
-    with the this context of the current DOM element
-
-    params contains the parameters for the current graphical mark to draw 
-    e.g. scales, type of mark, radius, color function, ..
-  */
+  
+  //  Main function to draw marks 
+  //  Invoked from a .each() call passing in the current datum d and index i, 
+  //  with the this context of the current DOM element
+  //
+  //  params contains the parameters for the current graphical mark to draw 
+  //  e.g. scales, type of mark, radius, color function, ..
   utils.draw_mark = function(selection, params) {
+
+    if(vars.dev) {
+      console.log("[utils.draw_mark]", params.type)
+    }
 
     selection.each(function(d) {
 
@@ -72,7 +78,7 @@
       }
 
 
-      // Use the global accessor
+      // Use the default accessor
       var accessor_data = vars.accessor_data;
 
       switch(params_type) {
@@ -532,10 +538,12 @@
 
         case "sparkline":
 
+/*
           var scope = {};
           scope = vistk.utils.merge(scope, vars)
 
           scope = vars.default_params["sparkline"](scope);
+
           scope.var_x = 'year';
           scope.var_y = vars.var_y;
 
@@ -564,56 +572,27 @@
               }]
           }];
 
+          scope.svg = vars.svg;
+*/
+          if(vars.dev) {
+            console.log("[draw_mark] sparkline");
+          }
+
+          var scope = {};
+          scope = vars.default_params["sparkline"](vars);
+
+          scope = vistk.utils.merge(vars, scope);
+
+          scope.type = "sparkline";
+
           var chart = d3.select(this).selectAll(".items__chart__sparkline").data([d]);
 
           chart.enter().append('g')
               .classed('items__chart__sparkline', true)
-              .call(utils.draw_chart, scope, d);
+              .call(utils.draw_chart, scope, [d]);
 
         break;
-/*
-        case "dotplot":
 
-          scope = {};
-          scope = vistk.utils.merge(scope, vars);
-
-          scope = vars.default_params["dotplot"](scope);
-
-          scope.var_x = "realgdp";
-          scope.var_y = "realgdp";
-          scope.var_id = "dept_name";
-          scope.var_text = "dept_name";
-
-          scope.margin = {top: 10, right: 10, bottom: 30, left: 30};
-
-          scope.width = vars.width / 2;
-          scope.height = vars.height / 2;
-
-          scope.x_scale[0]["func"].range([scope.height/2, scope.height/2])
-            .domain([0, d3.max(vars.old_data, function(d) { return d[scope.var_x]; })])
-            .nice();
-
-          scope.y_scale[0]["func"].range([scope.margin.left, scope.width-scope.margin.left-scope.margin.right])
-            .domain([0, d3.max(vars.old_data, function(d) { return d[scope.var_y]; })])
-            .nice();
-
-          // PRE-UPDATE ITEMS
-          var gItems = d3.select(this).selectAll(".mark__group")
-                          .data([vars.old_data], function(d, i) { return d[scope.var_id]; });
-
-          // ENTER ITEMS
-          var gItems_enter = gItems.enter()
-                          .append("g")
-                          .each(utils.items_group)
-
-          // APPEND AND UPDATE ITEMS MARK
-          scope.items[0].marks.forEach(function(params) {
-            gItems_enter.call(utils.draw_mark, params);
-            gItems.call(utils.draw_mark, params);
-          });
-
-        break;
-*/
         case "piechart":
 
           var scope = {};
@@ -899,10 +878,14 @@
 
   }
 
-  utils.draw_chart = function(context, data) {
+  utils.draw_chart = function(vars_svg, context, params) {
+
+    if(context.dev) {
+      console.log("[utils.draw_chart] drawing chart of type", context.type, context.connect);
+    }
 
     var vars = context;
-    vars.new_data = data;
+    vars.new_data = params;
 
     if(vars.x_invert) {
       vars.x_scale[0]["func"].range([vars.x_scale[0]["func"].range()[1], vars.x_scale[0]["func"].range()[0]]);
@@ -930,7 +913,7 @@
 
         // PRE-UPDATE ITEMS
         // Join is based on the curren_time value
-        var gItems = vars.svg.selectAll(".mark__group" +  "_" + index_item)
+        var gItems = vars_svg.selectAll(".mark__group" +  "_" + index_item)
                         .data(vars.new_data, function(d, i) {
                           d._index_item = index_item;
                           return accessor_data(d)[vars.var_id] + "_" + index_item;
@@ -957,6 +940,7 @@
               return true; 
             }
           } 
+
           // Supporting multipe similar elements
           params._mark_id = index_item + "_" + index_mark; 
           gItems_enter.filter(params.filter).call(utils.draw_mark, params);
@@ -977,10 +961,10 @@
 
         // IN CASE OF CUSTOM UPDATE FOR ITEMS
         if(typeof item.update !== "undefined") {
-          vars.svg.selectAll(".mark__group" + "_" + index_item).call(item.update, vars)
+          vars_svg.selectAll(".mark__group" + "_" + index_item).call(item.update, vars)
         } else {
         // POST-UPDATE ITEMS GROUPS
-        vars.svg.selectAll(".mark__group" + "_" + index_item)
+          vars_svg.selectAll(".mark__group" + "_" + index_item)
                         .transition()
                         .duration(vars.duration)
                         //.ease('none')
@@ -1012,7 +996,7 @@
 
       } else {
         
-        vars.svg.transition()
+        vars_svg.transition()
                 .duration(vars.duration)
                 .attr("transform", "translate(" + vars.margin.left + "," + vars.margin.top + ")");
 
@@ -1055,8 +1039,7 @@
         // PRE-UPDATE CONNECT
         // TOOD: find a common join to al types of connections
 
-
-        var gConnect = vars.svg.selectAll(".connect__group")
+        var gConnect = vars_svg.selectAll(".connect__group")
                         .data(connect_data, function(d, i) {
                           d._index_item = index_item;
                           return d[vars.var_id] + "_" + index_item;
@@ -1098,44 +1081,43 @@
 
     // CREATE / UPDATE / REMOVE AXIS
     if(vars.x_axis_show) {
-      vars.svg.call(utils.x_axis);
+      context.svg.call(utils.x_axis);
     } else {
-        vars.svg.selectAll(".x.axis").remove();
-     }
+      context.svg.selectAll(".x.axis").remove();
+    }
 
-     if(vars.y_axis_show) {
-        vars.svg.call(utils.y_axis);
-     } else {
-        vars.svg.selectAll(".y.axis").remove();
-     }
+    if(vars.y_axis_show) {
+       vars_svg.call(utils.y_axis);
+    } else {
+       vars_svg.selectAll(".y.axis").remove();
+    }
 
-     if(vars.x_grid_show) {
+    if(vars.x_grid_show) {
 
-       vars.svg.selectAll(".x.grid").data([vars.new_data])
-         .enter()
-           .append("g")
-           .attr("class", "x grid")
-           .style("display", function() { return vars.x_grid_show ? "block": "none"; })
-           .attr("transform", "translate(0," + (vars.margin.top) + ")");
+      vars_svg.selectAll(".x.grid").data([vars.new_data])
+        .enter()
+          .append("g")
+          .attr("class", "x grid")
+          .style("display", function() { return vars.x_grid_show ? "block": "none"; })
+          .attr("transform", "translate(0," + (vars.margin.top) + ")");
 
-
-       vars.svg.selectAll(".x.grid").transition()
-           .duration(vars.duration)
-           .call(utils.make_x_axis()
-           .tickSize(-vars.height+vars.margin.top+vars.margin.bottom, 0, 0)
-           .tickFormat(""));
-     }
+      vars_svg.selectAll(".x.grid").transition()
+          .duration(vars.duration)
+          .call(utils.make_x_axis()
+          .tickSize(-vars.height+vars.margin.top+vars.margin.bottom, 0, 0)
+          .tickFormat(""));
+    }
 
     if(vars.y_grid_show) {
 
-      vars.svg.selectAll(".y.grid").data([vars.new_data])
+      vars_svg.selectAll(".y.grid").data([vars.new_data])
         .enter()
           .append("g")
           .attr("class", "y grid")
           .style("display", function() { return vars.y_axis_show ? "block": "none"; })
           .attr("transform", "translate(" + vars.margin.left + ", 0)");
 
-      vars.svg.selectAll(".y.grid").transition()
+      vars_svg.selectAll(".y.grid").transition()
           .duration(vars.duration)
           .call(utils.make_y_axis()
           .tickSize(-vars.width+vars.margin.left+vars.margin.right, 0, 0)
@@ -1144,7 +1126,7 @@
 
     // POST-RENDERING STUFF
     if(vars.type == "productspace") {
-      vars.svg.selectAll('.mark__group').sort(function(a, b) { return a.__aggregated ;})
+      vars_svg.selectAll('.mark__group').sort(function(a, b) { return a.__aggregated ;})
     }
 
     utils.background_label(vars.title);
@@ -1152,6 +1134,7 @@
     // Flag that forces to re-wrangle data
     vars.refresh = false;
     vars.init = false;
+
 /*
     if(vars.dev) { 
       console.log("Creating chart with params", params, _, data);
@@ -1299,6 +1282,7 @@
         .orient("left");
   }
 
+  // Displays text as a background (e.g. current year in scatterplots)
   utils.background_label = function() {
 
     vars.svg.selectAll(".background_label")
@@ -1315,9 +1299,9 @@
 
   }
 
-  // One way to wrap text.. but creates too many elements..
+  // One way to wrap text but creates too many elements
+  // Alternative is to use the divtext graphical mark which wraps and ellipsis
   // http://bl.ocks.org/mbostock/7555321
-
   utils.wrap = function(node) {
 
     node.each(function() {
@@ -1369,38 +1353,7 @@
     }
   }
 
-  // UTIS FUNCTIONS
-
-  // One way to wrap text.. but creates too many elements..
-  // http://bl.ocks.org/mbostock/7555321
-  function wrap(text, width) {
-
-    text.each(function() {
-
-      width = d3.select(this).data()[0].dx;
-
-      var text = d3.select(this),
-          words = text.text().split(/\s+/).reverse(),
-          word,
-          line = [],
-          lineNumber = 0,
-          lineHeight = 1.1, // ems
-          y = text.attr("y"),
-          dy = parseFloat(text.attr("dy")),
-          tspan = text.text(null).append("tspan").attr("x", 0).attr("y", y).attr("dy", dy + "em");
-      while (word = words.pop()) {
-        line.push(word);
-        tspan.text(line.join(" "));
-        if (tspan.node().getComputedTextLength() > width) {
-          line.pop();
-          tspan.text(line.join(" "));
-          line = [word];
-          tspan = text.append("tspan").attr("x", 0).attr("y", y).attr("dy", ++lineNumber * lineHeight + dy + "em").text(word);
-        }
-      }
-    });
-  }
-
+  // Moves a graphical mark along a SVG path
   utils.animate_trajectory = function(path, start_time, duration) {
 
     var totalLength = path.node().getTotalLength();

@@ -6,10 +6,10 @@
 
       switch(vars.type) {
 
-        case 'undefined':
+        case 'raw':
 
-        // Basic dump of the data we have
+        // Display the current dataset
          vars.svg.append("span")
-          .html(JSON.stringify(vars.data));
+             .html(JSON.stringify(vars.new_data));
 
         break;
