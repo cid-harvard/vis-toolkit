@@ -2,20 +2,72 @@
 <meta charset="utf-8">
 <script src="../js/d3.js"></script>
 <script src="../build/vistk.js"></script>
-<link href="../css/vistk.css" rel="stylesheet">
 <body>
 <style type="text/css">
 
-  .tooltip {
-      background: #333;
-      background: rgba(0,0,0,.8);
-      border-radius: 5px;
-      height: 100%;
-      color: #fff;
-      padding: 5px 15px;
-      z-index: 98;
-      width: 220px;
-  }
+.connect__line {
+  stroke: #999;
+  stroke-opacity: .6;
+}
+
+.connect__line.highlighted {
+  stroke-width: 2.5px;
+  stroke-opacity: .6;
+}
+
+g:hover .items__mark__circle:not(.highlighted__adjacent) {
+  -webkit-transition:0.3s;
+  transition:0.3s;
+  opacity: 0.5;
+}
+
+g:hover .connect__path:not(.highlighted) {
+  -webkit-transition:0.3s;
+  transition:0.3s;
+  opacity: 0.5;
+}
+
+g:hover .items__mark__circle.highlighted {
+  stroke: black;
+  stroke-width: 2.5px;
+  opacity: 1;
+}
+
+.highlighted__adjacent {
+  opacity: 1;
+  stroke-width: 2.5px;
+  stroke: black;
+}
+
+.items__mark__circle.selected {
+  stroke: black;
+  stroke-width: 1.5px;
+}
+
+.connect__path:not(.highlighted) {
+  stroke-width: 1px;  
+}
+
+.connect__path.highlighted {
+  stroke-opacity: 1;
+  stroke-width: 5px;  
+}
+
+.connect__path.selected {
+  stroke-opacity: 1;
+  stroke-width: 3px;  
+}
+
+.tooltip {
+  background: #333;
+  background: rgba(0,0,0,.8);
+  border-radius: 5px;
+  height: 100%;
+  color: #fff;
+  padding: 5px 15px;
+  z-index: 98;
+  width: 220px;
+}
 
 </style>
 <div id="viz"></div>
@@ -65,11 +117,17 @@ d3.json("../data/industry-data-neave-150707.json", function(data) {
           }, {
             var_mark: '__highlighted',
             type: d3.scale.ordinal().domain([true, false]).range(["divtext", "none"]),
-            class: function() { return "tooltip"; }
+            class: function() { return "tooltip"; },
+            text: function(d) {
+              return d['pname'] + ' (' + d['id'] + ')';
+            }
           }, {
             var_mark: '__selected',
             type: d3.scale.ordinal().domain([true, false]).range(["divtext", "none"]),
-            class: function() { return "tooltip"; }
+            class: function() { return "tooltip"; },
+            text: function(d) {
+              return d['pname'] + ' (' + d['id'] + ')';
+            }
           }]
         }],
         ui: {

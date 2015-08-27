@@ -1,0 +1,65 @@
+<!doctype html>
+<meta charset="utf-8">
+<script src="../js/d3.js" charset="utf-8"></script>
+<script src="../build/vistk.js"></script>
+<link href="../css/vistk.css" rel="stylesheet">
+<body>
+<div id="viz"></div>
+<script>
+
+d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments) {
+
+  dimensions = ["dept_code", "value_added", "sum(export_value)", "realgdp_percap", "realgdp", "dept_pop"];
+
+  dimensions = dimensions.map(function(d, i) {
+    return {dimension: d, index: i};
+  })
+
+  vis = ["sparkline"];
+
+  departments.forEach(function(d, i) {
+    d.dept_pop = +d.dept_pop;
+    d.year = +d.year;
+    d.realgdp = +d.realgdp;
+    d.realgdp_percap = +d.realgdp_percap;    
+    d["sum(export_value)"] = +d["sum(export_value)"];
+    d["value_added"] = isNaN(+d["value_added"]) ? 0: +d["value_added"];
+  });
+
+  var ui_options = [];
+
+  visualization = vistk.viz()
+      .params({
+        dev: true,
+        height: 300,
+        width: 500,
+        type: 'ordinal_horizontal',
+        var_x: '__id',
+        var_y: '__id',  
+        data: ["sparkline", "dotplot", "scatterplot"],
+        container: '#viz',
+        x_text: null,
+        x_ticks: 10,
+        items: [{
+          marks: [{
+            type: "text",
+            rotate: "0",
+            translate: [0, 0]
+          }, {
+            var_mark: 'value',
+            data: [1, 2, 3],
+            type: function(d) { return d; }
+          }]
+        }],
+        ui: {
+          default: true,
+          options: ui_options
+        },
+        var_text: "value"
+      });
+
+    d3.select("#viz").call(visualization);
+
+  });
+
+</script>
