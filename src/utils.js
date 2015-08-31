@@ -97,8 +97,6 @@
         }
       }
 
-      var params_x = null;
-
       if(typeof params.x !== "undefined") {
         if(typeof params.x === "function") {
           params_x = params.x(d);
@@ -106,8 +104,6 @@
           params_x = params.x;
         }
       }
-
-      var params_y = null;
 
       if(typeof params.y !== "undefined") {
         if(typeof params.y === "function") {
@@ -165,8 +161,6 @@
           var items_mark_div = d3.select(d3.select(vars.svg.node().parentNode).node().parentNode)
                 .selectAll(".items__mark__div").data([d]);
 
-          console.log("AADING DV", items_mark_div.enter())
-
           var items_mark_div_enter = items_mark_div.enter()
                .append("div")
                  .classed("items__mark__div", true)
@@ -193,14 +187,14 @@
                    if(typeof params_x !== "undefined") {
                      return params_x + "px";
                    } else {
-                     return "0px";
+                     return (vars.x_scale[0]["func"](vars.accessor_data(d)[vars.var_x]) + 20) + "px";
                    }
                  })
                  .style("top", function(d) {
                    if(typeof params_y !== "undefined") {
                      return params_y + "px";
                    } else {
-                     return "0px";
+                     return (vars.y_scale[0]["func"](vars.accessor_data(d)[vars.var_y]) + 10) + "px";
                    }
                  })
                  .html(function(d) {

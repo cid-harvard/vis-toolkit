@@ -122,9 +122,7 @@ d3.json("../data/industry-data-neave-150707.json", function(data) {
               return d['pname'] + ' (' + d['id'] + ')';
             },
             width: 200,
-            height: 200,
-            x: 100,
-            y: 200,
+            height: 200
           }, {
             var_mark: '__selected',
             type: d3.scale.ordinal().domain([true, false]).range(["div", "none"]),
