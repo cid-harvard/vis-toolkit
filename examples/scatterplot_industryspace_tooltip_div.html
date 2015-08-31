@@ -70,7 +70,8 @@ g:hover .items__mark__circle.highlighted {
 }
 
 </style>
-<div id="viz"></div>
+<br><br><br><br><br><br><br><br><br>
+<div id="viz" style="position: relative"></div>
 <script>
 
 d3.json("../data/industry-data-neave-150707.json", function(data) {
@@ -121,8 +122,10 @@ d3.json("../data/industry-data-neave-150707.json", function(data) {
             text: function(d) {
               return d['pname'] + ' (' + d['id'] + ')';
             },
-            width: 200,
-            height: 200
+            exit: function() {
+
+            },
+            width: 200
           }, {
             var_mark: '__selected',
             type: d3.scale.ordinal().domain([true, false]).range(["div", "none"]),
