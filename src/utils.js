@@ -77,7 +77,6 @@
         params_text = params.text(d);
       }
 
-
       // Use the default accessor
       var accessor_data = vars.accessor_data;
 
@@ -116,6 +115,56 @@
               });
 
         items_mark_text.exit().remove();
+
+        break;
+
+        // Attach a div to the SVG container
+        case "div":
+
+          var items_mark_div = d3.select(d3.select(vars.svg.node().parentNode).node().parentNode)
+                .selectAll(".items__mark__div").data([d]);
+
+          console.log("AADING DV", items_mark_div.enter())
+
+          var items_mark_div_enter = items_mark_div.enter()
+               .append("div")
+                 .classed("items__mark__div", true)
+                 .classed("items_" + mark_id, true)
+                 .style("padding-top", function(d) { return -200+"px"; })
+                 .style("position", "absolute")
+
+                 .style({"text-overflow": "ellipsis", "overflow": "hidden"});
+
+          items_mark_div
+                 .style("width", function(d) {
+                   if(typeof params_width !== "undefined") {
+                     return params_width + "px";
+                   } else {
+                     return "150px";
+                   }
+                 })
+                 .style("height", function(d) { 
+                   if(typeof params_height !== "undefined") {
+                     return params_height + "px";
+                   } else {
+                    return "100%"; 
+                   }
+                 })
+                 .html(function(d) {
+                    if(typeof params_text !== "undefined") {
+                      return params_text;
+                    } else {
+                      return vars.accessor_data(d)[vars.var_text]; 
+                    }
+                 });
+
+          if(typeof params.class !== "undefined") {
+
+            items_mark_div_enter.classed(params.class(vars.accessor_items(d)), true);
+
+          }
+
+          items_mark_div.exit().remove();
 
         break;
 
