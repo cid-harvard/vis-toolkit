@@ -104,6 +104,7 @@
 
       d3.select(vars.container).selectAll(".connect__line").classed("highlighted", false);
       d3.select(vars.container).selectAll("circle").classed("highlighted__adjacent", false);
+
 /*
       // Reset all the highlighted nodes
       vars.links.forEach(function(e) {
@@ -118,9 +119,11 @@
       })
     }
 */
-//    d3.select(vars.container).call(vars.this_chart);
 
+    } else {
+      d3.select(vars.container).call(vars.this_chart);      
     }
+
   });
 
   vars.evt.register("selection", function(d) {
