@@ -77,6 +77,47 @@
         params_text = params.text(d);
       }
 
+      var params_width = null;
+
+      if(typeof params.width !== "undefined") {
+        if(typeof params.width === "function") {
+          params_width = params.width(d);
+        } else if(typeof params.width === "number") {
+          params_width = params.width;
+        }
+      }
+
+      var params_height = null;
+
+      if(typeof params.height !== "undefined") {
+        if(typeof params.height === "function") {
+          params_height = params.height(d);
+        } else if(typeof params.height === "number") {
+          params_height = params.height;
+        }
+      }
+
+      var params_x = null;
+
+      if(typeof params.x !== "undefined") {
+        if(typeof params.x === "function") {
+          params_x = params.x(d);
+        } else if(typeof params.x === "number") {
+          params_x = params.x;
+        }
+      }
+
+      var params_y = null;
+
+      if(typeof params.y !== "undefined") {
+        if(typeof params.y === "function") {
+          params_y = params.y(d);
+        } else if(typeof params.y === "number") {
+          params_y = params.y;
+        }
+      }
+
+
       // Use the default accessor
       var accessor_data = vars.accessor_data;
 
@@ -130,9 +171,7 @@
                .append("div")
                  .classed("items__mark__div", true)
                  .classed("items_" + mark_id, true)
-                 .style("padding-top", function(d) { return -200+"px"; })
                  .style("position", "absolute")
-
                  .style({"text-overflow": "ellipsis", "overflow": "hidden"});
 
           items_mark_div
@@ -148,6 +187,20 @@
                      return params_height + "px";
                    } else {
                     return "100%"; 
+                   }
+                 })
+                 .style("left", function(d) {
+                   if(typeof params_x !== "undefined") {
+                     return params_x + "px";
+                   } else {
+                     return "0px";
+                   }
+                 })
+                 .style("top", function(d) {
+                   if(typeof params_y !== "undefined") {
+                     return params_y + "px";
+                   } else {
+                     return "0px";
                    }
                  })
                  .html(function(d) {
