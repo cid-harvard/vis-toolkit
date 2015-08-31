@@ -102,6 +102,9 @@
     // Make sure the highlighted node is above other nodes
     if(vars.type == "productspace") {
 
+      d3.select(vars.container).selectAll(".connect__line").classed("highlighted", false);
+      d3.select(vars.container).selectAll("circle").classed("highlighted__adjacent", false);
+/*
       // Reset all the highlighted nodes
       vars.links.forEach(function(e) {
         e.__highlighted = false;
@@ -114,8 +117,10 @@
         e.__redraw = true;
       })
     }
+*/
+//    d3.select(vars.container).call(vars.this_chart);
 
-    d3.select(vars.container).call(vars.this_chart);
+    }
   });
 
   vars.evt.register("selection", function(d) {
