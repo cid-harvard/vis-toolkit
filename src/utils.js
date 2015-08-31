@@ -35,7 +35,6 @@
                     });
 
   }
-
   
   //  Main function to draw marks 
   //  Invoked from a .each() call passing in the current datum d and index i, 
@@ -77,8 +76,6 @@
         params_text = params.text(d);
       }
 
-      var params_width = null;
-
       if(typeof params.width !== "undefined") {
         if(typeof params.width === "function") {
           params_width = params.width(d);
@@ -86,8 +83,6 @@
           params_width = params.width;
         }
       }
-
-      var params_height = null;
 
       if(typeof params.height !== "undefined") {
         if(typeof params.height === "function") {
@@ -112,7 +107,6 @@
           params_y = params.y;
         }
       }
-
 
       // Use the default accessor
       var accessor_data = vars.accessor_data;
@@ -180,7 +174,7 @@
                    if(typeof params_height !== "undefined") {
                      return params_height + "px";
                    } else {
-                    return "100%"; 
+                    return "100px"; 
                    }
                  })
                  .style("left", function(d) {
@@ -220,48 +214,46 @@
           var items_mark_divtext = d3.select(this).selectAll(".items__mark__divtext").data([d]);
 
           var items_mark_divtext_enter = items_mark_divtext.enter().insert("foreignObject")
-                 .classed("items__mark__divtext", true)
-                 .classed("items_" + mark_id, true)
-                 .attr("width", function(d) {
+                .classed("items__mark__divtext", true)
+                .classed("items_" + mark_id, true)
+                .attr("width", function(d) {
                    if(typeof d.dx !== "undefined") {
                      return (d.dx - vars.padding) + "px";
                    } else {
                      return "150px";
                    }
                  })
-                 .attr("height", function(d) {
-                   if(typeof d.dy !== "undefined") {
-                      return (d.dy - 2*vars.padding) + "px";
-                    } else {
-                      return "100%";
-                    }
-                  })
-               .append("xhtml:body")
-                 .style("font", "14px 'Helvetica Neue'")
-               .append("div")
-                 .style("padding-top", function(d) { return -200+"px"; })
-                 .style("width", function(d) { 
-                   if(typeof d.dx !== "undefined") {
-                     return (d.dx - 2*vars.padding) + "px";
-                   } else {
-                     return "150px";
-                   }
-                  })
-                 .style("height", function(d) { 
-                   if(typeof d.dy !== "undefined") {
-                     return (d.dx - 2*vars.padding) + "px";
-                   } else {
-                    return "100%"; 
+                .attr("height", function(d) {
+                 if(typeof d.dy !== "undefined") {
+                    return (d.dy - 2*vars.padding) + "px";
+                  } else {
+                    return "100%";
                   }
-                  })
-                 .style({"text-overflow": "ellipsis", "overflow": "hidden"})
-                 .html(function(d) {
-                    if(typeof params_text !== "undefined") {
-                      return params_text;
-                    } else {
-                      return vars.accessor_data(d)[vars.var_text]; 
-                    }
-                 });
+                })
+               .append("xhtml:body")
+               .append("div")
+               .style("width", function(d) { 
+                 if(typeof d.dx !== "undefined") {
+                   return (d.dx - 2*vars.padding) + "px";
+                 } else {
+                   return "150px";
+                 }
+                })
+               .style("height", function(d) { 
+                 if(typeof d.dy !== "undefined") {
+                   return (d.dx - 2*vars.padding) + "px";
+                 } else {
+                  return "100%"; 
+                }
+                })
+               .style({"text-overflow": "ellipsis", "overflow": "hidden"})
+               .html(function(d) {
+                  if(typeof params_text !== "undefined") {
+                    return params_text;
+                  } else {
+                    return vars.accessor_data(d)[vars.var_text]; 
+                  }
+               });
 
           items_mark_divtext.select('div')
                  .transition()
@@ -1083,7 +1075,6 @@
           vars.new_data.forEach(function(d) { d.__redraw = false; });
         }
 
-
       });
 
       if(vars.zoom.length > 0) {
@@ -1223,8 +1214,12 @@
     }
 
     // POST-RENDERING STUFF
+    // Usually aimed at updating the rendering order of elements 
     if(vars.type == "productspace") {
-      vars_svg.selectAll('.mark__group').sort(function(a, b) { return a.__aggregated ;})
+
+      vars_svg.selectAll('.mark__group').sort(function(a, b) { return a.__aggregated ;});
+
+      vars_svg.selectAll('.connect__group').sort(function(a, b) { return a.__highlighted; });
     }
 
     utils.background_label(vars.title);
