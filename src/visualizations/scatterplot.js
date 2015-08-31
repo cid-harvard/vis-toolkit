@@ -31,7 +31,6 @@ vars.default_params["scatterplot"] = function(scope) {
         translate: null
       }]
     }, {
-    attr: "continent",
     marks: [{
         type: "circle",
         radius: 20,

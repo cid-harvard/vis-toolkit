@@ -1154,6 +1154,7 @@
           // Supporting multipe similar elements
           params._mark_id = index_item + "_" + index_mark;
 
+          // Only create connections when char inits
           if(vars.init) {
             gConnect_enter.filter(params.filter).call(utils.draw_mark, params);
           }
@@ -1169,6 +1170,7 @@
 
       });
 
+      // Specific to the product space as the structure does not change
       if(vars.type == "productspace") {
         connect_data.forEach(function(d) { d.__redraw = false; });
       }
