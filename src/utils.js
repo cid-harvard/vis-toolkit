@@ -1218,8 +1218,8 @@
     if(vars.type == "productspace") {
 
       vars_svg.selectAll('.mark__group').sort(function(a, b) { return a.__aggregated ;});
-
       vars_svg.selectAll('.connect__group').sort(function(a, b) { return a.__highlighted; });
+
     }
 
     utils.background_label(vars.title);

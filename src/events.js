@@ -105,6 +105,10 @@
       d3.select(vars.container).selectAll(".connect__line").classed("highlighted", false);
       d3.select(vars.container).selectAll("circle").classed("highlighted__adjacent", false);
 
+      // Temporary settings to prevent chart redraw for product space
+      d3.select(vars.container).selectAll(".items__mark__text").remove();
+      d3.select(vars.container).selectAll(".items__mark__div").remove();
+      
 /*
       // Reset all the highlighted nodes
       vars.links.forEach(function(e) {
