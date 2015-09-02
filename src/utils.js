@@ -167,14 +167,14 @@
                    if(typeof params_width !== "undefined") {
                      return params_width + "px";
                    } else {
-                     return "150px";
+                     return "auto";
                    }
                  })
                  .style("height", function(d) { 
                    if(typeof params_height !== "undefined") {
                      return params_height + "px";
                    } else {
-                    return "100px"; 
+                    return "auto"; 
                    }
                  })
                  .style("left", function(d) {
@@ -1195,6 +1195,7 @@
           .call(utils.make_x_axis()
           .tickSize(-vars.height+vars.margin.top+vars.margin.bottom, 0, 0)
           .tickFormat(""));
+
     }
 
     if(vars.y_grid_show) {
@@ -1211,6 +1212,7 @@
           .call(utils.make_y_axis()
           .tickSize(-vars.width+vars.margin.left+vars.margin.right, 0, 0)
           .tickFormat(""));
+
     }
 
     // POST-RENDERING STUFF
