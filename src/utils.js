@@ -390,23 +390,27 @@
 
         case "shape":
 
-          var items_mark_shape = d3.select(this).selectAll(".items__mark__shape").data([d]);
+          var items_mark_shape = d3.select(this).selectAll(".items__mark__shape.items_" + mark_id).data([d]);
 
           items_mark_shape.enter().insert("path")
               .classed('items__mark__shape', true)
               .classed("items_" + mark_id, true)
               .attr("class", "country")
               .attr("title", function(d,i) {
-                active = d3.select(null); 
+            //    active = d3.select(null); 
                 return d.name; 
               })
-              .on("click", clicked);
+           //   .on("click", clicked);
 
           items_mark_shape
               .classed("highlighted", function(d, i) { return d.__highlighted; })
               .classed("selected", function(d, i) { return d.__selected; })
               .attr("d", vars.path)
+              .style("fill", function(d, i) { 
+                return params.fill(vars.accessor_data(d)[vars.var_color]);
+              })
               .transition().duration(vars.duration)
+              /*
               .attr("transform", function(d) {
 
                 // Drawing projects comes with automatic offset
@@ -418,10 +422,8 @@
 
                 return "translate("+ -d.x +", "+ -d.y +")";
               })
-              .style("fill", function(d, i) { 
-                return params.fill(vars.accessor_data(d)[vars.var_color]);
-              })
-
+*/
+/*
               // http://bl.ocks.org/mbostock/4699541
               function clicked(d) {
                 if (active.node() === this) return reset();
@@ -451,7 +453,7 @@
                     .style("stroke-width", "1.5px")
                     .attr("transform", "");
               }
-
+*/
             items_mark_shape.exit().remove();
 
           break;
@@ -779,7 +781,7 @@
         case "circle":
         default:
 
-          var mark = d3.select(this).selectAll(".items__mark__circle").data([d]);
+          var mark = d3.select(this).selectAll(".items__mark__circle.items_" + mark_id).data([d]);
 
           var mark_enter = mark.enter().append("circle")
               .classed("items_" + mark_id, true)
@@ -787,8 +789,13 @@
               .attr("cx", 0)
               .attr("cy", 0)
               .attr("r", function(d) {
+
                 if(typeof params.var_r === "undefined") {
-                  return vars.radius;
+                  if(typeof params.radius !== "undefined") {
+                    return params.radius;
+                  } else {
+                    return vars.radius;
+                  }                 
                 } else {
                   var r_scale = d3.scale.linear()
                     .range([vars.radius_min, vars.radius_max])
