@@ -1,0 +1,76 @@
+ <!doctype html>
+<meta charset="utf-8">
+<script src="../js/d3.js"></script>
+<script src="../build/vistk.js"></script>
+<link href="../css/vistk.css" rel="stylesheet">
+<script src="../js/queue.v1.min.js"></script>
+<script src="../js/dragit.js"></script>
+
+<div id="viz_scatterplot" style="height: 400px; width: 600px; border: 1px solid black; float: left;"></div>
+<div id="viz_ranking" style="height: 400px; width: 600px; border: 1px solid black;float: left;"></div>
+
+<script>
+
+var scatterplot = vistk.viz().params({
+  dev: true,
+  container: "#viz_scatterplot",
+  width: 600,
+  height: 400,
+  dev: true,
+  margin: {left: 20, top: 20, bottom: 20, right: 20}
+});
+
+d3.select("#viz_scatterplot").call(scatterplot);
+
+// From http://atlas.cid.harvard.edu/explore/pie_scatter/export/prt/all/show/2013/
+var products = [
+  {name: 'Animal & Animal Products', pci: 20, opp_gain: 20, color: '#FFE999'}, 
+  {name: 'Vegetable Products', pci: 30, opp_gain: 20, color: '#FFC41C'},
+  {name: 'Foodstuffs', pci: 10, opp_gain: 20, color: '#DDFF48'},
+  {name: 'Chemicals & Allied Industries', pci: 90, opp_gain: 20, color: '#E377C2'},
+  {name: 'Mineral Products', pci: 19, opp_gain: 0, color: '#FFE999'},
+  {name: 'Plastics / Rubbers', pci: 13, opp_gain: 30, color: '#F7B6D2'},
+  {name: 'Raw Hides, Skins, Leather, & Furs', pci: 10, opp_gain: 20, color: '#98DF8A'},
+  {name: 'Textiles', pci: 10, opp_gain: 42, color: '#2CA02C'},
+  {name: 'Footwear / Headgear', pci: 20, opp_gain: 20, color: '#3AB11A'},
+  {name: 'Wood & Wood Products', pci: 30, opp_gain: 20, color: '#E22020'},
+  {name: 'Stone / Glass', pci: 10, opp_gain: 20, color: '#D66011'},
+  {name: 'Metals', pci: 10, opp_gain: 20, color: '#5F2107'},
+  {name: 'Machinery / Electrical', pci: 10, opp_gain: 20, color: '#65D4DF'},
+  {name: 'Transportation', pci: 10, opp_gain: 20, color: '#9EDAE5'},
+  {name: 'Miscellaneous', pci: 10, opp_gain: 20, color: '#7F7F7F'},
+  {name: 'Service', pci: 10, opp_gain: 20, color: '#C6C6C6'}
+]
+
+products.forEach(function(d) {
+  d.pci = Math.random() * 100;
+  d.opp_gain = Math.random() * 100;  
+})
+
+scatterplot.params({
+  type: 'scatterplot',
+  data: products,
+  var_color: "name",
+  var_id: 'name',
+  var_x: 'pci',
+  var_y: 'opp_gain',
+  var_text: 'name',
+  var_color: 'color',
+  color: function(d) { return d['color']; },
+  items: [{
+    marks: [{
+      type: 'circle',
+      radius: 10,
+      fill: function(d) { return d; }
+    }, {
+      type: "text"
+    }]
+  }],
+  selection: [],
+  highlight: [],
+  title: "Products (HS2 Level)"
+});
+
+d3.select("#viz_scatterplot").call(scatterplot);
+
+</script>
