@@ -73,4 +73,55 @@ scatterplot.params({
 
 d3.select("#viz_scatterplot").call(scatterplot);
 
+var ranking = vistk.viz().params({
+  dev: true,
+  container: "#viz_ranking",
+  width: 600,
+  height: 400,
+  dev: true,
+  margin: {left: 20, top: 20, bottom: 20, right: 20}
+});
+
+d3.select("#viz_ranking").call(ranking);
+
+var countries = ["France", "United States", "Germany"];
+var nb_years = 20;
+
+var countries_data = [];
+
+countries.forEach(function(d) {
+
+  var r = d3.range(nb_years).map(function(e, j) {
+    
+    var t = {};
+    t.value = Math.random();
+    t.year = j;
+    t.name = d;
+    countries_data.push(t);
+  })
+
+  return r;
+
+})
+
+ranking.params({
+  type: "linechart",
+  data: countries_data,
+  var_id: "name",
+  var_group: "name",
+//  var_color: "continent", // TODO: color by final ranking value..
+//  color: d3.scale.ordinal().domain(["Africa", "Americas", "Asia", "Europe", "Oceania"]).range(["#99237d", "#c72439", "#6bc145", "#88c7ed", "#dd9f98"]),
+  var_text: "name",
+  y_text: "ECI Rank",
+  var_y: 'value',
+  var_x: 'year',
+  time: {
+    parse: d3.time.format("%Y").parse,
+    var_time: 'year',
+    current_time: vistk.utils.max
+  }
+});
+
+d3.select("#viz_ranking").call(ranking);
+
 </script>
