@@ -531,11 +531,7 @@
 
           mark.enter().append('line')
               .classed('mark__line_horizontal', true)
-              .classed("items_" + mark_id, true)
-              .attr("x1", function(d) { return -t[0] + vars.margin.left; })
-              .attr("y1", function(d) { return 0; })
-              .attr("x2", function(d) { return vars.x_scale[0]["func"].range()[1]; })
-              .attr("y2", function(d) { return 0; });
+              .classed("items_" + mark_id, true);
 
           mark
               .classed("highlighted", function(d, i) { return d.__highlighted; })
@@ -1200,7 +1196,7 @@
       vars_svg.selectAll(".x.grid").transition()
           .duration(vars.duration)
           .call(utils.make_x_axis()
-          .tickSize(-vars.height+vars.margin.top+vars.margin.bottom, 0, 0)
+          .tickSize(vars.height - vars.margin.top - vars.margin.bottom, 0, 0)
           .tickFormat(""));
 
     }

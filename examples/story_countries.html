@@ -156,7 +156,11 @@ var highlight_country = function() {
   visualization.params().init = true;
   visualization.params().refresh = true;
 
+  // TODO
+  // -Change the behavior of the marks when updated
+  // -Should it be CSS? 
   visualization.params({
+    items: [{
     highlight: ["FRA", "GER", "CHN"],    
     selection: ["USA"]
   });
