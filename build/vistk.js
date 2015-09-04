@@ -4,7 +4,7 @@
 var vistk = window.vistk || {};
 window.vistk = vistk;
 
-vistk.version = "0.0.9";
+vistk.version = "0.0.10";
 vistk.utils = {};
 
 vistk.viz = function() {
@@ -52,7 +52,6 @@ var utils ={};
                     });
 
   }
-
   
   //  Main function to draw marks 
   //  Invoked from a .each() call passing in the current datum d and index i, 
@@ -94,6 +93,37 @@ var utils ={};
         params_text = params.text(d);
       }
 
+      if(typeof params.width !== "undefined") {
+        if(typeof params.width === "function") {
+          params_width = params.width(d);
+        } else if(typeof params.width === "number") {
+          params_width = params.width;
+        }
+      }
+
+      if(typeof params.height !== "undefined") {
+        if(typeof params.height === "function") {
+          params_height = params.height(d);
+        } else if(typeof params.height === "number") {
+          params_height = params.height;
+        }
+      }
+
+      if(typeof params.x !== "undefined") {
+        if(typeof params.x === "function") {
+          params_x = params.x(d);
+        } else if(typeof params.x === "number") {
+          params_x = params.x;
+        }
+      }
+
+      if(typeof params.y !== "undefined") {
+        if(typeof params.y === "function") {
+          params_y = params.y(d);
+        } else if(typeof params.y === "number") {
+          params_y = params.y;
+        }
+      }
 
       // Use the default accessor
       var accessor_data = vars.accessor_data;
@@ -136,46 +166,48 @@ var utils ={};
 
         break;
 
-        case "divtext":
+        // Attach a div to the SVG container
+        case "div":
 
-          var items_mark_divtext = d3.select(this).selectAll(".items__mark__divtext").data([d]);
+          var items_mark_div = d3.select(d3.select(vars.svg.node().parentNode).node().parentNode)
+                .selectAll(".items__mark__div").data([d]);
 
-          var items_mark_divtext_enter = items_mark_divtext.enter().insert("foreignObject")
-                 .classed("items__mark__divtext", true)
+          var items_mark_div_enter = items_mark_div.enter()
+               .append("div")
+                 .classed("items__mark__div", true)
                  .classed("items_" + mark_id, true)
-                 .attr("width", function(d) {
-                   if(typeof d.dx !== "undefined") {
-                     return (d.dx - vars.padding) + "px";
+                 .style("position", "absolute")
+                 .style({"text-overflow": "ellipsis", "overflow": "hidden"});
+
+          items_mark_div
+                 .style("width", function(d) {
+                   if(typeof params_width !== "undefined") {
+                     return params_width + "px";
                    } else {
-                     return "150px";
+                     return "auto";
                    }
                  })
-                 .attr("height", function(d) {
-                   if(typeof d.dy !== "undefined") {
-                      return (d.dy - 2*vars.padding) + "px";
-                    } else {
-                      return "100%";
-                    }
-                  })
-               .append("xhtml:body")
-                 .style("font", "14px 'Helvetica Neue'")
-               .append("div")
-                 .style("padding-top", function(d) { return -200+"px"; })
-                 .style("width", function(d) { 
-                   if(typeof d.dx !== "undefined") {
-                     return (d.dx - 2*vars.padding) + "px";
-                   } else {
-                     return "150px";
-                   }
-                  })
                  .style("height", function(d) { 
-                   if(typeof d.dy !== "undefined") {
-                     return (d.dx - 2*vars.padding) + "px";
+                   if(typeof params_height !== "undefined") {
+                     return params_height + "px";
                    } else {
-                    return "100%"; 
-                  }
-                  })
-                 .style({"text-overflow": "ellipsis", "overflow": "hidden"})
+                    return "auto"; 
+                   }
+                 })
+                 .style("left", function(d) {
+                   if(typeof params_x !== "undefined") {
+                     return params_x + "px";
+                   } else {
+                     return (vars.x_scale[0]["func"](vars.accessor_data(d)[vars.var_x]) + 20) + "px";
+                   }
+                 })
+                 .style("top", function(d) {
+                   if(typeof params_y !== "undefined") {
+                     return params_y + "px";
+                   } else {
+                     return (vars.y_scale[0]["func"](vars.accessor_data(d)[vars.var_y]) + 10) + "px";
+                   }
+                 })
                  .html(function(d) {
                     if(typeof params_text !== "undefined") {
                       return params_text;
@@ -183,6 +215,62 @@ var utils ={};
                       return vars.accessor_data(d)[vars.var_text]; 
                     }
                  });
+
+          if(typeof params.class !== "undefined") {
+
+            items_mark_div_enter.classed(params.class(vars.accessor_items(d)), true);
+
+          }
+
+          items_mark_div.exit().remove();
+
+        break;
+
+        case "divtext":
+
+          var items_mark_divtext = d3.select(this).selectAll(".items__mark__divtext").data([d]);
+
+          var items_mark_divtext_enter = items_mark_divtext.enter().insert("foreignObject")
+                .classed("items__mark__divtext", true)
+                .classed("items_" + mark_id, true)
+                .attr("width", function(d) {
+                   if(typeof d.dx !== "undefined") {
+                     return (d.dx - vars.padding) + "px";
+                   } else {
+                     return "150px";
+                   }
+                 })
+                .attr("height", function(d) {
+                 if(typeof d.dy !== "undefined") {
+                    return (d.dy - 2*vars.padding) + "px";
+                  } else {
+                    return "100%";
+                  }
+                })
+               .append("xhtml:body")
+               .append("div")
+               .style("width", function(d) { 
+                 if(typeof d.dx !== "undefined") {
+                   return (d.dx - 2*vars.padding) + "px";
+                 } else {
+                   return "150px";
+                 }
+                })
+               .style("height", function(d) { 
+                 if(typeof d.dy !== "undefined") {
+                   return (d.dx - 2*vars.padding) + "px";
+                 } else {
+                  return "100%"; 
+                }
+                })
+               .style({"text-overflow": "ellipsis", "overflow": "hidden"})
+               .html(function(d) {
+                  if(typeof params_text !== "undefined") {
+                    return params_text;
+                  } else {
+                    return vars.accessor_data(d)[vars.var_text]; 
+                  }
+               });
 
           items_mark_divtext.select('div')
                  .transition()
@@ -319,23 +407,27 @@ var utils ={};
 
         case "shape":
 
-          var items_mark_shape = d3.select(this).selectAll(".items__mark__shape").data([d]);
+          var items_mark_shape = d3.select(this).selectAll(".items__mark__shape.items_" + mark_id).data([d]);
 
           items_mark_shape.enter().insert("path")
               .classed('items__mark__shape', true)
               .classed("items_" + mark_id, true)
               .attr("class", "country")
               .attr("title", function(d,i) {
-                active = d3.select(null); 
+            //    active = d3.select(null); 
                 return d.name; 
               })
-              .on("click", clicked);
+           //   .on("click", clicked);
 
           items_mark_shape
               .classed("highlighted", function(d, i) { return d.__highlighted; })
               .classed("selected", function(d, i) { return d.__selected; })
               .attr("d", vars.path)
+              .style("fill", function(d, i) { 
+                return params.fill(vars.accessor_data(d)[vars.var_color]);
+              })
               .transition().duration(vars.duration)
+              /*
               .attr("transform", function(d) {
 
                 // Drawing projects comes with automatic offset
@@ -347,10 +439,8 @@ var utils ={};
 
                 return "translate("+ -d.x +", "+ -d.y +")";
               })
-              .style("fill", function(d, i) { 
-                return params.fill(vars.accessor_data(d)[vars.var_color]);
-              })
-
+*/
+/*
               // http://bl.ocks.org/mbostock/4699541
               function clicked(d) {
                 if (active.node() === this) return reset();
@@ -380,7 +470,7 @@ var utils ={};
                     .style("stroke-width", "1.5px")
                     .attr("transform", "");
               }
-
+*/
             items_mark_shape.exit().remove();
 
           break;
@@ -458,11 +548,7 @@ var utils ={};
 
           mark.enter().append('line')
               .classed('mark__line_horizontal', true)
-              .classed("items_" + mark_id, true)
-              .attr("x1", function(d) { return -t[0] + vars.margin.left; })
-              .attr("y1", function(d) { return 0; })
-              .attr("x2", function(d) { return vars.x_scale[0]["func"].range()[1]; })
-              .attr("y2", function(d) { return 0; });
+              .classed("items_" + mark_id, true);
 
           mark
               .classed("highlighted", function(d, i) { return d.__highlighted; })
@@ -708,7 +794,7 @@ var utils ={};
         case "circle":
         default:
 
-          var mark = d3.select(this).selectAll(".items__mark__circle").data([d]);
+          var mark = d3.select(this).selectAll(".items__mark__circle.items_" + mark_id).data([d]);
 
           var mark_enter = mark.enter().append("circle")
               .classed("items_" + mark_id, true)
@@ -716,8 +802,13 @@ var utils ={};
               .attr("cx", 0)
               .attr("cy", 0)
               .attr("r", function(d) {
+
                 if(typeof params.var_r === "undefined") {
-                  return vars.radius;
+                  if(typeof params.radius !== "undefined") {
+                    return params.radius;
+                  } else {
+                    return vars.radius;
+                  }                 
                 } else {
                   var r_scale = d3.scale.linear()
                     .range([vars.radius_min, vars.radius_max])
@@ -1004,7 +1095,6 @@ var utils ={};
           vars.new_data.forEach(function(d) { d.__redraw = false; });
         }
 
-
       });
 
       if(vars.zoom.length > 0) {
@@ -1075,6 +1165,7 @@ var utils ={};
           // Supporting multipe similar elements
           params._mark_id = index_item + "_" + index_mark;
 
+          // Only create connections when char inits
           if(vars.init) {
             gConnect_enter.filter(params.filter).call(utils.draw_mark, params);
           }
@@ -1090,6 +1181,7 @@ var utils ={};
 
       });
 
+      // Specific to the product space as the structure does not change
       if(vars.type == "productspace") {
         connect_data.forEach(function(d) { d.__redraw = false; });
       }
@@ -1121,8 +1213,9 @@ var utils ={};
       vars_svg.selectAll(".x.grid").transition()
           .duration(vars.duration)
           .call(utils.make_x_axis()
-          .tickSize(-vars.height+vars.margin.top+vars.margin.bottom, 0, 0)
+          .tickSize(vars.height - vars.margin.top - vars.margin.bottom, 0, 0)
           .tickFormat(""));
+
     }
 
     if(vars.y_grid_show) {
@@ -1139,11 +1232,16 @@ var utils ={};
           .call(utils.make_y_axis()
           .tickSize(-vars.width+vars.margin.left+vars.margin.right, 0, 0)
           .tickFormat(""));
+
     }
 
     // POST-RENDERING STUFF
+    // Usually aimed at updating the rendering order of elements 
     if(vars.type == "productspace") {
-      vars_svg.selectAll('.mark__group').sort(function(a, b) { return a.__aggregated ;})
+
+      vars_svg.selectAll('.mark__group').sort(function(a, b) { return a.__aggregated ;});
+      vars_svg.selectAll('.connect__group').sort(function(a, b) { return a.__highlighted; });
+
     }
 
     utils.background_label(vars.title);
@@ -1404,7 +1502,7 @@ var utils ={};
     title: "",
 
     // Default dimensions
-    margin: {top: 10, right: 10, bottom: 10, left: 10},
+    margin: {top: 0, right: 0, bottom: 0, left: 0},
 
     // Default Variables mapping
     var_color: null,
@@ -1649,6 +1747,14 @@ var utils ={};
     // Make sure the highlighted node is above other nodes
     if(vars.type == "productspace") {
 
+      d3.select(vars.container).selectAll(".connect__line").classed("highlighted", false);
+      d3.select(vars.container).selectAll("circle").classed("highlighted__adjacent", false);
+
+      // Temporary settings to prevent chart redraw for product space
+      d3.select(vars.container).selectAll(".items__mark__text").remove();
+      d3.select(vars.container).selectAll(".items__mark__div").remove();
+      
+/*
       // Reset all the highlighted nodes
       vars.links.forEach(function(e) {
         e.__highlighted = false;
@@ -1661,8 +1767,12 @@ var utils ={};
         e.__redraw = true;
       })
     }
+*/
 
-    d3.select(vars.container).call(vars.this_chart);
+    } else {
+      d3.select(vars.container).call(vars.this_chart);      
+    }
+
   });
 
   vars.evt.register("selection", function(d) {
@@ -1687,8 +1797,8 @@ var utils ={};
           .attr("height", vars.height)
           .style('overflow', 'visible')
           .style('z-index', 0)
-          .append("g")
-            .attr("transform", "translate(" + vars.margin.left + "," + vars.margin.top + ")");
+        .append("g")
+          .attr("transform", "translate(" + vars.margin.left + "," + vars.margin.top + ")");
 
       } else {
         // HTML Container for table
@@ -1817,7 +1927,6 @@ var utils ={};
 
       }
 
-
       vars.unique_data = [];
       vars.unique_items.forEach(function(item_id, i) {
 
@@ -1848,25 +1957,25 @@ var utils ={};
           return v;
         });
 
-        if(vars.filter.indexOf(d[vars.var_group]) < 0)
+        if(vars.filter.indexOf(d[vars.var_group]) < 0) {
           d.__filtered = false;
-        else
+        } else {
           d.__filtered = true;
+        }
 
         if(vars.highlight.indexOf(item_id) < 0) {
           d.__highlighted = false;
-        }
-        else
+        } else {
           d.__highlighted = true;
+        }
 
-        if(vars.selection.indexOf(item_id) < 0)
+        if(vars.selection.indexOf(item_id) < 0) {
           d.__selected = false;
-        else
+        } else {
           d.__selected = true;
-
+        }
 
         d.__aggregated = false;
-
         d.__redraw = true;
 
         vars.unique_data.push(d);
@@ -2330,7 +2439,6 @@ vars.default_params["scatterplot"] = function(scope) {
         translate: null
       }]
     }, {
-    attr: "continent",
     marks: [{
         type: "circle",
         radius: 20,
@@ -2384,6 +2492,8 @@ vars.default_params["scatterplot"] = function(scope) {
         data[vars.var_id] = "N/A"
         d.data = data;
       }
+
+      d.__redraw = true;
 
     });
 
@@ -2884,7 +2994,7 @@ vars.default_params["productspace"] = function(scope) {
 
   params.x_scale = [{
     func: d3.scale.linear()
-            .range([scope.margin.left, vars.width-vars.margin.left-vars.margin.right])
+            .range([0, vars.width-vars.margin.left-vars.margin.right])
             .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_x]; })).nice()
   }];
 
@@ -3740,11 +3850,11 @@ vars.default_params["ordinal_horizontal"] = function(scope) {
                   // Then move groups to their grid position
                   // visualization.param("refresh", true);
 
-                  var new_lang = visualization.params().var_text == "name_en" ? "name_es" : "name_en";
+                  var new_lang = vars.var_text == "name_en" ? "name_es" : "name_en";
 
-                  var new_lang_param = visualization.params().var_text == "name_en" ? "en_US" : "es_ES";
+                  var new_lang_param = vars.var_text == "name_en" ? "en_US" : "es_ES";
 
-                  visualization.params({
+                  vars.this_chart.params({
                     var_text: new_lang,
                     lang: new_lang_param
                   });
@@ -3752,14 +3862,14 @@ vars.default_params["ordinal_horizontal"] = function(scope) {
                   // visualization.params().refresh = true;
                   // visualization.params().init = true;
 
-                  d3.select(visualization.container()).call(visualization);
+                  d3.select(vars.container.call(vars.this_chart));
 
                   d3.select(this).html(function() {
-                    return "Current language: " + visualization.params().lang; 
+                    return "Current language: " + vars.lang; 
                   })
 
                 })
-               .html("Current language: " + visualization.params().lang);
+               .html("Current language: " + vars.lang);
 
     }
 
