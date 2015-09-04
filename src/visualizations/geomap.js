@@ -28,6 +28,8 @@
         d.data = data;
       }
 
+      d.__redraw = true;
+
     });
 
     vars.new_data = vars.countries;
