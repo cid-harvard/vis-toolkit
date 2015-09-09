@@ -1,0 +1,197 @@
+<!doctype html>
+<meta charset="utf-8">
+<script src="../js/d3.js"></script>
+<script src="../build/vistk.js"></script>
+<link href="../css/vistk.css" rel="stylesheet">
+<script src="../js/queue.v1.min.js"></script>
+<script src="../js/dragit.js"></script>
+
+<style>
+
+.connect__path:not(.selected) {
+  opacity: 0.1;
+  stroke: "#E3E5DC";
+}
+
+</style>
+<body>
+<h1>Countries Growth Scenarios by GDP and ECI</h1>
+
+<p style="margin: 20px;">Explore various growth projects for Germany. On the left, Germany is plotted by ECI and GDP. France and Spain are given as extrem examples. On the upper left, France has a higher GDP than expected and more complexity. Thus, the growth projections show that it will slow down to get back to its expected level. On the other side, Spain has more complexity but less GDP than expected. Thus, it is expected to catch up with higher growth.</p>
+
+<div id="viz_scatterplot" style="height: 400px; width: 600px; border: 1px solid black; float: left;"></div>
+<div id="viz_ranking" style="height: 400px; width: 600px; border: 1px solid black;float: left;"></div>
+<script>
+
+// TODO
+// -Draw line diagonally
+// -Equation linking the two charts
+
+var scatterplot = vistk.viz().params({
+  //dev: true,
+  container: "#viz_scatterplot",
+  width: 600,
+  height: 400,
+  margin: {left: 20, top: 20, bottom: 20, right: 20},
+  duration: 0,
+  radius_min: 10,
+  radius_max: 20
+});
+
+d3.select("#viz_scatterplot").call(scatterplot);
+
+// From http://atlas.cid.harvard.edu/explore/pie_scatter/export/prt/all/show/2013/
+var countries = [
+  {name: 'France', gdp: 1, eci: -1, color: '#FFE999'}, 
+  {name: 'Germany', gdp: .5, eci: 0, color: '#FFE999'},
+  {name: 'Spain', gdp: 0, eci: 1, color: '#FFE999'}
+]
+
+var nb_years = 20;
+
+var countries_growth = function() {
+
+  countries_data = [];
+
+  countries.forEach(function(d) {
+
+    var prev_t = {gdp_growth: 0};
+
+    var r = d3.range(nb_years).map(function(e, j) {
+      
+      var t = {};
+      t.gdp_growth = prev_t.gdp_growth + Math.random() - (d.gdp - d.eci);
+      t.year = j;
+      t.name = d.name;
+      countries_data.push(t);
+      prev_t = t;
+
+    })
+
+    return r;
+
+  })
+
+ return countries_data;
+
+}
+
+
+
+scatterplot.params({
+  type: 'scatterplot',
+  data: countries,
+  var_color: "name",
+  var_id: 'name',
+  var_x: 'eci',
+  var_y: 'gdp',
+  var_text: 'name',
+  var_color: 'color',
+  color: function(d) { return d['color']; },
+  items: [{
+    marks: [{
+      type: 'circle',
+      radius: 10,
+    //  var_r: 'world_trade',
+      fill: function(d) { return d; }
+    }, {
+      var_mark: '__aggregated',
+      type: d3.scale.ordinal().domain([true, false]).range(["line_horizontal", "none"]),
+      var_y: "gdp"
+    }, {
+      var_mark: '__highlighted',
+      type: d3.scale.ordinal().domain([true, false]).range(["circle", "none"]),
+      opacity: .1,
+      fill: function() { return "none"; },
+//      enter: function() { console.log(d3.select(this)); } //.attr("cursor", "ew-resize");  }
+    }, {
+      type: "text"
+    }]
+  }],
+  selection: [],
+  highlight: [],
+  title: "World Countries by GDP vs ECI"
+}).set('__aggregated', true);
+
+d3.select("#viz_scatterplot").call(scatterplot);
+
+var ranking = vistk.viz().params({
+  dev: true,
+  container: "#viz_ranking",
+  width: 600,
+  height: 400,
+  dev: true,
+  margin: {left: 20, top: 20, bottom: 20, right: 20}
+});
+
+d3.select("#viz_ranking").call(ranking);
+
+// TODO: Calculate ranking for each year
+
+var width = 240,
+    height = 125,
+    radius = 20;
+
+var drag = d3.behavior.drag()
+    .origin(function(d) { return {x: d['pci'], y: d['opp_gain']}; })
+    .on("drag", dragmove);
+
+function dragmove(d) {
+
+  var curr_x = scatterplot.params().x_scale[0]["func"](d[scatterplot.params().var_x]);
+  curr_x = curr_x + d3.event.dx;
+  d[scatterplot.params().var_x] = scatterplot.params().x_scale[0]["func"].invert(curr_x);
+
+  var curr_y = scatterplot.params().y_scale[0]["func"](d[scatterplot.params().var_y]);
+  curr_y = curr_y + d3.event.dy;
+  d[scatterplot.params().var_y] = scatterplot.params().y_scale[0]["func"].invert(curr_y);
+
+  countries.forEach(function(d) {
+    if(d.name == "Germany") {
+      d.eci = scatterplot.params().x_scale[0]["func"].invert(curr_x);
+      d.gdp = scatterplot.params().y_scale[0]["func"].invert(curr_y);
+    }
+  })
+
+  d3.select("#viz_scatterplot").call(scatterplot);
+
+  ranking.params().init = true;
+  ranking.params().refresh = true;
+  ranking.params().duration = 0;
+
+  ranking.params({data: countries_growth()});
+
+  d3.select("#viz_ranking").call(ranking);
+
+}
+
+d3.selectAll(".mark__group").attr("cursor", "move").call(drag);
+//d3.selectAll(".highlight").attr("cursor", "ew-resize").call(drag);
+
+ranking.params({
+  type: "linechart",
+  data: countries_growth(),
+  var_id: "name",
+  var_group: "name",
+  var_text: "name",
+  y_text: "Growth Projection",
+  y_invert: true,
+  var_y: 'gdp_growth',
+  var_x: 'year',
+  marks: [{
+    var_mark: '__selected',
+    type: d3.scale.ordinal().domain([true, false]).range(["text", "none"]),
+  }],
+  time: {
+    parse: d3.time.format("%Y").parse,
+    var_time: 'year',
+    current_time: vistk.utils.max
+  },
+  selection: ["Germany"],
+  title: "Countries Growth Projections"
+});
+
+d3.select("#viz_ranking").call(ranking);
+
+
+</script>
