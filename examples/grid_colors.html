@@ -1,0 +1,52 @@
+<!doctype html>
+<meta charset="utf-8">
+<script src="../js/d3.js"></script>
+<script src="../build/vistk.js"></script>
+<link href="../css/vistk.css" rel="stylesheet">
+<body>
+<div id="viz"></div>
+<script>
+
+var scale20c = d3.scale.category20c();
+
+var colors20c = d3.range(20).map(function(d, i) {
+  return scale20c(i);
+})
+
+var rect_w = 800 / Math.ceil(Math.sqrt(colors20c.length));
+var rect_h = 600 / Math.ceil(Math.sqrt(colors20c.length));
+
+var grid = vistk.viz().params({
+  type: "grid",
+  width: 800,
+  height: 600,
+  margin: {top: 0, right: 0, bottom: 0, left: 0},
+  container: "#viz",
+  data: colors20c,
+  var_text: "__value",
+  var_color: '__value',
+  var_group: '__value',
+  items: [{
+    marks: [{
+      type: "rect",
+      rotate: "0",
+      width: rect_w,
+      height: rect_h,
+      var_r: "realgdp",
+      var_fill: "__value"
+    }, {
+      type: "text",
+      translate: [rect_w/2, rect_h/2],
+      text_anchor: 'middle'
+    }]
+  }],
+  ui: {
+    default: true,
+    sort: ["realgdp", "dept_name", "value_added"]
+  }
+});
+
+d3.select("#viz").call(grid);
+
+</script>
+</body>

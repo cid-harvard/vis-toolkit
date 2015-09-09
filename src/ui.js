@@ -313,11 +313,11 @@
                   // Then move groups to their grid position
                   // visualization.param("refresh", true);
 
-                  var new_lang = visualization.params().var_text == "name_en" ? "name_es" : "name_en";
+                  var new_lang = vars.var_text == "name_en" ? "name_es" : "name_en";
 
-                  var new_lang_param = visualization.params().var_text == "name_en" ? "en_US" : "es_ES";
+                  var new_lang_param = vars.var_text == "name_en" ? "en_US" : "es_ES";
 
-                  visualization.params({
+                  vars.this_chart.params({
                     var_text: new_lang,
                     lang: new_lang_param
                   });
@@ -325,14 +325,14 @@
                   // visualization.params().refresh = true;
                   // visualization.params().init = true;
 
-                  d3.select(visualization.container()).call(visualization);
+                  d3.select(vars.container.call(vars.this_chart));
 
                   d3.select(this).html(function() {
-                    return "Current language: " + visualization.params().lang; 
+                    return "Current language: " + vars.lang; 
                   })
 
                 })
-               .html("Current language: " + visualization.params().lang);
+               .html("Current language: " + vars.lang);
 
     }
 

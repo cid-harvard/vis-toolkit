@@ -1,0 +1,176 @@
+ <!doctype html>
+<meta charset="utf-8">
+<script src="../js/d3.js"></script>
+<script src="../build/vistk.js"></script>
+<link href="../css/vistk.css" rel="stylesheet">
+<script src="../js/queue.v1.min.js"></script>
+<script src="../js/topojson.js"></script>
+<script src="../js/dragit.js"></script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<body>
+<div id="viz" style="height: 600px; width: 800px; border: 1px solid black;"></div>
+
+<div class="bs-example" data-example-id="simple-button-toolbar">
+  <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+    <div class="btn-group" role="group" aria-label="First group">
+      <button type="button" class="btn btn-default">Default (latitude x longitude)</button>
+      <button type="button" class="btn btn-default">Highlight Country</button>
+    </div>
+  </div>
+</div>
+
+<script>
+
+// LIST OF ALL COUNTRY-RELATED DATASETS
+//  queue()
+//      .defer(d3.json, "../shapefiles/world/world-110m.json")
+//      .defer(d3.tsv, "../data/world-country-names.tsv")
+//      d3.json("../data/countries.json", function(error, countries) {
+
+
+var visualization = vistk.viz().params({
+  dev: true,
+  width: 800,
+  height: 600
+});
+
+var scatterplot = function() {
+
+  d3.json("../data/countries.json", function(error, countries) {
+
+    countries.forEach(function(d) {
+      
+      if(d.latlng.length == 0) {
+        d.latlng = [0, 0];
+      }
+      d.latitude = d.latlng[0];
+      d.longitude = d.latlng[1];
+      d.name = d.name.common;
+    })
+
+    visualization.params({
+      dev: true,
+      width: 800,
+      height: 600,
+      margin: {left: 20, top: 20, bottom: 20, right: 20},
+      type: 'scatterplot',
+      data: countries,
+      var_color: "region",
+      var_id: 'cca3',
+      var_x: 'longitude',
+      var_y: 'latitude',
+      var_text: 'cca3',
+      items: [{
+        marks: [{
+    //      var_mark: '__highlighted',
+    //      type: d3.scale.ordinal().domain([true, false]).range(["circle", "none"]),
+    //      fill: function() { return 'gray'; },
+    //      opacity: .1,
+    //      radius: 20
+    //    }, 
+    //    {
+          type: 'circle',
+          radius: 10
+        }, {
+          var_mark: '__aggregated',
+          type: d3.scale.ordinal().domain([true, false]).range(["line_horizontal", "none"]),
+          var_y: "latitude"
+        }, {
+          var_mark: '__aggregated',
+          type: d3.scale.ordinal().domain([true, false]).range(["text", "none"]),
+          text: function() { return "Average Latitude"; },
+          text_anchor: "start",
+          translate: [300, 10]
+        }, 
+        {
+          type: "text",
+          rotate: "-30"
+        }]
+      }],
+      selection: [],
+      highlight: [],
+      title: "World Countries"
+    })
+    .set('__aggregated', true);
+
+    d3.select(visualization.container()).call(visualization);
+
+    dragit.init("svg");
+
+    var timecube = d3.range(nb_points).map(function(d, i) {
+      return d3.range(dragit.time.max).map(function(e, j) { 
+        return {x: j, y: Math.random(), t: j};
+      });
+    })
+
+    dragit.data = timecube.map(function(d, i) { 
+      return d.map(function(e, i) { 
+        return [xScale(e.x), yScale(e.y)]; 
+      }) 
+    });
+    
+    var nb_points = 1;
+
+    dragit.time = {min: 0, max: 20, step: 1, current: 0};
+    dragit.time.current = Math.floor(Math.random()*dragit.time.max);
+
+
+    function update(v, t) {
+
+      dragit.time.current = v || dragit.time.current;
+
+    }
+
+    dragit.evt.register("update", update);
+
+    dragit.playback.loop = true;
+    dragit.playback.speed =  500;
+
+    d3.selectAll(".mark__group").call(dragit.object.activate);
+
+  })
+
+}
+
+scatterplot();
+
+var init_scatterplot = function() {
+
+  visualization.params().init = true;
+  visualization.params().refresh = true;
+
+  visualization.params({
+    highlight: [],
+    selection: []
+  });
+
+  d3.select(visualization.container()).call(visualization);
+
+}
+
+var highlight_country = function() {
+
+  visualization.params().init = true;
+  visualization.params().refresh = true;
+
+  // TODO
+  // -Change the behavior of the marks when updated
+  // -Should it be CSS? 
+  visualization.params({
+    items: [{
+    highlight: ["FRA", "GER", "CHN"],    
+    selection: ["USA"]
+  });
+
+  d3.select(visualization.container()).call(visualization);
+
+}
+
+$('button:nth-child(1)').on('click', init_scatterplot);
+$('button:nth-child(2)').on('click', highlight_country);
+//$('button:nth-child(3)').on('click', select_country);
+
+</script>

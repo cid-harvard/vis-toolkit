@@ -15,8 +15,8 @@
           .attr("height", vars.height)
           .style('overflow', 'visible')
           .style('z-index', 0)
-          .append("g")
-            .attr("transform", "translate(" + vars.margin.left + "," + vars.margin.top + ")");
+        .append("g")
+          .attr("transform", "translate(" + vars.margin.left + "," + vars.margin.top + ")");
 
       } else {
         // HTML Container for table
