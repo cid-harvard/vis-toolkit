@@ -1,0 +1,285 @@
+ <!doctype html>
+<meta charset="utf-8">
+<script src="../js/d3.js"></script>
+<script src="../build/vistk.js"></script>
+<link href="../css/vistk.css" rel="stylesheet">
+<script src="../js/queue.v1.min.js"></script>
+<script src="../js/dragit.js"></script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+
+<script type="text/javascript"
+  src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+<style>
+
+.connect__path:not(.selected) {
+  opacity: 0.1;
+  stroke: "#E3E5DC";
+}
+
+
+</style>
+<body>
+<h1>Products characteristics & ECI ranking</h1>
+
+<p style="margin: 20px;">Products are the result of capabilities countries hold. On the left, a scatterplot with the main 16 categories of exported products. On the right, the ranking of countries by ECI.</p>
+
+
+<div id="viz_scatterplot" style="height: 400px; width: 600px; border: 1px solid black; float: left;"></div>
+<div id="viz_ranking" style="height: 400px; width: 600px; border: 1px solid black;float: left;"></div>
+
+  <div class="bs-example" data-example-id="simple-button-toolbar">
+    <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+      <div class="btn-group" role="group" aria-label="First group">
+        <button type="button" class="btn btn-default">Random Products</button>
+        <button type="button" class="btn btn-default">Random Ranking</button>
+      </div>
+    </div>
+  </div>
+
+
+<ul>
+<li>The Product Complexity Index (PCI) ranks products according to their product complexity. Product Complexity is determined by calculating the average diversity of countries that make a specific product, and the average ubiquity of the other products that these countries make. Formally, we can define:
+
+$$\widetilde{M}^{P}_{p,p'} \equiv \sum\limits_{c}\frac{M_{cp}M_{cp'}}{k_{c,0}k_{p,0}}.$$
+
+
+</li>
+</ul>
+
+<script>
+
+// Inspirations
+// http://bl.ocks.org/mccannf/1629464
+// http://bl.ocks.org/mbostock/1557377
+// 
+
+// TODO
+// -Allow resize of nodes
+// -Additive ranking to make it more realistic
+// -Click on a country in ranking updates the satterplot
+// -Select some countries in the rankings and fade the others
+// -Vertical drag of rankings
+// -Fixed boundaries for the scatterplots (+ add a margin)
+// -Add legend for color, circles size
+// -Make the average line interactive (e.g. increase global ECI)
+// -Annotate the various quadrants?
+// -When dragging a country, prevent mouse hovers 
+
+var scatterplot = vistk.viz().params({
+  //dev: true,
+  container: "#viz_scatterplot",
+  width: 600,
+  height: 400,
+  margin: {left: 20, top: 20, bottom: 20, right: 20},
+  duration: 0,
+  radius_min: 10,
+  radius_max: 20
+});
+
+d3.select("#viz_scatterplot").call(scatterplot);
+
+
+// From http://atlas.cid.harvard.edu/explore/pie_scatter/export/prt/all/show/2013/
+var products = [
+  {name: 'Animal & Animal Products', pci: 20, opp_gain: 20, color: '#FFE999'}, 
+  {name: 'Vegetable Products', pci: 30, opp_gain: 20, color: '#FFC41C'},
+  {name: 'Foodstuffs', pci: 10, opp_gain: 20, color: '#DDFF48'},
+  {name: 'Chemicals & Allied Industries', pci: 90, opp_gain: 20, color: '#E377C2'},
+  {name: 'Mineral Products', pci: 19, opp_gain: 0, color: '#FFE999'},
+  {name: 'Plastics / Rubbers', pci: 13, opp_gain: 30, color: '#F7B6D2'},
+  {name: 'Raw Hides, Skins, Leather, & Furs', pci: 10, opp_gain: 20, color: '#98DF8A'},
+  {name: 'Textiles', pci: 10, opp_gain: 42, color: '#2CA02C'},
+  {name: 'Footwear / Headgear', pci: 20, opp_gain: 20, color: '#3AB11A'},
+  {name: 'Wood & Wood Products', pci: 30, opp_gain: 20, color: '#E22020'},
+  {name: 'Stone / Glass', pci: 10, opp_gain: 20, color: '#D66011'},
+  {name: 'Metals', pci: 10, opp_gain: 20, color: '#5F2107'},
+  {name: 'Machinery / Electrical', pci: 10, opp_gain: 20, color: '#65D4DF'},
+  {name: 'Transportation', pci: 10, opp_gain: 20, color: '#9EDAE5'},
+  {name: 'Miscellaneous', pci: 10, opp_gain: 20, color: '#7F7F7F'},
+  {name: 'Service', pci: 10, opp_gain: 20, color: '#C6C6C6'}
+]
+
+var random_products = function() {
+
+  products.forEach(function(d) {
+    d.pci = Math.random() * 100;
+    d.opp_gain = Math.random() * 100;
+    d.world_trade = Math.random() * 100;
+  })
+
+ return products;
+
+}
+
+scatterplot.params({
+  type: 'scatterplot',
+  data: random_products(),
+  var_color: "name",
+  var_id: 'name',
+  var_x: 'pci',
+  var_y: 'opp_gain',
+  var_text: 'name',
+  var_color: 'color',
+  color: function(d) { return d['color']; },
+  items: [{
+    marks: [{
+      type: 'circle',
+      radius: 10,
+      var_r: 'world_trade',
+      fill: function(d) { return "#E3E5DC"; }
+    }, {
+      type: 'circle',
+      radius: 10,
+    //  var_r: 'world_trade',
+      fill: function(d) { return d; }
+    }, {
+      var_mark: '__aggregated',
+      type: d3.scale.ordinal().domain([true, false]).range(["line_horizontal", "none"]),
+      var_y: "opp_gain"
+    }, {
+      var_mark: '__highlighted',
+      type: d3.scale.ordinal().domain([true, false]).range(["circle", "none"]),
+      opacity: .1,
+      fill: function() { return "none"; },
+//      enter: function() { console.log(d3.select(this)); } //.attr("cursor", "ew-resize");  }
+    }, {
+      type: "text"
+    }]
+  }],
+  selection: [],
+  highlight: [],
+  title: "Products (HS2 Level)"
+}).set('__aggregated', true);
+
+d3.select("#viz_scatterplot").call(scatterplot);
+
+var ranking = vistk.viz().params({
+  dev: true,
+  container: "#viz_ranking",
+  width: 600,
+  height: 400,
+  dev: true,
+  margin: {left: 20, top: 20, bottom: 20, right: 20}
+});
+
+d3.select("#viz_ranking").call(ranking);
+
+var countries = ["Afghanistan","Albania","Algeria","Andorra","Angola","Anguilla","Antigua &amp; Barbuda","Argentina","Armenia","Aruba","Australia","Austria","Azerbaijan","Bahamas","Bahrain","Bangladesh","Barbados","Belarus","Belgium","Belize","Benin","Bermuda","Bhutan","Bolivia","Bosnia &amp; Herzegovina","Botswana","Brazil","British Virgin Islands","Brunei","Bulgaria","Burkina Faso","Burundi","Cambodia","Cameroon","Cape Verde","Cayman Islands","Chad","Chile","China","Colombia","Congo","Cook Islands","Costa Rica","Cote D Ivoire","Croatia","Cruise Ship","Cuba","Cyprus","Czech Republic","Denmark","Djibouti","Dominica","Dominican Republic","Ecuador","Egypt","El Salvador","Equatorial Guinea","Estonia","Ethiopia","Falkland Islands","Faroe Islands","Fiji","Finland","France","French Polynesia","French West Indies","Gabon","Gambia","Georgia","Germany","Ghana","Gibraltar","Greece","Greenland","Grenada","Guam","Guatemala","Guernsey","Guinea","Guinea Bissau","Guyana","Haiti","Honduras","Hong Kong","Hungary","Iceland","India","Indonesia","Iran","Iraq","Ireland","Isle of Man","Israel","Italy","Jamaica","Japan","Jersey","Jordan","Kazakhstan","Kenya","Kuwait","Kyrgyz Republic","Laos","Latvia","Lebanon","Lesotho","Liberia","Libya","Liechtenstein","Lithuania","Luxembourg","Macau","Macedonia","Madagascar","Malawi","Malaysia","Maldives","Mali","Malta","Mauritania","Mauritius","Mexico","Moldova","Monaco","Mongolia","Montenegro","Montserrat","Morocco","Mozambique","Namibia","Nepal","Netherlands","Netherlands Antilles","New Caledonia","New Zealand","Nicaragua","Niger","Nigeria","Norway","Oman","Pakistan","Palestine","Panama","Papua New Guinea","Paraguay","Peru","Philippines","Poland","Portugal","Puerto Rico","Qatar","Reunion","Romania","Russia","Rwanda","Saint Pierre &amp; Miquelon","Samoa","San Marino","Satellite","Saudi Arabia","Senegal","Serbia","Seychelles","Sierra Leone","Singapore","Slovakia","Slovenia","South Africa","South Korea","Spain","Sri Lanka","St Kitts &amp; Nevis","St Lucia","St Vincent","St. Lucia","Sudan","Suriname","Swaziland","Sweden","Switzerland","Syria","Taiwan","Tajikistan","Tanzania","Thailand","Timor L'Este","Togo","Tonga","Trinidad &amp; Tobago","Tunisia","Turkey","Turkmenistan","Turks &amp; Caicos","Uganda","Ukraine","United Arab Emirates","United Kingdom","Uruguay","Uzbekistan","Venezuela","Vietnam","Virgin Islands (US)","Yemen","Zambia","Zimbabwe"];
+
+var nb_years = 20;
+
+var countries_data = [];
+
+var random_countries = function() {
+
+  countries.forEach(function(d) {
+
+    var prev_t = {value: 0};
+
+    var r = d3.range(nb_years).map(function(e, j) {
+      
+      var t = {};
+      t.value = prev_t.value + Math.random();
+      t.year = j;
+      t.name = d;
+      countries_data.push(t);
+      prev_t = t;
+
+    })
+
+    return r;
+
+  })
+
+ return countries_data;
+
+}
+
+
+// TODO: Calculate ranking for each year
+
+var width = 240,
+    height = 125,
+    radius = 20;
+
+var drag = d3.behavior.drag()
+    .origin(function(d) { return {x: d['pci'], y: d['opp_gain']}; })
+    .on("drag", dragmove);
+
+function dragmove(d) {
+
+  var curr_x = scatterplot.params().x_scale[0]["func"](d[scatterplot.params().var_x]);
+  curr_x = curr_x + d3.event.dx;
+  d[scatterplot.params().var_x] = scatterplot.params().x_scale[0]["func"].invert(curr_x);
+
+  var curr_y = scatterplot.params().y_scale[0]["func"](d[scatterplot.params().var_y]);
+  curr_y = curr_y + d3.event.dy;
+  d[scatterplot.params().var_y] = scatterplot.params().y_scale[0]["func"].invert(curr_y);
+
+  d3.select("#viz_scatterplot").call(scatterplot);
+}
+
+d3.selectAll(".mark__group").attr("cursor", "move").call(drag);
+//d3.selectAll(".highlight").attr("cursor", "ew-resize").call(drag);
+
+ranking.params({
+  type: "linechart",
+  data: random_countries(),
+  var_id: "name",
+  var_group: "name",
+//  var_color: "continent", // TODO: color by final ranking value..
+//  color: d3.scale.ordinal().domain(["Africa", "Americas", "Asia", "Europe", "Oceania"]).range(["#99237d", "#c72439", "#6bc145", "#88c7ed", "#dd9f98"]),
+  var_text: "name",
+  y_text: "ECI Rank",
+  y_invert: true,
+  var_y: 'value',
+  var_x: 'year',
+  marks: [{
+
+   // fill: function(d) { return vars.color(params.accessor_items(d)[vars.var_color]); }
+    }, {
+    var_mark: '__selected',
+    type: d3.scale.ordinal().domain([true, false]).range(["text", "none"]),
+  }],
+  time: {
+    parse: d3.time.format("%Y").parse,
+    var_time: 'year',
+    current_time: vistk.utils.max
+  },
+  selection: ["France", "Germany", "United States", "China"],
+  title: "Countries Ranking by ECI"
+});
+
+d3.select("#viz_ranking").call(ranking);
+
+$('button:nth-child(1)').on('click', function() {
+
+  scatterplot.params().init = true;
+  scatterplot.params().refresh = true;
+  scatterplot.params().duration = 1000;
+
+  scatterplot.params({data: random_products()});
+  d3.select("#viz_scatterplot").call(scatterplot);
+
+  scatterplot.params().duration = 0;
+});
+
+$('button:nth-child(2)').on('click', function() {
+
+  ranking.params().init = true;
+  ranking.params().refresh = true;
+  ranking.params().duration = 1000;
+
+  ranking.params({data: random_countries()});
+  d3.select("#viz_ranking").call(ranking);
+
+  ranking.params().duration = 0;
+});
+
+</script>
