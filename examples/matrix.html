@@ -1,0 +1,38 @@
+<!doctype html>
+<meta charset="utf-8">
+<script src="../js/d3.js"></script>
+<script src="../build/vistk.js"></script>
+<link href="../css/vistk.css" rel="stylesheet">
+<body>
+<div id="viz"></div>
+<script>
+
+d3.json("../data/miserables.json", function(error, miserables) {
+console.log(miserables)
+
+  visualization = vistk.viz()
+    .params({
+      dev: true,
+      type: 'matrix',
+      margin: {top: 10, right: 10, bottom: 30, left: 30},
+      container: '#viz',
+      data: [],
+      links: miserables.links,
+      nodes: miserables.nodes,
+      var_id: 'name',
+      var_group: 'continent',
+      var_color: 'continent',
+      var_x: 'name',
+      var_y: 'name',
+      var_text: 'name',
+      ui: {
+        default: true,
+        options: ["country", "continent"]
+      }
+    });
+
+  d3.select("#viz").call(visualization);
+
+});
+
+</script>
