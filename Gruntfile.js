@@ -28,7 +28,7 @@ module.exports = function(grunt) {
               'src/visualizations/grid.js', 'src/visualizations/stacked.js', 'src/visualizations/piechart.js', 'src/visualizations/slopegraph.js', 
               'src/visualizations/treemap.js', 'src/visualizations/stackedbar.js',
               'src/visualizations/productspace.js', 'src/visualizations/ordinal_vertical.js', 'src/visualizations/ordinal_horizontal.js', 'src/start_selection.js', 'src/visualizations/table.js',
-              'src/visualizations/boxplot.js', 'src/visualizations/none.js',
+              'src/visualizations/boxplot.js', 'src/visualizations/matrix.js', 'src/visualizations/none.js',
               'src/visualizations/default.js', 'src/ui.js', 'src/getterssetters.js', 
               'src/end_constructor.js', 'src/end.js'],
         dest: 'build/vistk.js',
