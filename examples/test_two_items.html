@@ -7,10 +7,9 @@
 <div id="viz"></div>
 <script>
 
-var  visualization = vistk.viz()
-    .params({
-      container: "#viz",
-      data: d3.range(5).map(function(d, i) { return {id: i, x: Math.random()*10, y: Math.random()*10} }),
+var  visualization = vistk.viz().params({
+  container: "#viz",
+  data: d3.range(5).map(function(d, i) { return {id: i, x: Math.random()*10, y: Math.random()*10} }),
   type: 'scatterplot',
   var_id: 'id',
   var_x: 'x',
@@ -39,8 +38,7 @@ var  visualization = vistk.viz()
 //      enter: function() { console.log(d3.select(this)); } //.attr("cursor", "ew-resize");  }
     }, {
       type: "text"
-    }]
-  , marks: [{
+    }], marks: [{
       type: 'tick',
       radius: 10,
       var_r: 'id',
