@@ -988,7 +988,7 @@
       vars.items = vars.items(vars);
     }
 
-    if(typeof vars.items !== "undefined" && vars.items[0] !== "undefined" && vars.type !== "stacked") {
+    if(typeof vars.items !== "undefined" && vars.items[0] !== "undefined" &&  Object.keys(vars.items).length > 0 && vars.type !== "stacked") {
 
       vars.items.forEach(function(item, index_item) {
 
@@ -1091,7 +1091,7 @@
 
     }
 
-    if(typeof vars.connect !== "undefined" && typeof vars.connect[0] !== "undefined") {
+    if(typeof vars.connect !== "undefined" && typeof vars.connect[0] !== "undefined" && Object.keys(vars.connect).length > 0) {
 
       // 1/ Between different items at a given time for one dimension
       // 2/ Between same items at a given time points
