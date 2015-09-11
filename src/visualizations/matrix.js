@@ -7,17 +7,48 @@ vars.default_params["matrix"] = function(scope) {
   // A matrix is a permutation of two ordinal scales
   // Each cell is a graphical mark
 
-  params.items = [];
 
-  params.connect = [];
+  if(vars.refresh) {
 
-var margin = {top: 80, right: 0, bottom: 10, left: 80},
-    width = 720,
-    height = 720;
+    // Prepare data
 
-var x = d3.scale.ordinal().rangeBands([0, width]),
-    z = d3.scale.linear().domain([0, 4]).clamp(true),
+    // Duplicate and create
+
+
+  }
+
+
+
+  params.connect = [{
+    marks: [{
+      type: "rect"
+    }]
+  }];
+
+// Horizontal ordinal scale
+// var x = d3.scale.ordinal().rangeBands([0, vars.width]),
+var z = d3.scale.linear().domain([0, 4]).clamp(true),
     c = d3.scale.category10().domain(d3.range(10));
+
+  // TODO: Re-use previous scales
+  // vars.default_params["ordinal_vertical"] 
+  // vars.default_params["ordinal_horizontal"] 
+  params.x_scale = [{
+    func: d3.scale.ordinal()
+            .domain(d3.set(vars.new_data.map(function(d) { return d[vars.var_x]; })).values())
+            .rangeBands([scope.margin.left, scope.width - scope.margin.left - scope.margin.right]),
+  }];
+
+  /* Prototyping ideal configuration
+  params.items = [{
+    marks: [{
+      type: 'text'
+    }],
+    marks: [{
+      type: 'text'
+    }]
+   }];
+  */
 
   var matrix = [],
       nodes = vars.nodes,
@@ -48,26 +79,26 @@ var x = d3.scale.ordinal().rangeBands([0, width]),
   };
 
   // The default sort order.
-  x.domain(orders.name);
+  params.x_scale[0]['func'].domain(orders.name);
 
   vars.svg.append("rect")
       .attr("class", "background")
-      .attr("width", width)
-      .attr("height", height);
+      .attr("width", vars.width)
+      .attr("height", vars.height);
 
   var row = vars.svg.selectAll(".row")
       .data(matrix)
     .enter().append("g")
       .attr("class", "row")
-      .attr("transform", function(d, i) { return "translate(0," + x(i) + ")"; })
+      .attr("transform", function(d, i) { return "translate(0," + params.x_scale[0]['func'](i) + ")"; })
       .each(row);
 
   row.append("line")
-      .attr("x2", width);
+      .attr("x2", vars.width);
 
   row.append("text")
       .attr("x", -6)
-      .attr("y", x.rangeBand() / 2)
+      .attr("y", params.x_scale[0]['func'].rangeBand() / 2)
       .attr("dy", ".32em")
       .attr("text-anchor", "end")
       .text(function(d, i) { return nodes[i].name; });
@@ -76,14 +107,14 @@ var x = d3.scale.ordinal().rangeBands([0, width]),
       .data(matrix)
     .enter().append("g")
       .attr("class", "column")
-      .attr("transform", function(d, i) { return "translate(" + x(i) + ")rotate(-90)"; });
+      .attr("transform", function(d, i) { return "translate(" + params.x_scale[0]['func'](i) + ")rotate(-90)"; });
 
   column.append("line")
-      .attr("x1", -width);
+      .attr("x1", -vars.width);
 
   column.append("text")
       .attr("x", 6)
-      .attr("y", x.rangeBand() / 2)
+      .attr("y", params.x_scale[0]['func'].rangeBand() / 2)
       .attr("dy", ".32em")
       .attr("text-anchor", "start")
       .text(function(d, i) { return nodes[i].name; });
@@ -93,9 +124,9 @@ var x = d3.scale.ordinal().rangeBands([0, width]),
         .data(row.filter(function(d) { return d.z; }))
       .enter().append("rect")
         .attr("class", "cell")
-        .attr("x", function(d) { return x(d.x); })
-        .attr("width", x.rangeBand())
-        .attr("height", x.rangeBand())
+        .attr("x", function(d) { return params.x_scale[0]['func'](d.x); })
+        .attr("width", params.x_scale[0]['func'].rangeBand())
+        .attr("height", params.x_scale[0]['func'].rangeBand())
         .style("fill-opacity", function(d) { return z(d.z); })
         .style("fill", function(d) { return nodes[d.x].group == nodes[d.y].group ? c(nodes[d.x].group) : null; })
 
