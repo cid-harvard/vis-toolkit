@@ -1,0 +1,63 @@
+<!doctype html>
+<meta charset="utf-8">
+<script src="../js/d3.js"></script>
+<script src="../build/vistk.js"></script>
+<link href="../css/vistk.css" rel="stylesheet">
+<body>
+<div id="viz"></div>
+<body>
+<script src="../js/d3.js"></script>
+<script>
+
+d3.json("../data/partners_usa_2012_csay.json", function(error, data) {
+
+  var cumul_values = Array();
+
+  data.data.forEach(function(d) {
+
+    if(typeof cumul_values[d.name] === 'undefined') {
+      cumul_values[d.name] = 0;
+    }
+
+    cumul_values[d.name] += d.value;
+    d.cumul_values = cumul_values[d.name];
+    
+  });
+
+  visualization = vistk.viz().params({
+    type: "linechart",
+    container: "#viz",
+    height: 600,
+    width: 900,
+    margin: {top: 30, right: 100, bottom: 30, left: 10},
+    data: data.data,
+    var_id: "name",
+    var_group: "region_id",
+    var_color: "region_id", // TODO: color by final ranking value..
+    color: d3.scale.ordinal().domain(["Africa", "Americas", "Asia", "Europe", "Oceania"]).range(["#99237d", "#c72439", "#6bc145", "#88c7ed", "#dd9f98"]),
+    var_text: "name",
+    y_text: "ECI Rank",
+    var_y: "cumul_values",
+    var_x: 'year',
+    interpolate: 'step',
+    y_invert: true,
+    time: {
+      parse: d3.time.format("%Y").parse,
+      var_time: 'year',
+      current_time: '2012'
+    },
+    selection: ["Japan", "Switzerland", "Germany"],
+    highlight: "France",
+    ui: {
+      default: true,
+      options: ["country", "continent"]
+    },
+    title: "Cumulated trade partners for the United States"
+  });
+
+  d3.select("#viz").call(visualization);
+
+});
+
+
+</script>
