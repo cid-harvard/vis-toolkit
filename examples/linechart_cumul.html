@@ -11,16 +11,16 @@
 
 d3.json("../data/partners_usa_2012_csay.json", function(error, data) {
 
-  var cumul_values = Array();
+  var cumul_value = Array();
 
   data.data.forEach(function(d) {
 
-    if(typeof cumul_values[d.name] === 'undefined') {
-      cumul_values[d.name] = 0;
+    if(typeof cumul_value[d.name] === 'undefined') {
+      cumul_value[d.name] = 0;
     }
 
-    cumul_values[d.name] += d.value;
-    d.cumul_values = cumul_values[d.name];
+    cumul_value[d.name] += d.value;
+    d.cumul_value = cumul_value[d.name];
     
   });
 
@@ -37,9 +37,9 @@ d3.json("../data/partners_usa_2012_csay.json", function(error, data) {
     color: d3.scale.ordinal().domain(["Africa", "Americas", "Asia", "Europe", "Oceania"]).range(["#99237d", "#c72439", "#6bc145", "#88c7ed", "#dd9f98"]),
     var_text: "name",
     y_text: "ECI Rank",
-    var_y: "cumul_values",
+    var_y: "cumul_value",
     var_x: 'year',
-    interpolate: 'step',
+    interpolate: 'linear',
     y_invert: true,
     time: {
       parse: d3.time.format("%Y").parse,
@@ -56,6 +56,76 @@ d3.json("../data/partners_usa_2012_csay.json", function(error, data) {
   });
 
   d3.select("#viz").call(visualization);
+
+  // Add some controls
+  d3.select("#viz").selectAll(".alignLines").data(["align_lines"]).enter().append("button")
+   .attr("type", "button")
+   .attr("class", "alignLines")
+   .on("click", function() {
+
+      if(visualization.params().var_y == "value") { 
+        visualization.params({
+          var_y: "cumul_value",
+        });
+      } else {
+        visualization.params({
+          var_y: "value",
+        });
+      }
+
+      visualization.params().refresh = true;
+      visualization.params().init = true;
+
+      d3.select(visualization.container()).call(visualization);
+
+    })
+   .html("Toggle cumul");
+
+  var label_slider = d3.select("#viz")
+    .selectAll(".sliderYear")
+    .data(["sliderYear"])
+  .enter()
+    .append("label")
+    .attr("class", "sliderYear")
+    .text("Change pivot time: ")
+
+  label_slider.append("input")
+        .attr("type", "range")
+        .property("min", d3.min(visualization.params().time.points))
+        .property("max", d3.max(visualization.params().time.points))
+        .property("value", d3.min(visualization.params().time.points))
+        .attr("step", 1)
+        .on("input", function() {
+         
+          var this_value = this.value;
+          // Find the value year
+          year_offset = d3.range(visualization.params().unique_items.length).map(function() { return 0; });
+
+          data.data.forEach(function(d) {
+            if(+d.year == +this_value) {
+              year_offset[d.name] = d.cumul_value;
+            }
+          });
+
+          data.data.forEach(function(d) {
+            d.cumul_value_offset = d.cumul_value - year_offset[d.name];
+          });
+
+          dd = data;
+
+          visualization.params({
+            var_y: "cumul_value_offset"
+          });
+
+          visualization.params().refresh = true;
+          visualization.params().init = true;
+
+          d3.select(visualization.container()).call(visualization);
+
+        })
+        .style("width", "100px");
+
+
 
 });
 
