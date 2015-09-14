@@ -214,6 +214,7 @@ var drag = d3.behavior.drag()
 
 function dragmove(d) {
 
+<<<<<<< HEAD
   var curr_x = scatterplot.params().x_scale[0]["func"](d[scatterplot.params().var_x]);
   curr_x = curr_x + d3.event.dx;
   d[scatterplot.params().var_x] = scatterplot.params().x_scale[0]["func"].invert(curr_x);
@@ -221,6 +222,16 @@ function dragmove(d) {
   var curr_y = scatterplot.params().y_scale[0]["func"](d[scatterplot.params().var_y]);
   curr_y = curr_y + d3.event.dy;
   d[scatterplot.params().var_y] = scatterplot.params().y_scale[0]["func"].invert(curr_y);
+=======
+  var curr_x = scatterplot.params().x_scale[0]["func"](d['pci']);
+  curr_x = curr_x + d3.event.dx;
+  d['pci'] = scatterplot.params().x_scale[0]["func"].invert(curr_x);
+
+  var curr_y = scatterplot.params().y_scale[0]["func"](d['opp_gain']);
+  curr_y = curr_y + d3.event.dy;
+  d['opp_gain'] = scatterplot.params().y_scale[0]["func"].invert(curr_y);
+
+>>>>>>> master
 
   d3.select("#viz_scatterplot").call(scatterplot);
 }

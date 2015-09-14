@@ -4,7 +4,7 @@ vars.default_params["productspace"] = function(scope) {
 
   params.x_scale = [{
     func: d3.scale.linear()
-            .range([scope.margin.left, vars.width-vars.margin.left-vars.margin.right])
+            .range([0, vars.width-vars.margin.left-vars.margin.right])
             .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_x]; })).nice()
   }];
 

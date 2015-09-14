@@ -117,7 +117,6 @@
 
       }
 
-
       vars.unique_data = [];
       vars.unique_items.forEach(function(item_id, i) {
 
@@ -148,25 +147,25 @@
           return v;
         });
 
-        if(vars.filter.indexOf(d[vars.var_group]) < 0)
+        if(vars.filter.indexOf(d[vars.var_group]) < 0) {
           d.__filtered = false;
-        else
+        } else {
           d.__filtered = true;
+        }
 
         if(vars.highlight.indexOf(item_id) < 0) {
           d.__highlighted = false;
-        }
-        else
+        } else {
           d.__highlighted = true;
+        }
 
-        if(vars.selection.indexOf(item_id) < 0)
+        if(vars.selection.indexOf(item_id) < 0) {
           d.__selected = false;
-        else
+        } else {
           d.__selected = true;
-
+        }
 
         d.__aggregated = false;
-
         d.__redraw = true;
 
         vars.unique_data.push(d);
