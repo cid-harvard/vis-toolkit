@@ -57,7 +57,7 @@ $$\widetilde{M}^{P}_{p,p'} \equiv \sum\limits_{c}\frac{M_{cp}M_{cp'}}{k_{c,0}k_{
 // Inspirations
 // http://bl.ocks.org/mccannf/1629464
 // http://bl.ocks.org/mbostock/1557377
-// 
+//
 
 // TODO
 // -Allow resize of nodes
@@ -69,7 +69,7 @@ $$\widetilde{M}^{P}_{p,p'} \equiv \sum\limits_{c}\frac{M_{cp}M_{cp'}}{k_{c,0}k_{
 // -Add legend for color, circles size
 // -Make the average line interactive (e.g. increase global ECI)
 // -Annotate the various quadrants?
-// -When dragging a country, prevent mouse hovers 
+// -When dragging a country, prevent mouse hovers
 
 var scatterplot = vistk.viz().params({
   //dev: true,
@@ -87,7 +87,7 @@ d3.select("#viz_scatterplot").call(scatterplot);
 
 // From http://atlas.cid.harvard.edu/explore/pie_scatter/export/prt/all/show/2013/
 var products = [
-  {name: 'Animal & Animal Products', pci: 20, opp_gain: 20, color: '#FFE999'}, 
+  {name: 'Animal & Animal Products', pci: 20, opp_gain: 20, color: '#FFE999'},
   {name: 'Vegetable Products', pci: 30, opp_gain: 20, color: '#FFC41C'},
   {name: 'Foodstuffs', pci: 10, opp_gain: 20, color: '#DDFF48'},
   {name: 'Chemicals & Allied Industries', pci: 90, opp_gain: 20, color: '#E377C2'},
@@ -183,7 +183,7 @@ var random_countries = function() {
     var prev_t = {value: 0};
 
     var r = d3.range(nb_years).map(function(e, j) {
-      
+
       var t = {};
       t.value = prev_t.value + Math.random();
       t.year = j;
@@ -214,7 +214,6 @@ var drag = d3.behavior.drag()
 
 function dragmove(d) {
 
-<<<<<<< HEAD
   var curr_x = scatterplot.params().x_scale[0]["func"](d[scatterplot.params().var_x]);
   curr_x = curr_x + d3.event.dx;
   d[scatterplot.params().var_x] = scatterplot.params().x_scale[0]["func"].invert(curr_x);
@@ -222,16 +221,6 @@ function dragmove(d) {
   var curr_y = scatterplot.params().y_scale[0]["func"](d[scatterplot.params().var_y]);
   curr_y = curr_y + d3.event.dy;
   d[scatterplot.params().var_y] = scatterplot.params().y_scale[0]["func"].invert(curr_y);
-=======
-  var curr_x = scatterplot.params().x_scale[0]["func"](d['pci']);
-  curr_x = curr_x + d3.event.dx;
-  d['pci'] = scatterplot.params().x_scale[0]["func"].invert(curr_x);
-
-  var curr_y = scatterplot.params().y_scale[0]["func"](d['opp_gain']);
-  curr_y = curr_y + d3.event.dy;
-  d['opp_gain'] = scatterplot.params().y_scale[0]["func"].invert(curr_y);
-
->>>>>>> master
 
   d3.select("#viz_scatterplot").call(scatterplot);
 }
