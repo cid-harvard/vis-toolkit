@@ -64,10 +64,6 @@
         params_type = params.type(d[params.var_mark]);
       }
 
-      if(typeof params.rotate === "undefined") {
-        params.rotate = 0;
-      }
-
       if(typeof params.text !== "undefined" && typeof params.text === "function") {
         params_text = params.text(d);
       }
@@ -114,6 +110,16 @@
         }
       }
 
+      var params_rotate = 0;
+
+      if(typeof params.rotate !== "undefined" && params.rotate !== null) {
+        if(typeof params.rotate === "function") {
+          params_rotate = params.rotate(d);
+        } else {
+          params_rotate = params.rotate;
+        }
+      }
+
       // Use the default accessor
       var accessor_data = vars.accessor_data;
 
@@ -134,13 +140,13 @@
               .attr("x", 10)
               .attr("y", 0)
               .attr("dy", ".35em")
-              .attr("transform", "translate(" +  params_translate + ")rotate(" +  params.rotate + ")");
+              .attr("transform", "translate(" +  params_translate + ")rotate(" +  params_rotate + ")");
 
           items_mark_text
               .classed("highlighted", function(d, i) { return d.__highlighted; })
               .classed("selected", function(d, i) { return d.__selected; })
               .transition().duration(vars.duration)
-              .attr("transform", "translate(" +  params_translate + ")rotate(" +  params.rotate + ")")
+              .attr("transform", "translate(" +  params_translate + ")rotate(" +  params_rotate + ")")
               .text(function(d) {
 
                 if(typeof params.text !== "undefined") {
@@ -315,7 +321,7 @@
                   .attr("y", params.y || 0)
                   .attr("height", params.height || 10)
                   .attr("width", params.width || 10)
-                  .attr("transform", "rotate(0)")
+                  .attr("transform", "rotate(" + params_rotate + ")")
                   .style("fill", function(d) { return vars.color(vars.accessor_items(d)[vars.var_color]); });
 
         items_mark_rect
@@ -343,7 +349,7 @@
             .attr("width", vars.mark.width)
             .attr("x", -vars.mark.width/2)
             .attr("y", -vars.mark.height/2)
-            .attr("transform", "rotate(45)");
+            .attr("transform", "rotate(" + (params_rotate + 45) + ")");
 
           if(typeof params.class !== "undefined") {
             items_mark_diamond_enter.classed(params.class(vars.accessor_items(d)), true);
@@ -369,14 +375,14 @@
               .attr("y1", function(d) { return -20; })
               .attr("x2", function(d) { return 0; })
               .attr("y2", function(d) { return 20; })
-              .attr("transform", "translate(0,0)rotate(0)");
+              .attr("transform", "translate(0,0)rotate(" + params_rotate + ")");
 
           items_mark_tick
               .classed("highlighted", function(d, i) { return d.__highlighted; })
               .classed("selected", function(d, i) { return d.__selected; })
               .transition().duration(vars.duration)
               .attr("transform", function(d) {
-                return "translate(" +  params_translate + ")rotate(" +  params.rotate + ")";
+                return "translate(" +  params_translate + ")rotate(" +  params_rotate + ")";
               });
 
           items_mark_tick.exit().remove();
