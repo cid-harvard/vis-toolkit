@@ -421,7 +421,7 @@ marks: [{
 
 ### `items.marks.translate`
 
-> Customizing the exit function for marks.
+> Translate mark
 
 * **Type:** `Array`
 
@@ -430,6 +430,18 @@ marks: [{
 * **Example:** 
 
 * **Note:** We need a minimal offset between the tooltip and the mark.
+
+### `items.marks.rotate`
+
+> Rotate mark.
+
+* **Type:** `Array`
+
+* **Default:** 0
+
+* **Example:** 
+
+* **Note:**
 
 ### `connect`
 
