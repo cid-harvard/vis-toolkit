@@ -42,13 +42,13 @@
   //
   //  params contains the parameters for the current graphical mark to draw
   //  e.g. scales, type of mark, radius, color function, ..
-  utils.draw_mark = function(selection, params) {
+  utils.draw_mark = function(selection, params, vars) {
 
     if(vars.dev) {
       console.log("[utils.draw_mark]", params.type)
     }
 
-    selection.each(function(d) {
+    selection.each(function(d, i) {
 
       if(!d.__redraw) {
         return;
@@ -104,7 +104,7 @@
 
       if(typeof params.translate !== "undefined" && params.translate !== null) {
         if(typeof params.translate === "function") {
-          params_translate = params.translate(d);
+          params_translate = params.translate(d, i, vars);
         } else {
           params_translate = params.translate;
         }
@@ -804,13 +804,17 @@
 
           if(typeof params.fill !== "undefined") {
 
-            mark_enter.style("fill", function(d) {
-              return params.fill(vars.accessor_items(d)[vars.var_color]);
-            });
+            if(typeof params.fill === "function") {
 
-            mark.style("fill", function(d) {
-              return params.fill(vars.accessor_items(d)[vars.var_color]);
-            });
+              mark.style("fill", params.fill(d, i, vars));
+
+            } else {
+
+              mark_enter.style("fill", function(d) {
+                return params.fill(vars.accessor_items(d)[vars.var_color]);
+              });
+
+            }
 
           } else if(vars.var_color !== null) {
 
@@ -1035,8 +1039,15 @@
 
           // Supporting multipe similar elements
           params._mark_id = index_item + "_" + index_mark;
-          gItems_enter.filter(params.filter).call(utils.draw_mark, params);
-          gItems.filter(params.filter).call(utils.draw_mark, params);
+          gItems_enter
+              .filter(params.filter)
+              .filter(utils.filters.redraw_only)
+              .call(utils.draw_mark, params, vars);
+
+          gItems
+              .filter(params.filter)
+
+              .call(utils.draw_mark, params, vars);
         });
 
         // Bind events to groups after marks have been created
@@ -1151,10 +1162,14 @@
 
           // Only create connections when char inits
           if(vars.init) {
-            gConnect_enter.filter(params.filter).call(utils.draw_mark, params);
+            gConnect_enter
+              .filter(params.filter)
+              .call(utils.draw_mark, params, vars);
           }
 
-          gConnect.filter(params.filter).call(utils.draw_mark, params);
+          gConnect
+            .filter(params.filter)
+            .call(utils.draw_mark, params, vars);
         });
 
         // Bind events to groups after marks have been created
@@ -1466,3 +1481,7 @@
         .attr("stroke-dashoffset", 0);
 
   }
+
+  utils.filters = {};
+
+  utils.redraw_only = function(d) { return d.__redraw; }
