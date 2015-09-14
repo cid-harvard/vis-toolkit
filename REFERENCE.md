@@ -419,6 +419,18 @@ marks: [{
 
 * **Note:**
 
+### `items.marks.translate`
+
+> Customizing the exit function for marks.
+
+* **Type:** `Array`
+
+* **Default:** [20, 20]
+
+* **Example:** 
+
+* **Note:** We need a minimal offset between the tooltip and the mark.
+
 ### `connect`
 
 > Second type of graphical mark that aims at connecting items.
