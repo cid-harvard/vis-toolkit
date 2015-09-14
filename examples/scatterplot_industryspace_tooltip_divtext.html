@@ -130,7 +130,7 @@ d3.json("../data/industry-data-neave-150707.json", function(data) {
             width: 200
           }, {
             var_mark: '__selected',
-            type: d3.scale.ordinal().domain([true, false]).range(["divtext", "none"]),
+            type: d3.scale.ordinal().domain([true, false]).range(["divtext  ", "none"]),
             class: function() { return "tooltip"; },
             text: function(d) {
               return d['pname'] + ' (' + d['id'] + ')';

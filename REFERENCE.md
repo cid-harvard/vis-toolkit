@@ -515,9 +515,9 @@ Some time-related values are internally created:
 
 * **Type:** `String`
 
-* **Default:** 'en_US'
+* **Default:** `en_US`
 
-* **Example:** 'es_ES', 'fr_FR'
+* **Example:** `es_ES`, `fr_FR`
 
 * **Note:** Translations are currently built-in, should be made available separately.
 
