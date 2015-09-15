@@ -1,0 +1,133 @@
+<!doctype html>
+<meta charset="utf-8">
+<script src="../js/d3.js"></script>
+<script src="../build/vistk.js"></script>
+<link href="../css/vistk.css" rel="stylesheet">
+<body>
+<div id="viz"></div>
+<body>
+<script src="../js/d3.js"></script>
+<script>
+
+d3.json("../data/partners_usa_2012_csay.json", function(error, data) {
+
+  var cumul_value = Array();
+
+  data.data.forEach(function(d) {
+
+    if(typeof cumul_value[d.name] === 'undefined') {
+      cumul_value[d.name] = 0;
+    }
+
+    cumul_value[d.name] += d.value;
+    d.cumul_value = cumul_value[d.name];
+    
+  });
+
+  visualization = vistk.viz().params({
+    type: "linechart",
+    container: "#viz",
+    height: 600,
+    width: 900,
+    margin: {top: 30, right: 100, bottom: 30, left: 10},
+    data: data.data,
+    var_id: "name",
+    var_group: "region_id",
+    var_color: "region_id", // TODO: color by final ranking value..
+    color: d3.scale.ordinal().domain(["Africa", "Americas", "Asia", "Europe", "Oceania"]).range(["#99237d", "#c72439", "#6bc145", "#88c7ed", "#dd9f98"]),
+    var_text: "name",
+    y_text: "ECI Rank",
+    var_y: "cumul_value",
+    var_x: 'year',
+    interpolate: 'linear',
+    y_invert: true,
+    time: {
+      parse: d3.time.format("%Y").parse,
+      var_time: 'year',
+      current_time: '2012'
+    },
+    selection: ["Japan", "Switzerland", "Germany"],
+    highlight: "France",
+    ui: {
+      default: true,
+      options: ["country", "continent"]
+    },
+    title: "Cumulated trade partners for the United States"
+  });
+
+  d3.select("#viz").call(visualization);
+
+  // Add some controls
+  d3.select("#viz").selectAll(".alignLines").data(["align_lines"]).enter().append("button")
+   .attr("type", "button")
+   .attr("class", "alignLines")
+   .on("click", function() {
+
+      if(visualization.params().var_y == "value") { 
+        visualization.params({
+          var_y: "cumul_value",
+        });
+      } else {
+        visualization.params({
+          var_y: "value",
+        });
+      }
+
+      visualization.params().refresh = true;
+      visualization.params().init = true;
+
+      d3.select(visualization.container()).call(visualization);
+
+    })
+   .html("Toggle cumul");
+
+  var label_slider = d3.select("#viz")
+    .selectAll(".sliderYear")
+    .data(["sliderYear"])
+  .enter()
+    .append("label")
+    .attr("class", "sliderYear")
+    .text("Change pivot time: ")
+
+  label_slider.append("input")
+        .attr("type", "range")
+        .property("min", d3.min(visualization.params().time.points))
+        .property("max", d3.max(visualization.params().time.points))
+        .property("value", d3.min(visualization.params().time.points))
+        .attr("step", 1)
+        .on("input", function() {
+         
+          var this_value = this.value;
+          // Find the value year
+          year_offset = d3.range(visualization.params().unique_items.length).map(function() { return 0; });
+
+          data.data.forEach(function(d) {
+            if(+d.year == +this_value) {
+              year_offset[d.name] = d.cumul_value;
+            }
+          });
+
+          data.data.forEach(function(d) {
+            d.cumul_value_offset = d.cumul_value - year_offset[d.name];
+          });
+
+          dd = data;
+
+          visualization.params({
+            var_y: "cumul_value_offset"
+          });
+
+          visualization.params().refresh = true;
+          visualization.params().init = true;
+
+          d3.select(visualization.container()).call(visualization);
+
+        })
+        .style("width", "100px");
+
+
+
+});
+
+
+</script>

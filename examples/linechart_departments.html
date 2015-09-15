@@ -58,25 +58,19 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
            .on("click", function() {
 
               // find the current time
-
               var dept_baseline = Array();
               // Find value for time baseline
               departments.forEach(function(d, i) {
 
                 if(d['year'] == 2000) {
-
                   dept_baseline[d['dept_name']] = d["realgdp"];
-
                 }
 
               });
 
               departments.forEach(function(d, i) {
-
                 d["realgdp_aligned"] = +d["realgdp"] - dept_baseline[d['dept_name']];
-
               });
-
 
               // Then move groups to their grid position
               visualization.param("refresh", true);

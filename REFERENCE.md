@@ -1,47 +1,53 @@
 # Reference
 
-* [General](#general)
-  * [`type`](#type)
-  * [`margin`](#margin)
-  * [`container`](#container)
-  * [`title`](#title)
-  * [`var_color`](#var_color)
-  * [`color`](#color)
-  * [`var_text`](#var_text)
-* [Data](#data)
-  * [`data`](#data)
-  * [`var_id`](#var_id)
-  * [`var_group`](#var_group)
-  * [`set`](#set)
-  * [`aggregated`](#aggregated)
-  * [`selection`](#selection)
-  * [`highlight`](#highlight)
-  * [Axis / Layout Mapping](#axis--layout-mapping)
-* [Marks](#marks)
-  * [`items`](#items)
-  * [`items.marks`](#itemsmarks)
-  * [`items.marks.type`](#itemsmarkstype)
-  * [`items.marks.var_type`](#itemsmarksvar_type)
-  * [`items.marks.title`](#itemsmarkstitle)
-  * [`items.marks.class`](#itemsmarksclass)
-  * [`items.marks.fill`](#itemsmarksfill)
-  * [`items.marks.enter`](#itemsmarksenter)
-  * [`items.marks.exit`](#itemsmarksexit)
-  * [`connect`](#connect)
-* [Time](#time)
-  * [`time`](#time)
-    * [Format](#format)
-  * [`time.var_time`](#timevar_time)
-  * [`time.current_time`](#timecurrent_time)
-  * [`time.parse` (Function)](#timeparse-function)
-* [UI](#ui)
-  * [`ui`](#ui)
-    * [Format](#format-1)
-* [Utils](#utils)
-  * [`vistk.utils.min`](#vistkutilsmin)
-  * [`vistk.utils.max`](#vistkutilsmax)
-  * [`vistk.utils.translate_along`](#vistkutilstranslate_along)
-  * [`utils.draw_mark`](#utilsdraw_mark)
+- [Reference](#reference)
+  - [General](#general)
+    - [`type`](#type)
+    - [`margin`](#margin)
+    - [`container`](#container)
+    - [`title`](#title)
+    - [`var_color`](#var_color)
+    - [`color`](#color)
+    - [`var_text`](#var_text)
+  - [Data](#data)
+    - [`data`](#data)
+    - [`var_id`](#var_id)
+    - [`var_group`](#var_group)
+    - [`set`](#set)
+    - [`aggregated`](#aggregated)
+    - [`selection`](#selection)
+    - [`highlight`](#highlight)
+  - [Axis / Layout Mapping](#axis--layout-mapping)
+  - [Items](#items)
+    - [`items`](#items)
+    - [`items.marks`](#itemsmarks)
+    - [`items.marks.type`](#itemsmarkstype)
+    - [`items.marks.var_type`](#itemsmarksvar_type)
+    - [`items.marks.title`](#itemsmarkstitle)
+    - [`items.marks.class`](#itemsmarksclass)
+    - [`items.marks.fill`](#itemsmarksfill)
+    - [`items.marks.enter`](#itemsmarksenter)
+    - [`items.marks.exit`](#itemsmarksexit)
+    - [`items.marks.translate`](#itemsmarkstranslate)
+    - [`items.marks.rotate`](#itemsmarksrotate)
+  - [Connect](#connect)
+    - [`connect`](#connect)
+  - [Time](#time)
+    - [`time`](#time)
+    - [`time.var_time`](#timevar_time)
+    - [`time.current_time`](#timecurrent_time)
+    - [`time.parse`](#timeparse)
+  - [UI](#ui)
+    - [`ui`](#ui)
+  - [Misc](#misc)
+    - [`lang`](#lang)
+  - [Utils (Public)](#utils-public)
+    - [`vistk.utils.min`](#vistkutilsmin)
+    - [`vistk.utils.max`](#vistkutilsmax)
+    - [`vistk.utils.translate_along`](#vistkutilstranslate_along)
+  - [Utils (Private)](#utils-private)
+    - [`utils.draw_mark`](#utilsdraw_mark)
+    - [`utils.draw_chart`](#utilsdraw_chart)
 
 > This document lists all the parameters to create and customize visualizations.
 
@@ -146,6 +152,17 @@ A custom function can be passed  `var_color: 'rank'` and `color: d3.scale.linear
 * **Note:** Not all graphical marks contain text to be displayed. Naturally the `text` one requires one.
 
 If no id has been set, then `var_text` defaults to `__id`.
+
+### `z_index`
+
+* Type:** `Array`
+
+* **Default:** `[{selector: '.connect__group', attribute: '__highlighted', type: 'productspace', weight: 1}, {selector: '.mark__group', attribute: '__aggregated', type: 'productspace', weight: 1}]`
+
+* **Example:** `name`
+
+* **Note:** Not all graphical marks contain text to be displayed. Naturally the `text` one requires one.
+
 
 ## Data
 
@@ -292,9 +309,9 @@ Below are several variables aimed at customizing the chart's template. Those are
 * `x_axis_translate` (Default: [0, 0])
 * `x_invert` (Default: false)
 
-## Marks
+## Items
 
-A chart is made of items and connect marks that will enable to create complex charts.
+The main way to represent data is to use **items**, which are the direct representation of data. Another type of representation is **connect** which are derived from items.
 
 ### `items`
 
@@ -310,7 +327,6 @@ A chart is made of items and connect marks that will enable to create complex ch
 &nbsp;
 
 
-
 ### `items.marks`
 
 > Creates a new `<SVG>`  group that will contain marks.
@@ -321,9 +337,13 @@ A chart is made of items and connect marks that will enable to create complex ch
 
 * **Example:**
 
-* **Note:**
+* **Note:** Each mark being drawn has three arguments:
 
-* **Default:**
+* Data for the item
+* Index among all data
+* Vars for all the variables and 
+
+
 
 ### `items.marks.type`
 
@@ -401,7 +421,7 @@ marks: [{
 
 * **Type:**
 
-* **Default:** The final mark.
+* **Default:** Nothing.
 
 * **Example:**
 
@@ -413,11 +433,39 @@ marks: [{
 
 * **Type:**
 
-* **Default:** The original mark.
+* **Default:** Nothing.
 
 * **Example:**
 
 * **Note:**
+
+### `items.marks.translate`
+
+> Translate mark
+
+* **Type:** `Array`
+
+* **Default:** [20, 20]
+
+* **Example:** 
+
+* **Note:** We need a minimal offset between the tooltip and the mark.
+
+### `items.marks.rotate`
+
+> Rotate mark.
+
+* **Type:** `Array`
+
+* **Default:** 0
+
+* **Example:** 
+
+* **Note:** Rotation is in degrees, clockwise.
+
+## Connect
+
+The second type of marks that are derived from **items**.
 
 ### `connect`
 
@@ -431,6 +479,7 @@ marks: [{
 
 * **Note:**
 
+[The rest is quite similar to the **items** but still need to be filled out]
 
 ## Time
 
@@ -482,8 +531,8 @@ Some time-related values are internally created:
 * **Default:** `function(d) { return d; }`
 
 * **Example**: Depends on the way time values are formated in the dataset.
-&nbsp;
-`"2008"` &rarr; `d3.time.format("%Y").parse`&nbsp;
+
+`"2008"` &rarr; `d3.time.format("%Y")`&nbsp;
 `"Apr 2000"` &rarr; `d3.time.format("%b %d, %Y")`&nbsp;
 
 * **Note:** See the [D3 time formatting](https://github.com/mbostock/d3/wiki/Time-Formatting) documentation.
@@ -515,9 +564,9 @@ Some time-related values are internally created:
 
 * **Type:** `String`
 
-* **Default:** 'en_US'
+* **Default:** `en_US`
 
-* **Example:** 'es_ES', 'fr_FR'
+* **Example:** `es_ES`, `fr_FR`
 
 * **Note:** Translations are currently built-in, should be made available separately.
 

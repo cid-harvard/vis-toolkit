@@ -12,8 +12,7 @@
 
 .connect__line.highlighted {
   stroke-width: 2.5px;
-  stroke-opacity: 1;
-  stroke: red;
+  stroke-opacity: .6;
 }
 
 g:hover .items__mark__circle:not(.highlighted__adjacent) {
@@ -120,20 +119,19 @@ d3.json("../data/industry-data-neave-150707.json", function(data) {
             var_r: "size"
           }, {
             var_mark: '__highlighted',
-            type: d3.scale.ordinal().domain([true, false]).range(["div", "none"]),
-            class: function() {
-              return "tooltip";
+            type: d3.scale.ordinal().domain([true, false]).range(["divtext", "none"]),
+            class: function() { return "tooltip"; },
+            text: function(d) {
+              return d['pname'] + ' (' + d['id'] + ')';
             },
-            text: function(d, i, vars) {
-              return d['pname'] + ' (' + d['id'] + ') coordinates (x: ' + vars.x_scale[0]["func"](d[vars.var_x]) + ', ' + vars.y_scale[0]["func"](d[vars.var_y]) + ')';
-            },
-            translate: [20, 20],
+            translate: [50, 50],
             exit: function() {
+
             },
             width: 200
           }, {
             var_mark: '__selected',
-            type: d3.scale.ordinal().domain([true, false]).range(["div", "none"]),
+            type: d3.scale.ordinal().domain([true, false]).range(["divtext  ", "none"]),
             class: function() { return "tooltip"; },
             text: function(d) {
               return d['pname'] + ' (' + d['id'] + ')';
@@ -144,8 +142,7 @@ d3.json("../data/industry-data-neave-150707.json", function(data) {
           default: true,
           options: ["community_name", "product"]
         },
-        title: "Industry Space Colombia",
-        highlight: ["7499"]
+        title: "Industry Space Colombia"
       });
 
     d3.select("#viz").call(visualization);

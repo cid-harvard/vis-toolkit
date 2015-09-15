@@ -35,20 +35,20 @@
                     });
 
   }
-  
-  //  Main function to draw marks 
-  //  Invoked from a .each() call passing in the current datum d and index i, 
+
+  //  Main function to draw marks
+  //  Invoked from a .each() call passing in the current datum d and index i,
   //  with the this context of the current DOM element
   //
-  //  params contains the parameters for the current graphical mark to draw 
+  //  params contains the parameters for the current graphical mark to draw
   //  e.g. scales, type of mark, radius, color function, ..
-  utils.draw_mark = function(selection, params) {
+  utils.draw_mark = function(selection, params, vars) {
 
     if(vars.dev) {
       console.log("[utils.draw_mark]", params.type)
     }
 
-    selection.each(function(d) {
+    selection.each(function(d, i) {
 
       if(!d.__redraw) {
         return;
@@ -64,16 +64,14 @@
         params_type = params.type(d[params.var_mark]);
       }
 
-      if(typeof params.rotate === "undefined") {
-        params.rotate = 0;
-      }
+      var params_text = "";
 
-      if(typeof params.translate === "undefined" || params.translate == null) {
-        params.translate = [0, 0];
-      }
-
-      if(typeof params.text !== "undefined" && typeof params.text === "function") {
-        params_text = params.text(d);
+      if(typeof params.text !== "undefined") {
+        if(typeof params.text === "function") {
+          params_text = params.text(d, i , vars);
+        } else if(typeof params.text === "String") {
+          params_text = params.text;
+        }
       }
 
       if(typeof params.width !== "undefined") {
@@ -108,6 +106,26 @@
         }
       }
 
+      var params_translate = [0, 0];
+
+      if(typeof params.translate !== "undefined" && params.translate !== null) {
+        if(typeof params.translate === "function") {
+          params_translate = params.translate(d, i, vars);
+        } else {
+          params_translate = params.translate;
+        }
+      }
+
+      var params_rotate = 0;
+
+      if(typeof params.rotate !== "undefined" && params.rotate !== null) {
+        if(typeof params.rotate === "function") {
+          params_rotate = params.rotate(d);
+        } else {
+          params_rotate = params.rotate;
+        }
+      }
+
       // Use the default accessor
       var accessor_data = vars.accessor_data;
 
@@ -128,19 +146,19 @@
               .attr("x", 10)
               .attr("y", 0)
               .attr("dy", ".35em")
-              .attr("transform", "translate(" +  params.translate + ")rotate(" +  params.rotate + ")");
+              .attr("transform", "translate(" +  params_translate + ")rotate(" +  params_rotate + ")");
 
           items_mark_text
               .classed("highlighted", function(d, i) { return d.__highlighted; })
               .classed("selected", function(d, i) { return d.__selected; })
               .transition().duration(vars.duration)
-              .attr("transform", "translate(" +  params.translate + ")rotate(" +  params.rotate + ")")
+              .attr("transform", "translate(" +  params_translate + ")rotate(" +  params_rotate + ")")
               .text(function(d) {
 
                 if(typeof params.text !== "undefined") {
                   return params.text(d);
                 } else {
-                  return vars.accessor_data(d)[vars.var_text]; 
+                  return vars.accessor_data(d)[vars.var_text];
                 }
 
               });
@@ -170,39 +188,37 @@
                      return "auto";
                    }
                  })
-                 .style("height", function(d) { 
+                 .style("height", function(d) {
                    if(typeof params_height !== "undefined") {
                      return params_height + "px";
                    } else {
-                    return "auto"; 
+                    return "auto";
                    }
                  })
                  .style("left", function(d) {
                    if(typeof params_x !== "undefined") {
                      return params_x + "px";
                    } else {
-                     return (vars.x_scale[0]["func"](vars.accessor_data(d)[vars.var_x]) + 20) + "px";
+                     return (vars.x_scale[0]["func"](vars.accessor_data(d)[vars.var_x]) + params_translate[0]) + "px";
                    }
                  })
                  .style("top", function(d) {
                    if(typeof params_y !== "undefined") {
                      return params_y + "px";
                    } else {
-                     return (vars.y_scale[0]["func"](vars.accessor_data(d)[vars.var_y]) + 10) + "px";
+                     return (vars.y_scale[0]["func"](vars.accessor_data(d)[vars.var_y]) + params_translate[1]) + "px";
                    }
                  })
                  .html(function(d) {
                     if(typeof params_text !== "undefined") {
                       return params_text;
                     } else {
-                      return vars.accessor_data(d)[vars.var_text]; 
+                      return vars.accessor_data(d)[vars.var_text];
                     }
                  });
 
           if(typeof params.class !== "undefined") {
-
             items_mark_div_enter.classed(params.class(vars.accessor_items(d)), true);
-
           }
 
           items_mark_div.exit().remove();
@@ -232,18 +248,18 @@
                 })
                .append("xhtml:body")
                .append("div")
-               .style("width", function(d) { 
+               .style("width", function(d) {
                  if(typeof d.dx !== "undefined") {
                    return (d.dx - 2*vars.padding) + "px";
                  } else {
                    return "150px";
                  }
                 })
-               .style("height", function(d) { 
+               .style("height", function(d) {
                  if(typeof d.dy !== "undefined") {
                    return (d.dx - 2*vars.padding) + "px";
                  } else {
-                  return "100%"; 
+                  return "100%";
                 }
                 })
                .style({"text-overflow": "ellipsis", "overflow": "hidden"})
@@ -251,26 +267,26 @@
                   if(typeof params_text !== "undefined") {
                     return params_text;
                   } else {
-                    return vars.accessor_data(d)[vars.var_text]; 
+                    return vars.accessor_data(d)[vars.var_text];
                   }
                });
 
           items_mark_divtext.select('div')
-                 .transition()
-                 .style("width", function(d) { 
-                   if(typeof d.dx !== "undefined") {
-                     return (d.dx - 2*vars.padding) + "px";
-                   } else {
-                     return "150px";
-                   }
-                  })
-                 .style("height", function(d) { 
-                   if(typeof d.dy !== "undefined") {
-                     return (d.dx - 2*vars.padding) + "px";
-                   } else {
-                    return "100%"; 
-                  }
-                  });
+              .transition()
+              .style("width", function(d) {
+                if(typeof d.dx !== "undefined") {
+                  return (d.dx - 2*vars.padding) + "px";
+                } else {
+                  return "150px";
+                }
+               })
+              .style("height", function(d) {
+                if(typeof d.dy !== "undefined") {
+                  return (d.dx - 2*vars.padding) + "px";
+                } else {
+                 return "100%";
+               }
+               });
 
           if(typeof params.class !== "undefined") {
 
@@ -290,7 +306,7 @@
           items_mark_image.enter().append("image")
                  .classed("items__mark__image", true)
                  .classed("items_" + mark_id, true)
-                 .attr("xlink:href", params.href) 
+                 .attr("xlink:href", params.href)
                  .attr("x", 0)
                  .attr("y", 0)
                  .attr("width", 60)
@@ -304,14 +320,14 @@
 
         var items_mark_rect = d3.select(this).selectAll(".items__mark__rect").data([d]);
 
-        items_mark_rect.enter().append("rect")                            
+        items_mark_rect.enter().append("rect")
                   .classed("items__mark__rect", true)
                   .classed("items_" + mark_id, true)
                   .attr("x", params.x || 0)
                   .attr("y", params.y || 0)
                   .attr("height", params.height || 10)
                   .attr("width", params.width || 10)
-                  .attr("transform", "rotate(0)")
+                  .attr("transform", "rotate(" + params_rotate + ")")
                   .style("fill", function(d) { return vars.color(vars.accessor_items(d)[vars.var_color]); });
 
         items_mark_rect
@@ -336,15 +352,13 @@
             .classed("items__mark__diamond", true)
             .classed("items_" + mark_id, true)
             .attr("height", vars.mark.height)
-            .attr("width", vars.mark.width)                              
+            .attr("width", vars.mark.width)
             .attr("x", -vars.mark.width/2)
             .attr("y", -vars.mark.height/2)
-            .attr("transform", "rotate(45)");
+            .attr("transform", "rotate(" + (params_rotate + 45) + ")");
 
           if(typeof params.class !== "undefined") {
-            
             items_mark_diamond_enter.classed(params.class(vars.accessor_items(d)), true);
-
           }
 
         items_mark_diamond
@@ -367,21 +381,14 @@
               .attr("y1", function(d) { return -20; })
               .attr("x2", function(d) { return 0; })
               .attr("y2", function(d) { return 20; })
-              .attr("transform", "translate(0,0)rotate(0)");
+              .attr("transform", "translate(0,0)rotate(" + params_rotate + ")");
 
-          items_mark_tick              
+          items_mark_tick
               .classed("highlighted", function(d, i) { return d.__highlighted; })
               .classed("selected", function(d, i) { return d.__selected; })
               .transition().duration(vars.duration)
               .attr("transform", function(d) {
-
-                if(typeof params.translate === "function") {
-                  params_translate = params.translate(d);
-                } else {
-                  params_translate = params.translate;
-                }
-
-                return "translate(" +  params_translate + ")rotate(" +  params.rotate + ")";
+                return "translate(" +  params_translate + ")rotate(" +  params_rotate + ")";
               });
 
           items_mark_tick.exit().remove();
@@ -397,8 +404,8 @@
               .classed("items_" + mark_id, true)
               .attr("class", "country")
               .attr("title", function(d,i) {
-            //    active = d3.select(null); 
-                return d.name; 
+            //    active = d3.select(null);
+                return d.name;
               })
            //   .on("click", clicked);
 
@@ -406,7 +413,7 @@
               .classed("highlighted", function(d, i) { return d.__highlighted; })
               .classed("selected", function(d, i) { return d.__selected; })
               .attr("d", vars.path)
-              .style("fill", function(d, i) { 
+              .style("fill", function(d, i) {
                 return params.fill(vars.accessor_data(d)[vars.var_color]);
               })
               .transition().duration(vars.duration)
@@ -471,7 +478,7 @@
                 .domain(d3.extent(vars.new_data, function(d) { return vars.accessor_data(d)[vars.var_r]; }))
 
               return r_scale(vars.accessor_data(d)[vars.var_r]);
-            } 
+            }
 
           }).innerRadius(0);
 
@@ -546,7 +553,7 @@
         case "path":
 
           var this_accessor_values = function(d) { return d.values; };
-          
+
           if(typeof params['func'] == 'undefined') {
               params['func'] = d3.svg.line()
                .interpolate('linear')
@@ -563,17 +570,17 @@
               .style("fill", params.fill)
               .style("stroke", params.stroke)
               .attr('d', function(e) {
-                return params["func"](this_accessor_values(e)); 
+                return params["func"](this_accessor_values(e));
               });
 
-          mark              
+          mark
               .classed("highlighted", function(e, j) { return e.__highlighted; })
               .classed("selected", function(e, j) { return e.__selected; })
               .transition().duration(vars.duration)
               .style("fill", params.fill)
               .style("stroke", params.stroke)
               .attr('d', function(e) {
-                return params["func"](this_accessor_values(e)); 
+                return params["func"](this_accessor_values(e));
               });
 
         break;
@@ -606,12 +613,12 @@
           scope.zoom = vars.zoom;
           // Update scales
           scope.x_scale[0]["func"].domain(d3.extent(d.values, function(d) {
-           return d[scope.var_x]; 
+           return d[scope.var_x];
           }))
           .range([0, 50]);
 
           scope.y_scale[0]["func"].domain(d3.extent(d.values, function(d) {
-           return d[scope.var_y]; 
+           return d[scope.var_y];
           }))
           .range([0, 50]);
 
@@ -637,12 +644,12 @@
 
           // Update scales
           scope.x_scale[0]["func"].domain(d3.extent(d.values, function(d) {
-           return d[scope.var_x]; 
+           return d[scope.var_x];
           }))
           .range([0, 50]);
 
           scope.y_scale[0]["func"].domain(d3.extent(d.values, function(d) {
-           return d[scope.var_y]; 
+           return d[scope.var_y];
           }))
           .range([0, 50]);
 
@@ -708,7 +715,7 @@
               .classed('items__mark__star', true)
               .attr('d', star);
 
-          mark              
+          mark
               .classed("highlighted", function(d, i) { return d.__highlighted; })
               .classed("selected", function(d, i) { return d.__selected; });
 
@@ -791,7 +798,7 @@
                     return params.radius;
                   } else {
                     return vars.radius;
-                  }                 
+                  }
                 } else {
                   var r_scale = d3.scale.linear()
                     .range([vars.radius_min, vars.radius_max])
@@ -803,21 +810,25 @@
 
           if(typeof params.fill !== "undefined") {
 
-            mark_enter.style("fill", function(d) {
-              return params.fill(vars.accessor_items(d)[vars.var_color]);
-            });
+            if(typeof params.fill === "function") {
 
-            mark.style("fill", function(d) {
-              return params.fill(vars.accessor_items(d)[vars.var_color]);
-            });
+              mark.style("fill", params.fill(d, i, vars));
+
+            } else {
+
+              mark_enter.style("fill", function(d) {
+                return params.fill(vars.accessor_items(d)[vars.var_color]);
+              });
+
+            }
 
           } else if(vars.var_color !== null) {
 
-            mark_enter.style("fill", function(d) { 
+            mark_enter.style("fill", function(d) {
               return vars.color(vars.accessor_items(d)[vars.var_color]);
             });
-          
-            mark.style("fill", function(d) { 
+
+            mark.style("fill", function(d) {
               return vars.color(vars.accessor_items(d)[vars.var_color]);
             });
 
@@ -991,7 +1002,7 @@
       vars.items = vars.items(vars);
     }
 
-    if(typeof vars.items !== "undefined" && vars.items[0] !== "undefined" && vars.type !== "stacked") {
+    if(typeof vars.items !== "undefined" && vars.items[0] !== "undefined" &&  Object.keys(vars.items).length > 0 && vars.type !== "stacked") {
 
       vars.items.forEach(function(item, index_item) {
 
@@ -1027,27 +1038,34 @@
         item.marks.forEach(function(params, index_mark) {
 
           if(typeof params.filter == "undefined") {
-            params.filter = function() { 
-              return true; 
+            params.filter = function() {
+              return true;
             }
-          } 
+          }
 
           // Supporting multipe similar elements
-          params._mark_id = index_item + "_" + index_mark; 
-          gItems_enter.filter(params.filter).call(utils.draw_mark, params);
-          gItems.filter(params.filter).call(utils.draw_mark, params); 
-        }); 
+          params._mark_id = index_item + "_" + index_mark;
+          gItems_enter
+              .filter(params.filter)
+              .filter(utils.filters.redraw_only)
+              .call(utils.draw_mark, params, vars);
+
+          gItems
+              .filter(params.filter)
+
+              .call(utils.draw_mark, params, vars);
+        });
 
         // Bind events to groups after marks have been created
-        gItems.each(utils.items_group); 
-        /* Should be as below but current params don't match this format 
+        gItems.each(utils.items_group);
+        /* Should be as below but current params don't match this format
           // APPEND AND UPDATE ITEMS MARK
           vars.items.forEach(function(item) {
             item.marks.forEach(function(params) {
               gItems_enter.call(utils.draw_mark, params);
               gItems.call(utils.draw_mark, params);
             });
-          }); 
+          });
         */
 
         // IN CASE OF CUSTOM UPDATE FOR ITEMS
@@ -1073,7 +1091,7 @@
         } else {
           gItems_exit.remove();
         }
-        
+
         if(vars.type == "productspace") {
           vars.new_data.forEach(function(d) { d.__redraw = false; });
         }
@@ -1085,7 +1103,7 @@
         utils.zoom_to_nodes(vars.zoom);
 
       } else {
-        
+
         vars_svg.transition()
                 .duration(vars.duration)
                 .attr("transform", "translate(" + vars.margin.left + "," + vars.margin.top + ")");
@@ -1094,7 +1112,7 @@
 
     }
 
-    if(typeof vars.connect !== "undefined" && typeof vars.connect[0] !== "undefined") {
+    if(typeof vars.connect !== "undefined" && typeof vars.connect[0] !== "undefined" && Object.keys(vars.connect).length > 0) {
 
       // 1/ Between different items at a given time for one dimension
       // 2/ Between same items at a given time points
@@ -1134,14 +1152,14 @@
                           d._index_item = index_item;
                           return d[vars.var_id] + "_" + index_item;
                         });
-      
+
         // ENTER CONNECT
         var gConnect_enter = gConnect.enter()
                         .insert("g", ":first-child")
                         .attr("class", "connect__group");
 
         connect.marks.forEach(function(params, index_mark) {
-      
+
           if(typeof params.filter == "undefined")
             params.filter = function() { return true; };
 
@@ -1150,10 +1168,14 @@
 
           // Only create connections when char inits
           if(vars.init) {
-            gConnect_enter.filter(params.filter).call(utils.draw_mark, params);
+            gConnect_enter
+              .filter(params.filter)
+              .call(utils.draw_mark, params, vars);
           }
-          
-          gConnect.filter(params.filter).call(utils.draw_mark, params);
+
+          gConnect
+            .filter(params.filter)
+            .call(utils.draw_mark, params, vars);
         });
 
         // Bind events to groups after marks have been created
@@ -1219,13 +1241,24 @@
     }
 
     // POST-RENDERING STUFF
-    // Usually aimed at updating the rendering order of elements 
-    if(vars.type == "productspace") {
+    // Usually aimed at updating the rendering order of elements
+    vars.z_index.forEach(function(d) {
 
-      vars_svg.selectAll('.mark__group').sort(function(a, b) { return a.__aggregated ;});
-      vars_svg.selectAll('.connect__group').sort(function(a, b) { return a.__highlighted; });
+      if(vars.type === d.type) {
+        vars_svg.selectAll(d.selector)
+          .filter(function(e) {
+            if(typeof d.attribute !== 'undefined') {
+              return e[d.attribute];
+            } else {
+              return true;
+            }
+          })
+          .each(function() {
+            this.parentNode.appendChild(this);
+          });
+      }
 
-    }
+    });
 
     utils.background_label(vars.title);
 
@@ -1233,54 +1266,6 @@
     vars.refresh = false;
     vars.init = false;
 
-/*
-    if(vars.dev) { 
-      console.log("Creating chart with params", params, _, data);
-    }
-
-    // PRE-UPDATE CONNECT
-    var gConnect = _.selectAll(".connect__group")
-                    .data([data], function(d, i) { return i; })
-  
-    // ENTER CONNECT
-    var gConnect_enter = gConnect.enter()
-                    .append("g")
-                    .attr("class", "connect__group")
-                    .attr("transform", "translate(0, 0)")
-
-     vars.connect = vars.default_params.sparkline(params);
-     console.log("aasss", vars.connect)
-
-    // APPEND CONNECT MARK
-    if(typeof vars.connect !== "undefined" && typeof vars.connect[0] !== "undefined") {
-      console.log("DRAWW")
-      params.connect.forEach(function(connect) {
-        connect.marks.forEach(function(params) {
-
-          gConnect_enter.call(utils.draw_mark, params);
-          gConnect.call(utils.draw_mark, params);
-        });
-      });
-    }
-    // PRE-UPDATE ITEMS
-    var gItems = _.selectAll(".mark__group")
-                    .data([data], function(d, i) { return d[vars.var_id]; });
-
-    // ENTER ITEMS
-    var gItems_enter = gItems.enter()
-                    .append("g")
-                    .each(utils.items_group)
-                    .attr("transform", function(d, i) {
-                      return "translate(" + vars.x_scale[0]["func"](d[vars.var_x]) + ", " + vars.y_scale[0]["func"](d[vars.var_y]) + ")";
-                    });
-
-    // APPEND AND UPDATE ITEMS MARK
-    params.items[0].marks.forEach(function(params) {
-      gItems_enter.call(utils.draw_mark, params);
-      gItems.call(utils.draw_mark, params);
-    });
-
-*/
   }
 
   utils.x_axis = function(d, i) {
@@ -1356,7 +1341,7 @@
 
   }
 
-  utils.make_x_axis = function() {        
+  utils.make_x_axis = function() {
     return d3.svg.axis()
         .scale(vars.x_scale[0]["func"])
         .ticks(vars.x_ticks)
@@ -1368,7 +1353,7 @@
         .orient(vars.x_axis_orient);
   }
 
-  utils.make_y_axis = function() {        
+  utils.make_y_axis = function() {
     return d3.svg.axis()
         .scale(vars.y_scale[0]["func"])
         .ticks(vars.y_ticks)
@@ -1433,7 +1418,7 @@
   }
 
   utils.update_filters = function(value, add) {
-   
+
     if(vars.dev) {
       console.log("[update_filters]", value);
     }
@@ -1465,3 +1450,7 @@
         .attr("stroke-dashoffset", 0);
 
   }
+
+  utils.filters = {};
+
+  utils.redraw_only = function(d) { return d.__redraw; }
