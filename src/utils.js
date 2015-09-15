@@ -64,8 +64,14 @@
         params_type = params.type(d[params.var_mark]);
       }
 
-      if(typeof params.text !== "undefined" && typeof params.text === "function") {
-        params_text = params.text(d);
+      var params_text = "";
+
+      if(typeof params.text !== "undefined") {
+        if(typeof params.text === "function") {
+          params_text = params.text(d, i , vars);
+        } else if(typeof params.text === "String") {
+          params_text = params.text;
+        }
       }
 
       if(typeof params.width !== "undefined") {

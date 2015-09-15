@@ -121,13 +121,14 @@ d3.json("../data/industry-data-neave-150707.json", function(data) {
           }, {
             var_mark: '__highlighted',
             type: d3.scale.ordinal().domain([true, false]).range(["div", "none"]),
-            class: function() { return "tooltip"; },
-            text: function(d) {
-              return d['pname'] + ' (' + d['id'] + ')';
+            class: function() {
+              return "tooltip";
             },
-             translate: [20, 20],
+            text: function(d, i, vars) {
+              return d['pname'] + ' (' + d['id'] + ') coordinates (x: ' + vars.x_scale[0]["func"](d[vars.var_x]) + ', ' + vars.y_scale[0]["func"](d[vars.var_y]) + ')';
+            },
+            translate: [20, 20],
             exit: function() {
-
             },
             width: 200
           }, {
