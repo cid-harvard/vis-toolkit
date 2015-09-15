@@ -1213,7 +1213,13 @@
           .append("g")
           .attr("class", "x grid")
           .style("display", function() { return vars.x_grid_show ? "block": "none"; })
-          .attr("transform", "translate(0," + (vars.margin.top) + ")");
+          .attr("transform", function() {
+            if(vars.x_axis_orient == "top") {
+              return "translate(0," + (vars.height - vars.margin.top - vars.margin.bottom) + ")";
+            } else {
+              return "translate(0," + (vars.margin.top) + ")";
+            }
+          });
 
       vars_svg.selectAll(".x.grid").transition()
           .duration(vars.duration)
