@@ -1,4 +1,4 @@
-    
+
 
     // 1 - Init and define default values [INIT]
     // 2 - Duplicates the dataset [INIT, REFRESH]
@@ -12,7 +12,7 @@
     // 1 - Init and define default parameters
     vars.items_data = [];
 
-    // In case we use functions for X/Y variables 
+    // In case we use functions for X/Y variables
     if(typeof vars.var_x !== "string" && typeof vars.var_x === "function") {
       vars.data.forEach(function(d, i) {
         d.__var_x = vars.var_x();
@@ -58,7 +58,7 @@
 
           d.__id = i;
           return d;
- 
+
         })
 
         vars.var_id = '__id';
@@ -72,7 +72,7 @@
       // If time filter parameter is set, then keep values for this time
       if(typeof vars.time.filter != "undefined" && vars.time.filter.length > 0) {
 
-        if(vars.dev) { 
+        if(vars.dev) {
           console.log("[vars.time.filter]", vars.time.filter);
         }
 
@@ -80,20 +80,20 @@
         vars.new_data = vars.new_data.filter(function(d, i) {
           return vars.time.filter.indexOf(d[vars.time.var_time]) > -1;
         });
-       
+
       }
 
       // If time filter interval is set, then keep values from this interval
       if(typeof vars.time.filter_interval != "undefined" && vars.time.filter_interval.length == 2) {
 
-        if(vars.dev) { 
+        if(vars.dev) {
           console.log("[vars.time.interval]", vars.time.filter_interval);
         }
 
         vars.new_data = vars.new_data.filter(function(d, i) {
           return (d[vars.time.var_time] >= vars.time.filter_interval[0]) && (d[vars.time.var_time] <= vars.time.filter_interval[1]);
         });
-       
+
       }
 
       // Find unique values for various parameters
@@ -106,7 +106,7 @@
       // TODO: not sure we should remove data, but add an attribute instead would better
       if(vars.filter.length > 0) {
 
-        if(vars.dev) { 
+        if(vars.dev) {
           console.log("[vars.filter]", vars.filter);
         }
 
@@ -136,7 +136,7 @@
         .map(function(d) {
 
           // Below is what we need for time values
-          var v = {}; 
+          var v = {};
           v[vars.time.var_time] = d[vars.time.var_time];
           v[vars.var_y] = d[vars.var_y];
           v[vars.var_x] = d[vars.var_x];
@@ -156,6 +156,7 @@
         if(vars.highlight.indexOf(item_id) < 0) {
           d.__highlighted = false;
         } else {
+          console.log(d)
           d.__highlighted = true;
         }
 
@@ -251,14 +252,14 @@
 
     // Remove missing nodes
     vars.new_data = vars.new_data.filter(function(d) {
-     return !d.__missing; 
+     return !d.__missing;
     });
 
     // Aggregate data
     if(typeof vars.set['__aggregated'] !== 'undefined' && vars.refresh) {
 
-      if(vars.dev) { 
-        console.log("[vars.aggregate]", vars.aggregate); 
+      if(vars.dev) {
+        console.log("[vars.aggregate]", vars.aggregate);
       }
 
       // Do the nesting
@@ -305,7 +306,7 @@
           aggregation.piescatter[1] = {};
 
           // Assuming all the time values are present in all items
-          aggregation.values = d3.range(leaves[0].values.length).map(function(d, i) { 
+          aggregation.values = d3.range(leaves[0].values.length).map(function(d, i) {
             var d = {};
 
             if(vars.var_x === vars.time.var_time) {
@@ -313,7 +314,7 @@
             } else {
               d[vars.var_x] = 0;
             }
-            
+
             // Init values
             d[vars.var_y] = 0;
             d[vars.var_r] = 0;
@@ -327,7 +328,7 @@
           });
 
           // Assuming we only aggregate var_x, var_y, var_r
-          leaves.forEach(function(d, i) { 
+          leaves.forEach(function(d, i) {
             d.values.forEach(function(e, j) {
               if(vars.var_x !== vars.time.var_time) {
                 aggregation.values[j][vars.var_x] += e[vars.var_x];
@@ -392,7 +393,7 @@
     // Sorting the dataset
     if(typeof vars.var_sort !== "undefined" && vars.refresh) {
 
-      if(vars.dev) { 
+      if(vars.dev) {
          console.log("[updating sort]", vars.var_sort, vars.var_sort_asc, vars.user_vars)
       }
 
@@ -401,4 +402,4 @@
       } else {
         vars.new_data = vars.new_data.sort(function(a, b) { return d3.descending(a[vars.var_sort], b[vars.var_sort]);});
       }
-    } 
+    }

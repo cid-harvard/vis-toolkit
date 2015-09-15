@@ -153,10 +153,11 @@
     list_params: ["sparkline", "dotplot", "barchart", "linechart", "scatterplot", "grid", "stacked", "piechart", "slopegraph", "productspace", "treemap", "geomap", "stackedbar", "ordinal_vertical", "ordinal_horizontal", "matrix"],
     default_params: {},
 
-    postrendering: [
-      {selector: '.connect__group', attribute: '__highlighted', type: 'productspace'},
-      {selector: '.mark__group', attribute: '__aggregated', type: 'productspace'},
-     ],
+    z_index: [
+ //     {selector: '.mark__group', attribute: '__aggregated', type: 'productspace', weight: 1},
+      {selector: '.connect__group', attribute: '__highlighted', type: 'productspace', weight: 1},
+        {selector: '.mark__group', type: 'productspace', weight: 1},
+    ],
 
     set: []
   };

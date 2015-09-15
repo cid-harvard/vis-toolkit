@@ -153,6 +153,17 @@ A custom function can be passed  `var_color: 'rank'` and `color: d3.scale.linear
 
 If no id has been set, then `var_text` defaults to `__id`.
 
+### `z_index`
+
+* Type:** `Array`
+
+* **Default:** `[{selector: '.connect__group', attribute: '__highlighted', type: 'productspace', weight: 1}, {selector: '.mark__group', attribute: '__aggregated', type: 'productspace', weight: 1}]`
+
+* **Example:** `name`
+
+* **Note:** Not all graphical marks contain text to be displayed. Naturally the `text` one requires one.
+
+
 ## Data
 
 All parameters related to the semantic of the dataset.
