@@ -1236,14 +1236,23 @@
 
     // POST-RENDERING STUFF
     // Usually aimed at updating the rendering order of elements
-      vars.postrendering.forEach(function(d) {
+    vars.z_index.forEach(function(d) {
 
-        if(vars.type == d.type) {
-          vars_svg.selectAll(d.selector).sort(function(a, b) { return a[d.attr]; });
-        }
+      if(vars.type === d.type) {
+        vars_svg.selectAll(d.selector)
+          .filter(function(e) {
+            if(typeof d.attribute !== 'undefined') {
+              return e[d.attribute];
+            } else {
+              return true;
+            }
+          })
+          .each(function() {
+            this.parentNode.appendChild(this);
+          });
+      }
 
-      });
-
+    });
 
     utils.background_label(vars.title);
 
@@ -1251,54 +1260,6 @@
     vars.refresh = false;
     vars.init = false;
 
-/*
-    if(vars.dev) {
-      console.log("Creating chart with params", params, _, data);
-    }
-
-    // PRE-UPDATE CONNECT
-    var gConnect = _.selectAll(".connect__group")
-                    .data([data], function(d, i) { return i; })
-
-    // ENTER CONNECT
-    var gConnect_enter = gConnect.enter()
-                    .append("g")
-                    .attr("class", "connect__group")
-                    .attr("transform", "translate(0, 0)")
-
-     vars.connect = vars.default_params.sparkline(params);
-     console.log("aasss", vars.connect)
-
-    // APPEND CONNECT MARK
-    if(typeof vars.connect !== "undefined" && typeof vars.connect[0] !== "undefined") {
-      console.log("DRAWW")
-      params.connect.forEach(function(connect) {
-        connect.marks.forEach(function(params) {
-
-          gConnect_enter.call(utils.draw_mark, params);
-          gConnect.call(utils.draw_mark, params);
-        });
-      });
-    }
-    // PRE-UPDATE ITEMS
-    var gItems = _.selectAll(".mark__group")
-                    .data([data], function(d, i) { return d[vars.var_id]; });
-
-    // ENTER ITEMS
-    var gItems_enter = gItems.enter()
-                    .append("g")
-                    .each(utils.items_group)
-                    .attr("transform", function(d, i) {
-                      return "translate(" + vars.x_scale[0]["func"](d[vars.var_x]) + ", " + vars.y_scale[0]["func"](d[vars.var_y]) + ")";
-                    });
-
-    // APPEND AND UPDATE ITEMS MARK
-    params.items[0].marks.forEach(function(params) {
-      gItems_enter.call(utils.draw_mark, params);
-      gItems.call(utils.draw_mark, params);
-    });
-
-*/
   }
 
   utils.x_axis = function(d, i) {
