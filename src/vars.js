@@ -156,7 +156,8 @@
     z_index: [
  //     {selector: '.mark__group', attribute: '__aggregated', type: 'productspace', weight: 1},
       {selector: '.connect__group', attribute: '__highlighted', type: 'productspace', weight: 1},
-        {selector: '.mark__group', type: 'productspace', weight: 1},
+      {selector: '.mark__group', attribute: '__highlighted', type: 'productspace', weight: 1},
+      {selector: '.mark__group', attribute: '__highlighted__adjacent', type: 'productspace', weight: 1},
     ],
 
     set: []
