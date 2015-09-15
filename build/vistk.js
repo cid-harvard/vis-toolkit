@@ -4,7 +4,7 @@
 var vistk = window.vistk || {};
 window.vistk = vistk;
 
-vistk.version = "0.0.10";
+vistk.version = "0.0.11";
 vistk.utils = {};
 
 vistk.viz = function() {
@@ -52,20 +52,20 @@ var utils ={};
                     });
 
   }
-  
-  //  Main function to draw marks 
-  //  Invoked from a .each() call passing in the current datum d and index i, 
+
+  //  Main function to draw marks
+  //  Invoked from a .each() call passing in the current datum d and index i,
   //  with the this context of the current DOM element
   //
-  //  params contains the parameters for the current graphical mark to draw 
+  //  params contains the parameters for the current graphical mark to draw
   //  e.g. scales, type of mark, radius, color function, ..
-  utils.draw_mark = function(selection, params) {
+  utils.draw_mark = function(selection, params, vars) {
 
     if(vars.dev) {
       console.log("[utils.draw_mark]", params.type)
     }
 
-    selection.each(function(d) {
+    selection.each(function(d, i) {
 
       if(!d.__redraw) {
         return;
@@ -81,16 +81,14 @@ var utils ={};
         params_type = params.type(d[params.var_mark]);
       }
 
-      if(typeof params.rotate === "undefined") {
-        params.rotate = 0;
-      }
+      var params_text = "";
 
-      if(typeof params.translate === "undefined" || params.translate == null) {
-        params.translate = [0, 0];
-      }
-
-      if(typeof params.text !== "undefined" && typeof params.text === "function") {
-        params_text = params.text(d);
+      if(typeof params.text !== "undefined") {
+        if(typeof params.text === "function") {
+          params_text = params.text(d, i , vars);
+        } else if(typeof params.text === "String") {
+          params_text = params.text;
+        }
       }
 
       if(typeof params.width !== "undefined") {
@@ -125,6 +123,26 @@ var utils ={};
         }
       }
 
+      var params_translate = [0, 0];
+
+      if(typeof params.translate !== "undefined" && params.translate !== null) {
+        if(typeof params.translate === "function") {
+          params_translate = params.translate(d, i, vars);
+        } else {
+          params_translate = params.translate;
+        }
+      }
+
+      var params_rotate = 0;
+
+      if(typeof params.rotate !== "undefined" && params.rotate !== null) {
+        if(typeof params.rotate === "function") {
+          params_rotate = params.rotate(d);
+        } else {
+          params_rotate = params.rotate;
+        }
+      }
+
       // Use the default accessor
       var accessor_data = vars.accessor_data;
 
@@ -145,19 +163,19 @@ var utils ={};
               .attr("x", 10)
               .attr("y", 0)
               .attr("dy", ".35em")
-              .attr("transform", "translate(" +  params.translate + ")rotate(" +  params.rotate + ")");
+              .attr("transform", "translate(" +  params_translate + ")rotate(" +  params_rotate + ")");
 
           items_mark_text
               .classed("highlighted", function(d, i) { return d.__highlighted; })
               .classed("selected", function(d, i) { return d.__selected; })
               .transition().duration(vars.duration)
-              .attr("transform", "translate(" +  params.translate + ")rotate(" +  params.rotate + ")")
+              .attr("transform", "translate(" +  params_translate + ")rotate(" +  params_rotate + ")")
               .text(function(d) {
 
                 if(typeof params.text !== "undefined") {
                   return params.text(d);
                 } else {
-                  return vars.accessor_data(d)[vars.var_text]; 
+                  return vars.accessor_data(d)[vars.var_text];
                 }
 
               });
@@ -187,39 +205,37 @@ var utils ={};
                      return "auto";
                    }
                  })
-                 .style("height", function(d) { 
+                 .style("height", function(d) {
                    if(typeof params_height !== "undefined") {
                      return params_height + "px";
                    } else {
-                    return "auto"; 
+                    return "auto";
                    }
                  })
                  .style("left", function(d) {
                    if(typeof params_x !== "undefined") {
                      return params_x + "px";
                    } else {
-                     return (vars.x_scale[0]["func"](vars.accessor_data(d)[vars.var_x]) + 20) + "px";
+                     return (vars.x_scale[0]["func"](vars.accessor_data(d)[vars.var_x]) + params_translate[0]) + "px";
                    }
                  })
                  .style("top", function(d) {
                    if(typeof params_y !== "undefined") {
                      return params_y + "px";
                    } else {
-                     return (vars.y_scale[0]["func"](vars.accessor_data(d)[vars.var_y]) + 10) + "px";
+                     return (vars.y_scale[0]["func"](vars.accessor_data(d)[vars.var_y]) + params_translate[1]) + "px";
                    }
                  })
                  .html(function(d) {
                     if(typeof params_text !== "undefined") {
                       return params_text;
                     } else {
-                      return vars.accessor_data(d)[vars.var_text]; 
+                      return vars.accessor_data(d)[vars.var_text];
                     }
                  });
 
           if(typeof params.class !== "undefined") {
-
             items_mark_div_enter.classed(params.class(vars.accessor_items(d)), true);
-
           }
 
           items_mark_div.exit().remove();
@@ -249,18 +265,18 @@ var utils ={};
                 })
                .append("xhtml:body")
                .append("div")
-               .style("width", function(d) { 
+               .style("width", function(d) {
                  if(typeof d.dx !== "undefined") {
                    return (d.dx - 2*vars.padding) + "px";
                  } else {
                    return "150px";
                  }
                 })
-               .style("height", function(d) { 
+               .style("height", function(d) {
                  if(typeof d.dy !== "undefined") {
                    return (d.dx - 2*vars.padding) + "px";
                  } else {
-                  return "100%"; 
+                  return "100%";
                 }
                 })
                .style({"text-overflow": "ellipsis", "overflow": "hidden"})
@@ -268,26 +284,26 @@ var utils ={};
                   if(typeof params_text !== "undefined") {
                     return params_text;
                   } else {
-                    return vars.accessor_data(d)[vars.var_text]; 
+                    return vars.accessor_data(d)[vars.var_text];
                   }
                });
 
           items_mark_divtext.select('div')
-                 .transition()
-                 .style("width", function(d) { 
-                   if(typeof d.dx !== "undefined") {
-                     return (d.dx - 2*vars.padding) + "px";
-                   } else {
-                     return "150px";
-                   }
-                  })
-                 .style("height", function(d) { 
-                   if(typeof d.dy !== "undefined") {
-                     return (d.dx - 2*vars.padding) + "px";
-                   } else {
-                    return "100%"; 
-                  }
-                  });
+              .transition()
+              .style("width", function(d) {
+                if(typeof d.dx !== "undefined") {
+                  return (d.dx - 2*vars.padding) + "px";
+                } else {
+                  return "150px";
+                }
+               })
+              .style("height", function(d) {
+                if(typeof d.dy !== "undefined") {
+                  return (d.dx - 2*vars.padding) + "px";
+                } else {
+                 return "100%";
+               }
+               });
 
           if(typeof params.class !== "undefined") {
 
@@ -307,7 +323,7 @@ var utils ={};
           items_mark_image.enter().append("image")
                  .classed("items__mark__image", true)
                  .classed("items_" + mark_id, true)
-                 .attr("xlink:href", params.href) 
+                 .attr("xlink:href", params.href)
                  .attr("x", 0)
                  .attr("y", 0)
                  .attr("width", 60)
@@ -321,14 +337,14 @@ var utils ={};
 
         var items_mark_rect = d3.select(this).selectAll(".items__mark__rect").data([d]);
 
-        items_mark_rect.enter().append("rect")                            
+        items_mark_rect.enter().append("rect")
                   .classed("items__mark__rect", true)
                   .classed("items_" + mark_id, true)
                   .attr("x", params.x || 0)
                   .attr("y", params.y || 0)
                   .attr("height", params.height || 10)
                   .attr("width", params.width || 10)
-                  .attr("transform", "rotate(0)")
+                  .attr("transform", "rotate(" + params_rotate + ")")
                   .style("fill", function(d) { return vars.color(vars.accessor_items(d)[vars.var_color]); });
 
         items_mark_rect
@@ -353,15 +369,13 @@ var utils ={};
             .classed("items__mark__diamond", true)
             .classed("items_" + mark_id, true)
             .attr("height", vars.mark.height)
-            .attr("width", vars.mark.width)                              
+            .attr("width", vars.mark.width)
             .attr("x", -vars.mark.width/2)
             .attr("y", -vars.mark.height/2)
-            .attr("transform", "rotate(45)");
+            .attr("transform", "rotate(" + (params_rotate + 45) + ")");
 
           if(typeof params.class !== "undefined") {
-            
             items_mark_diamond_enter.classed(params.class(vars.accessor_items(d)), true);
-
           }
 
         items_mark_diamond
@@ -384,21 +398,14 @@ var utils ={};
               .attr("y1", function(d) { return -20; })
               .attr("x2", function(d) { return 0; })
               .attr("y2", function(d) { return 20; })
-              .attr("transform", "translate(0,0)rotate(0)");
+              .attr("transform", "translate(0,0)rotate(" + params_rotate + ")");
 
-          items_mark_tick              
+          items_mark_tick
               .classed("highlighted", function(d, i) { return d.__highlighted; })
               .classed("selected", function(d, i) { return d.__selected; })
               .transition().duration(vars.duration)
               .attr("transform", function(d) {
-
-                if(typeof params.translate === "function") {
-                  params_translate = params.translate(d);
-                } else {
-                  params_translate = params.translate;
-                }
-
-                return "translate(" +  params_translate + ")rotate(" +  params.rotate + ")";
+                return "translate(" +  params_translate + ")rotate(" +  params_rotate + ")";
               });
 
           items_mark_tick.exit().remove();
@@ -414,8 +421,8 @@ var utils ={};
               .classed("items_" + mark_id, true)
               .attr("class", "country")
               .attr("title", function(d,i) {
-            //    active = d3.select(null); 
-                return d.name; 
+            //    active = d3.select(null);
+                return d.name;
               })
            //   .on("click", clicked);
 
@@ -423,7 +430,7 @@ var utils ={};
               .classed("highlighted", function(d, i) { return d.__highlighted; })
               .classed("selected", function(d, i) { return d.__selected; })
               .attr("d", vars.path)
-              .style("fill", function(d, i) { 
+              .style("fill", function(d, i) {
                 return params.fill(vars.accessor_data(d)[vars.var_color]);
               })
               .transition().duration(vars.duration)
@@ -488,7 +495,7 @@ var utils ={};
                 .domain(d3.extent(vars.new_data, function(d) { return vars.accessor_data(d)[vars.var_r]; }))
 
               return r_scale(vars.accessor_data(d)[vars.var_r]);
-            } 
+            }
 
           }).innerRadius(0);
 
@@ -563,7 +570,7 @@ var utils ={};
         case "path":
 
           var this_accessor_values = function(d) { return d.values; };
-          
+
           if(typeof params['func'] == 'undefined') {
               params['func'] = d3.svg.line()
                .interpolate('linear')
@@ -580,17 +587,17 @@ var utils ={};
               .style("fill", params.fill)
               .style("stroke", params.stroke)
               .attr('d', function(e) {
-                return params["func"](this_accessor_values(e)); 
+                return params["func"](this_accessor_values(e));
               });
 
-          mark              
+          mark
               .classed("highlighted", function(e, j) { return e.__highlighted; })
               .classed("selected", function(e, j) { return e.__selected; })
               .transition().duration(vars.duration)
               .style("fill", params.fill)
               .style("stroke", params.stroke)
               .attr('d', function(e) {
-                return params["func"](this_accessor_values(e)); 
+                return params["func"](this_accessor_values(e));
               });
 
         break;
@@ -623,12 +630,12 @@ var utils ={};
           scope.zoom = vars.zoom;
           // Update scales
           scope.x_scale[0]["func"].domain(d3.extent(d.values, function(d) {
-           return d[scope.var_x]; 
+           return d[scope.var_x];
           }))
           .range([0, 50]);
 
           scope.y_scale[0]["func"].domain(d3.extent(d.values, function(d) {
-           return d[scope.var_y]; 
+           return d[scope.var_y];
           }))
           .range([0, 50]);
 
@@ -654,12 +661,12 @@ var utils ={};
 
           // Update scales
           scope.x_scale[0]["func"].domain(d3.extent(d.values, function(d) {
-           return d[scope.var_x]; 
+           return d[scope.var_x];
           }))
           .range([0, 50]);
 
           scope.y_scale[0]["func"].domain(d3.extent(d.values, function(d) {
-           return d[scope.var_y]; 
+           return d[scope.var_y];
           }))
           .range([0, 50]);
 
@@ -725,7 +732,7 @@ var utils ={};
               .classed('items__mark__star', true)
               .attr('d', star);
 
-          mark              
+          mark
               .classed("highlighted", function(d, i) { return d.__highlighted; })
               .classed("selected", function(d, i) { return d.__selected; });
 
@@ -808,7 +815,7 @@ var utils ={};
                     return params.radius;
                   } else {
                     return vars.radius;
-                  }                 
+                  }
                 } else {
                   var r_scale = d3.scale.linear()
                     .range([vars.radius_min, vars.radius_max])
@@ -820,21 +827,25 @@ var utils ={};
 
           if(typeof params.fill !== "undefined") {
 
-            mark_enter.style("fill", function(d) {
-              return params.fill(vars.accessor_items(d)[vars.var_color]);
-            });
+            if(typeof params.fill === "function") {
 
-            mark.style("fill", function(d) {
-              return params.fill(vars.accessor_items(d)[vars.var_color]);
-            });
+              mark.style("fill", params.fill(d, i, vars));
+
+            } else {
+
+              mark_enter.style("fill", function(d) {
+                return params.fill(vars.accessor_items(d)[vars.var_color]);
+              });
+
+            }
 
           } else if(vars.var_color !== null) {
 
-            mark_enter.style("fill", function(d) { 
+            mark_enter.style("fill", function(d) {
               return vars.color(vars.accessor_items(d)[vars.var_color]);
             });
-          
-            mark.style("fill", function(d) { 
+
+            mark.style("fill", function(d) {
               return vars.color(vars.accessor_items(d)[vars.var_color]);
             });
 
@@ -1008,7 +1019,7 @@ var utils ={};
       vars.items = vars.items(vars);
     }
 
-    if(typeof vars.items !== "undefined" && vars.items[0] !== "undefined" && vars.type !== "stacked") {
+    if(typeof vars.items !== "undefined" && vars.items[0] !== "undefined" &&  Object.keys(vars.items).length > 0 && vars.type !== "stacked") {
 
       vars.items.forEach(function(item, index_item) {
 
@@ -1044,27 +1055,34 @@ var utils ={};
         item.marks.forEach(function(params, index_mark) {
 
           if(typeof params.filter == "undefined") {
-            params.filter = function() { 
-              return true; 
+            params.filter = function() {
+              return true;
             }
-          } 
+          }
 
           // Supporting multipe similar elements
-          params._mark_id = index_item + "_" + index_mark; 
-          gItems_enter.filter(params.filter).call(utils.draw_mark, params);
-          gItems.filter(params.filter).call(utils.draw_mark, params); 
-        }); 
+          params._mark_id = index_item + "_" + index_mark;
+          gItems_enter
+              .filter(params.filter)
+              .filter(utils.filters.redraw_only)
+              .call(utils.draw_mark, params, vars);
+
+          gItems
+              .filter(params.filter)
+
+              .call(utils.draw_mark, params, vars);
+        });
 
         // Bind events to groups after marks have been created
-        gItems.each(utils.items_group); 
-        /* Should be as below but current params don't match this format 
+        gItems.each(utils.items_group);
+        /* Should be as below but current params don't match this format
           // APPEND AND UPDATE ITEMS MARK
           vars.items.forEach(function(item) {
             item.marks.forEach(function(params) {
               gItems_enter.call(utils.draw_mark, params);
               gItems.call(utils.draw_mark, params);
             });
-          }); 
+          });
         */
 
         // IN CASE OF CUSTOM UPDATE FOR ITEMS
@@ -1090,7 +1108,7 @@ var utils ={};
         } else {
           gItems_exit.remove();
         }
-        
+
         if(vars.type == "productspace") {
           vars.new_data.forEach(function(d) { d.__redraw = false; });
         }
@@ -1102,7 +1120,7 @@ var utils ={};
         utils.zoom_to_nodes(vars.zoom);
 
       } else {
-        
+
         vars_svg.transition()
                 .duration(vars.duration)
                 .attr("transform", "translate(" + vars.margin.left + "," + vars.margin.top + ")");
@@ -1111,7 +1129,7 @@ var utils ={};
 
     }
 
-    if(typeof vars.connect !== "undefined" && typeof vars.connect[0] !== "undefined") {
+    if(typeof vars.connect !== "undefined" && typeof vars.connect[0] !== "undefined" && Object.keys(vars.connect).length > 0) {
 
       // 1/ Between different items at a given time for one dimension
       // 2/ Between same items at a given time points
@@ -1151,14 +1169,14 @@ var utils ={};
                           d._index_item = index_item;
                           return d[vars.var_id] + "_" + index_item;
                         });
-      
+
         // ENTER CONNECT
         var gConnect_enter = gConnect.enter()
                         .insert("g", ":first-child")
                         .attr("class", "connect__group");
 
         connect.marks.forEach(function(params, index_mark) {
-      
+
           if(typeof params.filter == "undefined")
             params.filter = function() { return true; };
 
@@ -1167,10 +1185,14 @@ var utils ={};
 
           // Only create connections when char inits
           if(vars.init) {
-            gConnect_enter.filter(params.filter).call(utils.draw_mark, params);
+            gConnect_enter
+              .filter(params.filter)
+              .call(utils.draw_mark, params, vars);
           }
-          
-          gConnect.filter(params.filter).call(utils.draw_mark, params);
+
+          gConnect
+            .filter(params.filter)
+            .call(utils.draw_mark, params, vars);
         });
 
         // Bind events to groups after marks have been created
@@ -1236,13 +1258,24 @@ var utils ={};
     }
 
     // POST-RENDERING STUFF
-    // Usually aimed at updating the rendering order of elements 
-    if(vars.type == "productspace") {
+    // Usually aimed at updating the rendering order of elements
+    vars.z_index.forEach(function(d) {
 
-      vars_svg.selectAll('.mark__group').sort(function(a, b) { return a.__aggregated ;});
-      vars_svg.selectAll('.connect__group').sort(function(a, b) { return a.__highlighted; });
+      if(vars.type === d.type) {
+        vars_svg.selectAll(d.selector)
+          .filter(function(e) {
+            if(typeof d.attribute !== 'undefined') {
+              return e[d.attribute];
+            } else {
+              return true;
+            }
+          })
+          .each(function() {
+            this.parentNode.appendChild(this);
+          });
+      }
 
-    }
+    });
 
     utils.background_label(vars.title);
 
@@ -1250,54 +1283,6 @@ var utils ={};
     vars.refresh = false;
     vars.init = false;
 
-/*
-    if(vars.dev) { 
-      console.log("Creating chart with params", params, _, data);
-    }
-
-    // PRE-UPDATE CONNECT
-    var gConnect = _.selectAll(".connect__group")
-                    .data([data], function(d, i) { return i; })
-  
-    // ENTER CONNECT
-    var gConnect_enter = gConnect.enter()
-                    .append("g")
-                    .attr("class", "connect__group")
-                    .attr("transform", "translate(0, 0)")
-
-     vars.connect = vars.default_params.sparkline(params);
-     console.log("aasss", vars.connect)
-
-    // APPEND CONNECT MARK
-    if(typeof vars.connect !== "undefined" && typeof vars.connect[0] !== "undefined") {
-      console.log("DRAWW")
-      params.connect.forEach(function(connect) {
-        connect.marks.forEach(function(params) {
-
-          gConnect_enter.call(utils.draw_mark, params);
-          gConnect.call(utils.draw_mark, params);
-        });
-      });
-    }
-    // PRE-UPDATE ITEMS
-    var gItems = _.selectAll(".mark__group")
-                    .data([data], function(d, i) { return d[vars.var_id]; });
-
-    // ENTER ITEMS
-    var gItems_enter = gItems.enter()
-                    .append("g")
-                    .each(utils.items_group)
-                    .attr("transform", function(d, i) {
-                      return "translate(" + vars.x_scale[0]["func"](d[vars.var_x]) + ", " + vars.y_scale[0]["func"](d[vars.var_y]) + ")";
-                    });
-
-    // APPEND AND UPDATE ITEMS MARK
-    params.items[0].marks.forEach(function(params) {
-      gItems_enter.call(utils.draw_mark, params);
-      gItems.call(utils.draw_mark, params);
-    });
-
-*/
   }
 
   utils.x_axis = function(d, i) {
@@ -1373,7 +1358,7 @@ var utils ={};
 
   }
 
-  utils.make_x_axis = function() {        
+  utils.make_x_axis = function() {
     return d3.svg.axis()
         .scale(vars.x_scale[0]["func"])
         .ticks(vars.x_ticks)
@@ -1385,7 +1370,7 @@ var utils ={};
         .orient(vars.x_axis_orient);
   }
 
-  utils.make_y_axis = function() {        
+  utils.make_y_axis = function() {
     return d3.svg.axis()
         .scale(vars.y_scale[0]["func"])
         .ticks(vars.y_ticks)
@@ -1450,7 +1435,7 @@ var utils ={};
   }
 
   utils.update_filters = function(value, add) {
-   
+
     if(vars.dev) {
       console.log("[update_filters]", value);
     }
@@ -1483,6 +1468,10 @@ var utils ={};
 
   }
 
+  utils.filters = {};
+
+  utils.redraw_only = function(d) { return d.__redraw; }
+
 
   // Default parameters for all charts
   var default_vars = {
@@ -1510,12 +1499,12 @@ var utils ={};
 
     // Interaction
     highlight: [],
-    selection: [],  
+    selection: [],
     filter: [],
     zoom: [],
 
     time: {
-      var_time: null, 
+      var_time: null,
       current_time: null,
       parse: function(d) { return d; }
     },
@@ -1601,7 +1590,7 @@ var utils ={};
     size: d3.scale.linear(),
 
     dispatch: [],
-    evt: {register: function() {}, call: function() {} },  
+    evt: {register: function() {}, call: function() {} },
 
     // SVG Container
     svg: null,
@@ -1635,8 +1624,14 @@ var utils ={};
     init: true,
     _user_vars: {},
 
-    list_params: ["sparkline", "dotplot", "barchart", "linechart", "scatterplot", "grid", "stacked", "piechart", "slopegraph", "productspace", "treemap", "geomap", "stackedbar", "ordinal_vertical", "ordinal_horizontal"],
+    list_params: ["sparkline", "dotplot", "barchart", "linechart", "scatterplot", "grid", "stacked", "piechart", "slopegraph", "productspace", "treemap", "geomap", "stackedbar", "ordinal_vertical", "ordinal_horizontal", "matrix"],
     default_params: {},
+
+    z_index: [
+ //     {selector: '.mark__group', attribute: '__aggregated', type: 'productspace', weight: 1},
+      {selector: '.connect__group', attribute: '__highlighted', type: 'productspace', weight: 1},
+        {selector: '.mark__group', type: 'productspace', weight: 1},
+    ],
 
     set: []
   };
@@ -1656,7 +1651,7 @@ var utils ={};
       if(typeof vars.evt[e] === "undefined") {
         vars.evt[e] = [];
       }
-      
+
       vars.evt[e].push([f,d]);
     });
   };
@@ -1684,11 +1679,11 @@ var utils ={};
   vars.width = vars.width - vars.margin.left - vars.margin.right;
   vars.height = vars.width * vars.ratio;
 
-  // List of events 
+  // List of events
   vars.dispatch = d3.dispatch('init', 'end', 'highlightOn', 'highlightOut', 'selection', 'resize', 'clearAnimations');
 
   // Default events
-  d3.select(window).on('resize', function(d) { 
+  d3.select(window).on('resize', function(d) {
     vars.evt.call("resize", d);
   });
 
@@ -1717,7 +1712,7 @@ var utils ={};
           });
 
         }
-         
+
         if(e.target[vars.var_id] === d[vars.var_id]) {
 
           e.__highlighted = true;
@@ -1753,14 +1748,14 @@ var utils ={};
       // Temporary settings to prevent chart redraw for product space
       d3.select(vars.container).selectAll(".items__mark__text").remove();
       d3.select(vars.container).selectAll(".items__mark__div").remove();
-      
-/*
+
+
       // Reset all the highlighted nodes
       vars.links.forEach(function(e) {
         e.__highlighted = false;
-        e.__redraw = true;
+ //       e.__redraw = true;
       })
-
+/*
       // Reset all the highlighted adjacent nodes
       vars.new_data.forEach(function(e) {
         e.__highlighted__adjacent = false;
@@ -1770,7 +1765,7 @@ var utils ={};
 */
 
     } else {
-      d3.select(vars.container).call(vars.this_chart);      
+      d3.select(vars.container).call(vars.this_chart);
     }
 
   });
@@ -1808,7 +1803,7 @@ var utils ={};
       }
    }
 
-    
+
 
     // 1 - Init and define default values [INIT]
     // 2 - Duplicates the dataset [INIT, REFRESH]
@@ -1822,7 +1817,7 @@ var utils ={};
     // 1 - Init and define default parameters
     vars.items_data = [];
 
-    // In case we use functions for X/Y variables 
+    // In case we use functions for X/Y variables
     if(typeof vars.var_x !== "string" && typeof vars.var_x === "function") {
       vars.data.forEach(function(d, i) {
         d.__var_x = vars.var_x();
@@ -1868,7 +1863,7 @@ var utils ={};
 
           d.__id = i;
           return d;
- 
+
         })
 
         vars.var_id = '__id';
@@ -1882,7 +1877,7 @@ var utils ={};
       // If time filter parameter is set, then keep values for this time
       if(typeof vars.time.filter != "undefined" && vars.time.filter.length > 0) {
 
-        if(vars.dev) { 
+        if(vars.dev) {
           console.log("[vars.time.filter]", vars.time.filter);
         }
 
@@ -1890,20 +1885,20 @@ var utils ={};
         vars.new_data = vars.new_data.filter(function(d, i) {
           return vars.time.filter.indexOf(d[vars.time.var_time]) > -1;
         });
-       
+
       }
 
       // If time filter interval is set, then keep values from this interval
       if(typeof vars.time.filter_interval != "undefined" && vars.time.filter_interval.length == 2) {
 
-        if(vars.dev) { 
+        if(vars.dev) {
           console.log("[vars.time.interval]", vars.time.filter_interval);
         }
 
         vars.new_data = vars.new_data.filter(function(d, i) {
           return (d[vars.time.var_time] >= vars.time.filter_interval[0]) && (d[vars.time.var_time] <= vars.time.filter_interval[1]);
         });
-       
+
       }
 
       // Find unique values for various parameters
@@ -1916,7 +1911,7 @@ var utils ={};
       // TODO: not sure we should remove data, but add an attribute instead would better
       if(vars.filter.length > 0) {
 
-        if(vars.dev) { 
+        if(vars.dev) {
           console.log("[vars.filter]", vars.filter);
         }
 
@@ -1946,7 +1941,7 @@ var utils ={};
         .map(function(d) {
 
           // Below is what we need for time values
-          var v = {}; 
+          var v = {};
           v[vars.time.var_time] = d[vars.time.var_time];
           v[vars.var_y] = d[vars.var_y];
           v[vars.var_x] = d[vars.var_x];
@@ -1966,6 +1961,7 @@ var utils ={};
         if(vars.highlight.indexOf(item_id) < 0) {
           d.__highlighted = false;
         } else {
+          console.log(d)
           d.__highlighted = true;
         }
 
@@ -2061,14 +2057,14 @@ var utils ={};
 
     // Remove missing nodes
     vars.new_data = vars.new_data.filter(function(d) {
-     return !d.__missing; 
+     return !d.__missing;
     });
 
     // Aggregate data
     if(typeof vars.set['__aggregated'] !== 'undefined' && vars.refresh) {
 
-      if(vars.dev) { 
-        console.log("[vars.aggregate]", vars.aggregate); 
+      if(vars.dev) {
+        console.log("[vars.aggregate]", vars.aggregate);
       }
 
       // Do the nesting
@@ -2115,7 +2111,7 @@ var utils ={};
           aggregation.piescatter[1] = {};
 
           // Assuming all the time values are present in all items
-          aggregation.values = d3.range(leaves[0].values.length).map(function(d, i) { 
+          aggregation.values = d3.range(leaves[0].values.length).map(function(d, i) {
             var d = {};
 
             if(vars.var_x === vars.time.var_time) {
@@ -2123,7 +2119,7 @@ var utils ={};
             } else {
               d[vars.var_x] = 0;
             }
-            
+
             // Init values
             d[vars.var_y] = 0;
             d[vars.var_r] = 0;
@@ -2137,7 +2133,7 @@ var utils ={};
           });
 
           // Assuming we only aggregate var_x, var_y, var_r
-          leaves.forEach(function(d, i) { 
+          leaves.forEach(function(d, i) {
             d.values.forEach(function(e, j) {
               if(vars.var_x !== vars.time.var_time) {
                 aggregation.values[j][vars.var_x] += e[vars.var_x];
@@ -2202,7 +2198,7 @@ var utils ={};
     // Sorting the dataset
     if(typeof vars.var_sort !== "undefined" && vars.refresh) {
 
-      if(vars.dev) { 
+      if(vars.dev) {
          console.log("[updating sort]", vars.var_sort, vars.var_sort_asc, vars.user_vars)
       }
 
@@ -2211,7 +2207,7 @@ var utils ={};
       } else {
         vars.new_data = vars.new_data.sort(function(a, b) { return d3.descending(a[vars.var_sort], b[vars.var_sort]);});
       }
-    } 
+    }
 
 vars.default_params["sparkline"] = function(scope) {
 
@@ -3112,6 +3108,144 @@ vars.default_params["ordinal_horizontal"] = function(scope) {
   return params;
 
 }
+
+vars.default_params["matrix"] = function(scope) {
+
+  var params = {};
+
+  // vars.new_data = miserabels
+
+  // A matrix is a permutation of two ordinal scales
+  // Each cell is a graphical mark
+
+
+  if(vars.refresh) {
+
+    // Prepare data
+
+    // Duplicate and create
+
+
+  }
+
+
+
+  params.connect = [{
+    marks: [{
+      type: "rect"
+    }]
+  }];
+
+// Horizontal ordinal scale
+// var x = d3.scale.ordinal().rangeBands([0, vars.width]),
+var z = d3.scale.linear().domain([0, 4]).clamp(true),
+    c = d3.scale.category10().domain(d3.range(10));
+
+  // TODO: Re-use previous scales
+  // vars.default_params["ordinal_vertical"] 
+  // vars.default_params["ordinal_horizontal"] 
+  params.x_scale = [{
+    func: d3.scale.ordinal()
+            .domain(d3.set(vars.new_data.map(function(d) { return d[vars.var_x]; })).values())
+            .rangeBands([scope.margin.left, scope.width - scope.margin.left - scope.margin.right]),
+  }];
+
+  /* Prototyping ideal configuration
+  params.items = [{
+    marks: [{
+      type: 'text'
+    }],
+    marks: [{
+      type: 'text'
+    }]
+   }];
+  */
+
+  var matrix = [],
+      nodes = vars.nodes,
+      n = vars.nodes.length;
+
+  // Compute index per node.
+  nodes.forEach(function(node, i) {
+    node.index = i;
+    node.count = 0;
+    matrix[i] = d3.range(n).map(function(j) { return {x: j, y: i, z: 0}; });
+  });
+
+  // Convert links to matrix; count character occurrences.
+  vars.links.forEach(function(link) {
+    matrix[link.source][link.target].z += link.value;
+    matrix[link.target][link.source].z += link.value;
+    matrix[link.source][link.source].z += link.value;
+    matrix[link.target][link.target].z += link.value;
+    nodes[link.source].count += link.value;
+    nodes[link.target].count += link.value;
+  });
+
+  // Precompute the orders.
+  var orders = {
+    name: d3.range(n).sort(function(a, b) { return d3.ascending(nodes[a].name, nodes[b].name); }),
+    count: d3.range(n).sort(function(a, b) { return nodes[b].count - nodes[a].count; }),
+    group: d3.range(n).sort(function(a, b) { return nodes[b].group - nodes[a].group; })
+  };
+
+  // The default sort order.
+  params.x_scale[0]['func'].domain(orders.name);
+
+  vars.svg.append("rect")
+      .attr("class", "background")
+      .attr("width", vars.width)
+      .attr("height", vars.height);
+
+  var row = vars.svg.selectAll(".row")
+      .data(matrix)
+    .enter().append("g")
+      .attr("class", "row")
+      .attr("transform", function(d, i) { return "translate(0," + params.x_scale[0]['func'](i) + ")"; })
+      .each(row);
+
+  row.append("line")
+      .attr("x2", vars.width);
+
+  row.append("text")
+      .attr("x", -6)
+      .attr("y", params.x_scale[0]['func'].rangeBand() / 2)
+      .attr("dy", ".32em")
+      .attr("text-anchor", "end")
+      .text(function(d, i) { return nodes[i].name; });
+
+  var column = vars.svg.selectAll(".column")
+      .data(matrix)
+    .enter().append("g")
+      .attr("class", "column")
+      .attr("transform", function(d, i) { return "translate(" + params.x_scale[0]['func'](i) + ")rotate(-90)"; });
+
+  column.append("line")
+      .attr("x1", -vars.width);
+
+  column.append("text")
+      .attr("x", 6)
+      .attr("y", params.x_scale[0]['func'].rangeBand() / 2)
+      .attr("dy", ".32em")
+      .attr("text-anchor", "start")
+      .text(function(d, i) { return nodes[i].name; });
+
+  function row(row) {
+    var cell = d3.select(this).selectAll(".cell")
+        .data(row.filter(function(d) { return d.z; }))
+      .enter().append("rect")
+        .attr("class", "cell")
+        .attr("x", function(d) { return params.x_scale[0]['func'](d.x); })
+        .attr("width", params.x_scale[0]['func'].rangeBand())
+        .attr("height", params.x_scale[0]['func'].rangeBand())
+        .style("fill-opacity", function(d) { return z(d.z); })
+        .style("fill", function(d) { return nodes[d.x].group == nodes[d.y].group ? c(nodes[d.x].group) : null; })
+
+  }
+
+  return params;
+  
+};
 
 
     selection.each(function(d) {
