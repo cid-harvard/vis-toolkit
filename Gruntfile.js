@@ -22,15 +22,15 @@ module.exports = function(grunt) {
         separator: '\n',
       },
       build: {
-        src: ['js/superformula.js', 'src/start.js', 'src/utils.js', 'src/vars.js', 'src/events.js', 'src/star_constructor.js', 'src/wrangler.js', 
-              'src/visualizations/sparkline.js', 'src/visualizations/dotplot.js', 
-              'src/visualizations/barchart.js', 'src/visualizations/linechart.js', 'src/visualizations/scatterplot.js', 'src/visualizations/geomap.js', 
-              'src/visualizations/grid.js', 'src/visualizations/stacked.js', 'src/visualizations/piechart.js', 'src/visualizations/slopegraph.js', 
+        src: ['js/superformula.js', 'src/start.js', 'src/utils.js', 'src/vars.js', 'src/events.js', 'src/star_constructor.js', 'src/wrangler.js',
+              'src/visualizations/sparkline.js', 'src/visualizations/dotplot.js',
+              'src/visualizations/barchart.js', 'src/visualizations/linechart.js', 'src/visualizations/scatterplot.js', 'src/visualizations/geomap.js',
+              'src/visualizations/grid.js', 'src/visualizations/stacked.js', 'src/visualizations/piechart.js', 'src/visualizations/slopegraph.js',
               'src/visualizations/treemap.js', 'src/visualizations/stackedbar.js',
-              'src/visualizations/productspace.js', 'src/visualizations/ordinal_vertical.js', 'src/visualizations/ordinal_horizontal.js', 'src/visualizations/matrix.js', 
+              'src/visualizations/productspace.js', 'src/visualizations/ordinal_vertical.js', 'src/visualizations/ordinal_horizontal.js', 'src/visualizations/matrix.js',
               'src/start_selection.js', 'src/visualizations/table.js',
               'src/visualizations/boxplot.js', 'src/visualizations/none.js',
-              'src/visualizations/default.js', 'src/ui.js', 'src/getterssetters.js', 
+              'src/visualizations/default.js', 'src/ui.js', 'src/getterssetters.js',
               'src/end_constructor.js', 'src/end.js'],
         dest: 'build/vistk.js',
       },
@@ -38,7 +38,7 @@ module.exports = function(grunt) {
 
     jshint: {
       files: ['Gruntfile.js', 'build/vistk.js'],
-   
+
       beforeconcat: ['build/vistk.js'],
       afterconcat: ['build/vistk.js'],
 
@@ -51,7 +51,8 @@ module.exports = function(grunt) {
       concat: {
         files: ['src/*.js', 'src/visualizations/*.js'],
         tasks: ['string-replace', 'concat']
-      }
+      },
+      tasks: ['string-replace']
     },
 
     jasmine : {
