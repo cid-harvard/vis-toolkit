@@ -11,7 +11,7 @@
       if(typeof vars.evt[e] === "undefined") {
         vars.evt[e] = [];
       }
-      
+
       vars.evt[e].push([f,d]);
     });
   };
@@ -39,11 +39,11 @@
   vars.width = vars.width - vars.margin.left - vars.margin.right;
   vars.height = vars.width * vars.ratio;
 
-  // List of events 
+  // List of events
   vars.dispatch = d3.dispatch('init', 'end', 'highlightOn', 'highlightOut', 'selection', 'resize', 'clearAnimations');
 
   // Default events
-  d3.select(window).on('resize', function(d) { 
+  d3.select(window).on('resize', function(d) {
     vars.evt.call("resize", d);
   });
 
@@ -72,7 +72,7 @@
           });
 
         }
-         
+
         if(e.target[vars.var_id] === d[vars.var_id]) {
 
           e.__highlighted = true;
@@ -108,14 +108,14 @@
       // Temporary settings to prevent chart redraw for product space
       d3.select(vars.container).selectAll(".items__mark__text").remove();
       d3.select(vars.container).selectAll(".items__mark__div").remove();
-      
-/*
+
+
       // Reset all the highlighted nodes
       vars.links.forEach(function(e) {
         e.__highlighted = false;
-        e.__redraw = true;
+ //       e.__redraw = true;
       })
-
+/*
       // Reset all the highlighted adjacent nodes
       vars.new_data.forEach(function(e) {
         e.__highlighted__adjacent = false;
@@ -125,7 +125,7 @@
 */
 
     } else {
-      d3.select(vars.container).call(vars.this_chart);      
+      d3.select(vars.container).call(vars.this_chart);
     }
 
   });
