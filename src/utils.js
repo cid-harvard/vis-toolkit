@@ -1236,12 +1236,14 @@
 
     // POST-RENDERING STUFF
     // Usually aimed at updating the rendering order of elements
-    if(vars.type == "productspace") {
+      vars.postrendering.forEach(function(d) {
 
-      vars_svg.selectAll('.mark__group').sort(function(a, b) { return a.__aggregated ;});
-      vars_svg.selectAll('.connect__group').sort(function(a, b) { return a.__highlighted; });
+        if(vars.type == d.type) {
+          vars_svg.selectAll(d.selector).sort(function(a, b) { return a[d.attr]; });
+        }
 
-    }
+      });
+
 
     utils.background_label(vars.title);
 

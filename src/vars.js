@@ -25,12 +25,12 @@
 
     // Interaction
     highlight: [],
-    selection: [],  
+    selection: [],
     filter: [],
     zoom: [],
 
     time: {
-      var_time: null, 
+      var_time: null,
       current_time: null,
       parse: function(d) { return d; }
     },
@@ -116,7 +116,7 @@
     size: d3.scale.linear(),
 
     dispatch: [],
-    evt: {register: function() {}, call: function() {} },  
+    evt: {register: function() {}, call: function() {} },
 
     // SVG Container
     svg: null,
@@ -152,6 +152,11 @@
 
     list_params: ["sparkline", "dotplot", "barchart", "linechart", "scatterplot", "grid", "stacked", "piechart", "slopegraph", "productspace", "treemap", "geomap", "stackedbar", "ordinal_vertical", "ordinal_horizontal", "matrix"],
     default_params: {},
+
+    postrendering: [
+      {selector: '.connect__group', attribute: '__highlighted', type: 'productspace'},
+      {selector: '.mark__group', attribute: '__aggregated', type: 'productspace'},
+     ],
 
     set: []
   };
