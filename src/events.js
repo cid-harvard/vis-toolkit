@@ -100,7 +100,7 @@
     d.__redraw = true;
 
     // Make sure the highlighted node is above other nodes
-    if(vars.type == "productspace") {
+    if(vars.type == "productspace" || vars.type == "dotplot") {
 
       d3.select(vars.container).selectAll(".connect__line").classed("highlighted", false);
       d3.select(vars.container).selectAll("circle").classed("highlighted__adjacent", false);
