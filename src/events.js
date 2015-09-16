@@ -143,7 +143,9 @@
     }
 */
 
-    } else {
+    }
+
+    if(vars.type !== "productspace") {
       d3.select(vars.container).call(vars.this_chart);
     }
 
