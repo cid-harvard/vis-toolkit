@@ -155,9 +155,11 @@
 
     z_index: [
  //     {selector: '.mark__group', attribute: '__aggregated', type: 'productspace', weight: 1},
-      {selector: '.connect__group', attribute: '__highlighted', type: 'productspace', weight: 1},
-      {selector: '.mark__group', attribute: '__highlighted', type: 'productspace', weight: 1},
-      {selector: '.mark__group', attribute: '__highlighted__adjacent', type: 'productspace', weight: 1},
+      {selector: '.connect__group', type: 'productspace', weight: 1, event: 'highlightOut'},
+      {selector: '.mark__group', type: 'productspace', weight: 1, event: 'highlightOut'},
+      {selector: '.connect__group', attribute: '__highlighted', type: 'productspace', weight: 1, event: 'highlightOn'},
+      {selector: '.mark__group', attribute: '__highlighted', type: 'productspace', weight: 1, event: 'highlightOn'},
+      {selector: '.mark__group', attribute: '__highlighted__adjacent', type: 'productspace', weight: 1, event: 'highlightOn'},
     ],
 
     set: []

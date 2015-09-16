@@ -25,13 +25,19 @@
                     .classed("highlighted", function(d, i) { return d.__highlighted; })
                     .classed("selected", function(d, i) { return d.__selected; })
                     .on("mouseover",function(d) {
-                      vars.evt.call("highlightOn", d);
+                      if(vars.type !== "productspace") {
+                        vars.evt.call("highlightOn", d);
+                      }
                     })
                     .on("mouseleave", function(d) {
-                      vars.evt.call("highlightOut", d);
+                      if(vars.type !== "productspace") {
+                        vars.evt.call("highlightOut", d);
+                      }
                     })
                     .on("click", function(d) {
-                       vars.evt.call("selection", d);
+                      if(vars.type !== "productspace") {
+                        vars.evt.call("selection", d);
+                      }
                     });
 
   }
@@ -1245,26 +1251,6 @@
           .tickFormat(""));
 
     }
-
-    // POST-RENDERING STUFF
-    // Usually aimed at updating the rendering order of elements
-    vars.z_index.forEach(function(d) {
-
-      if(vars.type === d.type) {
-        vars_svg.selectAll(d.selector)
-          .filter(function(e) {
-            if(typeof d.attribute !== 'undefined') {
-              return e[d.attribute];
-            } else {
-              return true;
-            }
-          })
-          .each(function() {
-            this.parentNode.appendChild(this);
-          });
-      }
-
-    });
 
     utils.background_label(vars.title);
 
