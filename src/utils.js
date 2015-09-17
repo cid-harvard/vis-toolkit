@@ -748,6 +748,25 @@
 
         break;
 
+        case "triangle":
+
+          var mark = d3.select(this).selectAll('.items__mark__triangle').data([d]);
+
+          mark.enter().append('polygon')
+              .classed("items_" + mark_id, true)
+              .classed('items__mark__triangle', true)
+              .attr('fill', '#ED4036')
+              .attr('stroke-width', 0)
+              .attr('points','-10,5 0,-15 10,5');
+
+          mark
+              .classed('highlighted', function(d, i) { return d.__highlighted; })
+              .classed('selected', function(d, i) { return d.__selected; });
+
+          mark.exit().remove();
+
+        break;
+
         case "marker":
 
           var mark = d3.select(this).selectAll(".items__mark__marker").data([d]);
