@@ -7,7 +7,7 @@
 <div id="viz"></div>
 <script>
 
-var data = ["rect", "circle", "tick", "star", "diamond", "polygon", "marker", "shape", "image"];
+var data = ["rect", "circle", "triangle", "tick", "star", "diamond", "polygon", "marker", "shape", "image"];
 
 var visualization = vistk.viz()
     .params({
@@ -18,9 +18,10 @@ var visualization = vistk.viz()
       data: data,
       container: '#viz',
       var_x: '__id',
+      var_y: '__id',
       items: [{
         marks: [{
-          var_mark: 'value',
+          var_mark: '__value',
           type: function(d) { return d; }
         }, {
           type: "text",
