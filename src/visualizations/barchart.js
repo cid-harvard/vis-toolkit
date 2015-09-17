@@ -19,8 +19,8 @@ vars.default_params["barchart"] = function(scope) {
     marks: [{
       type: "rect",
       x: function() { return -scope.mark.width/2; },
-      y: function(d) { return - params.y_scale[0]["func"](d[vars.var_y]) + (scope.height - scope.margin.bottom - scope.margin.top - params.y_scale[0]["func"](d[scope.var_y])); },
-      height: function(d) { return params.y_scale[0]["func"](d[scope.var_y]); },
+      y: function(d) { return -scope.margin.top; },
+      height: function(d) { return scope.height - scope.margin.bottom - scope.margin.top - params.y_scale[0]["func"](d[scope.var_y]); },
       width: function(d) { return params.x_scale[0]["func"].rangeBand(); },
       fill: function(d) { return scope.color(scope.accessor_items(d)[scope.var_color]); }
     }]
@@ -35,5 +35,5 @@ vars.default_params["barchart"] = function(scope) {
   params.y_grid_show = true;
 
   return params;
-  
+
 };
