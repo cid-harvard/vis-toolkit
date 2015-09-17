@@ -864,6 +864,23 @@
 
           }
 
+
+          if(typeof params.opacity !== "undefined") {
+
+            if(typeof params.fill === "function") {
+
+              mark_enter.style("opacity", function(d) {
+                return params.opacity(vars.accessor_items(d));
+              });
+
+            } else {
+
+              mark.style("opacity", params.opacity);
+
+            }
+
+          }
+
           if(typeof params.title !== "undefined") {
 
             mark_enter.append("title").text(function(d) {
