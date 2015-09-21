@@ -18,6 +18,7 @@
 
     // Default dimensions
     margin: {top: 0, right: 0, bottom: 0, left: 0},
+    rotate: 0,
 
     // Default Variables mapping
     var_color: null,
