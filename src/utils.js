@@ -1035,6 +1035,10 @@
       vars.x_scale[0]["func"].range([vars.x_scale[0]["func"].range()[1], vars.x_scale[0]["func"].range()[0]]);
     }
 
+    if(vars.x_log) {
+   //   vars.x_scale[0]["func"].;
+    }
+
     if(vars.y_invert) {
       vars.y_scale[0]["func"].range([vars.y_scale[0]["func"].range()[1], vars.y_scale[0]["func"].range()[0]]);
     }
@@ -1148,7 +1152,7 @@
 
         vars_svg.transition()
                 .duration(vars.duration)
-                .attr("transform", "translate(" + vars.margin.left + "," + vars.margin.top + ")");
+                .attr("transform", "translate(" + vars.margin.left + "," + vars.margin.top + ")rotate(" + vars.rotate + ")");
 
       }
 
