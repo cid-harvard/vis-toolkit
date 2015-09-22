@@ -72,7 +72,7 @@ g:hover .items__mark__circle.highlighted {
 }
 
 </style>
-<div id="viz"></div>
+<div id="viz" style="position: relative"></div>
 <script>
 
 d3.json("../data/diversification_ubiquity_hs4_1995_2012.json", function(error, countries) {
@@ -81,7 +81,7 @@ d3.json("../data/diversification_ubiquity_hs4_1995_2012.json", function(error, c
 
   visualization = vistk.viz()
     .params({
-      dev: true,
+      dev: false,
       type: "treemap",
       container: "#viz",
       height: 600,
@@ -107,12 +107,18 @@ d3.json("../data/diversification_ubiquity_hs4_1995_2012.json", function(error, c
           height: function(d) { return d.dy; }
         }, {
           var_mark: '__highlighted',
-          type: d3.scale.ordinal().domain([true, false]).range(["div", "none"]),
+          type: d3.scale.ordinal().domain([false, true]).range(["none", "div"]),
           class: function() {
             return "tooltip";
           },
+          x: function(d, i, vars) {
+            return  vars.x_scale[0]["func"](d[vars.var_x]);
+          },
+          y: function(d, i, vars) {
+            return vars.y_scale[0]["func"](d[vars.var_y]);
+          },
           text: function(d, i, vars) {
-            return 'caption';
+            return d['name'] + ' (' + d['continent'] + ') coordinates (x: ' + vars.x_scale[0]["func"](d[vars.var_x]) + ', ' + vars.y_scale[0]["func"](d[vars.var_y]) + ')';
           },
           translate: [20, 20],
           exit: function() {
