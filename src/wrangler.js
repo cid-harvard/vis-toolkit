@@ -156,7 +156,6 @@
         if(vars.highlight.indexOf(item_id) < 0) {
           d.__highlighted = false;
         } else {
-          console.log(d)
           d.__highlighted = true;
         }
 
@@ -240,6 +239,7 @@
           d.__aggregated = false;
           d.__selected = false;
           d.__highlighted = false;
+          d.__highlighted__adjacent = false;
           d.__missing = false;
           d.__redraw = true;
           vars.new_data.push(d);
