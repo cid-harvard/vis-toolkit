@@ -3,7 +3,7 @@ vars.default_params["treemap"] = function(scope) {
   var params = {};
 
   if(vars.refresh) {
-    console.log("REFRES")
+
     // Create the root node
     vars.root = {};
     vars.root[vars.var_text]= "root";
@@ -32,7 +32,7 @@ vars.default_params["treemap"] = function(scope) {
     });
 
     // Make sure there is no empty elements
-    vars.groups = vars.groups.filter(function(n) { return n !== "undefined"; }); 
+    vars.groups = vars.groups.filter(function(n) { return n !== "undefined"; });
 
     // Add group elements are root children
     vars.root.children = vars.groups.map(function(d, i) {
@@ -48,7 +48,7 @@ vars.default_params["treemap"] = function(scope) {
       node.children = d.map(function(e, j) {
         var n = {year: e.year, id: e.id};
         n[vars.var_text] = e[vars.var_text];
-        n[vars.var_size] = e[vars.var_size]; 
+        n[vars.var_size] = e[vars.var_size];
         n[vars.var_group] = e[vars.var_group];
         n[vars.var_id] = e[vars.var_id];
 
@@ -99,7 +99,6 @@ vars.default_params["treemap"] = function(scope) {
       filter: function(d, i) { return d.depth == 1 && d.dx > 30 && d.dy > 30; }
     }, {
       type: "rect",
-      rotate: "10",
       filter: function(d, i) { return d.depth == 2; },
       x: 0,
       y: 0,
