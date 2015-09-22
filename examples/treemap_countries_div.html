@@ -112,7 +112,7 @@ d3.json("../data/diversification_ubiquity_hs4_1995_2012.json", function(error, c
             return "tooltip";
           },
           text: function(d, i, vars) {
-            return d['pname'] + ' (' + d['id'] + ') coordinates (x: ' + vars.x_scale[0]["func"](d[vars.var_x]) + ', ' + vars.y_scale[0]["func"](d[vars.var_y]) + ')';
+            return 'caption';
           },
           translate: [20, 20],
           exit: function() {

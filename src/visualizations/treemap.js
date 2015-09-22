@@ -2,6 +2,8 @@ vars.default_params["treemap"] = function(scope) {
 
   var params = {};
 
+  vars.padding = 2;
+
   if(vars.refresh) {
 
     // Create the root node
