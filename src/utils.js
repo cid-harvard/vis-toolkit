@@ -100,7 +100,7 @@
 
       if(typeof params.x !== "undefined") {
         if(typeof params.x === "function") {
-          params_x = params.x(d);
+          params_x = params.x(d, i, vars);
         } else if(typeof params.x === "number") {
           params_x = params.x;
         }
@@ -108,7 +108,7 @@
 
       if(typeof params.y !== "undefined") {
         if(typeof params.y === "function") {
-          params_y = params.y(d);
+          params_y = params.y(d, i, vars);
         } else if(typeof params.y === "number") {
           params_y = params.y;
         }
@@ -205,14 +205,14 @@
                  })
                  .style("left", function(d) {
                    if(typeof params_x !== "undefined") {
-                     return params_x + "px";
+                     return (params_x + params_translate[0]) + "px";
                    } else {
                      return (vars.x_scale[0]["func"](vars.accessor_data(d)[vars.var_x]) + params_translate[0]) + "px";
                    }
                  })
                  .style("top", function(d) {
                    if(typeof params_y !== "undefined") {
-                     return params_y + "px";
+                     return (params_y + params_translate[1]) + "px";
                    } else {
                      return (vars.y_scale[0]["func"](vars.accessor_data(d)[vars.var_y]) + params_translate[1]) + "px";
                    }
@@ -238,6 +238,7 @@
           var items_mark_divtext = d3.select(this).selectAll(".items__mark__divtext").data([d]);
 
           var items_mark_divtext_enter = items_mark_divtext.enter().insert("foreignObject")
+                .style("pointer-events", "none")
                 .classed("items__mark__divtext", true)
                 .classed("items_" + mark_id, true)
                 .attr("width", function(d) {
@@ -256,6 +257,7 @@
                 })
                .append("xhtml:body")
                .append("div")
+               .style("pointer-events", "none")
                .style("width", function(d) {
                  if(typeof d.dx !== "undefined") {
                    return (d.dx - 4 * vars.padding) + "px";
