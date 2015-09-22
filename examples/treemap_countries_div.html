@@ -1,0 +1,141 @@
+<!doctype html>
+<meta charset="utf-8">
+<script src="../js/d3.js"></script>
+<script src="../build/vistk.js"></script>
+<link href="../css/vistk.css" rel="stylesheet">
+<body>
+<style type="text/css">
+
+.connect__line {
+  stroke: #999;
+  stroke-opacity: .6;
+}
+
+.connect__line.highlighted {
+  stroke-width: 2.5px;
+  stroke-opacity: 1;
+  stroke: red;
+}
+
+g:hover .items__mark__circle:not(.highlighted__adjacent) {
+  -webkit-transition:0.3s;
+  transition:0.3s;
+  opacity: 0.5;
+}
+
+g:hover .connect__path:not(.highlighted) {
+  -webkit-transition:0.3s;
+  transition:0.3s;
+  opacity: 0.5;
+}
+
+g:hover .items__mark__circle.highlighted {
+  stroke: black;
+  stroke-width: 2.5px;
+  opacity: 1;
+}
+
+.highlighted__adjacent {
+  opacity: 1;
+  stroke-width: 2.5px;
+  stroke: black;
+}
+
+.items__mark__circle.selected {
+  stroke: black;
+  stroke-width: 1.5px;
+}
+
+.connect__path:not(.highlighted) {
+  stroke-width: 1px;
+}
+
+.connect__path.highlighted {
+  stroke-opacity: 1;
+  stroke-width: 5px;
+}
+
+.connect__path.selected {
+  stroke-opacity: 1;
+  stroke-width: 3px;
+}
+
+.tooltip {
+  background: #333;
+  background: rgba(0,0,0,.8);
+  border-radius: 5px;
+  height: 100%;
+  color: #fff;
+  padding: 5px 15px;
+  z-index: 98;
+  width: 220px;
+}
+
+</style>
+<div id="viz"></div>
+<script>
+
+d3.json("../data/diversification_ubiquity_hs4_1995_2012.json", function(error, countries) {
+
+  var flat_years = vistk.utils.flatten_years(countries);
+
+  visualization = vistk.viz()
+    .params({
+      dev: true,
+      type: "treemap",
+      container: "#viz",
+      height: 600,
+      width: 900,
+      data: flat_years,
+      var_id: "name",
+      var_sort: "nb_products",
+      var_group: "continent",
+      var_color: "continent",
+      title: "Countries",
+      var_size: "nb_products",
+      var_text: "continent",
+      items: [{
+        marks: [{
+          type: "divtext",
+          filter: function(d, i) { return d.depth == 1 && d.dx > 30 && d.dy > 30; }
+        }, {
+          type: "rect",
+          filter: function(d, i) { return d.depth == 2; },
+          x: 0,
+          y: 0,
+          width: function(d) { return d.dx; },
+          height: function(d) { return d.dy; }
+        }, {
+          var_mark: '__highlighted',
+          type: d3.scale.ordinal().domain([true, false]).range(["div", "none"]),
+          class: function() {
+            return "tooltip";
+          },
+          text: function(d, i, vars) {
+            return d['pname'] + ' (' + d['id'] + ') coordinates (x: ' + vars.x_scale[0]["func"](d[vars.var_x]) + ', ' + vars.y_scale[0]["func"](d[vars.var_y]) + ')';
+          },
+          translate: [20, 20],
+          exit: function() {
+          },
+          width: 200
+        }]
+      }],
+      time: {
+        var_time: "year",
+        current_time: 1995,
+        parse: function(d) { return d; }
+      },
+      ui: {
+        default: true,
+        options: ["country", "continent"]
+      },
+      selection: ["France"],
+      highlight: ["France", "Germany"]
+    });
+
+  d3.select(visualization.container()).call(visualization);
+
+});
+
+</script>
+</body>
