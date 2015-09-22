@@ -277,7 +277,7 @@
               .transition()
               .style("width", function(d) {
                 if(typeof d.dx !== "undefined") {
-                  return (d.dx - 2*vars.padding) + "px";
+                  return (d.dx - 10 * vars.padding) + "px";
                 } else {
                   return "auto";
                 }
