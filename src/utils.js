@@ -78,6 +78,8 @@
         } else if(typeof params.text === "String") {
           params_text = params.text;
         }
+      } else if(vars.var_text !== "undefined") {
+         params_text = vars.accessor_data(d)[vars.var_text];
       }
 
       if(typeof params.width !== "undefined") {
@@ -240,42 +242,36 @@
                 .classed("items_" + mark_id, true)
                 .attr("width", function(d) {
                    if(typeof d.dx !== "undefined") {
-                     return (d.dx - vars.padding) + "px";
+                     return (d.dx - 4 * vars.padding) + "px";
                    } else {
-                     return "150px";
+                     return "auto";
                    }
                  })
                 .attr("height", function(d) {
                  if(typeof d.dy !== "undefined") {
-                    return (d.dy - 2*vars.padding) + "px";
+                    return (d.dy - 2 * vars.padding) + "px";
                   } else {
-                    return "100%";
+                    return "auto";
                   }
                 })
                .append("xhtml:body")
                .append("div")
                .style("width", function(d) {
                  if(typeof d.dx !== "undefined") {
-                   return (d.dx - 2*vars.padding) + "px";
+                   return (d.dx - 4 * vars.padding) + "px";
                  } else {
-                   return "150px";
+                   return "auto";
                  }
                 })
                .style("height", function(d) {
                  if(typeof d.dy !== "undefined") {
-                   return (d.dx - 2*vars.padding) + "px";
+                   return (d.dy - 2 * vars.padding) + "px";
                  } else {
-                  return "100%";
+                  return "auto";
                 }
                 })
                .style({"text-overflow": "ellipsis", "overflow": "hidden"})
-               .html(function(d) {
-                  if(typeof params_text !== "undefined") {
-                    return params_text;
-                  } else {
-                    return vars.accessor_data(d)[vars.var_text];
-                  }
-               });
+               .html(params_text);
 
           items_mark_divtext.select('div')
               .transition()
@@ -283,14 +279,14 @@
                 if(typeof d.dx !== "undefined") {
                   return (d.dx - 2*vars.padding) + "px";
                 } else {
-                  return "150px";
+                  return "auto";
                 }
                })
               .style("height", function(d) {
                 if(typeof d.dy !== "undefined") {
-                  return (d.dx - 2*vars.padding) + "px";
+                  return (d.dy - 2*vars.padding) + "px";
                 } else {
-                 return "100%";
+                 return "auto";
                }
                });
 
