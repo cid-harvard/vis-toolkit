@@ -11,7 +11,7 @@
     vars.countries = topojson.object(vars.topology, vars.topology.objects.countries).geometries;
     vars.neighbors = topojson.neighbors(vars.topology, vars.countries);
 
-    vars.countries.forEach(function(d) { 
+    vars.countries.forEach(function(d) {
 
       // Retrieve the country name based on its id
       d[vars.var_id] = vars.names.filter(function(n) { return d.id == n.id; })[0][vars.var_id];
@@ -61,11 +61,10 @@
     marks: [{
       type: "shape",
       fill: d3.scale.linear()
-              .domain([d3.min(vars.new_data, function(d) { 
-                  return d[vars.var_color]; 
-                }), d3.max(vars.new_data, function(d) { 
-                  return d[vars.var_color]; 
-                })])
+              .domain([
+                d3.min(vars.new_data, function(d) { return d[vars.var_color]; }),
+                d3.max(vars.new_data, function(d) { return d[vars.var_color]; })
+              ])
               .range(["red", "green"])
     }]
   }];
