@@ -430,7 +430,6 @@
           items_mark_shape.enter().insert("path")
               .classed('items__mark__shape', true)
               .classed("items_" + mark_id, true)
-              .attr("class", "country")
               .attr("title", function(d,i) {
             //    active = d3.select(null);
                 return d.name;
