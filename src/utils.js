@@ -134,6 +134,18 @@
         }
       }
 
+      var params_fill = null;
+
+      if(typeof params.fill !== "undefined" && params.fill !== null) {
+
+        if(typeof params.fill === "function") {
+          params_fill = params.fill(d);
+        } else {
+          params_fill = params.fill;
+        }
+      }
+
+
       // Use the default accessor
       var accessor_data = vars.accessor_data;
 
@@ -332,7 +344,13 @@
                   .attr("height", params.height || 10)
                   .attr("width", params.width || 10)
                   .attr("transform", "rotate(" + params_rotate + ")")
-                  .style("fill", function(d) { return vars.color(vars.accessor_items(d)[vars.var_color]); });
+                  .style("fill", function(d) {
+                    if(typeof params_fill !== 'undefined' && params_fill !== null) {
+                      return params_fill;
+                    } else {
+                      return vars.color(vars.accessor_items(d)[vars.var_color]);
+                    }
+                  });
 
         items_mark_rect
             .classed("highlighted", function(d, i) { return d.__highlighted; })
@@ -342,7 +360,13 @@
             .attr("y", params.y || 0)
             .attr("height", params.height || 10)
             .attr("width", params.width || 10)
-            .style("fill", function(d) { return vars.color(vars.accessor_items(d)[vars.var_color]); });
+            .style("fill", function(d) {
+              if(typeof params_fill !== 'undefined' && params_fill !== null) {
+                return params_fill;
+              } else {
+                return vars.color(vars.accessor_items(d)[vars.var_color]);
+              }
+            });
 
         items_mark_rect.exit().remove();
 
@@ -823,6 +847,7 @@
                     return vars.radius;
                   }
                 } else {
+
                   var r_scale = d3.scale.linear()
                     .range([vars.radius_min, vars.radius_max])
                     .domain(d3.extent(vars.new_data, function(d) { return d[params.var_r]; }))
@@ -881,6 +906,17 @@
 
           }
 
+          if(typeof params.stroke_opacity !== "undefined") {
+
+            mark_enter.style("stroke-opacity", function(d) {
+              return params.stroke_opacity(vars.accessor_items(d));
+            });
+
+            mark.style("stroke-opacity", function(d) {
+              return params.stroke_opacity(vars.accessor_items(d));
+            });
+
+          }
 
           if(typeof params.opacity !== "undefined") {
 
@@ -1033,8 +1069,13 @@
       vars.x_scale[0]["func"].range([vars.x_scale[0]["func"].range()[1], vars.x_scale[0]["func"].range()[0]]);
     }
 
-    if(vars.x_log) {
-   //   vars.x_scale[0]["func"].;
+    if(vars.y_log) {
+      vars.y_scale = [{
+        func: d3.scale.log()
+                .range([vars.height - vars.margin.top - vars.margin.bottom, vars.margin.top])
+                .domain([1, d3.max(vars.new_data, function(d) { return d[vars.var_y]; })]).nice(),
+      }];
+
     }
 
     if(vars.y_invert) {
@@ -1386,12 +1427,12 @@
   utils.make_y_axis = function() {
     return d3.svg.axis()
         .scale(vars.y_scale[0]["func"])
-        .ticks(vars.y_ticks)
         // Quick fix to get max value
         .tickValues(vars.y_tickValues)
         .tickFormat(vars.y_format)
         .tickSize(vars.y_tickSize)
         .tickPadding(vars.y_tickPadding)
+
         .orient("left");
   }
 
