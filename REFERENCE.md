@@ -578,6 +578,11 @@ Some time-related values are internally created:
 ```
 
 
+## Chart Specifics
+
+* `padding` for treemaps
+
+
 ## Misc
 
 ### `lang`
