@@ -430,11 +430,9 @@
           items_mark_shape.enter().insert("path")
               .classed('items__mark__shape', true)
               .classed("items_" + mark_id, true)
-              .attr("title", function(d,i) {
-            //    active = d3.select(null);
-                return d.name;
+              .attr("transform", function(d) {
+                return "translate("+ -d.x +", "+ -d.y +")";
               })
-           //   .on("click", clicked);
 
           items_mark_shape
               .classed("highlighted", function(d, i) { return d.__highlighted; })
@@ -443,51 +441,18 @@
               .style("fill", function(d, i) {
                 return params.fill(vars.accessor_data(d)[vars.var_color]);
               })
-              .transition().duration(vars.duration)
-              /*
               .attr("transform", function(d) {
 
                 // Drawing projects comes with automatic offset
-                d.x = d3.select(this).node().getBBox().x;
-                d.y = d3.select(this).node().getBBox().y;
+                //d.x = d3.select(this).node().getBBox().x;
+                //d.y = d3.select(this).node().getBBox().y;
 
                 // Update parent with new coordinates
-                d3.select(d3.select(this).node().parentNode).attr("transform", "translate("+ d.x +", "+ d.y +")");
+                //d3.select(d3.select(this).node().parentNode).attr("transform", "translate("+ d.x +", "+ d.y +")");
 
                 return "translate("+ -d.x +", "+ -d.y +")";
               })
-*/
-/*
-              // http://bl.ocks.org/mbostock/4699541
-              function clicked(d) {
-                if (active.node() === this) return reset();
-                active.classed("active", false);
-                active = d3.select(this).classed("active", true);
 
-                var bounds = vars.path.bounds(d),
-                    dx = bounds[1][0] - bounds[0][0],
-                    dy = bounds[1][1] - bounds[0][1],
-                    x = (bounds[0][0] + bounds[1][0]) / 2,
-                    y = (bounds[0][1] + bounds[1][1]) / 2,
-                    scale = .9 / Math.max(dx / vars.width, dy / vars.height),
-                    translate = [vars.width / 2 - scale * x, vars.height / 2 - scale * y];
-
-                vars.svg.transition()
-                    .duration(750)
-                    .style("stroke-width", 1.5 / scale + "px")
-                    .attr("transform", "translate(" + translate + ")scale(" + scale + ")");
-              }
-
-              function reset() {
-                active.classed("active", false);
-                active = d3.select(null);
-
-                vars.svg.transition()
-                    .duration(750)
-                    .style("stroke-width", "1.5px")
-                    .attr("transform", "");
-              }
-*/
             items_mark_shape.exit().remove();
 
           break;
@@ -1114,6 +1079,7 @@
           gItems_enter.call(item.enter, vars);
         } else {
           gItems_enter.attr("transform", function(d, i) {
+            console.log(vars.x_scale[0]["func"](accessor_data(d)[vars.var_x]), d);
             return "translate(" + vars.x_scale[0]["func"](accessor_data(d)[vars.var_x]) + ", " + vars.y_scale[0]["func"](accessor_data(d)[vars.var_y]) + ")";
           });
         }
