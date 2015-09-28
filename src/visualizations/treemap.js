@@ -2,8 +2,6 @@ vars.default_params["treemap"] = function(scope) {
 
   var params = {};
 
-  vars.padding = 2;
-
   if(vars.refresh) {
 
     // Create the root node
@@ -25,10 +23,13 @@ vars.default_params["treemap"] = function(scope) {
       }
 
       var n = {year: d.year, id: i};
+
       n[vars.var_size] = d[vars.var_size];
       n[vars.var_group] = d[vars.var_group];
       n[vars.var_id] = d[vars.var_id];
       n[vars.var_text] = d[vars.var_text];
+      n[vars.var_color] = d[vars.var_color];
+
       vars.groups[vars.unique_groups.indexOf(d[vars.var_group])].push(n);
 
     });
@@ -40,20 +41,28 @@ vars.default_params["treemap"] = function(scope) {
     vars.root.children = vars.groups.map(function(d, i) {
 
       node = {};
+
       node[vars.var_text] = d[0][vars.var_text];
       node[vars.var_group] = d[0][vars.var_group];
       node[vars.var_id] = d[0][vars.var_group];
+      node[vars.var_color] = d[0][vars.var_color];
+
       node[vars.var_sort] = 0;
       node[vars.var_size] = 0;
 
       // Create the children nodes var
       node.children = d.map(function(e, j) {
+
+/*
         var n = {year: e.year, id: e.id};
         n[vars.var_text] = e[vars.var_text];
         n[vars.var_size] = e[vars.var_size];
         n[vars.var_group] = e[vars.var_group];
         n[vars.var_id] = e[vars.var_id];
-
+        n[vars.var_color] = e[vars.var_color];
+*/
+        var n = e;
+        n.final = true;
         node[vars.var_sort] += e[vars.var_sort];
         node[vars.var_size] += e[vars.var_size];
 
@@ -86,13 +95,13 @@ vars.default_params["treemap"] = function(scope) {
   params.x_scale = [{
     func: d3.scale.linear()
             .range([scope.margin.left, scope.width - scope.margin.left - scope.margin.right])
-            .domain([0, d3.max(vars.new_data, function(d) { return d.x; })]),
+            .domain(d3.extent(vars.new_data, function(d) { return d.x; })),
   }];
 
   params.y_scale = [{
     func: d3.scale.linear()
             .range([scope.margin.top, scope.height - scope.margin.top - scope.margin.bottom])
-            .domain([0, d3.max(vars.new_data, function(d) { return d.y; })]),
+            .domain(d3.extent(vars.new_data, function(d) { return d.y; })),
   }];
 
   params.items = [{
