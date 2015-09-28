@@ -221,6 +221,7 @@
                    } else {
                      return (vars.x_scale[0]["func"](vars.accessor_data(d)[vars.var_x]) + params_translate[0]) + "px";
                    }
+                   return params_translate[0];
                  })
                  .style("top", function(d) {
                    if(typeof params_y !== "undefined") {
@@ -228,6 +229,7 @@
                    } else {
                      return (vars.y_scale[0]["func"](vars.accessor_data(d)[vars.var_y]) + params_translate[1]) + "px";
                    }
+                   return params_translate[1];
                  })
                  .html(function(d) {
                     if(typeof params_text !== "undefined") {
@@ -255,55 +257,81 @@
                 .classed("items_" + mark_id, true)
                 .attr("width", function(d) {
                    if(typeof d.dx !== "undefined") {
-                     return (d.dx - 4 * vars.padding) + "px";
+                     return (Math.max(0, d.dx - 2 * vars.padding - params_translate[0])) + "px";
                    } else {
                      return "auto";
                    }
                  })
                 .attr("height", function(d) {
                  if(typeof d.dy !== "undefined") {
-                    return (d.dy - 2 * vars.padding) + "px";
+                    return (Math.max(0, d.dy - 2 * vars.padding - params_translate[1])) + "px";
                   } else {
                     return "auto";
                   }
                 })
                .append("xhtml:body")
                .append("div")
-               .style("pointer-events", "none")
+               .style({"pointer-events": "none"})
                .style("width", function(d) {
                  if(typeof d.dx !== "undefined") {
-                   return (d.dx - 4 * vars.padding) + "px";
+                   return (Math.max(0, d.dx - 2 * vars.padding - params_translate[0])) + "px";
                  } else {
                    return "auto";
                  }
                 })
                .style("height", function(d) {
                  if(typeof d.dy !== "undefined") {
-                   return (d.dy - 2 * vars.padding) + "px";
+                   return (Math.max(0, d.dy - 2 * vars.padding - params_translate[1])) + "px";
                  } else {
                   return "auto";
                 }
                 })
+              .style("margin-left", function(d) {
+                 return params_translate[0];
+               })
                .style({"text-overflow": "ellipsis", "overflow": "hidden"})
                .html(params_text);
 
           items_mark_divtext.select('div')
               .transition()
+              .style({"pointer-events": "none"})
+              .style("margin-left", function(d) {
+                 return params_translate[0] + 'px';
+               })
+              .style("margin-top", function(d) {
+                 return params_translate[1] + 'px';
+               })
               .style("width", function(d) {
                 if(typeof d.dx !== "undefined") {
-                  return (d.dx - 10 * vars.padding) + "px";
+                  return (Math.max(0, d.dx - 2 * vars.padding - params_translate[0])) + "px";
                 } else {
                   return "auto";
                 }
                })
               .style("height", function(d) {
                 if(typeof d.dy !== "undefined") {
-                  return (d.dy - 2*vars.padding) + "px";
+                  return (Math.max(0, d.dy - 2 * vars.padding - params_translate[1])) + "px";
                 } else {
                  return "auto";
                }
-               });
+               })
 
+/*
+               .style("left", function(d) {
+                 if(typeof params_x !== "undefined") {
+                   return (params_x + params_translate[0]) + "px";
+                 } else {
+                   return (vars.x_scale[0]["func"](vars.accessor_data(d)[vars.var_x]) + params_translate[0]) + "px";
+                 }
+               })
+               .style("top", function(d) {
+                 if(typeof params_y !== "undefined") {
+                   return (params_y + params_translate[1]) + "px";
+                 } else {
+                   return (vars.y_scale[0]["func"](vars.accessor_data(d)[vars.var_y]) + params_translate[1]) + "px";
+                 }
+               })
+*/
           if(typeof params.class !== "undefined") {
 
             items_mark_divtext_enter.classed(params.class(vars.accessor_items(d)), true);

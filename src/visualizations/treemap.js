@@ -74,9 +74,13 @@ vars.default_params["treemap"] = function(scope) {
     });
 
     if(typeof vars.var_sort_asc !== "undefined" && !vars.var_sort_asc) {
-      vars.root.children = vars.root.children.sort(function(a, b) { return d3.ascending(a[vars.var_sort], b[vars.var_sort]);});
+      vars.root.children = vars.root.children.sort(function(a, b) {
+        return d3.ascending(a[vars.var_sort], b[vars.var_sort]);
+      });
     } else {
-      vars.root.children = vars.root.children.sort(function(a, b) { return d3.descending(a[vars.var_sort], b[vars.var_sort]);});
+      vars.root.children = vars.root.children.sort(function(a, b) {
+        return d3.descending(a[vars.var_sort], b[vars.var_sort]);
+      });
     }
 
     vars.treemap = d3.layout.treemap()

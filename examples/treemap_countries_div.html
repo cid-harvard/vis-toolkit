@@ -86,6 +86,7 @@ d3.json("../data/diversification_ubiquity_hs4_1995_2012.json", function(error, c
       container: "#viz",
       height: 600,
       width: 900,
+      padding: 20,
       data: flat_years,
       var_id: "name",
       var_sort: "nb_products",
@@ -97,7 +98,8 @@ d3.json("../data/diversification_ubiquity_hs4_1995_2012.json", function(error, c
       items: [{
         marks: [{
           type: "divtext",
-          filter: function(d, i) { return d.depth == 1 && d.dx > 30 && d.dy > 30; }
+          filter: function(d, i) { return d.depth == 1 && d.dx > 30 && d.dy > 30; },
+          translate: [50, 20]
         }, {
           type: "rect",
           filter: function(d, i) { return d.depth == 2; },
