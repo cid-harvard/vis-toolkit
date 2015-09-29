@@ -95,6 +95,8 @@ var utils ={};
         } else if(typeof params.text === "String") {
           params_text = params.text;
         }
+      } else if(vars.var_text !== "undefined") {
+         params_text = vars.accessor_data(d)[vars.var_text];
       }
 
       if(typeof params.width !== "undefined") {
@@ -108,14 +110,14 @@ var utils ={};
       if(typeof params.height !== "undefined") {
         if(typeof params.height === "function") {
           params_height = params.height(d);
-        } else if(typeof params.height === "number") {
+        } else if(typeof params.height === "number" || typeof params.height === "string") {
           params_height = params.height;
         }
       }
 
       if(typeof params.x !== "undefined") {
         if(typeof params.x === "function") {
-          params_x = params.x(d);
+          params_x = params.x(d, i, vars);
         } else if(typeof params.x === "number") {
           params_x = params.x;
         }
@@ -123,7 +125,7 @@ var utils ={};
 
       if(typeof params.y !== "undefined") {
         if(typeof params.y === "function") {
-          params_y = params.y(d);
+          params_y = params.y(d, i, vars);
         } else if(typeof params.y === "number") {
           params_y = params.y;
         }
@@ -148,6 +150,29 @@ var utils ={};
           params_rotate = params.rotate;
         }
       }
+
+      var params_fill = null;
+
+      if(typeof params.fill !== "undefined" && params.fill !== null) {
+
+        if(typeof params.fill === "function") {
+          params_fill = params.fill(d);
+        } else {
+          params_fill = params.fill;
+        }
+      }
+
+      var params_stroke = null;
+
+      if(typeof params.stroke !== "undefined" && params.stroke !== null) {
+
+        if(typeof params.stroke === "function") {
+          params_stroke = params.stroke(d);
+        } else {
+          params_stroke = params.stroke;
+        }
+      }
+
 
       // Use the default accessor
       var accessor_data = vars.accessor_data;
@@ -220,17 +245,19 @@ var utils ={};
                  })
                  .style("left", function(d) {
                    if(typeof params_x !== "undefined") {
-                     return params_x + "px";
+                     return (params_x + params_translate[0]) + "px";
                    } else {
                      return (vars.x_scale[0]["func"](vars.accessor_data(d)[vars.var_x]) + params_translate[0]) + "px";
                    }
+                   return params_translate[0];
                  })
                  .style("top", function(d) {
                    if(typeof params_y !== "undefined") {
-                     return params_y + "px";
+                     return (params_y + params_translate[1]) + "px";
                    } else {
                      return (vars.y_scale[0]["func"](vars.accessor_data(d)[vars.var_y]) + params_translate[1]) + "px";
                    }
+                   return params_translate[1];
                  })
                  .html(function(d) {
                     if(typeof params_text !== "undefined") {
@@ -253,64 +280,86 @@ var utils ={};
           var items_mark_divtext = d3.select(this).selectAll(".items__mark__divtext").data([d]);
 
           var items_mark_divtext_enter = items_mark_divtext.enter().insert("foreignObject")
+                .style("pointer-events", "none")
                 .classed("items__mark__divtext", true)
                 .classed("items_" + mark_id, true)
                 .attr("width", function(d) {
                    if(typeof d.dx !== "undefined") {
-                     return (d.dx - vars.padding) + "px";
+                     return (Math.max(0, d.dx - 2 * vars.padding - params_translate[0])) + "px";
                    } else {
-                     return "150px";
+                     return "auto";
                    }
                  })
                 .attr("height", function(d) {
                  if(typeof d.dy !== "undefined") {
-                    return (d.dy - 2*vars.padding) + "px";
+                    return (Math.max(0, d.dy - 2 * vars.padding - params_translate[1])) + "px";
                   } else {
-                    return "100%";
+                    return "auto";
                   }
                 })
                .append("xhtml:body")
                .append("div")
+               .style({"pointer-events": "none"})
                .style("width", function(d) {
                  if(typeof d.dx !== "undefined") {
-                   return (d.dx - 2*vars.padding) + "px";
+                   return (Math.max(0, d.dx - 2 * vars.padding - params_translate[0])) + "px";
                  } else {
-                   return "150px";
+                   return "auto";
                  }
                 })
                .style("height", function(d) {
                  if(typeof d.dy !== "undefined") {
-                   return (d.dx - 2*vars.padding) + "px";
+                   return (Math.max(0, d.dy - 2 * vars.padding - params_translate[1])) + "px";
                  } else {
-                  return "100%";
+                  return "auto";
                 }
                 })
+              .style("margin-left", function(d) {
+                 return params_translate[0];
+               })
                .style({"text-overflow": "ellipsis", "overflow": "hidden"})
-               .html(function(d) {
-                  if(typeof params_text !== "undefined") {
-                    return params_text;
-                  } else {
-                    return vars.accessor_data(d)[vars.var_text];
-                  }
-               });
+               .html(params_text);
 
           items_mark_divtext.select('div')
               .transition()
+              .style({"pointer-events": "none"})
+              .style("margin-left", function(d) {
+                 return params_translate[0] + 'px';
+               })
+              .style("margin-top", function(d) {
+                 return params_translate[1] + 'px';
+               })
               .style("width", function(d) {
                 if(typeof d.dx !== "undefined") {
-                  return (d.dx - 2*vars.padding) + "px";
+                  return (Math.max(0, d.dx - 2 * vars.padding - params_translate[0])) + "px";
                 } else {
-                  return "150px";
+                  return "auto";
                 }
                })
               .style("height", function(d) {
                 if(typeof d.dy !== "undefined") {
-                  return (d.dx - 2*vars.padding) + "px";
+                  return (Math.max(0, d.dy - 2 * vars.padding - params_translate[1])) + "px";
                 } else {
-                 return "100%";
+                 return "auto";
                }
-               });
+               })
 
+/*
+               .style("left", function(d) {
+                 if(typeof params_x !== "undefined") {
+                   return (params_x + params_translate[0]) + "px";
+                 } else {
+                   return (vars.x_scale[0]["func"](vars.accessor_data(d)[vars.var_x]) + params_translate[0]) + "px";
+                 }
+               })
+               .style("top", function(d) {
+                 if(typeof params_y !== "undefined") {
+                   return (params_y + params_translate[1]) + "px";
+                 } else {
+                   return (vars.y_scale[0]["func"](vars.accessor_data(d)[vars.var_y]) + params_translate[1]) + "px";
+                 }
+               })
+*/
           if(typeof params.class !== "undefined") {
 
             items_mark_divtext_enter.classed(params.class(vars.accessor_items(d)), true);
@@ -351,7 +400,18 @@ var utils ={};
                   .attr("height", params.height || 10)
                   .attr("width", params.width || 10)
                   .attr("transform", "rotate(" + params_rotate + ")")
-                  .style("fill", function(d) { return vars.color(vars.accessor_items(d)[vars.var_color]); });
+                  .style("fill", function(d) {
+                    if(typeof params_fill !== 'undefined' && params_fill !== null) {
+                      return params_fill;
+                    } else {
+                      return vars.color(vars.accessor_items(d)[vars.var_color]);
+                    }
+                  })
+                  .style("stroke", function(d) {
+                    if(typeof params_stroke !== 'undefined' && params_stroke !== null) {
+                      return params_stroke;
+                    }
+                  });
 
         items_mark_rect
             .classed("highlighted", function(d, i) { return d.__highlighted; })
@@ -361,7 +421,18 @@ var utils ={};
             .attr("y", params.y || 0)
             .attr("height", params.height || 10)
             .attr("width", params.width || 10)
-            .style("fill", function(d) { return vars.color(vars.accessor_items(d)[vars.var_color]); });
+            .style("fill", function(d) {
+              if(typeof params_fill !== 'undefined' && params_fill !== null) {
+                return params_fill;
+              } else {
+                return vars.color(vars.accessor_items(d)[vars.var_color]);
+              }
+            })
+            .style("stroke", function(d) {
+              if(typeof params_stroke !== 'undefined' && params_stroke !== null) {
+                return params_stroke;
+              }
+            });
 
         items_mark_rect.exit().remove();
 
@@ -425,12 +496,9 @@ var utils ={};
           items_mark_shape.enter().insert("path")
               .classed('items__mark__shape', true)
               .classed("items_" + mark_id, true)
-              .attr("class", "country")
-              .attr("title", function(d,i) {
-            //    active = d3.select(null);
-                return d.name;
+              .attr("transform", function(d) {
+                return "translate("+ -d.x +", "+ -d.y +")";
               })
-           //   .on("click", clicked);
 
           items_mark_shape
               .classed("highlighted", function(d, i) { return d.__highlighted; })
@@ -439,51 +507,18 @@ var utils ={};
               .style("fill", function(d, i) {
                 return params.fill(vars.accessor_data(d)[vars.var_color]);
               })
-              .transition().duration(vars.duration)
-              /*
               .attr("transform", function(d) {
 
                 // Drawing projects comes with automatic offset
-                d.x = d3.select(this).node().getBBox().x;
-                d.y = d3.select(this).node().getBBox().y;
+                //d.x = d3.select(this).node().getBBox().x;
+                //d.y = d3.select(this).node().getBBox().y;
 
                 // Update parent with new coordinates
-                d3.select(d3.select(this).node().parentNode).attr("transform", "translate("+ d.x +", "+ d.y +")");
+                //d3.select(d3.select(this).node().parentNode).attr("transform", "translate("+ d.x +", "+ d.y +")");
 
                 return "translate("+ -d.x +", "+ -d.y +")";
               })
-*/
-/*
-              // http://bl.ocks.org/mbostock/4699541
-              function clicked(d) {
-                if (active.node() === this) return reset();
-                active.classed("active", false);
-                active = d3.select(this).classed("active", true);
 
-                var bounds = vars.path.bounds(d),
-                    dx = bounds[1][0] - bounds[0][0],
-                    dy = bounds[1][1] - bounds[0][1],
-                    x = (bounds[0][0] + bounds[1][0]) / 2,
-                    y = (bounds[0][1] + bounds[1][1]) / 2,
-                    scale = .9 / Math.max(dx / vars.width, dy / vars.height),
-                    translate = [vars.width / 2 - scale * x, vars.height / 2 - scale * y];
-
-                vars.svg.transition()
-                    .duration(750)
-                    .style("stroke-width", 1.5 / scale + "px")
-                    .attr("transform", "translate(" + translate + ")scale(" + scale + ")");
-              }
-
-              function reset() {
-                active.classed("active", false);
-                active = d3.select(null);
-
-                vars.svg.transition()
-                    .duration(750)
-                    .style("stroke-width", "1.5px")
-                    .attr("transform", "");
-              }
-*/
             items_mark_shape.exit().remove();
 
           break;
@@ -765,6 +800,25 @@ var utils ={};
 
         break;
 
+        case "triangle":
+
+          var mark = d3.select(this).selectAll('.items__mark__triangle').data([d]);
+
+          mark.enter().append('polygon')
+              .classed("items_" + mark_id, true)
+              .classed('items__mark__triangle', true)
+              .attr('fill', '#ED4036')
+              .attr('stroke-width', 0)
+              .attr('points','-10,5 0,-15 10,5');
+
+          mark
+              .classed('highlighted', function(d, i) { return d.__highlighted; })
+              .classed('selected', function(d, i) { return d.__selected; });
+
+          mark.exit().remove();
+
+        break;
+
         case "marker":
 
           var mark = d3.select(this).selectAll(".items__mark__marker").data([d]);
@@ -812,8 +866,8 @@ var utils ={};
           var mark_enter = mark.enter().append("circle")
               .classed("items_" + mark_id, true)
               .classed("items__mark__circle", true)
-              .attr("cx", 0)
-              .attr("cy", 0)
+              .attr("cx", params_translate[0])
+              .attr("cy", params_translate[1])
               .attr("r", function(d) {
 
                 if(typeof params.var_r === "undefined") {
@@ -823,6 +877,7 @@ var utils ={};
                     return vars.radius;
                   }
                 } else {
+
                   var r_scale = d3.scale.linear()
                     .range([vars.radius_min, vars.radius_max])
                     .domain(d3.extent(vars.new_data, function(d) { return d[params.var_r]; }))
@@ -878,6 +933,34 @@ var utils ={};
             mark.style("stroke-width", function(d) {
               return params.stroke_width(vars.accessor_items(d));
             });
+
+          }
+
+          if(typeof params.stroke_opacity !== "undefined") {
+
+            mark_enter.style("stroke-opacity", function(d) {
+              return params.stroke_opacity(vars.accessor_items(d));
+            });
+
+            mark.style("stroke-opacity", function(d) {
+              return params.stroke_opacity(vars.accessor_items(d));
+            });
+
+          }
+
+          if(typeof params.opacity !== "undefined") {
+
+            if(typeof params.fill === "function") {
+
+              mark_enter.style("opacity", function(d) {
+                return params.opacity(vars.accessor_items(d));
+              });
+
+            } else {
+
+              mark.style("opacity", params.opacity);
+
+            }
 
           }
 
@@ -1016,6 +1099,15 @@ var utils ={};
       vars.x_scale[0]["func"].range([vars.x_scale[0]["func"].range()[1], vars.x_scale[0]["func"].range()[0]]);
     }
 
+    if(vars.y_log) {
+      vars.y_scale = [{
+        func: d3.scale.log()
+                .range([vars.height - vars.margin.top - vars.margin.bottom, vars.margin.top])
+                .domain([1, d3.max(vars.new_data, function(d) { return d[vars.var_y]; })]).nice(),
+      }];
+
+    }
+
     if(vars.y_invert) {
       vars.y_scale[0]["func"].range([vars.y_scale[0]["func"].range()[1], vars.y_scale[0]["func"].range()[0]]);
     }
@@ -1115,7 +1207,7 @@ var utils ={};
           gItems_exit.remove();
         }
 
-        if(vars.type == "productspace") {
+        if(vars.type == "productspace" || vars.type == "treemap") {
           vars.new_data.forEach(function(d) { d.__redraw = false; });
         }
 
@@ -1129,7 +1221,7 @@ var utils ={};
 
         vars_svg.transition()
                 .duration(vars.duration)
-                .attr("transform", "translate(" + vars.margin.left + "," + vars.margin.top + ")");
+                .attr("transform", "translate(" + vars.margin.left + "," + vars.margin.top + ")rotate(" + vars.rotate + ")");
 
       }
 
@@ -1365,12 +1457,12 @@ var utils ={};
   utils.make_y_axis = function() {
     return d3.svg.axis()
         .scale(vars.y_scale[0]["func"])
-        .ticks(vars.y_ticks)
         // Quick fix to get max value
         .tickValues(vars.y_tickValues)
         .tickFormat(vars.y_format)
         .tickSize(vars.y_tickSize)
         .tickPadding(vars.y_tickPadding)
+
         .orient("left");
   }
 
@@ -1484,6 +1576,7 @@ var utils ={};
 
     // Default dimensions
     margin: {top: 0, right: 0, bottom: 0, left: 0},
+    rotate: 0,
 
     // Default Variables mapping
     var_color: null,
@@ -1755,7 +1848,7 @@ var utils ={};
     d.__redraw = true;
 
     // Make sure the highlighted node is above other nodes
-    if(vars.type == "productspace" || vars.type == "dotplot") {
+    if(vars.type == "productspace" || vars.type == "dotplot" || vars.type == "treemap") {
 
       d3.select(vars.container).selectAll(".connect__line").classed("highlighted", false);
       d3.select(vars.container).selectAll("circle").classed("highlighted__adjacent", false);
@@ -1778,7 +1871,9 @@ var utils ={};
     }
 */
 
-    } else {
+    }
+
+    if(vars.type !== "productspace") {
       d3.select(vars.container).call(vars.this_chart);
     }
 
@@ -1819,14 +1914,14 @@ var utils ={};
     // Create the top level element conaining the visualization
     if(!vars.svg) {
        if(vars.type !== "table") {
-       
+
         vars.svg = d3.select(vars.container).append("svg")
           .attr("width", vars.width)
           .attr("height", vars.height)
           .style('overflow', 'visible')
           .style('z-index', 0)
         .append("g")
-          .attr("transform", "translate(" + vars.margin.left + "," + vars.margin.top + ")");
+          .attr("transform", "translate(" + vars.margin.left + "," + vars.margin.top + ")rotate(" + vars.rotate + ")");
 
       } else {
         // HTML Container for table
@@ -1994,7 +2089,6 @@ var utils ={};
         if(vars.highlight.indexOf(item_id) < 0) {
           d.__highlighted = false;
         } else {
-          console.log(d)
           d.__highlighted = true;
         }
 
@@ -2078,6 +2172,7 @@ var utils ={};
           d.__aggregated = false;
           d.__selected = false;
           d.__highlighted = false;
+          d.__highlighted__adjacent = false;
           d.__missing = false;
           d.__redraw = true;
           vars.new_data.push(d);
@@ -2358,8 +2453,8 @@ vars.default_params["barchart"] = function(scope) {
     marks: [{
       type: "rect",
       x: function() { return -scope.mark.width/2; },
-      y: function(d) { return - params.y_scale[0]["func"](d[vars.var_y]) + (scope.height - scope.margin.bottom - scope.margin.top - params.y_scale[0]["func"](d[scope.var_y])); },
-      height: function(d) { return params.y_scale[0]["func"](d[scope.var_y]); },
+      y: function(d) { return -scope.margin.top; },
+      height: function(d) { return scope.height - scope.margin.bottom - scope.margin.top - params.y_scale[0]["func"](d[scope.var_y]); },
       width: function(d) { return params.x_scale[0]["func"].rangeBand(); },
       fill: function(d) { return scope.color(scope.accessor_items(d)[scope.var_color]); }
     }]
@@ -2374,7 +2469,7 @@ vars.default_params["barchart"] = function(scope) {
   params.y_grid_show = true;
 
   return params;
-  
+
 };
 
 vars.default_params["linechart"] = function(scope) {
@@ -2452,14 +2547,14 @@ vars.default_params["scatterplot"] = function(scope) {
   }];
 
   params.r_scale = d3.scale.linear()
-              .range([10, 30])
+              .range([vars.radius_min, vars.radius_max])
               .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_r]; })),
 
   params.items = [{
     marks: [{
         type: "circle",
         r_scale: d3.scale.linear()
-                    .range([10, 30])
+                    .range([vars.radius_min, vars.radius_max])
                     .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_r]; })),
         fill: function(d) { return vars.color(vars.accessor_items(d)[vars.var_color]); }
       }, {
@@ -2483,20 +2578,23 @@ vars.default_params["scatterplot"] = function(scope) {
   params.x_axis_translate = [0, scope.height - scope.margin.bottom - scope.margin.top];
   params.x_grid_show = true;
   params.x_ticks = 10;
-  
+
   params.y_axis_show = true;
   params.y_axis_translate = [scope.margin.left, 0];
   params.y_grid_show = true;
 
   return params;
-  
+
 };
 
  vars.default_params["geomap"] = function(scope) {
 
   var params = {};
 
-  params.accessor_data = function(d) { return d.data; };
+  params.var_x = 'x';
+  params.var_y = 'y';
+
+  params.accessor_data = function(d) { return d; };
   params.accessor_values = function(d) { return d.data.values; };
 
   if(vars.refresh) {
@@ -2505,13 +2603,15 @@ vars.default_params["scatterplot"] = function(scope) {
     vars.countries = topojson.object(vars.topology, vars.topology.objects.countries).geometries;
     vars.neighbors = topojson.neighbors(vars.topology, vars.countries);
 
-    vars.countries.forEach(function(d) { 
+    vars.countries.forEach(function(d) {
 
       // Retrieve the country name based on its id
       d[vars.var_id] = vars.names.filter(function(n) { return d.id == n.id; })[0][vars.var_id];
 
       // TODO: should merge on a more reliable join (e.g. 2-char)
-      d.data = vars.new_data.filter(function(n) { return d[vars.var_id] === n[vars.var_id]; })[0];
+      d.data = vars.new_data.filter(function(n) {
+        return d[vars.var_id] === n[vars.var_id];
+      })[0];
 
       // Two reasons why it is not defined
       // 1/ No data
@@ -2526,7 +2626,13 @@ vars.default_params["scatterplot"] = function(scope) {
 
     });
 
-    vars.new_data = vars.countries;
+    vars.new_data = vars.countries.map(function(d) {
+      d[vars.var_color] = d.data[vars.var_color];
+      d[vars.var_group] = d.data[vars.var_group];
+      if(typeof d.x === 'undefined') { d.x = 0; }
+      if(typeof d.y === 'undefined') { d.y = 0; }
+      return d;
+    });
 
     // http://techslides.com/demos/d3/d3-world-map-colors-tooltips.html
     vars.projection = d3.geo.mercator()
@@ -2541,25 +2647,24 @@ vars.default_params["scatterplot"] = function(scope) {
 
   params.x_scale = [{
     func: d3.scale.linear()
-            .domain(d3.extent(vars.countries, function(d) { return d[vars.var_x]; }))
+            .domain(d3.extent(vars.new_data, function(d) { return d[params.var_x]; }))
             .range([scope.margin.left, scope.width - scope.margin.left - scope.margin.right])
   }];
 
   params.y_scale = [{
     func: d3.scale.linear()
-            .domain(d3.extent(vars.countries, function(d) { return d[vars.var_y]; }))
-            .range([scope.height - vars.margin.top - vars.margin.bottom, scope.margin.top])
+            .domain(d3.extent(vars.new_data, function(d) { return d[params.var_y]; }))
+            .range([scope.height - scope.margin.top - scope.margin.bottom, scope.margin.top])
   }];
 
   params.items = [{
     marks: [{
       type: "shape",
       fill: d3.scale.linear()
-              .domain([d3.min(vars.new_data, function(d) { 
-                  return d[vars.var_color]; 
-                }), d3.max(vars.new_data, function(d) { 
-                  return d[vars.var_color]; 
-                })])
+              .domain([
+                d3.min(vars.new_data, function(d) { return d[vars.var_color]; }),
+                d3.max(vars.new_data, function(d) { return d[vars.var_color]; })
+              ])
               .range(["red", "green"])
     }]
   }];
@@ -2848,11 +2953,16 @@ vars.default_params["treemap"] = function(scope) {
   var params = {};
 
   if(vars.refresh) {
-    console.log("REFRES")
+
     // Create the root node
     vars.root = {};
     vars.root[vars.var_text]= "root";
     vars.root.depth = 0;
+    vars.root[vars.var_size] = vars.new_data.map(function(d) {
+      return d[vars.var_size];
+    }).reduce(function(p, c) {
+      return p + c;
+    });
 
     vars.groups = [];
 
@@ -2868,35 +2978,53 @@ vars.default_params["treemap"] = function(scope) {
       }
 
       var n = {year: d.year, id: i};
+
       n[vars.var_size] = d[vars.var_size];
       n[vars.var_group] = d[vars.var_group];
       n[vars.var_id] = d[vars.var_id];
       n[vars.var_text] = d[vars.var_text];
+      n[vars.var_color] = d[vars.var_color];
+      n[vars.var_text_item] = d[vars.var_text_item];
+
       vars.groups[vars.unique_groups.indexOf(d[vars.var_group])].push(n);
 
     });
 
     // Make sure there is no empty elements
-    vars.groups = vars.groups.filter(function(n) { return n !== "undefined"; }); 
+    vars.groups = vars.groups.filter(function(n) { return n !== "undefined"; });
 
     // Add group elements are root children
     vars.root.children = vars.groups.map(function(d, i) {
 
       node = {};
-      node[vars.var_text] = d[0][vars.var_text];
+
+      if(typeof vars.var_text_parent !== 'undefined') {
+        node[vars.var_text] = d[0][vars.var_text_parent];
+      } else {
+        node[vars.var_text] = d[0][vars.var_text];
+      }
+
       node[vars.var_group] = d[0][vars.var_group];
       node[vars.var_id] = d[0][vars.var_group];
+      node[vars.var_color] = d[0][vars.var_color];
+
       node[vars.var_sort] = 0;
       node[vars.var_size] = 0;
 
       // Create the children nodes var
       node.children = d.map(function(e, j) {
+
+/*
         var n = {year: e.year, id: e.id};
         n[vars.var_text] = e[vars.var_text];
-        n[vars.var_size] = e[vars.var_size]; 
+        n[vars.var_size] = e[vars.var_size];
         n[vars.var_group] = e[vars.var_group];
         n[vars.var_id] = e[vars.var_id];
+        n[vars.var_color] = e[vars.var_color];
+*/
+        var n = e;
 
+        // For parent element
         node[vars.var_sort] += e[vars.var_sort];
         node[vars.var_size] += e[vars.var_size];
 
@@ -2908,9 +3036,13 @@ vars.default_params["treemap"] = function(scope) {
     });
 
     if(typeof vars.var_sort_asc !== "undefined" && !vars.var_sort_asc) {
-      vars.root.children = vars.root.children.sort(function(a, b) { return d3.ascending(a[vars.var_sort], b[vars.var_sort]);});
+      vars.root.children = vars.root.children.sort(function(a, b) {
+        return d3.ascending(a[vars.var_sort], b[vars.var_sort]);
+      });
     } else {
-      vars.root.children = vars.root.children.sort(function(a, b) { return d3.descending(a[vars.var_sort], b[vars.var_sort]);});
+      vars.root.children = vars.root.children.sort(function(a, b) {
+        return d3.descending(a[vars.var_sort], b[vars.var_sort]);
+      });
     }
 
     vars.treemap = d3.layout.treemap()
@@ -2929,13 +3061,13 @@ vars.default_params["treemap"] = function(scope) {
   params.x_scale = [{
     func: d3.scale.linear()
             .range([scope.margin.left, scope.width - scope.margin.left - scope.margin.right])
-            .domain([0, d3.max(vars.new_data, function(d) { return d.x; })]),
+            .domain(d3.extent(vars.new_data, function(d) { return d.x; })),
   }];
 
   params.y_scale = [{
     func: d3.scale.linear()
             .range([scope.margin.top, scope.height - scope.margin.top - scope.margin.bottom])
-            .domain([0, d3.max(vars.new_data, function(d) { return d.y; })]),
+            .domain(d3.extent(vars.new_data, function(d) { return d.y; })),
   }];
 
   params.items = [{
@@ -2944,7 +3076,6 @@ vars.default_params["treemap"] = function(scope) {
       filter: function(d, i) { return d.depth == 1 && d.dx > 30 && d.dy > 30; }
     }, {
       type: "rect",
-      rotate: "10",
       filter: function(d, i) { return d.depth == 2; },
       x: 0,
       y: 0,
