@@ -8,6 +8,11 @@ vars.default_params["treemap"] = function(scope) {
     vars.root = {};
     vars.root[vars.var_text]= "root";
     vars.root.depth = 0;
+    vars.root[vars.var_size] = vars.new_data.map(function(d) {
+      return d[vars.var_size];
+    }).reduce(function(p, c) {
+      return p + c;
+    });
 
     vars.groups = [];
 
@@ -29,6 +34,7 @@ vars.default_params["treemap"] = function(scope) {
       n[vars.var_id] = d[vars.var_id];
       n[vars.var_text] = d[vars.var_text];
       n[vars.var_color] = d[vars.var_color];
+      n[vars.var_text_item] = d[vars.var_text_item];
 
       vars.groups[vars.unique_groups.indexOf(d[vars.var_group])].push(n);
 
@@ -42,7 +48,12 @@ vars.default_params["treemap"] = function(scope) {
 
       node = {};
 
-      node[vars.var_text] = d[0][vars.var_text];
+      if(typeof vars.var_text_parent !== 'undefined') {
+        node[vars.var_text] = d[0][vars.var_text_parent];
+      } else {
+        node[vars.var_text] = d[0][vars.var_text];
+      }
+
       node[vars.var_group] = d[0][vars.var_group];
       node[vars.var_id] = d[0][vars.var_group];
       node[vars.var_color] = d[0][vars.var_color];
@@ -62,7 +73,8 @@ vars.default_params["treemap"] = function(scope) {
         n[vars.var_color] = e[vars.var_color];
 */
         var n = e;
-        n.final = true;
+
+        // For parent element
         node[vars.var_sort] += e[vars.var_sort];
         node[vars.var_size] += e[vars.var_size];
 
