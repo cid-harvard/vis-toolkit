@@ -93,7 +93,7 @@
       if(typeof params.height !== "undefined") {
         if(typeof params.height === "function") {
           params_height = params.height(d);
-        } else if(typeof params.height === "number") {
+        } else if(typeof params.height === "number" || typeof params.height === "string") {
           params_height = params.height;
         }
       }
@@ -142,6 +142,17 @@
           params_fill = params.fill(d);
         } else {
           params_fill = params.fill;
+        }
+      }
+
+      var params_stroke = null;
+
+      if(typeof params.stroke !== "undefined" && params.stroke !== null) {
+
+        if(typeof params.stroke === "function") {
+          params_stroke = params.stroke(d);
+        } else {
+          params_stroke = params.stroke;
         }
       }
 
@@ -378,6 +389,11 @@
                     } else {
                       return vars.color(vars.accessor_items(d)[vars.var_color]);
                     }
+                  })
+                  .style("stroke", function(d) {
+                    if(typeof params_stroke !== 'undefined' && params_stroke !== null) {
+                      return params_stroke;
+                    }
                   });
 
         items_mark_rect
@@ -393,6 +409,11 @@
                 return params_fill;
               } else {
                 return vars.color(vars.accessor_items(d)[vars.var_color]);
+              }
+            })
+            .style("stroke", function(d) {
+              if(typeof params_stroke !== 'undefined' && params_stroke !== null) {
+                return params_stroke;
               }
             });
 
@@ -828,8 +849,8 @@
           var mark_enter = mark.enter().append("circle")
               .classed("items_" + mark_id, true)
               .classed("items__mark__circle", true)
-              .attr("cx", 0)
-              .attr("cy", 0)
+              .attr("cx", params_translate[0])
+              .attr("cy", params_translate[1])
               .attr("r", function(d) {
 
                 if(typeof params.var_r === "undefined") {
@@ -1107,7 +1128,6 @@
           gItems_enter.call(item.enter, vars);
         } else {
           gItems_enter.attr("transform", function(d, i) {
-            console.log(vars.x_scale[0]["func"](accessor_data(d)[vars.var_x]), d);
             return "translate(" + vars.x_scale[0]["func"](accessor_data(d)[vars.var_x]) + ", " + vars.y_scale[0]["func"](accessor_data(d)[vars.var_y]) + ")";
           });
         }
@@ -1170,7 +1190,7 @@
           gItems_exit.remove();
         }
 
-        if(vars.type == "productspace") {
+        if(vars.type == "productspace" || vars.type == "treemap") {
           vars.new_data.forEach(function(d) { d.__redraw = false; });
         }
 
