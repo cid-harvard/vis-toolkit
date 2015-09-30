@@ -25,13 +25,19 @@
                     .classed("highlighted", function(d, i) { return d.__highlighted; })
                     .classed("selected", function(d, i) { return d.__selected; })
                     .on("mouseover",function(d) {
-                      vars.evt.call("highlightOn", d);
+                      if(vars.type !== "productspace") {
+                        vars.evt.call("highlightOn", d);
+                      }
                     })
                     .on("mouseleave", function(d) {
-                      vars.evt.call("highlightOut", d);
+                      if(vars.type !== "productspace") {
+                        vars.evt.call("highlightOut", d);
+                      }
                     })
                     .on("click", function(d) {
-                       vars.evt.call("selection", d);
+                      if(vars.type !== "productspace") {
+                        vars.evt.call("selection", d);
+                      }
                     });
 
   }
@@ -72,6 +78,8 @@
         } else if(typeof params.text === "String") {
           params_text = params.text;
         }
+      } else if(vars.var_text !== "undefined") {
+         params_text = vars.accessor_data(d)[vars.var_text];
       }
 
       if(typeof params.width !== "undefined") {
@@ -85,14 +93,14 @@
       if(typeof params.height !== "undefined") {
         if(typeof params.height === "function") {
           params_height = params.height(d);
-        } else if(typeof params.height === "number") {
+        } else if(typeof params.height === "number" || typeof params.height === "string") {
           params_height = params.height;
         }
       }
 
       if(typeof params.x !== "undefined") {
         if(typeof params.x === "function") {
-          params_x = params.x(d);
+          params_x = params.x(d, i, vars);
         } else if(typeof params.x === "number") {
           params_x = params.x;
         }
@@ -100,7 +108,7 @@
 
       if(typeof params.y !== "undefined") {
         if(typeof params.y === "function") {
-          params_y = params.y(d);
+          params_y = params.y(d, i, vars);
         } else if(typeof params.y === "number") {
           params_y = params.y;
         }
@@ -125,6 +133,29 @@
           params_rotate = params.rotate;
         }
       }
+
+      var params_fill = null;
+
+      if(typeof params.fill !== "undefined" && params.fill !== null) {
+
+        if(typeof params.fill === "function") {
+          params_fill = params.fill(d);
+        } else {
+          params_fill = params.fill;
+        }
+      }
+
+      var params_stroke = null;
+
+      if(typeof params.stroke !== "undefined" && params.stroke !== null) {
+
+        if(typeof params.stroke === "function") {
+          params_stroke = params.stroke(d);
+        } else {
+          params_stroke = params.stroke;
+        }
+      }
+
 
       // Use the default accessor
       var accessor_data = vars.accessor_data;
@@ -197,17 +228,19 @@
                  })
                  .style("left", function(d) {
                    if(typeof params_x !== "undefined") {
-                     return params_x + "px";
+                     return (params_x + params_translate[0]) + "px";
                    } else {
                      return (vars.x_scale[0]["func"](vars.accessor_data(d)[vars.var_x]) + params_translate[0]) + "px";
                    }
+                   return params_translate[0];
                  })
                  .style("top", function(d) {
                    if(typeof params_y !== "undefined") {
-                     return params_y + "px";
+                     return (params_y + params_translate[1]) + "px";
                    } else {
                      return (vars.y_scale[0]["func"](vars.accessor_data(d)[vars.var_y]) + params_translate[1]) + "px";
                    }
+                   return params_translate[1];
                  })
                  .html(function(d) {
                     if(typeof params_text !== "undefined") {
@@ -230,64 +263,86 @@
           var items_mark_divtext = d3.select(this).selectAll(".items__mark__divtext").data([d]);
 
           var items_mark_divtext_enter = items_mark_divtext.enter().insert("foreignObject")
+                .style("pointer-events", "none")
                 .classed("items__mark__divtext", true)
                 .classed("items_" + mark_id, true)
                 .attr("width", function(d) {
                    if(typeof d.dx !== "undefined") {
-                     return (d.dx - vars.padding) + "px";
+                     return (Math.max(0, d.dx - 2 * vars.padding - params_translate[0])) + "px";
                    } else {
-                     return "150px";
+                     return "auto";
                    }
                  })
                 .attr("height", function(d) {
                  if(typeof d.dy !== "undefined") {
-                    return (d.dy - 2*vars.padding) + "px";
+                    return (Math.max(0, d.dy - 2 * vars.padding - params_translate[1])) + "px";
                   } else {
-                    return "100%";
+                    return "auto";
                   }
                 })
                .append("xhtml:body")
                .append("div")
+               .style({"pointer-events": "none"})
                .style("width", function(d) {
                  if(typeof d.dx !== "undefined") {
-                   return (d.dx - 2*vars.padding) + "px";
+                   return (Math.max(0, d.dx - 2 * vars.padding - params_translate[0])) + "px";
                  } else {
-                   return "150px";
+                   return "auto";
                  }
                 })
                .style("height", function(d) {
                  if(typeof d.dy !== "undefined") {
-                   return (d.dx - 2*vars.padding) + "px";
+                   return (Math.max(0, d.dy - 2 * vars.padding - params_translate[1])) + "px";
                  } else {
-                  return "100%";
+                  return "auto";
                 }
                 })
+              .style("margin-left", function(d) {
+                 return params_translate[0];
+               })
                .style({"text-overflow": "ellipsis", "overflow": "hidden"})
-               .html(function(d) {
-                  if(typeof params_text !== "undefined") {
-                    return params_text;
-                  } else {
-                    return vars.accessor_data(d)[vars.var_text];
-                  }
-               });
+               .html(params_text);
 
           items_mark_divtext.select('div')
               .transition()
+              .style({"pointer-events": "none"})
+              .style("margin-left", function(d) {
+                 return params_translate[0] + 'px';
+               })
+              .style("margin-top", function(d) {
+                 return params_translate[1] + 'px';
+               })
               .style("width", function(d) {
                 if(typeof d.dx !== "undefined") {
-                  return (d.dx - 2*vars.padding) + "px";
+                  return (Math.max(0, d.dx - 2 * vars.padding - params_translate[0])) + "px";
                 } else {
-                  return "150px";
+                  return "auto";
                 }
                })
               .style("height", function(d) {
                 if(typeof d.dy !== "undefined") {
-                  return (d.dx - 2*vars.padding) + "px";
+                  return (Math.max(0, d.dy - 2 * vars.padding - params_translate[1])) + "px";
                 } else {
-                 return "100%";
+                 return "auto";
                }
-               });
+               })
 
+/*
+               .style("left", function(d) {
+                 if(typeof params_x !== "undefined") {
+                   return (params_x + params_translate[0]) + "px";
+                 } else {
+                   return (vars.x_scale[0]["func"](vars.accessor_data(d)[vars.var_x]) + params_translate[0]) + "px";
+                 }
+               })
+               .style("top", function(d) {
+                 if(typeof params_y !== "undefined") {
+                   return (params_y + params_translate[1]) + "px";
+                 } else {
+                   return (vars.y_scale[0]["func"](vars.accessor_data(d)[vars.var_y]) + params_translate[1]) + "px";
+                 }
+               })
+*/
           if(typeof params.class !== "undefined") {
 
             items_mark_divtext_enter.classed(params.class(vars.accessor_items(d)), true);
@@ -328,7 +383,18 @@
                   .attr("height", params.height || 10)
                   .attr("width", params.width || 10)
                   .attr("transform", "rotate(" + params_rotate + ")")
-                  .style("fill", function(d) { return vars.color(vars.accessor_items(d)[vars.var_color]); });
+                  .style("fill", function(d) {
+                    if(typeof params_fill !== 'undefined' && params_fill !== null) {
+                      return params_fill;
+                    } else {
+                      return vars.color(vars.accessor_items(d)[vars.var_color]);
+                    }
+                  })
+                  .style("stroke", function(d) {
+                    if(typeof params_stroke !== 'undefined' && params_stroke !== null) {
+                      return params_stroke;
+                    }
+                  });
 
         items_mark_rect
             .classed("highlighted", function(d, i) { return d.__highlighted; })
@@ -338,7 +404,18 @@
             .attr("y", params.y || 0)
             .attr("height", params.height || 10)
             .attr("width", params.width || 10)
-            .style("fill", function(d) { return vars.color(vars.accessor_items(d)[vars.var_color]); });
+            .style("fill", function(d) {
+              if(typeof params_fill !== 'undefined' && params_fill !== null) {
+                return params_fill;
+              } else {
+                return vars.color(vars.accessor_items(d)[vars.var_color]);
+              }
+            })
+            .style("stroke", function(d) {
+              if(typeof params_stroke !== 'undefined' && params_stroke !== null) {
+                return params_stroke;
+              }
+            });
 
         items_mark_rect.exit().remove();
 
@@ -402,12 +479,9 @@
           items_mark_shape.enter().insert("path")
               .classed('items__mark__shape', true)
               .classed("items_" + mark_id, true)
-              .attr("class", "country")
-              .attr("title", function(d,i) {
-            //    active = d3.select(null);
-                return d.name;
+              .attr("transform", function(d) {
+                return "translate("+ -d.x +", "+ -d.y +")";
               })
-           //   .on("click", clicked);
 
           items_mark_shape
               .classed("highlighted", function(d, i) { return d.__highlighted; })
@@ -416,51 +490,18 @@
               .style("fill", function(d, i) {
                 return params.fill(vars.accessor_data(d)[vars.var_color]);
               })
-              .transition().duration(vars.duration)
-              /*
               .attr("transform", function(d) {
 
                 // Drawing projects comes with automatic offset
-                d.x = d3.select(this).node().getBBox().x;
-                d.y = d3.select(this).node().getBBox().y;
+                //d.x = d3.select(this).node().getBBox().x;
+                //d.y = d3.select(this).node().getBBox().y;
 
                 // Update parent with new coordinates
-                d3.select(d3.select(this).node().parentNode).attr("transform", "translate("+ d.x +", "+ d.y +")");
+                //d3.select(d3.select(this).node().parentNode).attr("transform", "translate("+ d.x +", "+ d.y +")");
 
                 return "translate("+ -d.x +", "+ -d.y +")";
               })
-*/
-/*
-              // http://bl.ocks.org/mbostock/4699541
-              function clicked(d) {
-                if (active.node() === this) return reset();
-                active.classed("active", false);
-                active = d3.select(this).classed("active", true);
 
-                var bounds = vars.path.bounds(d),
-                    dx = bounds[1][0] - bounds[0][0],
-                    dy = bounds[1][1] - bounds[0][1],
-                    x = (bounds[0][0] + bounds[1][0]) / 2,
-                    y = (bounds[0][1] + bounds[1][1]) / 2,
-                    scale = .9 / Math.max(dx / vars.width, dy / vars.height),
-                    translate = [vars.width / 2 - scale * x, vars.height / 2 - scale * y];
-
-                vars.svg.transition()
-                    .duration(750)
-                    .style("stroke-width", 1.5 / scale + "px")
-                    .attr("transform", "translate(" + translate + ")scale(" + scale + ")");
-              }
-
-              function reset() {
-                active.classed("active", false);
-                active = d3.select(null);
-
-                vars.svg.transition()
-                    .duration(750)
-                    .style("stroke-width", "1.5px")
-                    .attr("transform", "");
-              }
-*/
             items_mark_shape.exit().remove();
 
           break;
@@ -742,6 +783,25 @@
 
         break;
 
+        case "triangle":
+
+          var mark = d3.select(this).selectAll('.items__mark__triangle').data([d]);
+
+          mark.enter().append('polygon')
+              .classed("items_" + mark_id, true)
+              .classed('items__mark__triangle', true)
+              .attr('fill', '#ED4036')
+              .attr('stroke-width', 0)
+              .attr('points','-10,5 0,-15 10,5');
+
+          mark
+              .classed('highlighted', function(d, i) { return d.__highlighted; })
+              .classed('selected', function(d, i) { return d.__selected; });
+
+          mark.exit().remove();
+
+        break;
+
         case "marker":
 
           var mark = d3.select(this).selectAll(".items__mark__marker").data([d]);
@@ -789,8 +849,8 @@
           var mark_enter = mark.enter().append("circle")
               .classed("items_" + mark_id, true)
               .classed("items__mark__circle", true)
-              .attr("cx", 0)
-              .attr("cy", 0)
+              .attr("cx", params_translate[0])
+              .attr("cy", params_translate[1])
               .attr("r", function(d) {
 
                 if(typeof params.var_r === "undefined") {
@@ -800,6 +860,7 @@
                     return vars.radius;
                   }
                 } else {
+
                   var r_scale = d3.scale.linear()
                     .range([vars.radius_min, vars.radius_max])
                     .domain(d3.extent(vars.new_data, function(d) { return d[params.var_r]; }))
@@ -855,6 +916,34 @@
             mark.style("stroke-width", function(d) {
               return params.stroke_width(vars.accessor_items(d));
             });
+
+          }
+
+          if(typeof params.stroke_opacity !== "undefined") {
+
+            mark_enter.style("stroke-opacity", function(d) {
+              return params.stroke_opacity(vars.accessor_items(d));
+            });
+
+            mark.style("stroke-opacity", function(d) {
+              return params.stroke_opacity(vars.accessor_items(d));
+            });
+
+          }
+
+          if(typeof params.opacity !== "undefined") {
+
+            if(typeof params.fill === "function") {
+
+              mark_enter.style("opacity", function(d) {
+                return params.opacity(vars.accessor_items(d));
+              });
+
+            } else {
+
+              mark.style("opacity", params.opacity);
+
+            }
 
           }
 
@@ -993,6 +1082,15 @@
       vars.x_scale[0]["func"].range([vars.x_scale[0]["func"].range()[1], vars.x_scale[0]["func"].range()[0]]);
     }
 
+    if(vars.y_log) {
+      vars.y_scale = [{
+        func: d3.scale.log()
+                .range([vars.height - vars.margin.top - vars.margin.bottom, vars.margin.top])
+                .domain([1, d3.max(vars.new_data, function(d) { return d[vars.var_y]; })]).nice(),
+      }];
+
+    }
+
     if(vars.y_invert) {
       vars.y_scale[0]["func"].range([vars.y_scale[0]["func"].range()[1], vars.y_scale[0]["func"].range()[0]]);
     }
@@ -1092,7 +1190,7 @@
           gItems_exit.remove();
         }
 
-        if(vars.type == "productspace") {
+        if(vars.type == "productspace" || vars.type == "treemap") {
           vars.new_data.forEach(function(d) { d.__redraw = false; });
         }
 
@@ -1106,7 +1204,7 @@
 
         vars_svg.transition()
                 .duration(vars.duration)
-                .attr("transform", "translate(" + vars.margin.left + "," + vars.margin.top + ")");
+                .attr("transform", "translate(" + vars.margin.left + "," + vars.margin.top + ")rotate(" + vars.rotate + ")");
 
       }
 
@@ -1213,7 +1311,13 @@
           .append("g")
           .attr("class", "x grid")
           .style("display", function() { return vars.x_grid_show ? "block": "none"; })
-          .attr("transform", "translate(0," + (vars.margin.top) + ")");
+          .attr("transform", function() {
+            if(vars.x_axis_orient == "top") {
+              return "translate(0," + (vars.height - vars.margin.top - vars.margin.bottom) + ")";
+            } else {
+              return "translate(0," + (vars.margin.top) + ")";
+            }
+          });
 
       vars_svg.selectAll(".x.grid").transition()
           .duration(vars.duration)
@@ -1239,26 +1343,6 @@
           .tickFormat(""));
 
     }
-
-    // POST-RENDERING STUFF
-    // Usually aimed at updating the rendering order of elements
-    vars.z_index.forEach(function(d) {
-
-      if(vars.type === d.type) {
-        vars_svg.selectAll(d.selector)
-          .filter(function(e) {
-            if(typeof d.attribute !== 'undefined') {
-              return e[d.attribute];
-            } else {
-              return true;
-            }
-          })
-          .each(function() {
-            this.parentNode.appendChild(this);
-          });
-      }
-
-    });
 
     utils.background_label(vars.title);
 
@@ -1356,12 +1440,12 @@
   utils.make_y_axis = function() {
     return d3.svg.axis()
         .scale(vars.y_scale[0]["func"])
-        .ticks(vars.y_ticks)
         // Quick fix to get max value
         .tickValues(vars.y_tickValues)
         .tickFormat(vars.y_format)
         .tickSize(vars.y_tickSize)
         .tickPadding(vars.y_tickPadding)
+
         .orient("left");
   }
 

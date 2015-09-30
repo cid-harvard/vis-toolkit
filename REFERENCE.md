@@ -163,6 +163,28 @@ If no id has been set, then `var_text` defaults to `__id`.
 
 * **Note:** Not all graphical marks contain text to be displayed. Naturally the `text` one requires one.
 
+### `translate`
+
+* Type:** `Array`
+
+* **Default:** `[0, 0]`
+
+* **Example:**
+
+* **Note:** Used by the zoom to focus on a specific region that is the bounding box of some nodes, along with the `scale` of the `transfom`.
+*&nbsp;
+The translate operates directly on the child node of the root `<svg>` node.
+
+### `rotate`
+
+* Type:** int
+
+* **Default:** `0`
+
+* **Example:**
+
+* **Note:** Same as for `translate` above.
+
 
 ## Data
 
@@ -554,6 +576,11 @@ Some time-related values are internally created:
   sort: ['continent', "name", 'avg_products', 'nb_products']
 }
 ```
+
+
+## Chart Specifics
+
+* `padding` for treemaps
 
 
 ## Misc

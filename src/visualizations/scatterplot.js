@@ -15,14 +15,14 @@ vars.default_params["scatterplot"] = function(scope) {
   }];
 
   params.r_scale = d3.scale.linear()
-              .range([10, 30])
+              .range([vars.radius_min, vars.radius_max])
               .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_r]; })),
 
   params.items = [{
     marks: [{
         type: "circle",
         r_scale: d3.scale.linear()
-                    .range([10, 30])
+                    .range([vars.radius_min, vars.radius_max])
                     .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_r]; })),
         fill: function(d) { return vars.color(vars.accessor_items(d)[vars.var_color]); }
       }, {
@@ -46,11 +46,11 @@ vars.default_params["scatterplot"] = function(scope) {
   params.x_axis_translate = [0, scope.height - scope.margin.bottom - scope.margin.top];
   params.x_grid_show = true;
   params.x_ticks = 10;
-  
+
   params.y_axis_show = true;
   params.y_axis_translate = [scope.margin.left, 0];
   params.y_grid_show = true;
 
   return params;
-  
+
 };

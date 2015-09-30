@@ -42,7 +42,7 @@ var scatterplot = function() {
   d3.json("../data/countries.json", function(error, countries) {
 
     countries.forEach(function(d) {
-      
+
       if(d.latlng.length == 0) {
         d.latlng = [0, 0];
       }
@@ -70,7 +70,7 @@ var scatterplot = function() {
     //      fill: function() { return 'gray'; },
     //      opacity: .1,
     //      radius: 20
-    //    }, 
+    //    },
     //    {
           type: 'circle',
           radius: 10
@@ -84,7 +84,7 @@ var scatterplot = function() {
           text: function() { return "Average Latitude"; },
           text_anchor: "start",
           translate: [300, 10]
-        }, 
+        },
         {
           type: "text",
           rotate: "-30"
@@ -101,17 +101,17 @@ var scatterplot = function() {
     dragit.init("svg");
 
     var timecube = d3.range(nb_points).map(function(d, i) {
-      return d3.range(dragit.time.max).map(function(e, j) { 
+      return d3.range(dragit.time.max).map(function(e, j) {
         return {x: j, y: Math.random(), t: j};
       });
     })
 
-    dragit.data = timecube.map(function(d, i) { 
-      return d.map(function(e, i) { 
-        return [xScale(e.x), yScale(e.y)]; 
-      }) 
+    dragit.data = timecube.map(function(d, i) {
+      return d.map(function(e, i) {
+        return [xScale(e.x), yScale(e.y)];
+      })
     });
-    
+
     var nb_points = 1;
 
     dragit.time = {min: 0, max: 20, step: 1, current: 0};
@@ -158,10 +158,10 @@ var highlight_country = function() {
 
   // TODO
   // -Change the behavior of the marks when updated
-  // -Should it be CSS? 
+  // -Should it be CSS?
   visualization.params({
     items: [{
-    highlight: ["FRA", "GER", "CHN"],    
+    highlight: ["FRA", "GER", "CHN"],
     selection: ["USA"]
   });
 

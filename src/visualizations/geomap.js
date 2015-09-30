@@ -2,7 +2,10 @@
 
   var params = {};
 
-  params.accessor_data = function(d) { return d.data; };
+  params.var_x = 'x';
+  params.var_y = 'y';
+
+  params.accessor_data = function(d) { return d; };
   params.accessor_values = function(d) { return d.data.values; };
 
   if(vars.refresh) {
@@ -11,13 +14,15 @@
     vars.countries = topojson.object(vars.topology, vars.topology.objects.countries).geometries;
     vars.neighbors = topojson.neighbors(vars.topology, vars.countries);
 
-    vars.countries.forEach(function(d) { 
+    vars.countries.forEach(function(d) {
 
       // Retrieve the country name based on its id
       d[vars.var_id] = vars.names.filter(function(n) { return d.id == n.id; })[0][vars.var_id];
 
       // TODO: should merge on a more reliable join (e.g. 2-char)
-      d.data = vars.new_data.filter(function(n) { return d[vars.var_id] === n[vars.var_id]; })[0];
+      d.data = vars.new_data.filter(function(n) {
+        return d[vars.var_id] === n[vars.var_id];
+      })[0];
 
       // Two reasons why it is not defined
       // 1/ No data
@@ -32,7 +37,13 @@
 
     });
 
-    vars.new_data = vars.countries;
+    vars.new_data = vars.countries.map(function(d) {
+      d[vars.var_color] = d.data[vars.var_color];
+      d[vars.var_group] = d.data[vars.var_group];
+      if(typeof d.x === 'undefined') { d.x = 0; }
+      if(typeof d.y === 'undefined') { d.y = 0; }
+      return d;
+    });
 
     // http://techslides.com/demos/d3/d3-world-map-colors-tooltips.html
     vars.projection = d3.geo.mercator()
@@ -47,25 +58,24 @@
 
   params.x_scale = [{
     func: d3.scale.linear()
-            .domain(d3.extent(vars.countries, function(d) { return d[vars.var_x]; }))
+            .domain(d3.extent(vars.new_data, function(d) { return d[params.var_x]; }))
             .range([scope.margin.left, scope.width - scope.margin.left - scope.margin.right])
   }];
 
   params.y_scale = [{
     func: d3.scale.linear()
-            .domain(d3.extent(vars.countries, function(d) { return d[vars.var_y]; }))
-            .range([scope.height - vars.margin.top - vars.margin.bottom, scope.margin.top])
+            .domain(d3.extent(vars.new_data, function(d) { return d[params.var_y]; }))
+            .range([scope.height - scope.margin.top - scope.margin.bottom, scope.margin.top])
   }];
 
   params.items = [{
     marks: [{
       type: "shape",
       fill: d3.scale.linear()
-              .domain([d3.min(vars.new_data, function(d) { 
-                  return d[vars.var_color]; 
-                }), d3.max(vars.new_data, function(d) { 
-                  return d[vars.var_color]; 
-                })])
+              .domain([
+                d3.min(vars.new_data, function(d) { return d[vars.var_color]; }),
+                d3.max(vars.new_data, function(d) { return d[vars.var_color]; })
+              ])
               .range(["red", "green"])
     }]
   }];

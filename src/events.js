@@ -91,6 +91,26 @@
       })
     }
 
+    // POST-RENDERING STUFF
+    // Usually aimed at updating the rendering order of elements
+    vars.z_index.forEach(function(d) {
+
+      if(vars.type === d.type && d.event === 'highlightOn') {
+        vars.svg.selectAll(d.selector)
+          .filter(function(e) {
+            if(typeof d.attribute !== 'undefined') {
+              return e[d.attribute];
+            } else {
+              return true;
+            }
+          })
+          .each(function() {
+            this.parentNode.appendChild(this);
+          });
+      }
+
+    });
+
     d3.select(vars.container).call(vars.this_chart);
 
   });
@@ -100,7 +120,7 @@
     d.__redraw = true;
 
     // Make sure the highlighted node is above other nodes
-    if(vars.type == "productspace") {
+    if(vars.type == "productspace" || vars.type == "dotplot" || vars.type == "treemap") {
 
       d3.select(vars.container).selectAll(".connect__line").classed("highlighted", false);
       d3.select(vars.container).selectAll("circle").classed("highlighted__adjacent", false);
@@ -108,7 +128,6 @@
       // Temporary settings to prevent chart redraw for product space
       d3.select(vars.container).selectAll(".items__mark__text").remove();
       d3.select(vars.container).selectAll(".items__mark__div").remove();
-
 
       // Reset all the highlighted nodes
       vars.links.forEach(function(e) {
@@ -124,9 +143,30 @@
     }
 */
 
-    } else {
+    }
+
+    if(vars.type !== "productspace") {
       d3.select(vars.container).call(vars.this_chart);
     }
+
+    // Duplicate
+    vars.z_index.forEach(function(d) {
+
+      if(vars.type === d.type && d.event === 'highlightOut') {
+        vars.svg.selectAll(d.selector)
+          .filter(function(e) {
+            if(typeof d.attribute !== 'undefined') {
+              return e[d.attribute];
+            } else {
+              return true;
+            }
+          })
+          .each(function() {
+            this.parentNode.appendChild(this);
+          });
+      }
+
+    });
 
   });
 
