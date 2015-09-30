@@ -12,7 +12,7 @@ vars.default_params["treemap"] = function(scope) {
       return d[vars.var_size];
     }).reduce(function(p, c) {
       return p + c;
-    });
+    }, 0);
 
     vars.groups = [];
 
