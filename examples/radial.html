@@ -1,166 +1,47 @@
 <!doctype html>
 <meta charset="utf-8">
 <script src="../js/d3.js"></script>
-<script src="../js/vistk.js"></script>
+<script src="../build/vistk.js"></script>
 <link href="../css/vistk.css" rel="stylesheet">
 <body>
-<style>
-
-.node circle {
-  fill: #fff;
-  stroke: steelblue;
-  stroke-width: 1.5px;
-}
-
-.node {
-  font: 10px sans-serif;
-}
-
-.link {
-  fill: none;
-  stroke: #ccc;
-  stroke-width: 1.5px;
-}
-
-</style>
 <div id="viz"></div>
 <script>
 
-/* TODO
+d3.json("../data/diversification_ubiquity_hs4_1995_2012.json", function(error, countries) {
 
-  -Create a tree data structure from the node-link
+  var flat_years = vistk.utils.flatten_years(countries);
 
-*/
+  visualization = vistk.viz()
+    .params({
+      dev: true,
+      type: "radial",
+      container: "#viz",
+      height: 600,
+      width: 900,
+      data: flat_years,
+      var_id: "name",
+      var_sort: "nb_products",
+      var_group: "continent",
+      var_color: "continent",
+      title: "Countries",
+      var_size: "nb_products",
+      var_text: "name",
+      time: {
+        var_time: "year",
+        current_time: 1995,
+        parse: function(d) { return d; }
+      },
+      ui: {
+        default: true,
+        options: ["country", "continent"]
+      },
+      selection: ["France"],
+      highlight: ["France", "Germany"]
+    });
 
-var browsed_nodes = [];
-
-function find_links_node(node_id) {
-
-  var res = [];
-
-  console.log("FIND", node_id)
-
-  graph.links.forEach(function(d, i) {
-
-    if((d.source.id == node_id) && (browsed_nodes.indexOf(d.source.id) < 0)) {
-      console.log(node_id, "is a match for source!")
-      browsed_nodes.push(d.source.id);
-      res.push(d.target);
-    }
-
-    if((d.target.id == node_id) && (browsed_nodes.indexOf(d.target.id) < 0)) {
-      console.log(node_id, "is a match for target!")
-      browsed_nodes.push(d.target.id);
-      res.push(d.source);
-    }
-
-  })
-
-  return res;
-}
-
-d3.json("../data/network_hs.json", function(g) {
-
-  graph = g;
-
-  var min_x = Infinity, max_x = 0;
-  var min_y = Infinity, max_y = 0;
-
-  graph.nodes.forEach(function(d, i) {
-
-    d.id = i;
-
-    if(d.x < min_x)
-      min_x = d.x;
-
-    if(d.y < min_y)
-      min_y = d.y;
-
-    if(d.x > max_x)
-      max_x = d.x;
-
-    if(d.y > max_y)
-      max_y = d.y;
-
-  })
-
-  r = graph;
-
-  graph.links.forEach(function(d, i) {
-
-    d.source = graph.nodes[d.source];
-    d.target = graph.nodes[d.target];
-
-  })
-
-  test_data = {};
-  test_data.name = graph.nodes[0].id; 
-
-  // Create first round of children
-  test_data.children = find_links_node(graph.nodes[0].id)
-    
-  test_data.children.forEach(function(d, i) {
-
-    d.name = i;
-    d.size = 0;
-    
-    d.children = find_links_node(d.id)
-
-    d.children.forEach(function(e, j) {
-
-      e.name = i;
-      e.size = 0;
-      
-      e.children = find_links_node(e.id)
-
-      console.log("e.children", e.children, e)
-
-
-    })
-
-    console.log("THIS", d, d.id, d.children)
-
-  })
-
-  var radius = 960 / 2;
-
-  var cluster = d3.layout.cluster()
-      .size([360, radius - 120]);
-
-  var diagonal = d3.svg.diagonal.radial()
-      .projection(function(d) { return [d.y, d.x / 180 * Math.PI]; });
-
-  var svg = d3.select("body").append("svg")
-      .attr("width", radius * 2)
-      .attr("height", radius * 2)
-    .append("g")
-      .attr("transform", "translate(" + radius + "," + radius + ")");
-
-  nodes = cluster.nodes(test_data);
-
-  var link = svg.selectAll("path.link")
-      .data(cluster.links(nodes))
-    .enter().append("path")
-      .attr("class", "link")
-      .attr("d", diagonal);
-
-  var node = svg.selectAll("g.node")
-      .data(nodes)
-    .enter().append("g")
-      .attr("class", "node")
-      .attr("transform", function(d) { return "rotate(" + (d.x - 90) + ")translate(" + d.y + ")"; })
-
-  node.append("circle")
-      .attr("r", 4.5);
-
-  node.append("text")
-      .attr("dy", ".31em")
-      .attr("text-anchor", function(d) { return d.x < 180 ? "start" : "end"; })
-      .attr("transform", function(d) { return d.x < 180 ? "translate(8)" : "rotate(180)translate(-8)"; })
-      .text(function(d) { return d.name; });
+  d3.select(visualization.container()).call(visualization);
 
 });
 
 </script>
-
 </body>

@@ -151,7 +151,7 @@
     init: true,
     _user_vars: {},
 
-    list_params: ["sparkline", "dotplot", "barchart", "linechart", "scatterplot", "grid", "stacked", "piechart", "slopegraph", "productspace", "treemap", "geomap", "stackedbar", "ordinal_vertical", "ordinal_horizontal", "matrix"],
+    list_params: ["sparkline", "dotplot", "barchart", "linechart", "scatterplot", "grid", "stacked", "piechart", "slopegraph", "productspace", "treemap", "geomap", "stackedbar", "ordinal_vertical", "ordinal_horizontal", "matrix", "radial"],
     default_params: {},
 
     z_index: [
