@@ -1538,3 +1538,92 @@
   utils.filters = {};
 
   utils.redraw_only = function(d) { return d.__redraw; }
+
+  utils.create_hierarchy = function(vars) {
+
+   // Create the root node
+    vars.root = {};
+    vars.root[vars.var_text]= "root";
+    vars.root.depth = 0;
+
+    vars.root[vars.var_size] = vars.new_data.map(function(d) {
+      return d[vars.var_size];
+    }).reduce(function(p, c) {
+      return p + c;
+    }, 0);
+
+    vars.groups = [];
+
+    vars.unique_groups = [];
+
+    // Creates the groups here
+    vars.new_data.map(function(d, i) {
+
+      // If group doesn't exist, we create it
+      if(vars.unique_groups.indexOf(d[vars.var_group]) < 0) {
+        vars.unique_groups.push(d[vars.var_group]);
+        vars.groups[vars.unique_groups.indexOf(d[vars.var_group])] = [];
+      }
+
+      var n = {year: d.year, id: i};
+
+      n[vars.var_size] = d[vars.var_size];
+      n[vars.var_group] = d[vars.var_group];
+      n[vars.var_id] = d[vars.var_id];
+      n[vars.var_text] = d[vars.var_text];
+      n[vars.var_color] = d[vars.var_color];
+      n[vars.var_text_item] = d[vars.var_text_item];
+
+      vars.groups[vars.unique_groups.indexOf(d[vars.var_group])].push(n);
+
+    });
+
+    // Make sure there is no empty elements
+    vars.groups = vars.groups.filter(function(n) { return n !== "undefined"; });
+
+    // Add group elements are root children
+    vars.root.children = vars.groups.map(function(d, i) {
+
+      node = {};
+
+      if(typeof vars.var_text_parent !== 'undefined') {
+        node[vars.var_text] = d[0][vars.var_text_parent];
+      } else {
+        node[vars.var_text] = d[0][vars.var_text];
+      }
+
+      node[vars.var_group] = d[0][vars.var_group];
+      node[vars.var_id] = d[0][vars.var_group];
+      node[vars.var_color] = d[0][vars.var_color];
+
+      node[vars.var_sort] = 0;
+      node[vars.var_size] = 0;
+
+      // Create the children nodes var
+      node.children = d.map(function(e, j) {
+
+        var n = e;
+
+        // For parent element
+        node[vars.var_sort] += e[vars.var_sort];
+        node[vars.var_size] += e[vars.var_size];
+
+        return n;
+      });
+
+      return node;
+
+    });
+
+    if(typeof vars.var_sort_asc !== "undefined" && !vars.var_sort_asc) {
+      vars.root.children = vars.root.children.sort(function(a, b) {
+        return d3.ascending(a[vars.var_sort], b[vars.var_sort]);
+      });
+    } else {
+      vars.root.children = vars.root.children.sort(function(a, b) {
+        return d3.descending(a[vars.var_sort], b[vars.var_sort]);
+      });
+    }
+
+  }
+
