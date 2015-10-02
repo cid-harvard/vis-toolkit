@@ -56,6 +56,7 @@
 
     selection.each(function(d, i) {
 
+      // Skip the drawing if __redraw flag is false
       if(!d.__redraw) {
         return;
       }
@@ -598,6 +599,10 @@
 
           var this_accessor_values = function(d) { return d.values; };
 
+          if(vars.type == "radial") {
+            this_accessor_values = function(d) { return d; };
+          }
+
           if(typeof params['func'] == 'undefined') {
               params['func'] = d3.svg.line()
                .interpolate('linear')
@@ -615,6 +620,9 @@
               .style("stroke", params.stroke)
               .attr('d', function(e) {
                 return params["func"](this_accessor_values(e));
+              })
+              .attr("transform", function(d) {
+                return "translate(" +  params_translate + ")rotate(" +  params_rotate + ")";
               });
 
           mark
@@ -1147,6 +1155,7 @@
 
           // Supporting multipe similar elements
           params._mark_id = index_item + "_" + index_mark;
+
           gItems_enter
               .filter(params.filter)
               .filter(utils.filters.redraw_only)
@@ -1160,6 +1169,7 @@
 
         // Bind events to groups after marks have been created
         gItems.each(utils.items_group);
+
         /* Should be as below but current params don't match this format
           // APPEND AND UPDATE ITEMS MARK
           vars.items.forEach(function(item) {

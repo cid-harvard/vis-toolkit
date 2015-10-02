@@ -5,14 +5,12 @@ vars.default_params["radial"] = function(scope) {
   params.var_x = 'x';
   params.var_y = 'y';
 
-  //if(vars.refresh) {
+  if(vars.refresh) {
 
     utils.create_hierarchy(scope);
 
-    var diameter = 960;
-
     var tree = d3.layout.tree()
-        .size([360, diameter / 2 - 120])
+        .size([360, scope.width / 3 - 120])
         .separation(function(a, b) { return (a.parent == b.parent ? 1 : 2) / a.depth; });
 
     var diagonal = d3.svg.diagonal.radial()
@@ -26,7 +24,7 @@ vars.default_params["radial"] = function(scope) {
     vars.new_data.forEach(function(d) { d.__redraw = true; });
     vars.links.forEach(function(d) { d.__redraw = true; });
 
- // }
+  }
 
   params.x_scale = [{
     func: d3.scale.linear()
@@ -44,6 +42,7 @@ vars.default_params["radial"] = function(scope) {
               .range([10, 30])
               .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_r]; }));
 
+/*
   params.connect = [{
     attr: "links",
     type: "items",
@@ -53,7 +52,8 @@ vars.default_params["radial"] = function(scope) {
       func: null,
     }]
   }];
-/*
+  */
+
   params.connect = [{
     attr: vars.time.var_time,
     marks: [{
@@ -62,10 +62,11 @@ vars.default_params["radial"] = function(scope) {
       stroke: function(d) {
         return "black";
       },
-      func: diagonal
+      func: diagonal,
+      translate: [scope.width / 2, scope.height / 2]
     }]
   }];
-*/
+
   params.items = [{
     marks: [{
       type: "text",
@@ -78,8 +79,8 @@ vars.default_params["radial"] = function(scope) {
       r: 10,
       x: 0,
       y: 0,
-   //   rotate: function(d) { return d.x - 90; },
-   //   translate: function(d) { return [d.y, 0]; }
+      rotate: function(d) { return d.x - 90; },
+      translate: function(d) { return [d.y, 0]; }
     }]
   }];
 
