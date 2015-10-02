@@ -56,7 +56,6 @@ d3.csv("../data/new_rankings2.csv", function(error, data) {
       y_text: "ECI Rank",
       var_y: "rank",
       var_x: 'year',
-<<<<<<< HEAD
       items: [{
         attr: "name",
         marks: [{
@@ -72,15 +71,22 @@ d3.csv("../data/new_rankings2.csv", function(error, data) {
           })
         },
         update: function(data, vars) {
-          
+
           // Make sure the connect mark already exist
-          if(d3.select(".connect__path").node() == null)
+          if(d3.select(".connect__path").node() == null) {
             return;
+          }
 
-          this.transition().duration(1000)
-              .attrTween("transform",  vistk.utils.translate_along(d3.select(".connect__path")));
-
-        }
+          this.transition().duration(5000)
+              .attrTween("transform",  function(d, i) {
+                return vistk.utils.translate_along(d3.selectAll(".connect__path")
+                  .filter(function(e, j) {
+                    return j === i;
+                  }))(d);
+              })
+              // TODO: delay by final position
+        },
+        time: {current_time: vistk.utils.max}
       }],
       connect: [{
         time: {
@@ -88,25 +94,12 @@ d3.csv("../data/new_rankings2.csv", function(error, data) {
         },
         marks: [{
           type: "path"
-=======
-      connect: [{
-        marks: [{
-          type: "path",
-          rotate: "0",
-          var_r: "realgdp",
-          var_fill: "realgdp",
-  //        fill: function(d) { return vars.color(vars.accessor_items(d)[vars.var_color]); }
-        }, {
-          type: "text",
-          rotate: "-30",
-          translate: 10 // TODO: translate the same distance than the radius
->>>>>>> Bump version
         }]
       }],
       time: {
         parse: d3.time.format("%Y").parse,
         var_time: 'year',
-        current_time: '2013'
+        current_time: vistk.utils.min
       },
       selection: ["Japan", "Switzerland", "Germany"],
       highlight: "France",
