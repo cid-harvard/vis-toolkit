@@ -178,7 +178,7 @@
 
     // Links between items
     // Used for product space
-    if(vars.links !== null && vars.init) {
+    if(vars.links !== null && vars.init && vars.type === 'productspace') {
 
       vars.links.forEach(function(d, i) {
 
@@ -197,7 +197,7 @@
     }
 
     // Flagging missing nodes with __missing true attribute
-    if(typeof vars.nodes !== "undefined" && vars.init) {
+    if(typeof vars.nodes !== "undefined" && vars.init && vars.type === 'productspace') {
 
       // Adding coordinates to data
       vars.new_data.forEach(function(d, i) {

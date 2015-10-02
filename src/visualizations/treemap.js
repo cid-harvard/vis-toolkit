@@ -33,31 +33,6 @@ vars.default_params["treemap"] = function(scope) {
 
   params.items = [{
     marks: [{
-      type: "circle",
-      r_scale: d3.scale.linear()
-                  .range([10, 30])
-                  .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_r]; })),
-      fill: function(d) { return vars.color(vars.accessor_items(d)[vars.var_color]); }
-    }, {
-      type: "text",
-      rotate: "30",
-      translate: null
-    }]
-  }];
-
-  params.connect = [{
-    attr: "links",
-    type: "items",
-    marks: [{
-      type: "line",
-      rotate: "0",
-      func: null,
-    }]
-  }];
-
-/*
-  params.items = [{
-    marks: [{
       type: "divtext",
       filter: function(d, i) { return d.depth == 1 && d.dx > 30 && d.dy > 30; }
     }, {
@@ -69,7 +44,7 @@ vars.default_params["treemap"] = function(scope) {
       height: function(d) { return d.dy; }
     }]
   }];
-*/
+
   params.var_x = 'x';
   params.var_y = 'y';
 

@@ -156,7 +156,6 @@
         }
       }
 
-
       // Use the default accessor
       var accessor_data = vars.accessor_data;
 
@@ -553,8 +552,12 @@
           var mark = d3.select(this).selectAll(".connect__line").data([d]);
 
           // Make sure we have data for links
-          if(typeof d.source == "undefined"  || typeof d.target == "undefined")
+          if(typeof d.source == "undefined"  || typeof d.target == "undefined") {
+            if(vars.dev) {
+              console.log("[draw line] missing source or target")
+            }
             return;
+          }
 
           mark.enter().append('line')
               .classed('connect__line', true)
@@ -966,7 +969,8 @@
              // .attr("fill", params.fill)
               .classed("highlighted", function(d, i) { return d.__highlighted; })
               .classed("highlighted__adjacent", function(d, i) { return d.__highlighted__adjacent; })
-              .classed("selected", function(d, i) { return d.__selected; });
+              .classed("selected", function(d, i) { return d.__selected; })
+              .attr("transform", "translate(" +  params_translate + ")rotate(" +  params_rotate + ")");
 
           mark.exit().remove();
 
@@ -1150,8 +1154,8 @@
 
           gItems
               .filter(params.filter)
-
               .call(utils.draw_mark, params, vars);
+
         });
 
         // Bind events to groups after marks have been created
@@ -1222,6 +1226,7 @@
       // Connecting items
       if(vars.type == "productspace" || vars.type == "radial") {
 
+        // Assign a var_id value for each link (for join)
         if(vars.init) {
           vars.links.forEach(function(d, i) {
             d[vars.var_id] = i;

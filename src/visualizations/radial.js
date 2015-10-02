@@ -5,7 +5,7 @@ vars.default_params["radial"] = function(scope) {
   params.var_x = 'x';
   params.var_y = 'y';
 
-  if(vars.refresh) {
+  //if(vars.refresh) {
 
     utils.create_hierarchy(scope);
 
@@ -18,17 +18,15 @@ vars.default_params["radial"] = function(scope) {
     var diagonal = d3.svg.diagonal.radial()
         .projection(function(d) { return [d.y, d.x / 180 * Math.PI]; });
 
-  vars.nodes = tree.nodes(vars.root);
-  vars.links = tree.links(vars.nodes);
+    vars.nodes = tree.nodes(vars.root);
+    vars.links = tree.links(vars.nodes);
 
     vars.new_data = vars.nodes;
 
     vars.new_data.forEach(function(d) { d.__redraw = true; });
     vars.links.forEach(function(d) { d.__redraw = true; });
 
-//    vars.new_data = vars.treemap.nodes(vars.root);
-
-  }
+ // }
 
   params.x_scale = [{
     func: d3.scale.linear()
@@ -55,11 +53,24 @@ vars.default_params["radial"] = function(scope) {
       func: null,
     }]
   }];
-
+/*
+  params.connect = [{
+    attr: vars.time.var_time,
+    marks: [{
+      type: "path",
+     // fill: function(d) { return vars.color(params.accessor_items(d)[vars.var_color]); },
+      stroke: function(d) {
+        return "black";
+      },
+      func: diagonal
+    }]
+  }];
+*/
   params.items = [{
     marks: [{
       type: "text",
-      rotate: 90
+  //    rotate: function(d) { return d.x - 90; },
+  //      translate: function(d) { return [d.y, 0]; }
   //    filter: function(d, i) { return d.depth == 1 && d.dx > 30 && d.dy > 30; }
     }, {
       type: "circle",
@@ -67,8 +78,11 @@ vars.default_params["radial"] = function(scope) {
       r: 10,
       x: 0,
       y: 0,
+   //   rotate: function(d) { return d.x - 90; },
+   //   translate: function(d) { return [d.y, 0]; }
     }]
   }];
+
 
   return params;
 
