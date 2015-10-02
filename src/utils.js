@@ -1220,7 +1220,7 @@
       var connect_data = vars.new_data;
 
       // Connecting items
-      if(vars.type == "productspace") {
+      if(vars.type == "productspace" || vars.type == "radial") {
 
         if(vars.init) {
           vars.links.forEach(function(d, i) {
@@ -1258,8 +1258,9 @@
 
         connect.marks.forEach(function(params, index_mark) {
 
-          if(typeof params.filter == "undefined")
+          if(typeof params.filter === "undefined") {
             params.filter = function() { return true; };
+          }
 
           // Supporting multipe similar elements
           params._mark_id = index_item + "_" + index_mark;

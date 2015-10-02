@@ -5,7 +5,6 @@ vars.default_params["radial"] = function(scope) {
   params.var_x = 'x';
   params.var_y = 'y';
 
-
   if(vars.refresh) {
 
     utils.create_hierarchy(scope);
@@ -19,26 +18,15 @@ vars.default_params["radial"] = function(scope) {
     var diagonal = d3.svg.diagonal.radial()
         .projection(function(d) { return [d.y, d.x / 180 * Math.PI]; });
 
-/*
-    vars.treemap = d3.layout.treemap()
-        .padding(vars.padding)
-        .sticky(true)
-        .sort(function(a,b) { return a[vars.var_sort] - b[vars.var_sort]; })
-        .size([vars.width, vars.height])
-        .value(function(d) { return d[vars.var_size]; });
-*/
-
-
   vars.nodes = tree.nodes(vars.root);
   vars.links = tree.links(vars.nodes);
 
     vars.new_data = vars.nodes;
 
     vars.new_data.forEach(function(d) { d.__redraw = true; });
+    vars.links.forEach(function(d) { d.__redraw = true; });
 
 //    vars.new_data = vars.treemap.nodes(vars.root);
-
-    vars.new_data.forEach(function(d) { d.__redraw = true; });
 
   }
 
@@ -57,6 +45,16 @@ vars.default_params["radial"] = function(scope) {
   params.r_scale = d3.scale.linear()
               .range([10, 30])
               .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_r]; }));
+
+  params.connect = [{
+    attr: "links",
+    type: "items",
+    marks: [{
+      type: "line",
+      rotate: "0",
+      func: null,
+    }]
+  }];
 
   params.items = [{
     marks: [{
