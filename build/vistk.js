@@ -72,7 +72,7 @@ var utils ={};
     }
 
     selection.each(function(d, i) {
-
+      // Skip the drawing if __redraw flag is false
       if(!d.__redraw) {
         return;
       }
@@ -172,7 +172,6 @@ var utils ={};
           params_stroke = params.stroke;
         }
       }
-
 
       // Use the default accessor
       var accessor_data = vars.accessor_data;
@@ -318,7 +317,13 @@ var utils ={};
                  return params_translate[0];
                })
                .style({"text-overflow": "ellipsis", "overflow": "hidden"})
-               .html(params_text);
+               .html(function(d) {
+                 if(typeof params_text !== "undefined") {
+                   return params_text;
+                 } else {
+                   return vars.accessor_data(d)[vars.var_text];
+                 }
+               });
 
           items_mark_divtext.select('div')
               .transition()
@@ -514,7 +519,7 @@ var utils ={};
                 //d.y = d3.select(this).node().getBBox().y;
 
                 // Update parent with new coordinates
-                //d3.select(d3.select(this).node().parentNode).attr("transform", "translate("+ d.x +", "+ d.y +")");
+                d3.select(d3.select(this).node().parentNode).attr("transform", "translate("+ d.x +", "+ d.y +")");
 
                 return "translate("+ -d.x +", "+ -d.y +")";
               })
@@ -570,8 +575,12 @@ var utils ={};
           var mark = d3.select(this).selectAll(".connect__line").data([d]);
 
           // Make sure we have data for links
-          if(typeof d.source == "undefined"  || typeof d.target == "undefined")
+          if(typeof d.source == "undefined"  || typeof d.target == "undefined") {
+            if(vars.dev) {
+              console.log("[draw line] missing source or target")
+            }
             return;
+          }
 
           mark.enter().append('line')
               .classed('connect__line', true)
@@ -612,6 +621,10 @@ var utils ={};
 
           var this_accessor_values = function(d) { return d.values; };
 
+          if(vars.type == "radial") {
+            this_accessor_values = function(d) { return d; };
+          }
+
           if(typeof params['func'] == 'undefined') {
               params['func'] = d3.svg.line()
                .interpolate('linear')
@@ -629,6 +642,9 @@ var utils ={};
               .style("stroke", params.stroke)
               .attr('d', function(e) {
                 return params["func"](this_accessor_values(e));
+              })
+              .attr("transform", function(d) {
+                return "translate(" +  params_translate + ")rotate(" +  params_rotate + ")";
               });
 
           mark
@@ -983,7 +999,8 @@ var utils ={};
              // .attr("fill", params.fill)
               .classed("highlighted", function(d, i) { return d.__highlighted; })
               .classed("highlighted__adjacent", function(d, i) { return d.__highlighted__adjacent; })
-              .classed("selected", function(d, i) { return d.__selected; });
+              .classed("selected", function(d, i) { return d.__selected; })
+              .attr("transform", "translate(" +  params_translate + ")rotate(" +  params_rotate + ")");
 
           mark.exit().remove();
 
@@ -1160,6 +1177,7 @@ var utils ={};
 
           // Supporting multipe similar elements
           params._mark_id = index_item + "_" + index_mark;
+
           gItems_enter
               .filter(params.filter)
               .filter(utils.filters.redraw_only)
@@ -1167,12 +1185,13 @@ var utils ={};
 
           gItems
               .filter(params.filter)
-
               .call(utils.draw_mark, params, vars);
+
         });
 
         // Bind events to groups after marks have been created
         gItems.each(utils.items_group);
+
         /* Should be as below but current params don't match this format
           // APPEND AND UPDATE ITEMS MARK
           vars.items.forEach(function(item) {
@@ -1237,8 +1256,9 @@ var utils ={};
       var connect_data = vars.new_data;
 
       // Connecting items
-      if(vars.type == "productspace") {
+      if(vars.type == "productspace" || vars.type == "radial") {
 
+        // Assign a var_id value for each link (for join)
         if(vars.init) {
           vars.links.forEach(function(d, i) {
             d[vars.var_id] = i;
@@ -1275,8 +1295,9 @@ var utils ={};
 
         connect.marks.forEach(function(params, index_mark) {
 
-          if(typeof params.filter == "undefined")
+          if(typeof params.filter === "undefined") {
             params.filter = function() { return true; };
+          }
 
           // Supporting multipe similar elements
           params._mark_id = index_item + "_" + index_mark;
@@ -1553,6 +1574,23 @@ var utils ={};
   }
 
   utils.filters = {};
+
+
+  utils.init_params = function(p, params) {
+
+    var r = null;
+
+    if(typeof params[p] !== "undefined") {
+      if(typeof params[p] === "function") {
+        r = params[p](d, i , vars);
+      } else if(typeof params[p] === "String") {
+        r = params[p];
+      }
+    } else if(vars.var_text !== "undefined") {
+       r = vars.accessor_data(d)[vars.var_text];
+    }
+
+  }
 
   utils.redraw_only = function(d) { return d.__redraw; }
 
@@ -2200,7 +2238,7 @@ var utils ={};
 
     // Links between items
     // Used for product space
-    if(vars.links !== null && vars.init) {
+    if(vars.links !== null && vars.init && vars.type === 'productspace') {
 
       vars.links.forEach(function(d, i) {
 
@@ -2219,7 +2257,7 @@ var utils ={};
     }
 
     // Flagging missing nodes with __missing true attribute
-    if(typeof vars.nodes !== "undefined" && vars.init) {
+    if(typeof vars.nodes !== "undefined" && vars.init && vars.type === 'productspace') {
 
       // Adding coordinates to data
       vars.new_data.forEach(function(d, i) {
@@ -2751,8 +2789,8 @@ vars.default_params["scatterplot"] = function(scope) {
       type: "shape",
       fill: d3.scale.linear()
               .domain([
-                d3.min(vars.new_data, function(d) { return d[vars.var_color]; }),
-                d3.max(vars.new_data, function(d) { return d[vars.var_color]; })
+                d3.min(vars.new_data, function(d) { return d[scope.var_color]; }),
+                d3.max(vars.new_data, function(d) { return d[scope.var_color]; })
               ])
               .range(["red", "green"])
     }]
@@ -3041,6 +3079,14 @@ vars.default_params["treemap"] = function(scope) {
 
   var params = {};
 
+  if(vars.init) {
+
+    if(typeof vars.var_group === "undefined" || vars.var_group === null) {
+
+      vars.var_group = vars.var_id;
+    }
+  }
+
   if(vars.refresh) {
 
     utils.create_hierarchy(scope);
@@ -3072,31 +3118,6 @@ vars.default_params["treemap"] = function(scope) {
 
   params.items = [{
     marks: [{
-      type: "circle",
-      r_scale: d3.scale.linear()
-                  .range([10, 30])
-                  .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_r]; })),
-      fill: function(d) { return vars.color(vars.accessor_items(d)[vars.var_color]); }
-    }, {
-      type: "text",
-      rotate: "30",
-      translate: null
-    }]
-  }];
-
-  params.connect = [{
-    attr: "links",
-    type: "items",
-    marks: [{
-      type: "line",
-      rotate: "0",
-      func: null,
-    }]
-  }];
-
-/*
-  params.items = [{
-    marks: [{
       type: "divtext",
       filter: function(d, i) { return d.depth == 1 && d.dx > 30 && d.dy > 30; }
     }, {
@@ -3108,7 +3129,7 @@ vars.default_params["treemap"] = function(scope) {
       height: function(d) { return d.dy; }
     }]
   }];
-*/
+
   params.var_x = 'x';
   params.var_y = 'y';
 
@@ -3123,40 +3144,24 @@ vars.default_params["radial"] = function(scope) {
   params.var_x = 'x';
   params.var_y = 'y';
 
-
   if(vars.refresh) {
 
     utils.create_hierarchy(scope);
 
-    var diameter = 960;
-
     var tree = d3.layout.tree()
-        .size([360, diameter / 2 - 120])
+        .size([360, scope.width / 3 - 120])
         .separation(function(a, b) { return (a.parent == b.parent ? 1 : 2) / a.depth; });
 
     var diagonal = d3.svg.diagonal.radial()
         .projection(function(d) { return [d.y, d.x / 180 * Math.PI]; });
 
-/*
-    vars.treemap = d3.layout.treemap()
-        .padding(vars.padding)
-        .sticky(true)
-        .sort(function(a,b) { return a[vars.var_sort] - b[vars.var_sort]; })
-        .size([vars.width, vars.height])
-        .value(function(d) { return d[vars.var_size]; });
-*/
-
-
-  vars.nodes = tree.nodes(vars.root);
-  vars.links = tree.links(vars.nodes);
+    vars.nodes = tree.nodes(vars.root);
+    vars.links = tree.links(vars.nodes);
 
     vars.new_data = vars.nodes;
 
     vars.new_data.forEach(function(d) { d.__redraw = true; });
-
-//    vars.new_data = vars.treemap.nodes(vars.root);
-
-    vars.new_data.forEach(function(d) { d.__redraw = true; });
+    vars.links.forEach(function(d) { d.__redraw = true; });
 
   }
 
@@ -3176,10 +3181,36 @@ vars.default_params["radial"] = function(scope) {
               .range([10, 30])
               .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_r]; }));
 
+/*
+  params.connect = [{
+    attr: "links",
+    type: "items",
+    marks: [{
+      type: "line",
+      rotate: "0",
+      func: null,
+    }]
+  }];
+  */
+
+  params.connect = [{
+    attr: vars.time.var_time,
+    marks: [{
+      type: "path",
+     // fill: function(d) { return vars.color(params.accessor_items(d)[vars.var_color]); },
+      stroke: function(d) {
+        return "black";
+      },
+      func: diagonal,
+      translate: [scope.width / 2, scope.height / 2]
+    }]
+  }];
+
   params.items = [{
     marks: [{
       type: "text",
-      rotate: 90
+  //    rotate: function(d) { return d.x - 90; },
+  //      translate: function(d) { return [d.y, 0]; }
   //    filter: function(d, i) { return d.depth == 1 && d.dx > 30 && d.dy > 30; }
     }, {
       type: "circle",
@@ -3187,8 +3218,11 @@ vars.default_params["radial"] = function(scope) {
       r: 10,
       x: 0,
       y: 0,
+      rotate: function(d) { return d.x - 90; },
+      translate: function(d) { return [d.y, 0]; }
     }]
   }];
+
 
   return params;
 
