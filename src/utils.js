@@ -55,7 +55,6 @@
     }
 
     selection.each(function(d, i) {
-
       // Skip the drawing if __redraw flag is false
       if(!d.__redraw) {
         return;
@@ -301,7 +300,13 @@
                  return params_translate[0];
                })
                .style({"text-overflow": "ellipsis", "overflow": "hidden"})
-               .html(params_text);
+               .html(function(d) {
+                 if(typeof params_text !== "undefined") {
+                   return params_text;
+                 } else {
+                   return vars.accessor_data(d)[vars.var_text];
+                 }
+               });
 
           items_mark_divtext.select('div')
               .transition()
@@ -497,7 +502,7 @@
                 //d.y = d3.select(this).node().getBBox().y;
 
                 // Update parent with new coordinates
-                //d3.select(d3.select(this).node().parentNode).attr("transform", "translate("+ d.x +", "+ d.y +")");
+                d3.select(d3.select(this).node().parentNode).attr("transform", "translate("+ d.x +", "+ d.y +")");
 
                 return "translate("+ -d.x +", "+ -d.y +")";
               })
@@ -1552,6 +1557,23 @@
   }
 
   utils.filters = {};
+
+
+  utils.init_params = function(p, params) {
+
+    var r = null;
+
+    if(typeof params[p] !== "undefined") {
+      if(typeof params[p] === "function") {
+        r = params[p](d, i , vars);
+      } else if(typeof params[p] === "String") {
+        r = params[p];
+      }
+    } else if(vars.var_text !== "undefined") {
+       r = vars.accessor_data(d)[vars.var_text];
+    }
+
+  }
 
   utils.redraw_only = function(d) { return d.__redraw; }
 
