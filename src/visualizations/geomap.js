@@ -73,8 +73,8 @@
       type: "shape",
       fill: d3.scale.linear()
               .domain([
-                d3.min(vars.new_data, function(d) { return d[vars.var_color]; }),
-                d3.max(vars.new_data, function(d) { return d[vars.var_color]; })
+                d3.min(vars.new_data, function(d) { return d[scope.var_color]; }),
+                d3.max(vars.new_data, function(d) { return d[scope.var_color]; })
               ])
               .range(["red", "green"])
     }]

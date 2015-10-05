@@ -2,6 +2,14 @@ vars.default_params["treemap"] = function(scope) {
 
   var params = {};
 
+  if(vars.init) {
+
+    if(typeof vars.var_group === "undefined" || vars.var_group === null) {
+
+      vars.var_group = vars.var_id;
+    }
+  }
+
   if(vars.refresh) {
 
     utils.create_hierarchy(scope);
