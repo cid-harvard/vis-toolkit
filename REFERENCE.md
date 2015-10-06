@@ -666,3 +666,108 @@ A list of public functions made available mostly to be used by the parameters.
 
 * **Note:** ..
 
+## Templates
+
+### Dot plot 
+
+([Demo](http://cid-harvard.github.io/vis-toolkit/examples/dotplot.html) | [Source](examples/dotplot.html))
+
+<img src='img/dotplot.png' />
+
+### Sparkline 
+
+([Demo](http://cid-harvard.github.io/vis-toolkit/examples/sparkline.html) | [Source](examples/sparkline.html))
+
+<img src='img/sparkline.png' />
+
+### Treemap 
+
+([Demo](http://cid-harvard.github.io/vis-toolkit/examples/treemap.html) | [Source](examples/treemap.html))
+
+<img src='img/treemap.png' />
+
+### Bar Chart
+
+<img src='img/barchart.png' />
+
+### Scatterplot 
+
+([Demo](http://cid-harvard.github.io/vis-toolkit/examples/scatterplot.html) | [Source](examples/scatterplot.html))
+
+<img src='img/scatterplot.png' />
+
+### Product Space 
+
+([Demo](http://cid-harvard.github.io/vis-toolkit/examples/scatterplot_productspace.html) | [Source](examples/scatterplot_productspace.html))
+
+<img src='img/scatterplot_productspace.png' />
+
+Industry Space ([Demo](http://cid-harvard.github.io/vis-toolkit/examples/scatterplot_industryspace.html))
+
+### Line Chart
+
+([Demo](http://cid-harvard.github.io/vis-toolkit/examples/linechart.html) | [Source](examples/linechart.html))
+
+<img src='img/linechart.png' />
+
+### Stacked Graph
+
+([Demo](http://cid-harvard.github.io/vis-toolkit/examples/stacked.html) | [Source](examples/stacked.html))
+
+<img src='img/stacked.png' />
+
+Work-In-Progress
+
+* Geo Map ([Demo](http://cid-harvard.github.io/vis-toolkit/examples/geomap.html) | [Source](examples/geomap.html))
+
+
+## Examples
+
+### Minimal Chart
+
+A [default chart](http://cid-harvard.github.io/vis-toolkit/examples/default_minimal.html) is a minimal representation with no mapping besides showing each row as a dot. For instance, the dataset `[0, 1, 2, 3]` is plotted as a self-organized graph within the SVG canvas boundaries (position doesn't encode anything(. The SVG canvas is attached to a parent DOM element (e.g. `#viz`) as follows:
+
+<img src='img/default.png' />
+
+```html
+<div id="viz"></div>
+<script>
+
+var  visualization = vistk.viz()
+    .params({
+      container: "#viz",
+      data: [10, 20, 30, 40],
+    });
+
+d3.select("#viz").call(visualization);
+
+</script>
+```
+
+Each chart in `vistk` has a `type` and for the default chart it is called `none`. 
+
+```js
+.params({
+  container: "#viz",
+  data: [{id: 0, value: 10}, {id: 1, value: 20}, {id: 2, value: 30}, {id: 3, value: 40}],
+  var_id: 'id',
+  var_text: 'value'
+});
+```
+
+## HOWTO: Chart Customizations
+
+### Items
+
+```js
+params.items = [{
+  attr: "name",
+  marks: [{
+    type: "circle",
+  },{
+    type: "text",
+    rotate: "-90"
+  }]
+}];
+```
+
