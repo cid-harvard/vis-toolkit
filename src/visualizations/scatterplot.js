@@ -26,11 +26,11 @@ vars.default_params["scatterplot"] = function(scope) {
                     .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_r]; })),
         fill: function(d) { return vars.color(vars.accessor_items(d)[vars.var_color]); }
       }, {
-        type: "text",
-        rotate: "30",
-        translate: null
-      }]
-    }, {
+      var_mark: '__highlighted',
+      type: d3.scale.ordinal().domain([true, false]).range(["text", "none"])
+    }]
+/*
+    , {
     marks: [{
         type: "circle",
         radius: 20,
@@ -39,7 +39,9 @@ vars.default_params["scatterplot"] = function(scope) {
         type: "text",
         rotate: "-30",
         translate: null
-    }]
+    }
+*/
+ //   ]
   }];
 
   params.x_axis_show = true;
