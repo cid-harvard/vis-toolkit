@@ -1,7 +1,9 @@
 "use strict";
 
-var vistk = window.vistk || {};
-window.vistk = vistk;
+var w = typeof window === "undefined" ? this : window;
+
+var vistk = w.vistk || {};
+w.vistk = vistk;
 
 vistk.version = "{{ VERSION }}";
 vistk.utils = {};
