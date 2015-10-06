@@ -126,7 +126,17 @@
     duration: 1000,
     interpolate: "monotone",
 
+    layout: {},
+
     padding: 1,
+
+    treemap: {
+      padding: 1,
+      d_x: 30,
+      d_y: 30,
+      depth_text: 1,
+      depth_rect: 2
+    },
 
     radius: 5,
 

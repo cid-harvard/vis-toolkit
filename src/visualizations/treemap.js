@@ -14,14 +14,14 @@ vars.default_params["treemap"] = function(scope) {
 
     utils.create_hierarchy(scope);
 
-    vars.treemap = d3.layout.treemap()
-        .padding(vars.padding)
+    vars.layout.treemap = d3.layout.treemap()
+        .padding(scope.padding)
         .sticky(true)
-        .sort(function(a,b) { return a[vars.var_sort] - b[vars.var_sort]; })
-        .size([vars.width, vars.height])
-        .value(function(d) { return d[vars.var_size]; });
+        .sort(function(a,b) { return a[scope.var_sort] - b[scope.var_sort]; })
+        .size([scope.width - scope.margin.left - scope.margin.right, scope.height - scope.margin.top - scope.margin.bottom])
+        .value(function(d) { return d[scope.var_size]; });
 
-    vars.new_data = vars.treemap.nodes(vars.root);
+    vars.new_data = vars.layout.treemap.nodes(vars.root);
 
     vars.new_data.forEach(function(d) { d.__redraw = true; });
 
@@ -42,10 +42,10 @@ vars.default_params["treemap"] = function(scope) {
   params.items = [{
     marks: [{
       type: "divtext",
-      filter: function(d, i) { return d.depth == 1 && d.dx > 30 && d.dy > 30; }
+      filter: function(d, i) { return d.depth == vars.treemap.depth_text && d.dx > vars.treemap.dx && d.d_y >  vars.treemap.d_y; }
     }, {
       type: "rect",
-      filter: function(d, i) { return d.depth == 2; },
+      filter: function(d, i) { return d.depth == vars.treemap.depth_rect; },
       x: 0,
       y: 0,
       width: function(d) { return d.dx; },
