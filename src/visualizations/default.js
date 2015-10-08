@@ -5,9 +5,9 @@
         }
 
         if(vars.dev) { console.log("[init.vars.default]", vars); }
-        
+
         // If there is an existing configuration
-        if(vars.list_params.indexOf(vars.type) >= 0) {
+        if(vars.list.type.indexOf(vars.type) >= 0) {
 
           var scope = {};
           scope = vars.default_params[vars.type](vars);

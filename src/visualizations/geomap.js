@@ -65,7 +65,7 @@
   params.y_scale = [{
     func: d3.scale.linear()
             .domain(d3.extent(vars.new_data, function(d) { return d[params.var_y]; }))
-            .range([scope.height - scope.margin.top - scope.margin.bottom, scope.margin.top])
+            .range([scope.margin.top, scope.height - scope.margin.top - scope.margin.bottom])
   }];
 
   params.items = [{
