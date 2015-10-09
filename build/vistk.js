@@ -1,10 +1,12 @@
 (function(){function n(n,a,r){for(var e,s,o,m=-1,u=2*Math.PI/a,b=0,h=[];++m<a;)e=n.m*(m*u-Math.PI)/4,e=Math.pow(Math.abs(Math.pow(Math.abs(Math.cos(e)/n.a),n.n2)+Math.pow(Math.abs(Math.sin(e)/n.b),n.n3)),-1/n.n1),e>b&&(b=e),h.push(e);for(b=r*Math.SQRT1_2/b,m=-1;++m<a;)s=(e=h[m]*b)*Math.cos(m*u),o=e*Math.sin(m*u),h[m]=[Math.abs(s)<1e-6?0:s,Math.abs(o)<1e-6?0:o];return t(h)+"Z"}var a=d3.svg.symbol(),t=d3.svg.line();d3.superformula=function(){function t(a,t){var u,b=r[e.call(this,a,t)];for(u in m)b[u]=m[u].call(this,a,t);return n(b,o.call(this,a,t),Math.sqrt(s.call(this,a,t)))}var e=a.type(),s=a.size(),o=s,m={};return t.type=function(n){return arguments.length?(e=d3.functor(n),t):e},t.param=function(n,a){return arguments.length<2?m[n]:(m[n]=d3.functor(a),t)},t.size=function(n){return arguments.length?(s=d3.functor(n),t):s},t.segments=function(n){return arguments.length?(o=d3.functor(n),t):o},t};var r={asterisk:{m:12,n1:.3,n2:0,n3:10,a:1,b:1},bean:{m:2,n1:1,n2:4,n3:8,a:1,b:1},butterfly:{m:3,n1:1,n2:6,n3:2,a:.6,b:1},circle:{m:4,n1:2,n2:2,n3:2,a:1,b:1},clover:{m:6,n1:.3,n2:0,n3:10,a:1,b:1},cloverFour:{m:8,n1:10,n2:-1,n3:-8,a:1,b:1},cross:{m:8,n1:1.3,n2:.01,n3:8,a:1,b:1},diamond:{m:4,n1:1,n2:1,n3:1,a:1,b:1},drop:{m:1,n1:.5,n2:.5,n3:.5,a:1,b:1},ellipse:{m:4,n1:2,n2:2,n3:2,a:9,b:6},gear:{m:19,n1:100,n2:50,n3:50,a:1,b:1},heart:{m:1,n1:.8,n2:1,n3:-8,a:1,b:.18},heptagon:{m:7,n1:1e3,n2:400,n3:400,a:1,b:1},hexagon:{m:6,n1:1e3,n2:400,n3:400,a:1,b:1},malteseCross:{m:8,n1:.9,n2:.1,n3:100,a:1,b:1},pentagon:{m:5,n1:1e3,n2:600,n3:600,a:1,b:1},rectangle:{m:4,n1:100,n2:100,n3:100,a:2,b:1},roundedStar:{m:5,n1:2,n2:7,n3:7,a:1,b:1},square:{m:4,n1:100,n2:100,n3:100,a:1,b:1},star:{m:5,n1:30,n2:100,n3:100,a:1,b:1},triangle:{m:3,n1:100,n2:200,n3:200,a:1,b:1}};d3.superformulaTypes=d3.keys(r)})();
 "use strict";
 
-var vistk = window.vistk || {};
-window.vistk = vistk;
+var w = typeof window === "undefined" ? this : window;
 
-vistk.version = "{{ VERSION }}";
+var vistk = w.vistk || {};
+w.vistk = vistk;
+
+vistk.version = "0.0.15";
 vistk.utils = {};
 
 vistk.viz = function() {
@@ -99,17 +101,21 @@ var utils ={};
          params_text = vars.accessor_data(d)[vars.var_text];
       }
 
+      var params_width = 10;
+
       if(typeof params.width !== "undefined") {
         if(typeof params.width === "function") {
-          params_width = params.width(d);
-        } else if(typeof params.width === "number") {
+          params_width = params.width(d, i , vars);
+        } else if(typeof params.width === "number" || typeof params.height === "string") {
           params_width = params.width;
         }
       }
 
+      var params_height = 10;
+
       if(typeof params.height !== "undefined") {
         if(typeof params.height === "function") {
-          params_height = params.height(d);
+          params_height = params.height(d, i , vars);
         } else if(typeof params.height === "number" || typeof params.height === "string") {
           params_height = params.height;
         }
@@ -145,7 +151,7 @@ var utils ={};
 
       if(typeof params.rotate !== "undefined" && params.rotate !== null) {
         if(typeof params.rotate === "function") {
-          params_rotate = params.rotate(d);
+          params_rotate = params.rotate(d, i, vars);
         } else {
           params_rotate = params.rotate;
         }
@@ -156,7 +162,7 @@ var utils ={};
       if(typeof params.fill !== "undefined" && params.fill !== null) {
 
         if(typeof params.fill === "function") {
-          params_fill = params.fill(d);
+          params_fill = params.fill(d, i, vars);
         } else {
           params_fill = params.fill;
         }
@@ -167,7 +173,7 @@ var utils ={};
       if(typeof params.stroke !== "undefined" && params.stroke !== null) {
 
         if(typeof params.stroke === "function") {
-          params_stroke = params.stroke(d);
+          params_stroke = params.stroke(d, i, vars);
         } else {
           params_stroke = params.stroke;
         }
@@ -395,15 +401,15 @@ var utils ={};
 
       case "rect":
 
-        var items_mark_rect = d3.select(this).selectAll(".items__mark__rect").data([d]);
+        var items_mark_rect = d3.select(this).selectAll(".items__mark__rect.items_" + mark_id).data([d]);
 
         items_mark_rect.enter().append("rect")
                   .classed("items__mark__rect", true)
                   .classed("items_" + mark_id, true)
                   .attr("x", params.x || 0)
                   .attr("y", params.y || 0)
-                  .attr("height", params.height || 10)
-                  .attr("width", params.width || 10)
+                  .attr("height", params_height)
+                  .attr("width", params_width)
                   .attr("transform", "rotate(" + params_rotate + ")")
                   .style("fill", function(d) {
                     if(typeof params_fill !== 'undefined' && params_fill !== null) {
@@ -424,8 +430,8 @@ var utils ={};
             .transition().duration(vars.duration)
             .attr("x", params.x || 0)
             .attr("y", params.y || 0)
-            .attr("height", params.height || 10)
-            .attr("width", params.width || 10)
+            .attr("height", params_height)
+            .attr("width", params_width)
             .style("fill", function(d) {
               if(typeof params_fill !== 'undefined' && params_fill !== null) {
                 return params_fill;
@@ -502,6 +508,15 @@ var utils ={};
               .classed('items__mark__shape', true)
               .classed("items_" + mark_id, true)
               .attr("transform", function(d) {
+
+                // Drawing projects comes with automatic offset
+                d.x = d3.select(this).node().getBBox().x;
+                d.y = d3.select(this).node().getBBox().y;
+
+                // Update parent with new coordinates
+           //     d3.select(d3.select(this).node().parentNode).attr("transform", "translate("+ d.x +", "+ d.y +")");
+
+
                 return "translate("+ -d.x +", "+ -d.y +")";
               })
 
@@ -513,13 +528,6 @@ var utils ={};
                 return params.fill(vars.accessor_data(d)[vars.var_color]);
               })
               .attr("transform", function(d) {
-
-                // Drawing projects comes with automatic offset
-                //d.x = d3.select(this).node().getBBox().x;
-                //d.y = d3.select(this).node().getBBox().y;
-
-                // Update parent with new coordinates
-                d3.select(d3.select(this).node().parentNode).attr("transform", "translate("+ d.x +", "+ d.y +")");
 
                 return "translate("+ -d.x +", "+ -d.y +")";
               })
@@ -1811,7 +1819,17 @@ var utils ={};
     duration: 1000,
     interpolate: "monotone",
 
+    layout: {},
+
     padding: 1,
+
+    treemap: {
+      padding: 1,
+      d_x: 30,
+      d_y: 30,
+      depth_text: 1,
+      depth_rect: 2
+    },
 
     radius: 5,
 
@@ -1836,7 +1854,10 @@ var utils ={};
     init: true,
     _user_vars: {},
 
-    list_params: ["sparkline", "dotplot", "barchart", "linechart", "scatterplot", "grid", "stacked", "piechart", "slopegraph", "productspace", "treemap", "geomap", "stackedbar", "ordinal_vertical", "ordinal_horizontal", "matrix", "radial"],
+    list: {type: ["sparkline", "dotplot", "barchart", "linechart", "scatterplot", "grid", "stacked", "piechart", "slopegraph", "productspace", "treemap", "geomap", "stackedbar", "ordinal_vertical", "ordinal_horizontal", "matrix", "radial"],
+      mark: ['rect', 'circle', 'star', 'shape']
+    },
+
     default_params: {},
 
     z_index: [
@@ -2685,11 +2706,11 @@ vars.default_params["scatterplot"] = function(scope) {
                     .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_r]; })),
         fill: function(d) { return vars.color(vars.accessor_items(d)[vars.var_color]); }
       }, {
-        type: "text",
-        rotate: "30",
-        translate: null
-      }]
-    }, {
+      var_mark: '__highlighted',
+      type: d3.scale.ordinal().domain([true, false]).range(["text", "none"])
+    }]
+/*
+    , {
     marks: [{
         type: "circle",
         radius: 20,
@@ -2698,7 +2719,9 @@ vars.default_params["scatterplot"] = function(scope) {
         type: "text",
         rotate: "-30",
         translate: null
-    }]
+    }
+*/
+ //   ]
   }];
 
   params.x_axis_show = true;
@@ -2781,7 +2804,7 @@ vars.default_params["scatterplot"] = function(scope) {
   params.y_scale = [{
     func: d3.scale.linear()
             .domain(d3.extent(vars.new_data, function(d) { return d[params.var_y]; }))
-            .range([scope.height - scope.margin.top - scope.margin.bottom, scope.margin.top])
+            .range([scope.margin.top, scope.height - scope.margin.top - scope.margin.bottom])
   }];
 
   params.items = [{
@@ -3091,14 +3114,14 @@ vars.default_params["treemap"] = function(scope) {
 
     utils.create_hierarchy(scope);
 
-    vars.treemap = d3.layout.treemap()
-        .padding(vars.padding)
+    vars.layout.treemap = d3.layout.treemap()
+        .padding(scope.treemap.padding)
         .sticky(true)
-        .sort(function(a,b) { return a[vars.var_sort] - b[vars.var_sort]; })
-        .size([vars.width, vars.height])
-        .value(function(d) { return d[vars.var_size]; });
+        .sort(function(a,b) { return a[scope.var_sort] - b[scope.var_sort]; })
+        .size([scope.width - scope.margin.left - scope.margin.right, scope.height - scope.margin.top - scope.margin.bottom])
+        .value(function(d) { return d[scope.var_size]; });
 
-    vars.new_data = vars.treemap.nodes(vars.root);
+    vars.new_data = vars.layout.treemap.nodes(vars.root);
 
     vars.new_data.forEach(function(d) { d.__redraw = true; });
 
@@ -3107,22 +3130,22 @@ vars.default_params["treemap"] = function(scope) {
   params.x_scale = [{
     func: d3.scale.linear()
             .range([scope.margin.left, scope.width - scope.margin.left - scope.margin.right])
-            .domain(d3.extent(vars.new_data, function(d) { return d.x; })),
+            .domain([scope.margin.left, scope.width - scope.margin.left - scope.margin.right]),
   }];
 
   params.y_scale = [{
     func: d3.scale.linear()
             .range([scope.margin.top, scope.height - scope.margin.top - scope.margin.bottom])
-            .domain(d3.extent(vars.new_data, function(d) { return d.y; })),
+            .domain([scope.margin.top, scope.height - scope.margin.top - scope.margin.bottom]),
   }];
 
   params.items = [{
     marks: [{
       type: "divtext",
-      filter: function(d, i) { return d.depth == 1 && d.dx > 30 && d.dy > 30; }
+      filter: function(d, i) { return d.depth == vars.treemap.depth_text && d.dx > vars.treemap.dx && d.d_y >  vars.treemap.d_y; }
     }, {
       type: "rect",
-      filter: function(d, i) { return d.depth == 2; },
+      filter: function(d, i) { return d.depth == vars.treemap.depth_rect; },
       x: 0,
       y: 0,
       width: function(d) { return d.dx; },
@@ -3934,9 +3957,9 @@ var z = d3.scale.linear().domain([0, 4]).clamp(true),
         }
 
         if(vars.dev) { console.log("[init.vars.default]", vars); }
-        
+
         // If there is an existing configuration
-        if(vars.list_params.indexOf(vars.type) >= 0) {
+        if(vars.list.type.indexOf(vars.type) >= 0) {
 
           var scope = {};
           scope = vars.default_params[vars.type](vars);
@@ -4532,7 +4555,7 @@ vistk.utils.flatten_years = function(data) {
 
   //for each country
   data.forEach(function(root) {
-    
+
       //for each year in each country
       root.years.forEach(function(year) {
           //extend the year object with the common properties stored just once in the country object
@@ -4553,9 +4576,6 @@ vistk.utils.find_node_by_id = function(nodes, id) {
     return d.id == id;
   })[0];
 
-  // if(typeof res == "undefined")
-   // console.log("id not found", id)
-
   return res;
 }
 
@@ -4563,9 +4583,6 @@ vistk.utils.find_data_by_id = function(id) {
   var res = vars.new_data.filter(function(d) {
     return d[vars.var_id] == +id;
   })[0];
-
-  // if(typeof res == "undefined")
-  //  console.log("Data id not found", id)
 
   return res;
 }
@@ -4596,7 +4613,7 @@ vistk.utils.time.current = function(data) {
 }
 
 vistk.utils.decode_url = function() {
-  
+
   // Variables from query string
   var queryParameters = {}, queryString = location.search.substring(1),
       re = /([^&=]+)=([^&]*)/g, m, queryActivated = false;
@@ -4636,3 +4653,6 @@ vistk.utils.find_unique_values = function(data, key) {
 
 }
 
+vistk.utils.list = function(param) {
+  return list[param];
+}
