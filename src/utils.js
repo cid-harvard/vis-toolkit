@@ -132,7 +132,7 @@
 
       if(typeof params.rotate !== "undefined" && params.rotate !== null) {
         if(typeof params.rotate === "function") {
-          params_rotate = params.rotate(d);
+          params_rotate = params.rotate(d, i, vars);
         } else {
           params_rotate = params.rotate;
         }
@@ -143,7 +143,7 @@
       if(typeof params.fill !== "undefined" && params.fill !== null) {
 
         if(typeof params.fill === "function") {
-          params_fill = params.fill(d);
+          params_fill = params.fill(d, i, vars);
         } else {
           params_fill = params.fill;
         }
@@ -154,7 +154,7 @@
       if(typeof params.stroke !== "undefined" && params.stroke !== null) {
 
         if(typeof params.stroke === "function") {
-          params_stroke = params.stroke(d);
+          params_stroke = params.stroke(d, i, vars);
         } else {
           params_stroke = params.stroke;
         }

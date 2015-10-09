@@ -23,7 +23,7 @@ vistk.utils.flatten_years = function(data) {
 
   //for each country
   data.forEach(function(root) {
-    
+
       //for each year in each country
       root.years.forEach(function(year) {
           //extend the year object with the common properties stored just once in the country object
@@ -44,9 +44,6 @@ vistk.utils.find_node_by_id = function(nodes, id) {
     return d.id == id;
   })[0];
 
-  // if(typeof res == "undefined")
-   // console.log("id not found", id)
-
   return res;
 }
 
@@ -54,9 +51,6 @@ vistk.utils.find_data_by_id = function(id) {
   var res = vars.new_data.filter(function(d) {
     return d[vars.var_id] == +id;
   })[0];
-
-  // if(typeof res == "undefined")
-  //  console.log("Data id not found", id)
 
   return res;
 }
@@ -87,7 +81,7 @@ vistk.utils.time.current = function(data) {
 }
 
 vistk.utils.decode_url = function() {
-  
+
   // Variables from query string
   var queryParameters = {}, queryString = location.search.substring(1),
       re = /([^&=]+)=([^&]*)/g, m, queryActivated = false;
@@ -127,3 +121,6 @@ vistk.utils.find_unique_values = function(data, key) {
 
 }
 
+vistk.utils.list = function(param) {
+  return list[param];
+}
