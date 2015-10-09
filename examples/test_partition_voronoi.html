@@ -25,30 +25,69 @@ var padding = 10,
     height = 500;
 
 var points = [
-  [200, 200],
-  [760, 300]
+  {x: 200, y: 200},
+  {x: 760, y: 300}
 ];
 
+var drag = d3.behavior.drag()
+    .origin(function(d) { return d; })
+//    .on('dragstart', dragstart)
+    .on("drag", dragmove)
+//    .on("dragend", dragend)
+
 var voronoi = d3.geom.voronoi()
+    .x(function(d) { return d.x; })
+    .y(function(d) { return d.y; })
     .clipExtent([[padding, padding], [width - padding, height - padding]]);
 
 var color = d3.scale.category10();
 
 var svg = d3.select("body").append("svg")
     .attr("width", width)
-    .attr("height", height);
+    .attr("height", height)
+    .on("click", function() {
+      // TODO: add jitter if same point
+      points.push({x: d3.event.x, y: d3.event.y});
+      draw_voronoi();
+      draw_circle();
+    })
 
-svg.selectAll("path")
-    .data(voronoi(points))
-  .enter().append("path")
-    .style("fill", function(d, i) { return color(i); })
-    .attr("d", function(d) { return "M" + d.join("L") + "Z"; });
 
-svg.selectAll("circle")
-    .data(points)
-  .enter().append("circle")
+draw_voronoi();
+
+function draw_circle() {
+
+  svg.selectAll("circle")
+      .data(points)
+    .enter().append("circle")
+      .style("fill", function(d, i) { return color(i); })
+      .attr("transform", function(d) { return "translate(" + [d.x, d.y] + ")"; })
+      .attr("r", 4.5)
+      .call(drag);
+
+}
+
+
+function draw_voronoi() {
+
+ var v = svg.selectAll("path")
+    .data(voronoi(points));
+
+  v.enter().append("path")
     .style("fill", function(d, i) { return color(i); })
-    .attr("transform", function(d) { return "translate(" + d + ")"; })
-    .attr("r", 4.5);
+
+  v.attr("d", function(d) { return "M" + d.join("L") + "Z"; });
+
+}
+
+
+function dragmove(d) {
+
+  d3.select(this)
+      .attr("transform", function(d) { return "translate(" + [d.x = d3.event.x, d.y = d3.event.y] + ")"; })
+
+  draw_voronoi()
+
+}
 
 </script>
