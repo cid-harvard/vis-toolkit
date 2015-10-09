@@ -82,17 +82,21 @@
          params_text = vars.accessor_data(d)[vars.var_text];
       }
 
+      var params_width = 10;
+
       if(typeof params.width !== "undefined") {
         if(typeof params.width === "function") {
-          params_width = params.width(d);
-        } else if(typeof params.width === "number") {
+          params_width = params.width(d, i , vars);
+        } else if(typeof params.width === "number" || typeof params.height === "string") {
           params_width = params.width;
         }
       }
 
+      var params_height = 10;
+
       if(typeof params.height !== "undefined") {
         if(typeof params.height === "function") {
-          params_height = params.height(d);
+          params_height = params.height(d, i , vars);
         } else if(typeof params.height === "number" || typeof params.height === "string") {
           params_height = params.height;
         }
@@ -378,15 +382,15 @@
 
       case "rect":
 
-        var items_mark_rect = d3.select(this).selectAll(".items__mark__rect").data([d]);
+        var items_mark_rect = d3.select(this).selectAll(".items__mark__rect.items_" + mark_id).data([d]);
 
         items_mark_rect.enter().append("rect")
                   .classed("items__mark__rect", true)
                   .classed("items_" + mark_id, true)
                   .attr("x", params.x || 0)
                   .attr("y", params.y || 0)
-                  .attr("height", params.height || 10)
-                  .attr("width", params.width || 10)
+                  .attr("height", params_height)
+                  .attr("width", params_width)
                   .attr("transform", "rotate(" + params_rotate + ")")
                   .style("fill", function(d) {
                     if(typeof params_fill !== 'undefined' && params_fill !== null) {
@@ -407,8 +411,8 @@
             .transition().duration(vars.duration)
             .attr("x", params.x || 0)
             .attr("y", params.y || 0)
-            .attr("height", params.height || 10)
-            .attr("width", params.width || 10)
+            .attr("height", params_height)
+            .attr("width", params_width)
             .style("fill", function(d) {
               if(typeof params_fill !== 'undefined' && params_fill !== null) {
                 return params_fill;
@@ -485,6 +489,15 @@
               .classed('items__mark__shape', true)
               .classed("items_" + mark_id, true)
               .attr("transform", function(d) {
+
+                // Drawing projects comes with automatic offset
+                d.x = d3.select(this).node().getBBox().x;
+                d.y = d3.select(this).node().getBBox().y;
+
+                // Update parent with new coordinates
+           //     d3.select(d3.select(this).node().parentNode).attr("transform", "translate("+ d.x +", "+ d.y +")");
+
+
                 return "translate("+ -d.x +", "+ -d.y +")";
               })
 
@@ -496,13 +509,6 @@
                 return params.fill(vars.accessor_data(d)[vars.var_color]);
               })
               .attr("transform", function(d) {
-
-                // Drawing projects comes with automatic offset
-                //d.x = d3.select(this).node().getBBox().x;
-                //d.y = d3.select(this).node().getBBox().y;
-
-                // Update parent with new coordinates
-                d3.select(d3.select(this).node().parentNode).attr("transform", "translate("+ d.x +", "+ d.y +")");
 
                 return "translate("+ -d.x +", "+ -d.y +")";
               })
