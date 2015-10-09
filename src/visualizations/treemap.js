@@ -15,7 +15,7 @@ vars.default_params["treemap"] = function(scope) {
     utils.create_hierarchy(scope);
 
     vars.layout.treemap = d3.layout.treemap()
-        .padding(scope.padding)
+        .padding(scope.treemap.padding)
         .sticky(true)
         .sort(function(a,b) { return a[scope.var_sort] - b[scope.var_sort]; })
         .size([scope.width - scope.margin.left - scope.margin.right, scope.height - scope.margin.top - scope.margin.bottom])
@@ -30,13 +30,13 @@ vars.default_params["treemap"] = function(scope) {
   params.x_scale = [{
     func: d3.scale.linear()
             .range([scope.margin.left, scope.width - scope.margin.left - scope.margin.right])
-            .domain(d3.extent(vars.new_data, function(d) { return d.x; })),
+            .domain([scope.margin.left, scope.width - scope.margin.left - scope.margin.right]),
   }];
 
   params.y_scale = [{
     func: d3.scale.linear()
             .range([scope.margin.top, scope.height - scope.margin.top - scope.margin.bottom])
-            .domain(d3.extent(vars.new_data, function(d) { return d.y; })),
+            .domain([scope.margin.top, scope.height - scope.margin.top - scope.margin.bottom]),
   }];
 
   params.items = [{
