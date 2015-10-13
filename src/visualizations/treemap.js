@@ -19,7 +19,14 @@ vars.default_params["treemap"] = function(scope) {
         .sticky(true)
         .sort(function(a,b) { return a[scope.var_sort] - b[scope.var_sort]; })
         .size([scope.width - scope.margin.left - scope.margin.right, scope.height - scope.margin.top - scope.margin.bottom])
-        .value(function(d) { return d[scope.var_size]; });
+        .mode(scope.treemap_mode)
+        .value(function(d) {
+          if(typeof scope.var_size === "function") {
+            return scope.var_size(d);
+          } else {
+            return d[scope.var_size];
+          }
+        });
 
     vars.new_data = vars.layout.treemap.nodes(vars.root);
 

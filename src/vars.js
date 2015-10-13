@@ -129,6 +129,7 @@
     layout: {},
 
     padding: 1,
+    treemap_mode: 'squarify',
 
     treemap: {
       padding: 1,
