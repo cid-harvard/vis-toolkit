@@ -42,6 +42,7 @@
 
   }
 
+
   //  Main function to draw marks
   //  Invoked from a .each() call passing in the current datum d and index i,
   //  with the this context of the current DOM element
@@ -1216,7 +1217,11 @@
         }
 
         if(vars.type == "productspace" || vars.type == "treemap") {
-          vars.new_data.forEach(function(d) { d.__redraw = false; });
+          vars.new_data.forEach(function(d) {
+            if(!d.__selected) {
+              d.__redraw = false;
+            }
+          });
         }
 
       });
