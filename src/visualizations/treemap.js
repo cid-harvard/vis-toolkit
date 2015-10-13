@@ -5,9 +5,13 @@ vars.default_params["treemap"] = function(scope) {
   if(vars.init) {
 
     if(typeof vars.var_group === "undefined" || vars.var_group === null) {
-
       vars.var_group = vars.var_id;
     }
+
+    if(vars.var_group == vars.var_id) {
+      vars.var_group = "_index_item";
+    }
+
   }
 
   if(vars.refresh) {

@@ -172,5 +172,6 @@
 
   vars.evt.register("selection", function(d) {
     d.__selected = !d.__selected;
+    d.__redraw = true;
     d3.select(vars.container).call(vars.this_chart);
   });

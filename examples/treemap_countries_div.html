@@ -64,7 +64,6 @@ g:hover .items__mark__circle.highlighted {
   background: #333;
   background: rgba(0,0,0,.8);
   border-radius: 5px;
-  height: 100%;
   color: #fff;
   padding: 5px 15px;
   z-index: 98;
@@ -90,11 +89,11 @@ d3.json("../data/diversification_ubiquity_hs4_1995_2012.json", function(error, c
       data: flat_years,
       var_id: "name",
       var_sort: "nb_products",
-      var_group: "continent",
+      var_group: "name",
       var_color: "continent",
       title: "Countries",
       var_size: "nb_products",
-      var_text: "continent",
+      var_text: "name",
       items: [{
         marks: [{
           type: "divtext",
@@ -122,7 +121,8 @@ d3.json("../data/diversification_ubiquity_hs4_1995_2012.json", function(error, c
           text: function(d, i, vars) {
             return d['name'] + ' (' + d['continent'] + ') coordinates (x: ' + vars.x_scale[0]["func"](d[vars.var_x]) + ', ' + vars.y_scale[0]["func"](d[vars.var_y]) + ')';
           },
-          translate: [20, 20],
+          height: "auto",
+          translate: [20, -40],
           exit: function() {
           },
           width: 200
