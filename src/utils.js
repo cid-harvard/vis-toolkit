@@ -76,12 +76,13 @@
       if(typeof params.text !== "undefined") {
         if(typeof params.text === "function") {
           params_text = params.text(d, i , vars);
-        } else if(typeof params.text === "String") {
+        } else if(typeof params.text === "string") {
           params_text = params.text;
         }
       } else if(vars.var_text !== "undefined") {
-         params_text = vars.accessor_data(d)[vars.var_text];
+        params_text = vars.accessor_data(d)[vars.var_text];
       }
+
 
       var params_width = 10;
 
@@ -98,7 +99,9 @@
       if(typeof params.height !== "undefined") {
         if(typeof params.height === "function") {
           params_height = params.height(d, i , vars);
-        } else if(typeof params.height === "number" || typeof params.height === "string") {
+        } else if(typeof params.height === "number") {
+          params_height = params.height + "px";
+        } else if(typeof params.height === "string") {
           params_height = params.height;
         }
       }
@@ -225,7 +228,7 @@
                  })
                  .style("height", function(d) {
                    if(typeof params_height !== "undefined") {
-                     return params_height + "px";
+                     return params_height;
                    } else {
                     return "auto";
                    }
@@ -246,13 +249,7 @@
                    }
                    return params_translate[1];
                  })
-                 .html(function(d) {
-                    if(typeof params_text !== "undefined") {
-                      return params_text;
-                    } else {
-                      return vars.accessor_data(d)[vars.var_text];
-                    }
-                 });
+                 .html(params_text);
 
           if(typeof params.class !== "undefined") {
             items_mark_div_enter.classed(params.class(vars.accessor_items(d)), true);
@@ -302,19 +299,16 @@
                 }
                 })
               .style("margin-left", function(d) {
-                 return params_translate[0];
+                 return params_translate[0] + 'px';
+               })
+              .style("margin-top", function(d) {
+                 return params_translate[1] + 'px';
                })
                .style({"text-overflow": "ellipsis", "overflow": "hidden"})
-               .html(function(d) {
-                 if(typeof params_text !== "undefined") {
-                   return params_text;
-                 } else {
-                   return vars.accessor_data(d)[vars.var_text];
-                 }
-               });
+               .html(params_text);
 
           items_mark_divtext.select('div')
-              .transition()
+              .transition().duration(vars.duration)
               .style({"pointer-events": "none"})
               .style("margin-left", function(d) {
                  return params_translate[0] + 'px';
@@ -337,22 +331,6 @@
                }
                })
 
-/*
-               .style("left", function(d) {
-                 if(typeof params_x !== "undefined") {
-                   return (params_x + params_translate[0]) + "px";
-                 } else {
-                   return (vars.x_scale[0]["func"](vars.accessor_data(d)[vars.var_x]) + params_translate[0]) + "px";
-                 }
-               })
-               .style("top", function(d) {
-                 if(typeof params_y !== "undefined") {
-                   return (params_y + params_translate[1]) + "px";
-                 } else {
-                   return (vars.y_scale[0]["func"](vars.accessor_data(d)[vars.var_y]) + params_translate[1]) + "px";
-                 }
-               })
-*/
           if(typeof params.class !== "undefined") {
 
             items_mark_divtext_enter.classed(params.class(vars.accessor_items(d)), true);
@@ -1140,7 +1118,7 @@
         var gItems = vars_svg.selectAll(".mark__group" +  "_" + index_item)
                         .data(vars.new_data, function(d, i) {
                           d._index_item = index_item;
-                          return accessor_data(d)[vars.var_id] + "_" + index_item;
+                          return accessor_data(d)[vars.var_id] + "_" + index_item + d.depth;
                         });
 
         // ENTER ITEMS
