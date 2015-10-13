@@ -1,0 +1,148 @@
+<!doctype html>
+<meta charset="utf-8">
+<script src="../js/d3.js"></script>
+<script src="../build/vistk.js"></script>
+<link href="../css/vistk.css" rel="stylesheet">
+<body>
+<div id="viz"></div>
+<script>
+
+d3.json("../data/diversification_ubiquity_hs4_1995_2012.json", function(error, countries) {
+
+  var flat_years = vistk.utils.flatten_years(countries);
+
+  var items_color = [{
+        marks: [{
+          type: "rect",
+          filter: function(d, i) { return d.depth == 2; },
+          x: 0,
+          y: 0,
+          width: function(d) { return d.dx; },
+          height: function(d) { return d.dy; }
+        }, {
+          type: "divtext",
+          filter: function(d, i, vars) { return d.depth == 1 && d.dx > 30 && d.dy > 30; }
+        }]
+      }]
+
+  visualization = vistk.viz()
+    .params({
+      dev: true,
+      type: "treemap",
+      container: "#viz",
+      height: 600,
+      width: 900,
+      data: flat_years,
+      var_id: "name_2char",
+      var_sort: "nb_products",
+      var_group: "continent",
+      var_color: "continent",
+      title: "Countries",
+      var_size: "nb_products",
+      var_text: "continent",
+      padding: 0,
+      treemap: {
+        padding: 2,
+        d_x: 30,
+        d_y: 30,
+        depth_text: 1,
+        depth_rect: 2
+      },
+      time: {
+        var_time: "year",
+        current_time: 1995,
+        parse: function(d) { return d; }
+      },
+      items: items_color,
+      ui: {
+        default: true,
+        options: ["country", "continent"]
+      },
+      selection: ["France"],
+      highlight: ["France", "Germany"],
+    //  filter: ['Europe', 'America']
+    });
+
+  d3.select(visualization.container()).call(visualization);
+
+  d3.select(visualization.container()).selectAll(".wireStep").data(["wireStep"]).enter().append("button")
+           .attr("type", "button")
+           .attr("class", "wireStep")
+           .on("click", function() {
+
+              // Then move groups to their grid position
+              visualization.param("refresh", true);
+
+              visualization.params({
+                items: [{
+                  marks: [{
+                    type: "rect",
+                    filter: function(d, i) { return d.depth == 2; },
+                    x: 0,
+                    y: 0,
+                    width: function(d) { return d.dx; },
+                    height: function(d) { return d.dy; },
+                    fill: "#fff",
+                    stroke: "#000"
+                  }, {
+                    type: "divtext",
+                    filter: function(d, i, vars) { return d.depth == 1 && d.dx > 30 && d.dy > 30; }
+                  }]
+                }]
+              });
+
+              visualization.params().refresh = true;
+              visualization.params().init = true;
+
+              d3.select(visualization.container()).call(visualization);
+
+            })
+           .html("Wireframe");
+
+
+  d3.select(visualization.container()).selectAll(".colorStep").data(["colorStep"]).enter().append("button")
+           .attr("type", "button")
+           .attr("class", "colorStep")
+           .on("click", function() {
+
+              // Then move groups to their grid position
+              visualization.param("refresh", true);
+
+              visualization.params({
+                items: items_color
+              });
+
+              visualization.params().refresh = true;
+              visualization.params().init = true;
+
+              d3.select(visualization.container()).call(visualization);
+
+            })
+           .html("Color");
+
+  d3.select(visualization.container()).selectAll(".equalSize").data(["equalSize"]).enter().append("button")
+           .attr("type", "button")
+           .attr("class", "colorStep")
+           .on("click", function() {
+
+              // Then move groups to their grid position
+              visualization.param("refresh", true);
+
+              visualization.params({
+                var_group: "root",
+                var_size: function() { return 1; },
+                items: items_color
+              });
+
+              visualization.params().refresh = true;
+              visualization.params().init = true;
+
+              d3.select(visualization.container()).call(visualization);
+
+            })
+           .html("Equal size");
+
+});
+
+</script>
+</body>
