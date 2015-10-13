@@ -6,7 +6,7 @@ var w = typeof window === "undefined" ? this : window;
 var vistk = w.vistk || {};
 w.vistk = vistk;
 
-vistk.version = "0.0.15";
+vistk.version = "0.0.16";
 vistk.utils = {};
 
 vistk.viz = function() {
@@ -61,6 +61,7 @@ var utils ={};
 
   }
 
+
   //  Main function to draw marks
   //  Invoked from a .each() call passing in the current datum d and index i,
   //  with the this context of the current DOM element
@@ -94,12 +95,13 @@ var utils ={};
       if(typeof params.text !== "undefined") {
         if(typeof params.text === "function") {
           params_text = params.text(d, i , vars);
-        } else if(typeof params.text === "String") {
+        } else if(typeof params.text === "string") {
           params_text = params.text;
         }
       } else if(vars.var_text !== "undefined") {
-         params_text = vars.accessor_data(d)[vars.var_text];
+        params_text = vars.accessor_data(d)[vars.var_text];
       }
+
 
       var params_width = 10;
 
@@ -116,7 +118,9 @@ var utils ={};
       if(typeof params.height !== "undefined") {
         if(typeof params.height === "function") {
           params_height = params.height(d, i , vars);
-        } else if(typeof params.height === "number" || typeof params.height === "string") {
+        } else if(typeof params.height === "number") {
+          params_height = params.height + "px";
+        } else if(typeof params.height === "string") {
           params_height = params.height;
         }
       }
@@ -243,7 +247,7 @@ var utils ={};
                  })
                  .style("height", function(d) {
                    if(typeof params_height !== "undefined") {
-                     return params_height + "px";
+                     return params_height;
                    } else {
                     return "auto";
                    }
@@ -264,13 +268,7 @@ var utils ={};
                    }
                    return params_translate[1];
                  })
-                 .html(function(d) {
-                    if(typeof params_text !== "undefined") {
-                      return params_text;
-                    } else {
-                      return vars.accessor_data(d)[vars.var_text];
-                    }
-                 });
+                 .html(params_text);
 
           if(typeof params.class !== "undefined") {
             items_mark_div_enter.classed(params.class(vars.accessor_items(d)), true);
@@ -320,19 +318,16 @@ var utils ={};
                 }
                 })
               .style("margin-left", function(d) {
-                 return params_translate[0];
+                 return params_translate[0] + 'px';
+               })
+              .style("margin-top", function(d) {
+                 return params_translate[1] + 'px';
                })
                .style({"text-overflow": "ellipsis", "overflow": "hidden"})
-               .html(function(d) {
-                 if(typeof params_text !== "undefined") {
-                   return params_text;
-                 } else {
-                   return vars.accessor_data(d)[vars.var_text];
-                 }
-               });
+               .html(params_text);
 
           items_mark_divtext.select('div')
-              .transition()
+              .transition().duration(vars.duration)
               .style({"pointer-events": "none"})
               .style("margin-left", function(d) {
                  return params_translate[0] + 'px';
@@ -355,22 +350,6 @@ var utils ={};
                }
                })
 
-/*
-               .style("left", function(d) {
-                 if(typeof params_x !== "undefined") {
-                   return (params_x + params_translate[0]) + "px";
-                 } else {
-                   return (vars.x_scale[0]["func"](vars.accessor_data(d)[vars.var_x]) + params_translate[0]) + "px";
-                 }
-               })
-               .style("top", function(d) {
-                 if(typeof params_y !== "undefined") {
-                   return (params_y + params_translate[1]) + "px";
-                 } else {
-                   return (vars.y_scale[0]["func"](vars.accessor_data(d)[vars.var_y]) + params_translate[1]) + "px";
-                 }
-               })
-*/
           if(typeof params.class !== "undefined") {
 
             items_mark_divtext_enter.classed(params.class(vars.accessor_items(d)), true);
@@ -1158,7 +1137,7 @@ var utils ={};
         var gItems = vars_svg.selectAll(".mark__group" +  "_" + index_item)
                         .data(vars.new_data, function(d, i) {
                           d._index_item = index_item;
-                          return accessor_data(d)[vars.var_id] + "_" + index_item;
+                          return accessor_data(d)[vars.var_id] + "_" + index_item + d.depth;
                         });
 
         // ENTER ITEMS
@@ -1235,7 +1214,11 @@ var utils ={};
         }
 
         if(vars.type == "productspace" || vars.type == "treemap") {
-          vars.new_data.forEach(function(d) { d.__redraw = false; });
+          vars.new_data.forEach(function(d) {
+            if(!d.__selected) {
+              d.__redraw = false;
+            }
+          });
         }
 
       });
@@ -1822,6 +1805,7 @@ var utils ={};
     layout: {},
 
     padding: 1,
+    treemap_mode: 'squarify',
 
     treemap: {
       padding: 1,
@@ -2048,6 +2032,7 @@ var utils ={};
 
   vars.evt.register("selection", function(d) {
     d.__selected = !d.__selected;
+    d.__redraw = true;
     d3.select(vars.container).call(vars.this_chart);
   });
 
@@ -3105,9 +3090,13 @@ vars.default_params["treemap"] = function(scope) {
   if(vars.init) {
 
     if(typeof vars.var_group === "undefined" || vars.var_group === null) {
-
       vars.var_group = vars.var_id;
     }
+
+    if(vars.var_group == vars.var_id) {
+      vars.var_group = "_index_item";
+    }
+
   }
 
   if(vars.refresh) {
@@ -3119,7 +3108,14 @@ vars.default_params["treemap"] = function(scope) {
         .sticky(true)
         .sort(function(a,b) { return a[scope.var_sort] - b[scope.var_sort]; })
         .size([scope.width - scope.margin.left - scope.margin.right, scope.height - scope.margin.top - scope.margin.bottom])
-        .value(function(d) { return d[scope.var_size]; });
+        .mode(scope.treemap_mode)
+        .value(function(d) {
+          if(typeof scope.var_size === "function") {
+            return scope.var_size(d);
+          } else {
+            return d[scope.var_size];
+          }
+        });
 
     vars.new_data = vars.layout.treemap.nodes(vars.root);
 
