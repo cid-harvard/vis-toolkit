@@ -32,8 +32,19 @@
               vars.zoom = [];
               vars.init = true;
               vars.refresh = true;
-              console.log("REFH", vars, vars.init, vars.refresh)
-              d3.select(vars.container).call(vars.this_chart);
+
+              d3.select(vars.container).selectAll(".connect__line")
+                .classed("highlighted", function(d, i) { return false; })
+                .classed("highlighted__adjacent", function(d, i) { return false; })
+                .classed("selected", function(d, i) { return false; })
+                .classed("selected__adjacent", function(d, i) { return false; })
+
+              d3.select(vars.container).selectAll("circle")
+                .classed("highlighted", function(d, i) { return false; })
+                .classed("highlighted__adjacent", function(d, i) { return false; })
+                .classed("selected", function(d, i) { return false; })
+                .classed("selected__adjacent", function(d, i) { return false; })
+
             }
 
           })
