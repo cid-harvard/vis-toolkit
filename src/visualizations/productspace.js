@@ -50,8 +50,6 @@ vars.default_params["productspace"] = function(scope) {
 
   vars.evt.register("highlightOn", function(d) {
 
-    d.__highlighted = true;
-    d.__redraw = true;
     // Make sure the highlighted node is above other nodes
     vars.svg.selectAll('.mark__group').sort(function(a, b) { return a.__highlighted ;})
 
@@ -77,36 +75,108 @@ vars.default_params["productspace"] = function(scope) {
 
   });
 
-    vars.evt.register("highlightOut", function(d) {
+  vars.evt.register("highlightOut", function(d) {
 
-      d3.select(vars.container).selectAll(".connect__line").classed("highlighted", false);
-      d3.select(vars.container).selectAll("circle").classed("highlighted__adjacent", false);
+    // Temporary settings to prevent chart redraw for product space tooltip
+    d3.select(vars.container).selectAll(".items__mark__text").remove();
+    d3.select(vars.container).selectAll(".items__mark__div").remove();
 
-      // Temporary settings to prevent chart redraw for product space tooltip
-      d3.select(vars.container).selectAll(".items__mark__text").remove();
-      d3.select(vars.container).selectAll(".items__mark__div").remove();
+    vars.new_data.forEach(function(f, k) {
+      if(f.__highlighted__adjacent) {
+        f.__highlighted__adjacent = false;
+        f.__redraw = true;
+      }
+    });
+
+    vars.links.forEach(function(f, k) {
+      if(f.__highlighted__adjacent) {
+        f.__highlighted__adjacent = false;
+        f.__redraw = true;
+      }
+    });
+
+    d3.select(vars.container).selectAll(".connect__line")
+      .classed("highlighted", function(d, i) { return false; })
+      .classed("highlighted__adjacent", function(d, i) { return false; })
+
+    d3.select(vars.container).selectAll("circle")
+      .classed("highlighted", function(d, i) { return false; })
+      .classed("highlighted__adjacent", function(d, i) { return false; })
+
+//    var adjacent_links = utils.find_adjacent_links(d, vars.links);
+/*
+    adjacent_links.forEach(function(e) {
+
+      e.__highlighted__adjacent = false;
+      e.__redraw = true;
+
+      vars.new_data.forEach(function(f, k) {
+
+         if(f[vars.var_id] === e.target[vars.var_id]) {
+
+           f.__highlighted__adjacent = false;
+           f.__redraw = true;
+
+         }
+
+       });
+
+    });
+*/
+  });
+
+  vars.evt.register("selection", function(d) {
+
+    // Make sure the highlighted node is above other nodes
+    //vars.svg.selectAll('.mark__group').sort(function(a, b) { return a.__highlighted ;})
+
+      vars.new_data.forEach(function(f, k) {
+        if(f.__selected) {
+          f.__selected = false;
+          f.__redraw = true;
+        }
+      });
+
+      vars.links.forEach(function(f, k) {
+        if(f.__selected) {
+          f.__selected = false;
+          f.__redraw = true;
+        }
+      });
+
+      d.__selected = true;
+      d.__redraw = true;
 
       var adjacent_links = utils.find_adjacent_links(d, vars.links);
 
       adjacent_links.forEach(function(e) {
 
-        e.__highlighted__adjacent = false;
-        e.__redraw = true;
+          // Update links
+          e.__selected = true;
+          e.__redraw = true;
 
-        vars.new_data.forEach(function(f, k) {
+          vars.new_data.forEach(function(f, k) {
 
-           if(f[vars.var_id] === e.target[vars.var_id]) {
+            if(f[vars.var_id] === e.target[vars.var_id]) {
 
-             f.__highlighted__adjacent = false;
-             f.__redraw = true;
+              // Update nodes
+              f.__selected = true;
+              f.__redraw = true;
+            }
 
-           }
-
-         });
+          });
 
       });
 
-    });
+    d3.select(vars.container).selectAll(".connect__line")
+      .classed("selected", function(d, i) { return d.__selected; })
+      .classed("selected__adjacent", function(d, i) { return d.__selected__adjacent; })
+
+    d3.select(vars.container).selectAll("circle")
+      .classed("selected", function(d, i) { return d.__selected; })
+      .classed("selected__adjacent", function(d, i) { return d.__selected__adjacent; })
+
+  });
 
   return params;
 

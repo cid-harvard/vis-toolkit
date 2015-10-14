@@ -82,7 +82,7 @@
 */
   });
 
-  vars.evt.register("selection", function(d) {
+ // vars.evt.register("selection", function(d) {
 
     // Toggle selection for current node
     // d.__selected = !d.__selected;
@@ -93,74 +93,11 @@
 
     // One node has already been selected, but select on another one
     // Click on background unselects everything
-    if(vars.type == "productspace") {
-
-      // Make sure the highlighted node is above other nodes
-      //vars.svg.selectAll('.mark__group').sort(function(a, b) { return a.__highlighted ;})
-
-      var current_node = d.__selected;
-
-      // Current node already selected, unselect it and adjacents links/nodes
-      if(current_node) {
-
-        d.__selected = false;
-        d.__redraw = true;
-
-        var adjacent_links = utils.find_adjacent_links(d, vars.links);
-
-        adjacent_links.forEach(function(e) {
-
-            // Update links
-            e.__selected = false;
-            e.__redraw = true;
-
-            vars.new_data.forEach(function(f, k) {
-
-              if(f[vars.var_id] === e.target[vars.var_id]) {
-
-                // Update nodes
-                f.__selected = false;
-                f.__redraw = true;
-              }
-
-            });
-
-        });
-
-      } else {
-
-        d.__selected = true;
-        d.__redraw = true;
-
-        var adjacent_links = utils.find_adjacent_links(d, vars.links);
-
-        adjacent_links.forEach(function(e) {
-
-            // Update links
-            e.__selected = true;
-            e.__redraw = true;
-
-            vars.new_data.forEach(function(f, k) {
-
-              if(f[vars.var_id] === e.target[vars.var_id]) {
-
-                // Update nodes
-                f.__selected = true;
-                f.__redraw = true;
-              }
-
-            });
-
-        });
-
-      }
 
 
-    }
+//    d3.select(vars.container).call(vars.this_chart);
 
-    d3.select(vars.container).call(vars.this_chart);
-
-  });
+ // });
 
   // Reset selection/zoom when click SVG canvas
 //  vars.svg
