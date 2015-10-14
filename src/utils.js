@@ -205,9 +205,6 @@
 
       var_mark.forEach(function(params_type) {
 
-
-        console.log("START WITH", params_type)
-
       switch(params_type) {
 
         case "text":
@@ -601,10 +598,11 @@
 
           mark
               .classed("highlighted", function(d, i) { return d.__highlighted; })
-              .classed("selected", function(d, i) { return d.__selected; });
+              .classed("highlighted__adjacent", function(d, i) { return d.__highlighted__adjacent; })
+              .classed("selected", function(d, i) { return d.__selected; })
+              .classed("selected__adjacent", function(d, i) { return d.__selected__adjacent; })
 
           break;
-
 
         case "line_horizontal":
 
@@ -1004,11 +1002,10 @@
           }
 
           mark
-             // .attr("r", function(d) {return params.radius; })
-             // .attr("fill", params.fill)
               .classed("highlighted", function(d, i) { return d.__highlighted; })
               .classed("highlighted__adjacent", function(d, i) { return d.__highlighted__adjacent; })
               .classed("selected", function(d, i) { return d.__selected; })
+              .classed("selected__adjacent", function(d, i) { return d.__selected__adjacent; })
               .attr("transform", "translate(" +  params_translate + ")rotate(" +  params_rotate + ")");
 
           mark.exit().remove();
@@ -1611,6 +1608,13 @@
   }
 
   utils.redraw_only = function(d) { return d.__redraw; }
+
+  utils.find_adjacent_nodes = function(d, links) {
+
+      return vars.links.filter(function(e) {
+        return e.source[vars.var_id] === d[vars.var_id] || e.target[vars.var_id] === d[vars.var_id];
+      })
+  }
 
   utils.create_hierarchy = function(vars) {
 

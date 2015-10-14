@@ -51,19 +51,20 @@
     d.__highlighted = true;
     d.__redraw = true;
 
-    // Make sure the highlighted node is above other nodes
     if(vars.type == "productspace") {
+
+      // Make sure the highlighted node is above other nodes
       vars.svg.selectAll('.mark__group').sort(function(a, b) { return a.__highlighted ;})
 
-      // Find all the connect marks which source or targets are linked to the current item
-      vars.links.forEach(function(e) {
+      var adjacent_nodes = utils.find_adjacent_nodes(d, vars.links);
 
-        if(e.source[vars.var_id] === d[vars.var_id]) {
+      adjacent_nodes.forEach(function(e) {
 
           e.__highlighted = true;
           e.__redraw = true;
 
           vars.new_data.forEach(function(f, k) {
+
             if(f[vars.var_id] === e.target[vars.var_id]) {
               f.__highlighted__adjacent = true;
               f.__redraw = true;
@@ -71,24 +72,8 @@
 
           });
 
-        }
+      });
 
-        if(e.target[vars.var_id] === d[vars.var_id]) {
-
-          e.__highlighted = true;
-          e.__redraw = true;
-
-          vars.new_data.forEach(function(f, k) {
-            if(f[vars.var_id] === e.source[vars.var_id]) {
-              f.__highlighted__adjacent = true;
-              f.__redraw = true;
-            }
-
-          });
-
-        }
-
-      })
     }
 
     // POST-RENDERING STUFF
@@ -171,7 +156,36 @@
   });
 
   vars.evt.register("selection", function(d) {
+    // Toggle selection for current node
     d.__selected = !d.__selected;
     d.__redraw = true;
     d3.select(vars.container).call(vars.this_chart);
+
+    if(vars.type == "productspace") {
+
+      // Make sure the highlighted node is above other nodes
+      //vars.svg.selectAll('.mark__group').sort(function(a, b) { return a.__highlighted ;})
+
+      var adjacent_nodes = utils.find_adjacent_nodes(d, vars.links);
+
+      adjacent_nodes.forEach(function(e) {
+
+          e.__selected = true;
+          e.__redraw = true;
+
+          vars.new_data.forEach(function(f, k) {
+
+            if(f[vars.var_id] === e.target[vars.var_id]) {
+              f.__selected__adjacent = true;
+              f.__redraw = true;
+            }
+
+          });
+
+      });
+
+    }
+
+    // Renove
+
   });
