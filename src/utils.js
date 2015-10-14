@@ -14,6 +14,7 @@
                     })
                     .on("click", function(d) {
                        vars.evt.call("selection", d);
+                       d3.event.stopPropagation();
                     });
 
   }
@@ -1608,6 +1609,13 @@
   }
 
   utils.redraw_only = function(d) { return d.__redraw; }
+
+  utils.find_adjacent_links = function(d, links) {
+
+      return vars.links.filter(function(e) {
+        return e.source[vars.var_id] === d[vars.var_id] || e.target[vars.var_id] === d[vars.var_id];
+      })
+  }
 
   utils.find_adjacent_nodes = function(d, links) {
 

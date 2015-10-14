@@ -1,5 +1,5 @@
 
-  vars.evt.register = function(evt, f, d) {
+  vars.evt.register = function(evt, f) {
 
     if(vars.dev) { console.log("[vars.evt.register]", evt); }
 
@@ -8,12 +8,15 @@
     }
 
     evt.forEach(function(e) {
+
       if(typeof vars.evt[e] === "undefined") {
         vars.evt[e] = [];
       }
 
-      vars.evt[e].push([f,d]);
+      vars.evt[e].push([f]);
+
     });
+
   };
 
   vars.evt.call = function(evt, a) {
@@ -50,142 +53,114 @@
   vars.evt.register("highlightOn", function(d) {
     d.__highlighted = true;
     d.__redraw = true;
-
-    if(vars.type == "productspace") {
-
-      // Make sure the highlighted node is above other nodes
-      vars.svg.selectAll('.mark__group').sort(function(a, b) { return a.__highlighted ;})
-
-      var adjacent_nodes = utils.find_adjacent_nodes(d, vars.links);
-
-      adjacent_nodes.forEach(function(e) {
-
-          e.__highlighted = true;
-          e.__redraw = true;
-
-          vars.new_data.forEach(function(f, k) {
-
-            if(f[vars.var_id] === e.target[vars.var_id]) {
-              f.__highlighted__adjacent = true;
-              f.__redraw = true;
-            }
-
-          });
-
-      });
-
-    }
-
-    // POST-RENDERING STUFF
-    // Usually aimed at updating the rendering order of elements
-    vars.z_index.forEach(function(d) {
-
-      if(vars.type === d.type && d.event === 'highlightOn') {
-        vars.svg.selectAll(d.selector)
-          .filter(function(e) {
-            if(typeof d.attribute !== 'undefined') {
-              return e[d.attribute];
-            } else {
-              return true;
-            }
-          })
-          .each(function() {
-            this.parentNode.appendChild(this);
-          });
-      }
-
-    });
-
-    d3.select(vars.container).call(vars.this_chart);
-
   });
 
   vars.evt.register("highlightOut", function(d) {
     d.__highlighted = false;
     d.__redraw = true;
-
-    // Make sure the highlighted node is above other nodes
-    if(vars.type == "productspace" || vars.type == "dotplot" || vars.type == "treemap") {
-
-      d3.select(vars.container).selectAll(".connect__line").classed("highlighted", false);
-      d3.select(vars.container).selectAll("circle").classed("highlighted__adjacent", false);
-
-      // Temporary settings to prevent chart redraw for product space
-      d3.select(vars.container).selectAll(".items__mark__text").remove();
-      d3.select(vars.container).selectAll(".items__mark__div").remove();
-
-      // Reset all the highlighted nodes
-      vars.links.forEach(function(e) {
-        e.__highlighted = false;
- //       e.__redraw = true;
-      })
 /*
-      // Reset all the highlighted adjacent nodes
-      vars.new_data.forEach(function(e) {
+    var adjacent_nodes = utils.find_adjacent_nodes(d, vars.links);
+
+    adjacent_nodes.forEach(function(e) {
+
+        // Redraw adjacent nodes
         e.__highlighted__adjacent = false;
         e.__redraw = true;
-      })
-    }
-*/
 
-    }
+       vars.new_data.forEach(function(f, k) {
 
-    if(vars.type !== "productspace") {
-      d3.select(vars.container).call(vars.this_chart);
-    }
+         if(f[vars.var_id] === e.target[vars.var_id]) {
+          // Redraw adjacent links
+           f.__highlighted__adjacent = false;
+           f.__redraw = true;
+           console.log("OUT")
+         }
 
-    // Duplicate
-    vars.z_index.forEach(function(d) {
-
-      if(vars.type === d.type && d.event === 'highlightOut') {
-        vars.svg.selectAll(d.selector)
-          .filter(function(e) {
-            if(typeof d.attribute !== 'undefined') {
-              return e[d.attribute];
-            } else {
-              return true;
-            }
-          })
-          .each(function() {
-            this.parentNode.appendChild(this);
-          });
-      }
+       });
 
     });
-
+*/
   });
 
   vars.evt.register("selection", function(d) {
-    // Toggle selection for current node
-    d.__selected = !d.__selected;
-    d.__redraw = true;
-    d3.select(vars.container).call(vars.this_chart);
 
+    // Toggle selection for current node
+    // d.__selected = !d.__selected;
+    // d.__redraw = true;
+
+    // Cases
+    // No node has been selected before (first selection)
+
+    // One node has already been selected, but select on another one
+    // Click on background unselects everything
     if(vars.type == "productspace") {
 
       // Make sure the highlighted node is above other nodes
       //vars.svg.selectAll('.mark__group').sort(function(a, b) { return a.__highlighted ;})
 
-      var adjacent_nodes = utils.find_adjacent_nodes(d, vars.links);
+      var current_node = d.__selected;
 
-      adjacent_nodes.forEach(function(e) {
+      // Current node already selected, unselect it and adjacents links/nodes
+      if(current_node) {
 
-          e.__selected = true;
-          e.__redraw = true;
+        d.__selected = false;
+        d.__redraw = true;
 
-          vars.new_data.forEach(function(f, k) {
+        var adjacent_links = utils.find_adjacent_links(d, vars.links);
 
-            if(f[vars.var_id] === e.target[vars.var_id]) {
-              f.__selected__adjacent = true;
-              f.__redraw = true;
-            }
+        adjacent_links.forEach(function(e) {
 
-          });
+            // Update links
+            e.__selected = false;
+            e.__redraw = true;
 
-      });
+            vars.new_data.forEach(function(f, k) {
+
+              if(f[vars.var_id] === e.target[vars.var_id]) {
+
+                // Update nodes
+                f.__selected = false;
+                f.__redraw = true;
+              }
+
+            });
+
+        });
+
+      } else {
+
+        d.__selected = true;
+        d.__redraw = true;
+
+        var adjacent_links = utils.find_adjacent_links(d, vars.links);
+
+        adjacent_links.forEach(function(e) {
+
+            // Update links
+            e.__selected = true;
+            e.__redraw = true;
+
+            vars.new_data.forEach(function(f, k) {
+
+              if(f[vars.var_id] === e.target[vars.var_id]) {
+
+                // Update nodes
+                f.__selected = true;
+                f.__redraw = true;
+              }
+
+            });
+
+        });
+
+      }
+
 
     }
 
-    // Renove
+    d3.select(vars.container).call(vars.this_chart);
 
   });
+
+  // Reset selection/zoom when click SVG canvas
+//  vars.svg
