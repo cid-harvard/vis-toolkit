@@ -61,15 +61,49 @@
         return;
       }
 
-      var params_type = params.type;
-
       // Default id for marks
       var mark_id = params._mark_id;
 
+      // params_type is the list of marks to be drawn
+      // it is either static (string) or can be computer
+      // from the params.var_mark
+      // in both case it will result int an array of marks
+
+      var var_mark = [];
+
       // In case a function determines the type of mark to be used
-      if(typeof params_type === "function") {
-        params_type = params.type(d[params.var_mark]);
+      if(typeof params.var_mark === "object") {
+
+        params.var_mark.forEach(function(var_mark) {
+
+          var params_type = "";
+
+          if(typeof params.type === "function") {
+            params_type = params.type(d[var_mark]);
+          } else {
+            params_type = params.type;
+          }
+
+          if(typeof params_type !== "undefined") {
+            var_mark = var_mark.concat(params_type)
+          }
+
+        })
+
+      } else {
+
+        var params_type = "";
+
+        if(typeof params.type === "function") {
+          params_type = params.type(d[params.var_mark]);
+        } else {
+          params_type = params.type;
+        }
+
+        var_mark.push(params_type);
+
       }
+
 
       var params_text = "";
 
@@ -167,6 +201,13 @@
       // Use the default accessor
       var accessor_data = vars.accessor_data;
 
+      var that = this;
+
+      var_mark.forEach(function(params_type) {
+
+
+        console.log("START WITH", params_type)
+
       switch(params_type) {
 
         case "text":
@@ -175,7 +216,7 @@
             params.text_anchor = "start";
           }
 
-          var items_mark_text = d3.select(this).selectAll(".items__mark__text.items_" + mark_id).data([d]);
+          var items_mark_text = d3.select(that).selectAll(".items__mark__text.items_" + mark_id).data([d]);
 
           items_mark_text.enter().append("text")
               .classed("items__mark__text", true)
@@ -261,7 +302,7 @@
 
         case "divtext":
 
-          var items_mark_divtext = d3.select(this).selectAll(".items__mark__divtext").data([d]);
+          var items_mark_divtext = d3.select(that).selectAll(".items__mark__divtext").data([d]);
 
           var items_mark_divtext_enter = items_mark_divtext.enter().insert("foreignObject")
                 .style("pointer-events", "none")
@@ -344,7 +385,7 @@
 
         case "image":
 
-          var items_mark_image = d3.select(this).selectAll(".items__mark__image").data([d]);
+          var items_mark_image = d3.select(that).selectAll(".items__mark__image").data([d]);
 
           items_mark_image.enter().append("image")
                  .classed("items__mark__image", true)
@@ -361,7 +402,7 @@
 
       case "rect":
 
-        var items_mark_rect = d3.select(this).selectAll(".items__mark__rect.items_" + mark_id).data([d]);
+        var items_mark_rect = d3.select(that).selectAll(".items__mark__rect.items_" + mark_id).data([d]);
 
         items_mark_rect.enter().append("rect")
                   .classed("items__mark__rect", true)
@@ -411,7 +452,7 @@
 
       case "diamond":
 
-        var items_mark_diamond = d3.select(this).selectAll(".items__mark__diamond.items_" + mark_id).data([d]);
+        var items_mark_diamond = d3.select(that).selectAll(".items__mark__diamond.items_" + mark_id).data([d]);
 
         var items_mark_diamond_enter = items_mark_diamond.enter().append("rect")
             .classed("items__mark__diamond", true)
@@ -437,7 +478,7 @@
 
         case "tick":
 
-          var items_mark_tick = d3.select(this).selectAll(".items__mark__tick.items_" + mark_id).data([d]);
+          var items_mark_tick = d3.select(that).selectAll(".items__mark__tick.items_" + mark_id).data([d]);
 
           items_mark_tick.enter().append('line')
               .classed('items__mark__tick', true)
@@ -462,7 +503,7 @@
 
         case "shape":
 
-          var items_mark_shape = d3.select(this).selectAll(".items__mark__shape.items_" + mark_id).data([d]);
+          var items_mark_shape = d3.select(that).selectAll(".items__mark__shape.items_" + mark_id).data([d]);
 
           items_mark_shape.enter().insert("path")
               .classed('items__mark__shape', true)
@@ -470,11 +511,11 @@
               .attr("transform", function(d) {
 
                 // Drawing projects comes with automatic offset
-                d.x = d3.select(this).node().getBBox().x;
-                d.y = d3.select(this).node().getBBox().y;
+                d.x = d3.select(that).node().getBBox().x;
+                d.y = d3.select(that).node().getBBox().y;
 
                 // Update parent with new coordinates
-           //     d3.select(d3.select(this).node().parentNode).attr("transform", "translate("+ d.x +", "+ d.y +")");
+           //     d3.select(d3.select(that).node().parentNode).attr("transform", "translate("+ d.x +", "+ d.y +")");
 
 
                 return "translate("+ -d.x +", "+ -d.y +")";
@@ -513,7 +554,7 @@
 
           }).innerRadius(0);
 
-          var mark = d3.select(this).selectAll(".items__mark__arc").data([d]);
+          var mark = d3.select(that).selectAll(".items__mark__arc").data([d]);
 
           mark.enter().append("path")
               .classed("items_" + mark_id, true)
@@ -540,7 +581,7 @@
 
         case "line":
 
-          var mark = d3.select(this).selectAll(".connect__line").data([d]);
+          var mark = d3.select(that).selectAll(".connect__line").data([d]);
 
           // Make sure we have data for links
           if(typeof d.source == "undefined"  || typeof d.target == "undefined") {
@@ -567,9 +608,9 @@
 
         case "line_horizontal":
 
-          var mark = d3.select(this).selectAll(".mark__line_horizontal").data([d]);
+          var mark = d3.select(that).selectAll(".mark__line_horizontal").data([d]);
 
-          var t = d3.transform(d3.select(this).attr("transform")).translate;
+          var t = d3.transform(d3.select(that).attr("transform")).translate;
 
           mark.enter().append('line')
               .classed('mark__line_horizontal', true)
@@ -600,7 +641,7 @@
                .y(function(d) { return vars.y_scale[0]["func"](d[vars.var_y]); });
           }
 
-          var mark = d3.select(this).selectAll(".connect__path_" + mark_id).data([d]);
+          var mark = d3.select(that).selectAll(".connect__path_" + mark_id).data([d]);
 
           mark.enter().append('path')
               .classed('connect__path', true)
@@ -645,7 +686,7 @@
           scope.type = "sparkline";
           scope.var_x = "year";
           scope.var_y = "realgdp";
-          scope.svg  = d3.select(this);
+          scope.svg  = d3.select(that);
           scope.new_data = vars.new_data;
           //scope = vistk.utils.merge(scope, vars)
 
@@ -720,7 +761,7 @@
 
           scope.type = "sparkline";
 
-          var chart = d3.select(this).selectAll(".items__chart__sparkline").data([d]);
+          var chart = d3.select(that).selectAll(".items__chart__sparkline").data([d]);
 
           chart.enter().append('g')
               .classed('items__chart__sparkline', true)
@@ -735,7 +776,7 @@
 
           var piechart_params = vars.default_params["piechart"](scope);
 
-          var chart = d3.select(this).selectAll(".items__chart__piechart").data([d]);
+          var chart = d3.select(that).selectAll(".items__chart__piechart").data([d]);
 
           chart.enter().append('g')
               .classed('items__chart__piechart', true)
@@ -750,7 +791,7 @@
               .size(10 * 50)
               .segments(360);
 
-          var mark = d3.select(this).selectAll(".items__mark__star").data([d]);
+          var mark = d3.select(that).selectAll(".items__mark__star").data([d]);
 
           mark.enter().append('path')
               .classed("items_" + mark_id, true)
@@ -767,7 +808,7 @@
 
         case "polygon":
 
-          var mark = d3.select(this).selectAll('.items__mark__polygon').data([d]);
+          var mark = d3.select(that).selectAll('.items__mark__polygon').data([d]);
 
           mark.enter().append('polygon')
               .classed("items_" + mark_id, true)
@@ -786,7 +827,7 @@
 
         case "triangle":
 
-          var mark = d3.select(this).selectAll('.items__mark__triangle').data([d]);
+          var mark = d3.select(that).selectAll('.items__mark__triangle').data([d]);
 
           mark.enter().append('polygon')
               .classed("items_" + mark_id, true)
@@ -805,7 +846,7 @@
 
         case "marker":
 
-          var mark = d3.select(this).selectAll(".items__mark__marker").data([d]);
+          var mark = d3.select(that).selectAll(".items__mark__marker").data([d]);
 
           var mark_enter = mark.enter().append('path')
               .classed("items_" + mark_id, true)
@@ -823,7 +864,7 @@
               .classed("highlighted", function(d, i) { return d.__highlighted; })
               .classed("selected", function(d, i) { return d.__selected; });
 
-          d3.select(this).selectAll(".items__mark__marker")
+          d3.select(that).selectAll(".items__mark__marker")
                           .transition()
                           .duration(vars.duration)
                           .ease('bounce')
@@ -838,14 +879,14 @@
         case "none":
 
           // To make sure we removed __highlighted and __selected nodes
-          d3.select(this).selectAll(".items_" + mark_id).remove();
+          d3.select(that).selectAll(".items_" + mark_id).remove();
 
         break;
 
         case "circle":
         default:
 
-          var mark = d3.select(this).selectAll(".items__mark__circle.items_" + mark_id).data([d]);
+          var mark = d3.select(that).selectAll(".items__mark__circle.items_" + mark_id).data([d]);
 
           var mark_enter = mark.enter().append("circle")
               .classed("items_" + mark_id, true)
@@ -976,7 +1017,12 @@
 
       }
 
+
+
     });
+
+
+      })
 
   }
 
