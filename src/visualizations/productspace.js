@@ -44,9 +44,69 @@ vars.default_params["productspace"] = function(scope) {
 
   params.x_axis_show = false;
   params.x_grid_show = false;
-  
+
   params.y_axis_show = false;
   params.y_grid_show = false;
+
+  vars.evt.register("highlightOn", function(d) {
+
+    d.__highlighted = true;
+    d.__redraw = true;
+    // Make sure the highlighted node is above other nodes
+    vars.svg.selectAll('.mark__group').sort(function(a, b) { return a.__highlighted ;})
+
+    var adjacent_links = utils.find_adjacent_links(d, vars.links);
+
+    adjacent_links.forEach(function(e) {
+
+        // Redraw adjacent links
+        e.__highlighted__adjacent = true;
+        e.__redraw = true;
+
+       vars.new_data.forEach(function(f, k) {
+
+         if(f[vars.var_id] === e.target[vars.var_id]) {
+          // Redraw adjacent nodes
+           f.__highlighted__adjacent = true;
+           f.__redraw = true;
+         }
+
+       });
+
+    });
+
+  });
+
+    vars.evt.register("highlightOut", function(d) {
+
+      d3.select(vars.container).selectAll(".connect__line").classed("highlighted", false);
+      d3.select(vars.container).selectAll("circle").classed("highlighted__adjacent", false);
+
+      // Temporary settings to prevent chart redraw for product space tooltip
+      d3.select(vars.container).selectAll(".items__mark__text").remove();
+      d3.select(vars.container).selectAll(".items__mark__div").remove();
+
+      var adjacent_links = utils.find_adjacent_links(d, vars.links);
+
+      adjacent_links.forEach(function(e) {
+
+        e.__highlighted__adjacent = false;
+        e.__redraw = true;
+
+        vars.new_data.forEach(function(f, k) {
+
+           if(f[vars.var_id] === e.target[vars.var_id]) {
+
+             f.__highlighted__adjacent = false;
+             f.__redraw = true;
+
+           }
+
+         });
+
+      });
+
+    });
 
   return params;
 
