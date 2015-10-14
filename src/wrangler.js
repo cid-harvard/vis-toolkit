@@ -165,6 +165,9 @@
           d.__selected = true;
         }
 
+        d.__selected__adjacent = false;
+        d.__highlighted__adjacent = false;
+
         d.__aggregated = false;
         d.__redraw = true;
 
