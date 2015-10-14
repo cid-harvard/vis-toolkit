@@ -1125,6 +1125,9 @@
         var gItems_enter = gItems.enter()
                         .insert("g", ":first-child");
 
+        // ITEMS EXIT
+        var gItems_exit = gItems.exit();
+
         // IN CASE OF CUSTOM ENTER FOR ITEMS
         if(typeof item.enter !== "undefined") {
           gItems_enter.call(item.enter, vars);
@@ -1183,9 +1186,6 @@
                           return "translate(" + vars.x_scale[0]["func"](accessor_data(d)[vars.var_x]) + ", " + vars.y_scale[0]["func"](accessor_data(d)[vars.var_y]) + ")";
                         });
         }
-
-        // ITEMS EXIT
-        var gItems_exit = gItems.exit();
 
         // IN CASE OF CUSTOM EXIT FOR ITEMS
         if(typeof item.exit !== "undefined") {
