@@ -6,7 +6,7 @@ var w = typeof window === "undefined" ? this : window;
 var vistk = w.vistk || {};
 w.vistk = vistk;
 
-vistk.version = "0.0.16";
+vistk.version = "0.0.17";
 vistk.utils = {};
 
 vistk.viz = function() {
@@ -33,6 +33,7 @@ var utils ={};
                     })
                     .on("click", function(d) {
                        vars.evt.call("selection", d);
+                       d3.event.stopPropagation();
                     });
 
   }
@@ -80,15 +81,49 @@ var utils ={};
         return;
       }
 
-      var params_type = params.type;
-
       // Default id for marks
       var mark_id = params._mark_id;
 
+      // params_type is the list of marks to be drawn
+      // it is either static (string) or can be computer
+      // from the params.var_mark
+      // in both case it will result int an array of marks
+
+      var var_mark = [];
+
       // In case a function determines the type of mark to be used
-      if(typeof params_type === "function") {
-        params_type = params.type(d[params.var_mark]);
+      if(typeof params.var_mark === "object") {
+
+        params.var_mark.forEach(function(var_mark) {
+
+          var params_type = "";
+
+          if(typeof params.type === "function") {
+            params_type = params.type(d[var_mark]);
+          } else {
+            params_type = params.type;
+          }
+
+          if(typeof params_type !== "undefined") {
+            var_mark = var_mark.concat(params_type)
+          }
+
+        })
+
+      } else {
+
+        var params_type = "";
+
+        if(typeof params.type === "function") {
+          params_type = params.type(d[params.var_mark]);
+        } else {
+          params_type = params.type;
+        }
+
+        var_mark.push(params_type);
+
       }
+
 
       var params_text = "";
 
@@ -186,6 +221,10 @@ var utils ={};
       // Use the default accessor
       var accessor_data = vars.accessor_data;
 
+      var that = this;
+
+      var_mark.forEach(function(params_type) {
+
       switch(params_type) {
 
         case "text":
@@ -194,7 +233,7 @@ var utils ={};
             params.text_anchor = "start";
           }
 
-          var items_mark_text = d3.select(this).selectAll(".items__mark__text.items_" + mark_id).data([d]);
+          var items_mark_text = d3.select(that).selectAll(".items__mark__text.items_" + mark_id).data([d]);
 
           items_mark_text.enter().append("text")
               .classed("items__mark__text", true)
@@ -280,7 +319,7 @@ var utils ={};
 
         case "divtext":
 
-          var items_mark_divtext = d3.select(this).selectAll(".items__mark__divtext").data([d]);
+          var items_mark_divtext = d3.select(that).selectAll(".items__mark__divtext").data([d]);
 
           var items_mark_divtext_enter = items_mark_divtext.enter().insert("foreignObject")
                 .style("pointer-events", "none")
@@ -363,7 +402,7 @@ var utils ={};
 
         case "image":
 
-          var items_mark_image = d3.select(this).selectAll(".items__mark__image").data([d]);
+          var items_mark_image = d3.select(that).selectAll(".items__mark__image").data([d]);
 
           items_mark_image.enter().append("image")
                  .classed("items__mark__image", true)
@@ -380,7 +419,7 @@ var utils ={};
 
       case "rect":
 
-        var items_mark_rect = d3.select(this).selectAll(".items__mark__rect.items_" + mark_id).data([d]);
+        var items_mark_rect = d3.select(that).selectAll(".items__mark__rect.items_" + mark_id).data([d]);
 
         items_mark_rect.enter().append("rect")
                   .classed("items__mark__rect", true)
@@ -430,7 +469,7 @@ var utils ={};
 
       case "diamond":
 
-        var items_mark_diamond = d3.select(this).selectAll(".items__mark__diamond.items_" + mark_id).data([d]);
+        var items_mark_diamond = d3.select(that).selectAll(".items__mark__diamond.items_" + mark_id).data([d]);
 
         var items_mark_diamond_enter = items_mark_diamond.enter().append("rect")
             .classed("items__mark__diamond", true)
@@ -456,7 +495,7 @@ var utils ={};
 
         case "tick":
 
-          var items_mark_tick = d3.select(this).selectAll(".items__mark__tick.items_" + mark_id).data([d]);
+          var items_mark_tick = d3.select(that).selectAll(".items__mark__tick.items_" + mark_id).data([d]);
 
           items_mark_tick.enter().append('line')
               .classed('items__mark__tick', true)
@@ -481,7 +520,7 @@ var utils ={};
 
         case "shape":
 
-          var items_mark_shape = d3.select(this).selectAll(".items__mark__shape.items_" + mark_id).data([d]);
+          var items_mark_shape = d3.select(that).selectAll(".items__mark__shape.items_" + mark_id).data([d]);
 
           items_mark_shape.enter().insert("path")
               .classed('items__mark__shape', true)
@@ -489,11 +528,11 @@ var utils ={};
               .attr("transform", function(d) {
 
                 // Drawing projects comes with automatic offset
-                d.x = d3.select(this).node().getBBox().x;
-                d.y = d3.select(this).node().getBBox().y;
+                d.x = d3.select(that).node().getBBox().x;
+                d.y = d3.select(that).node().getBBox().y;
 
                 // Update parent with new coordinates
-           //     d3.select(d3.select(this).node().parentNode).attr("transform", "translate("+ d.x +", "+ d.y +")");
+           //     d3.select(d3.select(that).node().parentNode).attr("transform", "translate("+ d.x +", "+ d.y +")");
 
 
                 return "translate("+ -d.x +", "+ -d.y +")";
@@ -532,7 +571,7 @@ var utils ={};
 
           }).innerRadius(0);
 
-          var mark = d3.select(this).selectAll(".items__mark__arc").data([d]);
+          var mark = d3.select(that).selectAll(".items__mark__arc").data([d]);
 
           mark.enter().append("path")
               .classed("items_" + mark_id, true)
@@ -559,7 +598,7 @@ var utils ={};
 
         case "line":
 
-          var mark = d3.select(this).selectAll(".connect__line").data([d]);
+          var mark = d3.select(that).selectAll(".connect__line").data([d]);
 
           // Make sure we have data for links
           if(typeof d.source == "undefined"  || typeof d.target == "undefined") {
@@ -579,16 +618,17 @@ var utils ={};
 
           mark
               .classed("highlighted", function(d, i) { return d.__highlighted; })
-              .classed("selected", function(d, i) { return d.__selected; });
+              .classed("highlighted__adjacent", function(d, i) { return d.__highlighted__adjacent; })
+              .classed("selected", function(d, i) { return d.__selected; })
+              .classed("selected__adjacent", function(d, i) { return d.__selected__adjacent; })
 
           break;
 
-
         case "line_horizontal":
 
-          var mark = d3.select(this).selectAll(".mark__line_horizontal").data([d]);
+          var mark = d3.select(that).selectAll(".mark__line_horizontal").data([d]);
 
-          var t = d3.transform(d3.select(this).attr("transform")).translate;
+          var t = d3.transform(d3.select(that).attr("transform")).translate;
 
           mark.enter().append('line')
               .classed('mark__line_horizontal', true)
@@ -619,7 +659,7 @@ var utils ={};
                .y(function(d) { return vars.y_scale[0]["func"](d[vars.var_y]); });
           }
 
-          var mark = d3.select(this).selectAll(".connect__path_" + mark_id).data([d]);
+          var mark = d3.select(that).selectAll(".connect__path_" + mark_id).data([d]);
 
           mark.enter().append('path')
               .classed('connect__path', true)
@@ -664,7 +704,7 @@ var utils ={};
           scope.type = "sparkline";
           scope.var_x = "year";
           scope.var_y = "realgdp";
-          scope.svg  = d3.select(this);
+          scope.svg  = d3.select(that);
           scope.new_data = vars.new_data;
           //scope = vistk.utils.merge(scope, vars)
 
@@ -739,7 +779,7 @@ var utils ={};
 
           scope.type = "sparkline";
 
-          var chart = d3.select(this).selectAll(".items__chart__sparkline").data([d]);
+          var chart = d3.select(that).selectAll(".items__chart__sparkline").data([d]);
 
           chart.enter().append('g')
               .classed('items__chart__sparkline', true)
@@ -754,7 +794,7 @@ var utils ={};
 
           var piechart_params = vars.default_params["piechart"](scope);
 
-          var chart = d3.select(this).selectAll(".items__chart__piechart").data([d]);
+          var chart = d3.select(that).selectAll(".items__chart__piechart").data([d]);
 
           chart.enter().append('g')
               .classed('items__chart__piechart', true)
@@ -769,7 +809,7 @@ var utils ={};
               .size(10 * 50)
               .segments(360);
 
-          var mark = d3.select(this).selectAll(".items__mark__star").data([d]);
+          var mark = d3.select(that).selectAll(".items__mark__star").data([d]);
 
           mark.enter().append('path')
               .classed("items_" + mark_id, true)
@@ -786,7 +826,7 @@ var utils ={};
 
         case "polygon":
 
-          var mark = d3.select(this).selectAll('.items__mark__polygon').data([d]);
+          var mark = d3.select(that).selectAll('.items__mark__polygon').data([d]);
 
           mark.enter().append('polygon')
               .classed("items_" + mark_id, true)
@@ -805,7 +845,7 @@ var utils ={};
 
         case "triangle":
 
-          var mark = d3.select(this).selectAll('.items__mark__triangle').data([d]);
+          var mark = d3.select(that).selectAll('.items__mark__triangle').data([d]);
 
           mark.enter().append('polygon')
               .classed("items_" + mark_id, true)
@@ -824,7 +864,7 @@ var utils ={};
 
         case "marker":
 
-          var mark = d3.select(this).selectAll(".items__mark__marker").data([d]);
+          var mark = d3.select(that).selectAll(".items__mark__marker").data([d]);
 
           var mark_enter = mark.enter().append('path')
               .classed("items_" + mark_id, true)
@@ -842,7 +882,7 @@ var utils ={};
               .classed("highlighted", function(d, i) { return d.__highlighted; })
               .classed("selected", function(d, i) { return d.__selected; });
 
-          d3.select(this).selectAll(".items__mark__marker")
+          d3.select(that).selectAll(".items__mark__marker")
                           .transition()
                           .duration(vars.duration)
                           .ease('bounce')
@@ -857,14 +897,14 @@ var utils ={};
         case "none":
 
           // To make sure we removed __highlighted and __selected nodes
-          d3.select(this).selectAll(".items_" + mark_id).remove();
+          d3.select(that).selectAll(".items_" + mark_id).remove();
 
         break;
 
         case "circle":
         default:
 
-          var mark = d3.select(this).selectAll(".items__mark__circle.items_" + mark_id).data([d]);
+          var mark = d3.select(that).selectAll(".items__mark__circle.items_" + mark_id).data([d]);
 
           var mark_enter = mark.enter().append("circle")
               .classed("items_" + mark_id, true)
@@ -982,11 +1022,10 @@ var utils ={};
           }
 
           mark
-             // .attr("r", function(d) {return params.radius; })
-             // .attr("fill", params.fill)
               .classed("highlighted", function(d, i) { return d.__highlighted; })
               .classed("highlighted__adjacent", function(d, i) { return d.__highlighted__adjacent; })
               .classed("selected", function(d, i) { return d.__selected; })
+              .classed("selected__adjacent", function(d, i) { return d.__selected__adjacent; })
               .attr("transform", "translate(" +  params_translate + ")rotate(" +  params_rotate + ")");
 
           mark.exit().remove();
@@ -995,7 +1034,12 @@ var utils ={};
 
       }
 
+
+
     });
+
+
+      })
 
   }
 
@@ -1144,6 +1188,9 @@ var utils ={};
         var gItems_enter = gItems.enter()
                         .insert("g", ":first-child");
 
+        // ITEMS EXIT
+        var gItems_exit = gItems.exit();
+
         // IN CASE OF CUSTOM ENTER FOR ITEMS
         if(typeof item.enter !== "undefined") {
           gItems_enter.call(item.enter, vars);
@@ -1202,9 +1249,6 @@ var utils ={};
                           return "translate(" + vars.x_scale[0]["func"](accessor_data(d)[vars.var_x]) + ", " + vars.y_scale[0]["func"](accessor_data(d)[vars.var_y]) + ")";
                         });
         }
-
-        // ITEMS EXIT
-        var gItems_exit = gItems.exit();
 
         // IN CASE OF CUSTOM EXIT FOR ITEMS
         if(typeof item.exit !== "undefined") {
@@ -1585,6 +1629,20 @@ var utils ={};
 
   utils.redraw_only = function(d) { return d.__redraw; }
 
+  utils.find_adjacent_links = function(d, links) {
+
+      return vars.links.filter(function(e) {
+        return e.source[vars.var_id] === d[vars.var_id] || e.target[vars.var_id] === d[vars.var_id];
+      })
+  }
+
+  utils.find_adjacent_nodes = function(d, links) {
+
+      return vars.links.filter(function(e) {
+        return e.source[vars.var_id] === d[vars.var_id] || e.target[vars.var_id] === d[vars.var_id];
+      })
+  }
+
   utils.create_hierarchy = function(vars) {
 
    // Create the root node
@@ -1859,7 +1917,7 @@ var utils ={};
   vars = vistk.utils.merge(vars, default_vars);
 
 
-  vars.evt.register = function(evt, f, d) {
+  vars.evt.register = function(evt, f) {
 
     if(vars.dev) { console.log("[vars.evt.register]", evt); }
 
@@ -1868,12 +1926,15 @@ var utils ={};
     }
 
     evt.forEach(function(e) {
+
       if(typeof vars.evt[e] === "undefined") {
         vars.evt[e] = [];
       }
 
-      vars.evt[e].push([f,d]);
+      vars.evt[e].push([f]);
+
     });
+
   };
 
   vars.evt.call = function(evt, a) {
@@ -1910,131 +1971,54 @@ var utils ={};
   vars.evt.register("highlightOn", function(d) {
     d.__highlighted = true;
     d.__redraw = true;
-
-    // Make sure the highlighted node is above other nodes
-    if(vars.type == "productspace") {
-      vars.svg.selectAll('.mark__group').sort(function(a, b) { return a.__highlighted ;})
-
-      // Find all the connect marks which source or targets are linked to the current item
-      vars.links.forEach(function(e) {
-
-        if(e.source[vars.var_id] === d[vars.var_id]) {
-
-          e.__highlighted = true;
-          e.__redraw = true;
-
-          vars.new_data.forEach(function(f, k) {
-            if(f[vars.var_id] === e.target[vars.var_id]) {
-              f.__highlighted__adjacent = true;
-              f.__redraw = true;
-            }
-
-          });
-
-        }
-
-        if(e.target[vars.var_id] === d[vars.var_id]) {
-
-          e.__highlighted = true;
-          e.__redraw = true;
-
-          vars.new_data.forEach(function(f, k) {
-            if(f[vars.var_id] === e.source[vars.var_id]) {
-              f.__highlighted__adjacent = true;
-              f.__redraw = true;
-            }
-
-          });
-
-        }
-
-      })
-    }
-
-    // POST-RENDERING STUFF
-    // Usually aimed at updating the rendering order of elements
-    vars.z_index.forEach(function(d) {
-
-      if(vars.type === d.type && d.event === 'highlightOn') {
-        vars.svg.selectAll(d.selector)
-          .filter(function(e) {
-            if(typeof d.attribute !== 'undefined') {
-              return e[d.attribute];
-            } else {
-              return true;
-            }
-          })
-          .each(function() {
-            this.parentNode.appendChild(this);
-          });
-      }
-
-    });
-
-    d3.select(vars.container).call(vars.this_chart);
-
   });
 
   vars.evt.register("highlightOut", function(d) {
     d.__highlighted = false;
     d.__redraw = true;
-
-    // Make sure the highlighted node is above other nodes
-    if(vars.type == "productspace" || vars.type == "dotplot" || vars.type == "treemap") {
-
-      d3.select(vars.container).selectAll(".connect__line").classed("highlighted", false);
-      d3.select(vars.container).selectAll("circle").classed("highlighted__adjacent", false);
-
-      // Temporary settings to prevent chart redraw for product space
-      d3.select(vars.container).selectAll(".items__mark__text").remove();
-      d3.select(vars.container).selectAll(".items__mark__div").remove();
-
-      // Reset all the highlighted nodes
-      vars.links.forEach(function(e) {
-        e.__highlighted = false;
- //       e.__redraw = true;
-      })
 /*
-      // Reset all the highlighted adjacent nodes
-      vars.new_data.forEach(function(e) {
+    var adjacent_nodes = utils.find_adjacent_nodes(d, vars.links);
+
+    adjacent_nodes.forEach(function(e) {
+
+        // Redraw adjacent nodes
         e.__highlighted__adjacent = false;
         e.__redraw = true;
-      })
-    }
-*/
 
-    }
+       vars.new_data.forEach(function(f, k) {
 
-    if(vars.type !== "productspace") {
-      d3.select(vars.container).call(vars.this_chart);
-    }
+         if(f[vars.var_id] === e.target[vars.var_id]) {
+          // Redraw adjacent links
+           f.__highlighted__adjacent = false;
+           f.__redraw = true;
+           console.log("OUT")
+         }
 
-    // Duplicate
-    vars.z_index.forEach(function(d) {
-
-      if(vars.type === d.type && d.event === 'highlightOut') {
-        vars.svg.selectAll(d.selector)
-          .filter(function(e) {
-            if(typeof d.attribute !== 'undefined') {
-              return e[d.attribute];
-            } else {
-              return true;
-            }
-          })
-          .each(function() {
-            this.parentNode.appendChild(this);
-          });
-      }
+       });
 
     });
-
+*/
   });
 
-  vars.evt.register("selection", function(d) {
-    d.__selected = !d.__selected;
-    d.__redraw = true;
-    d3.select(vars.container).call(vars.this_chart);
-  });
+ // vars.evt.register("selection", function(d) {
+
+    // Toggle selection for current node
+    // d.__selected = !d.__selected;
+    // d.__redraw = true;
+
+    // Cases
+    // No node has been selected before (first selection)
+
+    // One node has already been selected, but select on another one
+    // Click on background unselects everything
+
+
+//    d3.select(vars.container).call(vars.this_chart);
+
+ // });
+
+  // Reset selection/zoom when click SVG canvas
+//  vars.svg
 
   function chart(selection) {
 
@@ -2053,8 +2037,42 @@ var utils ={};
           .attr("height", vars.height)
           .style('overflow', 'visible')
           .style('z-index', 0)
+          .on("click", function(d) {
+
+            if(vars.type === "productspace") {
+
+              vars.links.forEach(function(e) {
+                e.__selected = false;
+                e.__redraw = true;
+              });
+
+              vars.new_data.forEach(function(f, k) {
+                f.__selected = false;
+                f.__redraw = true;
+              });
+
+              vars.zoom = [];
+              vars.init = true;
+              vars.refresh = true;
+
+              d3.select(vars.container).selectAll(".connect__line")
+                .classed("highlighted", function(d, i) { return false; })
+                .classed("highlighted__adjacent", function(d, i) { return false; })
+                .classed("selected", function(d, i) { return false; })
+                .classed("selected__adjacent", function(d, i) { return false; })
+
+              d3.select(vars.container).selectAll("circle")
+                .classed("highlighted", function(d, i) { return false; })
+                .classed("highlighted__adjacent", function(d, i) { return false; })
+                .classed("selected", function(d, i) { return false; })
+                .classed("selected__adjacent", function(d, i) { return false; })
+
+            }
+
+          })
         .append("g")
-          .attr("transform", "translate(" + vars.margin.left + "," + vars.margin.top + ")rotate(" + vars.rotate + ")");
+          .attr("transform", "translate(" + vars.margin.left + "," + vars.margin.top + ")rotate(" + vars.rotate + ")")
+
 
       } else {
         // HTML Container for table
@@ -2231,6 +2249,9 @@ var utils ={};
           d.__selected = true;
         }
 
+        d.__selected__adjacent = false;
+        d.__highlighted__adjacent = false;
+
         d.__aggregated = false;
         d.__redraw = true;
 
@@ -2304,6 +2325,7 @@ var utils ={};
           d[vars.var_id] = d.id;
           d.__aggregated = false;
           d.__selected = false;
+          d.__selected__adjacent = false;
           d.__highlighted = false;
           d.__highlighted__adjacent = false;
           d.__missing = false;
@@ -3350,9 +3372,139 @@ vars.default_params["productspace"] = function(scope) {
 
   params.x_axis_show = false;
   params.x_grid_show = false;
-  
+
   params.y_axis_show = false;
   params.y_grid_show = false;
+
+  vars.evt.register("highlightOn", function(d) {
+
+    // Make sure the highlighted node is above other nodes
+    vars.svg.selectAll('.mark__group').sort(function(a, b) { return a.__highlighted ;})
+
+    var adjacent_links = utils.find_adjacent_links(d, vars.links);
+
+    adjacent_links.forEach(function(e) {
+
+        // Redraw adjacent links
+        e.__highlighted__adjacent = true;
+        e.__redraw = true;
+
+       vars.new_data.forEach(function(f, k) {
+
+         if(f[vars.var_id] === e.target[vars.var_id]) {
+          // Redraw adjacent nodes
+           f.__highlighted__adjacent = true;
+           f.__redraw = true;
+         }
+
+       });
+
+    });
+
+  });
+
+  vars.evt.register("highlightOut", function(d) {
+
+    // Temporary settings to prevent chart redraw for product space tooltip
+    d3.select(vars.container).selectAll(".items__mark__text").remove();
+    d3.select(vars.container).selectAll(".items__mark__div").remove();
+
+    vars.new_data.forEach(function(f, k) {
+      if(f.__highlighted__adjacent) {
+        f.__highlighted__adjacent = false;
+        f.__redraw = true;
+      }
+    });
+
+    vars.links.forEach(function(f, k) {
+      if(f.__highlighted__adjacent) {
+        f.__highlighted__adjacent = false;
+        f.__redraw = true;
+      }
+    });
+
+    d3.select(vars.container).selectAll(".connect__line")
+      .classed("highlighted", function(d, i) { return false; })
+      .classed("highlighted__adjacent", function(d, i) { return false; })
+
+    d3.select(vars.container).selectAll("circle")
+      .classed("highlighted", function(d, i) { return false; })
+      .classed("highlighted__adjacent", function(d, i) { return false; })
+
+//    var adjacent_links = utils.find_adjacent_links(d, vars.links);
+/*
+    adjacent_links.forEach(function(e) {
+
+      e.__highlighted__adjacent = false;
+      e.__redraw = true;
+
+      vars.new_data.forEach(function(f, k) {
+
+         if(f[vars.var_id] === e.target[vars.var_id]) {
+
+           f.__highlighted__adjacent = false;
+           f.__redraw = true;
+
+         }
+
+       });
+
+    });
+*/
+  });
+
+  vars.evt.register("selection", function(d) {
+
+    // Make sure the highlighted node is above other nodes
+    //vars.svg.selectAll('.mark__group').sort(function(a, b) { return a.__highlighted ;})
+
+      vars.new_data.forEach(function(f, k) {
+        if(f.__selected) {
+          f.__selected = false;
+          f.__redraw = true;
+        }
+      });
+
+      vars.links.forEach(function(f, k) {
+        if(f.__selected) {
+          f.__selected = false;
+          f.__redraw = true;
+        }
+      });
+
+      d.__selected = true;
+      d.__redraw = true;
+
+      var adjacent_links = utils.find_adjacent_links(d, vars.links);
+
+      adjacent_links.forEach(function(e) {
+
+          // Update links
+          e.__selected = true;
+          e.__redraw = true;
+
+          vars.new_data.forEach(function(f, k) {
+
+            if(f[vars.var_id] === e.target[vars.var_id]) {
+
+              // Update nodes
+              f.__selected = true;
+              f.__redraw = true;
+            }
+
+          });
+
+      });
+
+    d3.select(vars.container).selectAll(".connect__line")
+      .classed("selected", function(d, i) { return d.__selected; })
+      .classed("selected__adjacent", function(d, i) { return d.__selected__adjacent; })
+
+    d3.select(vars.container).selectAll("circle")
+      .classed("selected", function(d, i) { return d.__selected; })
+      .classed("selected__adjacent", function(d, i) { return d.__selected__adjacent; })
+
+  });
 
   return params;
 
@@ -4519,6 +4671,65 @@ var z = d3.scale.linear().domain([0, 4]).clamp(true),
     return chart;
   };
 
+
+setTimeout(function() {
+
+  vars.evt.register("highlightOn", function(d) {
+
+    // POST-RENDERING STUFF
+    // Usually aimed at updating the rendering order of elements
+    vars.z_index.forEach(function(d) {
+
+      if(vars.type === d.type && d.event === 'highlightOn') {
+
+        vars.svg.selectAll(d.selector)
+          .filter(function(e) {
+            if(typeof d.attribute !== 'undefined') {
+              return e[d.attribute];
+            } else {
+              return true;
+            }
+          })
+          .each(function() {
+            this.parentNode.appendChild(this);
+          });
+      }
+
+    });
+
+    d3.select(vars.container).call(vars.this_chart);
+
+  });
+
+  vars.evt.register("highlightOut", function(d) {
+
+    if(vars.type !== "productspace") {
+      d3.select(vars.container).call(vars.this_chart);
+    }
+
+    // Duplicate
+    vars.z_index.forEach(function(d) {
+
+      if(vars.type === d.type && d.event === 'highlightOut') {
+
+        vars.svg.selectAll(d.selector)
+          .filter(function(e) {
+            if(typeof d.attribute !== 'undefined') {
+              return e[d.attribute];
+            } else {
+              return true;
+            }
+          })
+          .each(function() {
+            this.parentNode.appendChild(this);
+          });
+      }
+
+    });
+
+	});
+
+}, 100)
 
   vars.this_chart = chart;
 
