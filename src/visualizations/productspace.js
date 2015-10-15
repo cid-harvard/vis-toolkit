@@ -77,10 +77,6 @@ vars.default_params["productspace"] = function(scope) {
 
   vars.evt.register("highlightOut", function(d) {
 
-    // Temporary settings to prevent chart redraw for product space tooltip
-    d3.select(vars.container).selectAll(".items__mark__text").remove();
-    d3.select(vars.container).selectAll(".items__mark__div").remove();
-
     vars.new_data.forEach(function(f, k) {
       if(f.__highlighted__adjacent) {
         f.__highlighted__adjacent = false;
@@ -130,43 +126,57 @@ vars.default_params["productspace"] = function(scope) {
     // Make sure the highlighted node is above other nodes
     //vars.svg.selectAll('.mark__group').sort(function(a, b) { return a.__highlighted ;})
 
-      vars.new_data.forEach(function(f, k) {
-        if(f.__selected) {
-          f.__selected = false;
-          f.__redraw = true;
-        }
-      });
+    vars.new_data.forEach(function(f, k) {
+      if(f.__selected) {
+        f.__selected = false;
+        f.__redraw = true;
+      }
 
-      vars.links.forEach(function(f, k) {
-        if(f.__selected) {
-          f.__selected = false;
-          f.__redraw = true;
-        }
-      });
+      if(f.__selected__adjacent) {
+        f.__selected__adjacent = false;
+        f.__redraw = true;
+      }
 
-      d.__selected = true;
-      d.__redraw = true;
+    });
 
-      var adjacent_links = utils.find_adjacent_links(d, vars.links);
+    vars.links.forEach(function(f, k) {
+      if(f.__selected) {
+        f.__selected = false;
+        f.__redraw = true;
+      }
 
-      adjacent_links.forEach(function(e) {
+      if(f.__selected__adjacent) {
+        f.__selected__adjacent = false;
+        f.__redraw = true;
+      }
 
-          // Update links
-          e.__selected = true;
-          e.__redraw = true;
+    });
 
-          vars.new_data.forEach(function(f, k) {
+    d.__selected = true;
+    d.__redraw = true;
 
-            if(f[vars.var_id] === e.target[vars.var_id]) {
+    var adjacent_links = utils.find_adjacent_links(d, vars.links);
 
-              // Update nodes
-              f.__selected = true;
-              f.__redraw = true;
-            }
+    adjacent_links.forEach(function(e) {
 
-          });
+        // Update links
+        e.__selected = true;
+        e.__selected__adjacent = true;
+        e.__redraw = true;
 
-      });
+        vars.new_data.forEach(function(f, k) {
+
+          if(f[vars.var_id] === e.target[vars.var_id]) {
+
+            // Update nodes
+            //f.__selected = true;
+            f.__selected__adjacent = true;
+            f.__redraw = true;
+          }
+
+        });
+
+    });
 
     d3.select(vars.container).selectAll(".connect__line")
       .classed("selected", function(d, i) { return d.__selected; })
@@ -181,4 +191,3 @@ vars.default_params["productspace"] = function(scope) {
   return params;
 
 };
-

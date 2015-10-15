@@ -55,49 +55,16 @@
     d.__redraw = true;
   });
 
+  vars.evt.register("selection", function(d) {
+    if(vars.dev) { console.log("[vars.evt.call] selection"); }
+  });
+
   vars.evt.register("highlightOut", function(d) {
     d.__highlighted = false;
     d.__redraw = true;
-/*
-    var adjacent_nodes = utils.find_adjacent_nodes(d, vars.links);
 
-    adjacent_nodes.forEach(function(e) {
+    // Temporary settings to prevent chart redraw for product space tooltip
+    d3.select(vars.container).selectAll(".items__mark__text").remove();
+    d3.select(vars.container).selectAll(".items__mark__div").remove();
 
-        // Redraw adjacent nodes
-        e.__highlighted__adjacent = false;
-        e.__redraw = true;
-
-       vars.new_data.forEach(function(f, k) {
-
-         if(f[vars.var_id] === e.target[vars.var_id]) {
-          // Redraw adjacent links
-           f.__highlighted__adjacent = false;
-           f.__redraw = true;
-           console.log("OUT")
-         }
-
-       });
-
-    });
-*/
   });
-
- // vars.evt.register("selection", function(d) {
-
-    // Toggle selection for current node
-    // d.__selected = !d.__selected;
-    // d.__redraw = true;
-
-    // Cases
-    // No node has been selected before (first selection)
-
-    // One node has already been selected, but select on another one
-    // Click on background unselects everything
-
-
-//    d3.select(vars.container).call(vars.this_chart);
-
- // });
-
-  // Reset selection/zoom when click SVG canvas
-//  vars.svg

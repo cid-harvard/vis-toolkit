@@ -10,47 +10,14 @@
     if(!vars.svg) {
        if(vars.type !== "table") {
 
-        vars.svg = d3.select(vars.container).append("svg")
+        vars.root_svg = d3.select(vars.container).append("svg")
           .attr("width", vars.width)
           .attr("height", vars.height)
           .style('overflow', 'visible')
-          .style('z-index', 0)
-          .on("click", function(d) {
+          .style('z-index', 0);
 
-            if(vars.type === "productspace") {
-
-              vars.links.forEach(function(e) {
-                e.__selected = false;
-                e.__redraw = true;
-              });
-
-              vars.new_data.forEach(function(f, k) {
-                f.__selected = false;
-                f.__redraw = true;
-              });
-
-              vars.zoom = [];
-              vars.init = true;
-              vars.refresh = true;
-
-              d3.select(vars.container).selectAll(".connect__line")
-                .classed("highlighted", function(d, i) { return false; })
-                .classed("highlighted__adjacent", function(d, i) { return false; })
-                .classed("selected", function(d, i) { return false; })
-                .classed("selected__adjacent", function(d, i) { return false; })
-
-              d3.select(vars.container).selectAll("circle")
-                .classed("highlighted", function(d, i) { return false; })
-                .classed("highlighted__adjacent", function(d, i) { return false; })
-                .classed("selected", function(d, i) { return false; })
-                .classed("selected__adjacent", function(d, i) { return false; })
-
-            }
-
-          })
-        .append("g")
-          .attr("transform", "translate(" + vars.margin.left + "," + vars.margin.top + ")rotate(" + vars.rotate + ")")
-
+        vars.svg = vars.root_svg.append("g")
+          .attr("transform", "translate(" + vars.margin.left + "," + vars.margin.top + ")rotate(" + vars.rotate + ")");
 
       } else {
         // HTML Container for table
