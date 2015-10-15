@@ -56,6 +56,40 @@ setTimeout(function() {
 
 	});
 
+vars.root_svg.on("click", function(d) {
+
+            if(vars.type === "productspace") {
+
+              vars.links.forEach(function(e) {
+                e.__selected = false;
+                e.__redraw = true;
+              });
+
+              vars.new_data.forEach(function(f, k) {
+                f.__selected = false;
+                f.__redraw = true;
+              });
+
+              vars.zoom = [];
+              vars.init = true;
+              vars.refresh = true;
+
+              d3.select(vars.container).selectAll(".connect__line")
+                .classed("highlighted", function(d, i) { return false; })
+                .classed("highlighted__adjacent", function(d, i) { return false; })
+                .classed("selected", function(d, i) { return false; })
+                .classed("selected__adjacent", function(d, i) { return false; })
+
+              d3.select(vars.container).selectAll("circle")
+                .classed("highlighted", function(d, i) { return false; })
+                .classed("highlighted__adjacent", function(d, i) { return false; })
+                .classed("selected", function(d, i) { return false; })
+                .classed("selected__adjacent", function(d, i) { return false; })
+
+            }
+
+          })
+
 }, 100)
 
   vars.this_chart = chart;
