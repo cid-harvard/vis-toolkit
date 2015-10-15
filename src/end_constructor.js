@@ -80,6 +80,7 @@ setTimeout(function() {
       vars.init = true;
       vars.refresh = true;
 
+
       d3.select(vars.container).selectAll(".connect__line")
         .classed("highlighted", function(d, i) { return false; })
         .classed("highlighted__adjacent", function(d, i) { return false; })

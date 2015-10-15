@@ -63,7 +63,7 @@ vars.default_params["productspace"] = function(scope) {
 
        vars.new_data.forEach(function(f, k) {
 
-         if(f[vars.var_id] === e.target[vars.var_id]) {
+         if(f[vars.var_id] === e.target[vars.var_id] || f[vars.var_id] === e.source[vars.var_id]) {
           // Redraw adjacent nodes
            f.__highlighted__adjacent = true;
            f.__redraw = true;
@@ -166,7 +166,7 @@ vars.default_params["productspace"] = function(scope) {
 
       vars.new_data.forEach(function(f, k) {
 
-        if(f[vars.var_id] === e.target[vars.var_id]) {
+        if(f[vars.var_id] === e.target[vars.var_id] || f[vars.var_id] === e.source[vars.var_id]) {
 
           // Update nodes
           f.__selected = true;
