@@ -35,7 +35,7 @@ g:hover .items__mark__circle:not(.highlighted__adjacent) {
   stroke: black;
 }
 
-.items__mark__circle.selected {
+.items__mark__circle.selected, .items__mark__circle.selected__adjacent {
   stroke: black;
   stroke-width: 4.5px;
 }
@@ -86,7 +86,7 @@ d3.json("../data/industry-data-neave-150707.json", function(data) {
 
     visualization = vistk.viz()
       .params({
-        dev: false,
+        dev: true,
         type: "productspace",
         container: "#viz",
         nodes: data.nodes,
@@ -127,14 +127,13 @@ d3.json("../data/industry-data-neave-150707.json", function(data) {
 
     // On selected add adjacent nodes to the zoom selection
 
-/*
     d3.selectAll(".items__mark__circle").on("click", function(d) {
 
       var l = visualization.params().new_data.filter(function(d) {
         return d.__highlighted__adjacent || d.__selected;
-      }).map(function(d) { return d.id; })
-
-      console.log("ADJACENT", l)
+      }).map(function(d) {
+        return d.id;
+      });
 
       visualization.params().init = true;
       visualization.params().refresh = true;
@@ -145,6 +144,6 @@ d3.json("../data/industry-data-neave-150707.json", function(data) {
        d3.select("#viz").call(visualization);
 
     })
-*/
+
 });
 </script>

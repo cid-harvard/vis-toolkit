@@ -122,9 +122,9 @@ vars.default_params["productspace"] = function(scope) {
   });
 
   vars.evt.register("selection", function(d) {
-
+    console.log("HERE", d)
     // Make sure the highlighted node is above other nodes
-    //vars.svg.selectAll('.mark__group').sort(function(a, b) { return a.__highlighted ;})
+    // vars.svg.selectAll('.mark__group').sort(function(a, b) { return a.__highlighted ;})
 
     vars.new_data.forEach(function(f, k) {
       if(f.__selected) {
@@ -159,22 +159,22 @@ vars.default_params["productspace"] = function(scope) {
 
     adjacent_links.forEach(function(e) {
 
-        // Update links
-        e.__selected = true;
-        e.__selected__adjacent = true;
-        e.__redraw = true;
+      // Update links
+      e.__selected = true;
+      e.__selected__adjacent = true;
+      e.__redraw = true;
 
-        vars.new_data.forEach(function(f, k) {
+      vars.new_data.forEach(function(f, k) {
 
-          if(f[vars.var_id] === e.target[vars.var_id]) {
+        if(f[vars.var_id] === e.target[vars.var_id]) {
 
-            // Update nodes
-            //f.__selected = true;
-            f.__selected__adjacent = true;
-            f.__redraw = true;
-          }
+          // Update nodes
+          f.__selected = true;
+          f.__selected__adjacent = true;
+          f.__redraw = true;
+        }
 
-        });
+      });
 
     });
 

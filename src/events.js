@@ -55,7 +55,7 @@
     d.__redraw = true;
   });
 
-  vars.evt.register("selection", function(d) {
+  vars.evt.register("highlightOn", function(d) {
     if(vars.dev) { console.log("[vars.evt.call] selection"); }
   });
 

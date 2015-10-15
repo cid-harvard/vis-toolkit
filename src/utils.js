@@ -1254,6 +1254,7 @@
 
       } else {
 
+        // Resets scale and viewport to default values
         vars_svg.transition()
                 .duration(vars.duration)
                 .attr("transform", "translate(" + vars.margin.left + "," + vars.margin.top + ")rotate(" + vars.rotate + ")");

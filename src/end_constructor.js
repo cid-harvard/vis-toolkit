@@ -7,6 +7,7 @@ setTimeout(function() {
     // Usually aimed at updating the rendering order of elements
     vars.z_index.forEach(function(d) {
 
+      // Filter events
       if(vars.type === d.type && d.event === 'highlightOn') {
 
         vars.svg.selectAll(d.selector)
@@ -34,9 +35,9 @@ setTimeout(function() {
       d3.select(vars.container).call(vars.this_chart);
     }
 
-    // Duplicate
     vars.z_index.forEach(function(d) {
 
+      // Filter events
       if(vars.type === d.type && d.event === 'highlightOut') {
 
         vars.svg.selectAll(d.selector)
@@ -56,39 +57,44 @@ setTimeout(function() {
 
 	});
 
-vars.root_svg.on("click", function(d) {
+  vars.root_svg.on("click", function(d) {
 
-            if(vars.type === "productspace") {
+    if(vars.type === "productspace") {
 
-              vars.links.forEach(function(e) {
-                e.__selected = false;
-                e.__redraw = true;
-              });
+      vars.links.forEach(function(e) {
+        e.__selected = false;
+        e.__redraw = true;
+      });
 
-              vars.new_data.forEach(function(f, k) {
-                f.__selected = false;
-                f.__redraw = true;
-              });
+      vars.new_data.forEach(function(f, k) {
+        f.__selected = false;
+        f.__redraw = true;
+      });
 
-              vars.zoom = [];
-              vars.init = true;
-              vars.refresh = true;
+      vars.zoom = [];
 
-              d3.select(vars.container).selectAll(".connect__line")
-                .classed("highlighted", function(d, i) { return false; })
-                .classed("highlighted__adjacent", function(d, i) { return false; })
-                .classed("selected", function(d, i) { return false; })
-                .classed("selected__adjacent", function(d, i) { return false; })
+      vars.svg.transition()
+              .duration(vars.duration)
+              .attr("transform", "translate(" + vars.margin.left + "," + vars.margin.top + ")rotate(" + vars.rotate + ")");
 
-              d3.select(vars.container).selectAll("circle")
-                .classed("highlighted", function(d, i) { return false; })
-                .classed("highlighted__adjacent", function(d, i) { return false; })
-                .classed("selected", function(d, i) { return false; })
-                .classed("selected__adjacent", function(d, i) { return false; })
+      vars.init = true;
+      vars.refresh = true;
 
-            }
+      d3.select(vars.container).selectAll(".connect__line")
+        .classed("highlighted", function(d, i) { return false; })
+        .classed("highlighted__adjacent", function(d, i) { return false; })
+        .classed("selected", function(d, i) { return false; })
+        .classed("selected__adjacent", function(d, i) { return false; })
 
-          })
+      d3.select(vars.container).selectAll("circle")
+        .classed("highlighted", function(d, i) { return false; })
+        .classed("highlighted__adjacent", function(d, i) { return false; })
+        .classed("selected", function(d, i) { return false; })
+        .classed("selected__adjacent", function(d, i) { return false; })
+
+    }
+
+  })
 
 }, 100)
 
