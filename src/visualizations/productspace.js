@@ -122,7 +122,7 @@ vars.default_params["productspace"] = function(scope) {
   });
 
   vars.evt.register("selection", function(d) {
-    console.log("HERE", d)
+
     // Make sure the highlighted node is above other nodes
     // vars.svg.selectAll('.mark__group').sort(function(a, b) { return a.__highlighted ;})
 
