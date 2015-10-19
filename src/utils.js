@@ -1067,6 +1067,17 @@
 
   utils.zoom_to_nodes = function(nodes) {
 
+    if(nodes.length === 0) {
+      // Resets scale and viewport to default values
+      vars.svg.transition()
+              .duration(vars.duration)
+              .attr("transform", "translate(" + vars.margin.left + "," + vars.margin.top + ")rotate(" + vars.rotate + ")");
+
+      return;
+    }
+
+    if(vars.dev) { console.log("[zooming to nodes]", vars.zoom.length); }
+
     var min_x = vars.width;
     var max_x = 0;
     var min_y = vars.height;
@@ -1248,18 +1259,7 @@
 
       });
 
-      if(vars.zoom.length > 0) {
-
-        utils.zoom_to_nodes(vars.zoom);
-
-      } else {
-
-        // Resets scale and viewport to default values
-        vars_svg.transition()
-                .duration(vars.duration)
-                .attr("transform", "translate(" + vars.margin.left + "," + vars.margin.top + ")rotate(" + vars.rotate + ")");
-
-      }
+      utils.zoom_to_nodes(vars.zoom);
 
     }
 
