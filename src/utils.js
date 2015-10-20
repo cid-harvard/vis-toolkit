@@ -507,15 +507,6 @@
               .classed('items__mark__shape', true)
               .classed("items_" + mark_id, true)
               .attr("transform", function(d) {
-
-                // Drawing projects comes with automatic offset
-                d.x = d3.select(that).node().getBBox().x;
-                d.y = d3.select(that).node().getBBox().y;
-
-                // Update parent with new coordinates
-           //     d3.select(d3.select(that).node().parentNode).attr("transform", "translate("+ d.x +", "+ d.y +")");
-
-
                 return "translate("+ -d.x +", "+ -d.y +")";
               })
 
@@ -527,7 +518,7 @@
                 return params.fill(vars.accessor_data(d)[vars.var_color]);
               })
               .attr("transform", function(d) {
-
+//
                 return "translate("+ -d.x +", "+ -d.y +")";
               })
 
@@ -1401,7 +1392,7 @@
 
     utils.background_label(vars.title);
 
-    // Flag that forces to re-wrangle data
+    // Flag that prevent to re-wrangle data by default
     vars.refresh = false;
     vars.init = false;
 

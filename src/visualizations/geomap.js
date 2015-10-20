@@ -45,14 +45,21 @@
       return d;
     });
 
-    // http://techslides.com/demos/d3/d3-world-map-colors-tooltips.html
     vars.projection = d3.geo.mercator()
-                   // .translate([vars.width/2, vars.height/2])
                     .scale(100);
 
     // This is the main function that draws the shapes later on
     vars.path = d3.geo.path()
         .projection(vars.projection);
+
+    // Pr-process the shapes and calculate their BBox here and assign to x
+
+    vars.new_data.forEach(function(d) {
+      var a = vars.svg.append("path").attr("id", "geomap__pre-render").attr("d", vars.path(d))
+      d.x = a.node().getBBox().x;
+      d.y = a.node().getBBox().y;
+      a.remove();
+    })
 
   }
 
