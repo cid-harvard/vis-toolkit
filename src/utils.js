@@ -43,7 +43,6 @@
 
   }
 
-
   //  Main function to draw marks
   //  Invoked from a .each() call passing in the current datum d and index i,
   //  with the this context of the current DOM element
@@ -57,6 +56,7 @@
     }
 
     selection.each(function(d, i) {
+
       // Skip the drawing if __redraw flag is false
       if(!d.__redraw) {
         return;
@@ -105,7 +105,6 @@
 
       }
 
-
       var params_text = "";
 
       if(typeof params.text !== "undefined") {
@@ -117,7 +116,6 @@
       } else if(vars.var_text !== "undefined") {
         params_text = vars.accessor_data(d)[vars.var_text];
       }
-
 
       var params_width = 10;
 
@@ -980,17 +978,13 @@
           }
 
           if(typeof params.title !== "undefined") {
-
             mark_enter.append("title").text(function(d) {
               return params.title(vars.accessor_items(d));
             });
-
           }
 
           if(typeof params.class !== "undefined") {
-
             mark_enter.classed(params.class(vars.accessor_items(d)), true);
-
           }
 
           mark
@@ -1004,14 +998,11 @@
 
           break;
 
-      }
+        }
 
+      });
 
-
-    });
-
-
-      })
+    })
 
   }
 
