@@ -7,24 +7,35 @@
 
 <style>
 #textfilter {
-    height:50px;
-    width: 860px;
-    font-size:30px;
-    margin: 20px;
+  height:50px;
+  width: 860px;
+  font-size:30px;
+  margin: 20px;
 }
+
+.tooltip {
+  background: #333;
+  background: rgba(0,0,0,.8);
+  border-radius: 5px;
+  color: #fff;
+  padding: 5px 15px;
+  z-index: 98;
+  width: 220px;
+}
+
 </style>
 
 <input type="text" id="textfilter" onkeyup="filter_treemap(this.value)" autofocus/>
-<div id="viz"></div>
+<div id="viz" style="position: relative"></div>
 <script>
 
 var filter = "";
 
 d3.json("../data/exports_quinn_2012.json", function(error, exports) {
-dd = exports
+
   visualization = vistk.viz()
     .params({
-      dev: true,
+      dev: false,
       type: "treemap",
       container: "#viz",
       height: 600,
@@ -45,7 +56,7 @@ dd = exports
             if(filter.length === 0) {
               return d.depth == 1 && d.dx > 30 && d.dy > 30;
             } else {
-              return d.depth == 2 && d.dx > 30 && d.dy > 30;
+              return d.depth == 1 && d.dx > 30 && d.dy > 30;
             }
           },
           class: function() { return 'tree-map--title'; },
@@ -70,18 +81,33 @@ dd = exports
           stroke: function(d) {
             return "#000";
           },
+        }, {
+          var_mark: '__highlighted',
+          type: d3.scale.ordinal().domain([false, true]).range(["none", "div"]),
+          class: function() {
+            return "tooltip";
+          },
+          x: function(d, i, vars) {
+            return  vars.x_scale[0]["func"](d[vars.var_x]);
+          },
+          y: function(d, i, vars) {
+            return vars.y_scale[0]["func"](d[vars.var_y]);
+          },
+          text: function(d, i, vars) {
+            return d['name'] + ' (' + d['continent'] + ') coordinates (x: ' + vars.x_scale[0]["func"](d[vars.var_x]) + ', ' + vars.y_scale[0]["func"](d[vars.var_y]) + ')';
+          },
+          height: "auto",
+          translate: [20, -40],
+          exit: function() {
+          },
+          width: 200
         }]
       }],
       time: {
         var_time: "year",
         current_time: 2012,
         parse: function(d) { return d; }
-      },
-      ui: {
-        default: true,
-        sort: ["parent_code", "name", "export_value"]
-      },
-      focus: 1121
+      }
     });
 
   d3.select("#viz").call(visualization);
@@ -95,7 +121,8 @@ function filter_treemap(str) {
 
   // Update params
   visualization.params().refresh = true;
-  visualization.params().init = true;
+  // visualization.params().init = true;
+
   // Update visualization
   d3.select("#viz").call(visualization);
 
