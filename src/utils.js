@@ -1629,14 +1629,22 @@
   utils.find_adjacent_links = function(d, links) {
 
       return vars.links.filter(function(e) {
-        return e.source[vars.var_id] === d[vars.var_id] || e.target[vars.var_id] === d[vars.var_id];
+        if(typeof e.source !== 'undefined' && typeof e.target !== 'undefined') {
+          return e.source[vars.var_id] === d[vars.var_id] || e.target[vars.var_id] === d[vars.var_id];
+        } else {
+          return false;
+        }
       })
   }
 
   utils.find_adjacent_nodes = function(d, links) {
 
       return vars.links.filter(function(e) {
-        return e.source[vars.var_id] === d[vars.var_id] || e.target[vars.var_id] === d[vars.var_id];
+        if(typeof e.source !== 'undefined' && typeof e.target !== 'undefined') {
+          return e.source[vars.var_id] === d[vars.var_id] || e.target[vars.var_id] === d[vars.var_id];
+        } else {
+          return false;
+        }
       })
   }
 
