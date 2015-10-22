@@ -63,11 +63,13 @@
 
         vars.links.forEach(function(e) {
           e.__selected = false;
+          e.__highlighted = false;
           e.__redraw = true;
         });
 
         vars.new_data.forEach(function(f, k) {
           f.__selected = false;
+          f.__highlighted = false;
           f.__redraw = true;
         });
 

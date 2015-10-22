@@ -139,6 +139,8 @@
         }
       }
 
+      var params_x = 0;
+
       if(typeof params.x !== "undefined") {
         if(typeof params.x === "function") {
           params_x = params.x(d, i, vars);
@@ -146,6 +148,8 @@
           params_x = params.x;
         }
       }
+
+      var params_y = 0;
 
       if(typeof params.y !== "undefined") {
         if(typeof params.y === "function") {
@@ -1049,16 +1053,15 @@
 
   utils.zoom_to_nodes = function(nodes) {
 
+    if(vars.dev) { console.log("[zooming to nodes]", vars.zoom.length); }
+
     if(nodes.length === 0) {
       // Resets scale and viewport to default values
       vars.svg.transition()
               .duration(vars.duration)
               .attr("transform", "translate(" + vars.margin.left + "," + vars.margin.top + ")rotate(" + vars.rotate + ")");
-
       return;
     }
-
-    if(vars.dev) { console.log("[zooming to nodes]", vars.zoom.length); }
 
     var min_x = vars.width;
     var max_x = 0;
