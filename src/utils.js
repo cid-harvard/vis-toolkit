@@ -218,8 +218,8 @@
               .classed("items__mark__text", true)
               .classed("items_" + mark_id, true)
               .style("text-anchor", params.text_anchor)
-              .attr("x", 10)
-              .attr("y", 0)
+              .attr("x", params_x)
+              .attr("y", params_y)
               .attr("dy", ".35em")
               .attr("transform", "translate(" +  params_translate + ")rotate(" +  params_rotate + ")");
 
@@ -1343,8 +1343,9 @@
       nodes[0].map(function(t) {
 
         //
-        var tr = d3.transform(d3.select(this.parentNode).attr("transform")).translate;
-        console.log("MAP", d3.select(this), tr);
+        //var tr = d3.transform(d3.select(this.parentNode).attr("transform")).translate;
+
+        //tr.each(utils.items_group);
 
         vars.svg.node().appendChild(t);
       })
