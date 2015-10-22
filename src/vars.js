@@ -177,7 +177,9 @@
       {selector: '.mark__group', attribute: '__highlighted__adjacent', type: 'productspace', weight: 1, event: 'highlightOn'},
     ],
 
-    set: []
+    set: [],
+
+    flat_scene: false
   };
 
   vars = vistk.utils.merge(vars, default_vars);

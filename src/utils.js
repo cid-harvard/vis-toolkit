@@ -1141,107 +1141,114 @@
 
     if(typeof vars.items !== "undefined" && vars.items[0] !== "undefined" &&  Object.keys(vars.items).length > 0 && vars.type !== "stacked") {
 
-      vars.items.forEach(function(item, index_item) {
+     // if(!vars.flat_scene) {
 
-        // Use the global accessor, unless specif one has been set
-        var accessor_data = vars.accessor_data;
+        vars.items.forEach(function(item, index_item) {
 
-        if(typeof item.accessor_data !== "undefined") {
-          accessor_data = item.accessor_data;
-        }
+          // Use the global accessor, unless specif one has been set
+          var accessor_data = vars.accessor_data;
 
-        // PRE-UPDATE ITEMS
-        // Join is based on the curren_time value
-        var gItems = vars_svg.selectAll(".mark__group" +  "_" + index_item)
-                        .data(vars.new_data, function(d, i) {
-                          d._index_item = index_item;
-                          return accessor_data(d)[vars.var_id] + "_" + index_item + d.depth;
-                        });
-
-        // ENTER ITEMS
-        var gItems_enter = gItems.enter()
-                        .insert("g", ":first-child");
-
-        // ITEMS EXIT
-        var gItems_exit = gItems.exit();
-
-        // IN CASE OF CUSTOM ENTER FOR ITEMS
-        if(typeof item.enter !== "undefined") {
-          gItems_enter.call(item.enter, vars);
-        } else {
-          gItems_enter.attr("transform", function(d, i) {
-            return "translate(" + vars.x_scale[0]["func"](accessor_data(d)[vars.var_x]) + ", " + vars.y_scale[0]["func"](accessor_data(d)[vars.var_y]) + ")";
-          });
-        }
-
-       // APPEND AND UPDATE ITEMS MARK
-        item.marks.forEach(function(params, index_mark) {
-
-          if(typeof params.filter == "undefined") {
-            params.filter = function() {
-              return true;
-            }
+          if(typeof item.accessor_data !== "undefined") {
+            accessor_data = item.accessor_data;
           }
 
-          // Supporting multipe similar elements
-          params._mark_id = index_item + "_" + index_mark;
+          // PRE-UPDATE ITEMS
+          // Join is based on the curren_time value
+          var gItems = vars_svg.selectAll(".mark__group" +  "_" + index_item)
+                          .data(vars.new_data, function(d, i) {
+                            d._index_item = index_item;
+                            return accessor_data(d)[vars.var_id] + "_" + index_item + d.depth;
+                          });
 
-          gItems_enter
-              .filter(params.filter)
-              .filter(utils.filters.redraw_only)
-              .call(utils.draw_mark, params, vars);
+          // ENTER ITEMS
+          var gItems_enter = gItems.enter()
+                          .insert("g", ":first-child");
 
-          gItems
-              .filter(params.filter)
-              .call(utils.draw_mark, params, vars);
+          // ITEMS EXIT
+          var gItems_exit = gItems.exit();
+
+          // IN CASE OF CUSTOM ENTER FOR ITEMS
+          if(typeof item.enter !== "undefined") {
+            gItems_enter.call(item.enter, vars);
+          } else {
+            gItems_enter.attr("transform", function(d, i) {
+              return "translate(" + vars.x_scale[0]["func"](accessor_data(d)[vars.var_x]) + ", " + vars.y_scale[0]["func"](accessor_data(d)[vars.var_y]) + ")";
+            });
+          }
+
+         // APPEND AND UPDATE ITEMS MARK
+          item.marks.forEach(function(params, index_mark) {
+
+            if(typeof params.filter == "undefined") {
+              params.filter = function() {
+                return true;
+              }
+            }
+
+            // Supporting multipe similar elements
+            params._mark_id = index_item + "_" + index_mark;
+
+            gItems_enter
+                .filter(params.filter)
+                .filter(utils.filters.redraw_only)
+                .call(utils.draw_mark, params, vars);
+
+            gItems
+                .filter(params.filter)
+                .call(utils.draw_mark, params, vars);
+
+          });
+
+          // Bind events to groups after marks have been created
+          gItems.each(utils.items_group);
+
+          /* Should be as below but current params don't match this format
+            // APPEND AND UPDATE ITEMS MARK
+            vars.items.forEach(function(item) {
+              item.marks.forEach(function(params) {
+                gItems_enter.call(utils.draw_mark, params);
+                gItems.call(utils.draw_mark, params);
+              });
+            });
+          */
+
+          // IN CASE OF CUSTOM UPDATE FOR ITEMS
+          if(typeof item.update !== "undefined") {
+            vars_svg.selectAll(".mark__group" + "_" + index_item).call(item.update, vars)
+          } else {
+          // POST-UPDATE ITEMS GROUPS
+            vars_svg.selectAll(".mark__group" + "_" + index_item)
+                          .transition()
+                          .duration(vars.duration)
+                          //.ease('none')
+                          .attr("transform", function(d, i) {
+                            return "translate(" + vars.x_scale[0]["func"](accessor_data(d)[vars.var_x]) + ", " + vars.y_scale[0]["func"](accessor_data(d)[vars.var_y]) + ")";
+                          });
+          }
+
+          // IN CASE OF CUSTOM EXIT FOR ITEMS
+          if(typeof item.exit !== "undefined") {
+            gItems_exit.call(item.exit, vars)
+          } else {
+            gItems_exit.remove();
+          }
+
+          if(vars.type == "productspace" || vars.type == "treemap") {
+            vars.new_data.forEach(function(d) {
+              if(!d.__selected) {
+                d.__redraw = false;
+              }
+            });
+          }
 
         });
 
-        // Bind events to groups after marks have been created
-        gItems.each(utils.items_group);
+        utils.zoom_to_nodes(vars.zoom);
 
-        /* Should be as below but current params don't match this format
-          // APPEND AND UPDATE ITEMS MARK
-          vars.items.forEach(function(item) {
-            item.marks.forEach(function(params) {
-              gItems_enter.call(utils.draw_mark, params);
-              gItems.call(utils.draw_mark, params);
-            });
-          });
-        */
+        // For each mark, create the mark and bind the data
 
-        // IN CASE OF CUSTOM UPDATE FOR ITEMS
-        if(typeof item.update !== "undefined") {
-          vars_svg.selectAll(".mark__group" + "_" + index_item).call(item.update, vars)
-        } else {
-        // POST-UPDATE ITEMS GROUPS
-          vars_svg.selectAll(".mark__group" + "_" + index_item)
-                        .transition()
-                        .duration(vars.duration)
-                        //.ease('none')
-                        .attr("transform", function(d, i) {
-                          return "translate(" + vars.x_scale[0]["func"](accessor_data(d)[vars.var_x]) + ", " + vars.y_scale[0]["func"](accessor_data(d)[vars.var_y]) + ")";
-                        });
-        }
+        // Bind the various events
 
-        // IN CASE OF CUSTOM EXIT FOR ITEMS
-        if(typeof item.exit !== "undefined") {
-          gItems_exit.call(item.exit, vars)
-        } else {
-          gItems_exit.remove();
-        }
-
-        if(vars.type == "productspace" || vars.type == "treemap") {
-          vars.new_data.forEach(function(d) {
-            if(!d.__selected) {
-              d.__redraw = false;
-            }
-          });
-        }
-
-      });
-
-      utils.zoom_to_nodes(vars.zoom);
 
     }
 
@@ -1325,6 +1332,31 @@
       if(vars.type == "productspace") {
         connect_data.forEach(function(d) { d.__redraw = false; });
       }
+
+    }
+
+    if(vars.flat_scene && vars.init) {
+
+      var nodes = vars.svg.selectAll(".items__mark__rect");
+
+      // Move them to the current sub-node
+      nodes[0].map(function(t) {
+
+        //
+        var tr = d3.transform(d3.select(this.parentNode).attr("transform")).translate;
+        console.log("MAP", d3.select(this), tr);
+
+        vars.svg.node().appendChild(t);
+      })
+/*
+      vars.svg.selectAll(".mark__group").filter(function(d) {
+        var el = d3.select(this);
+        console.log("DDD", d)
+       // console.log("EL", d3.select(this))
+        vars.svg.append(el);
+      })
+*/
+      vars.svg.selectAll(".mark__group").remove();
 
     }
 
