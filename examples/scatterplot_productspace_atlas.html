@@ -42,50 +42,59 @@ path.state {
 }
 
 .connect__line {
-  stroke: #E1DCD6;
-  stroke-opacity: .4;
+  stroke: #999;
+  stroke-opacity: .6;
 }
 
-.connect__line.highlighted {
-  fill: yellow;
-  stroke-width: 1.5px;
+.connect__line.highlighted__adjacent {
+  stroke-width: 2.5px;
+  stroke-opacity: 1;
+  stroke: black;
 }
 
-.items__mark__star {
-  fill: #CBC0B8;
-  stroke-width: .5px;
+.connect__line.selected {
+  stroke-width: 2.5px;
+  stroke-opacity: 1;
   stroke: red;
-  transform: scale(0.5);
 }
-
-.items__mark__star.selected {
-  stroke-width: 1px;
+/*
+g:hover .items__mark__circle:not(.highlighted__adjacent) {
+  -webkit-transition:0.3s;
+  transition:0.3s;
+  opacity: 0.5;
 }
+*/
 
-.items__mark__star.highlighted {
-  fill: yellow;
-  stroke-width: 1.5px;
+.highlighted__adjacent {
+  opacity: 1;
+  stroke-width: 2.5px;
+  stroke: black;
 }
 
 .items__mark__circle {
   fill: white;
+  stroke: black;
+}
+
+.items__mark__circle.selected, .items__mark__circle.selected__adjacent {
+  stroke: black;
+  stroke-width: 4.5px;
+}
+
+.connect__path:not(.highlighted) {
   stroke-width: 1px;
-  stroke: black;
 }
 
-.items__mark__circle.highlighted {
-  fill: #191914;
-  stroke: black;
-  stroke-width: .5px;
+.connect__path.highlighted {
+  stroke-opacity: 1;
+  stroke-width: 5px;
 }
 
-.items__mark__circle.selected {
-  fill: #EA413D;
+.connect__path.selected {
+  stroke-opacity: 1;
+  stroke-width: 3px;
 }
 
-.items__mark__text {
-  text-shadow: -2px 0 white, 0 2px white, 2px 0 white, 0 -2px white;
-}
 
 </style>
 <body>
@@ -96,7 +105,7 @@ d3.json("../data/atlas_international_product_space_hs4_codes.json", function(gra
   d3.json("../data/usa_exports_2013.json", function(exports) {
 
 // data {"abbrv": "0101", "distance": 0.5495458, "opp_gain": 0.0, "name": "Live horses, asses, mules or hinnies", "color": "#FFE999", "pci": 0.9957224, "share": 0.0018579885548872719, "community_id": 106, "value": 325000000.0, "rca": 2.303479, "community_name": "Animal & Animal Products", "code": "0101", "year": 1995, "item_id": 1, "id": "0101"}
-xp = exports
+
 console.log(exports.data)
       visualization = vistk.viz()
         .params({
@@ -122,8 +131,7 @@ console.log(exports.data)
           items: [{
             marks: [{
               type: "circle",
-              fill: function(d) { return d.color; },
-              title: function(d) { return d['name']; }
+              fill: function(d) { return d.color; }
             }]
           }],
           time: {
