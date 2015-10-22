@@ -1,0 +1,56 @@
+<!doctype html>
+<meta charset="utf-8">
+<script src="../js/d3.js"></script>
+<script src="../build/vistk.js"></script>
+<link href="../css/vistk.css" rel="stylesheet">
+<body>
+<div id="viz"></div>
+<script>
+
+d3.json("../data/fra_exports_2013.json", function(error, exports) {
+
+  d3.json("../data/fra_imports_2013.json", function(error, imports) {
+
+    exports.data.forEach(function(d) {
+
+      d.value_import = 0;
+
+      imports.data.forEach(function(e) {
+
+        if(d.abbrv === e.abbrv) {
+          d.value_import = e.value;
+        }
+
+      });
+    });
+
+    visualization = vistk.viz()
+      .params({
+        type: 'rectmap',
+        container: '#viz',
+        height: 700,
+        width: 700,
+        data: exports.data,
+        var_id: 'abbrv',
+        var_sort: 'value',
+        var_group: 'community_id',
+        var_color: 'color',
+        var_size: 'value',
+        var_text: 'name',
+        var_width: 'value',
+        var_height: 'value_import',
+        time: {
+          var_time: 'year',
+          current_time: 2013
+        },
+        title: "Exports (horizontal) vs Imports (vertical)"
+      });
+
+    d3.select("#viz").call(visualization);
+
+  });
+
+});
+
+</script>
+</body>
