@@ -1,0 +1,6 @@
+general:
+  artifacts:
+    - build/vistk.js
+test:
+  post:
+    - grunt
