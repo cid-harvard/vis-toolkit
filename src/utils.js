@@ -1200,10 +1200,16 @@
                 .filter(params.filter)
                 .call(utils.draw_mark, params, vars);
 
+            if(vars.init && typeof params.evt !== 'undefined') {
+              vars.evt.register("selection", params.evt[0].func)
+            }
+
           });
 
           // Bind events to groups after marks have been created
           gItems.each(utils.items_group);
+
+
 
           /* Should be as below but current params don't match this format
             // APPEND AND UPDATE ITEMS MARK

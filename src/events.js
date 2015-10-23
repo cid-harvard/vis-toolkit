@@ -28,10 +28,10 @@
       return;
     }
 
-    vars.evt[evt].forEach(function(e) {
+    vars.evt[evt].forEach(function(e, i) {
       if(vars.dev) { console.log("[calling evt]", e); }
       if(typeof(e[0]) !== "undefined") {
-        e[0](a);
+        e[0](a, 0, vars);
       }
     });
   };
