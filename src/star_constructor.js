@@ -13,7 +13,7 @@
         vars.root_svg = d3.select(vars.container).append("svg")
           .attr("width", vars.width)
           .attr("height", vars.height)
-          .style('overflow', 'visible')
+          .style('overflow', 'hidden')
           .style('z-index', 0)
           .on("click", function(d) {
 
