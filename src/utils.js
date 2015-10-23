@@ -1053,7 +1053,7 @@
 
   utils.zoom_to_nodes = function(nodes) {
 
-    if(vars.dev) { console.log("[zooming to nodes]", vars.zoom.length); }
+    if(vars.dev) { console.log("[zooming to nodes]", vars.zoom); }
 
     if(nodes.length === 0) {
       // Resets scale and viewport to default values
@@ -1246,13 +1246,6 @@
 
         });
 
-        utils.zoom_to_nodes(vars.zoom);
-
-        // For each mark, create the mark and bind the data
-
-        // Bind the various events
-
-
     }
 
     if(typeof vars.connect !== "undefined" && typeof vars.connect[0] !== "undefined" && Object.keys(vars.connect).length > 0) {
@@ -1417,6 +1410,11 @@
 
     }
 
+
+    if(vars.refresh) {
+      utils.zoom_to_nodes(vars.zoom);
+    }
+
     utils.background_label(vars.title);
 
     // Flag that prevent to re-wrangle data by default
@@ -1522,7 +1520,7 @@
         .orient("left");
   }
 
-  // Displays text as a background (e.g. current year in scatterplots)
+  // Title
   utils.background_label = function() {
 
     vars.svg.selectAll(".background_label")

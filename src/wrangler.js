@@ -229,7 +229,8 @@
 
       });
 
-      // Making sure we display all the nodes
+      // Go through again the list of nodes
+      // to make sure we display all the nodes
       vars.nodes.forEach(function(d, i) {
 
         var node = vistk.utils.find_node_coordinates_by_id(vars.new_data, vars.var_id, d['id']);
@@ -246,6 +247,7 @@
           d.__highlighted__adjacent = false;
           d.__missing = false;
           d.__redraw = true;
+
           vars.new_data.push(d);
 
         }
