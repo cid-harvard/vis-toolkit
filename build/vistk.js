@@ -1076,6 +1076,12 @@ var utils ={};
 
     if(nodes.length === 0) {
       // Resets scale and viewport to default values
+
+      vars.scale = 1;
+      vars.translate = [0, 0];
+      vars.translate_x = 0;
+      vars.translate_y = 0;
+
       vars.svg.transition()
               .duration(vars.duration)
               .attr("transform", "translate(" + vars.margin.left + "," + vars.margin.top + ")rotate(" + vars.rotate + ")");
@@ -1113,20 +1119,22 @@ var utils ={};
     var width = (max_x - min_x) + 100;
     var height = (max_y - min_y) + 100;
 
-    var x = min_x + (max_x - min_x) / 2;
-    var y = min_y + (max_y - min_y) / 2;
+    vars.translate_x = min_x + (max_x - min_x) / 2;
+    vars.translate_y = min_y + (max_y - min_y) / 2;
 
-    var scale = 1 / Math.max(width / vars.width, height / vars.height);
-    var translate = [vars.width / 2 - scale * x, vars.height / 2 - scale * y];
+    vars.scale = 1 / Math.max(width / vars.width, height / vars.height);
+    vars.translate = [vars.width / 2 - vars.scale * vars.translate_x, vars.height / 2 - vars.scale * vars.translate_y];
 
     // Animate the graph
     vars.svg.transition()
         .duration(1750)
-        .style("stroke-width", 1.5 / scale + "px")
-        .attr("transform", "translate(" + translate + ")scale(" + scale + ")");
+        .style("stroke-width", 1.5 / vars.scale + "px")
+        .attr("transform", "translate(" + vars.translate + ")scale(" + vars.scale + ")");
 
-    vars.svg.selectAll("circle").style("stroke-width", (1.5 / scale) + "px")
-    vars.svg.selectAll("text").style("font-size", (1 / scale) + "rem")
+    // If we want to re-scale the various elements
+    // vars.svg.selectAll("circle").style("stroke-width", (1.5 / vars.scale) + "px")
+
+    vars.svg.selectAll("text").style("font-size", (1 / vars.scale) + "rem")
 
   }
 
@@ -1219,10 +1227,16 @@ var utils ={};
                 .filter(params.filter)
                 .call(utils.draw_mark, params, vars);
 
+            if(vars.init && typeof params.evt !== 'undefined') {
+              vars.evt.register("selection", params.evt[0].func)
+            }
+
           });
 
           // Bind events to groups after marks have been created
           gItems.each(utils.items_group);
+
+
 
           /* Should be as below but current params don't match this format
             // APPEND AND UPDATE ITEMS MARK
@@ -1940,7 +1954,13 @@ var utils ={};
 
     set: [],
 
+    scale: 1,
+    translate_x: 0,
+    translate_y: 0,
+    translate: [0, 0],
+
     flat_scene: false
+
   };
 
   vars = vistk.utils.merge(vars, default_vars);
@@ -1975,10 +1995,10 @@ var utils ={};
       return;
     }
 
-    vars.evt[evt].forEach(function(e) {
+    vars.evt[evt].forEach(function(e, i) {
       if(vars.dev) { console.log("[calling evt]", e); }
       if(typeof(e[0]) !== "undefined") {
-        e[0](a);
+        e[0](a, 0, vars);
       }
     });
   };
@@ -2031,8 +2051,53 @@ var utils ={};
         vars.root_svg = d3.select(vars.container).append("svg")
           .attr("width", vars.width)
           .attr("height", vars.height)
-          .style('overflow', 'visible')
-          .style('z-index', 0);
+          .style('overflow', 'hidden')
+          .style('z-index', 0)
+          .on("click", function(d) {
+
+            if(vars.type === "productspace") {
+
+              vars.links.forEach(function(e) {
+                e.__selected = false;
+                e.__selected__adjacent = false;
+                e.__highlighted = false;
+                e.__highlighted__adjacent = false;
+                e.__redraw = true;
+              });
+
+              vars.new_data.forEach(function(f, k) {
+                f.__selected = false;
+                f.__selected__adjacent = false;
+                f.__highlighted = false;
+                f.__highlighted__adjacent = false;
+                f.__redraw = true;
+              });
+
+              vars.zoom = [];
+              vars.selection = [];
+              vars.highlight = [];
+
+            //  vars.init = true;
+            //  vars.refresh = true;
+
+              d3.select(vars.container).selectAll(".connect__line")
+                .classed("highlighted", function(d, i) { return false; })
+                .classed("highlighted__adjacent", function(d, i) { return false; })
+                .classed("selected", function(d, i) { return false; })
+                .classed("selected__adjacent", function(d, i) { return false; });
+
+              d3.select(vars.container).selectAll("circle")
+                .classed("highlighted", function(d, i) { return false; })
+                .classed("highlighted__adjacent", function(d, i) { return false; })
+                .classed("selected", function(d, i) { return false; })
+                .classed("selected__adjacent", function(d, i) { return false; });
+
+                utils.zoom_to_nodes(vars.zoom);
+            // d3.select(vars.container).call(vars.this_chart);
+
+            }
+
+          })
 
         vars.svg = vars.root_svg.append("g")
           .attr("transform", "translate(" + vars.margin.left + "," + vars.margin.top + ")rotate(" + vars.rotate + ")");
@@ -4756,50 +4821,7 @@ var z = d3.scale.linear().domain([0, 4]).clamp(true),
 
     });
 
-    vars.root_svg.on("click", function(d) {
-
-      if(vars.type === "productspace") {
-
-        vars.links.forEach(function(e) {
-          e.__selected = false;
-          e.__selected__adjacent = false;
-          e.__highlighted = false;
-          e.__highlighted__adjacent = false;
-          e.__redraw = true;
-        });
-
-        vars.new_data.forEach(function(f, k) {
-          f.__selected = false;
-          f.__selected__adjacent = false;
-          f.__highlighted = false;
-          f.__highlighted__adjacent = false;
-          f.__redraw = true;
-        });
-
-        vars.zoom = [];
-        vars.selection = [];
-        vars.highlight = [];
-
-        vars.init = true;
-        vars.refresh = true;
-
-        d3.select(vars.container).selectAll(".connect__line")
-          .classed("highlighted", function(d, i) { return false; })
-          .classed("highlighted__adjacent", function(d, i) { return false; })
-          .classed("selected", function(d, i) { return false; })
-          .classed("selected__adjacent", function(d, i) { return false; });
-
-        d3.select(vars.container).selectAll("circle")
-          .classed("highlighted", function(d, i) { return false; })
-          .classed("highlighted__adjacent", function(d, i) { return false; })
-          .classed("selected", function(d, i) { return false; })
-          .classed("selected__adjacent", function(d, i) { return false; });
-
-      d3.select(vars.container).call(vars.this_chart);
-
-      }
-
-    })
+//    vars.root_svg
 
   }, 100)
 
