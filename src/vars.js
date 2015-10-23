@@ -181,7 +181,13 @@
 
     set: [],
 
+    scale: 1,
+    translate_x: 0,
+    translate_y: 0,
+    translate: [0, 0],
+
     flat_scene: false
+
   };
 
   vars = vistk.utils.merge(vars, default_vars);

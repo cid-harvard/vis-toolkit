@@ -1057,6 +1057,12 @@
 
     if(nodes.length === 0) {
       // Resets scale and viewport to default values
+
+      vars.scale = 1;
+      vars.translate = [0, 0];
+      vars.translate_x = 0;
+      vars.translate_y = 0;
+
       vars.svg.transition()
               .duration(vars.duration)
               .attr("transform", "translate(" + vars.margin.left + "," + vars.margin.top + ")rotate(" + vars.rotate + ")");
@@ -1094,20 +1100,22 @@
     var width = (max_x - min_x) + 100;
     var height = (max_y - min_y) + 100;
 
-    var x = min_x + (max_x - min_x) / 2;
-    var y = min_y + (max_y - min_y) / 2;
+    vars.translate_x = min_x + (max_x - min_x) / 2;
+    vars.translate_y = min_y + (max_y - min_y) / 2;
 
-    var scale = 1 / Math.max(width / vars.width, height / vars.height);
-    var translate = [vars.width / 2 - scale * x, vars.height / 2 - scale * y];
+    vars.scale = 1 / Math.max(width / vars.width, height / vars.height);
+    vars.translate = [vars.width / 2 - vars.scale * vars.translate_x, vars.height / 2 - vars.scale * vars.translate_y];
 
     // Animate the graph
     vars.svg.transition()
         .duration(1750)
-        .style("stroke-width", 1.5 / scale + "px")
-        .attr("transform", "translate(" + translate + ")scale(" + scale + ")");
+        .style("stroke-width", 1.5 / vars.scale + "px")
+        .attr("transform", "translate(" + vars.translate + ")scale(" + vars.scale + ")");
 
-    vars.svg.selectAll("circle").style("stroke-width", (1.5 / scale) + "px")
-    vars.svg.selectAll("text").style("font-size", (1 / scale) + "rem")
+    // If we want to re-scale the various elements
+    // vars.svg.selectAll("circle").style("stroke-width", (1.5 / vars.scale) + "px")
+
+    vars.svg.selectAll("text").style("font-size", (1 / vars.scale) + "rem")
 
   }
 
