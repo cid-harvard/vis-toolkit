@@ -1,10 +1,12 @@
 general:
   artifacts:
     - build/vistk.js
+test:
+  post:
+    - grunt
 deployment:
   release:
     tag: /v[0-9]+(\.[0-9]+)*/
     owner: romsson
     commands:
-      - grunt
       - echo "Deployment script goes here".
