@@ -4,7 +4,7 @@
   "description": "vis-toolkit ===================",
   "main": "\"\"",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Dummy test case! This will always pass until there are legit tests.\" && exit 0"
   },
   "repository": {
     "type": "git",
