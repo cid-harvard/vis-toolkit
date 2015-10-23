@@ -55,9 +55,10 @@
 
 * **Example:** Most examples are issued from the examples located in <a href='src/visualizations/'>src/visualizations/</a>.
 
-* **Note:** This is a work-in-progress, there might be missing or incomplete sections.
-&nbsp;
-Most of the parameters are of type `String` or `Object`, but functions can also be used.
+Most of the parameters are of type:
+* `String` 
+* `Object`
+* `function`
 
 ## General
 
@@ -488,6 +489,23 @@ marks: [{
 ## Connect
 
 The second type of marks that are derived from **items**.
+
+### `items.marks.evt`
+
+> Rotate mark.
+
+* **Type:** `Array`
+
+* **Default:** 0
+
+* **Example:** 
+
+* **Note:** Rotation is in degrees, clockwise.
+
+## Connect
+
+The second type of marks that are derived from **items**.
+
 
 ### `connect`
 
