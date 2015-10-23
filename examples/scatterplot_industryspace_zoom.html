@@ -10,24 +10,28 @@
   stroke-opacity: .6;
 }
 
-.connect__line.highlighted__adjacent {
+.connect__line.highlighted {
   stroke-width: 2.5px;
-  stroke-opacity: 1;
-  stroke: black;
+  stroke-opacity: .6;
 }
 
-.connect__line.selected {
-  stroke-width: 2.5px;
-  stroke-opacity: 1;
-  stroke: red;
-}
-/*
 g:hover .items__mark__circle:not(.highlighted__adjacent) {
   -webkit-transition:0.3s;
   transition:0.3s;
   opacity: 0.5;
 }
-*/
+
+g:hover .connect__path:not(.highlighted) {
+  -webkit-transition:0.3s;
+  transition:0.3s;
+  opacity: 0.5;
+}
+
+g:hover .items__mark__circle.highlighted {
+  stroke: black;
+  stroke-width: 2.5px;
+  opacity: 1;
+}
 
 .highlighted__adjacent {
   opacity: 1;
@@ -35,9 +39,9 @@ g:hover .items__mark__circle:not(.highlighted__adjacent) {
   stroke: black;
 }
 
-.items__mark__circle.selected, .items__mark__circle.selected__adjacent {
+.items__mark__circle.selected {
   stroke: black;
-  stroke-width: 4.5px;
+  stroke-width: 1.5px;
 }
 
 .connect__path:not(.highlighted) {
@@ -64,6 +68,7 @@ g:hover .items__mark__circle:not(.highlighted__adjacent) {
   z-index: 98;
   width: 220px;
 }
+
 
 </style>
 
@@ -110,9 +115,30 @@ d3.json("../data/industry-data-neave-150707.json", function(data) {
           attr: "name",
           marks: [{
             type: "circle",
-            rotate: "0",
             var_color: 'category',
-            var_r: "size"
+            var_r: "size",
+            evt: [{
+              type: "selection",
+              func: function(d, i, vars) {
+                var l = vars.new_data.filter(function(d) {
+                  return d.__highlighted__adjacent || d.__selected;
+                }).map(function(d) {
+                  return d.id;
+                });
+
+                vars.refresh = true;
+                vars.zoom = l;
+
+                d3.select(vars.container).call(vars.this_chart);
+              }
+            }]
+          }, {
+            var_mark: '__highlighted',
+            type: d3.scale.ordinal().domain([true, false]).range(["divtext", "none"]),
+            class: function() { return "tooltip"; },
+            text: function(d) {
+              return d['pname'] + ' (' + d['id'] + ')';
+            }
           }]
         }],
         ui: {
@@ -123,33 +149,6 @@ d3.json("../data/industry-data-neave-150707.json", function(data) {
       });
 
     d3.select("#viz").call(visualization);
-
-    once = true
-
-    visualization.params().evt.register("selection", function(d) {
-
-    // On selected add adjacent nodes to the zoom selection
-
-   // d3.selectAll(".items__mark__circle").on("click", function(d) {
-
-      var l = visualization.params().new_data.filter(function(d) {
-        return d.__highlighted__adjacent || d.__selected;
-      }).map(function(d) {
-        return d.id;
-      });
-
-      console.log("LLLL", l)
-
-      visualization.params().init = true;
-      visualization.params().refresh = true;
-
-      visualization.params({
-        zoom: l
-      })
-
-      d3.select("#viz").call(visualization);
-
-    })
 
 });
 </script>
