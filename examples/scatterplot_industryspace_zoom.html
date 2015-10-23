@@ -119,12 +119,12 @@ d3.json("../data/industry-data-neave-150707.json", function(data) {
           default: true,
           options: ["community_name", "product"]
         },
-        title: "Industry Space Colombia",
-        highlight: ["7499"]
+        title: "Industry Space Colombia"
       });
 
     d3.select("#viz").call(visualization);
 
+    once = true
 
     visualization.params().evt.register("selection", function(d) {
 
@@ -137,6 +137,8 @@ d3.json("../data/industry-data-neave-150707.json", function(data) {
       }).map(function(d) {
         return d.id;
       });
+
+      console.log("LLLL", l)
 
       visualization.params().init = true;
       visualization.params().refresh = true;

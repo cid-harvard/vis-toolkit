@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+
+body {
+  position: relative;
+}
+
+svg,
+canvas {
+  position: absolute;
+}
+
+.axis text {
+  font: 10px sans-serif;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.axis path {
+  display: none;
+}
+
+</style>
+<body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+<script src="http://cid-harvard.github.io/vis-toolkit/js/queue.v1.min.js"></script>
+<script src="http://cid-harvard.github.io/vis-toolkit/build/vistk.js"></script>
+
+<div id="viz-heatmap" style="position: fixed;"></div>
+<div id="viz"></div>
+
+<script>
+
+// From http://bl.ocks.org/mbostock/3074470
+
+// TODO
+// -Load foreground product space
+// -Use product space data as heatmap
+// -Discretize the product space and make some halo around nodes
+// -Adapt product space
+
+// Fix the aspect ratio.
+// var ka = dy / dx, kb = height / width;
+// if (ka < kb) height = width * ka;
+// else width = height / ka;
+
+d3.json("../data/atlas_international_product_space_hs4_codes.json", function(graph) {
+  d3.json("../data/usa_exports_2013.json", function(exports) {
+
+// data {"abbrv": "0101", "distance": 0.5495458, "opp_gain": 0.0, "name": "Live horses, asses, mules or hinnies", "color": "#FFE999", "pci": 0.9957224, "share": 0.0018579885548872719, "community_id": 106, "value": 325000000.0, "rca": 2.303479, "community_name": "Animal & Animal Products", "code": "0101", "year": 1995, "item_id": 1, "id": "0101"}
+xp = exports
+
+      visualization = vistk.viz()
+        .params({
+          dev: false,
+          type: "productspace",
+          container: "#viz",
+          width: 800,
+          height: 500,
+          nodes: graph.nodes,
+          links: graph.edges,
+          data: exports.data,
+          var_x: 'x',
+          var_y: 'y',
+          x_axis_show: false,
+          x_grid_show: false,
+          y_axis_show: false,
+          y_grid_show: false,
+          y_invert: true,
+          radius: 4,
+          var_color: 'color',
+          var_id: 'id',
+          var_text: 'name',
+          items: [{
+            marks: [{
+              type: "circle",
+              fill: function(d) { return d.color; },
+              title: function(d) { return d['name']; }
+            }]
+          }],
+          time: {
+            var_time: "year",
+            current_time: 2013,
+            parse: function(d) { return d; }
+          },
+          title: "USA Atlas Product Space (2013)"
+        })
+
+      d3.select("#viz").call(visualization);
+
+var width = visualization.params().width,
+    height = visualization.params().height;
+
+heatmap = d3.range(width).map(function(d, i) {
+  return d3.range(height).map(function(e, j) {
+    return 0;
+  });
+})
+
+visualization.params().nodes.forEach(function(d) {
+
+  var posX = Math.ceil(d.x);
+  var posY = Math.ceil(d.y);
+
+  if(typeof heatmap[Math.ceil(d.x)] !== "undefined" && typeof heatmap[Math.ceil(d.x)][Math.ceil(d.y)] !== "undefined") {
+    heatmap[posX][posY] = 1;
+  }
+})
+
+var dx = heatmap[0].length,
+    dy = heatmap.length;
+
+
+      var x = d3.scale.linear()
+          .domain([0, dx])
+          .range([0, width]);
+
+      var y = d3.scale.linear()
+          .domain([0, dy])
+          .range([height, 0]);
+
+      var color = d3.scale.linear()
+          .domain([0, 1])
+          .range(["white", "red"]);
+
+      var xAxis = d3.svg.axis()
+          .scale(x)
+          .orient("top")
+          .ticks(20);
+
+      var yAxis = d3.svg.axis()
+          .scale(y)
+          .orient("right");
+
+      d3.select("#viz-heatmap").append("canvas")
+          .attr("width", dx)
+          .attr("height", dy)
+          .style("width", width + "px")
+          .style("height", height + "px")
+          .call(drawImage);
+/*
+      var svg = d3.select("body").append("svg")
+          .attr("width", width)
+          .attr("height", height);
+
+      svg.append("g")
+          .attr("class", "x axis")
+          .attr("transform", "translate(0," + height + ")")
+          .call(xAxis)
+          .call(removeZero);
+
+      svg.append("g")
+          .attr("class", "y axis")
+          .call(yAxis)
+          .call(removeZero);
+*/
+      // Compute the pixel colors; scaled by CSS.
+      function drawImage(canvas) {
+        var context = canvas.node().getContext("2d"),
+            image = context.createImageData(dx, dy);
+
+        for (var y = 0, p = -1; y < dy; ++y) {
+          for (var x = 0; x < dx; ++x) {
+            var c = d3.rgb(color(heatmap[y][x]));
+            image.data[++p] = c.r;
+            image.data[++p] = c.g;
+            image.data[++p] = c.b;
+            image.data[++p] = 255;
+          }
+        }
+
+        context.putImageData(image, 0, 0);
+      }
+
+      function removeZero(axis) {
+        axis.selectAll("g").filter(function(d) { return !d; }).remove();
+      }
+
+    });
+
+  });
+
+
+
+</script>

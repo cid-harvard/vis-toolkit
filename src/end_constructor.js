@@ -63,19 +63,23 @@
 
         vars.links.forEach(function(e) {
           e.__selected = false;
+          e.__selected__adjacent = false;
+          e.__highlighted = false;
+          e.__highlighted__adjacent = false;
           e.__redraw = true;
         });
 
         vars.new_data.forEach(function(f, k) {
           f.__selected = false;
+          f.__selected__adjacent = false;
+          f.__highlighted = false;
+          f.__highlighted__adjacent = false;
           f.__redraw = true;
         });
 
         vars.zoom = [];
         vars.selection = [];
         vars.highlight = [];
-
-        utils.zoom_to_nodes(vars.zoom);
 
         vars.init = true;
         vars.refresh = true;
@@ -92,6 +96,8 @@
           .classed("selected", function(d, i) { return false; })
           .classed("selected__adjacent", function(d, i) { return false; });
 
+      d3.select(vars.container).call(vars.this_chart);
+
       }
 
     })
@@ -102,4 +108,3 @@
 
   return chart;
 }
-

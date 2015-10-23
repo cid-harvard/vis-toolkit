@@ -55,10 +55,10 @@ vistk.utils.find_data_by_id = function(id) {
   return res;
 }
 
-vistk.utils.find_node_coordinates_by_id = function(nodes, var_id, id) {
+vistk.utils.find_node_coordinates_by_id = function(nodes, var_id, data_id) {
 
-  var res = nodes.filter(function(d) {
-    return d[var_id] == id;
+  var res = nodes.filter(function(node) {
+    return node[var_id] == data_id;
   })[0];
 
   return res;
