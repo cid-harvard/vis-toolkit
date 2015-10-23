@@ -101,12 +101,23 @@ g:hover .items__mark__circle:not(.highlighted__adjacent) {
 <div id="viz"></div>
 <script>
 
-d3.json("../data/atlas_international_product_space_hs4_codes.json", function(graph) {
+d3.json("../data/network_hs.json", function(graph) {
   d3.json("../data/usa_exports_2013.json", function(exports) {
 
 // data {"abbrv": "0101", "distance": 0.5495458, "opp_gain": 0.0, "name": "Live horses, asses, mules or hinnies", "color": "#FFE999", "pci": 0.9957224, "share": 0.0018579885548872719, "community_id": 106, "value": 325000000.0, "rca": 2.303479, "community_name": "Animal & Animal Products", "code": "0101", "year": 1995, "item_id": 1, "id": "0101"}
 
-console.log(exports.data)
+      graph.nodes.forEach(function(node) {
+        node.id = node.id.slice(2,6);
+      });
+
+      graph.links.forEach(function(link) {
+        link.source = graph.nodes[link.source];
+        link.target = graph.nodes[link.target];
+      })
+
+
+      gg = graph;
+
       visualization = vistk.viz()
         .params({
           dev: false,
@@ -115,7 +126,7 @@ console.log(exports.data)
           width: 800,
           height: 500,
           nodes: graph.nodes,
-          links: graph.edges,
+          links: graph.links,
           data: exports.data,
           var_x: 'x',
           var_y: 'y',
