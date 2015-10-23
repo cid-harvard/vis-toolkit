@@ -99,26 +99,6 @@ vars.default_params["productspace"] = function(scope) {
       .classed("highlighted", function(d, i) { return false; })
       .classed("highlighted__adjacent", function(d, i) { return false; })
 
-//    var adjacent_links = utils.find_adjacent_links(d, vars.links);
-/*
-    adjacent_links.forEach(function(e) {
-
-      e.__highlighted__adjacent = false;
-      e.__redraw = true;
-
-      vars.new_data.forEach(function(f, k) {
-
-         if(f[vars.var_id] === e.target[vars.var_id]) {
-
-           f.__highlighted__adjacent = false;
-           f.__redraw = true;
-
-         }
-
-       });
-
-    });
-*/
   });
 
   vars.evt.register("selection", function(d) {
