@@ -2,7 +2,7 @@
 
     // 1 - Init and define default values [INIT]
     // 2 - Duplicates the dataset [INIT]
-    // 3 - Mutate all_data with static metadata
+    // 3 - Mutate all_data with static metadata [INIT]
     // Filter by time values
     // Filter by attribute/ Selection
     // Find unique values from dataset
@@ -16,14 +16,14 @@
     // In case we use functions for X/Y variables
     if(typeof vars.var_x !== "string" && typeof vars.var_x === "function") {
       vars.data.forEach(function(d, i) {
-        d.__var_x = vars.var_x();
+        d.__var_x = vars.var_x(d, i, vars);
       });
-      vars.var_x = "___var_x";
+      vars.var_x = "__var_x";
     }
 
     if(typeof vars.var_y !== "string" && typeof vars.var_y === "function") {
       vars.data.forEach(function(d, i) {
-        d.__var_y = vars.var_y();
+        d.__var_y = vars.var_y(d, i, vars);
       });
       vars.var_y = "__var_y";
     }
@@ -69,7 +69,7 @@
         // Adding coordinates to data
         vars.all_data.forEach(function(d, i) {
 
-          var node = vistk.utils.find_node_coordinates_by_id(vars.nodes, 'id', d[vars.var_id]);
+          var node = vistk.utils.find_node_coordinates_by_id(vars.nodes, vars.var_node_id, d[vars.var_id]);
 
           // If we can't find product in the graph, put it in the corner
           // if(typeof node == "undefined") {
@@ -94,12 +94,17 @@
 
         });
 
+        // Remove missing nodes
+        vars.all_data = vars.all_data.filter(function(d) {
+         return !d.__missing;
+        });
+
         // Go through again the list of nodes
         // to make sure we display all the nodes
         vars.nodes.forEach(function(d, i) {
-          console.log("NOde", d)
-          var node = vistk.utils.find_node_coordinates_by_id(vars.all_data, vars.var_id, d['id']);
 
+          var node = vistk.utils.find_node_coordinates_by_id(vars.all_data, vars.var_id, d[vars.var_node_id]);
+          console.log("NODE", node)
           if(typeof node === "undefined") {
 
             d.values = [];
@@ -126,11 +131,6 @@
     // 1/ The list of all items (e.g. countries, products)
     // 2/ The metadata for each items
     if(vars.init || vars.refresh) {
-
-            // Remove missing nodes
-      vars.new_data = vars.all_data.filter(function(d) {
-       return !d.__missing;
-      });
 
       // Creates default ids `__id` and `__value` for dataset without any id
       if(typeof vars.var_id === 'undefined') {

@@ -14,6 +14,8 @@
     var_group: null,
     data: [],
     links: [],
+    var_node_id: 'id', // ID to join the nodes/link data
+
     title: "",
 
     // Default dimensions
