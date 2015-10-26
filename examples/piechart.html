@@ -15,15 +15,17 @@ d3.json("../data/diversification_ubiquity_hs4_1995_2012.json", function(error, c
   visualization = vistk.viz()
     .params({
       type: 'piechart',
+      width: 600,
+      heigh: 200,
       margin: {top: 10, right: 10, bottom: 30, left: 30},
       container: '#viz',
       data: flat_years,
       var_id: 'name',
       var_group: 'continent',
       var_color: 'continent',
-      var_x: function() { return this.width/2; },
-      var_y: function() { return this.height/2; },
       var_r: 'nb_products',
+      var_x: function(d, i, vars) { return vars.width/2; },
+      var_y: function(d, i, vars) { return vars.height/2; },
       var_share: "nb_products",
       var_radius: "nb_products",
       var_text: "name",
@@ -32,11 +34,17 @@ d3.json("../data/diversification_ubiquity_hs4_1995_2012.json", function(error, c
         marks: [{
           type: "arc",
           rotate: "0",
-          fill: function(d) { return vars.color(vars.accessor_items(d)[vars.var_color]); }
+          fill: function(d, i, vars) {
+            return vars.color(vars.accessor_items(d)[vars.var_color]);
+          },
+          translate: function(d, i, vars) {
+            return [100, 100];
+            // return [vars.width/2, vars.height/2];
+          }
         }]
       }],
       time: {
-        var_time: "year", 
+        var_time: "year",
         current_time: 1995,
         parse: function(d) { return d; }
       },
