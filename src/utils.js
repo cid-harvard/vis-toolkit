@@ -117,48 +117,8 @@
         params_text = vars.accessor_data(d)[vars.var_text];
       }
 
-      var params_width = 10;
-
-      if(typeof params.width !== "undefined") {
-        if(typeof params.width === "function") {
-          params_width = params.width(d, i , vars);
-        } else if(typeof params.width === "number" || typeof params.height === "string") {
-          params_width = params.width;
-        }
-      }
-
-      var params_height = 10;
-
-      if(typeof params.height !== "undefined") {
-        if(typeof params.height === "function") {
-          params_height = params.height(d, i , vars);
-        } else if(typeof params.height === "number") {
-          params_height = params.height + "px";
-        } else if(typeof params.height === "string") {
-          params_height = params.height;
-        }
-      }
-
-      var params_x = 0;
-
-      if(typeof params.x !== "undefined") {
-        if(typeof params.x === "function") {
-          params_x = params.x(d, i, vars);
-        } else if(typeof params.x === "number") {
-          params_x = params.x;
-        }
-      }
-
-      var params_y = 0;
-
-      if(typeof params.y !== "undefined") {
-        if(typeof params.y === "function") {
-          params_y = params.y(d, i, vars);
-        } else if(typeof params.y === "number") {
-          params_y = params.y;
-        }
-      }
-
+      var params_source = [0, 0];
+      var params_target = [vars.width, vars.height];
       var params_translate = [0, 0];
 
       if(typeof params.translate !== "undefined" && params.translate !== null) {
@@ -168,38 +128,13 @@
           params_translate = params.translate;
         }
       }
-
-      var params_rotate = 0;
-
-      if(typeof params.rotate !== "undefined" && params.rotate !== null) {
-        if(typeof params.rotate === "function") {
-          params_rotate = params.rotate(d, i, vars);
-        } else {
-          params_rotate = params.rotate;
-        }
-      }
-
-      var params_fill = null;
-
-      if(typeof params.fill !== "undefined" && params.fill !== null) {
-
-        if(typeof params.fill === "function") {
-          params_fill = params.fill(d, i, vars);
-        } else {
-          params_fill = params.fill;
-        }
-      }
-
-      var params_stroke = null;
-
-      if(typeof params.stroke !== "undefined" && params.stroke !== null) {
-
-        if(typeof params.stroke === "function") {
-          params_stroke = params.stroke(d, i, vars);
-        } else {
-          params_stroke = params.stroke;
-        }
-      }
+      var params_x = utils.init_params("x", 0, params, d, i, vars);
+      var params_y = utils.init_params("y", 0, params, d, i, vars);
+      var params_height = utils.init_params("height", 10, params, d, i, vars);
+      var params_width = utils.init_params("width", 10, params, d, i, vars);
+      var params_rotate = utils.init_params("rotate", 0, params, d, i, vars);
+      var params_fill = utils.init_params("fill", vars.color(vars.accessor_items(d)[vars.var_color]), params, d, i, vars);
+      var params_stroke = utils.init_params("stroke", 0, params, d, i, vars);
 
       // Use the default accessor
       var accessor_data = vars.accessor_data;
@@ -269,7 +204,7 @@
                  })
                  .style("height", function(d) {
                    if(typeof params_height !== "undefined") {
-                     return params_height;
+                     return params_height + "px";
                    } else {
                     return "auto";
                    }
@@ -412,13 +347,7 @@
                   .attr("height", params_height)
                   .attr("width", params_width)
                   .attr("transform", "rotate(" + params_rotate + ")")
-                  .style("fill", function(d) {
-                    if(typeof params_fill !== 'undefined' && params_fill !== null) {
-                      return params_fill;
-                    } else {
-                      return vars.color(vars.accessor_items(d)[vars.var_color]);
-                    }
-                  })
+                  .style("fill", params_fill)
                   .style("stroke", function(d) {
                     if(typeof params_stroke !== 'undefined' && params_stroke !== null) {
                       return params_stroke;
@@ -615,6 +544,26 @@
               .attr("y1", function(d) { return 0; })
               .attr("x2", function(d) { return vars.x_scale[0]["func"].range()[1]; })
               .attr("y2", function(d) { return 0; });
+
+          break;
+
+        case "line_coord":
+
+          var mark = d3.select(that).selectAll(".mark__line_horizontal").data([d]);
+
+          var t = d3.transform(d3.select(that).attr("transform")).translate;
+
+          mark.enter().append('line')
+              .classed('mark__line_horizontal', true)
+              .classed("items_" + mark_id, true);
+
+          mark
+              .classed("highlighted", function(d, i) { return d.__highlighted; })
+              .classed("selected", function(d, i) { return d.__selected; })
+              .attr("x1", function(d) { return params_source[0]; })
+              .attr("y1", function(d) { return params_target[0]; })
+              .attr("x2", function(d) { return params_source[1]; })
+              .attr("y2", function(d) { return params_target[1]; });
 
           break;
 
@@ -1623,19 +1572,23 @@
   utils.filters = {};
 
 
-  utils.init_params = function(p, params) {
+  utils.init_params = function(v, default_value, params, d, i, vars) {
 
-    var r = null;
+    var result = default_value;
 
-    if(typeof params[p] !== "undefined") {
-      if(typeof params[p] === "function") {
-        r = params[p](d, i , vars);
-      } else if(typeof params[p] === "String") {
-        r = params[p];
+    if(typeof params[v] !== "undefined") {
+      if(typeof params[v] === "function") {
+        result = params[v](d, i, vars);
+      } else if(typeof params[v] === "string") {
+        result = params[v];
+      } else if(typeof params[v] === "number") {
+        result = params[v];
+      } else {
+        result = params[v];
       }
-    } else if(vars.var_text !== "undefined") {
-       r = vars.accessor_data(d)[vars.var_text];
     }
+
+    return result;
 
   }
 
