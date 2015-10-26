@@ -1,7 +1,8 @@
 
 
     // 1 - Init and define default values [INIT]
-    // 2 - Duplicates the dataset [INIT, REFRESH]
+    // 2 - Duplicates the dataset [INIT]
+    // 3 - Mutate all_data with static metadata
     // Filter by time values
     // Filter by attribute/ Selection
     // Find unique values from dataset
@@ -36,13 +37,100 @@
       vars.time.current_time = vars.time.current_time(vars.data)
     }
 
+    // Duplicate the dataset to prevent mutation
+    if(vars.init) {
+
+      // Get a copy of the whole dataset
+      vars.all_data = JSON.parse(JSON.stringify(vars.data));
+
+      // Links between items
+      // Used for product space
+      if(vars.links !== null && vars.type === 'productspace') {
+
+        vars.links.forEach(function(d, i) {
+
+          if(typeof d.source === "string") {
+            d.source = vistk.utils.find_node_by_id(vars.nodes, d.source);
+          }
+
+          if(typeof d.target === "string") {
+            d.target = vistk.utils.find_node_by_id(vars.nodes, d.target);
+          }
+
+          d.__redraw = true;
+
+        });
+
+      }
+
+      // Flagging missing nodes with __missing true attribute
+      if(typeof vars.nodes !== "undefined"  && vars.type === 'productspace') {
+
+        // Adding coordinates to data
+        vars.all_data.forEach(function(d, i) {
+
+          var node = vistk.utils.find_node_coordinates_by_id(vars.nodes, 'id', d[vars.var_id]);
+
+          // If we can't find product in the graph, put it in the corner
+          // if(typeof node == "undefined") {
+          // // res = {x: 500+Math.random()*400, y: 1500+Math.random()*400};
+          //   res = {x: 1095, y: 1675};
+          // }
+
+          // We flag as missing the nodes in data without any coordinate
+          if(typeof node === "undefined") {
+
+            d.__missing = true;
+
+          } else {
+
+            d.__missing = false;
+            d.x = node.x;
+            d.y = node.y;
+
+          }
+
+          d.__redraw = true;
+
+        });
+
+        // Go through again the list of nodes
+        // to make sure we display all the nodes
+        vars.nodes.forEach(function(d, i) {
+          console.log("NOde", d)
+          var node = vistk.utils.find_node_coordinates_by_id(vars.all_data, vars.var_id, d['id']);
+
+          if(typeof node === "undefined") {
+
+            d.values = [];
+            d[vars.var_r] = 0;
+            d[vars.var_id] = d.id;
+            d.__aggregated = false;
+            d.__selected = false;
+            d.__selected__adjacent = false;
+            d.__highlighted = false;
+            d.__highlighted__adjacent = false;
+            d.__missing = false;
+            d.__redraw = true;
+            vars.all_data.push(d);
+
+          }
+
+        })
+
+      }
+
+    }
+
     // Calculate vars.new_data which should contain two things
     // 1/ The list of all items (e.g. countries, products)
     // 2/ The metadata for each items
     if(vars.init || vars.refresh) {
 
-      // Get a copy of the whole dataset
-      vars.new_data = JSON.parse(JSON.stringify(vars.data));
+            // Remove missing nodes
+      vars.new_data = vars.all_data.filter(function(d) {
+       return !d.__missing;
+      });
 
       // Creates default ids `__id` and `__value` for dataset without any id
       if(typeof vars.var_id === 'undefined') {
@@ -66,6 +154,10 @@
         if(typeof vars.var_text === 'undefined') {
           vars.var_text = '__id';
         }
+
+      } else {
+
+        vars.new_data = JSON.parse(JSON.stringify(vars.all_data));
 
       }
 
@@ -140,6 +232,8 @@
           v[vars.time.var_time] = d[vars.time.var_time];
           v[vars.var_y] = d[vars.var_y];
           v[vars.var_x] = d[vars.var_x];
+          v[vars.var_size] = d[vars.var_size];
+          v[vars.var_color] = d[vars.var_color];
 
           // TODO: this is metadata, should not be duplicated every year
           v[vars.var_id] = d[vars.var_id];
@@ -178,88 +272,6 @@
       vars.new_data = vars.unique_data;
 
     }
-
-    // Links between items
-    // Used for product space
-    if(vars.links !== null && vars.init && vars.type === 'productspace') {
-
-      vars.links.forEach(function(d, i) {
-
-        if(typeof d.source === "string") {
-          d.source = vistk.utils.find_node_by_id(vars.nodes, d.source);
-        }
-
-        if(typeof d.target === "string") {
-          d.target = vistk.utils.find_node_by_id(vars.nodes, d.target);
-        }
-
-        d.__redraw = true;
-
-      });
-
-    }
-
-    // Flagging missing nodes with __missing true attribute
-    if(typeof vars.nodes !== "undefined" && vars.init && vars.type === 'productspace') {
-
-      // Adding coordinates to data
-      vars.new_data.forEach(function(d, i) {
-
-        var node = vistk.utils.find_node_coordinates_by_id(vars.nodes, 'id', d[vars.var_id]);
-
-        // If we can't find product in the graph, put it in the corner
-        // if(typeof node == "undefined") {
-        // // res = {x: 500+Math.random()*400, y: 1500+Math.random()*400};
-        //   res = {x: 1095, y: 1675};
-        // }
-
-        if(typeof node === "undefined") {
-
-          d.__missing = true;
-
-        } else {
-
-          d.__missing = false;
-          d.x = node.x;
-          d.y = node.y;
-
-        }
-
-        d.__redraw = true;
-
-      });
-
-      // Go through again the list of nodes
-      // to make sure we display all the nodes
-      vars.nodes.forEach(function(d, i) {
-
-        var node = vistk.utils.find_node_coordinates_by_id(vars.new_data, vars.var_id, d['id']);
-
-        if(typeof node === "undefined") {
-
-          d.values = [];
-          d[vars.var_r] = 0;
-          d[vars.var_id] = d.id;
-          d.__aggregated = false;
-          d.__selected = false;
-          d.__selected__adjacent = false;
-          d.__highlighted = false;
-          d.__highlighted__adjacent = false;
-          d.__missing = false;
-          d.__redraw = true;
-
-          vars.new_data.push(d);
-
-        }
-
-      })
-
-    }
-
-    // Remove missing nodes
-    vars.new_data = vars.new_data.filter(function(d) {
-     return !d.__missing;
-    });
 
     // Aggregate data
     if(typeof vars.set['__aggregated'] !== 'undefined' && vars.refresh) {
