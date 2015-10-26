@@ -47,14 +47,6 @@ vistk.utils.find_node_by_id = function(nodes, id) {
   return res;
 }
 
-vistk.utils.find_data_by_id = function(id) {
-  var res = vars.new_data.filter(function(d) {
-    return d[vars.var_id] == +id;
-  })[0];
-
-  return res;
-}
-
 vistk.utils.find_node_coordinates_by_id = function(nodes, var_id, data_id) {
 
   var res = nodes.filter(function(node) {
