@@ -1,0 +1,69 @@
+<!doctype html>
+<meta charset="utf-8">
+<script src="../js/d3.js" charset="utf-8"></script>
+<script src="../build/vistk.js"></script>
+<link href="../css/vistk.css" rel="stylesheet">
+<body>
+<div id="viz"></div>
+<script>
+
+d3.json("../data/countries.json", function(error, countries) {
+
+  countries.forEach(function(d, i) {
+
+    d.value_exports = 100*Math.random();
+    d.value_imports = 100*Math.random();
+    d.value_diff = d.value_exports - d.value_imports;
+    d.community_id = i;
+    d.year = 2013;
+    d.name = d.name.common;
+  });
+
+  var rotate_scale = d3.scale.linear().range([-45, 45])
+    .domain(d3.extent(countries, function(d) { return d.value_diff; }));
+
+  visualization = vistk.viz()
+    .params({
+      type: 'dotplot',
+      data: countries,
+      container: '#viz',
+      var_id: "name",
+      var_text: "name",
+      var_x: 'value_diff',
+      var_group: 'community_id',
+      x_type: 'linear',
+      var_y: function() { return this.height/2; },
+      x_text: null,
+      x_ticks: 10,
+      x_format: function(d) { return '$' + d3.format(".2s")(d); },
+      items: [{
+        attr: "name",
+        marks: [{
+          type: "tick",
+          rotate: function(d) { return rotate_scale(d.value_diff); },
+          translate: function(d, i, vars) { return [0, -10]; }
+        }, {
+          type: "text",
+          rotate: "90",
+          translate: [0, -30],
+          text_anchor: "end"
+        }]
+      }],
+      time: {
+        var_time: 'year',
+        current_time: 2013,
+        parse: function(d) { return d; }
+      },
+      ui: {
+        default: true,
+        options: ["country", "continent", "year"]
+      },
+//      filter: ["Antioquia", "Bogotá D. C."],
+      selection: ["Antioquia", "Bogotá D. C."],
+      highlight: ["Antioquia"]
+    });
+
+  d3.select("#viz").call(visualization);
+});
+
+</script>
