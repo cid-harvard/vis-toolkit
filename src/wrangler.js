@@ -238,30 +238,21 @@
           return v;
         });
 
-        if(vars.filter.indexOf(d[vars.var_group]) < 0) {
-          d.__filtered = false;
-        } else {
+        utils.init_item(d);
+
+        if(vars.filter.indexOf(d[vars.var_group]) > -1) {
           d.__filtered = true;
         }
 
-        if(vars.highlight.indexOf(item_id) < 0) {
-          d.__highlighted = false;
-        } else {
+        if(vars.highlight.indexOf(item_id) > -1) {
           d.__highlighted = true;
         }
 
-        if(vars.selection.indexOf(item_id) < 0) {
-          d.__selected = false;
-        } else {
+        if(vars.selection.indexOf(item_id) > -1) {
           d.__selected = true;
         }
 
-        d.__selected__adjacent = false;
-        d.__highlighted__adjacent = false;
-
-        d.__aggregated = false;
         d.__redraw = true;
-
         vars.unique_data.push(d);
 
       });
@@ -354,9 +345,8 @@
             });
           });
 
+          utils.init_item(aggregation);
           aggregation.__aggregated = true;
-          aggregation.__selected = false;
-          aggregation.__highlighted = false;
           aggregation.__redraw = true;
 
           if(typeof vars.share_cutoff != "undefined") {

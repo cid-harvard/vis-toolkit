@@ -18,7 +18,6 @@ vars.default_params["sparkline"] = function(scope) {
   }];
 
   params.items = [{
-    attr: "year",
     marks: [{
       type: "circle",
       rotate: "0",
@@ -40,12 +39,13 @@ vars.default_params["sparkline"] = function(scope) {
            .interpolate(scope.interpolate)
            .x(function(d) { return params.x_scale[0]["func"](d[scope.var_x]); })
            .y(function(d) { return params.y_scale[0]["func"](d[scope.var_y]); }),
+      fill: 'none'
     }]
   }];
 
   params.x_axis_show = false;
   params.x_grid_show = false;
-  
+
   params.y_axis_show = false;
   params.y_grid_show = false;
 
