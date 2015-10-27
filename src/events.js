@@ -69,10 +69,10 @@
 
   });
 
-  vars.evt.register("timeUpdate", function(d) {
+  vars.evt.register("timeUpdate", function(new_time) {
     if(vars.dev) { console.log("[vars.evt.call] timeUpdate"); }
 
-    vars.time.current_time = +this.value;
+    vars.time.current_time = new_time;
     vars.refresh = true;
 
     d3.select(vars.container).call(vars.this_chart);
