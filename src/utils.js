@@ -348,11 +348,7 @@
                   .attr("width", params_width)
                   .attr("transform", "rotate(" + params_rotate + ")")
                   .style("fill", params_fill)
-                  .style("stroke", function(d) {
-                    if(typeof params_stroke !== 'undefined' && params_stroke !== null) {
-                      return params_stroke;
-                    }
-                  });
+                  .style("stroke", params_stroke);
 
         items_mark_rect
             .classed("highlighted", function(d, i) { return d.__highlighted; })
@@ -362,18 +358,8 @@
             .attr("y", params.y || 0)
             .attr("height", params_height)
             .attr("width", params_width)
-            .style("fill", function(d) {
-              if(typeof params_fill !== 'undefined' && params_fill !== null) {
-                return params_fill;
-              } else {
-                return vars.color(vars.accessor_items(d)[vars.var_color]);
-              }
-            })
-            .style("stroke", function(d) {
-              if(typeof params_stroke !== 'undefined' && params_stroke !== null) {
-                return params_stroke;
-              }
-            });
+            .style("fill", params_fill)
+            .style("stroke", params_stroke);
 
         items_mark_rect.exit().remove();
 
@@ -479,9 +465,7 @@
           mark.enter().append("path")
               .classed("items_" + mark_id, true)
               .classed("items__mark__arc", true)
-              .attr("fill", function(d, i) {
-                return vars.color(vars.accessor_data(d)[vars.var_color]);
-              })
+              .attr("fill", params_fill)
               .style("fill-opacity", function(d, i) {
                 if(d.i == 0)
                   return .2;
@@ -588,8 +572,8 @@
               .classed('connect__path', true)
               .classed('connect__path_' + mark_id, true)
               .classed("items_" + mark_id, true)
-              .style("fill", params.fill)
-              .style("stroke", params.stroke)
+              .style("fill", params_fill)
+              .style("stroke", params_stroke)
               .attr('d', function(e) {
                 return params["func"](this_accessor_values(e));
               })
@@ -601,8 +585,8 @@
               .classed("highlighted", function(e, j) { return e.__highlighted; })
               .classed("selected", function(e, j) { return e.__selected; })
               .transition().duration(vars.duration)
-              .style("fill", params.fill)
-              .style("stroke", params.stroke)
+              .style("fill", params_fill)
+              .style("stroke", params_stroke)
               .attr('d', function(e) {
                 return params["func"](this_accessor_values(e));
               });

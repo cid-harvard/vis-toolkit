@@ -39,6 +39,7 @@ vars.default_params["linechart"] = function(scope) {
            .interpolate(vars.interpolate)
            .x(function(d) { return params.x_scale[0]["func"](d[vars.var_x]); })
            .y(function(d) { return params.y_scale[0]["func"](d[vars.var_y]); }),
+      fill: "none"
     }]
   }];
 
