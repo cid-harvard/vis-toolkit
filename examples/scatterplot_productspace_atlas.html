@@ -109,6 +109,20 @@ g:hover .items__mark__circle:not(.highlighted__adjacent) {
 <div id="viz"></div>
 <script>
 
+var years = [1960, 2013];
+var categories = [
+  {name: "Food/Live Animals for Food", id: 0},
+  {name: "Drinks/Tobacco", id: 1},
+  {name: "Crude Materials, Inedible, exc. Fuels", id: 2},
+  {name: "Mineral Fuels, Lubricants & Related Materials", id: 3},
+  {name: "Animal/Veg Oils, Fats & Waxes", id: 4},
+  {name: "Chem. & Related Prods.", id: 5},
+  {name: "Manuf. Goods classified chiefly by material", id: 6},
+  {name: "Machinery & Transport Equip.", id: 7},
+  {name: "Misc. manufactured articles", id: 8},
+  {name: "Commodities & Transactions unclassified elsewhere in sitc", id: 9}
+];
+
 d3.json("../data/network_sitc.json", function(graph) {
   d3.json("../data/thai_exports_1960_2013.json", function(exports) {
 
@@ -182,6 +196,8 @@ var label = d3.select("svg").insert("text", ":first-child")
     .attr("y", 154)
     .attr("x", 500)
     .text(visualization.params().time.current_time);
+
+
 
 
     });
