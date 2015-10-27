@@ -6,7 +6,7 @@ var w = typeof window === "undefined" ? this : window;
 var vistk = w.vistk || {};
 w.vistk = vistk;
 
-vistk.version = "0.0.20";
+vistk.version = "{{ VERSION }}";
 vistk.utils = {};
 
 vistk.viz = function() {
@@ -136,48 +136,8 @@ var utils ={};
         params_text = vars.accessor_data(d)[vars.var_text];
       }
 
-      var params_width = 10;
-
-      if(typeof params.width !== "undefined") {
-        if(typeof params.width === "function") {
-          params_width = params.width(d, i , vars);
-        } else if(typeof params.width === "number" || typeof params.height === "string") {
-          params_width = params.width;
-        }
-      }
-
-      var params_height = 10;
-
-      if(typeof params.height !== "undefined") {
-        if(typeof params.height === "function") {
-          params_height = params.height(d, i , vars);
-        } else if(typeof params.height === "number") {
-          params_height = params.height + "px";
-        } else if(typeof params.height === "string") {
-          params_height = params.height;
-        }
-      }
-
-      var params_x = 0;
-
-      if(typeof params.x !== "undefined") {
-        if(typeof params.x === "function") {
-          params_x = params.x(d, i, vars);
-        } else if(typeof params.x === "number") {
-          params_x = params.x;
-        }
-      }
-
-      var params_y = 0;
-
-      if(typeof params.y !== "undefined") {
-        if(typeof params.y === "function") {
-          params_y = params.y(d, i, vars);
-        } else if(typeof params.y === "number") {
-          params_y = params.y;
-        }
-      }
-
+      var params_source = [0, 0];
+      var params_target = [vars.width, vars.height];
       var params_translate = [0, 0];
 
       if(typeof params.translate !== "undefined" && params.translate !== null) {
@@ -187,38 +147,16 @@ var utils ={};
           params_translate = params.translate;
         }
       }
+      var params_x = utils.init_params("x", 0, params, d, i, vars);
+      var params_y = utils.init_params("y", 0, params, d, i, vars);
+      var params_height = utils.init_params("height", 10, params, d, i, vars);
+      var params_width = utils.init_params("width", 10, params, d, i, vars);
+      var params_rotate = utils.init_params("rotate", 0, params, d, i, vars);
+      var params_fill = utils.init_params("fill", vars.color(vars.accessor_items(d)[vars.var_color]), params, d, i, vars);
+      var params_stroke = utils.init_params("stroke", 0, params, d, i, vars);
 
-      var params_rotate = 0;
-
-      if(typeof params.rotate !== "undefined" && params.rotate !== null) {
-        if(typeof params.rotate === "function") {
-          params_rotate = params.rotate(d, i, vars);
-        } else {
-          params_rotate = params.rotate;
-        }
-      }
-
-      var params_fill = null;
-
-      if(typeof params.fill !== "undefined" && params.fill !== null) {
-
-        if(typeof params.fill === "function") {
-          params_fill = params.fill(d, i, vars);
-        } else {
-          params_fill = params.fill;
-        }
-      }
-
-      var params_stroke = null;
-
-      if(typeof params.stroke !== "undefined" && params.stroke !== null) {
-
-        if(typeof params.stroke === "function") {
-          params_stroke = params.stroke(d, i, vars);
-        } else {
-          params_stroke = params.stroke;
-        }
-      }
+      params_translate[0] += vars.x_scale[0]["func"](vars.accessor_data(d)[vars.var_x]);
+      params_translate[1] += vars.y_scale[0]["func"](vars.accessor_data(d)[vars.var_y]);
 
       // Use the default accessor
       var accessor_data = vars.accessor_data;
@@ -288,7 +226,7 @@ var utils ={};
                  })
                  .style("height", function(d) {
                    if(typeof params_height !== "undefined") {
-                     return params_height;
+                     return params_height + "px";
                    } else {
                     return "auto";
                    }
@@ -431,18 +369,8 @@ var utils ={};
                   .attr("height", params_height)
                   .attr("width", params_width)
                   .attr("transform", "rotate(" + params_rotate + ")")
-                  .style("fill", function(d) {
-                    if(typeof params_fill !== 'undefined' && params_fill !== null) {
-                      return params_fill;
-                    } else {
-                      return vars.color(vars.accessor_items(d)[vars.var_color]);
-                    }
-                  })
-                  .style("stroke", function(d) {
-                    if(typeof params_stroke !== 'undefined' && params_stroke !== null) {
-                      return params_stroke;
-                    }
-                  });
+                  .style("fill", params_fill)
+                  .style("stroke", params_stroke);
 
         items_mark_rect
             .classed("highlighted", function(d, i) { return d.__highlighted; })
@@ -452,18 +380,8 @@ var utils ={};
             .attr("y", params.y || 0)
             .attr("height", params_height)
             .attr("width", params_width)
-            .style("fill", function(d) {
-              if(typeof params_fill !== 'undefined' && params_fill !== null) {
-                return params_fill;
-              } else {
-                return vars.color(vars.accessor_items(d)[vars.var_color]);
-              }
-            })
-            .style("stroke", function(d) {
-              if(typeof params_stroke !== 'undefined' && params_stroke !== null) {
-                return params_stroke;
-              }
-            });
+            .style("fill", params_fill)
+            .style("stroke", params_stroke);
 
         items_mark_rect.exit().remove();
 
@@ -569,9 +487,7 @@ var utils ={};
           mark.enter().append("path")
               .classed("items_" + mark_id, true)
               .classed("items__mark__arc", true)
-              .attr("fill", function(d, i) {
-                return vars.color(vars.accessor_data(d)[vars.var_color]);
-              })
+              .attr("fill", params_fill)
               .style("fill-opacity", function(d, i) {
                 if(d.i == 0)
                   return .2;
@@ -637,6 +553,26 @@ var utils ={};
 
           break;
 
+        case "line_coord":
+
+          var mark = d3.select(that).selectAll(".mark__line_horizontal").data([d]);
+
+          var t = d3.transform(d3.select(that).attr("transform")).translate;
+
+          mark.enter().append('line')
+              .classed('mark__line_horizontal', true)
+              .classed("items_" + mark_id, true);
+
+          mark
+              .classed("highlighted", function(d, i) { return d.__highlighted; })
+              .classed("selected", function(d, i) { return d.__selected; })
+              .attr("x1", function(d) { return params_source[0]; })
+              .attr("y1", function(d) { return params_target[0]; })
+              .attr("x2", function(d) { return params_source[1]; })
+              .attr("y2", function(d) { return params_target[1]; });
+
+          break;
+
         case "path":
 
           var this_accessor_values = function(d) { return d.values; };
@@ -658,8 +594,8 @@ var utils ={};
               .classed('connect__path', true)
               .classed('connect__path_' + mark_id, true)
               .classed("items_" + mark_id, true)
-              .style("fill", params.fill)
-              .style("stroke", params.stroke)
+              .style("fill", params_fill)
+              .style("stroke", params_stroke)
               .attr('d', function(e) {
                 return params["func"](this_accessor_values(e));
               })
@@ -671,8 +607,8 @@ var utils ={};
               .classed("highlighted", function(e, j) { return e.__highlighted; })
               .classed("selected", function(e, j) { return e.__selected; })
               .transition().duration(vars.duration)
-              .style("fill", params.fill)
-              .style("stroke", params.stroke)
+              .style("fill", params_fill)
+              .style("stroke", params_stroke)
               .attr('d', function(e) {
                 return params["func"](this_accessor_values(e));
               });
@@ -1171,8 +1107,6 @@ var utils ={};
 
     if(typeof vars.items !== "undefined" && vars.items[0] !== "undefined" &&  Object.keys(vars.items).length > 0 && vars.type !== "stacked") {
 
-     // if(!vars.flat_scene) {
-
         vars.items.forEach(function(item, index_item) {
 
           // Use the global accessor, unless specif one has been set
@@ -1180,30 +1114,6 @@ var utils ={};
 
           if(typeof item.accessor_data !== "undefined") {
             accessor_data = item.accessor_data;
-          }
-
-          // PRE-UPDATE ITEMS
-          // Join is based on the curren_time value
-          var gItems = vars_svg.selectAll(".mark__group" +  "_" + index_item)
-                          .data(vars.new_data, function(d, i) {
-                            d._index_item = index_item;
-                            return accessor_data(d)[vars.var_id] + "_" + index_item + d.depth;
-                          });
-
-          // ENTER ITEMS
-          var gItems_enter = gItems.enter()
-                          .insert("g", ":first-child");
-
-          // ITEMS EXIT
-          var gItems_exit = gItems.exit();
-
-          // IN CASE OF CUSTOM ENTER FOR ITEMS
-          if(typeof item.enter !== "undefined") {
-            gItems_enter.call(item.enter, vars);
-          } else {
-            gItems_enter.attr("transform", function(d, i) {
-              return "translate(" + vars.x_scale[0]["func"](accessor_data(d)[vars.var_x]) + ", " + vars.y_scale[0]["func"](accessor_data(d)[vars.var_y]) + ")";
-            });
           }
 
          // APPEND AND UPDATE ITEMS MARK
@@ -1215,15 +1125,42 @@ var utils ={};
               }
             }
 
+            // PRE-UPDATE ITEMS
+            // Join is based on the curren_time value
+            var markItems = vars_svg.selectAll(".mark__group" +  "_" + index_item)
+                            .data(vars.new_data, function(d, i) {
+                              d._index_item = index_item;
+                              return accessor_data(d)[vars.var_id] + "_" + index_item + '_' + index_mark;
+                            });
+
+            var markItems_enter = markItems.enter().append('g');
+/*
+            // ENTER ITEMS
+            var gItems_enter = gItems.enter()
+                            .insert("g", ":first-child");
+
+            // ITEMS EXIT
+            var gItems_exit = gItems.exit();
+
+            // IN CASE OF CUSTOM ENTER FOR ITEMS
+            if(typeof item.enter !== "undefined") {
+              gItems_enter.call(item.enter, vars);
+            } else {
+              gItems_enter.attr("transform", function(d, i) {
+                return "translate(" + vars.x_scale[0]["func"](accessor_data(d)[vars.var_x]) + ", " + vars.y_scale[0]["func"](accessor_data(d)[vars.var_y]) + ")";
+              });
+            }
+*/
+
             // Supporting multipe similar elements
             params._mark_id = index_item + "_" + index_mark;
 
-            gItems_enter
-                .filter(params.filter)
-                .filter(utils.filters.redraw_only)
+            markItems_enter
+                //.filter(params.filter)
+                //.filter(utils.filters.redraw_only)
                 .call(utils.draw_mark, params, vars);
 
-            gItems
+            markItems
                 .filter(params.filter)
                 .call(utils.draw_mark, params, vars);
 
@@ -1234,20 +1171,8 @@ var utils ={};
           });
 
           // Bind events to groups after marks have been created
-          gItems.each(utils.items_group);
-
-
-
-          /* Should be as below but current params don't match this format
-            // APPEND AND UPDATE ITEMS MARK
-            vars.items.forEach(function(item) {
-              item.marks.forEach(function(params) {
-                gItems_enter.call(utils.draw_mark, params);
-                gItems.call(utils.draw_mark, params);
-              });
-            });
-          */
-
+          //gItems.each(utils.items_group);
+/*
           // IN CASE OF CUSTOM UPDATE FOR ITEMS
           if(typeof item.update !== "undefined") {
             vars_svg.selectAll(".mark__group" + "_" + index_item).call(item.update, vars)
@@ -1276,7 +1201,7 @@ var utils ={};
               }
             });
           }
-
+*/
         });
 
     }
@@ -1641,20 +1566,33 @@ var utils ={};
 
   utils.filters = {};
 
+  utils.init_item = function(d) {
+    d.__aggregated = false;
+    d.__selected = false;
+    d.__selected__adjacent = false;
+    d.__highlighted = false;
+    d.__highlighted__adjacent = false;
+    d.__missing = false;
+    d.__redraw = false;
+  }
 
-  utils.init_params = function(p, params) {
+  utils.init_params = function(v, default_value, params, d, i, vars) {
 
-    var r = null;
+    var result = default_value;
 
-    if(typeof params[p] !== "undefined") {
-      if(typeof params[p] === "function") {
-        r = params[p](d, i , vars);
-      } else if(typeof params[p] === "String") {
-        r = params[p];
+    if(typeof params[v] !== "undefined") {
+      if(typeof params[v] === "function") {
+        result = params[v](d, i, vars);
+      } else if(typeof params[v] === "string") {
+        result = params[v];
+      } else if(typeof params[v] === "number") {
+        result = params[v];
+      } else {
+        result = params[v];
       }
-    } else if(vars.var_text !== "undefined") {
-       r = vars.accessor_data(d)[vars.var_text];
     }
+
+    return result;
 
   }
 
@@ -1787,6 +1725,8 @@ var utils ={};
     var_group: null,
     data: [],
     links: [],
+    var_node_id: 'id', // ID to join the nodes/link data
+
     title: "",
 
     // Default dimensions
@@ -2010,7 +1950,7 @@ var utils ={};
   vars.height = vars.width * vars.ratio;
 
   // List of events
-  vars.dispatch = d3.dispatch('init', 'end', 'highlightOn', 'highlightOut', 'selection', 'resize', 'clearAnimations');
+  vars.dispatch = d3.dispatch('init', 'end', 'highlightOn', 'highlightOut', 'selection', 'resize', 'clearAnimations', 'timeUpdate');
 
   // Default events
   d3.select(window).on('resize', function(d) {
@@ -2033,6 +1973,16 @@ var utils ={};
     // Temporary settings to prevent chart redraw for product space tooltip
     d3.select(vars.container).selectAll(".items__mark__text").remove();
     d3.select(vars.container).selectAll(".items__mark__div").remove();
+
+  });
+
+  vars.evt.register("timeUpdate", function(new_time) {
+    if(vars.dev) { console.log("[vars.evt.call] timeUpdate"); }
+
+    vars.time.current_time = new_time;
+    vars.refresh = true;
+
+    d3.select(vars.container).call(vars.this_chart);
 
   });
 
@@ -2113,7 +2063,8 @@ var utils ={};
 
 
     // 1 - Init and define default values [INIT]
-    // 2 - Duplicates the dataset [INIT, REFRESH]
+    // 2 - Duplicates the dataset [INIT]
+    // 3 - Mutate all_data with static metadata [INIT]
     // Filter by time values
     // Filter by attribute/ Selection
     // Find unique values from dataset
@@ -2127,14 +2078,14 @@ var utils ={};
     // In case we use functions for X/Y variables
     if(typeof vars.var_x !== "string" && typeof vars.var_x === "function") {
       vars.data.forEach(function(d, i) {
-        d.__var_x = vars.var_x();
+        d.__var_x = vars.var_x(d, i, vars);
       });
-      vars.var_x = "___var_x";
+      vars.var_x = "__var_x";
     }
 
     if(typeof vars.var_y !== "string" && typeof vars.var_y === "function") {
       vars.data.forEach(function(d, i) {
-        d.__var_y = vars.var_y();
+        d.__var_y = vars.var_y(d, i, vars);
       });
       vars.var_y = "__var_y";
     }
@@ -2148,16 +2099,104 @@ var utils ={};
       vars.time.current_time = vars.time.current_time(vars.data)
     }
 
+    // Duplicate the dataset to prevent mutation
+    if(vars.init) {
+
+      // Get a copy of the whole dataset
+      vars.all_data = JSON.parse(JSON.stringify(vars.data));
+
+      // Links between items
+      // Used for product space
+      if(vars.links !== null && vars.type === 'productspace') {
+
+        vars.links.forEach(function(d, i) {
+
+          if(typeof d.source === "string") {
+            d.source = vistk.utils.find_node_by_id(vars.nodes, d.source);
+          }
+
+          if(typeof d.target === "string") {
+            d.target = vistk.utils.find_node_by_id(vars.nodes, d.target);
+          }
+
+          d.__redraw = true;
+
+        });
+
+      }
+
+      // Flagging missing nodes with __missing true attribute
+      if(typeof vars.nodes !== "undefined"  && vars.type === 'productspace') {
+
+        // Adding coordinates to data
+        vars.all_data.forEach(function(d, i) {
+
+          var node = vistk.utils.find_node_coordinates_by_id(vars.nodes, vars.var_node_id, d[vars.var_id]);
+
+          // If we can't find product in the graph, put it in the corner
+          // if(typeof node == "undefined") {
+          // // res = {x: 500+Math.random()*400, y: 1500+Math.random()*400};
+          //   res = {x: 1095, y: 1675};
+          // }
+
+          // We flag as missing the nodes in data without any coordinate
+          if(typeof node === "undefined") {
+
+            d.__missing = true;
+
+          } else {
+
+            d.__missing = false;
+            d.x = node.x;
+            d.y = node.y;
+
+          }
+
+          d.__redraw = true;
+
+        });
+
+        // Remove missing nodes
+        vars.all_data = vars.all_data.filter(function(d) {
+         return !d.__missing;
+        });
+
+        // Go through again the list of nodes
+        // to make sure we display all the nodes
+        vars.nodes.forEach(function(d, i) {
+
+          var node = vistk.utils.find_node_coordinates_by_id(vars.all_data, vars.var_id, d[vars.var_node_id]);
+
+          if(typeof node === "undefined") {
+
+            d.values = [];
+            d[vars.var_r] = 0;
+            d[vars.var_id] = d.id;
+
+            utils.init_item(d);
+            d.__redraw = true;
+
+            vars.all_data.push(d);
+
+          }
+
+        })
+
+      }
+
+    }
+
     // Calculate vars.new_data which should contain two things
     // 1/ The list of all items (e.g. countries, products)
     // 2/ The metadata for each items
     if(vars.init || vars.refresh) {
 
-      // Get a copy of the whole dataset
-      vars.new_data = JSON.parse(JSON.stringify(vars.data));
-
       // Creates default ids `__id` and `__value` for dataset without any id
       if(typeof vars.var_id === 'undefined') {
+
+        if(vars.new_data === null) {
+          vars.new_data = vars.all_data;
+        }
 
         vars.new_data = vars.new_data.map(function(d, i) {
 
@@ -2179,6 +2218,10 @@ var utils ={};
           vars.var_text = '__id';
         }
 
+      } else {
+
+        vars.new_data = JSON.parse(JSON.stringify(vars.all_data));
+
       }
 
       // If time filter parameter is set, then keep values for this time
@@ -2188,7 +2231,6 @@ var utils ={};
           console.log("[vars.time.filter]", vars.time.filter);
         }
 
-        ;;
         vars.new_data = vars.new_data.filter(function(d, i) {
           return vars.time.filter.indexOf(d[vars.time.var_time]) > -1;
         });
@@ -2238,8 +2280,9 @@ var utils ={};
         })[0];
 
         // TODO: it can happen there is no item for the current year (but for others)
-        if(typeof d === "undefined")
+        if(typeof d === "undefined") {
           return;
+        }
 
         // TIME VALUES
         d.values = vars.new_data.filter(function(e) {
@@ -2252,6 +2295,8 @@ var utils ={};
           v[vars.time.var_time] = d[vars.time.var_time];
           v[vars.var_y] = d[vars.var_y];
           v[vars.var_x] = d[vars.var_x];
+          v[vars.var_size] = d[vars.var_size];
+          v[vars.var_color] = d[vars.var_color];
 
           // TODO: this is metadata, should not be duplicated every year
           v[vars.var_id] = d[vars.var_id];
@@ -2259,30 +2304,21 @@ var utils ={};
           return v;
         });
 
-        if(vars.filter.indexOf(d[vars.var_group]) < 0) {
-          d.__filtered = false;
-        } else {
+        utils.init_item(d);
+
+        if(vars.filter.indexOf(d[vars.var_group]) > -1) {
           d.__filtered = true;
         }
 
-        if(vars.highlight.indexOf(item_id) < 0) {
-          d.__highlighted = false;
-        } else {
+        if(vars.highlight.indexOf(item_id) > -1) {
           d.__highlighted = true;
         }
 
-        if(vars.selection.indexOf(item_id) < 0) {
-          d.__selected = false;
-        } else {
+        if(vars.selection.indexOf(item_id) > -1) {
           d.__selected = true;
         }
 
-        d.__selected__adjacent = false;
-        d.__highlighted__adjacent = false;
-
-        d.__aggregated = false;
         d.__redraw = true;
-
         vars.unique_data.push(d);
 
       });
@@ -2290,88 +2326,6 @@ var utils ={};
       vars.new_data = vars.unique_data;
 
     }
-
-    // Links between items
-    // Used for product space
-    if(vars.links !== null && vars.init && vars.type === 'productspace') {
-
-      vars.links.forEach(function(d, i) {
-
-        if(typeof d.source === "string") {
-          d.source = vistk.utils.find_node_by_id(vars.nodes, d.source);
-        }
-
-        if(typeof d.target === "string") {
-          d.target = vistk.utils.find_node_by_id(vars.nodes, d.target);
-        }
-
-        d.__redraw = true;
-
-      });
-
-    }
-
-    // Flagging missing nodes with __missing true attribute
-    if(typeof vars.nodes !== "undefined" && vars.init && vars.type === 'productspace') {
-
-      // Adding coordinates to data
-      vars.new_data.forEach(function(d, i) {
-
-        var node = vistk.utils.find_node_coordinates_by_id(vars.nodes, 'id', d[vars.var_id]);
-
-        // If we can't find product in the graph, put it in the corner
-        // if(typeof node == "undefined") {
-        // // res = {x: 500+Math.random()*400, y: 1500+Math.random()*400};
-        //   res = {x: 1095, y: 1675};
-        // }
-
-        if(typeof node === "undefined") {
-
-          d.__missing = true;
-
-        } else {
-
-          d.__missing = false;
-          d.x = node.x;
-          d.y = node.y;
-
-        }
-
-        d.__redraw = true;
-
-      });
-
-      // Go through again the list of nodes
-      // to make sure we display all the nodes
-      vars.nodes.forEach(function(d, i) {
-
-        var node = vistk.utils.find_node_coordinates_by_id(vars.new_data, vars.var_id, d['id']);
-
-        if(typeof node === "undefined") {
-
-          d.values = [];
-          d[vars.var_r] = 0;
-          d[vars.var_id] = d.id;
-          d.__aggregated = false;
-          d.__selected = false;
-          d.__selected__adjacent = false;
-          d.__highlighted = false;
-          d.__highlighted__adjacent = false;
-          d.__missing = false;
-          d.__redraw = true;
-
-          vars.new_data.push(d);
-
-        }
-
-      })
-
-    }
-
-    // Remove missing nodes
-    vars.new_data = vars.new_data.filter(function(d) {
-     return !d.__missing;
-    });
 
     // Aggregate data
     if(typeof vars.set['__aggregated'] !== 'undefined' && vars.refresh) {
@@ -2457,9 +2411,8 @@ var utils ={};
             });
           });
 
+          utils.init_item(aggregation);
           aggregation.__aggregated = true;
-          aggregation.__selected = false;
-          aggregation.__highlighted = false;
           aggregation.__redraw = true;
 
           if(typeof vars.share_cutoff != "undefined") {
@@ -2542,7 +2495,6 @@ vars.default_params["sparkline"] = function(scope) {
   }];
 
   params.items = [{
-    attr: "year",
     marks: [{
       type: "circle",
       rotate: "0",
@@ -2564,12 +2516,13 @@ vars.default_params["sparkline"] = function(scope) {
            .interpolate(scope.interpolate)
            .x(function(d) { return params.x_scale[0]["func"](d[scope.var_x]); })
            .y(function(d) { return params.y_scale[0]["func"](d[scope.var_y]); }),
+      fill: 'none'
     }]
   }];
 
   params.x_axis_show = false;
   params.x_grid_show = false;
-  
+
   params.y_axis_show = false;
   params.y_grid_show = false;
 
@@ -2698,6 +2651,7 @@ vars.default_params["linechart"] = function(scope) {
            .interpolate(vars.interpolate)
            .x(function(d) { return params.x_scale[0]["func"](d[vars.var_x]); })
            .y(function(d) { return params.y_scale[0]["func"](d[vars.var_y]); }),
+      fill: "none"
     }]
   }];
 
@@ -4259,7 +4213,7 @@ var z = d3.scale.linear().domain([0, 4]).clamp(true),
               .property("checked", function(d) {
                   return vars.filter.indexOf(d) > -1;
                })
-              .on("change", function(d) { 
+              .on("change", function(d) {
 
                 utils.update_filters(this.value, this.checked);
                 vars.refresh = true;
@@ -4268,7 +4222,7 @@ var z = d3.scale.linear().domain([0, 4]).clamp(true),
               });
 
           label_checkboxes.append("span")
-              .html(function(d) { 
+              .html(function(d) {
                 var count = vars.new_data.filter(function(e, j) { return vars.accessor_data(e)[vars.var_group] == d; }).length;
                 return d + " (" + count + ")";
               });
@@ -4285,11 +4239,11 @@ var z = d3.scale.linear().domain([0, 4]).clamp(true),
           // TODO: find levels of aggregation
           label_radios.append("input")
                      .attr("type", "radio")
-                     .attr("id", "id")  
+                     .attr("id", "id")
                      .attr("value", function(d) { return d; })
                      .attr("name", "radio-nest")
                      .property("checked", true)
-                     .on("change", function(d) { 
+                     .on("change", function(d) {
 
                        vars.aggregate = d;
                        vars.refresh = true;
@@ -4298,7 +4252,7 @@ var z = d3.scale.linear().domain([0, 4]).clamp(true),
                      });
 
           label_radios.append("span")
-              .html(function(d) { 
+              .html(function(d) {
   //              var count = vars.data.filter(function(e, j) { return e[vars.var_group] == d; }).length;
                 // TODO
                 var count = "";
@@ -4340,14 +4294,7 @@ var z = d3.scale.linear().domain([0, 4]).clamp(true),
                       .property("value", vars.time.current_time)
                       .attr("step", 1)
                       .on("input", function() {
-                        vars.time.current_time = +this.value;
-                        vars.refresh = true;
-
-                        if(vars.dev) { 
-                          console.log("[time.slider.update]", vars.time.current_time);
-                        }
-
-                        d3.select(vars.container).call(vars.this_chart);
+                        vars.evt.call("timeUpdate", +this.value);
                       })
                       .style("width", "100px");
 
@@ -4383,11 +4330,11 @@ var z = d3.scale.linear().domain([0, 4]).clamp(true),
             // TODO: find levels of aggregation
             label_radios.append("input")
                        .attr("type", "radio")
-                       .attr("id", "id")  
+                       .attr("id", "id")
                        .attr("value", function(d) { return d; })
                        .attr("name", "radio-nest")
                        .property("checked", true)
-                       .on("change", function(d) { 
+                       .on("change", function(d) {
 
                           visualization.params({
                             x_type: d
@@ -4396,7 +4343,7 @@ var z = d3.scale.linear().domain([0, 4]).clamp(true),
                        });
 
             label_radios.append("span")
-                .html(function(d) { 
+                .html(function(d) {
                   return d ;
                 });
 
@@ -4412,11 +4359,11 @@ var z = d3.scale.linear().domain([0, 4]).clamp(true),
         // TODO: find levels of aggregation
         label_radios.append("input")
                    .attr("type", "radio")
-                   .attr("id", "id")  
+                   .attr("id", "id")
                    .attr("value", function(d) { return d; })
                    .attr("name", "radio-nest")
                    .property("checked", function(d) { return vars.aggregate === d; })
-                   .on("change", function(d) { 
+                   .on("change", function(d) {
 
                     if(d === vars.var_id) {
 
@@ -4435,7 +4382,7 @@ var z = d3.scale.linear().domain([0, 4]).clamp(true),
                    });
 
         label_radios.append("span")
-            .html(function(d) { 
+            .html(function(d) {
               return d ;
             });
 
@@ -4458,13 +4405,13 @@ var z = d3.scale.linear().domain([0, 4]).clamp(true),
         // TODO: find levels of aggregation
         label_radios.append("input")
                    .attr("type", "radio")
-                   .attr("id", "id")  
+                   .attr("id", "id")
                    .attr("value", function(d) { return d; })
                    .attr("name", "radio-nest")
                    .property("checked", function(d) {
                       return d == vars.var_sort;
                    })
-                   .on("click", function(d) { 
+                   .on("click", function(d) {
 
                      if(vars.var_sort == d)
                        vars._user_vars.var_sort_asc = !vars._user_vars.var_sort_asc;
@@ -4477,7 +4424,7 @@ var z = d3.scale.linear().domain([0, 4]).clamp(true),
                    });
 
         label_radios.append("span")
-            .html(function(d) { 
+            .html(function(d) {
               return d ;
             });
       }
@@ -4488,7 +4435,7 @@ var z = d3.scale.linear().domain([0, 4]).clamp(true),
             .classed("label_highlight", true)
             .html("<br>Select/highlight");
 
-      // Highlight 
+      // Highlight
       var label_litems = d3.select(vars.container).selectAll(".items").data([vars.var_id])
         .enter()
           .append("label")
@@ -4531,7 +4478,7 @@ var z = d3.scale.linear().domain([0, 4]).clamp(true),
              .on("click", function() {
 
                 vars.svg.selectAll(".highlighted").classed("highlighted", false);
-                vars.highlight = [];                
+                vars.highlight = [];
                 d3.select(vars.container).call(vars.this_chart);
 
               })
@@ -4562,7 +4509,7 @@ var z = d3.scale.linear().domain([0, 4]).clamp(true),
                   d3.select(vars.container.call(vars.this_chart));
 
                   d3.select(this).html(function() {
-                    return "Current language: " + vars.lang; 
+                    return "Current language: " + vars.lang;
                   })
 
                 })
@@ -4634,13 +4581,13 @@ var z = d3.scale.linear().domain([0, 4]).clamp(true),
           .attr("x", 0)
           .attr("width", x_offset)
           .attr("height", 18)
-          .style("fill", function(d, i) { 
+          .style("fill", function(d, i) {
             if(i === 0) {
               return vars.color(vars.color.domain()[0])
             } else if(i === 1) {
               return vars.color((vars.color.domain()[1] - vars.color.domain()[0]) / 2);
             } else {
-              return vars.color(vars.color.domain()[1]); 
+              return vars.color(vars.color.domain()[1]);
             }
 
           });
@@ -4874,14 +4821,6 @@ vistk.utils.flatten_years = function(data) {
 vistk.utils.find_node_by_id = function(nodes, id) {
   var res = nodes.filter(function(d) {
     return d.id == id;
-  })[0];
-
-  return res;
-}
-
-vistk.utils.find_data_by_id = function(id) {
-  var res = vars.new_data.filter(function(d) {
-    return d[vars.var_id] == +id;
   })[0];
 
   return res;

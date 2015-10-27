@@ -136,6 +136,9 @@
       var params_fill = utils.init_params("fill", vars.color(vars.accessor_items(d)[vars.var_color]), params, d, i, vars);
       var params_stroke = utils.init_params("stroke", 0, params, d, i, vars);
 
+      params_translate[0] += vars.x_scale[0]["func"](vars.accessor_data(d)[vars.var_x]);
+      params_translate[1] += vars.y_scale[0]["func"](vars.accessor_data(d)[vars.var_y]);
+
       // Use the default accessor
       var accessor_data = vars.accessor_data;
 
@@ -1085,8 +1088,6 @@
 
     if(typeof vars.items !== "undefined" && vars.items[0] !== "undefined" &&  Object.keys(vars.items).length > 0 && vars.type !== "stacked") {
 
-     // if(!vars.flat_scene) {
-
         vars.items.forEach(function(item, index_item) {
 
           // Use the global accessor, unless specif one has been set
@@ -1094,30 +1095,6 @@
 
           if(typeof item.accessor_data !== "undefined") {
             accessor_data = item.accessor_data;
-          }
-
-          // PRE-UPDATE ITEMS
-          // Join is based on the curren_time value
-          var gItems = vars_svg.selectAll(".mark__group" +  "_" + index_item)
-                          .data(vars.new_data, function(d, i) {
-                            d._index_item = index_item;
-                            return accessor_data(d)[vars.var_id] + "_" + index_item + d.depth;
-                          });
-
-          // ENTER ITEMS
-          var gItems_enter = gItems.enter()
-                          .insert("g", ":first-child");
-
-          // ITEMS EXIT
-          var gItems_exit = gItems.exit();
-
-          // IN CASE OF CUSTOM ENTER FOR ITEMS
-          if(typeof item.enter !== "undefined") {
-            gItems_enter.call(item.enter, vars);
-          } else {
-            gItems_enter.attr("transform", function(d, i) {
-              return "translate(" + vars.x_scale[0]["func"](accessor_data(d)[vars.var_x]) + ", " + vars.y_scale[0]["func"](accessor_data(d)[vars.var_y]) + ")";
-            });
           }
 
          // APPEND AND UPDATE ITEMS MARK
@@ -1129,15 +1106,42 @@
               }
             }
 
+            // PRE-UPDATE ITEMS
+            // Join is based on the curren_time value
+            var markItems = vars_svg.selectAll(".mark__group" +  "_" + index_item)
+                            .data(vars.new_data, function(d, i) {
+                              d._index_item = index_item;
+                              return accessor_data(d)[vars.var_id] + "_" + index_item + '_' + index_mark;
+                            });
+
+            var markItems_enter = markItems.enter().append('g');
+/*
+            // ENTER ITEMS
+            var gItems_enter = gItems.enter()
+                            .insert("g", ":first-child");
+
+            // ITEMS EXIT
+            var gItems_exit = gItems.exit();
+
+            // IN CASE OF CUSTOM ENTER FOR ITEMS
+            if(typeof item.enter !== "undefined") {
+              gItems_enter.call(item.enter, vars);
+            } else {
+              gItems_enter.attr("transform", function(d, i) {
+                return "translate(" + vars.x_scale[0]["func"](accessor_data(d)[vars.var_x]) + ", " + vars.y_scale[0]["func"](accessor_data(d)[vars.var_y]) + ")";
+              });
+            }
+*/
+
             // Supporting multipe similar elements
             params._mark_id = index_item + "_" + index_mark;
 
-            gItems_enter
-                .filter(params.filter)
-                .filter(utils.filters.redraw_only)
+            markItems_enter
+                //.filter(params.filter)
+                //.filter(utils.filters.redraw_only)
                 .call(utils.draw_mark, params, vars);
 
-            gItems
+            markItems
                 .filter(params.filter)
                 .call(utils.draw_mark, params, vars);
 
@@ -1148,20 +1152,8 @@
           });
 
           // Bind events to groups after marks have been created
-          gItems.each(utils.items_group);
-
-
-
-          /* Should be as below but current params don't match this format
-            // APPEND AND UPDATE ITEMS MARK
-            vars.items.forEach(function(item) {
-              item.marks.forEach(function(params) {
-                gItems_enter.call(utils.draw_mark, params);
-                gItems.call(utils.draw_mark, params);
-              });
-            });
-          */
-
+          //gItems.each(utils.items_group);
+/*
           // IN CASE OF CUSTOM UPDATE FOR ITEMS
           if(typeof item.update !== "undefined") {
             vars_svg.selectAll(".mark__group" + "_" + index_item).call(item.update, vars)
@@ -1190,7 +1182,7 @@
               }
             });
           }
-
+*/
         });
 
     }
