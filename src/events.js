@@ -43,7 +43,7 @@
   vars.height = vars.width * vars.ratio;
 
   // List of events
-  vars.dispatch = d3.dispatch('init', 'end', 'highlightOn', 'highlightOut', 'selection', 'resize', 'clearAnimations');
+  vars.dispatch = d3.dispatch('init', 'end', 'highlightOn', 'highlightOut', 'selection', 'resize', 'clearAnimations', 'timeUpdate');
 
   // Default events
   d3.select(window).on('resize', function(d) {
@@ -66,5 +66,15 @@
     // Temporary settings to prevent chart redraw for product space tooltip
     d3.select(vars.container).selectAll(".items__mark__text").remove();
     d3.select(vars.container).selectAll(".items__mark__div").remove();
+
+  });
+
+  vars.evt.register("timeUpdate", function(d) {
+    if(vars.dev) { console.log("[vars.evt.call] timeUpdate"); }
+
+    vars.time.current_time = +this.value;
+    vars.refresh = true;
+
+    d3.select(vars.container).call(vars.this_chart);
 
   });

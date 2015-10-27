@@ -25,7 +25,7 @@
               .property("checked", function(d) {
                   return vars.filter.indexOf(d) > -1;
                })
-              .on("change", function(d) { 
+              .on("change", function(d) {
 
                 utils.update_filters(this.value, this.checked);
                 vars.refresh = true;
@@ -34,7 +34,7 @@
               });
 
           label_checkboxes.append("span")
-              .html(function(d) { 
+              .html(function(d) {
                 var count = vars.new_data.filter(function(e, j) { return vars.accessor_data(e)[vars.var_group] == d; }).length;
                 return d + " (" + count + ")";
               });
@@ -51,11 +51,11 @@
           // TODO: find levels of aggregation
           label_radios.append("input")
                      .attr("type", "radio")
-                     .attr("id", "id")  
+                     .attr("id", "id")
                      .attr("value", function(d) { return d; })
                      .attr("name", "radio-nest")
                      .property("checked", true)
-                     .on("change", function(d) { 
+                     .on("change", function(d) {
 
                        vars.aggregate = d;
                        vars.refresh = true;
@@ -64,7 +64,7 @@
                      });
 
           label_radios.append("span")
-              .html(function(d) { 
+              .html(function(d) {
   //              var count = vars.data.filter(function(e, j) { return e[vars.var_group] == d; }).length;
                 // TODO
                 var count = "";
@@ -106,14 +106,7 @@
                       .property("value", vars.time.current_time)
                       .attr("step", 1)
                       .on("input", function() {
-                        vars.time.current_time = +this.value;
-                        vars.refresh = true;
-
-                        if(vars.dev) { 
-                          console.log("[time.slider.update]", vars.time.current_time);
-                        }
-
-                        d3.select(vars.container).call(vars.this_chart);
+                        vars.evt.call("timeUpdate");
                       })
                       .style("width", "100px");
 
@@ -149,11 +142,11 @@
             // TODO: find levels of aggregation
             label_radios.append("input")
                        .attr("type", "radio")
-                       .attr("id", "id")  
+                       .attr("id", "id")
                        .attr("value", function(d) { return d; })
                        .attr("name", "radio-nest")
                        .property("checked", true)
-                       .on("change", function(d) { 
+                       .on("change", function(d) {
 
                           visualization.params({
                             x_type: d
@@ -162,7 +155,7 @@
                        });
 
             label_radios.append("span")
-                .html(function(d) { 
+                .html(function(d) {
                   return d ;
                 });
 
@@ -178,11 +171,11 @@
         // TODO: find levels of aggregation
         label_radios.append("input")
                    .attr("type", "radio")
-                   .attr("id", "id")  
+                   .attr("id", "id")
                    .attr("value", function(d) { return d; })
                    .attr("name", "radio-nest")
                    .property("checked", function(d) { return vars.aggregate === d; })
-                   .on("change", function(d) { 
+                   .on("change", function(d) {
 
                     if(d === vars.var_id) {
 
@@ -201,7 +194,7 @@
                    });
 
         label_radios.append("span")
-            .html(function(d) { 
+            .html(function(d) {
               return d ;
             });
 
@@ -224,13 +217,13 @@
         // TODO: find levels of aggregation
         label_radios.append("input")
                    .attr("type", "radio")
-                   .attr("id", "id")  
+                   .attr("id", "id")
                    .attr("value", function(d) { return d; })
                    .attr("name", "radio-nest")
                    .property("checked", function(d) {
                       return d == vars.var_sort;
                    })
-                   .on("click", function(d) { 
+                   .on("click", function(d) {
 
                      if(vars.var_sort == d)
                        vars._user_vars.var_sort_asc = !vars._user_vars.var_sort_asc;
@@ -243,7 +236,7 @@
                    });
 
         label_radios.append("span")
-            .html(function(d) { 
+            .html(function(d) {
               return d ;
             });
       }
@@ -254,7 +247,7 @@
             .classed("label_highlight", true)
             .html("<br>Select/highlight");
 
-      // Highlight 
+      // Highlight
       var label_litems = d3.select(vars.container).selectAll(".items").data([vars.var_id])
         .enter()
           .append("label")
@@ -297,7 +290,7 @@
              .on("click", function() {
 
                 vars.svg.selectAll(".highlighted").classed("highlighted", false);
-                vars.highlight = [];                
+                vars.highlight = [];
                 d3.select(vars.container).call(vars.this_chart);
 
               })
@@ -328,7 +321,7 @@
                   d3.select(vars.container.call(vars.this_chart));
 
                   d3.select(this).html(function() {
-                    return "Current language: " + vars.lang; 
+                    return "Current language: " + vars.lang;
                   })
 
                 })
@@ -400,13 +393,13 @@
           .attr("x", 0)
           .attr("width", x_offset)
           .attr("height", 18)
-          .style("fill", function(d, i) { 
+          .style("fill", function(d, i) {
             if(i === 0) {
               return vars.color(vars.color.domain()[0])
             } else if(i === 1) {
               return vars.color((vars.color.domain()[1] - vars.color.domain()[0]) / 2);
             } else {
-              return vars.color(vars.color.domain()[1]); 
+              return vars.color(vars.color.domain()[1]);
             }
 
           });
