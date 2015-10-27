@@ -84,7 +84,8 @@ d3.json("../data/countries.json", function(error, countries) {
             x: 0,
             y: 0,
             width: function(d) { return d.dx; },
-            height: function(d) { return d.dy; }
+            height: function(d) { return d.dy; },
+            rotate: Math.random()*90 -45
           }]
         }],
         time: {

@@ -132,6 +132,10 @@
       // Creates default ids `__id` and `__value` for dataset without any id
       if(typeof vars.var_id === 'undefined') {
 
+        if(vars.new_data === null) {
+          vars.new_data = vars.all_data;
+        }
+
         vars.new_data = vars.new_data.map(function(d, i) {
 
           if(typeof d !== 'object') {

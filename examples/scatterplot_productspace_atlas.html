@@ -185,20 +185,24 @@ d3.json("../data/network_sitc.json", function(graph) {
           default: true,
           options: []
         },
+        /*
+        evt: [
+
+        ]
+        */
         //  title: "Thailand Product Space (2013)"
-        })
+      })
+
+
 
       d3.select("#viz").call(visualization);
 
-var label = d3.select("svg").insert("text", ":first-child")
-    .attr("class", "year label")
-    .attr("text-anchor", "end")
-    .attr("y", 154)
-    .attr("x", 500)
-    .text(visualization.params().time.current_time);
-
-
-
+      var label = d3.select("svg").insert("text", ":first-child")
+          .attr("class", "year label")
+          .attr("text-anchor", "end")
+          .attr("y", 154)
+          .attr("x", 500)
+          .text(visualization.params().time.current_time);
 
     });
 

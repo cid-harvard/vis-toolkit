@@ -1,0 +1,38 @@
+<!doctype html>
+<meta charset="utf-8">
+<script src="../js/d3.js" charset="utf-8"></script>
+<script src="../build/vistk.js"></script>
+<link href="../css/vistk.css" rel="stylesheet">
+<body>
+<div id="viz"></div>
+<script>
+
+var data = [{x: 100, y: 200, text: "I'm a div"}]
+
+var visualization = vistk.viz()
+    .params({
+      dev: true,
+      height: 200,
+      width: 500,
+      type: 'scatterplot',
+      data: data,
+      container: '#viz',
+      var_x: 'x',
+      var_y: 'y',
+      items: [{
+        marks: [{
+          type: 'div',
+          type: function(d) { return d; }
+        }, {
+          type: "text",
+          rotate: 0,
+          text_anchor: 'middle',
+          translate: [0, 20]
+        }]
+      }],
+      var_text:  "value"
+    });
+
+d3.select("#viz").call(visualization);
+
+</script>
