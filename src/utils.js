@@ -1555,6 +1555,15 @@
 
   utils.filters = {};
 
+  utils.init_item = function(d) {
+    d.__aggregated = false;
+    d.__selected = false;
+    d.__selected__adjacent = false;
+    d.__highlighted = false;
+    d.__highlighted__adjacent = false;
+    d.__missing = false;
+    d.__redraw = false;
+  }
 
   utils.init_params = function(v, default_value, params, d, i, vars) {
 

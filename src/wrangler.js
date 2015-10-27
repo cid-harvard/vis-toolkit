@@ -104,19 +104,16 @@
         vars.nodes.forEach(function(d, i) {
 
           var node = vistk.utils.find_node_coordinates_by_id(vars.all_data, vars.var_id, d[vars.var_node_id]);
-          console.log("NODE", node)
+
           if(typeof node === "undefined") {
 
             d.values = [];
             d[vars.var_r] = 0;
             d[vars.var_id] = d.id;
-            d.__aggregated = false;
-            d.__selected = false;
-            d.__selected__adjacent = false;
-            d.__highlighted = false;
-            d.__highlighted__adjacent = false;
-            d.__missing = false;
+
+            utils.init_item(d);
             d.__redraw = true;
+
             vars.all_data.push(d);
 
           }
@@ -168,7 +165,6 @@
           console.log("[vars.time.filter]", vars.time.filter);
         }
 
-        ;;
         vars.new_data = vars.new_data.filter(function(d, i) {
           return vars.time.filter.indexOf(d[vars.time.var_time]) > -1;
         });
@@ -218,8 +214,9 @@
         })[0];
 
         // TODO: it can happen there is no item for the current year (but for others)
-        if(typeof d === "undefined")
+        if(typeof d === "undefined") {
           return;
+        }
 
         // TIME VALUES
         d.values = vars.new_data.filter(function(e) {
