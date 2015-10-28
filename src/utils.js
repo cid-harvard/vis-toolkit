@@ -1,7 +1,7 @@
   // LIST OF PRIVATE UTILS FUNCTIONS
 
   // Create SVG groups for items marks
-  utils.items_group = function(d, i) {
+  utils.bind_events = function(d, i) {
 
     d3.select(this).classed("highlighted", function(d, i) { return d.__highlighted; })
                    .classed("selected", function(d, i) { return d.__selected; })
@@ -56,11 +56,6 @@
 
     selection.each(function(d, i) {
 
-
-      // Skip the drawing if __redraw flag is false
-     // if(!d.__redraw) {
-     //   return;
-     // }
 
       // Default id for marks
       var mark_id = params._mark_id;
@@ -837,15 +832,6 @@
 
           }
 
-          if(typeof params.title !== "undefined") {
-            mark_enter.append("title").text(function(d) {
-              return params.title(vars.accessor_items(d));
-            });
-          }
-
-          if(typeof params.class !== "undefined") {
-            mark_enter.classed(params.class(vars.accessor_items(d)), true);
-          }
 
           mark
               .classed("highlighted", function(d, i) { return d.__highlighted; })
@@ -1015,6 +1001,8 @@
 
         item.marks.forEach(function(mark, index_mark) {
 
+
+
           // Get the mark (circle, rect, line)
           var mark_type = mark.type;
 
@@ -1025,7 +1013,17 @@
           var mark_params = vars.default_marks[mark_type](vars);
 
           var items = vars.svg.selectAll("#" + mark_id)
-            .data(vars.new_data);
+            .data(vars.new_data)
+
+          // Skip the drawing if __redraw flag is false
+
+           // if(typeof params.filter == "undefined") {
+           //   params.filter = function() {
+           //     return true;
+           //   }
+           // }
+          //.filter(params.filter)
+          //.filter(utils.filters.redraw_only)
 
           items.enter().call(mark_params.enter, params, vars, mark_id);
           items.call(mark_params.update, params, vars, mark_id);
@@ -1049,12 +1047,6 @@
      // APPEND AND UPDATE ITEMS MARK
       item.marks.forEach(function(params, index_mark) {
 
-        if(typeof params.filter == "undefined") {
-          params.filter = function() {
-            return true;
-          }
-        }
-
             // PRE-UPDATE ITEMS
       //      // Join is based on the curren_time value
       //      var markItems = vars_svg.selectAll(".items__mark__" + params_type + ".mark__group" +  "_" + index_item)
@@ -1062,11 +1054,6 @@
       //                        d._index_item = index_item;
       //                        return accessor_data(d)[vars.var_id] + "_" + index_item + '_' + index_mark;
       //                      });
-//
-      //      var markItems_enter = markItems.enter().append('g');
-//
-//
-    //      var mark = d3.select(that).selectAll(".items__mark__circle.items_" + mark_id).data([d]);
 
             // ENTER ITEMS
             var gItems_enter = gItems.enter()

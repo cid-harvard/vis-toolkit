@@ -18,7 +18,8 @@ vars.default_marks["circle"] = function(scope) {
         .attr('id', mark_id)
         .classed("items__mark__circle", true)
         .attr("r", this_params.radius)
-        .attr("transform", "translate(" +  mark_params.translate + ")rotate(" +  mark_params.rotate + ")");
+        .attr("transform", "translate(" +  mark_params.translate + ")rotate(" +  mark_params.rotate + ")")
+        .each(utils.bind_events);
 
     });
 

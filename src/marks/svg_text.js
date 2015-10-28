@@ -24,7 +24,7 @@ vars.default_marks["text"] = function(scope) {
         .classed("selected", function(d, i) { return d.__selected; })
         .attr("dy", ".35em")
         .attr("transform", "translate(" +  mark_params.translate + ")rotate(" +  mark_params.rotate + ")")
-        //.call(utils.items_group);
+        .each(utils.bind_events);
 
     });
 

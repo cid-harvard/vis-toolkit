@@ -6,7 +6,7 @@ vars.default_params["grid"] = function(scope) {
 
   // Chart specific metadata: grid
   // Generates x and y attributes to display items as a 2D grid
-  if(vars.refresh) {
+  if(vars.init || vars.refresh) {
 
     var nb_dimension =  Math.ceil(Math.sqrt(vars.new_data.length));
 

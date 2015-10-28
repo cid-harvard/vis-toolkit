@@ -8,17 +8,6 @@ vars.default_marks['rect'] = function(scope) {
 
   this_params.enter = function(selection, params, vars, mark_id) {
 
-/*
-        var items_mark_rect = d3.select(that).selectAll(".items__mark__rect.items_" + mark_id).data([d]);
-
-        items_mark_rect
-                  .classed("highlighted", function(d, i) { return d.__highlighted; })
-                  .classed("selected", function(d, i) { return d.__selected; })
-                  .transition().duration(vars.duration)
-
-                  .attr("transform", "translate(" +  params_translate + ")rotate(" +  params_rotate + ")");
-        */
-
     var sel = selection.append("rect");
 
     sel.each(function(d, i) {
@@ -30,11 +19,12 @@ vars.default_marks['rect'] = function(scope) {
         .classed("items__mark__rect", true)
         .attr("x", mark_params.x)
         .attr("y", mark_params.y)
-        .attr("height", mark_params.height)
-        .attr("width", mark_params.width)
+        .attr("height", mark_params.dy)
+        .attr("width", mark_params.dx)
         .style("stroke", mark_params.stroke)
         .style("fill", mark_params.fill)
-        .attr("transform", "translate(" +  mark_params.translate + ")rotate(" +  mark_params.rotate + ")");
+        .attr("transform", "translate(" +  mark_params.translate + ")rotate(" +  mark_params.rotate + ")")
+        .each(utils.bind_events);
 
     });
 
