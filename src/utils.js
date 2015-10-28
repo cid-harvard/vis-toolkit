@@ -302,36 +302,6 @@
 
         break;
 
-      case "rect":
-
-        var items_mark_rect = d3.select(that).selectAll(".items__mark__rect.items_" + mark_id).data([d]);
-
-        items_mark_rect.enter().append("rect")
-                  .classed("items__mark__rect", true)
-                  .classed("items_" + mark_id, true)
-                  .attr("x", params.x || 0)
-                  .attr("y", params.y || 0)
-                  .attr("height", params_height)
-                  .attr("width", params_width)
-                  .style("fill", params_fill)
-                  .style("stroke", params_stroke)
-                  .attr("transform", "translate(" +  params_translate + ")rotate(" +  params_rotate + ")");
-
-        items_mark_rect
-                  .classed("highlighted", function(d, i) { return d.__highlighted; })
-                  .classed("selected", function(d, i) { return d.__selected; })
-                  .transition().duration(vars.duration)
-                  .attr("x", params.x || 0)
-                  .attr("y", params.y || 0)
-                  .attr("height", params_height)
-                  .attr("width", params_width)
-                  .style("fill", params_fill)
-                  .style("stroke", params_stroke)
-                  .attr("transform", "translate(" +  params_translate + ")rotate(" +  params_rotate + ")");
-
-        items_mark_rect.exit().remove();
-
-        break;
 
       case "diamond":
 
@@ -1038,16 +1008,20 @@
 
     if(typeof vars.items !== "undefined" && vars.items[0] !== "undefined" &&  Object.keys(vars.items).length > 0 && vars.type !== "stacked") {
 
-      //Get the chart params_type = params.type(d[var_mark]);
-      var vars_params = vars.default_params["dotplot"](vars);
+      //Get the chart params
+      var vars_params = vars.default_params[vars.type](vars);
 
       vars_params.items.forEach(function(item, index_item) {
 
         item.marks.forEach(function(mark, index_mark) {
 
-          var mark_type = mark.type; // get the mark (circle, rect, line)
-          var mark_id = mark_type + "_" + index_item+ "_" + index_mark; //  unique ID for the mark
+          // Get the mark (circle, rect, line)
+          var mark_type = mark.type;
 
+          //  Unique ID for the mark
+          var mark_id = mark_type + "_" + index_item+ "_" + index_mark;
+
+          // Get the marks params
           var mark_params = vars.default_marks[mark_type](vars);
 
           var items = vars.svg.selectAll("#" + mark_id)
@@ -1094,7 +1068,6 @@
 //
     //      var mark = d3.select(that).selectAll(".items__mark__circle.items_" + mark_id).data([d]);
 
-
             // ENTER ITEMS
             var gItems_enter = gItems.enter()
                             .insert("g", ":first-child");
@@ -1110,7 +1083,6 @@
                 return "translate(" + vars.x_scale[0]["func"](accessor_data(d)[vars.var_x]) + ", " + vars.y_scale[0]["func"](accessor_data(d)[vars.var_y]) + ")";
               });
             }
-
 
             // Supporting multipe similar elements
            params._mark_id = index_item + "_" + index_mark;
