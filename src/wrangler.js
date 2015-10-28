@@ -30,7 +30,7 @@
 
     if(typeof vars.type === 'undefined') {
       vars.type = 'none';
-    };
+    }
 
     // In case the current_time is set dynamically
     if(typeof vars.time.current_time === "function") {

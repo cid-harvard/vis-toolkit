@@ -13,7 +13,7 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
     d.dept_pop = +d.dept_pop;
     d.year = +d.year;
     d.realgdp = +d.realgdp;
-    d.realgdp_percap = +d.realgdp_percap;    
+    d.realgdp_percap = +d.realgdp_percap;
     d["sum(export_value)"] = +d["sum(export_value)"];
     d["value_added"] = isNaN(+d["value_added"]) ? 0: +d["value_added"];
   });
@@ -21,7 +21,9 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
   visualization = vistk.viz()
     .params({
       dev: true,
-      type: 'dotplot',      
+      width: 600,
+      height: 400,
+      type: 'dotplot',
       data: departments,
       container: '#viz',
       var_x: 'dept_pop',
@@ -42,7 +44,7 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
         }]
       }],
       time: {
-        var_time: 'year', 
+        var_time: 'year',
         current_time: vistk.utils.max,
         parse: function(d) { return d; }
       },

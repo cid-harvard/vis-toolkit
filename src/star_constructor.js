@@ -8,6 +8,7 @@
 
     // Create the top level element conaining the visualization
     if(!vars.svg) {
+
        if(vars.type !== "table") {
 
         vars.root_svg = d3.select(vars.container).append("svg")
@@ -71,3 +72,11 @@
 
       }
    }
+
+   // TODO: add vars.canvas
+   // if(!vars.canvas) {
+   //   vars.canvas = d3.select(vars.container).append("canvas")
+   //    .attr("width", vars.width)
+   //    .attr("height", vars.height)
+   // }
+

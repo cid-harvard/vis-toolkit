@@ -3,19 +3,18 @@
   // Create SVG groups for items marks
   utils.items_group = function(d, i) {
 
-    d3.select(this).attr("class", "mark__group mark__group_" + d._index_item)
-                    .classed("highlighted", function(d, i) { return d.__highlighted; })
-                    .classed("selected", function(d, i) { return d.__selected; })
-                    .on("mouseover",function(d) {
-                      vars.evt.call("highlightOn", d);
-                    })
-                    .on("mouseleave", function(d) {
-                      vars.evt.call("highlightOut", d);
-                    })
-                    .on("click", function(d) {
-                       vars.evt.call("selection", d);
-                       d3.event.stopPropagation();
-                    });
+    d3.select(this).classed("highlighted", function(d, i) { return d.__highlighted; })
+                   .classed("selected", function(d, i) { return d.__selected; })
+                   .on("mouseover",function(d) {
+                     vars.evt.call("highlightOn", d);
+                   })
+                   .on("mouseleave", function(d) {
+                     vars.evt.call("highlightOut", d);
+                   })
+                   .on("click", function(d) {
+                      vars.evt.call("selection", d);
+                      d3.event.stopPropagation();
+                   });
 
   }
 
@@ -57,10 +56,11 @@
 
     selection.each(function(d, i) {
 
+
       // Skip the drawing if __redraw flag is false
-      if(!d.__redraw) {
-        return;
-      }
+     // if(!d.__redraw) {
+     //   return;
+     // }
 
       // Default id for marks
       var mark_id = params._mark_id;
@@ -89,7 +89,7 @@
             var_mark = var_mark.concat(params_type)
           }
 
-        })
+        });
 
       } else {
 
@@ -147,42 +147,6 @@
       var_mark.forEach(function(params_type) {
 
       switch(params_type) {
-
-        case "text":
-
-          if(typeof params.text_anchor === "undefined") {
-            params.text_anchor = "start";
-          }
-
-          var items_mark_text = d3.select(that).selectAll(".items__mark__text.items_" + mark_id).data([d]);
-
-          items_mark_text.enter().append("text")
-              .classed("items__mark__text", true)
-              .classed("items_" + mark_id, true)
-              .style("text-anchor", params.text_anchor)
-              .attr("x", params_x)
-              .attr("y", params_y)
-              .attr("dy", ".35em")
-              .attr("transform", "translate(" +  params_translate + ")rotate(" +  params_rotate + ")");
-
-          items_mark_text
-              .classed("highlighted", function(d, i) { return d.__highlighted; })
-              .classed("selected", function(d, i) { return d.__selected; })
-              .transition().duration(vars.duration)
-              .attr("transform", "translate(" +  params_translate + ")rotate(" +  params_rotate + ")")
-              .text(function(d) {
-
-                if(typeof params.text !== "undefined") {
-                  return params.text(d);
-                } else {
-                  return vars.accessor_data(d)[vars.var_text];
-                }
-
-              });
-
-        items_mark_text.exit().remove();
-
-        break;
 
         // Attach a div to the SVG container
         case "div":
@@ -349,20 +313,21 @@
                   .attr("y", params.y || 0)
                   .attr("height", params_height)
                   .attr("width", params_width)
-                  .attr("transform", "rotate(" + params_rotate + ")")
                   .style("fill", params_fill)
-                  .style("stroke", params_stroke);
+                  .style("stroke", params_stroke)
+                  .attr("transform", "translate(" +  params_translate + ")rotate(" +  params_rotate + ")");
 
         items_mark_rect
-            .classed("highlighted", function(d, i) { return d.__highlighted; })
-            .classed("selected", function(d, i) { return d.__selected; })
-            .transition().duration(vars.duration)
-            .attr("x", params.x || 0)
-            .attr("y", params.y || 0)
-            .attr("height", params_height)
-            .attr("width", params_width)
-            .style("fill", params_fill)
-            .style("stroke", params_stroke);
+                  .classed("highlighted", function(d, i) { return d.__highlighted; })
+                  .classed("selected", function(d, i) { return d.__selected; })
+                  .transition().duration(vars.duration)
+                  .attr("x", params.x || 0)
+                  .attr("y", params.y || 0)
+                  .attr("height", params_height)
+                  .attr("width", params_width)
+                  .style("fill", params_fill)
+                  .style("stroke", params_stroke)
+                  .attr("transform", "translate(" +  params_translate + ")rotate(" +  params_rotate + ")");
 
         items_mark_rect.exit().remove();
 
@@ -694,21 +659,6 @@
           chart.enter().append('g')
               .classed('items__chart__sparkline', true)
               .call(utils.draw_chart, scope, [d]);
-
-        break;
-
-        case "piechart":
-
-          var scope = {};
-          scope = vistk.utils.merge(scope, vars);
-
-          var piechart_params = vars.default_params["piechart"](scope);
-
-          var chart = d3.select(that).selectAll(".items__chart__piechart").data([d]);
-
-          chart.enter().append('g')
-              .classed('items__chart__piechart', true)
-              .call(utils.draw_chart, piechart_params, d);
 
         break;
 
@@ -1088,34 +1038,63 @@
 
     if(typeof vars.items !== "undefined" && vars.items[0] !== "undefined" &&  Object.keys(vars.items).length > 0 && vars.type !== "stacked") {
 
-        vars.items.forEach(function(item, index_item) {
+      //Get the chart params_type = params.type(d[var_mark]);
+      var vars_params = vars.default_params["dotplot"](vars);
 
-          // Use the global accessor, unless specif one has been set
-          var accessor_data = vars.accessor_data;
+      vars_params.items.forEach(function(item, index_item) {
 
-          if(typeof item.accessor_data !== "undefined") {
-            accessor_data = item.accessor_data;
+        item.marks.forEach(function(mark, index_mark) {
+
+          var mark_type = mark.type; // get the mark (circle, rect, line)
+          var mark_id = mark_type + "_" + index_item+ "_" + index_mark; //  unique ID for the mark
+
+          var mark_params = vars.default_marks[mark_type](vars);
+
+          var items = vars.svg.selectAll("#" + mark_id)
+            .data(vars.new_data);
+
+          items.enter().call(mark_params.enter, params, vars, mark_id);
+          items.call(mark_params.update, params, vars, mark_id);
+          items.exit().call(mark_params.exit, params, vars, mark_id);
+
+        });
+
+      });
+
+    }
+/*
+    vars.items.forEach(function(item, index_item) {
+
+      // Use the global accessor, unless specif one has been set
+      var accessor_data = vars.accessor_data;
+
+      if(typeof item.accessor_data !== "undefined") {
+        accessor_data = item.accessor_data;
+      }
+
+     // APPEND AND UPDATE ITEMS MARK
+      item.marks.forEach(function(params, index_mark) {
+
+        if(typeof params.filter == "undefined") {
+          params.filter = function() {
+            return true;
           }
-
-         // APPEND AND UPDATE ITEMS MARK
-          item.marks.forEach(function(params, index_mark) {
-
-            if(typeof params.filter == "undefined") {
-              params.filter = function() {
-                return true;
-              }
-            }
+        }
 
             // PRE-UPDATE ITEMS
-            // Join is based on the curren_time value
-            var markItems = vars_svg.selectAll(".mark__group" +  "_" + index_item)
-                            .data(vars.new_data, function(d, i) {
-                              d._index_item = index_item;
-                              return accessor_data(d)[vars.var_id] + "_" + index_item + '_' + index_mark;
-                            });
+      //      // Join is based on the curren_time value
+      //      var markItems = vars_svg.selectAll(".items__mark__" + params_type + ".mark__group" +  "_" + index_item)
+      //                      .data(vars.new_data, function(d, i) {
+      //                        d._index_item = index_item;
+      //                        return accessor_data(d)[vars.var_id] + "_" + index_item + '_' + index_mark;
+      //                      });
+//
+      //      var markItems_enter = markItems.enter().append('g');
+//
+//
+    //      var mark = d3.select(that).selectAll(".items__mark__circle.items_" + mark_id).data([d]);
 
-            var markItems_enter = markItems.enter().append('g');
-/*
+
             // ENTER ITEMS
             var gItems_enter = gItems.enter()
                             .insert("g", ":first-child");
@@ -1131,29 +1110,29 @@
                 return "translate(" + vars.x_scale[0]["func"](accessor_data(d)[vars.var_x]) + ", " + vars.y_scale[0]["func"](accessor_data(d)[vars.var_y]) + ")";
               });
             }
-*/
+
 
             // Supporting multipe similar elements
-            params._mark_id = index_item + "_" + index_mark;
+           params._mark_id = index_item + "_" + index_mark;
 
-            markItems_enter
+            vars_svg
                 //.filter(params.filter)
                 //.filter(utils.filters.redraw_only)
                 .call(utils.draw_mark, params, vars);
-
-            markItems
-                .filter(params.filter)
-                .call(utils.draw_mark, params, vars);
-
-            if(vars.init && typeof params.evt !== 'undefined') {
-              vars.evt.register("selection", params.evt[0].func)
-            }
+//
+        //    markItems
+        //        .filter(params.filter)
+        //        .call(utils.draw_mark, params, vars);
+//
+        //    if(vars.init && typeof params.evt !== 'undefined') {
+        //      vars.evt.register("selection", params.evt[0].func)
+        //    }
 
           });
 
           // Bind events to groups after marks have been created
           //gItems.each(utils.items_group);
-/*
+
           // IN CASE OF CUSTOM UPDATE FOR ITEMS
           if(typeof item.update !== "undefined") {
             vars_svg.selectAll(".mark__group" + "_" + index_item).call(item.update, vars)
@@ -1182,11 +1161,11 @@
               }
             });
           }
-*/
+
         });
 
     }
-
+*/
     if(typeof vars.connect !== "undefined" && typeof vars.connect[0] !== "undefined" && Object.keys(vars.connect).length > 0) {
 
       // 1/ Between different items at a given time for one dimension
@@ -1575,6 +1554,50 @@
 
     return result;
 
+  }
+
+  utils.mark_params = function(params, vars, d, i) {
+
+    var mark_params = {};
+
+    mark_params.text = "";
+
+    if(typeof params.text !== "undefined") {
+      if(typeof params.text === "function") {
+        mark_params.text = params.text(d, i , vars);
+      } else if(typeof params.text === "string") {
+        mark_params.text = params.text;
+      }
+    } else if(vars.var_text !== "undefined") {
+      mark_params.text = vars.accessor_data(d)[vars.var_text];
+    }
+
+    mark_params.source = [0, 0];
+    mark_params.target = [vars.width, vars.height];
+    mark_params.translate = [0, 0];
+
+    if(typeof params.translate !== "undefined" && params.translate !== null) {
+      if(typeof params.translate === "function") {
+        mark_params.translate = params.translate(d, i, vars);
+      } else {
+        mark_params.translate = params.translate;
+      }
+    }
+
+    mark_params.x = utils.init_params("x", 0, params, d, i, vars);
+    mark_params.y = utils.init_params("y", 0, params, d, i, vars);
+    mark_params.height = utils.init_params("height", 10, params, d, i, vars);
+    mark_params.width = utils.init_params("width", 10, params, d, i, vars);
+    mark_params.rotate = utils.init_params("rotate", 0, params, d, i, vars);
+    mark_params.fill = utils.init_params("fill", vars.color(vars.accessor_items(d)[vars.var_color]), params, d, i, vars);
+    mark_params.stroke = utils.init_params("stroke", 0, params, d, i, vars);
+
+    mark_params.text_anchor = utils.init_params("text_anchor", "end", params, d, i, vars);
+
+    mark_params.translate[0] += vars.x_scale[0]["func"](vars.accessor_data(d)[vars.var_x]);
+    mark_params.translate[1] += vars.y_scale[0]["func"](vars.accessor_data(d)[vars.var_y]);
+
+    return mark_params;
   }
 
   utils.redraw_only = function(d) { return d.__redraw; }

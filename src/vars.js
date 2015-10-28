@@ -125,6 +125,9 @@
     svg: null,
     ratio: 0.5, // Visualization aspect ratio
 
+    // Canvas Container
+    canvas: null,
+
     duration: 1000,
     interpolate: "monotone",
 
@@ -171,6 +174,7 @@
     },
 
     default_params: {},
+    default_marks: {},
 
     z_index: [
  //     {selector: '.mark__group', attribute: '__aggregated', type: 'productspace', weight: 1},
