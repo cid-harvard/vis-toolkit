@@ -73,10 +73,10 @@
       }
    }
 
-   // TODO: add vars.canvas
-   // if(!vars.canvas) {
-   //   vars.canvas = d3.select(vars.container).append("canvas")
-   //    .attr("width", vars.width)
-   //    .attr("height", vars.height)
-   // }
+   if(!vars.canvas) {
+     vars.canvas = d3.select(vars.container).append("canvas")
+      .attr("width", vars.width)
+      .attr("height", vars.height)
+      .style('position', 'fixed')
+   }
 

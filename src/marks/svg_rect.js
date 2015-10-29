@@ -25,6 +25,8 @@ vars.default_marks['rect'] = function(scope) {
         .style("fill", mark_params.fill)
         .attr("transform", "translate(" +  mark_params.translate + ")rotate(" +  mark_params.rotate + ")")
         .each(utils.bind_events);
+        // .each(utils.default_svg_attr, mark_params);
+
 
     });
 

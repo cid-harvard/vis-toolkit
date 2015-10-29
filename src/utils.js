@@ -18,6 +18,20 @@
 
   }
 
+  utils.default_svg_attr = function(params) {
+
+  // if(typeof params.title !== "undefined") {
+  //   mark_enter.append("title").text(function(d) {
+  //     return params.title(vars.accessor_items(d));
+  //   });
+  // }
+
+  // if(typeof params.class !== "undefined") {
+  //   mark_enter.classed(params.class(vars.accessor_items(d)), true);
+  // }
+
+  }
+
   // Create SVG groups for connect marks
   utils.connect_group = function(d, i) {
 
@@ -1001,7 +1015,13 @@
 
         item.marks.forEach(function(mark, index_mark) {
 
-
+          // if(typeof params.filter == "undefined") {
+          //   params.filter = function() {
+          //     return true;
+          //   }
+          // } else {
+          //  console.log(params.filter
+          // }
 
           // Get the mark (circle, rect, line)
           var mark_type = mark.type;
@@ -1016,14 +1036,17 @@
             .data(vars.new_data)
 
           // Skip the drawing if __redraw flag is false
-
-           // if(typeof params.filter == "undefined") {
-           //   params.filter = function() {
-           //     return true;
-           //   }
-           // }
           //.filter(params.filter)
           //.filter(utils.filters.redraw_only)
+
+          // Z-index?
+          // .insert("g", ":first-child");
+          // Should we re-order the marks to make sure it will appear in right order?
+          // Or do it afterwards?
+
+          // Custom enters
+          // Custom updates
+          // Custom exits
 
           items.enter().call(mark_params.enter, params, vars, mark_id);
           items.call(mark_params.update, params, vars, mark_id);
@@ -1037,13 +1060,6 @@
 /*
     vars.items.forEach(function(item, index_item) {
 
-      // Use the global accessor, unless specif one has been set
-      var accessor_data = vars.accessor_data;
-
-      if(typeof item.accessor_data !== "undefined") {
-        accessor_data = item.accessor_data;
-      }
-
      // APPEND AND UPDATE ITEMS MARK
       item.marks.forEach(function(params, index_mark) {
 
@@ -1055,42 +1071,24 @@
       //                        return accessor_data(d)[vars.var_id] + "_" + index_item + '_' + index_mark;
       //                      });
 
-            // ENTER ITEMS
-            var gItems_enter = gItems.enter()
-                            .insert("g", ":first-child");
+      // IN CASE OF CUSTOM ENTER FOR ITEMS
+      if(typeof item.enter !== "undefined") {
+        gItems_enter.call(item.enter, vars);
+      } else {
+        gItems_enter.attr("transform", function(d, i) {
+          return "translate(" + vars.x_scale[0]["func"](accessor_data(d)[vars.var_x]) + ", " + vars.y_scale[0]["func"](accessor_data(d)[vars.var_y]) + ")";
+        });
+      }
 
-            // ITEMS EXIT
-            var gItems_exit = gItems.exit();
-
-            // IN CASE OF CUSTOM ENTER FOR ITEMS
-            if(typeof item.enter !== "undefined") {
-              gItems_enter.call(item.enter, vars);
-            } else {
-              gItems_enter.attr("transform", function(d, i) {
-                return "translate(" + vars.x_scale[0]["func"](accessor_data(d)[vars.var_x]) + ", " + vars.y_scale[0]["func"](accessor_data(d)[vars.var_y]) + ")";
-              });
-            }
-
-            // Supporting multipe similar elements
-           params._mark_id = index_item + "_" + index_mark;
+       // Supporting multipe similar elements
+      params._mark_id = index_item + "_" + index_mark;
 
             vars_svg
                 //.filter(params.filter)
                 //.filter(utils.filters.redraw_only)
                 .call(utils.draw_mark, params, vars);
-//
-        //    markItems
-        //        .filter(params.filter)
-        //        .call(utils.draw_mark, params, vars);
-//
-        //    if(vars.init && typeof params.evt !== 'undefined') {
-        //      vars.evt.register("selection", params.evt[0].func)
-        //    }
 
           });
-
-          // Bind events to groups after marks have been created
-          //gItems.each(utils.items_group);
 
           // IN CASE OF CUSTOM UPDATE FOR ITEMS
           if(typeof item.update !== "undefined") {
@@ -1543,18 +1541,19 @@
       }
     }
 
+    // Available to all marks
     mark_params.x = utils.init_params("x", 0, params, d, i, vars);
     mark_params.y = utils.init_params("y", 0, params, d, i, vars);
     mark_params.height = utils.init_params("height", 10, params, d, i, vars);
     mark_params.width = utils.init_params("width", 10, params, d, i, vars);
+    mark_params.translate[0] += vars.x_scale[0]["func"](vars.accessor_data(d)[vars.var_x]);
+    mark_params.translate[1] += vars.y_scale[0]["func"](vars.accessor_data(d)[vars.var_y]);
+
+    // Specific to marks / charts
     mark_params.rotate = utils.init_params("rotate", 0, params, d, i, vars);
     mark_params.fill = utils.init_params("fill", vars.color(vars.accessor_items(d)[vars.var_color]), params, d, i, vars);
     mark_params.stroke = utils.init_params("stroke", 0, params, d, i, vars);
-
     mark_params.text_anchor = utils.init_params("text_anchor", "end", params, d, i, vars);
-
-    mark_params.translate[0] += vars.x_scale[0]["func"](vars.accessor_data(d)[vars.var_x]);
-    mark_params.translate[1] += vars.y_scale[0]["func"](vars.accessor_data(d)[vars.var_y]);
 
     return mark_params;
   }
@@ -1670,4 +1669,3 @@
     }
 
   }
-
