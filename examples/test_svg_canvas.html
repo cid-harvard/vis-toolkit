@@ -1,0 +1,38 @@
+<!doctype html>
+<meta charset="utf-8">
+<script src="../js/d3.js" charset="utf-8"></script>
+<script src="../build/vistk.js"></script>
+<link href="../css/vistk.css" rel="stylesheet">
+<body>
+<div id="viz"></div>
+<script>
+
+  var visualization = vistk.viz()
+      .params({
+        dev: true,
+        height: 300,
+        width: 500,
+        type: 'ordinal_horizontal',
+        var_x: '__id',
+        var_y: '__id',
+        data: [{text: 'I am SVG', render: 'svg'}, {text: 'I am Canvas', render: 'canvas'}],
+        container: '#viz',
+        x_text: null,
+        x_ticks: 10,
+        items: [{
+          marks: [{
+            type: 'text',
+            render: function(d, i, vars) { return d.render; },
+            translate: [-10, -10],
+            text_anchor: 'start'
+          }, {
+            type: 'rect',
+            render: function(d, i, vars) { return d.render; }
+          }]
+        }],
+        var_text: 'text'
+      });
+
+    d3.select("#viz").call(visualization);
+
+</script>
