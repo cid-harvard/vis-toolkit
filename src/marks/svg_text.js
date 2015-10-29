@@ -11,7 +11,7 @@ vars.default_marks["text"] = function(scope) {
 
     sel.each(function(d, i) {
 
-      var mark_params = utils.mark_params(params, vars, d, i);
+      var mark_params = utils.mark_params_values(params, vars, d, i);
 
       d3.select(this)
         .attr('id', mark_id)
@@ -34,7 +34,7 @@ vars.default_marks["text"] = function(scope) {
 
     selection.each(function(d, i) {
 
-      var mark_params = utils.mark_params(params, vars, d, i);
+      var mark_params = utils.mark_params_values(params, vars, d, i);
 
       d3.select(this)
         .classed("highlighted", function(d, i) { return d.__highlighted; })

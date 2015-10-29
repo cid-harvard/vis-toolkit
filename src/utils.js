@@ -1497,6 +1497,10 @@
 
     var result = default_value;
 
+    if(v === "height") {
+      console.log("HERER", default_value, params)
+    }
+
     if(typeof params[v] !== "undefined") {
       if(typeof params[v] === "function") {
         result = params[v](d, i, vars);
@@ -1556,6 +1560,55 @@
     mark_params.text_anchor = utils.init_params("text_anchor", "end", params, d, i, vars);
 
     return mark_params;
+  }
+
+  utils.init_params_values = function(var_v, default_value, params, d, i, vars) {
+
+    var result = default_value;
+
+    if(typeof params[var_v] !== "undefined") {
+      if(typeof params[var_v] === "function") {
+        result = params[var_v](d, i, vars);
+      } else if(typeof params[var_v] === "string") {
+        result = params[var_v];
+      } else if(typeof params[var_v] === "number") {
+        result = params[var_v];
+      } else {
+        result = params[var_v];
+      }
+    }
+
+    return result;
+
+  }
+
+  utils.mark_params_values = function(params, vars, d, i) {
+
+    var params_values = {};
+
+    params_values.text = utils.init_params_values(vars.var_text, "default", params, d, i, vars);
+
+    // Available to all marks
+    params_values.x = utils.init_params_values(vars.var_x, 0, params, d, i, vars);
+    params_values.y = utils.init_params_values(vars.var_y, 0, params, d, i, vars);
+    params_values.height = utils.init_params_values(vars.var_height, 10, params, d, i, vars);
+    params_values.width = utils.init_params_values(vars.var_width, 10, params, d, i, vars);
+
+    params_values.translate = [0, 0];
+
+    params_values.translate[0] += vars.x_scale[0]["func"](vars.accessor_data(d)[vars.var_x]);
+    params_values.translate[1] += vars.y_scale[0]["func"](vars.accessor_data(d)[vars.var_y]);
+
+    params_values.rotate = utils.init_params_values(vars.var_rotate, 0, params, d, i, vars);
+
+/*
+    // Specific to marks / charts
+
+    mark_params.fill = utils.init_params("fill", vars.color(vars.accessor_items(d)[vars.var_color]), params, d, i, vars);
+    mark_params.stroke = utils.init_params("stroke", 0, params, d, i, vars);
+    mark_params.text_anchor = utils.init_params("text_anchor", "end", params, d, i, vars);
+*/
+    return params_values;
   }
 
   utils.redraw_only = function(d) { return d.__redraw; }

@@ -6,6 +6,13 @@
     // Merging with current charts parameters set by the user in the HTML file
     vars = vistk.utils.merge(vars, vars.user_vars);
 
+   // if(!vars.canvas) {
+   //   vars.canvas = d3.select(vars.container).append("canvas")
+   //    .attr("width", vars.width)
+   //    .attr("height", vars.height)
+   //    .style('position', 'fixed')
+   // }
+
     // Create the top level element conaining the visualization
     if(!vars.svg) {
 
@@ -71,12 +78,5 @@
             .style({height: vars.height+"px", width: vars.width+"px", overflow: "scroll"});
 
       }
-   }
-
-   if(!vars.canvas) {
-     vars.canvas = d3.select(vars.container).append("canvas")
-      .attr("width", vars.width)
-      .attr("height", vars.height)
-      .style('position', 'fixed')
    }
 
