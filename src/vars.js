@@ -55,6 +55,7 @@
     x_axis_orient: "bottom",
     x_grid_show: false,
     x_text: true,
+    x_text_custom: "",
     x_axis_translate: [0, 0],
     x_invert: false,
 
@@ -70,6 +71,7 @@
     y_axis_show: false,
     y_grid_show: false,
     y_text: true,
+    y_text_custom: "",
     y_axis_translate: [0, 0],
     y_invert: false,
 

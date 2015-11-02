@@ -136,6 +136,7 @@
       var params_scale = utils.init_params("scale", 1, params, d, i, vars);
       var params_fill = utils.init_params("fill", vars.color(vars.accessor_items(d)[vars.var_color]), params, d, i, vars);
       var params_stroke = utils.init_params("stroke", 0, params, d, i, vars);
+      var params_offset_y = utils.init_params("offset_y", 0, params, d, i, vars);
 
       // Use the default accessor
       var accessor_data = vars.accessor_data;
@@ -528,9 +529,9 @@
               .classed("highlighted", function(d, i) { return d.__highlighted; })
               .classed("selected", function(d, i) { return d.__selected; })
               .attr("x1", function(d) { return -t[0] + vars.margin.left; })
-              .attr("y1", function(d) { return 0; })
+              .attr("y1", function(d) { return params_offset_y; })
               .attr("x2", function(d) { return vars.x_scale[0]["func"].range()[1]; })
-              .attr("y2", function(d) { return 0; });
+              .attr("y2", function(d) { return params_offset_y; });
 
           break;
 
@@ -1324,7 +1325,7 @@
 
       vars_svg.selectAll(".x.grid").data([vars.new_data])
         .enter()
-          .append("g")
+          .insert("g", ":first-child")
           .attr("class", "x grid")
           .style("display", function() { return vars.x_grid_show ? "block": "none"; })
           .attr("transform", function() {
@@ -1347,7 +1348,7 @@
 
       vars_svg.selectAll(".y.grid").data([vars.new_data])
         .enter()
-          .append("g")
+          .insert("g", ":first-child")
           .attr("class", "y grid")
           .style("display", function() { return vars.y_axis_show ? "block": "none"; })
           .attr("transform", "translate(" + vars.margin.left + ", 0)");
@@ -1359,7 +1360,6 @@
           .tickFormat(""));
 
     }
-
 
     if(vars.refresh) {
       utils.zoom_to_nodes(vars.zoom);
@@ -1383,7 +1383,7 @@
         .attr("class", "x axis")
         .attr("transform", "translate(" + vars.x_axis_translate + ")")
       .append("text")
-        .attr("class", "label")
+        .attr("class", "axis__label x__axis__label")
         .attr("x", vars.width-vars.margin.left-vars.margin.right)
         .attr("y", -6)
         .style({
@@ -1396,7 +1396,13 @@
             }
           }
         })
-        .text(vars.var_x);
+        .text(function() {
+          if(vars.x_text_custom !== "") {
+            return vars.x_text_custom;
+          } else {
+            return vars.var_x;
+          }
+        });
 
     vars.svg.selectAll(".x.axis").transition()
         .duration(vars.duration)
@@ -1427,7 +1433,7 @@
         .attr("class", "y axis")
         .attr("transform", "translate(" + vars.y_axis_translate + ")")
       .append("text")
-        .attr("class", "label")
+        .attr("class", "axis__label x__axis__label")
         .attr("transform", "rotate(-90)")
         .attr("y", 6)
         .attr("dy", ".71em")
@@ -1437,7 +1443,13 @@
             return typeof vars.y_text !== "undefined" && vars.y_text !== null;
           }
         })
-        .text(vars.var_y);
+        .text(function() {
+          if(vars.y_text_custom !== "") {
+            return vars.y_text_custom;
+          } else {
+            return vars.var_y;
+          }
+        });
 
     vars.svg.selectAll(".y.axis").transition()
         .duration(vars.duration)
