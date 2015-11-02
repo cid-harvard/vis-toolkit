@@ -13,9 +13,7 @@ d3.json("../data/diversification_ubiquity_hs4_1995_2012.json", function(error, c
 
   var flat_years = vistk.utils.flatten_years(countries);
 
-  flat_years.forEach(function(d) {
-    d.group = "world";
-  })
+  var world_average = 35;
 
   visualization = vistk.viz()
     .params({
@@ -25,7 +23,6 @@ d3.json("../data/diversification_ubiquity_hs4_1995_2012.json", function(error, c
       container: '#viz',
       data: flat_years,
       var_id: 'name',
-      var_group: 'group',
       var_color: 'continent',
       var_x: 'nb_products',
       var_y: 'avg_products',
@@ -52,10 +49,12 @@ d3.json("../data/diversification_ubiquity_hs4_1995_2012.json", function(error, c
           type: d3.scale.ordinal().domain([true, false]).range(["star", "none"]),
           rotate: "0"
         }, {
-          var_mark: '__aggregated',
-          type: d3.scale.ordinal().domain([true, false]).range(["line_horizontal", "none"]),
-          var_y: "nb_products",
-          offset_y: 0
+          type: 'line_horizontal',
+          filter: function(d, i) { return i===0; },
+          var_y: function() { return 35; },
+          offset_y: function(d, i, vars) {
+            return -(vars.y_scale[0]["func"](d[vars.var_y]) - vars.y_scale[0]["func"](35));
+          }
         }, {
           type: "text",
           rotate: "0",
@@ -70,8 +69,7 @@ d3.json("../data/diversification_ubiquity_hs4_1995_2012.json", function(error, c
       selection: ["France"],
       highlight: ["France", "Germany"],
       title: "World Countries"
-    })
-    .set('__aggregated', true);
+    });
 
   d3.select("#viz").call(visualization);
 
