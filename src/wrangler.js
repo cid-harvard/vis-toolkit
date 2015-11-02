@@ -43,85 +43,6 @@
       // Get a copy of the whole dataset
       vars.all_data = JSON.parse(JSON.stringify(vars.data));
 
-      // Links between items
-      // Used for product space
-      if(vars.links !== null && vars.type === 'productspace') {
-
-        vars.links.forEach(function(d, i) {
-
-          if(typeof d.source === "string") {
-            d.source = vistk.utils.find_node_by_id(vars.nodes, d.source);
-          }
-
-          if(typeof d.target === "string") {
-            d.target = vistk.utils.find_node_by_id(vars.nodes, d.target);
-          }
-
-          d.__redraw = true;
-
-        });
-
-      }
-
-      // Flagging missing nodes with __missing true attribute
-      if(typeof vars.nodes !== "undefined"  && vars.type === 'productspace') {
-
-        // Adding coordinates to data
-        vars.all_data.forEach(function(d, i) {
-
-          var node = vistk.utils.find_node_coordinates_by_id(vars.nodes, vars.var_node_id, d[vars.var_id]);
-
-          // If we can't find product in the graph, put it in the corner
-          // if(typeof node == "undefined") {
-          // // res = {x: 500+Math.random()*400, y: 1500+Math.random()*400};
-          //   res = {x: 1095, y: 1675};
-          // }
-
-          // We flag as missing the nodes in data without any coordinate
-          if(typeof node === "undefined") {
-
-            d.__missing = true;
-
-          } else {
-
-            d.__missing = false;
-            d.x = node.x;
-            d.y = node.y;
-
-          }
-
-          d.__redraw = true;
-
-        });
-
-        // Remove missing nodes
-        vars.all_data = vars.all_data.filter(function(d) {
-         return !d.__missing;
-        });
-
-        // Go through again the list of nodes
-        // to make sure we display all the nodes
-        vars.nodes.forEach(function(d, i) {
-
-          var node = vistk.utils.find_node_coordinates_by_id(vars.all_data, vars.var_id, d[vars.var_node_id]);
-
-          if(typeof node === "undefined") {
-
-            d.values = [];
-            d[vars.var_r] = 0;
-            d[vars.var_id] = d.id;
-
-            utils.init_item(d);
-            d.__redraw = true;
-
-            vars.all_data.push(d);
-
-          }
-
-        })
-
-      }
-
     }
 
     // Calculate vars.new_data which should contain two things
@@ -396,6 +317,90 @@
       } else {
         vars.new_data = nested_data.map(function(d) { return d.values; });
       }
+
+    }
+
+    if(vars.init || vars.refresh) {
+
+      // Links between items
+      // Used for product space
+      if(vars.links !== null && vars.type === 'productspace') {
+
+        vars.links.forEach(function(d, i) {
+
+          if(typeof d.source === "string") {
+            d.source = vistk.utils.find_node_by_id(vars.nodes, d.source);
+          }
+
+          if(typeof d.target === "string") {
+            d.target = vistk.utils.find_node_by_id(vars.nodes, d.target);
+          }
+
+          d.__redraw = true;
+
+        });
+
+      }
+
+      // Flagging missing nodes with __missing true attribute
+      if(typeof vars.nodes !== "undefined" && vars.type === 'productspace') {
+
+        // Adding coordinates to data
+        vars.new_data.forEach(function(d, i) {
+
+          var node = vistk.utils.find_node_coordinates_by_id(vars.nodes, vars.var_node_id, d[vars.var_id]);
+
+          // If we can't find product in the graph, put it in the corner
+          // if(typeof node == "undefined") {
+          // // res = {x: 500+Math.random()*400, y: 1500+Math.random()*400};
+          //   res = {x: 1095, y: 1675};
+          // }
+
+          // We flag as missing the nodes in data without any coordinate
+          if(typeof node === "undefined") {
+            console.log("MISSING")
+            d.__missing = true;
+
+          } else {
+
+            d.__missing = false;
+            d.x = node.x;
+            d.y = node.y;
+
+          }
+
+          d.__redraw = true;
+
+        });
+
+        // Remove missing nodes
+        vars.new_data = vars.new_data.filter(function(d) {
+         return !d.__missing;
+        });
+
+        // Go through again the list of nodes
+        // to make sure we display all the nodes
+        vars.nodes.forEach(function(d, i) {
+
+          var node = vistk.utils.find_node_coordinates_by_id(vars.new_data, vars.var_id, d[vars.var_node_id]);
+
+          if(typeof node === "undefined") {
+
+            d.values = [];
+            d[vars.var_r] = 0;
+            d[vars.var_id] = d.id;
+
+            utils.init_item(d);
+            d.__redraw = true;
+
+            vars.new_data.push(d);
+
+          }
+
+        })
+
+      }
+
 
     }
 
