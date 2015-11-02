@@ -3,6 +3,7 @@
 <script src="../js/d3.js"></script>
 <script src="../build/vistk.js"></script>
 <link href="../css/vistk.css" rel="stylesheet">
+<title>Product Space</title>
 <style>
 #legend {
     padding: 1.5em 0 0 1.5em;
@@ -109,6 +110,8 @@ g:hover .items__mark__circle:not(.highlighted__adjacent) {
 <div id="viz"></div>
 <script>
 
+var visualization = null;
+
 var years = [1960, 2013];
 var categories = [
   {name: "Food/Live Animals for Food", id: 0},
@@ -161,7 +164,7 @@ d3.json("../data/network_sitc.json", function(graph) {
           y_invert: true,
           radius: 5,
           var_color: 'rca',
-          var_group: 'color',
+          var_group: 'community_name',
           var_id: 'id',
           var_text: 'name',
           items: [{
@@ -185,23 +188,16 @@ d3.json("../data/network_sitc.json", function(graph) {
           default: true,
           options: []
         },
-        /*
-        evt: [
-
-        ]
-        */
-        //  title: "Thailand Product Space (2013)"
       })
-
-
 
       d3.select("#viz").call(visualization);
 
       var label = d3.select("svg").insert("text", ":first-child")
           .attr("class", "year label")
-          .attr("text-anchor", "end")
-          .attr("y", 154)
-          .attr("x", 500)
+          .attr("text-anchor", "start")
+          .style("font-size", 100)
+          .attr("y", 110)
+          .attr("x", 10)
           .text(visualization.params().time.current_time);
 
     });
