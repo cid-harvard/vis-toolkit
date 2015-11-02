@@ -133,6 +133,7 @@
       var params_height = utils.init_params("height", 10, params, d, i, vars);
       var params_width = utils.init_params("width", 10, params, d, i, vars);
       var params_rotate = utils.init_params("rotate", 0, params, d, i, vars);
+      var params_scale = utils.init_params("scale", 1, params, d, i, vars);
       var params_fill = utils.init_params("fill", vars.color(vars.accessor_items(d)[vars.var_color]), params, d, i, vars);
       var params_stroke = utils.init_params("stroke", 0, params, d, i, vars);
 
@@ -398,19 +399,21 @@
           items_mark_tick.enter().append('line')
               .classed('items__mark__tick', true)
               .classed("items_" + mark_id, true)
-              .attr("x1", function(d) { return 0; })
-              .attr("y1", function(d) { return -20; })
-              .attr("x2", function(d) { return 0; })
-              .attr("y2", function(d) { return 20; })
-              .attr("transform", "translate(0,0)rotate(" + params_rotate + ")");
+              // .attr("x1", function(d) { return 0; })
+              // .attr("y1", function(d) { return -20; })
+              // .attr("x2", function(d) { return 0; })
+              .attr("y2", function(d) { return -20; })
+              .attr("transform", "translate(" +  params_translate + ")rotate(" + params_rotate + ")scale(" + params_scale + ")");
+
+          if(typeof params.class !== "undefined") {
+            items_mark_tick.classed(params.class(vars.accessor_items(d)), true);
+          }
 
           items_mark_tick
               .classed("highlighted", function(d, i) { return d.__highlighted; })
               .classed("selected", function(d, i) { return d.__selected; })
               .transition().duration(vars.duration)
-              .attr("transform", function(d) {
-                return "translate(" +  params_translate + ")rotate(" +  params_rotate + ")";
-              });
+              .attr("transform", "translate(" +  params_translate + ")rotate(" + params_rotate + ")scale(" + params_scale + ")")  ;
 
           items_mark_tick.exit().remove();
 
