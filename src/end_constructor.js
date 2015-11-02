@@ -57,9 +57,7 @@
 
     });
 
-//    vars.root_svg
-
-  }, 100)
+  }, 100);
 
   vars.this_chart = chart;
 
