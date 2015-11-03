@@ -358,7 +358,6 @@
 
           // We flag as missing the nodes in data without any coordinate
           if(typeof node === "undefined") {
-            console.log("MISSING")
             d.__missing = true;
 
           } else {
