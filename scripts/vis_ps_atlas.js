@@ -29,7 +29,7 @@ var rca_fill = function(d) {
   }
 }
 
-var color_fill = function(d) { return d.color; }
+function color_fill(d) { return d.color; }
 var white_fill = function() { return "#fff"; }
 
 // INTRODUCTION
@@ -42,19 +42,19 @@ var PS_INTRO = [
     filter: []
   },
   {
-    label: "755 Products",
+    label: "Circles are 755 Products",
     group: "intro",
     fill: white_fill,
     filter: []
   },
   {
-    label: "Distance by Similarity",
+    label: "Distance is Similarity",
     group: "intro",
     fill: color_fill,
     filter: []
   },
   {
-    label: "Color by Category",
+    label: "Colors are Categories",
     group: "intro",
     fill: color_fill,
     filter: []
@@ -68,9 +68,9 @@ PS_INTRO.forEach(function(d) {
 
 // CATEGORY DESCRIPTION
 
-CATEGORY_INTRO = [
+PS_CATEGORY = [
   {
-    label: "16 Categories",
+    label: "16 Products Category",
     group: "category",
     fill: function(d) { return d.color; },
     filter: []
@@ -95,7 +95,7 @@ CATEGORY_INTRO = [
   }
 ];
 
-CATEGORY_INTRO.forEach(function(d) {
+PS_CATEGORY.forEach(function(d) {
   d.time = {};
   d.time.current_time = 2013;
 })
@@ -117,7 +117,7 @@ LIST_COUNTRY = [
   }
 ];
 
-COUNTRY_INTRO = LIST_COUNTRY.map(function(d) {
+PS_COUNTRY = LIST_COUNTRY.map(function(d) {
   o = {};
   o.time = {};
   o.time.current_time = 2013;
@@ -128,7 +128,7 @@ COUNTRY_INTRO = LIST_COUNTRY.map(function(d) {
   return o;
 });
 
-YEAR_INTRO = d3.range((2013-1960)).map(function(d, i) {
+PS_YEAR = d3.range((2013-1960)).map(function(d, i) {
   o = {};
   o.time = {};
   o.time.current_time = 1960 + i;
