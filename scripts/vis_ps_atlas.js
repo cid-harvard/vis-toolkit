@@ -2,7 +2,6 @@ var fs = require('fs');
 var system = require('system');
 var d3 = require("d3");
 
-
 var process = require("child_process")
 var execFile = process.execFile
 
@@ -11,7 +10,6 @@ var THUMBS_DIR = "../thumbs/";
 var SCREENSHOT_WIDTH = 800;
 var SCREENSHOT_HEIGHT = 600;
 
-
 var inputFileName = "../examples/scatterplot_productspace_atlas.html";
 
 fs.removeTree(THUMBS_DIR);
@@ -19,52 +17,97 @@ fs.makeDirectory(THUMBS_DIR);
 
 var default_dataset = "../data/thai_exports_1960_2013.json";
 
-/*
-"../data/bgd_exports_1960_2013.json";
-"../data/deu_exports_1960_2013.json";
-"../data/sau_exports_1960_2013.json";
-"../data/usa_exports_1960_2013.json";
-*/
+rca_fill = function(d) {
+  if(d.rca > 1) {
+    return d.color;
+  } else {
+    return "#fff";
+  }
+}
+
+color_fill = function(d) { return d.color; }
+white_fill = function() { return "#fff"; }
 
 var PS_INTRO = [
-
+  {
+    label: "The Product Space",
+    group: "intro",
+    fill: color_fill,
+    filter: []
+  },
   {
     label: "755 Products",
-    group: "intro"
+    group: "intro",
+    fill: white_fill,
+    filter: []
   },
   {
-    label: "By proximity",
-    group: "intro"
+    label: "Distance by Similarity",
+    group: "intro",
+    fill: color_fill,
+    filter: []
   },
   {
-    label: "Color by category",
-    group: "intro"
+    label: "Color by Category",
+    group: "intro",
+    fill: color_fill,
+    filter: []
+  }
+];
+
+PS_INTRO.forEach(function(d) {
+  d.time = {};
+  d.time.current_time = 2013;
+})
+
+CATEGORY_INTRO = [
+  {
+    label: "16 Categories",
+    group: "intro",
+    fill: function(d) { return d.color; },
+    filter: []
   },
   {
     label: "Machinery",
-    group: "intro"
-  },
-  {
-    label: "Textile",
-    group: "intro"
+    group: "intro",
+    fill: function(d) { return d.color; },
+    filter: ["Machinery"]
   },
   {
     label: "Garnments",
-    group: "intro"
+    group: "intro",
+    fill: color_fill,
+    filter: ["Garnments"]
   },
   {
     label: "Electronics",
-    group: "intro"
+    group: "intro",
+    fill: color_fill,
+    filter: ["Electronics"]
   }
-]
+];
+
+CATEGORY_INTRO.forEach(function(d) {
+  d.time = {};
+  d.time.current_time = 2013;
+})
+
+COUNTRIES_INTRO = [
+  {
+    data: "../data/bgd_exports_1960_2013.json",
+    label: "Bangladesh",
+    group: "county"
+  }
+// "../data/deu_exports_1960_2013.json";
+// "../data/sau_exports_1960_2013.json";
+// "../data/usa_exports_1960_2013.json";
+];
 
 var LIST_PARAMS = [
 
 // TIME
   {
-    time: {
-      current_time: 1985
-    },
+    time: {current_time: 1985},
     filter: [],
     label: "1985",
     group: "time"
@@ -123,6 +166,7 @@ LIST_PARAMS = d3.range((2013-1960)).map(function(d, i) {
   return o;
 })
 
+LIST_PARAMS = CATEGORY_INTRO;
 
 var takeScreenshot = function(index) {
         console.log('Page loaded', index);
@@ -140,7 +184,7 @@ var takeScreenshot = function(index) {
 
         window.setTimeout(function () {
 
-            page.evaluate(function (PARAMS) {
+            page.evaluate(function (PARAMS, rca_fill) {
 
               visualization.params().ui.default = false;
 
@@ -150,9 +194,17 @@ var takeScreenshot = function(index) {
 
              // }
 
-              //if(typeof PARAMS.filter !== "undefined") {
-              //  visualization.params().filter = PARAMS.filter;
-              //}
+              if(typeof PARAMS.filter !== "undefined") {
+                visualization.params().filter = PARAMS.filter;
+              } else {
+                visualization.params().filter = [];
+              }
+
+              if(typeof PARAMS.fill !== "undefined") {
+                visualization.params().items[0].marks[0].fill = PARAMS.fill;
+              } else {
+                visualization.params().items[0].marks[0].fill = rca_fill;
+              }
 
               visualization.params().refresh = true;
 
@@ -160,7 +212,7 @@ var takeScreenshot = function(index) {
               d3.select("#viz").call(visualization);
               d3.select('.year').text(PARAMS.label);
 
-            }, LIST_PARAMS[index]);
+            }, LIST_PARAMS[index], rca_fill);
 
 
             window.setTimeout(function () {
