@@ -1,9 +1,12 @@
+// For arguments and file writing
 var fs = require('fs');
 var system = require('system');
-var d3 = require("d3");
-
+var args = system.args;
 var process = require("child_process")
 var execFile = process.execFile
+
+// Useful utils stuff
+var d3 = require("d3");
 
 var LOAD_WAIT_TIME = 5000;
 var THUMBS_DIR = "../thumbs/";
@@ -12,12 +15,13 @@ var SCREENSHOT_HEIGHT = 600;
 
 var inputFileName = "../examples/scatterplot_productspace_atlas.html";
 
+// Remove temporary directory
 fs.removeTree(THUMBS_DIR);
 fs.makeDirectory(THUMBS_DIR);
 
 var default_dataset = "../data/thai_exports_1960_2013.json";
 
-rca_fill = function(d) {
+var rca_fill = function(d) {
   if(d.rca > 1) {
     return d.color;
   } else {
@@ -25,8 +29,10 @@ rca_fill = function(d) {
   }
 }
 
-color_fill = function(d) { return d.color; }
-white_fill = function() { return "#fff"; }
+var color_fill = function(d) { return d.color; }
+var white_fill = function() { return "#fff"; }
+
+// INTRODUCTION
 
 var PS_INTRO = [
   {
@@ -60,28 +66,30 @@ PS_INTRO.forEach(function(d) {
   d.time.current_time = 2013;
 })
 
+// CATEGORY DESCRIPTION
+
 CATEGORY_INTRO = [
   {
     label: "16 Categories",
-    group: "intro",
+    group: "category",
     fill: function(d) { return d.color; },
     filter: []
   },
   {
     label: "Machinery",
-    group: "intro",
+    group: "category",
     fill: function(d) { return d.color; },
     filter: ["Machinery"]
   },
   {
     label: "Garnments",
-    group: "intro",
+    group: "category",
     fill: color_fill,
     filter: ["Garnments"]
   },
   {
     label: "Electronics",
-    group: "intro",
+    group: "category",
     fill: color_fill,
     filter: ["Electronics"]
   }
@@ -92,71 +100,35 @@ CATEGORY_INTRO.forEach(function(d) {
   d.time.current_time = 2013;
 })
 
-COUNTRIES_INTRO = [
+// COUNTRY DESCRIPTION
+
+LIST_COUNTRY = [
   {
-    data: "../data/bgd_exports_1960_2013.json",
-    label: "Bangladesh",
-    group: "county"
+    name: 'Germany',
+    accr: 'deu'
+  },
+  {
+    name: 'Saudi Arabia',
+    accr: 'sau'
+  },
+  {
+    name: 'United States',
+    accr: 'usa'
   }
-// "../data/deu_exports_1960_2013.json";
-// "../data/sau_exports_1960_2013.json";
-// "../data/usa_exports_1960_2013.json";
 ];
 
-var LIST_PARAMS = [
+COUNTRY_INTRO = LIST_COUNTRY.map(function(d) {
+  o = {};
+  o.time = {};
+  o.time.current_time = 2013;
+  o.filter = [];
+  o.dataset = "../data/" + d.accr + "_exports_1960_2013.json";
+  o.label = d.name + " " + o.time.current_time + "";
+  o.group = 'country';
+  return o;
+});
 
-// TIME
-  {
-    time: {current_time: 1985},
-    filter: [],
-    label: "1985",
-    group: "time"
-  },
-
-  {
-    time: {
-      current_time: 1990
-    },
-    filter: [],
-    label: "1990",
-    group: "time"
-  },
-
-// COUNTRIES
-// Uses different datasets
-  {
-    time: {
-      current_time: 1995
-    },
-    filter: [],
-    label: "Germany 1995",
-    group: "country",
-    data: '../data/..'
-  },
-  {
-    time: {
-      current_time: 2000
-    },
-    filter: [],
-    label: "Germany 2000",
-    group: "country"
-  },
-
-// CATEGORY
-  {
-    time: {
-      current_time: 2000
-    },
-    filter: ['Machinery'],
-    label: "Machinery",
-    group: "category"
-  }
-
-// CATEGORY
-
-];
-
-LIST_PARAMS = d3.range((2013-1960)).map(function(d, i) {
+YEAR_INTRO = d3.range((2013-1960)).map(function(d, i) {
   o = {};
   o.time = {};
   o.time.current_time = 1960 + i;
@@ -166,10 +138,8 @@ LIST_PARAMS = d3.range((2013-1960)).map(function(d, i) {
   return o;
 })
 
-LIST_PARAMS = CATEGORY_INTRO;
+var captureScreen = function(index, LIST_PARAMS) {
 
-var takeScreenshot = function(index) {
-        console.log('Page loaded', index);
   var page = require("webpage").create();
 
   page.open(inputFileName, function    (status) {
@@ -180,7 +150,7 @@ var takeScreenshot = function(index) {
 
     } else {
 
-      console.log('success~')
+      console.log('Page loaded for ', index, LIST_PARAMS[index].group);
 
         window.setTimeout(function () {
 
@@ -214,7 +184,6 @@ var takeScreenshot = function(index) {
 
             }, LIST_PARAMS[index], rca_fill);
 
-
             window.setTimeout(function () {
 
               page.clipRect = {
@@ -227,16 +196,19 @@ var takeScreenshot = function(index) {
               var outputImage = THUMBS_DIR + LIST_PARAMS[index].group + '_' + pad(index) + '.png';
               page.render(outputImage);
 
-              console.log("writing file ", outputImage)
+              console.log("Writing file ", outputImage)
 
               if(index >= LIST_PARAMS.length - 1) {
+
+                console.log("Create GIF")
 
                 execFile("convert", ["-delay", "20", "-loop", 0, THUMBS_DIR, "*.png", "result_ph.gif"], null, function (err, stdout, stderr) {
                   phantom.exit();
                 });
 
               } else {
-                takeScreenshot(index + 1);
+                console.log("Next image ", index + 1);
+                captureScreen(index + 1, LIST_PARAMS);
               }
 
             }, LOAD_WAIT_TIME);
@@ -246,8 +218,31 @@ var takeScreenshot = function(index) {
    });
 }
 
-takeScreenshot(0);
+if (args.length === 1) {
+  console.log('Try to pass some arguments: intro, category, country, year.');
+  phantom.exit();
+} else {
+  if(args[1] === "intro") {
+    console.log("Loading introduction");
+    captureScreen(0, PS_INTRO);
+  } else if(args[1] === "category") {
+    console.log("Loading category")
+    captureScreen(0, PS_CATEGORY);
+  } else if(args[1] === "country") {
+    console.log("Loading country")
+    captureScreen(0, PS_COUNTRY);
+  } else if(args[1] === "year") {
+    console.log("Loading year")
+    captureScreen(0, PS_YEAR);
+  } else {
+    console.log("Unknown parameters, pick: intro, category, country, year.");
+    phantom.exit();
+  }
+}
 
+// UTILS FUNCTIONS
+
+// Add leading zeros
 function pad(n) {
     return (n < 10) ? ("0" + n) : n;
 }
