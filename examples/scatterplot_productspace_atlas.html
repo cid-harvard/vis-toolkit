@@ -105,6 +105,36 @@ g:hover .items__mark__circle:not(.highlighted__adjacent) {
   fill: #ddd;
 }
 
+
+.tooltip {
+  background: white;
+
+  padding: 10;
+  z-index: 10;
+  min-width: 150px;
+  max-width: 150px;
+  font-size: 3em;
+  overflow: initial !important;
+  box-shadow: -1px -1px 5px rgba(0,0,0,0.2);
+  transform: translate(-50%, calc(-100% - 10px));
+  text-transform: capitalize;
+}
+
+.tootip:after {
+    top: 100%;
+    left: 50%;
+    border: solid transparent;
+    content: '';
+    height: 0;
+    width: 0;
+    position: absolute;
+    pointer-events: none;
+    border-color: rgba(255, 255, 255, 0);
+    border-top-color: white;
+    border-width: 10px;
+    margin-left: -10px;
+  }
+
 </style>
 <body>
 <div id="viz"></div>
@@ -127,7 +157,7 @@ var categories = [
 ];
 
 d3.json("../data/network_sitc.json", function(graph) {
-  d3.json("../data/thai_exports_1960_2013.json", function(exports) {
+  d3.json("../data/usa_exports_1960_2013.json", function(exports) {
 
 // data {"abbrv": "0101", "distance": 0.5495458, "opp_gain": 0.0, "name": "Live horses, asses, mules or hinnies", "color": "#FFE999", "pci": 0.9957224, "share": 0.0018579885548872719, "community_id": 106, "value": 325000000.0, "rca": 2.303479, "community_name": "Animal & Animal Products", "code": "0101", "year": 1995, "item_id": 1, "id": "0101"}
 /* HS PRE-PROCESSING
@@ -177,28 +207,53 @@ d3.json("../data/network_sitc.json", function(graph) {
                   return "#fff";
                 }
               }
+            }, {
+              var_mark: '__highlighted',
+              type: d3.scale.ordinal().domain([false, true]).range(['none', 'div']),
+              class: function() {
+                return 'tooltip';
+              },
+              x: function(d, i, vars) {
+                return  vars.x_scale[0]["func"](d[vars.var_x]);
+              },
+              y: function(d, i, vars) {
+                return vars.y_scale[0]["func"](d[vars.var_y]);
+              },
+              text: function(d, i, vars) {
+                return "<img src='http://cdn.mysitemyway.com/etc-mysitemyway/icons/legacy-previews/icons/glossy-black-icons-transport-travel/038420-glossy-black-icon-transport-travel-transportation-car9-sc44.png' style='width: 150px;'>";
+              },
+              height: function() { return '100px';},
+              translate: [0, 0],
+              width: '150px'
             }]
           }],
           time: {
             var_time: "year",
-            current_time: 1980,
+            current_time: 2000,
             parse: function(d) { return d; }
           },
         ui: {
-          default: false,
+          default: true,
           options: []
         },
+        highlighted: ['8703']
       })
 
       d3.select("#viz").call(visualization);
 
       var label = d3.select("svg").insert("text", ":first-child")
-          .attr("class", "year label")
+          .attr("class", "year label tooltip")
           .attr("text-anchor", "start")
           .style("font-size", 70)
           .attr("y", 80)
           .attr("x", 10)
           .text(visualization.params().time.current_time);
+
+
+
+      // Cars 8703
+      // Aircraft 8802
+      // Men's or boys' shirts, knitted or crocheted 6105
 
     });
 
