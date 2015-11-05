@@ -130,7 +130,10 @@
       }
       var params_x = utils.init_params("x", 0, params, d, i, vars);
       var params_y = utils.init_params("y", 0, params, d, i, vars);
-      var params_height = utils.init_params("height", 10, params, d, i, vars);
+
+      var default_height = params_type == 'div' || params_type == 'divtext' ? null: 10;
+      var params_height = utils.init_params("height", default_height, params, d, i, vars);
+
       var params_width = utils.init_params("width", 10, params, d, i, vars);
       var params_rotate = utils.init_params("rotate", 0, params, d, i, vars);
       var params_scale = utils.init_params("scale", 1, params, d, i, vars);
@@ -185,7 +188,7 @@
 
         // Attach a div to the SVG container
         case "div":
-
+        console.log("height", params_height, params.height)
           var items_mark_div = d3.select(d3.select(vars.svg.node().parentNode).node().parentNode)
                 .selectAll(".items__mark__div").data([d]);
 
@@ -205,11 +208,10 @@
                    }
                  })
                  .style("height", function(d) {
-                   if(typeof params_height !== "undefined") {
-                     return params_height + "px";
-                   } else {
-                    return "auto";
-                   }
+                  return 'auto';
+                  // if(typeof params_height !== "undefined") {
+                  //   return params_height + "px";
+                  // }
                  })
                  .style("left", function(d) {
                    if(typeof params_x !== "undefined") {
@@ -227,6 +229,7 @@
                    }
                    return params_translate[1];
                  })
+                 .append('span')
                  .html(params_text);
 
           if(typeof params.class !== "undefined") {
@@ -272,9 +275,7 @@
                .style("height", function(d) {
                  if(typeof d.dy !== "undefined") {
                    return (Math.max(0, d.dy - 2 * vars.padding - params_translate[1])) + "px";
-                 } else {
-                  return "auto";
-                }
+                 }
                 })
               .style("margin-left", function(d) {
                  return params_translate[0] + 'px';
@@ -304,9 +305,7 @@
               .style("height", function(d) {
                 if(typeof d.dy !== "undefined") {
                   return (Math.max(0, d.dy - 2 * vars.padding - params_translate[1])) + "px";
-                } else {
-                 return "auto";
-               }
+                }
                })
 
           if(typeof params.class !== "undefined") {
@@ -517,7 +516,7 @@
 
         case "line_horizontal":
 
-          var mark = d3.select(that).selectAll(".mark__line_horizontal").data([d]);
+          var mark = d3.select(that).selectAll(".mark__line_horizontal.items_" + mark_id).data([d]);
 
           var t = d3.transform(d3.select(that).attr("transform")).translate;
 
