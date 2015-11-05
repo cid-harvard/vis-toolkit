@@ -197,7 +197,8 @@
                  .classed("items__mark__div", true)
                  .classed("items_" + mark_id, true)
                  .style("position", "absolute")
-                 .style({"text-overflow": "ellipsis", "overflow": "hidden"});
+                 .style("text-overflow", "ellipsis")
+                 .style("overflow", "hidden");
 
           items_mark_div
                  .style("width", function(d) {
@@ -229,7 +230,6 @@
                    }
                    return params_translate[1];
                  })
-                 .append('span')
                  .html(params_text);
 
           if(typeof params.class !== "undefined") {
@@ -264,7 +264,7 @@
                 })
                .append("xhtml:body")
                .append("div")
-               .style({"pointer-events": "none"})
+               .style("pointer-events", "none")
                .style("width", function(d) {
                  if(typeof d.dx !== "undefined") {
                    return (Math.max(0, d.dx - 2 * vars.padding - params_translate[0])) + "px";
