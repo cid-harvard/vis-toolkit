@@ -43,7 +43,19 @@
   vars.height = vars.width * vars.ratio;
 
   // List of events
-  vars.dispatch = d3.dispatch('init', 'end', 'highlightOn', 'highlightOut', 'selection', 'resize', 'clearAnimations', 'timeUpdate');
+  vars.dispatch = d3.dispatch('init', 'start', 'finish', 'end', 'highlightOn', 'highlightOut', 'selection', 'resize', 'clearAnimations', 'timeUpdate');
+
+  vars.evt.register('start', function(d) {
+    if(vars.dev) { console.log("[vars.evt.call] start rendering"); }
+    d3.select(vars.container).selectAll(".message").style('display', 'block').text('Loading...');
+  });
+
+  vars.evt.register('finish', function(d) {
+    if(vars.dev) { console.log("[vars.evt.call] end rendering"); }
+    if(vars.new_data.length > 0) {
+      d3.select(vars.container).selectAll(".message").style('display', 'none');
+    }
+  });
 
   // Default events
   d3.select(window).on('resize', function(d) {
