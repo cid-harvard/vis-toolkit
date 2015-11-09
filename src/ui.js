@@ -495,4 +495,7 @@
     }
 
   });
+
+
+    vars.evt.call('finish', null);
 }
