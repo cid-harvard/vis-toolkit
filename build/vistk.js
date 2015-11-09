@@ -6,7 +6,7 @@ var w = typeof window === "undefined" ? this : window;
 var vistk = w.vistk || {};
 w.vistk = vistk;
 
-vistk.version = "0.0.21";
+vistk.version = "0.0.22";
 vistk.utils = {};
 
 vistk.viz = function() {
@@ -2223,7 +2223,7 @@ var utils ={};
       // Find unique values for various parameters
       vars.time.interval = d3.extent(vars.new_data, function(d) { return d[vars.time.var_time]; });
       vars.time.points = vistk.utils.find_unique_values(vars.new_data, vars.time.var_time);
-      vars.unique_items = vistk.utils.find_unique_values(vars.new_data, vars.var_id);
+      // vars.unique_items = vistk.utils.find_unique_values(vars.new_data, vars.var_id);
 
 
       // Filter data by attribute
@@ -2244,55 +2244,54 @@ var utils ={};
       vars.unique_data = [];
 
       var lookup_index = [];
+      var lookup_size = 0;
 
-      vars.unique_items.forEach(function(item_id, i) {
+      vars.new_data.forEach(function(d, i) {
 
-        // METADATA
-        var d = vars.new_data.filter(function(e, j) {
-          return e[vars.var_id] == item_id && e[vars.time.var_time] == vars.time.current_time;
-        })[0];
+        var index = -1;
 
-        // TODO: it can happen there is no item for the current year (but for others)
-        if(typeof d === "undefined") {
-          return;
+        if(typeof lookup_index[d[vars.var_id]] === 'undefined') {
+
+          index = lookup_size;
+          lookup_size++;
+
+          lookup_index[d[vars.var_id]] = index;
+
+          utils.init_item(d);
+
+          if(vars.filter.indexOf(d[vars.var_group]) > -1) {
+            d.__filtered = true;
+          }
+          if(vars.highlight.indexOf(vars.var_id) > -1) {
+            d.__highlighted = true;
+          }
+          if(vars.selection.indexOf(vars.var_id) > -1) {
+            d.__selected = true;
+          }
+
+          d.__redraw = true;
+
+          // Dup for metadata
+          var dup = JSON.parse(JSON.stringify(d));
+          dup.values = [];
+
+          vars.unique_data.push(dup);
+
+        } else {
+
+          index = lookup_index[d[vars.var_id]];
+
         }
 
-        // TIME VALUES
-        d.values = vars.new_data.filter(function(e) {
-          return item_id === e[vars.var_id];
-        })
-        .map(function(d) {
+        var v = {};
+        v[vars.var_id] = d[vars.var_id];
+        v[vars.time.var_time] = d[vars.time.var_time];
+        v[vars.var_y] = d[vars.var_y];
+        v[vars.var_x] = d[vars.var_x];
+        v[vars.var_size] = d[vars.var_size];
+        v[vars.var_color] = d[vars.var_color];
 
-          // Below is what we need for time values
-          var v = {};
-          v[vars.time.var_time] = d[vars.time.var_time];
-          v[vars.var_y] = d[vars.var_y];
-          v[vars.var_x] = d[vars.var_x];
-          v[vars.var_size] = d[vars.var_size];
-          v[vars.var_color] = d[vars.var_color];
-
-          // TODO: this is metadata, should not be duplicated every year
-          v[vars.var_id] = d[vars.var_id];
-
-          return v;
-        });
-
-        utils.init_item(d);
-
-        if(vars.filter.indexOf(d[vars.var_group]) > -1) {
-          d.__filtered = true;
-        }
-
-        if(vars.highlight.indexOf(item_id) > -1) {
-          d.__highlighted = true;
-        }
-
-        if(vars.selection.indexOf(item_id) > -1) {
-          d.__selected = true;
-        }
-
-        d.__redraw = true;
-        vars.unique_data.push(d);
+        vars.unique_data[index].values.push(v);
 
       });
 
