@@ -224,7 +224,6 @@
                    } else {
                      return (vars.x_scale[0]["func"](vars.accessor_data(d)[vars.var_x]) + params_translate[0]) + "px";
                    }
-                   return params_translate[0];
                  })
                  .style("top", function(d) {
                    if(typeof params_y !== "undefined") {
@@ -232,7 +231,6 @@
                    } else {
                      return (vars.y_scale[0]["func"](vars.accessor_data(d)[vars.var_y]) + params_translate[1]) + "px";
                    }
-                   return params_translate[1];
                  })
                  .html(params_text);
 
@@ -1016,6 +1014,7 @@
 
             gItems
                 .filter(params.filter)
+                .filter(utils.filters.redraw_only)
                 .call(utils.draw_mark, params, vars);
 
             if(vars.init && typeof params.evt !== 'undefined') {
@@ -1121,18 +1120,16 @@
           if(vars.init) {
             gConnect_enter
               .filter(params.filter)
+              .filter(utils.filters.redraw_only)
               .call(utils.draw_mark, params, vars)
-
-            // Specific to the product space as the structure does not change
-            if(vars.type === "productspace") {
-              connect_data.forEach(function(d) { d.__redraw = false; });
-            }
 
           }
 
           gConnect
             .filter(params.filter)
+            .filter(utils.filters.redraw_only)
             .call(utils.draw_mark, params, vars);
+
         });
 
         // Bind events to groups after marks have been created
@@ -1140,6 +1137,12 @@
 
         // EXIT
         var gConnect_exit = gConnect.exit().remove();
+
+        // Specific to the product space as the structure does not change
+        if(vars.type === "productspace") {
+          connect_data.forEach(function(d) { d.__redraw = false; });
+        }
+
 
       });
 
@@ -1463,7 +1466,7 @@
 
   }
 
-  utils.redraw_only = function(d) { return d.__redraw; }
+  utils.filters.redraw_only = function(d) { return d.__redraw; }
 
   utils.find_adjacent_links = function(d, links) {
 
