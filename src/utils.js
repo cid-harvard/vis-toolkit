@@ -519,7 +519,7 @@
           break;
 
         case "line_horizontal":
-        console.log("LINE HORIZ", params_offset_y)
+
           var mark = d3.select(that).selectAll(".mark__line_horizontal.items_" + mark_id).data([d]);
 
           var t = d3.transform(d3.select(that).attr("transform")).translate;
@@ -597,107 +597,6 @@
               .attr('d', function(e) {
                 return params["func"](this_accessor_values(e));
               });
-
-        break;
-
-        case "sparkline2":
-
-          var scope = {};
-
-          scope = vistk.utils.merge(scope, vars);
-
-          /*
-          scope.margin = vars.margin;
-          scope.time = vars.time;
-
-          scope = vars.default_params["sparkline"](scope);
-
-          scope.margin = vars.margin;
-          scope.time = vars.time;
-
-          scope.type = "sparkline";
-          scope.var_x = "year";
-          scope.var_y = "realgdp";
-          scope.svg  = d3.select(that);
-          scope.new_data = vars.new_data;
-          //scope = vistk.utils.merge(scope, vars)
-
-
-          scope.x_scale = vars.x_scale;
-          scope.y_scale = vars.y_scale;
-          scope.zoom = vars.zoom;
-          // Update scales
-          scope.x_scale[0]["func"].domain(d3.extent(d.values, function(d) {
-           return d[scope.var_x];
-          }))
-          .range([0, 50]);
-
-          scope.y_scale[0]["func"].domain(d3.extent(d.values, function(d) {
-           return d[scope.var_y];
-          }))
-          .range([0, 50]);
-
-          console.log("USING SCOPE", scope.time)
-*/
-         // utils.draw_chart(scope);
-
-        break;
-
-
-        case "sparkline":
-
-/*
-          var scope = {};
-          scope = vistk.utils.merge(scope, vars)
-
-          scope = vars.default_params["sparkline"](scope);
-
-          scope.var_x = 'year';
-          scope.var_y = vars.var_y;
-
-          scope.width = scope.width / 2;
-
-          // Update scales
-          scope.x_scale[0]["func"].domain(d3.extent(d.values, function(d) {
-           return d[scope.var_x];
-          }))
-          .range([0, 50]);
-
-          scope.y_scale[0]["func"].domain(d3.extent(d.values, function(d) {
-           return d[scope.var_y];
-          }))
-          .range([0, 50]);
-
-          scope.connect = [{
-            marks: [{
-                type: "path",
-                rotate: "10",
-                stroke: function(d) { return "black"; },
-                func: d3.svg.line()
-                     .interpolate(scope.interpolate)
-                     .x(function(d) { return scope.x_scale[0]["func"](d[scope.var_x]); })
-                     .y(function(d) { return scope.y_scale[0]["func"](d[scope.var_y]); }),
-              }]
-          }];
-
-          scope.svg = vars.svg;
-*/
-          if(vars.dev) {
-            console.log("[draw_mark] sparkline");
-          }
-
-          var scope = {};
-          scope = vars.default_params["sparkline"](vars);
-
-          scope = vistk.utils.merge(vars, scope);
-
-          scope.type = "sparkline";
-
-          var chart = d3.select(that).selectAll(".items__chart__sparkline").data([d]);
-
-          chart.enter().append('g')
-              .classed('items__chart__sparkline', true)
-              .call(utils.draw_chart, scope, [d]);
 
         break;
 
