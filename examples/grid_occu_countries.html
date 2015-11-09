@@ -26,9 +26,10 @@ d3.json("../data/diversification_ubiquity_hs4_1995_2012.json", function(error, c
     var_sort: 'nb_products',
     var_sort_asc: false,
     var_id: 'name',
+    var_text: 'name',
     var_r: "nb_products",
     time: {
-      var_time: "year", 
+      var_time: "year",
       parse: d3.time.format("%Y").parse,
       interval: [],
       current_time: "2000"
@@ -40,7 +41,7 @@ d3.json("../data/diversification_ubiquity_hs4_1995_2012.json", function(error, c
         rotate: "0",
         var_r: "nb_products",
         var_fill: "nb_products",
-        fill: function(d) { return vars.color(vars.accessor_items(d)[vars.var_color]); }
+        fill: function(d, i, vars) { return vars.color(vars.accessor_items(d)[vars.var_color]); }
       }, {
         type: "text",
         rotate: "-30",
