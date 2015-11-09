@@ -1,0 +1,80 @@
+<!doctype html>
+<meta charset="utf-8">
+<script src="../js/d3.js"></script>
+<script src="../build/vistk.js"></script>
+<link href="../css/vistk.css" rel="stylesheet">
+<body>
+<div id="viz"></div>
+<script>
+
+d3.csv("../data/atlas_reporting.csv", function(error, countries) {
+
+
+
+// year,exporter,report_by_exporter,exp,imp,final,onlyfinal,exportreporter,export_value,// inatlas
+// 1962,"ABW",0,0,0,0,0,0,0,0
+// 1962,"AFG",1,125,118,210,93,37204137,6.02e+07,0
+// 1962,"AGO",1,583,372,723,151,1.457e+08,1.50e+08,1
+// 1962,"AIA",0,0,0,0,0,0,0,0
+
+  var flat_years = vistk.utils.flatten_years(countries);
+
+  visualization = vistk.viz()
+    .params({
+      dev: true,
+      type: 'scatterplot',
+      margin: {top: 10, right: 10, bottom: 30, left: 30},
+      container: '#viz',
+      data: countries,
+      var_id: 'name',
+      var_group: 'continent',
+      var_color: 'continent',
+      var_x: 'nb_products',
+      var_y: 'avg_products',
+      var_r: 'nb_products',
+      var_share: "avg_products",
+      share_cutoff: function(d) { return d.avg_products > 30; },
+      var_text: 'name_2char',
+      time: {
+        var_time: "year",
+        current_time: "1995",
+        parse: function(d) { return d; }
+      },
+      x_scale: [{
+        domain: [0, 700]
+      }],
+      items: [{
+        attr: "name",
+        marks: [{
+          var_mark: '__aggregated',
+          type: d3.scale.ordinal().domain([true, false]).range(["none", "circle"]),
+          rotate: "0"
+        }, {
+          var_mark: '__selected',
+          type: d3.scale.ordinal().domain([true, false]).range(["star", "none"]),
+          rotate: "0"
+        }, {
+          var_mark: '__aggregated',
+          type: d3.scale.ordinal().domain([true, false]).range(["circle", "none"]),
+          var_r: "nb_products",
+          var_fill: "nb_products",
+          rotate: 0,
+          var_share: "avg_products"
+        }, {
+          type: "text",
+          rotate: "-30"
+        }]
+      }],
+      ui: {
+        default: true,
+        options: ["country", "continent"]
+      },
+      selection: ["France"],
+      highlight: ["France", "Germany"],
+      title: "World Countries"
+    });
+
+  d3.select("#viz").call(visualization);
+
+});
+</script>
