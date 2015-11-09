@@ -89,7 +89,9 @@
           'high': 'High',
           'export': 'Export',
           'non-export': 'Non-Export',
-          'similarity_link': 'Similarity Link'
+          'similarity_link': 'Similarity Link',
+          'loading': 'Loading...',
+          'no-data': 'No data is available'
         },
         'en_EN': {
           'complexity': 'Complexity',
@@ -97,7 +99,9 @@
           'high': 'High',
           'export': 'Export',
           'non-export': 'Non-Export',
-          'similarity_link': 'Similarity Link'
+          'similarity_link': 'Similarity Link',
+          'loading': 'Loading...',
+          'no-data': 'No data is available'
         },
         'es_ES': {
           'complexity': 'Complejidad',
@@ -105,7 +109,9 @@
           'high': 'Alto',
           'export': 'Exportación',
           'non-export': 'No-Exportación',
-          'similarity_link': 'Enlar de similitud'
+          'similarity_link': 'Enlar de similitud',
+          'loading': 'Cargando...',
+          'no-data': 'Sin datos disponibles'
         },
         'fr_FR': {
           'complexity': 'Complexité',
@@ -113,7 +119,9 @@
           'high': 'Haute',
           'export': 'Export',
           'non-export': 'Non-Export',
-          'similarity_link': 'Lien de similarité'
+          'similarity_link': 'Lien de similarité',
+          'loading': 'Chargement...',
+          'no-data': 'Aucune donnée disponible'
         }
     },
     // Graphical properties for graphical marks
