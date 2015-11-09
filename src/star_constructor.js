@@ -64,7 +64,18 @@
         vars.svg = vars.root_svg.append("g")
           .attr("transform", "translate(" + vars.margin.left + "," + vars.margin.top + ")rotate(" + vars.rotate + ")");
 
+        vars.message_svg = vars.root_svg.append("g").insert("text", ":first-child")
+          .attr("transform", "translate(" + vars.margin.left + "," + vars.margin.top + ")rotate(" + vars.rotate + ")")
+          .attr("class", "message")
+          .attr("y", 80)
+          .attr("x", 10)
+          .attr("text-anchor", "start")
+          .style("font-size", 70)
+          .text("Loading..");
+
+
       } else {
+
         // HTML Container for table
         vars.svg = d3.select(vars.container).append("div")
             .style({height: vars.height+"px", width: vars.width+"px", overflow: "scroll"});
