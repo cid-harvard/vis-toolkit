@@ -1,5 +1,4 @@
 
-
     // 1 - Init and define default values [INIT]
     // 2 - Duplicates the dataset [INIT]
     // 3 - Mutate all_data with static metadata [INIT]
@@ -131,6 +130,9 @@
       }
 
       vars.unique_data = [];
+
+      var lookup_index = [];
+
       vars.unique_items.forEach(function(item_id, i) {
 
         // METADATA
@@ -346,30 +348,40 @@
       if(typeof vars.nodes !== "undefined" && vars.type === 'productspace') {
 
         // Adding coordinates to data
-        vars.new_data.forEach(function(d, i) {
+        //vars.new_data.forEach(function(d, i) {
+//
+        //  var node = vistk.utils.find_node_coordinates_by_id(vars.nodes, vars.var_node_id, d[vars.var_id]);
+//
+        //  // If we can't find product in the graph, put it in the corner
+        //  // if(typeof node == "undefined") {
+        //  // // res = {x: 500+Math.random()*400, y: 1500+Math.random()*400};
+        //  //   res = {x: 1095, y: 1675};
+        //  // }
+//
+        //  // We flag as missing the nodes in data without any coordinate
+        //  if(typeof node === "undefined") {
+        //    d.__missing = true;
+//
+        //  } else {
+//
+        //    d.__missing = false;
+        //    d.x = node.x;
+        //    d.y = node.y;
+//
+        //  }
+//
+        //  d.__redraw = true;
+//
+        //});
 
-          var node = vistk.utils.find_node_coordinates_by_id(vars.nodes, vars.var_node_id, d[vars.var_id]);
-
-          // If we can't find product in the graph, put it in the corner
-          // if(typeof node == "undefined") {
-          // // res = {x: 500+Math.random()*400, y: 1500+Math.random()*400};
-          //   res = {x: 1095, y: 1675};
-          // }
-
-          // We flag as missing the nodes in data without any coordinate
-          if(typeof node === "undefined") {
-            d.__missing = true;
-
-          } else {
-
-            d.__missing = false;
-            d.x = node.x;
-            d.y = node.y;
-
-          }
-
-          d.__redraw = true;
-
+        vars.new_data = utils.join(vars.nodes, vars.new_data, vars.var_node_id, vars.var_id, function(new_data, node) {
+            var r = new_data;
+            if(typeof node === 'undefined')
+                return;
+            r.x = node.x;
+            r.y = node.y;
+            r.__redraw = true;
+            return r;
         });
 
         // Remove missing nodes

@@ -138,7 +138,11 @@
       var params_rotate = utils.init_params("rotate", 0, params, d, i, vars);
       var params_scale = utils.init_params("scale", 1, params, d, i, vars);
       var params_fill = utils.init_params("fill", vars.color(vars.accessor_items(d)[vars.var_color]), params, d, i, vars);
-      var params_stroke = utils.init_params("stroke", 0, params, d, i, vars);
+
+      var params_stroke = utils.init_params("stroke", null, params, d, i, vars);
+      var params_stroke_width = utils.init_params("stroke_width", null, params, d, i, vars);
+      var params_stroke_opacity = utils.init_params("stroke_opacity", null, params, d, i, vars);
+
       var params_offset_y = utils.init_params("offset_y", 0, params, d, i, vars);
 
       // Use the default accessor
@@ -188,7 +192,7 @@
 
         // Attach a div to the SVG container
         case "div":
-        console.log("height", params_height, params.height)
+
           var items_mark_div = d3.select(d3.select(vars.svg.node().parentNode).node().parentNode)
                 .selectAll(".items__mark__div").data([d]);
 
@@ -515,7 +519,7 @@
           break;
 
         case "line_horizontal":
-
+        console.log("LINE HORIZ", params_offset_y)
           var mark = d3.select(that).selectAll(".mark__line_horizontal.items_" + mark_id).data([d]);
 
           var t = d3.transform(d3.select(that).attr("transform")).translate;
@@ -823,7 +827,7 @@
               .attr("cy", params_translate[1])
               .attr("r", function(d) {
 
-                if(typeof params.var_r === "undefined") {
+                if(typeof vars.var_r === "undefined") {
                   if(typeof params.radius !== "undefined") {
                     return params.radius;
                   } else {
@@ -831,13 +835,16 @@
                   }
                 } else {
 
-                  var r_scale = d3.scale.linear()
+                  var r_scale = d3.scale.sqrt()
                     .range([vars.radius_min, vars.radius_max])
-                    .domain(d3.extent(vars.new_data, function(d) { return d[params.var_r]; }))
+                    .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_r]; }))
 
-                  return r_scale(d[params.var_r]);
+                  return r_scale(d[vars.var_r]);
                 }
-              });
+              })
+              .style("stroke", params_stroke)
+              .style("stroke-width", params_stroke_width)
+              .style("stroke-opacity", params_stroke_opacity);
 
           if(typeof params.fill !== "undefined") {
 
@@ -861,42 +868,6 @@
 
             mark.style("fill", function(d) {
               return vars.color(vars.accessor_items(d)[vars.var_color]);
-            });
-
-          }
-
-          if(typeof params.stroke !== "undefined") {
-
-            mark_enter.style("stroke", function(d) {
-              return params.stroke(vars.accessor_items(d));
-            });
-
-            mark.style("stroke", function(d) {
-              return params.stroke(vars.accessor_items(d));
-            });
-
-          }
-
-          if(typeof params.stroke_width !== "undefined") {
-
-            mark_enter.style("stroke-width", function(d) {
-              return params.stroke_width(vars.accessor_items(d));
-            });
-
-            mark.style("stroke-width", function(d) {
-              return params.stroke_width(vars.accessor_items(d));
-            });
-
-          }
-
-          if(typeof params.stroke_opacity !== "undefined") {
-
-            mark_enter.style("stroke-opacity", function(d) {
-              return params.stroke_opacity(vars.accessor_items(d));
-            });
-
-            mark.style("stroke-opacity", function(d) {
-              return params.stroke_opacity(vars.accessor_items(d));
             });
 
           }
@@ -1135,10 +1106,14 @@
             // Supporting multipe similar elements
             params._mark_id = index_item + "_" + index_mark;
 
-            gItems_enter
-                .filter(params.filter)
-                .filter(utils.filters.redraw_only)
-                .call(utils.draw_mark, params, vars);
+            if(vars.init) {
+
+              gItems_enter
+                  .filter(params.filter)
+                  .filter(utils.filters.redraw_only)
+                  .call(utils.draw_mark, params, vars);
+
+            }
 
             gItems
                 .filter(params.filter)
@@ -1152,18 +1127,6 @@
 
           // Bind events to groups after marks have been created
           gItems.each(utils.items_group);
-
-
-
-          /* Should be as below but current params don't match this format
-            // APPEND AND UPDATE ITEMS MARK
-            vars.items.forEach(function(item) {
-              item.marks.forEach(function(params) {
-                gItems_enter.call(utils.draw_mark, params);
-                gItems.call(utils.draw_mark, params);
-              });
-            });
-          */
 
           // IN CASE OF CUSTOM UPDATE FOR ITEMS
           if(typeof item.update !== "undefined") {
@@ -1186,6 +1149,7 @@
             gItems_exit.remove();
           }
 
+          // Make sure we won't re-draw all nodes next time
           if(vars.type == "productspace" || vars.type == "treemap") {
             vars.new_data.forEach(function(d) {
               if(!d.__selected) {
@@ -1258,7 +1222,13 @@
           if(vars.init) {
             gConnect_enter
               .filter(params.filter)
-              .call(utils.draw_mark, params, vars);
+              .call(utils.draw_mark, params, vars)
+
+            // Specific to the product space as the structure does not change
+            if(vars.type === "productspace") {
+              connect_data.forEach(function(d) { d.__redraw = false; });
+            }
+
           }
 
           gConnect
@@ -1273,11 +1243,6 @@
         var gConnect_exit = gConnect.exit().remove();
 
       });
-
-      // Specific to the product space as the structure does not change
-      if(vars.type == "productspace") {
-        connect_data.forEach(function(d) { d.__redraw = false; });
-      }
 
     }
 
@@ -1710,4 +1675,34 @@
     }
 
   }
+
+  utils.check_data_display = function() {
+    if(vars.type === 'treemap') {
+      return vars.new_data.filter(function(d) {
+        return d[vars.var_size] > 0
+      }).length > 0;
+    } else {
+      return vars.new_data.length > 0;
+    }
+  }
+
+  // http://stackoverflow.com/questions/17500312/is-there-some-way-i-can-join-the-contents-of-two-javascript-arrays-much-like-i/17500836#17500836
+  utils.join = function(lookupTable, mainTable, lookupKey, mainKey, select) {
+      var l = lookupTable.length,
+          m = mainTable.length,
+          lookupIndex = [],
+          output = [];
+      for (var i = 0; i < l; i++) { // loop through l items
+          var row = lookupTable[i];
+          lookupIndex[row[lookupKey]] = row; // create an index for lookup table
+      }
+      for (var j = 0; j < m; j++) { // loop through m items
+          var y = mainTable[j];
+          var x = lookupIndex[y[mainKey]]; // get corresponding row from lookupTable
+          var s = select(y, x);
+          if(typeof s !== 'undefined')
+            output.push(s); // select only the columns you need
+      }
+      return output;
+  };
 
