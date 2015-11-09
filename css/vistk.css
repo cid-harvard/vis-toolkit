@@ -109,7 +109,7 @@ body {
 .x.axis path {
   display: none;
 }
-*/ 
+*/
 .line {
   fill: none;
   stroke: steelblue;
@@ -258,9 +258,16 @@ path {
   font-weight: 700;
 }
 
+.items__mark__circle {
+  stroke: black;
+  stroke-width: "0.5px";
+  stroke-opacity: .5;
+}
+
 .items__mark__circle.highlighted__adjacent {
   stroke: black;
   stroke-width: 1.5px;
+  stroke-opacity: 1;
 }
 
 g:hover .items__mark__circle:not(.highlighted__adjacent) {
@@ -271,6 +278,7 @@ g:hover .items__mark__circle:not(.highlighted__adjacent) {
 
 .items__mark__circle:.highlighted__adjacent {
   opacity: 1;
+  stroke-opacity: 1;
 }
 
 g:hover .connect__path:not(.highlighted) {
@@ -279,29 +287,31 @@ g:hover .connect__path:not(.highlighted) {
   opacity: 0.5;
 }
 
-g:hover  .items__mark__circle.highlighted {
+g:hover .items__mark__circle.highlighted {
   stroke: black;
   stroke-width: 2.5px;
   opacity: 1;
+  stroke-opacity: 1;
 }
 
 .items__mark__circle.selected {
   stroke: black;
   stroke-width: 1.5px;
+  stroke-opacity: 1;
 }
 
 .connect__path:not(.highlighted) {
-  stroke-width: 1px;  
+  stroke-width: 1px;
 }
 
 .connect__path.highlighted {
   stroke-opacity: 1;
-  stroke-width: 5px;  
+  stroke-width: 5px;
 }
 
 .connect__path.selected {
   stroke-opacity: 1;
-  stroke-width: 3px;  
+  stroke-width: 3px;
 }
 
 .items__mark__rect.highlighted {
