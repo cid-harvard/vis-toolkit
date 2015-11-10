@@ -9,93 +9,118 @@
 
 d3.json("../data/countries.json", function(error, countries) {
 
-//  var countries_enter = d3.select("body").data(countries).enter();
+  d3.json("../data/countries_exports_categories.json", function(error, exports) {
 
-  // TODO
-  // -Order countries by total exports
-  // -Option to re-scale?
-  // -Links to The Atlas
-  // -Options to re-order by population
-  // -Make it fit in the page
-  // -Title
-  // -Explanation
-  // -Make it a treemap
-  // -Gather as a total world export
-  // d3.selectAll("rect").style("opacity", .3)
+  //  var countries_enter = d3.select("body").data(countries).enter();
 
-  var categories = [
-    {name: 'Animal & Animal Products', pci: 20, opp_gain: 20, color: '#FFE999'},
-    {name: 'Vegetable Products', pci: 30, opp_gain: 20, color: '#FFC41C'},
-    {name: 'Foodstuffs', pci: 10, opp_gain: 20, color: '#DDFF48'},
-    {name: 'Chemicals & Allied Industries', pci: 90, opp_gain: 20, color: '#E377C2'},
-    {name: 'Mineral Products', pci: 19, opp_gain: 0, color: '#FFE999'},
-    {name: 'Plastics / Rubbers', pci: 13, opp_gain: 30, color: '#F7B6D2'},
-    {name: 'Raw Hides, Skins, Leather, & Furs', pci: 10, opp_gain: 20, color: '#98DF8A'},
-    {name: 'Textiles', pci: 10, opp_gain: 42, color: '#2CA02C'},
-    {name: 'Footwear / Headgear', pci: 20, opp_gain: 20, color: '#3AB11A'},
-    {name: 'Wood & Wood Products', pci: 30, opp_gain: 20, color: '#E22020'},
-    {name: 'Stone / Glass', pci: 10, opp_gain: 20, color: '#D66011'},
-    {name: 'Metals', pci: 10, opp_gain: 20, color: '#5F2107'},
-    {name: 'Machinery / Electrical', pci: 10, opp_gain: 20, color: '#65D4DF'},
-    {name: 'Transportation', pci: 10, opp_gain: 20, color: '#9EDAE5'},
-    {name: 'Miscellaneous', pci: 10, opp_gain: 20, color: '#7F7F7F'},
-    {name: 'Service', pci: 10, opp_gain: 20, color: '#C6C6C6'}
-  ];
+  console.log('exports', exports)
+    // TODO
+    // -Order countries by total exports
+    // -Option to re-scale?
+    // -Links to The Atlas
+    // -Options to re-order by population
+    // -Make it fit in the page
+    // -Title
+    // -Explanation
+    // -Make it a treemap
+    // -Gather as a total world export
+    // d3.selectAll("rect").style("opacity", .3)
 
-  countries.sort(function(a, b) { return b.area - a.area; });
+    var categories = [
+      {name: 'Animal & Animal Products', pci: 20, opp_gain: 20, color: '#FFE999'},
+      {name: 'Vegetable Products', pci: 30, opp_gain: 20, color: '#FFC41C'},
+      {name: 'Foodstuffs', pci: 10, opp_gain: 20, color: '#DDFF48'},
+      {name: 'Chemicals & Allied Industries', pci: 90, opp_gain: 20, color: '#E377C2'},
+      {name: 'Mineral Products', pci: 19, opp_gain: 0, color: '#FFE999'},
+      {name: 'Plastics / Rubbers', pci: 13, opp_gain: 30, color: '#F7B6D2'},
+      {name: 'Raw Hides, Skins, Leather, & Furs', pci: 10, opp_gain: 20, color: '#98DF8A'},
+      {name: 'Textiles', pci: 10, opp_gain: 42, color: '#2CA02C'},
+      {name: 'Footwear / Headgear', pci: 20, opp_gain: 20, color: '#3AB11A'},
+      {name: 'Wood & Wood Products', pci: 30, opp_gain: 20, color: '#E22020'},
+      {name: 'Stone / Glass', pci: 10, opp_gain: 20, color: '#D66011'},
+      {name: 'Metals', pci: 10, opp_gain: 20, color: '#5F2107'},
+      {name: 'Machinery / Electrical', pci: 10, opp_gain: 20, color: '#65D4DF'},
+      {name: 'Transportation', pci: 10, opp_gain: 20, color: '#9EDAE5'},
+      {name: 'Miscellaneous', pci: 10, opp_gain: 20, color: '#7F7F7F'},
+      {name: 'Service', pci: 10, opp_gain: 20, color: '#C6C6C6'}
+    ];
 
-  countries.forEach(function(d, i) {
+    countries.sort(function(a, b) { return b.area - a.area; });
 
-    var id = "country_" + d.cca3;
+    countries.forEach(function(d, i) {
 
-    d3.select("body").append("div").style("float", "left").attr("id", id);
+      console.log('country', d)
+      var id = "country_" + d.cca3;
 
-    var data = [];
+      d3.select("body").append("div").style("float", "left").attr("id", id);
 
-    categories.forEach(function(category, i) {
-      var d = {};
-      d.value_exports = 100*Math.random();
-      d.value_imports = 100*Math.random();
-      d.community_id = i;
-      d.color = category.color;
-      d.year = 2013;
-      data.push(d);
+      var data = [];
+
+      exports.forEach(function(e, i) {
+
+
+        if(e.name_3char === d.cca3) {
+
+          var r = {};
+          r.value_exports = e.total_exports;
+          r.value_imports = 100*Math.random();
+          r.community_id = e.community_id;
+          r.color = 'red';//category.color;
+          r.year = e.year;
+
+          data.push(r);
+         // delete exports[i];
+        }
+
+      })
+
+      console.log("DA", data)
+      // categories.forEach(function(category, i) {
+      //   var d = {};
+      //   d.value_exports = 100*Math.random();
+      //   d.value_imports = 100*Math.random();
+      //   d.community_id = i;
+      //   d.color = category.color;
+      //   d.year = 2013;
+      //   data.push(d);
+      // });
+
+      var visualization = vistk.viz()
+        .params({
+          type: 'rectmap',
+          container: "#" + id,
+          height: 80,
+          width: 60,
+          margin: {top: 10, bottom: 10, left: 10, right: 10},
+          data: data,
+          var_sort: 'value_exports',
+          var_group: 'community_id',
+          var_color: 'color',
+          var_size: 'value_exports',
+          var_text: 'community_id',
+          var_width: 'value_exports',
+          var_height: 'value_imports',
+          items: [{
+            marks: [{
+              type: "rect",
+              fill: function(d) { return d['color']; },
+              x: 0,
+              y: 0,
+              width: function(d) { return d.dx; },
+              height: function(d) { return d.dy; },
+          //    rotate: Math.random()*90 -45
+            }]
+          }],
+          time: {
+            var_time: 'year',
+            current_time: 2013
+          },
+          title: d.cca3
+        });
+
+      d3.select("#" + id).call(visualization);
+
     });
-
-    var visualization = vistk.viz()
-      .params({
-        type: 'rectmap',
-        container: "#" + id,
-        height: 80,
-        width: 60,
-        margin: {top: 10, bottom: 10, left: 10, right: 10},
-        data: data,
-        var_sort: 'value_exports',
-        var_group: 'community_id',
-        var_color: 'color',
-        var_size: 'value_exports',
-        var_text: 'community_id',
-        var_width: 'value_exports',
-        var_height: 'value_imports',
-        items: [{
-          marks: [{
-            type: "rect",
-            fill: function(d) { return d['color']; },
-            x: 0,
-            y: 0,
-            width: function(d) { return d.dx; },
-            height: function(d) { return d.dy; },
-            rotate: Math.random()*90 -45
-          }]
-        }],
-        time: {
-          var_time: 'year',
-          current_time: 2013
-        },
-        title: d.cca3
-      });
-
-    d3.select("#" + id).call(visualization);
 
   });
 
