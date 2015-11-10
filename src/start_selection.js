@@ -5,20 +5,18 @@
       vars.evt.call("clearAnimations", null);
       vars.evt.call('start', null);
 
-      console.log("DATA CHECK", utils.check_data_display(), vars.var_size, vars.new_data.filter(function(d) { return d[vars.var_size] > 0; }).length);
-
       // If no data, display a user friendly message telling
       if(!utils.check_data_display()) {
 
-   	    d3.select(vars.container).selectAll(".message")
-   	    	.style('display', 'block')
-   	    	.text(vars.locales[vars.lang]['no-data']);
+        d3.select(vars.container).selectAll(".message")
+          .style('display', 'block')
+          .text(vars.locales[vars.lang]['no-data']);
 
-   	    vars.svg.style('visibility', 'hidden');
+        vars.svg.style('visibility', 'hidden');
 
-  	  } else {
-   	    vars.svg.style('visibility', 'visible');
-  	  }
+      } else {
+        vars.svg.style('visibility', 'visible');
+      }
 
       switch(vars.type) {
 

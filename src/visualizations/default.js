@@ -35,8 +35,6 @@
 
         vars.svg.call(utils.draw_chart, vars, vars.new_data);
 
-//        vars.svg.calutils.draw_chart(vars, vars.new_data);
-
       break;
 
     }

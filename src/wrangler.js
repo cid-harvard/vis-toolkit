@@ -127,7 +127,7 @@
 
       }
 
-      vars.unique_data = [];
+      var unique_data = [];
 
       var lookup_index = [];
       var lookup_size = 0;
@@ -161,7 +161,7 @@
           var dup = JSON.parse(JSON.stringify(d));
           dup.values = [];
 
-          vars.unique_data.push(dup);
+          unique_data.push(dup);
 
         } else {
 
@@ -177,11 +177,11 @@
         v[vars.var_size] = d[vars.var_size];
         v[vars.var_color] = d[vars.var_color];
 
-        vars.unique_data[index].values.push(v);
+        unique_data[index].values.push(v);
 
       });
 
-      vars.new_data = vars.unique_data;
+      vars.new_data = unique_data;
 
     }
 
@@ -344,33 +344,6 @@
       // Flagging missing nodes with __missing true attribute
       if(typeof vars.nodes !== "undefined" && vars.type === 'productspace') {
 
-        // Adding coordinates to data
-        //vars.new_data.forEach(function(d, i) {
-//
-        //  var node = vistk.utils.find_node_coordinates_by_id(vars.nodes, vars.var_node_id, d[vars.var_id]);
-//
-        //  // If we can't find product in the graph, put it in the corner
-        //  // if(typeof node == "undefined") {
-        //  // // res = {x: 500+Math.random()*400, y: 1500+Math.random()*400};
-        //  //   res = {x: 1095, y: 1675};
-        //  // }
-//
-        //  // We flag as missing the nodes in data without any coordinate
-        //  if(typeof node === "undefined") {
-        //    d.__missing = true;
-//
-        //  } else {
-//
-        //    d.__missing = false;
-        //    d.x = node.x;
-        //    d.y = node.y;
-//
-        //  }
-//
-        //  d.__redraw = true;
-//
-        //});
-
         vars.new_data = utils.join(vars.nodes, vars.new_data, vars.var_node_id, vars.var_id, function(new_data, node) {
             var r = new_data;
             if(typeof node === 'undefined')
@@ -382,9 +355,9 @@
         });
 
         // Remove missing nodes
-        vars.new_data = vars.new_data.filter(function(d) {
-         return !d.__missing;
-        });
+        // vars.new_data = vars.new_data.filter(function(d) {
+        //  return !d.__missing;
+        // });
 
         // Go through again the list of nodes
         // to make sure we display all the nodes
@@ -408,7 +381,6 @@
         })
 
       }
-
 
     }
 
