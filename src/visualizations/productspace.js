@@ -48,125 +48,128 @@ vars.default_params["productspace"] = function(scope) {
   params.y_axis_show = false;
   params.y_grid_show = false;
 
-  vars.evt.register("highlightOn", function(d) {
 
-    // Make sure the highlighted node is above other nodes
-    vars.svg.selectAll('.mark__group').sort(function(a, b) { return a.__highlighted ;})
+  if(vars.init) {
+    vars.evt.register("highlightOn", function(d) {
 
-    var adjacent_links = utils.find_adjacent_links(d, vars.links);
+      // Make sure the highlighted node is above other nodes
+      vars.svg.selectAll('.mark__group').sort(function(a, b) { return a.__highlighted ;})
 
-    adjacent_links.forEach(function(e) {
+      var adjacent_links = utils.find_adjacent_links(d, vars.links);
 
-        // Redraw adjacent links
-        e.__highlighted__adjacent = true;
-        e.__redraw = true;
+      adjacent_links.forEach(function(e) {
 
-       vars.new_data.forEach(function(f, k) {
+          // Redraw adjacent links
+          e.__highlighted__adjacent = true;
+          e.__redraw = true;
 
-         if(f[vars.var_id] === e.target[vars.var_id] || f[vars.var_id] === e.source[vars.var_id]) {
-          // Redraw adjacent nodes
-           f.__highlighted__adjacent = true;
-           f.__redraw = true;
-         }
+         vars.new_data.forEach(function(f, k) {
 
-       });
+           if(f[vars.var_id] === e.target[vars.var_id] || f[vars.var_id] === e.source[vars.var_id]) {
+            // Redraw adjacent nodes
+             f.__highlighted__adjacent = true;
+             f.__redraw = true;
+           }
 
-    });
-
-  });
-
-  vars.evt.register("highlightOut", function(d) {
-
-    vars.new_data.forEach(function(f, k) {
-      if(f.__highlighted__adjacent) {
-        f.__highlighted__adjacent = false;
-        f.__redraw = true;
-      }
-    });
-
-    vars.links.forEach(function(f, k) {
-      if(f.__highlighted__adjacent) {
-        f.__highlighted__adjacent = false;
-        f.__redraw = true;
-      }
-    });
-
-    d3.select(vars.container).selectAll(".connect__line")
-      .classed("highlighted", function(d, i) { return false; })
-      .classed("highlighted__adjacent", function(d, i) { return false; })
-
-    d3.select(vars.container).selectAll("circle")
-      .classed("highlighted", function(d, i) { return false; })
-      .classed("highlighted__adjacent", function(d, i) { return false; })
-
-  });
-
-  vars.evt.register("selection", function(d) {
-
-    // Make sure the highlighted node is above other nodes
-    // vars.svg.selectAll('.mark__group').sort(function(a, b) { return a.__highlighted ;})
-
-    vars.new_data.forEach(function(f, k) {
-      if(f.__selected) {
-        f.__selected = false;
-        f.__redraw = true;
-      }
-
-      if(f.__selected__adjacent) {
-        f.__selected__adjacent = false;
-        f.__redraw = true;
-      }
-
-    });
-
-    vars.links.forEach(function(f, k) {
-      if(f.__selected) {
-        f.__selected = false;
-        f.__redraw = true;
-      }
-
-      if(f.__selected__adjacent) {
-        f.__selected__adjacent = false;
-        f.__redraw = true;
-      }
-
-    });
-
-    d.__selected = true;
-    d.__redraw = true;
-
-    var adjacent_links = utils.find_adjacent_links(d, vars.links);
-
-    adjacent_links.forEach(function(e) {
-
-      // Update links
-      e.__selected = true;
-      e.__selected__adjacent = true;
-      e.__redraw = true;
-
-      vars.new_data.forEach(function(f, k) {
-
-        if(f[vars.var_id] === e.target[vars.var_id] || f[vars.var_id] === e.source[vars.var_id]) {
-
-          // Update nodes
-          f.__selected = true;
-          f.__selected__adjacent = true;
-          f.__redraw = true;
-        }
+         });
 
       });
 
     });
 
-    d3.select(vars.container).selectAll(".connect__line")
-      .classed("selected", function(d, i) { return d.__selected; })
-      .classed("selected__adjacent", function(d, i) { return d.__selected__adjacent; })
+    vars.evt.register("highlightOut", function(d) {
 
-    d3.select(vars.container).selectAll("circle")
-      .classed("selected", function(d, i) { return d.__selected; })
-      .classed("selected__adjacent", function(d, i) { return d.__selected__adjacent; })
+      vars.new_data.forEach(function(f, k) {
+        if(f.__highlighted__adjacent) {
+          f.__highlighted__adjacent = false;
+          f.__redraw = true;
+        }
+      });
 
-  });
+      vars.links.forEach(function(f, k) {
+        if(f.__highlighted__adjacent) {
+          f.__highlighted__adjacent = false;
+          f.__redraw = true;
+        }
+      });
+
+      d3.select(vars.container).selectAll(".connect__line")
+        .classed("highlighted", function(d, i) { return false; })
+        .classed("highlighted__adjacent", function(d, i) { return false; })
+
+      d3.select(vars.container).selectAll("circle")
+        .classed("highlighted", function(d, i) { return false; })
+        .classed("highlighted__adjacent", function(d, i) { return false; })
+
+    });
+
+    vars.evt.register("selection", function(d) {
+
+      // Make sure the highlighted node is above other nodes
+      // vars.svg.selectAll('.mark__group').sort(function(a, b) { return a.__highlighted ;})
+
+      vars.new_data.forEach(function(f, k) {
+        if(f.__selected) {
+          f.__selected = false;
+          f.__redraw = true;
+        }
+
+        if(f.__selected__adjacent) {
+          f.__selected__adjacent = false;
+          f.__redraw = true;
+        }
+
+      });
+
+      vars.links.forEach(function(f, k) {
+        if(f.__selected) {
+          f.__selected = false;
+          f.__redraw = true;
+        }
+
+        if(f.__selected__adjacent) {
+          f.__selected__adjacent = false;
+          f.__redraw = true;
+        }
+
+      });
+
+      d.__selected = true;
+      d.__redraw = true;
+
+      var adjacent_links = utils.find_adjacent_links(d, vars.links);
+
+      adjacent_links.forEach(function(e) {
+
+        // Update links
+        e.__selected = true;
+        e.__selected__adjacent = true;
+        e.__redraw = true;
+
+        vars.new_data.forEach(function(f, k) {
+
+          if(f[vars.var_id] === e.target[vars.var_id] || f[vars.var_id] === e.source[vars.var_id]) {
+
+            // Update nodes
+            f.__selected = true;
+            f.__selected__adjacent = true;
+            f.__redraw = true;
+          }
+
+        });
+
+      });
+
+      d3.select(vars.container).selectAll(".connect__line")
+        .classed("selected", function(d, i) { return d.__selected; })
+        .classed("selected__adjacent", function(d, i) { return d.__selected__adjacent; })
+
+      d3.select(vars.container).selectAll("circle")
+        .classed("selected", function(d, i) { return d.__selected; })
+        .classed("selected__adjacent", function(d, i) { return d.__selected__adjacent; })
+
+    });
+  }
 
   return params;
 
