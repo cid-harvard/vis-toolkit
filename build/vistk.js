@@ -6,7 +6,7 @@ var w = typeof window === "undefined" ? this : window;
 var vistk = w.vistk || {};
 w.vistk = vistk;
 
-vistk.version = "0.0.22";
+vistk.version = "0.0.23";
 vistk.utils = {};
 
 vistk.viz = function() {
@@ -243,7 +243,6 @@ var utils ={};
                    } else {
                      return (vars.x_scale[0]["func"](vars.accessor_data(d)[vars.var_x]) + params_translate[0]) + "px";
                    }
-                   return params_translate[0];
                  })
                  .style("top", function(d) {
                    if(typeof params_y !== "undefined") {
@@ -251,7 +250,6 @@ var utils ={};
                    } else {
                      return (vars.y_scale[0]["func"](vars.accessor_data(d)[vars.var_y]) + params_translate[1]) + "px";
                    }
-                   return params_translate[1];
                  })
                  .html(params_text);
 
@@ -538,7 +536,7 @@ var utils ={};
           break;
 
         case "line_horizontal":
-        console.log("LINE HORIZ", params_offset_y)
+
           var mark = d3.select(that).selectAll(".mark__line_horizontal.items_" + mark_id).data([d]);
 
           var t = d3.transform(d3.select(that).attr("transform")).translate;
@@ -616,107 +614,6 @@ var utils ={};
               .attr('d', function(e) {
                 return params["func"](this_accessor_values(e));
               });
-
-        break;
-
-        case "sparkline2":
-
-          var scope = {};
-
-          scope = vistk.utils.merge(scope, vars);
-
-          /*
-          scope.margin = vars.margin;
-          scope.time = vars.time;
-
-          scope = vars.default_params["sparkline"](scope);
-
-          scope.margin = vars.margin;
-          scope.time = vars.time;
-
-          scope.type = "sparkline";
-          scope.var_x = "year";
-          scope.var_y = "realgdp";
-          scope.svg  = d3.select(that);
-          scope.new_data = vars.new_data;
-          //scope = vistk.utils.merge(scope, vars)
-
-
-          scope.x_scale = vars.x_scale;
-          scope.y_scale = vars.y_scale;
-          scope.zoom = vars.zoom;
-          // Update scales
-          scope.x_scale[0]["func"].domain(d3.extent(d.values, function(d) {
-           return d[scope.var_x];
-          }))
-          .range([0, 50]);
-
-          scope.y_scale[0]["func"].domain(d3.extent(d.values, function(d) {
-           return d[scope.var_y];
-          }))
-          .range([0, 50]);
-
-          console.log("USING SCOPE", scope.time)
-*/
-         // utils.draw_chart(scope);
-
-        break;
-
-
-        case "sparkline":
-
-/*
-          var scope = {};
-          scope = vistk.utils.merge(scope, vars)
-
-          scope = vars.default_params["sparkline"](scope);
-
-          scope.var_x = 'year';
-          scope.var_y = vars.var_y;
-
-          scope.width = scope.width / 2;
-
-          // Update scales
-          scope.x_scale[0]["func"].domain(d3.extent(d.values, function(d) {
-           return d[scope.var_x];
-          }))
-          .range([0, 50]);
-
-          scope.y_scale[0]["func"].domain(d3.extent(d.values, function(d) {
-           return d[scope.var_y];
-          }))
-          .range([0, 50]);
-
-          scope.connect = [{
-            marks: [{
-                type: "path",
-                rotate: "10",
-                stroke: function(d) { return "black"; },
-                func: d3.svg.line()
-                     .interpolate(scope.interpolate)
-                     .x(function(d) { return scope.x_scale[0]["func"](d[scope.var_x]); })
-                     .y(function(d) { return scope.y_scale[0]["func"](d[scope.var_y]); }),
-              }]
-          }];
-
-          scope.svg = vars.svg;
-*/
-          if(vars.dev) {
-            console.log("[draw_mark] sparkline");
-          }
-
-          var scope = {};
-          scope = vars.default_params["sparkline"](vars);
-
-          scope = vistk.utils.merge(vars, scope);
-
-          scope.type = "sparkline";
-
-          var chart = d3.select(that).selectAll(".items__chart__sparkline").data([d]);
-
-          chart.enter().append('g')
-              .classed('items__chart__sparkline', true)
-              .call(utils.draw_chart, scope, [d]);
 
         break;
 
@@ -1136,7 +1033,13 @@ var utils ={};
 
             gItems
                 .filter(params.filter)
+                .filter(utils.filters.redraw_only)
                 .call(utils.draw_mark, params, vars);
+
+            if(vars.init) {
+              // Bind events to groups after marks have been created
+              gItems.each(utils.items_group);
+            }
 
             if(vars.init && typeof params.evt !== 'undefined') {
               vars.evt.register("selection", params.evt[0].func)
@@ -1144,15 +1047,13 @@ var utils ={};
 
           });
 
-          // Bind events to groups after marks have been created
-          gItems.each(utils.items_group);
-
           // IN CASE OF CUSTOM UPDATE FOR ITEMS
           if(typeof item.update !== "undefined") {
             vars_svg.selectAll(".mark__group" + "_" + index_item).call(item.update, vars)
           } else {
           // POST-UPDATE ITEMS GROUPS
             vars_svg.selectAll(".mark__group" + "_" + index_item)
+                          .filter(utils.filters.redraw_only)
                           .transition()
                           .duration(vars.duration)
                           //.ease('none')
@@ -1171,9 +1072,7 @@ var utils ={};
           // Make sure we won't re-draw all nodes next time
           if(vars.type == "productspace" || vars.type == "treemap") {
             vars.new_data.forEach(function(d) {
-              if(!d.__selected) {
-                d.__redraw = false;
-              }
+              if(!d.__selected) { d.__redraw = false; }
             });
           }
 
@@ -1239,27 +1138,34 @@ var utils ={};
 
           // Only create connections when char inits
           if(vars.init) {
+
             gConnect_enter
               .filter(params.filter)
+              .filter(utils.filters.redraw_only)
               .call(utils.draw_mark, params, vars)
-
-            // Specific to the product space as the structure does not change
-            if(vars.type === "productspace") {
-              connect_data.forEach(function(d) { d.__redraw = false; });
-            }
 
           }
 
           gConnect
             .filter(params.filter)
+            .filter(utils.filters.redraw_only)
             .call(utils.draw_mark, params, vars);
+
         });
 
-        // Bind events to groups after marks have been created
-        gConnect.each(utils.connect_group);
+        if(vars.init) {
+          // Bind events to groups after marks have been created
+          gConnect.each(utils.connect_group);
+        }
 
         // EXIT
         var gConnect_exit = gConnect.exit().remove();
+
+        // Specific to the product space as the structure does not change
+        if(vars.init && vars.type === "productspace") {
+          connect_data.forEach(function(d) { d.__redraw = false; });
+        }
+
 
       });
 
@@ -1583,7 +1489,7 @@ var utils ={};
 
   }
 
-  utils.redraw_only = function(d) { return d.__redraw; }
+  utils.filters.redraw_only = function(d) { return d.__redraw; }
 
   utils.find_adjacent_links = function(d, links) {
 
@@ -1697,8 +1603,8 @@ var utils ={};
 
   utils.check_data_display = function() {
     if(vars.type === 'treemap') {
-      return vars.new_data.filter(function(d) {
-        return d[vars.var_size] > 0
+      return nb_values = vars.new_data.filter(function(d) {
+        return d[vars.var_size] > 0;
       }).length > 0;
     } else {
       return vars.new_data.length > 0;
@@ -1986,7 +1892,7 @@ var utils ={};
 
   vars.evt.register('finish', function(d) {
     if(vars.dev) { console.log("[vars.evt.call] end rendering"); }
-    if(vars.new_data.length > 0) {
+    if(utils.check_data_display()) {
       d3.select(vars.container).selectAll(".message").style('display', 'none');
     }
   });
@@ -2019,7 +1925,6 @@ var utils ={};
     if(vars.dev) { console.log("[vars.evt.call] timeUpdate"); }
 
     vars.time.current_time = new_time;
-    vars.refresh = true;
 
     d3.select(vars.container).call(vars.this_chart);
 
@@ -2223,8 +2128,6 @@ var utils ={};
       // Find unique values for various parameters
       vars.time.interval = d3.extent(vars.new_data, function(d) { return d[vars.time.var_time]; });
       vars.time.points = vistk.utils.find_unique_values(vars.new_data, vars.time.var_time);
-      // vars.unique_items = vistk.utils.find_unique_values(vars.new_data, vars.var_id);
-
 
       // Filter data by attribute
       // TODO: not sure we should remove data, but add an attribute instead would better
@@ -3497,125 +3400,128 @@ vars.default_params["productspace"] = function(scope) {
   params.y_axis_show = false;
   params.y_grid_show = false;
 
-  vars.evt.register("highlightOn", function(d) {
 
-    // Make sure the highlighted node is above other nodes
-    vars.svg.selectAll('.mark__group').sort(function(a, b) { return a.__highlighted ;})
+  if(vars.init) {
+    vars.evt.register("highlightOn", function(d) {
 
-    var adjacent_links = utils.find_adjacent_links(d, vars.links);
+      // Make sure the highlighted node is above other nodes
+      vars.svg.selectAll('.mark__group').sort(function(a, b) { return a.__highlighted ;})
 
-    adjacent_links.forEach(function(e) {
+      var adjacent_links = utils.find_adjacent_links(d, vars.links);
 
-        // Redraw adjacent links
-        e.__highlighted__adjacent = true;
-        e.__redraw = true;
+      adjacent_links.forEach(function(e) {
 
-       vars.new_data.forEach(function(f, k) {
+          // Redraw adjacent links
+          e.__highlighted__adjacent = true;
+          e.__redraw = true;
 
-         if(f[vars.var_id] === e.target[vars.var_id] || f[vars.var_id] === e.source[vars.var_id]) {
-          // Redraw adjacent nodes
-           f.__highlighted__adjacent = true;
-           f.__redraw = true;
-         }
+         vars.new_data.forEach(function(f, k) {
 
-       });
+           if(f[vars.var_id] === e.target[vars.var_id] || f[vars.var_id] === e.source[vars.var_id]) {
+            // Redraw adjacent nodes
+             f.__highlighted__adjacent = true;
+             f.__redraw = true;
+           }
 
-    });
-
-  });
-
-  vars.evt.register("highlightOut", function(d) {
-
-    vars.new_data.forEach(function(f, k) {
-      if(f.__highlighted__adjacent) {
-        f.__highlighted__adjacent = false;
-        f.__redraw = true;
-      }
-    });
-
-    vars.links.forEach(function(f, k) {
-      if(f.__highlighted__adjacent) {
-        f.__highlighted__adjacent = false;
-        f.__redraw = true;
-      }
-    });
-
-    d3.select(vars.container).selectAll(".connect__line")
-      .classed("highlighted", function(d, i) { return false; })
-      .classed("highlighted__adjacent", function(d, i) { return false; })
-
-    d3.select(vars.container).selectAll("circle")
-      .classed("highlighted", function(d, i) { return false; })
-      .classed("highlighted__adjacent", function(d, i) { return false; })
-
-  });
-
-  vars.evt.register("selection", function(d) {
-
-    // Make sure the highlighted node is above other nodes
-    // vars.svg.selectAll('.mark__group').sort(function(a, b) { return a.__highlighted ;})
-
-    vars.new_data.forEach(function(f, k) {
-      if(f.__selected) {
-        f.__selected = false;
-        f.__redraw = true;
-      }
-
-      if(f.__selected__adjacent) {
-        f.__selected__adjacent = false;
-        f.__redraw = true;
-      }
-
-    });
-
-    vars.links.forEach(function(f, k) {
-      if(f.__selected) {
-        f.__selected = false;
-        f.__redraw = true;
-      }
-
-      if(f.__selected__adjacent) {
-        f.__selected__adjacent = false;
-        f.__redraw = true;
-      }
-
-    });
-
-    d.__selected = true;
-    d.__redraw = true;
-
-    var adjacent_links = utils.find_adjacent_links(d, vars.links);
-
-    adjacent_links.forEach(function(e) {
-
-      // Update links
-      e.__selected = true;
-      e.__selected__adjacent = true;
-      e.__redraw = true;
-
-      vars.new_data.forEach(function(f, k) {
-
-        if(f[vars.var_id] === e.target[vars.var_id] || f[vars.var_id] === e.source[vars.var_id]) {
-
-          // Update nodes
-          f.__selected = true;
-          f.__selected__adjacent = true;
-          f.__redraw = true;
-        }
+         });
 
       });
 
     });
 
-    d3.select(vars.container).selectAll(".connect__line")
-      .classed("selected", function(d, i) { return d.__selected; })
-      .classed("selected__adjacent", function(d, i) { return d.__selected__adjacent; })
+    vars.evt.register("highlightOut", function(d) {
 
-    d3.select(vars.container).selectAll("circle")
-      .classed("selected", function(d, i) { return d.__selected; })
-      .classed("selected__adjacent", function(d, i) { return d.__selected__adjacent; })
+      vars.new_data.forEach(function(f, k) {
+        if(f.__highlighted__adjacent) {
+          f.__highlighted__adjacent = false;
+          f.__redraw = true;
+        }
+      });
 
-  });
+      vars.links.forEach(function(f, k) {
+        if(f.__highlighted__adjacent) {
+          f.__highlighted__adjacent = false;
+          f.__redraw = true;
+        }
+      });
+
+      d3.select(vars.container).selectAll(".connect__line")
+        .classed("highlighted", function(d, i) { return false; })
+        .classed("highlighted__adjacent", function(d, i) { return false; })
+
+      d3.select(vars.container).selectAll("circle")
+        .classed("highlighted", function(d, i) { return false; })
+        .classed("highlighted__adjacent", function(d, i) { return false; })
+
+    });
+
+    vars.evt.register("selection", function(d) {
+
+      // Make sure the highlighted node is above other nodes
+      // vars.svg.selectAll('.mark__group').sort(function(a, b) { return a.__highlighted ;})
+
+      vars.new_data.forEach(function(f, k) {
+        if(f.__selected) {
+          f.__selected = false;
+          f.__redraw = true;
+        }
+
+        if(f.__selected__adjacent) {
+          f.__selected__adjacent = false;
+          f.__redraw = true;
+        }
+
+      });
+
+      vars.links.forEach(function(f, k) {
+        if(f.__selected) {
+          f.__selected = false;
+          f.__redraw = true;
+        }
+
+        if(f.__selected__adjacent) {
+          f.__selected__adjacent = false;
+          f.__redraw = true;
+        }
+
+      });
+
+      d.__selected = true;
+      d.__redraw = true;
+
+      var adjacent_links = utils.find_adjacent_links(d, vars.links);
+
+      adjacent_links.forEach(function(e) {
+
+        // Update links
+        e.__selected = true;
+        e.__selected__adjacent = true;
+        e.__redraw = true;
+
+        vars.new_data.forEach(function(f, k) {
+
+          if(f[vars.var_id] === e.target[vars.var_id] || f[vars.var_id] === e.source[vars.var_id]) {
+
+            // Update nodes
+            f.__selected = true;
+            f.__selected__adjacent = true;
+            f.__redraw = true;
+          }
+
+        });
+
+      });
+
+      d3.select(vars.container).selectAll(".connect__line")
+        .classed("selected", function(d, i) { return d.__selected; })
+        .classed("selected__adjacent", function(d, i) { return d.__selected__adjacent; })
+
+      d3.select(vars.container).selectAll("circle")
+        .classed("selected", function(d, i) { return d.__selected; })
+        .classed("selected__adjacent", function(d, i) { return d.__selected__adjacent; })
+
+    });
+  }
 
   return params;
 
@@ -3836,16 +3742,20 @@ var z = d3.scale.linear().domain([0, 4]).clamp(true),
       vars.evt.call("clearAnimations", null);
       vars.evt.call('start', null);
 
+      console.log("DATA CHECK", utils.check_data_display(), vars.var_size, vars.new_data.filter(function(d) { return d[vars.var_size] > 0; }).length);
+
       // If no data, display a user friendly message telling
       if(!utils.check_data_display()) {
- 	    d3.select(vars.container).selectAll(".message")
- 	    	.style('display', 'block')
- 	    	.text(vars.locales[vars.lang]['no-data']);
 
- 	    vars.svg.style('visibility', 'hidden');
-	  } else {
- 	    vars.svg.style('visibility', 'visible');
-	  }
+   	    d3.select(vars.container).selectAll(".message")
+   	    	.style('display', 'block')
+   	    	.text(vars.locales[vars.lang]['no-data']);
+
+   	    vars.svg.style('visibility', 'hidden');
+
+  	  } else {
+   	    vars.svg.style('visibility', 'visible');
+  	  }
 
       switch(vars.type) {
 
