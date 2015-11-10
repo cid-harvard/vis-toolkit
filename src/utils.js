@@ -1017,14 +1017,16 @@
                 .filter(utils.filters.redraw_only)
                 .call(utils.draw_mark, params, vars);
 
+            if(vars.init) {
+              // Bind events to groups after marks have been created
+              gItems.each(utils.items_group);
+            }
+
             if(vars.init && typeof params.evt !== 'undefined') {
               vars.evt.register("selection", params.evt[0].func)
             }
 
           });
-
-          // Bind events to groups after marks have been created
-          gItems.each(utils.items_group);
 
           // IN CASE OF CUSTOM UPDATE FOR ITEMS
           if(typeof item.update !== "undefined") {
@@ -1032,6 +1034,7 @@
           } else {
           // POST-UPDATE ITEMS GROUPS
             vars_svg.selectAll(".mark__group" + "_" + index_item)
+                          .filter(utils.filters.redraw_only)
                           .transition()
                           .duration(vars.duration)
                           //.ease('none')
@@ -1050,9 +1053,7 @@
           // Make sure we won't re-draw all nodes next time
           if(vars.type == "productspace" || vars.type == "treemap") {
             vars.new_data.forEach(function(d) {
-              if(!d.__selected) {
-                d.__redraw = false;
-              }
+              if(!d.__selected) { d.__redraw = false; }
             });
           }
 
@@ -1118,6 +1119,7 @@
 
           // Only create connections when char inits
           if(vars.init) {
+
             gConnect_enter
               .filter(params.filter)
               .filter(utils.filters.redraw_only)
@@ -1132,14 +1134,16 @@
 
         });
 
-        // Bind events to groups after marks have been created
-        gConnect.each(utils.connect_group);
+        if(vars.init) {
+          // Bind events to groups after marks have been created
+          gConnect.each(utils.connect_group);
+        }
 
         // EXIT
         var gConnect_exit = gConnect.exit().remove();
 
         // Specific to the product space as the structure does not change
-        if(vars.type === "productspace") {
+        if(vars.init && vars.type === "productspace") {
           connect_data.forEach(function(d) { d.__redraw = false; });
         }
 
