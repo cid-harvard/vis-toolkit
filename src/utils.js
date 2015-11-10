@@ -1584,8 +1584,8 @@
 
   utils.check_data_display = function() {
     if(vars.type === 'treemap') {
-      return vars.new_data.filter(function(d) {
-        return d[vars.var_size] > 0
+      return nb_values = vars.new_data.filter(function(d) {
+        return d[vars.var_size] > 0;
       }).length > 0;
     } else {
       return vars.new_data.length > 0;

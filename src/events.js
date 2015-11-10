@@ -52,7 +52,7 @@
 
   vars.evt.register('finish', function(d) {
     if(vars.dev) { console.log("[vars.evt.call] end rendering"); }
-    if(vars.new_data.length > 0) {
+    if(utils.check_data_display()) {
       d3.select(vars.container).selectAll(".message").style('display', 'none');
     }
   });
