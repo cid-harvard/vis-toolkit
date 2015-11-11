@@ -4,7 +4,7 @@ vars.default_params["caterplot"] = function(scope) {
 
   params.x_scale = [{
     func: d3.scale.ordinal()
-            .range([scope.margin.left, scope.width - scope.margin.left - scope.margin.right])
+            .rangeBands([scope.margin.left, scope.width - scope.margin.left - scope.margin.right])
             .domain(d3.set(vars.new_data.map(function(d) { return d['community_name']; })).values())
   }];
 
