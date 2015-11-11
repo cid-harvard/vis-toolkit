@@ -2,6 +2,9 @@ vars.default_params["caterplot"] = function(scope) {
 
   var params = {};
 
+  params.accessor_values = function(d) { return d.values; };
+  params.accessor_items = function(d) { return d; };
+
   params.x_scale = [{
     func: d3.scale.ordinal()
             .rangeBands([scope.margin.left, scope.width - scope.margin.left - scope.margin.right])
@@ -28,6 +31,18 @@ vars.default_params["caterplot"] = function(scope) {
       }, {
       var_mark: '__highlighted',
       type: d3.scale.ordinal().domain([true, false]).range(["text", "none"])
+    }]
+  }];
+
+  params.connect = [{
+    marks: [{
+      type: "path",
+      stroke: function(d) { return vars.color(params.accessor_items(d)[vars.var_color]); },
+      func: d3.svg.line()
+           .interpolate(vars.interpolate)
+           .x(function(d) { return params.x_scale[0]["func"](d[vars.var_x]); })
+           .y(function(d) { return params.y_scale[0]["func"](d[vars.var_y]); }),
+      fill: "none"
     }]
   }];
 
