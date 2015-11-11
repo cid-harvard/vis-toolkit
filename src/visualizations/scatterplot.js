@@ -11,12 +11,12 @@ vars.default_params["scatterplot"] = function(scope) {
   params.y_scale = [{
     func: d3.scale.linear()
             .range([scope.height - scope.margin.top - scope.margin.bottom, scope.margin.top])
-            .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_y]; })).nice(),
+            .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_y]; })).nice()
   }];
 
   params.r_scale = d3.scale.linear()
               .range([vars.radius_min, vars.radius_max])
-              .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_r]; })),
+              .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_r]; }));
 
   params.items = [{
     marks: [{
@@ -29,19 +29,6 @@ vars.default_params["scatterplot"] = function(scope) {
       var_mark: '__highlighted',
       type: d3.scale.ordinal().domain([true, false]).range(["text", "none"])
     }]
-/*
-    , {
-    marks: [{
-        type: "circle",
-        radius: 20,
-        fill: function(d) { return vars.color(vars.accessor_items(d)[vars.var_color]); }
-    }, {
-        type: "text",
-        rotate: "-30",
-        translate: null
-    }
-*/
- //   ]
   }];
 
   params.x_axis_show = true;
