@@ -27,6 +27,7 @@ module.exports = function(grunt) {
               'src/visualizations/barchart.js', 'src/visualizations/linechart.js', 'src/visualizations/scatterplot.js', 'src/visualizations/geomap.js',
               'src/visualizations/grid.js', 'src/visualizations/stacked.js', 'src/visualizations/piechart.js', 'src/visualizations/slopegraph.js',
               'src/visualizations/treemap.js', 'src/visualizations/radial.js', 'src/visualizations/stackedbar.js', 'src/visualizations/rectmap.js',
+              'src/visualizations/caterplot.js',
               'src/visualizations/productspace.js', 'src/visualizations/ordinal_vertical.js', 'src/visualizations/ordinal_horizontal.js', 'src/visualizations/matrix.js',
               'src/start_selection.js', 'src/visualizations/table.js',
               'src/visualizations/boxplot.js', 'src/visualizations/none.js',
