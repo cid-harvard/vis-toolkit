@@ -174,8 +174,8 @@
         v[vars.time.var_time] = d[vars.time.var_time];
         v[vars.var_y] = d[vars.var_y];
         v[vars.var_x] = d[vars.var_x];
-        v[vars.var_size] = d[vars.var_size];
         v[vars.var_color] = d[vars.var_color];
+        v[vars.var_size] = d[vars.var_size];
 
         unique_data[index].values.push(v);
 
@@ -346,8 +346,9 @@
 
         vars.new_data = utils.join(vars.nodes, vars.new_data, vars.var_node_id, vars.var_id, function(new_data, node) {
             var r = new_data;
-            if(typeof node === 'undefined')
-                return;
+            if(typeof node === 'undefined') {
+              return;
+            }
             r.x = node.x;
             r.y = node.y;
             r.__redraw = true;
