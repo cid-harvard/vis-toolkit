@@ -131,7 +131,7 @@
       var params_x = utils.init_params("x", 0, params, d, i, vars);
       var params_y = utils.init_params("y", 0, params, d, i, vars);
 
-      var default_height = params_type == 'div' || params_type == 'divtext' ? null: 10;
+      var default_height = params_type === 'div' || params_type === 'divtext' ? "auto": 10;
       var params_height = utils.init_params("height", default_height, params, d, i, vars);
 
       var params_width = utils.init_params("width", 10, params, d, i, vars);
@@ -206,17 +206,19 @@
 
           items_mark_div
                  .style("width", function(d) {
-                   if(typeof params_width !== "undefined") {
+                   if(typeof params_width !== "undefined" && params_width !== 'auto') {
                      return params_width + "px";
                    } else {
                      return "auto";
                    }
                  })
                  .style("height", function(d) {
-                  return 'auto';
-                  // if(typeof params_height !== "undefined") {
-                  //   return params_height + "px";
-                  // }
+
+                   if(typeof params_height !== "undefined" && params_height !== 'auto') {
+                     return params_height + "px";
+                   } else {
+                     return "auto";
+                   }
                  })
                  .style("left", function(d) {
                    if(typeof params_x !== "undefined") {
