@@ -6,7 +6,7 @@ var w = typeof window === "undefined" ? this : window;
 var vistk = w.vistk || {};
 w.vistk = vistk;
 
-vistk.version = "0.0.23";
+vistk.version = "0.0.24";
 vistk.utils = {};
 
 vistk.viz = function() {
@@ -82,7 +82,7 @@ var utils ={};
       }
 
       // Default id for marks
-      var mark_id = params._mark_id;
+      var mark_id = params._mark_id + "_" + i;
 
       // params_type is the list of marks to be drawn
       // it is either static (string) or can be computer
@@ -213,7 +213,7 @@ var utils ={};
         case "div":
 
           var items_mark_div = d3.select(d3.select(vars.svg.node().parentNode).node().parentNode)
-                .selectAll(".items__mark__div").data([d]);
+                .selectAll(".items__mark__div.items_" + mark_id).data([d]);
 
           var items_mark_div_enter = items_mark_div.enter()
                .append("div")
@@ -1810,7 +1810,8 @@ var utils ={};
 
     list: {type: ["sparkline", "dotplot", "barchart", "linechart", "scatterplot", "grid",
                   "stacked", "piechart", "slopegraph", "productspace", "treemap", "geomap",
-                  "stackedbar", "ordinal_vertical", "ordinal_horizontal", "matrix", "radial", "rectmap"],
+                  "stackedbar", "ordinal_vertical", "ordinal_horizontal", "matrix", "radial", "rectmap",
+                  "caterplot"],
       mark: ['rect', 'circle', 'star', 'shape']
     },
 
@@ -1915,9 +1916,9 @@ var utils ={};
     d.__highlighted = false;
     d.__redraw = true;
 
-    // Temporary settings to prevent chart redraw for product space tooltip
-    d3.select(vars.container).selectAll(".items__mark__text").remove();
-    d3.select(vars.container).selectAll(".items__mark__div").remove();
+    // Temporary settings to prevent chart redraw tooltips .tooltip
+    d3.select(vars.container).selectAll(".items__mark__text.tooltip").remove();
+    d3.select(vars.container).selectAll(".items__mark__div.tooltip").remove();
 
   });
 
@@ -2144,7 +2145,7 @@ var utils ={};
 
       }
 
-      vars.unique_data = [];
+      var unique_data = [];
 
       var lookup_index = [];
       var lookup_size = 0;
@@ -2178,7 +2179,7 @@ var utils ={};
           var dup = JSON.parse(JSON.stringify(d));
           dup.values = [];
 
-          vars.unique_data.push(dup);
+          unique_data.push(dup);
 
         } else {
 
@@ -2191,14 +2192,14 @@ var utils ={};
         v[vars.time.var_time] = d[vars.time.var_time];
         v[vars.var_y] = d[vars.var_y];
         v[vars.var_x] = d[vars.var_x];
-        v[vars.var_size] = d[vars.var_size];
         v[vars.var_color] = d[vars.var_color];
+        v[vars.var_size] = d[vars.var_size];
 
-        vars.unique_data[index].values.push(v);
+        unique_data[index].values.push(v);
 
       });
 
-      vars.new_data = vars.unique_data;
+      vars.new_data = unique_data;
 
     }
 
@@ -2361,37 +2362,11 @@ var utils ={};
       // Flagging missing nodes with __missing true attribute
       if(typeof vars.nodes !== "undefined" && vars.type === 'productspace') {
 
-        // Adding coordinates to data
-        //vars.new_data.forEach(function(d, i) {
-//
-        //  var node = vistk.utils.find_node_coordinates_by_id(vars.nodes, vars.var_node_id, d[vars.var_id]);
-//
-        //  // If we can't find product in the graph, put it in the corner
-        //  // if(typeof node == "undefined") {
-        //  // // res = {x: 500+Math.random()*400, y: 1500+Math.random()*400};
-        //  //   res = {x: 1095, y: 1675};
-        //  // }
-//
-        //  // We flag as missing the nodes in data without any coordinate
-        //  if(typeof node === "undefined") {
-        //    d.__missing = true;
-//
-        //  } else {
-//
-        //    d.__missing = false;
-        //    d.x = node.x;
-        //    d.y = node.y;
-//
-        //  }
-//
-        //  d.__redraw = true;
-//
-        //});
-
         vars.new_data = utils.join(vars.nodes, vars.new_data, vars.var_node_id, vars.var_id, function(new_data, node) {
             var r = new_data;
-            if(typeof node === 'undefined')
-                return;
+            if(typeof node === 'undefined') {
+              return;
+            }
             r.x = node.x;
             r.y = node.y;
             r.__redraw = true;
@@ -2399,9 +2374,9 @@ var utils ={};
         });
 
         // Remove missing nodes
-        vars.new_data = vars.new_data.filter(function(d) {
-         return !d.__missing;
-        });
+        // vars.new_data = vars.new_data.filter(function(d) {
+        //  return !d.__missing;
+        // });
 
         // Go through again the list of nodes
         // to make sure we display all the nodes
@@ -2425,7 +2400,6 @@ var utils ={};
         })
 
       }
-
 
     }
 
@@ -2650,12 +2624,12 @@ vars.default_params["scatterplot"] = function(scope) {
   params.y_scale = [{
     func: d3.scale.linear()
             .range([scope.height - scope.margin.top - scope.margin.bottom, scope.margin.top])
-            .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_y]; })).nice(),
+            .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_y]; })).nice()
   }];
 
   params.r_scale = d3.scale.linear()
               .range([vars.radius_min, vars.radius_max])
-              .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_r]; })),
+              .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_r]; }));
 
   params.items = [{
     marks: [{
@@ -2668,19 +2642,6 @@ vars.default_params["scatterplot"] = function(scope) {
       var_mark: '__highlighted',
       type: d3.scale.ordinal().domain([true, false]).range(["text", "none"])
     }]
-/*
-    , {
-    marks: [{
-        type: "circle",
-        radius: 20,
-        fill: function(d) { return vars.color(vars.accessor_items(d)[vars.var_color]); }
-    }, {
-        type: "text",
-        rotate: "-30",
-        translate: null
-    }
-*/
- //   ]
   }];
 
   params.x_axis_show = true;
@@ -3350,9 +3311,78 @@ vars.default_params["rectmap"] = function(scope) {
 
 };
 
+vars.default_params["caterplot"] = function(scope) {
+
+  var params = {};
+
+  params.accessor_values = function(d) { return d.values; };
+  params.accessor_items = function(d) { return d; };
+
+  params.x_scale = [{
+    func: d3.scale.ordinal()
+            .rangeBands([scope.margin.left, scope.width - scope.margin.left - scope.margin.right])
+            .domain(d3.set(vars.new_data.map(function(d) { return d['community_name']; })).values())
+  }];
+
+  params.y_scale = [{
+    func: d3.scale.linear()
+            .range([scope.height - scope.margin.top - scope.margin.bottom, scope.margin.top])
+            .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_y]; })).nice()
+  }];
+
+  params.r_scale = d3.scale.linear()
+              .range([vars.radius_min, vars.radius_max])
+              .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_r]; }));
+
+  params.items = [{
+    marks: [{
+        type: "circle",
+        r_scale: d3.scale.linear()
+                    .range([vars.radius_min, vars.radius_max])
+                    .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_r]; })),
+        fill: function(d) { return vars.color(vars.accessor_items(d)[vars.var_color]); }
+      }, {
+      var_mark: '__highlighted',
+      type: d3.scale.ordinal().domain([true, false]).range(["text", "none"])
+    }]
+  }];
+
+  params.connect = [{
+    marks: [{
+      type: "path",
+      stroke: function(d) { return vars.color(params.accessor_items(d)[vars.var_color]); },
+      func: d3.svg.line()
+           .interpolate(vars.interpolate)
+           .x(function(d) { return params.x_scale[0]["func"](d[vars.var_x]); })
+           .y(function(d) { return params.y_scale[0]["func"](d[vars.var_y]); }),
+      fill: "none"
+    }]
+  }];
+
+  params.x_axis_show = true;
+  params.x_axis_translate = [0, scope.height - scope.margin.bottom - scope.margin.top];
+  params.x_grid_show = true;
+  params.x_ticks = 10;
+
+  params.y_axis_show = true;
+  params.y_axis_translate = [scope.margin.left, 0];
+  params.y_grid_show = true;
+
+  return params;
+
+};
+
 vars.default_params["productspace"] = function(scope) {
 
   var params = {};
+
+  var accessor_values = function(d) {
+    return d.values.filter(function(v) {
+      if(v[vars.time.var_time] === vars.time.current_time) {
+        return v;
+      }
+    })[0];
+  }
 
   params.x_scale = [{
     func: d3.scale.linear()
@@ -3366,17 +3396,17 @@ vars.default_params["productspace"] = function(scope) {
             .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_y]; })).nice(),
   }];
 
-  params.r_scale = d3.scale.linear()
-              .range([10, 30])
-              .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_r]; }));
+  //params.r_scale = d3.scale.linear()
+  //            .range([10, 30])
+  //            .domain(d3.extent(vars.new_data, function(d) { return accessor_values(d)[vars.var_r]; }));
 
   params.items = [{
     marks: [{
       type: "circle",
-      r_scale: d3.scale.linear()
-                  .range([10, 30])
-                  .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_r]; })),
-      fill: function(d) { return vars.color(vars.accessor_items(d)[vars.var_color]); }
+     // r_scale: d3.scale.linear()
+     //             .range([10, 30])
+     //             .domain(d3.extent(vars.new_data, function(d) { return accessor_values(d)[vars.var_r]; })),
+      fill: function(d) { return vars.color(vars.accessor_items(accessor_values(d))[vars.var_color]); }
     }, {
       type: "text",
       rotate: "30",
@@ -3389,7 +3419,6 @@ vars.default_params["productspace"] = function(scope) {
     type: "items",
     marks: [{
       type: "line",
-      rotate: "0",
       func: null,
     }]
   }];
@@ -3742,20 +3771,18 @@ var z = d3.scale.linear().domain([0, 4]).clamp(true),
       vars.evt.call("clearAnimations", null);
       vars.evt.call('start', null);
 
-      console.log("DATA CHECK", utils.check_data_display(), vars.var_size, vars.new_data.filter(function(d) { return d[vars.var_size] > 0; }).length);
-
       // If no data, display a user friendly message telling
       if(!utils.check_data_display()) {
 
-   	    d3.select(vars.container).selectAll(".message")
-   	    	.style('display', 'block')
-   	    	.text(vars.locales[vars.lang]['no-data']);
+        d3.select(vars.container).selectAll(".message")
+          .style('display', 'block')
+          .text(vars.locales[vars.lang]['no-data']);
 
-   	    vars.svg.style('visibility', 'hidden');
+        vars.svg.style('visibility', 'hidden');
 
-  	  } else {
-   	    vars.svg.style('visibility', 'visible');
-  	  }
+      } else {
+        vars.svg.style('visibility', 'visible');
+      }
 
       switch(vars.type) {
 
@@ -4166,8 +4193,6 @@ var z = d3.scale.linear().domain([0, 4]).clamp(true),
         }
 
         vars.svg.call(utils.draw_chart, vars, vars.new_data);
-
-//        vars.svg.calutils.draw_chart(vars, vars.new_data);
 
       break;
 
