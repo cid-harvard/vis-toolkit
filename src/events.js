@@ -75,9 +75,9 @@
     d.__highlighted = false;
     d.__redraw = true;
 
-    // Temporary settings to prevent chart redraw for product space tooltip
-    d3.select(vars.container).selectAll(".items__mark__text").remove();
-    d3.select(vars.container).selectAll(".items__mark__div").remove();
+    // Temporary settings to prevent chart redraw tooltips .tooltip
+    d3.select(vars.container).selectAll(".items__mark__text.tooltip").remove();
+    d3.select(vars.container).selectAll(".items__mark__div.tooltip").remove();
 
   });
 
