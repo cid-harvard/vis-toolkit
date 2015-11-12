@@ -63,7 +63,7 @@
       }
 
       // Default id for marks
-      var mark_id = params._mark_id;
+      var mark_id = params._mark_id + "_" + i;
 
       // params_type is the list of marks to be drawn
       // it is either static (string) or can be computer
@@ -194,7 +194,7 @@
         case "div":
 
           var items_mark_div = d3.select(d3.select(vars.svg.node().parentNode).node().parentNode)
-                .selectAll(".items__mark__div").data([d]);
+                .selectAll(".items__mark__div.items_" + mark_id).data([d]);
 
           var items_mark_div_enter = items_mark_div.enter()
                .append("div")
