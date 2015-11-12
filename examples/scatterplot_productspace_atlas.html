@@ -102,7 +102,7 @@ g:hover .items__mark__circle:not(.highlighted__adjacent) {
 
 .year.label {
   font: 500 196px "Helvetica Neue";
-  fill: #ddd;
+  fill: black;
 }
 
 
@@ -242,8 +242,8 @@ d3.json("../data/network_sitc.json", function(graph) {
       var label = d3.select("svg").insert("text", ":first-child")
           .attr("class", "year label tooltip")
           .attr("text-anchor", "start")
-          .style("font-size", 70)
-          .attr("y", 80)
+          .style("font-size", 50)
+          .attr("y", 50)
           .attr("x", 10)
           .text(visualization.params().time.current_time);
 
