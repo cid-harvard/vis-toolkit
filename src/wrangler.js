@@ -211,13 +211,14 @@
           aggregation[vars.var_group] = leaves[0][vars.var_group];
 
           // Quick fix in case var_x is an ordinal scale
-          if(vars.var_x !== vars.var_id && vars.var_x !== vars.time.var_time) {
+          if(vars.var_x !== vars.var_id && vars.var_x !== vars.time.var_time && vars.var_x !== vars.var_group) {
             aggregation[vars.var_x] = d3.mean(leaves, function(d) {
               return d[vars.var_x];
             });
           } else {
             aggregation[vars.var_x] = leaves[0][vars.var_x];
           }
+
 
           if(vars.var_y !== vars.var_id && vars.var_y !== vars.time.var_time) {
             aggregation[vars.var_y] = d3.mean(leaves, function(d) {
