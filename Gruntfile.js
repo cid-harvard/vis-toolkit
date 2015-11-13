@@ -51,7 +51,7 @@ module.exports = function(grunt) {
 
     watch: {
       concat: {
-        files: ['src/*.js', 'src/visualizations/*.js'],
+        files: ['src/*.js', 'src/visualizations/*.js', 'src/marks/*.js'],
         tasks: ['string-replace', 'concat']
       },
       tasks: ['string-replace']
