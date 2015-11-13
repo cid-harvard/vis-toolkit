@@ -182,6 +182,7 @@
     },
 
     default_params: {},
+    default_marks: {},
 
     z_index: [
  //     {selector: '.mark__group', attribute: '__aggregated', type: 'productspace', weight: 1},
