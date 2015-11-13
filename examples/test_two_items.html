@@ -7,16 +7,17 @@
 <div id="viz"></div>
 <script>
 
-var  visualization = vistk.viz().params({
-  container: "#viz",
-  data: d3.range(5).map(function(d, i) { return {id: i, x: Math.random()*10, y: Math.random()*10} }),
+var  visualization = vistk.viz()
+    .params({
+      container: "#viz",
+      data: d3.range(5).map(function(d, i) { return {id: i, x: Math.random()*10, y: Math.random()*10} }),
   type: 'scatterplot',
   var_id: 'id',
   var_x: 'x',
   var_y: 'y',
   var_text: 'id',
   var_color: 'id',
-  var_r: 'id',  
+  var_r: 'id',
   color: function(d) { return d['id']; },
   items: [{
     marks: [{

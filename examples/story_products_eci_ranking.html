@@ -126,17 +126,19 @@ scatterplot.params({
   var_y: 'opp_gain',
   var_text: 'name',
   var_color: 'color',
+  var_r: 'world_trade',
   color: function(d) { return d['color']; },
   items: [{
     marks: [{
       type: 'circle',
       radius: 10,
       var_r: 'world_trade',
+      class: function() { return 'circle__handle'; },
       fill: function(d) { return "#E3E5DC"; }
     }, {
       type: 'circle',
       radius: 10,
-    //  var_r: 'world_trade',
+      class: function() { return 'circle__core'; },
       fill: function(d) { return d; }
     }, {
       var_mark: '__aggregated',
@@ -150,7 +152,16 @@ scatterplot.params({
 //      enter: function() { console.log(d3.select(this)); } //.attr("cursor", "ew-resize");  }
     }, {
       type: "text"
+  }]
+
+  , marks: [{
+      type: 'star',
+      radius: 10,
+      var_r: 'world_trade',
+      class: function() { return 'circle__handle'; },
+      fill: function(d) { return "#E3E5DC"; }
     }]
+
   }],
   selection: [],
   highlight: [],
@@ -164,7 +175,6 @@ var ranking = vistk.viz().params({
   container: "#viz_ranking",
   width: 600,
   height: 400,
-  dev: true,
   margin: {left: 20, top: 20, bottom: 20, right: 20}
 });
 
@@ -212,6 +222,10 @@ var drag = d3.behavior.drag()
     .origin(function(d) { return {x: d['pci'], y: d['opp_gain']}; })
     .on("drag", dragmove);
 
+var drag_circle = d3.behavior.drag()
+    .origin(function(d) { return {r: d['world_trade']}; })
+    .on("drag", dragmove_circle);
+
 function dragmove(d) {
 
   var curr_x = scatterplot.params().x_scale[0]["func"](d[scatterplot.params().var_x]);
@@ -225,8 +239,19 @@ function dragmove(d) {
   d3.select("#viz_scatterplot").call(scatterplot);
 }
 
+function dragmove_circle(d) {
+
+  var curr_r = scatterplot.params().r_scale[0]["func"](d[scatterplot.params().var_r]);
+  curr_r = curr_r + d3.event.dy;
+  d[scatterplot.params().var_r] = scatterplot.params().r_scale[0]["func"].invert(curr_r);
+
+  d3.select("#viz_scatterplot").call(scatterplot);
+
+}
+
 d3.selectAll(".mark__group").attr("cursor", "move").call(drag);
-//d3.selectAll(".highlight").attr("cursor", "ew-resize").call(drag);
+
+//d3.selectAll(".circle__handle").attr("cursor", "ns-resize").call(drag_circle);
 
 ranking.params({
   type: "linechart",
