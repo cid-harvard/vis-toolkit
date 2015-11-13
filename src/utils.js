@@ -19,6 +19,24 @@
 
   }
 
+  // Binds events for items marks
+  utils.bind_events = function(d, i) {
+
+    d3.select(this).classed("highlighted", function(d, i) { return d.__highlighted; })
+                   .classed("selected", function(d, i) { return d.__selected; })
+                   .on("mouseover",function(d) {
+                     vars.evt.call("highlightOn", d);
+                   })
+                   .on("mouseleave", function(d) {
+                     vars.evt.call("highlightOut", d);
+                   })
+                   .on("click", function(d) {
+                      vars.evt.call("selection", d);
+                      d3.event.stopPropagation();
+                   });
+
+  }
+
   // Create SVG groups for connect marks
   utils.connect_group = function(d, i) {
 
@@ -961,110 +979,113 @@
         vars.items.forEach(function(item, index_item) {
 
 
-            // Use the global accessor, unless specif one has been set
-            var accessor_data = vars.accessor_data;
+            if(!vars.flat_scene) {
+              // Use the global accessor, unless specif one has been set
+              var accessor_data = vars.accessor_data;
 
-            if(typeof item.accessor_data !== "undefined") {
-              accessor_data = item.accessor_data;
-            }
+              if(typeof item.accessor_data !== "undefined") {
+                accessor_data = item.accessor_data;
+              }
 
-            // PRE-UPDATE ITEMS
-            // Join is based on the curren_time value
-            var gItems = vars_svg.selectAll(".mark__group" +  "_" + index_item)
-                            .data(vars.new_data, function(d, i) {
-                              d._index_item = index_item;
-                              return accessor_data(d)[vars.var_id] + "_" + index_item + d.depth;
-                            });
+              // PRE-UPDATE ITEMS
+              // Join is based on the curren_time value
+              var gItems = vars_svg.selectAll(".mark__group" +  "_" + index_item)
+                              .data(vars.new_data, function(d, i) {
+                                d._index_item = index_item;
+                                return accessor_data(d)[vars.var_id] + "_" + index_item + d.depth;
+                              });
 
-            // ENTER ITEMS
-            var gItems_enter = gItems.enter()
-                            .insert("g", ":first-child");
+              // ENTER ITEMS
+              var gItems_enter = gItems.enter()
+                              .insert("g", ":first-child");
 
-            // ITEMS EXIT
-            var gItems_exit = gItems.exit();
+              // ITEMS EXIT
+              var gItems_exit = gItems.exit();
 
-            // IN CASE OF CUSTOM ENTER FOR ITEMS
-            if(typeof item.enter !== "undefined") {
-              gItems_enter.call(item.enter, vars);
-            } else {
-              gItems_enter.attr("transform", function(d, i) {
-                return "translate(" + vars.x_scale[0]["func"](accessor_data(d)[vars.var_x]) + ", " + vars.y_scale[0]["func"](accessor_data(d)[vars.var_y]) + ")";
-              });
+              // IN CASE OF CUSTOM ENTER FOR ITEMS
+              if(typeof item.enter !== "undefined") {
+                gItems_enter.call(item.enter, vars);
+              } else {
+                gItems_enter.attr("transform", function(d, i) {
+                  return "translate(" + vars.x_scale[0]["func"](accessor_data(d)[vars.var_x]) + ", " + vars.y_scale[0]["func"](accessor_data(d)[vars.var_y]) + ")";
+                });
+              }
             }
 
            // APPEND AND UPDATE ITEMS MARK
             item.marks.forEach(function(params, index_mark) {
 
-            if(!vars.flat_scene) {
+              if(!vars.flat_scene) {
 
-              if(typeof params.filter == "undefined") {
-                params.filter = function() {
-                  return true;
+                if(typeof params.filter == "undefined") {
+                  params.filter = function() {
+                    return true;
+                  }
                 }
-              }
 
-              // Supporting multipe similar elements
-              params._mark_id = index_item + "_" + index_mark;
+                // Supporting multipe similar elements
+                params._mark_id = index_item + "_" + index_mark;
 
-              if(vars.init) {
+                if(vars.init) {
 
-                gItems_enter
+                  gItems_enter
+                      .filter(params.filter)
+                      .filter(utils.filters.redraw_only)
+                      .call(utils.draw_mark, params, vars);
+
+                }
+
+                gItems
                     .filter(params.filter)
                     .filter(utils.filters.redraw_only)
                     .call(utils.draw_mark, params, vars);
 
+                if(vars.init) {
+                  // Bind events to groups after marks have been created
+                  gItems.each(utils.items_group);
+                }
+
+                if(vars.init && typeof params.evt !== 'undefined') {
+                  vars.evt.register("selection", params.evt[0].func)
+                }
+
+              } else { // flat scene graph
+
+                var mark_type = params.type;
+                var index_mark = index_mark;
+
+                //  Unique ID for the mark
+                var mark_id = mark_type + "_" + index_item+ "_" + index_mark;
+
+                // Get the marks params
+                var mark_params = vars.default_marks[mark_type](vars);
+
+                var items = vars.svg.selectAll("#" + mark_id)
+                    .data(vars.new_data, function(d, i) {
+                      d._index_item = index_item;
+                      return d[vars.var_id] + "_" + index_item + d.depth;
+                    });
+
+                // Skip the drawing if __redraw flag is false
+                //.filter(params.filter)
+                //.filter(utils.filters.redraw_only)
+
+                // Z-index?
+                // .insert("g", ":first-child");
+                // Should we re-order the marks to make sure it will appear in right order?
+                // Or do it afterwards?
+
+
+                items.enter().call(mark_params.enter, params, vars, mark_id);
+                // items.call(mark_params.update, params, vars, mark_id);
+                // items.exit().call(mark_params.exit, params, vars, mark_id);
+
               }
-
-              gItems
-                  .filter(params.filter)
-                  .filter(utils.filters.redraw_only)
-                  .call(utils.draw_mark, params, vars);
-
-              if(vars.init) {
-                // Bind events to groups after marks have been created
-                gItems.each(utils.items_group);
-              }
-
-              if(vars.init && typeof params.evt !== 'undefined') {
-                vars.evt.register("selection", params.evt[0].func)
-              }
-
-            } else { // flat scene graph
-
-              var mark_type = params.type;
-              var index_mark = index_mark;
-
-              //  Unique ID for the mark
-              var mark_id = mark_type + "_" + index_item+ "_" + index_mark;
-
-              // Get the marks params
-              var mark_params = vars.default_marks[mark_type](vars);
-
-              var items = vars.svg.selectAll("#" + mark_id)
-                .data(vars.new_data)
-
-              // Skip the drawing if __redraw flag is false
-              //.filter(params.filter)
-              //.filter(utils.filters.redraw_only)
-
-              // Z-index?
-              // .insert("g", ":first-child");
-              // Should we re-order the marks to make sure it will appear in right order?
-              // Or do it afterwards?
-
-              // Custom enters
-              // Custom updates
-              // Custom exits
-
-              items.enter().call(mark_params.enter, params, vars, mark_id);
-              items.call(mark_params.update, params, vars, mark_id);
-              items.exit().call(mark_params.exit, params, vars, mark_id);
-
-
-            }
 
 
             });
+
+          if(!vars.flat_scene) {
 
             // IN CASE OF CUSTOM UPDATE FOR ITEMS
             if(typeof item.update !== "undefined") {
@@ -1095,7 +1116,7 @@
               });
             }
 
-
+          }
 
         });
 
@@ -1645,6 +1666,52 @@ utils.init_params_values = function(var_v, default_value, params, d, i, vars) {
     return result;
 
   }
+
+  utils.mark_params = function(params, vars, d, i) {
+
+    var mark_params = {};
+
+    mark_params.text = "";
+
+    if(typeof params.text !== "undefined") {
+      if(typeof params.text === "function") {
+        mark_params.text = params.text(d, i , vars);
+      } else if(typeof params.text === "string") {
+        mark_params.text = params.text;
+      }
+    } else if(vars.var_text !== "undefined") {
+      mark_params.text = vars.accessor_data(d)[vars.var_text];
+    }
+
+    mark_params.source = [0, 0];
+    mark_params.target = [vars.width, vars.height];
+    mark_params.translate = [0, 0];
+
+    if(typeof params.translate !== "undefined" && params.translate !== null) {
+      if(typeof params.translate === "function") {
+        mark_params.translate = params.translate(d, i, vars);
+      } else {
+        mark_params.translate = params.translate;
+      }
+    }
+
+    // Available to all marks
+    mark_params.x = utils.init_params("x", 0, params, d, i, vars);
+    mark_params.y = utils.init_params("y", 0, params, d, i, vars);
+    mark_params.height = utils.init_params("height", 10, params, d, i, vars);
+    mark_params.width = utils.init_params("width", 10, params, d, i, vars);
+    mark_params.translate[0] += vars.x_scale[0]["func"](vars.accessor_data(d)[vars.var_x]);
+    mark_params.translate[1] += vars.y_scale[0]["func"](vars.accessor_data(d)[vars.var_y]);
+
+    // Specific to marks / charts
+    mark_params.rotate = utils.init_params("rotate", 0, params, d, i, vars);
+    mark_params.fill = utils.init_params("fill", vars.color(vars.accessor_items(d)[vars.var_color]), params, d, i, vars);
+    mark_params.stroke = utils.init_params("stroke", 0, params, d, i, vars);
+    mark_params.text_anchor = utils.init_params("text_anchor", "end", params, d, i, vars);
+
+    return mark_params;
+  }
+
 
   utils.mark_params_values = function(params, vars, d, i) {
 
