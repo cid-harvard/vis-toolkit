@@ -1060,24 +1060,33 @@
                 // Get the marks params
                 var mark_params = vars.default_marks[mark_type](vars);
 
-                var items = vars.svg.selectAll("#" + mark_id)
+                var items = vars.svg.selectAll(mark_type + "." + mark_id)
                     .data(vars.new_data, function(d, i) {
-                      d._index_item = index_item;
-                      return d[vars.var_id] + "_" + index_item + d.depth;
+                      d.__mark_id = mark_id + '_' + i;
+                      return d.__mark_id;
                     });
-
-                // Skip the drawing if __redraw flag is false
-                //.filter(params.filter)
-                //.filter(utils.filters.redraw_only)
 
                 // Z-index?
                 // .insert("g", ":first-child");
                 // Should we re-order the marks to make sure it will appear in right order?
                 // Or do it afterwards?
 
-                items.enter().call(mark_params.enter, params, vars, mark_id);
-                items.call(mark_params.update, params, vars, mark_id);
-                items.exit().call(mark_params.exit, params, vars, mark_id);
+                if(typeof params.filter == "undefined") {
+                  params.filter = function() { return true; }
+                }
+
+                // Skip the drawing if __redraw flag is false
+                //.filter(params.filter)
+                //.filter(utils.filters.redraw_only)
+
+                // Drawing SVG TYPE MARK
+                items.enter().append(mark_type).filter(params.filter).call(mark_params.enter, params, vars, mark_id);
+                items.filter(params.filter).call(mark_params.update, params, vars, mark_id);
+                items.exit().filter(params.filter).call(mark_params.exit, params, vars, mark_id);
+
+                // TODO: Drawing HTML TYPE MARKS
+
+                // TODO: Drawing CANVAS TYPE MARKS
 
               }
 

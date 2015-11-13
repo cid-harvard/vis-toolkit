@@ -8,14 +8,13 @@ vars.default_marks["circle"] = function(scope) {
 
   this_params.enter = function(selection, params, vars, mark_id) {
 
-    var sel = selection.append("circle");
-
-    sel.each(function(d, i) {
+    selection.each(function(d, i) {
 
       var mark_params = utils.mark_params(params, vars, d, i);
 
       d3.select(this)
         .attr('id', mark_id)
+        .classed(mark_id, true)
         .classed("items__mark__circle", true)
         .attr("r", this_params.radius)
         .attr("transform", "translate(" +  mark_params.translate + ")rotate(" +  mark_params.rotate + ")")

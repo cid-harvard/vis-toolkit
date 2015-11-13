@@ -28,7 +28,7 @@ d3.json("../../vis-toolkit-datasets/data/exports_quinn_2012.json", function(erro
       items: [{
         marks: [{
           type: "rect",
-          filter: function(d, i) { return d.depth == vars.treemap.depth_rect; },
+          filter: function(d, i, vars) { return d.depth == 2; },
           x: 0,
           y: 0,
           width: function(d) { return d.dx; },

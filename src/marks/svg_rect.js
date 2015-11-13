@@ -8,14 +8,12 @@ vars.default_marks['rect'] = function(scope) {
 
   this_params.enter = function(selection, params, vars, mark_id) {
 
-    var sel = selection.append("rect");
-
-    sel.each(function(d, i) {
+    selection.each(function(d, i) {
 
       var mark_params = utils.mark_params(params, vars, d, i);
 
       d3.select(this)
-        .attr('id', mark_id + '_' + i)
+        .attr('id', d.__mark_id)
         .classed("items__mark__rect", true)
         .attr("x", mark_params.x)
         .attr("y", mark_params.y)
