@@ -12,7 +12,7 @@ vars.default_marks['rect'] = function(scope) {
 
     sel.each(function(d, i) {
 
-      var mark_params = utils.mark_params_values(params, vars, d, i);
+      var mark_params = utils.mark_params(params, vars, d, i);
 
       d3.select(this)
         .attr('id', mark_id)
@@ -25,22 +25,16 @@ vars.default_marks['rect'] = function(scope) {
         .style("fill", mark_params.fill)
         .attr("transform", "translate(" +  mark_params.translate + ")rotate(" +  mark_params.rotate + ")")
         .each(utils.bind_events);
-        // .each(utils.default_svg_attr, mark_params);
-
 
     });
 
   };
 
-  this_params.update = function(selection, params, vars, mark_id) {
+  this_params.update = function(selection) {
 
-    selection.each(function(d, i) {
+    var mark_params = utils.mark_params(params, vars, d, i);
 
-     // var mark_params = utils.mark_params(params, vars, d, i);
-
-      var mark_params = utils.mark_params_values(params, vars, d, i);
-
-      d3.select(this)
+    selection
         .classed("highlighted", function(d, i) { return d.__highlighted; })
         .classed("highlighted__adjacent", function(d, i) { return d.__highlighted__adjacent; })
         .classed("selected", function(d, i) { return d.__selected; })
@@ -48,17 +42,14 @@ vars.default_marks['rect'] = function(scope) {
         .attr("x", mark_params.x)
         .attr("y", mark_params.y)
         .attr("height", mark_params.height)
-        .attr("width", mark_params.width)
+        .attr("width", mark_params.height)
         .style("stroke", mark_params.stroke)
         .style("fill", mark_params.fill)
-        .attr("transform", "translate(" +  mark_params.translate + ")rotate(" +  mark_params.rotate + ")");
-
-    });
-
+        .attr("transform", "translate(" +  mark_params.translate + ")rotate(" +  mark_params.rotate + ")")
   };
 
   this_params.exit = function(selection) {
-	  selection.remove();
+    selection.remove();
   };
 
   return this_params;
