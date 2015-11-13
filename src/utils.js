@@ -961,9 +961,6 @@
         vars.items.forEach(function(item, index_item) {
 
 
-
-          if(!vars.flat_scene) {
-
             // Use the global accessor, unless specif one has been set
             var accessor_data = vars.accessor_data;
 
@@ -998,6 +995,8 @@
            // APPEND AND UPDATE ITEMS MARK
             item.marks.forEach(function(params, index_mark) {
 
+            if(!vars.flat_scene) {
+
               if(typeof params.filter == "undefined") {
                 params.filter = function() {
                   return true;
@@ -1030,6 +1029,41 @@
                 vars.evt.register("selection", params.evt[0].func)
               }
 
+            } else { // flat scene graph
+
+              var mark_type = params.type;
+              var index_mark = index_mark;
+
+              //  Unique ID for the mark
+              var mark_id = mark_type + "_" + index_item+ "_" + index_mark;
+
+              // Get the marks params
+              var mark_params = vars.default_marks[mark_type](vars);
+
+              var items = vars.svg.selectAll("#" + mark_id)
+                .data(vars.new_data)
+
+              // Skip the drawing if __redraw flag is false
+              //.filter(params.filter)
+              //.filter(utils.filters.redraw_only)
+
+              // Z-index?
+              // .insert("g", ":first-child");
+              // Should we re-order the marks to make sure it will appear in right order?
+              // Or do it afterwards?
+
+              // Custom enters
+              // Custom updates
+              // Custom exits
+
+              items.enter().call(mark_params.enter, params, vars, mark_id);
+              items.call(mark_params.update, params, vars, mark_id);
+              items.exit().call(mark_params.exit, params, vars, mark_id);
+
+
+            }
+
+
             });
 
             // IN CASE OF CUSTOM UPDATE FOR ITEMS
@@ -1061,39 +1095,7 @@
               });
             }
 
-          } else { // flat scene graph
 
-            var mark_type = params.type;
-            var index_mark = index_mark;
-
-            //  Unique ID for the mark
-            var mark_id = mark_type + "_" + index_item+ "_" + index_mark;
-
-            // Get the marks params
-            var mark_params = vars.default_marks[mark_type](vars);
-
-            var items = vars.svg.selectAll("#" + mark_id)
-              .data(vars.new_data)
-
-            // Skip the drawing if __redraw flag is false
-            //.filter(params.filter)
-            //.filter(utils.filters.redraw_only)
-
-            // Z-index?
-            // .insert("g", ":first-child");
-            // Should we re-order the marks to make sure it will appear in right order?
-            // Or do it afterwards?
-
-            // Custom enters
-            // Custom updates
-            // Custom exits
-
-            items.enter().call(mark_params.enter, params, vars, mark_id);
-            items.call(mark_params.update, params, vars, mark_id);
-            items.exit().call(mark_params.exit, params, vars, mark_id);
-
-
-          }
 
         });
 
