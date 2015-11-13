@@ -15,7 +15,7 @@ vars.default_marks['rect'] = function(scope) {
       var mark_params = utils.mark_params(params, vars, d, i);
 
       d3.select(this)
-        .attr('id', mark_id)
+        .attr('id', mark_id + '_' + i)
         .classed("items__mark__rect", true)
         .attr("x", mark_params.x)
         .attr("y", mark_params.y)
@@ -30,11 +30,13 @@ vars.default_marks['rect'] = function(scope) {
 
   };
 
-  this_params.update = function(selection) {
+  this_params.update = function(selection, params, vars, mark_id) {
+
+    selection.each(function(d, i) {
 
     var mark_params = utils.mark_params(params, vars, d, i);
 
-    selection
+      d3.select(this)
         .classed("highlighted", function(d, i) { return d.__highlighted; })
         .classed("highlighted__adjacent", function(d, i) { return d.__highlighted__adjacent; })
         .classed("selected", function(d, i) { return d.__selected; })
@@ -45,7 +47,9 @@ vars.default_marks['rect'] = function(scope) {
         .attr("width", mark_params.height)
         .style("stroke", mark_params.stroke)
         .style("fill", mark_params.fill)
-        .attr("transform", "translate(" +  mark_params.translate + ")rotate(" +  mark_params.rotate + ")")
+        .attr("transform", "translate(" +  mark_params.translate + ")rotate(" +  mark_params.rotate + ")");
+
+      });
   };
 
   this_params.exit = function(selection) {

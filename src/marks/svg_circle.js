@@ -25,14 +25,23 @@ vars.default_marks["circle"] = function(scope) {
 
   };
 
-  this_params.update = function(selection) {
+  this_params.update = function(selection, params, vars, mark_id) {
 
-    selection
+    selection.each(function(d, i) {
+
+    var mark_params = utils.mark_params(params, vars, d, i);
+
+      d3.select(this)
         .classed("highlighted", function(d, i) { return d.__highlighted; })
         .classed("highlighted__adjacent", function(d, i) { return d.__highlighted__adjacent; })
         .classed("selected", function(d, i) { return d.__selected; })
         .classed("selected__adjacent", function(d, i) { return d.__selected__adjacent; })
-    //    .attr("transform", "translate(" +  params_translate + ")rotate(" +  params_rotate + ")");
+        .transition().duration(vars.duration)
+        .attr("transform", "translate(" +  mark_params.translate + ")rotate(" +  mark_params.rotate + ")")
+
+
+    })
+
   };
 
   this_params.exit = function(selection) {
