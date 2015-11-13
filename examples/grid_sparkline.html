@@ -57,33 +57,19 @@ d3.tsv("../../vis-toolkit-datasets/data/COL_pop_realgdp_dept_2000-2013.txt", fun
           var_time: "year",
           parse: d3.time.format("%Y").parse,
           interval: [],
-          current_time: "2013"
-        },
-        items: [{
-          attr: "name",
-          marks: [{
-            type: "diamond",
-            width: 10,
-            height: 10
-          },{
-            type: "text",
-            rotate: "50"
-          }]
-        }],
-        connect: [{
-          marks: [{
-            type: "path",
-            rotate: "0",
-            stroke: function(d) { return "black"; },
-          }]
-        }],
-        interpolate: "linear",
+          current_time: "2013"}
+        }, {
+          type: "diamond",
+          width: 10,
+          height: 10
         }, {
           type: "text",
-          rotate: "30",
-          translate: [20, 0]
+          rotate: "50"
+        }, {
+          type: "sparkline",
+          rotate: "50"
         }]
-      }],
+      }]
     });
 
   d3.select("#viz").call(visualization);

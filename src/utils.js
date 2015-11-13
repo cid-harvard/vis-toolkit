@@ -725,6 +725,14 @@
 
         break;
 
+
+        case "sparkline":
+
+          // To make sure we removed __highlighted and __selected nodes
+          // d3.select(that).selectAll(".items_" + mark_id).remove();
+
+        break;
+
         case "none":
 
           // To make sure we removed __highlighted and __selected nodes
@@ -978,7 +986,6 @@
 
         vars.items.forEach(function(item, index_item) {
 
-
             if(!vars.flat_scene) {
               // Use the global accessor, unless specif one has been set
               var accessor_data = vars.accessor_data;
@@ -1075,14 +1082,20 @@
                   params.filter = function() { return true; }
                 }
 
-                // Skip the drawing if __redraw flag is false
-                //.filter(params.filter)
-                //.filter(utils.filters.redraw_only)
-
                 // Drawing SVG TYPE MARK
-                items.enter().append(mark_type).filter(params.filter).call(mark_params.enter, params, vars, mark_id);
-                items.filter(params.filter).call(mark_params.update, params, vars, mark_id);
-                items.exit().filter(params.filter).call(mark_params.exit, params, vars, mark_id);
+                items.enter()
+                  .append(mark_type)
+                    .filter(params.filter)
+                    .filter(utils.filters.redraw_only)
+                    .call(mark_params.enter, params, vars, mark_id);
+
+                items
+                  .filter(params.filter)
+                  .call(mark_params.update, params, vars, mark_id);
+
+                items.exit()
+                  .filter(params.filter)
+                  .call(mark_params.exit, params, vars, mark_id);
 
                 // TODO: Drawing HTML TYPE MARKS
 
