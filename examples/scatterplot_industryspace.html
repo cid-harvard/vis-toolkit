@@ -42,17 +42,17 @@ g:hover  .items__mark__circle.highlighted {
 }
 
 .connect__path:not(.highlighted) {
-  stroke-width: 1px;  
+  stroke-width: 1px;
 }
 
 .connect__path.highlighted {
   stroke-opacity: 1;
-  stroke-width: 5px;  
+  stroke-width: 5px;
 }
 
 .connect__path.selected {
   stroke-opacity: 1;
-  stroke-width: 3px;  
+  stroke-width: 3px;
 }
 
 </style>
@@ -60,7 +60,7 @@ g:hover  .items__mark__circle.highlighted {
 <div id="viz"></div>
 <script>
 
-d3.json("../data/industry-data-neave-150707.json", function(data) {
+d3.json("../../vis-toolkit-datasets/data/industry-data-neave-150707.json", function(data) {
 
     data.nodes.forEach(function(d) {
 
@@ -72,11 +72,11 @@ d3.json("../data/industry-data-neave-150707.json", function(data) {
 
     })
 
-//  d3.json("../data/col_dept_exports_3.json", function(exports) {
+//  d3.json("../../vis-toolkit-datasets/data/col_dept_exports_3.json", function(exports) {
 /*
-    // cog: 0.4208957237122138 coi: 0.8067728413148435 distance: 0.8179699425486985 
+    // cog: 0.4208957237122138 coi: 0.8067728413148435 distance: 0.8179699425486985
     // export_rca: 0.04472251026943858 export_value: 29700 id: 2479 import_value: 3278477
-    // product_id: "115" year: 2008  
+    // product_id: "115" year: 2008
 */
     visualization = vistk.viz()
       .params({

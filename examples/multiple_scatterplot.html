@@ -6,7 +6,7 @@
 <body>
 <script>
 
-d3.json("../data/diversification_ubiquity_hs4_1995_2012.json", function(error, countries) {
+d3.json("../../vis-toolkit-datasets/data/diversification_ubiquity_hs4_1995_2012.json", function(error, countries) {
 
 // [{"name": "Angola", "name_2char": "ao", "country_id": 4, "longitude": 13.242, "years": [{"avg_products": 61, "nb_products": 5, "year": 1995}
 
@@ -14,7 +14,7 @@ d3.json("../data/diversification_ubiquity_hs4_1995_2012.json", function(error, c
   var height = width * 0.7;
 
   var flat_years = vistk.utils.flatten_years(countries);
-  
+
   var dimensions = ["latitude", "nb_products", "avg_products"];
 
   dimensions.forEach(function(dim, i) {
@@ -31,7 +31,7 @@ d3.json("../data/diversification_ubiquity_hs4_1995_2012.json", function(error, c
           type: 'scatterplot',
           margin: {top: 10, right: 10, bottom: 30, left: 30},
           width: width / dimensions.length,
-          height: height / dimensions.length,         
+          height: height / dimensions.length,
           container: '#'+viz_id,
           data: flat_years,
           var_id: 'name',
@@ -55,7 +55,7 @@ d3.json("../data/diversification_ubiquity_hs4_1995_2012.json", function(error, c
             }]
           }],
           selection: ["France"],
-          highlight: ["France", "Germany"],      
+          highlight: ["France", "Germany"],
           title: "World Countries " + dim + " / " + dam
         });
 

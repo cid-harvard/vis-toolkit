@@ -7,7 +7,7 @@
 <div id="viz"></div>
 <script>
 
-d3.json("../data/diversification_ubiquity_hs4_1995_2012.json", function(error, countries) {
+d3.json("../../vis-toolkit-datasets/data/diversification_ubiquity_hs4_1995_2012.json", function(error, countries) {
 
 // [{"name": "Angola", "name_2char": "ao", "country_id": 4, "longitude": 13.242, "years": [{"avg_products": 61, "nb_products": 5, "year": 1995}
 
@@ -16,7 +16,7 @@ d3.json("../data/diversification_ubiquity_hs4_1995_2012.json", function(error, c
   visualization = vistk.viz()
     .params({
       dev: true,
-      type: 'dotplot',      
+      type: 'dotplot',
       data: flat_years,
       container: '#viz',
       var_id: 'name',
@@ -48,7 +48,7 @@ d3.json("../data/diversification_ubiquity_hs4_1995_2012.json", function(error, c
         }]
       }],
       time: {
-        var_time: 'year', 
+        var_time: 'year',
         current_time: vistk.utils.max,
         parse: function(d) { return d; }
       },

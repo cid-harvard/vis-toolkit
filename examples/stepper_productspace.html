@@ -115,11 +115,11 @@ d3.select("input[value='step4']").on("click", function(d) {
 
 });
 
-d3.json("../data/atlas_international_product_space_hs4_codes.json", function(graph) {
-  d3.json("../data/colombia_products_location930_2012.json", function(exports) {
-    d3.json("../data/colombia_products_metadata.json", function(metadata) {
-  /* 
-  
+d3.json("../../vis-toolkit-datasets/data/atlas_international_product_space_hs4_codes.json", function(graph) {
+  d3.json("../../vis-toolkit-datasets/data/colombia_products_location930_2012.json", function(exports) {
+    d3.json("../../vis-toolkit-datasets/data/colombia_products_metadata.json", function(metadata) {
+  /*
+
     PRODUCT
       "cog": 0.0,
       "coi": 181.64991760253906,
@@ -141,7 +141,7 @@ d3.json("../data/atlas_international_product_space_hs4_codes.json", function(gra
       "name_es": null,
       "name_short_en": null,
       "name_short_es": null,
-      "parent_id": null 
+      "parent_id": null
   */
 
       // Create quasi-dummy categories

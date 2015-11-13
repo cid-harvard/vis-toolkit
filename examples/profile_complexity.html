@@ -12,12 +12,12 @@
   <tr><td>                  </td><td>All departments (2013)</td><td>Value (2013)</td><td>Growth, Annual (2009 - 2013)</td></tr>
   <td>Overall export complexity         </td><td><div id="js-dotplot-complexity"></div></td><td>0.3</td><td><div id="js-sparkline-complexity"></div></td></tr>
   <tr><td colspan="2">
-  	
+
     <div id="js-dotplot-complexity">
-      <input name="story" value="step0" type="radio" checked>Start<br>    
+      <input name="story" value="step0" type="radio" checked>Start<br>
       <input name="story" value="step1" type="radio">Step 1<br>
-      <input name="story" value="step2" type="radio" />Step 2<br>    
-      <input name="story" value="step3" type="radio" />Step 3<br>   
+      <input name="story" value="step2" type="radio" />Step 2<br>
+      <input name="story" value="step3" type="radio" />Step 3<br>
     </div>
 
   </td><td colspan="2"><div id="js-product-space-complexity"></div></td></tr>
@@ -26,14 +26,14 @@
 
 <script>
 
-d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments) {
+d3.tsv("../../vis-toolkit-datasets/data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments) {
 
   departments.forEach(function(d, i) {
 
     d.dept_pop = +d.dept_pop;
-    d.year = +d.year;    
+    d.year = +d.year;
     d.realgdp = +d.realgdp;
-    d.realgdp_percap = +d.realgdp_percap;    
+    d.realgdp_percap = +d.realgdp_percap;
     d["sum(export_value)"] = +d["sum(export_value)"];
     d["value_added"] = +d["value_added"];
 
@@ -46,7 +46,7 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
     .container("#js-dotplot-complexity")
     .data(departments)
     .height(100)
-    .width(400)    
+    .width(400)
     .x_var("dept_pop")
     .x_scale("linear")
     .y_var(["dept_pop", "realgdp"]) //TODO: make it categorical
@@ -63,15 +63,15 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
 })
 
 
-d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments) {
+d3.tsv("../../vis-toolkit-datasets/data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments) {
 
   // Pre-processing the data
   departments.forEach(function(d, i) {
 
     d.dept_pop = +d.dept_pop;
-   // d.year = +d.year;    
+   // d.year = +d.year;
     d.realgdp = +d.realgdp;
-    d.realgdp_percap = +d.realgdp_percap;    
+    d.realgdp_percap = +d.realgdp_percap;
     d["sum(export_value)"] = +d["sum(export_value)"];
     d["value_added"] = +d["value_added"];
 
@@ -110,15 +110,15 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
 
 })
 
-d3.json("../data/atlas_international_product_space.json", function(graph) {
+d3.json("../../vis-toolkit-datasets/data/atlas_international_product_space.json", function(graph) {
 
-  d3.json("../data/col_dept_exports_3.json", function(exports) {
+  d3.json("../../vis-toolkit-datasets/data/col_dept_exports_3.json", function(exports) {
 
     console.log(exports)
 
     // Adding a category attribute to the data
     exports.forEach(function(node){
-      node.category = node.product_id.slice(0, 1);      
+      node.category = node.product_id.slice(0, 1);
     });
 
     product_space_complexity = vistk.viz()
@@ -143,19 +143,19 @@ d3.json("../data/atlas_international_product_space.json", function(graph) {
     d3.select("#js-product-space-complexity").call(product_space_complexity)
 
     // Highlight random nodes
-    d3.select("input[value='step0']").on("click", function() { 
+    d3.select("input[value='step0']").on("click", function() {
       product_space_complexity.vars().evt.call("highlightOut");
     });
 
-    d3.select("input[value='step1']").on("click", function() { 
+    d3.select("input[value='step1']").on("click", function() {
       product_space_complexity.vars().evt.call("highlightOn", product_space_complexity.data()[Math.floor(product_space_complexity.data().length*Math.random())]);
     });
 
-    d3.select("input[value='step2']").on("click", function() { 
+    d3.select("input[value='step2']").on("click", function() {
       product_space_complexity.vars().evt.call("highlightOn", product_space_complexity.data()[Math.floor(product_space_complexity.data().length*Math.random())]);
     });
 
-    d3.select("input[value='step3']").on("click", function() { 
+    d3.select("input[value='step3']").on("click", function() {
       product_space_complexity.vars().evt.call("highlightOn", product_space_complexity.data()[Math.floor(product_space_complexity.data().length*Math.random())]);
     });
 

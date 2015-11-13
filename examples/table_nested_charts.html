@@ -11,7 +11,7 @@
 // [ ] Create fake data for the table to be screen filling
 // [ ] Create some nested charts within each cell
 
-d3.json("../data/exports_2012.json", function(error, exports) {
+d3.json("../../vis-toolkit-datasets/data/exports_2012.json", function(error, exports) {
 
   visualization = vistk.viz()
     .type("table")
@@ -22,7 +22,7 @@ d3.json("../data/exports_2012.json", function(error, exports) {
     .columns(['a', 'b', 'c'])
     .params({
       mark: function(m) {
-      
+
       // For each mark, do something different
 
       // In that case we want to create a scatterplot

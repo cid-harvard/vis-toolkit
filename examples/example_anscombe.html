@@ -19,12 +19,12 @@
 
 var width = 800, height = 600;
 
-d3.csv("../data/anscombe.csv", function(graph) {
+d3.csv("../../vis-toolkit-datasets/data/anscombe.csv", function(graph) {
 
   data = [];
 
   graph.forEach(function(d) {
-    
+
     d["x"] = +d["x"];
     d["y"] = +d["y"];
 

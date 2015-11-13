@@ -18,14 +18,14 @@
 
 <script>
 
-d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments) {
+d3.tsv("../../vis-toolkit-datasets/data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments) {
 
   departments.forEach(function(d, i) {
 
     d.dept_pop = +d.dept_pop;
-    d.year = +d.year;    
+    d.year = +d.year;
     d.realgdp = +d.realgdp;
-    d.realgdp_percap = +d.realgdp_percap;    
+    d.realgdp_percap = +d.realgdp_percap;
     d["sum(export_value)"] = +d["sum(export_value)"];
     d["value_added"] = +d["value_added"];
 
@@ -36,7 +36,7 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
     .container("#js-dotplot-gdp")
     .data(departments)
     .height(100)
-    .width(400)    
+    .width(400)
     .x_var("realgdp")
     .x_scale("linear")
     .y_var(["dept_pop", "realgdp"]) //TODO: make it categorical
@@ -55,7 +55,7 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
     .container("#js-dotplot-income-capita")
     .data(departments)
     .height(100)
-    .width(400)    
+    .width(400)
     .x_var("realgdp_percap")
     .x_scale("linear")
     //.y_var(["realgdp"]) //TODO: make it categorical
@@ -74,7 +74,7 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
     .container("#js-dotplot-population")
     .data(departments)
     .height(100)
-    .width(400)    
+    .width(400)
     .x_var("dept_pop")
     .x_scale("linear")
     .y_var(["dept_pop", "realgdp"]) //TODO: make it categorical
@@ -88,15 +88,15 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
 
   d3.select("#js-dotplot-population").call(dotplot_population)
 
-  d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments) {
+  d3.tsv("../../vis-toolkit-datasets/data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments) {
 
     // Pre-processing the data
     departments.forEach(function(d, i) {
 
       d.dept_pop = +d.dept_pop;
-     // d.year = +d.year;    
+     // d.year = +d.year;
       d.realgdp = +d.realgdp;
-      d.realgdp_percap = +d.realgdp_percap;    
+      d.realgdp_percap = +d.realgdp_percap;
       d["sum(export_value)"] = +d["sum(export_value)"];
       d["value_added"] = +d["value_added"];
 

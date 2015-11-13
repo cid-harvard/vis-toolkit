@@ -7,7 +7,7 @@
 <div id="viz"></div>
 <script>
 
-d3.json("../data/colombia_products_location_year.json", function(error, products) {
+d3.json("../../vis-toolkit-datasets/data/colombia_products_location_year.json", function(error, products) {
 
   /*
   {
@@ -46,7 +46,7 @@ d3.json("../data/colombia_products_location_year.json", function(error, products
       var_text: "parent_name",
       color: function() { return "#eee"; },
       time: {
-        var_time: "year", 
+        var_time: "year",
         current_time: 2012,
         parse: function(d) { return d; }
       },

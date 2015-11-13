@@ -10,12 +10,12 @@
 <script src="../js/d3.js"></script>
 <script>
 
-d3.csv("../data/atlas_growth_projections_2023.csv", function(error, data) {
+d3.csv("../../vis-toolkit-datasets/data/atlas_growth_projections_2023.csv", function(error, data) {
 
   dd = data
-  
+
   var res = [];
-  
+
   // This is what the result should look like
   // {name: d.Country, year: k, rank: +d[k], id: d.Country.replace(" ", "_"), category: +d[k]%5})
 

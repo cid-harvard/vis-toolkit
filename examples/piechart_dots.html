@@ -7,7 +7,7 @@
 <div id="viz"></div>
 <script>
 
-d3.json("../data/diversification_ubiquity_hs4_1995_2012.json", function(error, countries) {
+d3.json("../../vis-toolkit-datasets/data/diversification_ubiquity_hs4_1995_2012.json", function(error, countries) {
 
   flat_years = vistk.utils.flatten_years(countries);
 
@@ -20,7 +20,7 @@ d3.json("../data/diversification_ubiquity_hs4_1995_2012.json", function(error, c
     group: "continent",
     var_share: "nb_products",
     time: {
-      var_time: "year", 
+      var_time: "year",
       current_time: 1995,
     },
     var_color: "continent",

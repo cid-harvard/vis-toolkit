@@ -7,12 +7,11 @@
 <div id="viz"></div>
 <script>
 
-d3.json("../data/exports_2012.json", function(error, exports) {
+d3.json("../../vis-toolkit-datasets/data/exports_2012.json", function(error, exports) {
 
   var visualization = vistk.viz()
     .params({
       type: 'scatterplot',
-      margin: {top: 10, right: 10, bottom: 30, left: 30},
       container: '#viz',
       data: exports.data,
       var_id: 'code',

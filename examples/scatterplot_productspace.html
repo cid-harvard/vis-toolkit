@@ -73,7 +73,7 @@ path.state {
 }
 
 .items__mark__circle.highlighted {
-  fill: #191914;  
+  fill: #191914;
   stroke: black;
   stroke-width: .5px;
 }
@@ -92,20 +92,20 @@ path.state {
 <div id="legend"></div>
 <script>
 
-//d3.json("../data/atlas_international_product_space.json", function(graph) {
+//d3.json("../../vis-toolkit-datasets/data/atlas_international_product_space.json", function(graph) {
 
-//  d3.json("../data/col_dept_exports_3.json", function(exports) {
+//  d3.json("../../vis-toolkit-datasets/data/col_dept_exports_3.json", function(exports) {
 /*
-    // cog: 0.4208957237122138 coi: 0.8067728413148435 distance: 0.8179699425486985 
+    // cog: 0.4208957237122138 coi: 0.8067728413148435 distance: 0.8179699425486985
     // export_rca: 0.04472251026943858 export_value: 29700 id: 2479 import_value: 3278477
-    // product_id: "115" year: 2008  
+    // product_id: "115" year: 2008
 */
 
-d3.json("../data/colombia_product_space.json", function(graph) {
-  d3.json("../data/colombia_products_location930_2012.json", function(exports) {
-    d3.json("../data/colombia_products_metadata.json", function(metadata) {
-  /* 
-  
+d3.json("../../vis-toolkit-datasets/data/colombia_product_space.json", function(graph) {
+  d3.json("../../vis-toolkit-datasets/data/colombia_products_location930_2012.json", function(exports) {
+    d3.json("../../vis-toolkit-datasets/data/colombia_products_metadata.json", function(metadata) {
+  /*
+
     PRODUCT
       "cog": 0.0,
       "coi": 181.64991760253906,
@@ -147,7 +147,7 @@ d3.json("../data/colombia_product_space.json", function(graph) {
           return p.parent_id == e.id;
         })[0];
 */
-  
+
         if(typeof metadata_export === "undefined") {
 
           d["name_en"] = "undefined";
@@ -196,14 +196,14 @@ d3.json("../data/colombia_product_space.json", function(graph) {
               type: d3.scale.ordinal().domain([true, false]).range(["text", "none"])
             }, {
               var_mark: '__selected',
-              type: d3.scale.ordinal().domain([true, false]).range(["star", "circle"]),              
-              stroke: function(d) { 
+              type: d3.scale.ordinal().domain([true, false]).range(["star", "circle"]),
+              stroke: function(d) {
                       return d['export_rca'] > 1 ? "black": "black";
               },
-              stroke_width: function(d) { 
+              stroke_width: function(d) {
                       return d['export_rca'] > 1 ? '1.5px': '0.5px';
               },
-              class: function(d) { 
+              class: function(d) {
                 return d['export_rca'] > 1 ? 'circle__export': 'circle__non__export';
               }
             }, {
@@ -222,7 +222,7 @@ d3.json("../data/colombia_product_space.json", function(graph) {
                     .range([2, 10]);
                     return c(d["export_rca"]);
             },
-            fill: function(d) { 
+            fill: function(d) {
                     var c = d3.scale.linear()
                       .domain(d3.extent(exports, function(d) { return vars.accessor_values(d).export_rca; }))
                       .range(["lightgray", "red"]);
@@ -231,7 +231,7 @@ d3.json("../data/colombia_product_space.json", function(graph) {
           },
           */
           time: {
-            var_time: "year", 
+            var_time: "year",
             current_time: "2012",
             parse: function(d) { return d; },
             filter: "2012"

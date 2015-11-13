@@ -49,13 +49,13 @@
 <div id="viz" style="position: absolute; top:100px; left: 200px; overflow:visible;"></div>
 <script>
 
-d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments) {
+d3.tsv("../../vis-toolkit-datasets/data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments) {
 
   departments.forEach(function(d, i) {
     d.dept_pop = +d.dept_pop;
     d.year = +d.year;
     d.realgdp = +d.realgdp;
-    d.realgdp_percap = +d.realgdp_percap;    
+    d.realgdp_percap = +d.realgdp_percap;
     d["sum(export_value)"] = +d["sum(export_value)"];
     d["value_added"] = +d["value_added"];
   });
@@ -94,7 +94,7 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
         }]
       }],
       time: {
-        var_time: 'year', 
+        var_time: 'year',
         current_time: 2013,
         parse: function(d) { return d; }
       },

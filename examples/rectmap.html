@@ -7,9 +7,9 @@
 <div id="viz"></div>
 <script>
 
-d3.json("../data/fra_exports_2013.json", function(error, exports) {
+d3.json("../../vis-toolkit-datasets/data/fra_exports_2013.json", function(error, exports) {
 
-  d3.json("../data/fra_imports_2013.json", function(error, imports) {
+  d3.json("../../vis-toolkit-datasets/data/fra_imports_2013.json", function(error, imports) {
 
     exports.data.forEach(function(d) {
 

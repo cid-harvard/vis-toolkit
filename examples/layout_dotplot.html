@@ -13,13 +13,13 @@
 // [ ] Use with a different configuration (abs and relative), one labels other rect
 // [ ] Connect the dot plots together with a line (should be another chart)
 
-d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments) {
+d3.tsv("../../vis-toolkit-datasets/data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments) {
 
   departments.forEach(function(d, i) {
     d.dept_pop = +d.dept_pop;
     d.year = +d.year;
     d.realgdp = +d.realgdp;
-    d.realgdp_percap = +d.realgdp_percap;    
+    d.realgdp_percap = +d.realgdp_percap;
     d["sum(export_value)"] = +d["sum(export_value)"];
     d["value_added"] = +d["value_added"];
   });
@@ -27,7 +27,7 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
   var params_scatterplot = {
       type: "scatterplot",
       width: 600,
-      height: 400,      
+      height: 400,
       container: "#viz",
       id: ["continent", "country"],
       group: "continent",
@@ -50,7 +50,7 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
 
   var params_dotplot = {
       height: 200,
-      type: 'dotplot',      
+      type: 'dotplot',
       data: departments,
       container: '#viz',
       var_x: 'dept_pop',
@@ -65,14 +65,14 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
         height: 10
       },
       time: {
-        var_time: 'year', 
+        var_time: 'year',
         current_time: 2013
       },
       ui: {
         default: false
       },
       id: "name",
-      var_text: "dept_name", 
+      var_text: "dept_name",
       selection: [0],
       highlight: [0]
     };

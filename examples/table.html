@@ -7,7 +7,7 @@
 <div id="viz"></div>
 <script>
 
-d3.json("../data/exports_2012.json", function(error, exports) {
+d3.json("../../vis-toolkit-datasets/data/exports_2012.json", function(error, exports) {
 
   visualization = vistk.viz()
     .params({
@@ -21,7 +21,7 @@ d3.json("../data/exports_2012.json", function(error, exports) {
         group: "community_name",
         text: "name",
         time: {
-          var_time: "year", 
+          var_time: "year",
           current_time: 1995
         },
         title: "Products",

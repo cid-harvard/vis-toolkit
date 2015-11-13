@@ -36,25 +36,25 @@ g:hover .items__mark__circle.highlighted {
 }
 
 .connect__path:not(.highlighted) {
-  stroke-width: 1px;  
+  stroke-width: 1px;
 }
 
 .connect__path.highlighted {
   stroke-opacity: 1;
-  stroke-width: 5px;  
+  stroke-width: 5px;
 }
 </style>
 <body>
 <div id="viz"></div>
 <script>
 
-d3.json("../data/atlas_international_product_space.json", function(graph) {
+d3.json("../../vis-toolkit-datasets/data/atlas_international_product_space.json", function(graph) {
 
-  d3.json("../data/col_dept_exports_3.json", function(exports) {
+  d3.json("../../vis-toolkit-datasets/data/col_dept_exports_3.json", function(exports) {
 /*
-    // cog: 0.4208957237122138 coi: 0.8067728413148435 distance: 0.8179699425486985 
+    // cog: 0.4208957237122138 coi: 0.8067728413148435 distance: 0.8179699425486985
     // export_rca: 0.04472251026943858 export_value: 29700 id: 2479 import_value: 3278477
-    // product_id: "115" year: 2008  
+    // product_id: "115" year: 2008
 */
     visualization = vistk.viz()
       .params({
@@ -86,7 +86,7 @@ d3.json("../data/atlas_international_product_space.json", function(graph) {
           }, {
             var_mark: '__selected',
             type: d3.scale.ordinal().domain([true, false]).range(["marker", "none"]),
-            rotate: "0",  
+            rotate: "0",
             enter: function(data, vars) {
               this.attr("transform", function(d, i) {
                 return "translate(-10, " + (-vars.y_scale[0]["func"](vars.accessor_data(d)[vars.var_y]) - 40) + ")";
@@ -95,7 +95,7 @@ d3.json("../data/atlas_international_product_space.json", function(graph) {
           }]
         }],
         time: {
-          var_time: "year", 
+          var_time: "year",
           current_time: "2008",
           parse: function(d) { return d; },
           filter: "2008"

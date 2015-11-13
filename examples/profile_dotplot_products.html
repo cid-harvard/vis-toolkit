@@ -36,7 +36,7 @@
 <div id="viz"></div>
 <script>
 
-d3.json("../data/colombia_metadata_products_4digit.json", function(error, products) {
+d3.json("../../vis-toolkit-datasets/data/colombia_metadata_products_4digit.json", function(error, products) {
 
   products.data.forEach(function(d, i) {
     d.export = Math.random() * 100;
@@ -90,7 +90,7 @@ d3.json("../data/colombia_metadata_products_4digit.json", function(error, produc
         }]
       }],
       time: {
-        var_time: 'year', 
+        var_time: 'year',
         current_time: 2013,
         parse: function(d) { return d; }
       },
@@ -115,7 +115,7 @@ d3.json("../data/colombia_metadata_products_4digit.json", function(error, produc
               });
 
               d3.select(this).html(function() {
-                return "Current language: " + new_lang; 
+                return "Current language: " + new_lang;
               })
 
               // visualization.params().refresh = true;

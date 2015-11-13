@@ -8,7 +8,7 @@
 <div id="viz_sparkline" style="float:left"></div>
 <script>
 
-d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments) {
+d3.tsv("../../vis-toolkit-datasets/data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments) {
 
   var width = 600;
 
@@ -16,7 +16,7 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
     d.dept_pop = +d.dept_pop;
     d.year = +d.year;
     d.realgdp = +d.realgdp;
-    d.realgdp_percap = +d.realgdp_percap;    
+    d.realgdp_percap = +d.realgdp_percap;
     d["sum(export_value)"] = +d["sum(export_value)"];
     d["value_added"] = isNaN(+d["value_added"]) ? 0: +d["value_added"];
   });
@@ -49,7 +49,7 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
         }]
       }],
       time: {
-        var_time: 'year', 
+        var_time: 'year',
         current_time: 2013,
         parse: function(d) { return d; }
       },
@@ -82,7 +82,7 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
         default: false
       },
       time: {
-        var_time: "year", 
+        var_time: "year",
         parse: d3.time.format("%Y").parse,
         current_time: '2012',
         filter_interval: ['2000', '2012']

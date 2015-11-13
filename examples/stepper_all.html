@@ -15,19 +15,19 @@
     <li><input name="radio-step" value="treemap" type="radio">Treemap</li>
     <li><input name="radio-step" value="geomap" type="radio">Geomap</li>
     <li><input name="radio-step" value="sparkline" type="radio">Sparklines (grid)</li>
-    <li><input name="radio-step" value="linechart" type="radio">Line chart</li>  
-    <li><input name="radio-step" value="stacked" type="radio">Stacked graph</li>  
+    <li><input name="radio-step" value="linechart" type="radio">Line chart</li>
+    <li><input name="radio-step" value="stacked" type="radio">Stacked graph</li>
   </ul>
 </div>
 
 <script>
 
-var file = "../data/diversification_ubiquity_hs4_1995_2012.json";
+var file = "../../vis-toolkit-datasets/data/diversification_ubiquity_hs4_1995_2012.json";
 
 var file_type = "countries";
 
 if(document.location.hash.substring(1) === "products") {
-  flat_years = "../data/exports_2012.json";
+  flat_years = "../../vis-toolkit-datasets/data/exports_2012.json";
   file_type = "prducts";
 }
 
@@ -52,7 +52,7 @@ d3.json(file, function(error, countries) {
       time: {
         parse: function(d) { return d; },
         var_time: 'year',
-        current_time: 1995      
+        current_time: 1995
       },
       ui: {
         default: true,
@@ -89,7 +89,7 @@ d3.select("input[value='grid']").on("click", function(d) {
   d3.selectAll(".items__mark__rect").remove();
   d3.selectAll(".items__mark__circle").remove();
   d3.selectAll(".items__mark__text").remove();
-  
+
   visualization.params().refresh = true;
 
   visualization.params({
@@ -238,7 +238,7 @@ d3.select("input[value='geomap']").on("click", function(d) {
       marks: [{
         type: "circle",
         rotate: "0",
-        radius: 5                
+        radius: 5
       }, {
         type: "text",
         rotate: "30",

@@ -19,7 +19,7 @@
         <button type="button" class="btn btn-default">Geo map by GDP</button>
         <button type="button" class="btn btn-default">Scatterplot GDP / Population</button>
         <button type="button" class="btn btn-default">Scatterplot Diversity / Ubiquity</button>
-        <button type="button" class="btn btn-default">ECI Rankings</button> 
+        <button type="button" class="btn btn-default">ECI Rankings</button>
       </div>
     </div>
   </div>
@@ -29,7 +29,7 @@
 // Datasets needed
 // -Countries metadata
 // -ECI
-// 
+//
 
 // STEP 1 - INIT WITH A FIXED NUMBER OF COUNTRIES
 var visualization = vistk.viz().params({
@@ -40,7 +40,7 @@ var visualization = vistk.viz().params({
 
 
 var default_chart = function() {
- 
+
   visualization.params({
     type: 'none',
     container: "#viz",
@@ -55,7 +55,7 @@ var default_chart = function() {
 
 
 // STEP 2 - LOAD MASTER DATASET
-setTimeout(function() { 
+setTimeout(function() {
 
 }, 500);
 
@@ -63,7 +63,7 @@ default_chart();
 
 var scatterplot = function() {
 
-  d3.json("../data/countries.json", function(error, countries) {
+  d3.json("../../vis-toolkit-datasets/data/countries.json", function(error, countries) {
 
     countries.forEach(function(d) {
       d.latitude = d.latlng[0];
@@ -91,11 +91,11 @@ var scatterplot = function() {
 
 var geo_map = function() {
 
-  d3.json("../data/partners_usa_2012_csay.json", function(error, partners) {
+  d3.json("../../vis-toolkit-datasets/data/partners_usa_2012_csay.json", function(error, partners) {
 
     queue()
         .defer(d3.json, "../shapefiles/world/world-110m.json")
-        .defer(d3.tsv, "../data/world-country-names.tsv")
+        .defer(d3.tsv, "../../vis-toolkit-datasets/data/world-country-names.tsv")
         .await(ready);
 
     function ready(error, world, names) {
@@ -119,7 +119,7 @@ var geo_map = function() {
               type: "shape",
               fill: d3.scale.linear().domain([0, 1]).range(["red", "green"]),
               rotate: "0",
-              radius: 5  
+              radius: 5
             }]
           }],
           time: {
@@ -145,9 +145,9 @@ $('button:nth-child(3)').on('click', scatterplot);
 ///$('button:nth-child(3)').on('click', default_chart)
 
 /*
-d3.csv("../data/new_rankings2.csv", function(error, data) {
+d3.csv("../../vis-toolkit-datasets/data/new_rankings2.csv", function(error, data) {
 
-  d3.json("../data/countries.json", function(error, countries) {
+  d3.json("../../vis-toolkit-datasets/data/countries.json", function(error, countries) {
 
     var res = [];
 

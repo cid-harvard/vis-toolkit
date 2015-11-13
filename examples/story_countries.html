@@ -27,8 +27,8 @@
 // LIST OF ALL COUNTRY-RELATED DATASETS
 //  queue()
 //      .defer(d3.json, "../shapefiles/world/world-110m.json")
-//      .defer(d3.tsv, "../data/world-country-names.tsv")
-//      d3.json("../data/countries.json", function(error, countries) {
+//      .defer(d3.tsv, "../../vis-toolkit-datasets/data/world-country-names.tsv")
+//      d3.json("../../vis-toolkit-datasets/data/countries.json", function(error, countries) {
 
 
 var visualization = vistk.viz().params({
@@ -39,7 +39,7 @@ var visualization = vistk.viz().params({
 
 var scatterplot = function() {
 
-  d3.json("../data/countries.json", function(error, countries) {
+  d3.json("../../vis-toolkit-datasets/data/countries.json", function(error, countries) {
 
     countries.forEach(function(d) {
 

@@ -7,7 +7,7 @@
 <div id="viz"></div>
 <script>
 
-d3.json("../data/exports_2012.json", function(error, exports) {
+d3.json("../../vis-toolkit-datasets/data/exports_2012.json", function(error, exports) {
 
   var grid = vistk.viz().params({
     type: "grid",
@@ -26,7 +26,7 @@ d3.json("../data/exports_2012.json", function(error, exports) {
     var_r: 'share',
     share_cutoff: function(d) { return d.rca < 1; },
     time: {
-      var_time: "year", 
+      var_time: "year",
       parse: d3.time.format("%Y").parse,
       interval: [],
       current_time: "2000"

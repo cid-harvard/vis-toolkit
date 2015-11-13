@@ -7,7 +7,7 @@
 <div id="viz"></div>
 <script>
 
-d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments) {
+d3.tsv("../../vis-toolkit-datasets/data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments) {
 
   // Data pre-processing
   departments.forEach(function(d, i) {
@@ -15,7 +15,7 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
     d.id = i;
     d.dept_pop = +d.dept_pop;
     d.realgdp = +d.realgdp;
-    d.realgdp_percap = +d.realgdp_percap;    
+    d.realgdp_percap = +d.realgdp_percap;
     d["sum(export_value)"] = +d["sum(export_value)"];
     d["value_added"] = +d["value_added"];
 
@@ -36,7 +36,7 @@ d3.tsv("../data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments
         default: true
       },
       time: {
-        var_time: "year", 
+        var_time: "year",
         parse: d3.time.format("%Y").parse,
         current_time: '2012',
         filter_interval: ['2000', '2012']

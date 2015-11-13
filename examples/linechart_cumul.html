@@ -9,7 +9,7 @@
 <script src="../js/d3.js"></script>
 <script>
 
-d3.json("../data/partners_usa_2012_csay.json", function(error, data) {
+d3.json("../../vis-toolkit-datasets/data/partners_usa_2012_csay.json", function(error, data) {
 
   var cumul_value = Array();
 
@@ -21,7 +21,7 @@ d3.json("../data/partners_usa_2012_csay.json", function(error, data) {
 
     cumul_value[d.name] += d.value;
     d.cumul_value = cumul_value[d.name];
-    
+
   });
 
   visualization = vistk.viz().params({
@@ -63,7 +63,7 @@ d3.json("../data/partners_usa_2012_csay.json", function(error, data) {
    .attr("class", "alignLines")
    .on("click", function() {
 
-      if(visualization.params().var_y == "value") { 
+      if(visualization.params().var_y == "value") {
         visualization.params({
           var_y: "cumul_value",
         });
@@ -96,7 +96,7 @@ d3.json("../data/partners_usa_2012_csay.json", function(error, data) {
         .property("value", d3.min(visualization.params().time.points))
         .attr("step", 1)
         .on("input", function() {
-         
+
           var this_value = this.value;
           // Find the value year
           year_offset = d3.range(visualization.params().unique_items.length).map(function() { return 0; });

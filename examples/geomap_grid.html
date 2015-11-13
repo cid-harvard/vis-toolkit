@@ -9,11 +9,11 @@
 <div id="viz"></div>
 <script>
 
-d3.json("../data/partners_usa_2012_csay.json", function(error, partners) {
+d3.json("../../vis-toolkit-datasets/data/partners_usa_2012_csay.json", function(error, partners) {
 
   queue()
       .defer(d3.json, "../shapefiles/world/world-110m.json")
-      .defer(d3.tsv, "../data/world-country-names.tsv")
+      .defer(d3.tsv, "../../vis-toolkit-datasets/data/world-country-names.tsv")
       .await(ready);
 
   function ready(error, world, names) {
