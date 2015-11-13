@@ -25,6 +25,16 @@ d3.json("../../vis-toolkit-datasets/data/exports_quinn_2012.json", function(erro
       var_sort: "export_value",
       var_text: "name",
       flat_scene: true,
+      items: [{
+        marks: [{
+          type: "rect",
+          filter: function(d, i) { return d.depth == vars.treemap.depth_rect; },
+          x: 0,
+          y: 0,
+          width: function(d) { return d.dx; },
+          height: function(d) { return d.dy; }
+        }]
+      }],
       time: {
         var_time: "year",
         current_time: 2012,
