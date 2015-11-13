@@ -1075,7 +1075,6 @@
                 // Should we re-order the marks to make sure it will appear in right order?
                 // Or do it afterwards?
 
-
                 items.enter().call(mark_params.enter, params, vars, mark_id);
                 // items.call(mark_params.update, params, vars, mark_id);
                 // items.exit().call(mark_params.exit, params, vars, mark_id);
