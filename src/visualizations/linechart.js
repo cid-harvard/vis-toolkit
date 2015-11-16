@@ -15,8 +15,7 @@ vars.default_params["linechart"] = function(scope) {
     func: d3.scale.linear()
             .range([scope.margin.top, scope.height - scope.margin.top - scope.margin.bottom])
             .domain(d3.extent(Array.prototype.concat.apply([], vars.new_data.map(function(d) {
-              console.log("MAAP", d3.values(d.values))
-              return d.values;
+              return d3.values(d.values);
             })), function(d) {
               return d[vars.var_y];
             }))
@@ -42,8 +41,8 @@ vars.default_params["linechart"] = function(scope) {
       stroke: function(d) { return vars.color(params.accessor_items(d)[vars.var_color]); },
       func: d3.svg.line()
            .interpolate(vars.interpolate)
-           .x(function(d) { return params.x_scale[0]["func"](d[vars.var_x]); })
-           .y(function(d) { return params.y_scale[0]["func"](d[vars.var_y]); }),
+           .x(function(d) { return params.x_scale[0]["func"](vars.accessor_data(d)[vars.var_x]); })
+           .y(function(d) { return params.y_scale[0]["func"](vars.accessor_data(d)[vars.var_y]); }),
       fill: "none"
     }]
   }];

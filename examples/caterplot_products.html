@@ -25,17 +25,6 @@ d3.json("../../vis-toolkit-datasets/data/exports_2012.json", function(error, exp
       var_r: 'share',
       var_text: 'name',
       share_cutoff: function(d) { return d.rca < 1; },
-      items: [{
-        marks: [{
-          type: "circle",
-        }, {
-          var_mark: '__selected',
-          type: d3.scale.ordinal().domain([true, false]).range(["text", "none"]),
-        }, {
-          var_mark: '__highlighted',
-          type: d3.scale.ordinal().domain([true, false]).range(["text", "none"]),
-        }]
-      }],
       time: {
         var_time: 'year',
         current_time: 1995
