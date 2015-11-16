@@ -81,49 +81,9 @@
     // Automatically generate UI elements
     ui: true,
 
-    lang: 'en_US', // 'es_ES, fr_FR'
-    locales: {
-        'en_US': {
-          'complexity': 'Complexity',
-          'low': 'Low',
-          'high': 'High',
-          'export': 'Export',
-          'non-export': 'Non-Export',
-          'similarity_link': 'Similarity Link',
-          'loading': 'Loading...',
-          'no-data': 'No data is available'
-        },
-        'en_EN': {
-          'complexity': 'Complexity',
-          'low': 'Low',
-          'high': 'High',
-          'export': 'Export',
-          'non-export': 'Non-Export',
-          'similarity_link': 'Similarity Link',
-          'loading': 'Loading...',
-          'no-data': 'No data is available'
-        },
-        'es_ES': {
-          'complexity': 'Complejidad',
-          'low': 'Bajo',
-          'high': 'Alto',
-          'export': 'Exportación',
-          'non-export': 'No-Exportación',
-          'similarity_link': 'Enlar de similitud',
-          'loading': 'Cargando...',
-          'no-data': 'Sin datos disponibles'
-        },
-        'fr_FR': {
-          'complexity': 'Complexité',
-          'low': 'Basse',
-          'high': 'Haute',
-          'export': 'Export',
-          'non-export': 'Non-Export',
-          'similarity_link': 'Lien de similarité',
-          'loading': 'Chargement...',
-          'no-data': 'Aucune donnée disponible'
-        }
-    },
+    lang: 'en_US', // 'es_ES, fr_FR', ..
+    locales: {}, // Translations for various lang
+
     // Graphical properties for graphical marks
     color: d3.scale.category20c(),
     size: d3.scale.linear(),
@@ -165,8 +125,12 @@
     },
 
     accessor_values: function(d) { return d; },
-    accessor_data: function(d) { return d; },
     accessor_items: function(d) { return d; },
+
+    accessor_static: function(d) { return d; },
+    accessor_data: function(d) {
+      console.log("DDDD", d, vars.new_data);//, d.values, vars.time.current_time)
+      return d.values[vars.time.current_time]; },
 
     container: "#viz",
 

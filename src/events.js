@@ -85,7 +85,6 @@
     if(vars.dev) { console.log("[vars.evt.call] timeUpdate"); }
 
     vars.time.current_time = new_time;
-
     d3.select(vars.container).call(vars.this_chart);
 
   });

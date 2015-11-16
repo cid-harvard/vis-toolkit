@@ -132,7 +132,7 @@
           params_text = params.text;
         }
       } else if(vars.var_text !== "undefined") {
-        params_text = vars.accessor_data(d)[vars.var_text];
+        params_text = d[vars.var_text];
       }
 
       var params_source = [0, 0];
@@ -987,9 +987,11 @@
         vars.items.forEach(function(item, index_item) {
 
             if(!vars.flat_scene) {
+
               // Use the global accessor, unless specif one has been set
               var accessor_data = vars.accessor_data;
 
+              // In case of custom static accessor
               if(typeof item.accessor_data !== "undefined") {
                 accessor_data = item.accessor_data;
               }
@@ -1014,7 +1016,8 @@
                 gItems_enter.call(item.enter, vars);
               } else {
                 gItems_enter.attr("transform", function(d, i) {
-                  return "translate(" + vars.x_scale[0]["func"](accessor_data(d)[vars.var_x]) + ", " + vars.y_scale[0]["func"](accessor_data(d)[vars.var_y]) + ")";
+                  return "translate(" + vars.x_scale[0]["func"](accessor_data(d)[vars.var_x])
+                    + ", " + vars.y_scale[0]["func"](accessor_data(d)[vars.var_y]) + ")";
                 });
               }
             }

@@ -15,6 +15,8 @@
         vars.svg.style('visibility', 'hidden');
 
       } else {
+
+        // There is no data to display so we show a message
         vars.svg.style('visibility', 'visible');
       }
 
