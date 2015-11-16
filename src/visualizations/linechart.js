@@ -14,7 +14,12 @@ vars.default_params["linechart"] = function(scope) {
   params.y_scale = [{
     func: d3.scale.linear()
             .range([scope.margin.top, scope.height - scope.margin.top - scope.margin.bottom])
-            .domain(d3.extent(Array.prototype.concat.apply([], vars.new_data.map(function(d) { return d.values; }) ), function(d) { return d[vars.var_y]; }))
+            .domain(d3.extent(Array.prototype.concat.apply([], vars.new_data.map(function(d) {
+              console.log("MAAP", d3.values(d.values))
+              return d.values;
+            })), function(d) {
+              return d[vars.var_y];
+            }))
   }];
 
   params.items = [{

@@ -31,8 +31,8 @@ var z = d3.scale.linear().domain([0, 4]).clamp(true),
     c = d3.scale.category10().domain(d3.range(10));
 
   // TODO: Re-use previous scales
-  // vars.default_params["ordinal_vertical"] 
-  // vars.default_params["ordinal_horizontal"] 
+  // vars.default_params["ordinal_vertical"]
+  // vars.default_params["ordinal_horizontal"]
   params.x_scale = [{
     func: d3.scale.ordinal()
             .domain(d3.set(vars.new_data.map(function(d) { return d[vars.var_x]; })).values())
@@ -133,5 +133,5 @@ var z = d3.scale.linear().domain([0, 4]).clamp(true),
   }
 
   return params;
-  
+
 };

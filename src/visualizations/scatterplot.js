@@ -5,25 +5,33 @@ vars.default_params["scatterplot"] = function(scope) {
   params.x_scale = [{
     func: d3.scale.linear()
             .range([scope.margin.left, scope.width - scope.margin.left - scope.margin.right])
-            .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_x]; })).nice()
+            .domain(d3.extent(vars.new_data, function(d) {
+              return scope.accessor_data(d)[vars.var_x];
+            })).nice()
   }];
 
   params.y_scale = [{
     func: d3.scale.linear()
             .range([scope.height - scope.margin.top - scope.margin.bottom, scope.margin.top])
-            .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_y]; })).nice()
+            .domain(d3.extent(vars.new_data, function(d) {
+              return scope.accessor_data(d)[vars.var_y];
+            })).nice()
   }];
 
   params.r_scale = d3.scale.linear()
               .range([vars.radius_min, vars.radius_max])
-              .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_r]; }));
+              .domain(d3.extent(vars.new_data, function(d) {
+                return scope.accessor_data(d)[vars.var_r];
+              }));
 
   params.items = [{
     marks: [{
         type: "circle",
         r_scale: d3.scale.linear()
                     .range([vars.radius_min, vars.radius_max])
-                    .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_r]; })),
+                    .domain(d3.extent(vars.new_data, function(d) {
+                      return scope.accessor_data(d)[vars.var_r];
+                    })),
         fill: function(d) { return vars.color(vars.accessor_items(d)[vars.var_color]); }
       }, {
       var_mark: '__highlighted',
