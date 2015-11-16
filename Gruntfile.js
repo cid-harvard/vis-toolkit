@@ -22,7 +22,8 @@ module.exports = function(grunt) {
         separator: '\n',
       },
       build: {
-        src: ['js/superformula.js', 'src/start.js', 'src/utils.js', 'src/vars.js', 'src/events.js', 'src/star_constructor.js', 'src/wrangler.js',
+        src: ['js/superformula.js', 'src/start.js', 'src/utils.js', 'src/vars.js',
+              'src/events.js', 'src/star_constructor.js', 'src/wrangler.js', 'src/locales.js',
               'src/marks/svg_rect.js', 'src/marks/svg_circle.js',
               'src/visualizations/sparkline.js', 'src/visualizations/dotplot.js',
               'src/visualizations/barchart.js', 'src/visualizations/linechart.js', 'src/visualizations/scatterplot.js', 'src/visualizations/geomap.js',
