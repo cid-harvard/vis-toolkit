@@ -12,7 +12,9 @@
     // 1 - Init and define default parameters
     vars.items_data = [];
 
-    // In case we use functions for X/Y variables
+    // Each item needs coordinates
+    // 1/ In case we use functions for X/Y variables
+    // 2/ Adds default attributes __var_x and __var_y if no coordinate exist
     if(typeof vars.var_x !== "string" && typeof vars.var_x === "function") {
       vars.data.forEach(function(d, i) {
         d.__var_x = vars.var_x(d, i, vars);
@@ -83,7 +85,7 @@
       }
 
       // If time filter parameter is set, then keep values for this time
-      if(typeof vars.time.filter != "undefined" && vars.time.filter.length > 0) {
+      if(typeof vars.time.filter !== "undefined" && vars.time.filter.length > 0) {
 
         if(vars.dev) {
           console.log("[vars.time.filter]", vars.time.filter);
@@ -132,6 +134,9 @@
       var lookup_index = [];
       var lookup_size = 0;
 
+      vars.lookup_index_time = [];
+      var lookup_time_size = 0;
+
       vars.new_data.forEach(function(d, i) {
 
         var index = -1;
@@ -176,8 +181,10 @@
         v[vars.var_x] = d[vars.var_x];
         v[vars.var_color] = d[vars.var_color];
         v[vars.var_size] = d[vars.var_size];
+        v[vars.var_text] = d[vars.var_text];
 
-        unique_data[index].values.push(v);
+        // TODO: make sure there is no existing value for this time
+        unique_data[index].values[d[vars.time.var_time]] = v;
 
       });
 
@@ -218,7 +225,6 @@
           } else {
             aggregation[vars.var_x] = leaves[0][vars.var_x];
           }
-
 
           if(vars.var_y !== vars.var_id && vars.var_y !== vars.time.var_time) {
             aggregation[vars.var_y] = d3.mean(leaves, function(d) {
@@ -350,8 +356,23 @@
             if(typeof node === 'undefined') {
               return;
             }
+
+            // Update all time points
+            visualization.params().time.points.forEach(function(time) {
+
+              if(typeof(r.values[time]) === 'undefined') {
+                r.values[time] = {};
+                r.values[time][vars.var_id] = vars.var_id;
+              }
+
+              r.values[time].x = node.x;
+              r.values[time].y = node.y;
+            });
+
+            // Keep the metadata
             r.x = node.x;
             r.y = node.y;
+
             r.__redraw = true;
             return r;
         });
