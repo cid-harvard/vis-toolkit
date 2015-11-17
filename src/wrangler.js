@@ -15,7 +15,12 @@
     // Each item needs coordinates
     // 1/ In case we use functions for X/Y variables
     // 2/ Adds default attributes __var_x and __var_y if no coordinate exist
-    if(typeof vars.var_x !== "string" && typeof vars.var_x === "function") {
+
+    if(typeof vars.var_x === "function") {
+      vars.var_x = vars.type(vars);
+    }
+
+    if(typeof vars.var_x === "undefined") {
       vars.data.forEach(function(d, i) {
         d.__var_x = vars.var_x(d, i, vars);
       });
@@ -27,6 +32,11 @@
         d.__var_y = vars.var_y(d, i, vars);
       });
       vars.var_y = "__var_y";
+    }
+
+    // In case the chart type is a function
+    if(typeof vars.type !== "string" && typeof vars.type === "function") {
+      vars.type = vars.type(vars);
     }
 
     if(typeof vars.type === 'undefined') {
