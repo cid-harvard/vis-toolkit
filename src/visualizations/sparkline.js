@@ -10,12 +10,11 @@ vars.default_params["sparkline"] = function(scope) {
 
   params.y_scale = [{
     func: d3.scale.linear()
-            .range([scope.height - scope.margin.top - scope.margin.bottom, scope.margin.top])
-            .domain(d3.extent(Array.prototype.concat.apply([], vars.new_data.filter(function(d) { return (typeof d !== 'undefined'); }).map(function(d) {
-              console.log("DDD values retu", d.values, vars.new_data.length, vars.new_data)
-              return d.values;
-            }) ), function(d) {
-              return vars.accessor_data(d)[vars.var_y];
+            .range([scope.margin.top, scope.height - scope.margin.top - scope.margin.bottom])
+            .domain(d3.extent(Array.prototype.concat.apply([], vars.new_data.map(function(d) {
+              return d3.values(d.values);
+            })), function(d) {
+              return d[vars.var_y];
             }))
   }];
 
