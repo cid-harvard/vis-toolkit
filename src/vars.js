@@ -136,6 +136,8 @@
 
     refresh: true,
     init: true,
+    redraw_all: false,
+
     _user_vars: {},
 
     list: {type: ["sparkline", "dotplot", "barchart", "linechart", "scatterplot", "grid",

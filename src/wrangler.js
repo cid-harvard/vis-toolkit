@@ -431,5 +431,8 @@
       }
     }
 
-    if(vars.time.current_time)
+    if(vars.redraw_all) {
+      vars.new_data.forEach(function(d) { d.__redraw = true; });
+    }
 
+    vars.redraw_all = false;

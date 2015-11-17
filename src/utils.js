@@ -1132,7 +1132,7 @@
             }
 
             // Make sure we won't re-draw all nodes next time
-            if(vars.type == "productspace" || vars.type == "treemap") {
+            if(vars.type == "productspace" || vars.type == "treemap" || vars.type == "scatterplot") {
               vars.new_data.forEach(function(d) {
                 if(!d.__selected) { d.__redraw = false; }
               });

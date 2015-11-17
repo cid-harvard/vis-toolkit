@@ -106,6 +106,7 @@
                       .property("value", vars.time.current_time)
                       .attr("step", 1)
                       .on("input", function() {
+                        vars.redraw_all = true;
                         vars.evt.call("timeUpdate", +this.value);
                       })
                       .style("width", "100px");
