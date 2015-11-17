@@ -35,7 +35,7 @@
 
     // In case the current_time is set dynamically
     if(typeof vars.time.current_time === "function") {
-      vars.time.current_time = vars.time.current_time(vars.data)
+      vars.time.current_time = vars.time.current_time(vars.data);
     }
 
     // Duplicate the dataset to prevent mutation
@@ -113,6 +113,11 @@
       // Find unique values for various parameters
       vars.time.interval = d3.extent(vars.new_data, function(d) { return d[vars.time.var_time]; });
       vars.time.points = vistk.utils.find_unique_values(vars.new_data, vars.time.var_time);
+
+      // In case no tempora values, change the accessor
+      if(vars.time.var_time === null || vars.type === 'treemap') {
+        vars.accessor_data = function(d) { return d; }
+      }
 
       // Filter data by attribute
       // TODO: not sure we should remove data, but add an attribute instead would better
@@ -242,26 +247,31 @@
           aggregation.piescatter[0] = {};
           aggregation.piescatter[1] = {};
 
+          aggregation.values = [];
+
           // Assuming all the time values are present in all items
-          aggregation.values = d3.range(leaves[0].values.length).map(function(d, i) {
+          vars.time.points.forEach(function(time, i) {
+
             var d = {};
 
-            if(vars.var_x === vars.time.var_time) {
-              d[vars.var_x] = leaves[0].values[i][vars.var_x];
-            } else {
-              d[vars.var_x] = 0;
-            }
+           // if(vars.var_x === vars.time.var_time) {
+           //   d[vars.var_x] = leaves[0].values[i][vars.var_x];
+           // } else {
+           //   d[vars.var_x] = 0;
+           // }
 
             // Init values
-            d[vars.var_y] = 0;
-            d[vars.var_r] = 0;
-
-            // TODO: this is metadata, should not be duplicated every year
-            d[vars.var_id] = leaves[0].values[i][vars.var_id];
+            d[vars.var_x] = leaves[0].values[time][vars.var_x];
+            d[vars.var_y] = leaves[0].values[time][vars.var_y];
+            d[vars.var_r] = leaves[0].values[time][vars.var_r];
+            d[vars.var_id] = leaves[0].values[time][vars.var_id];
 
             // Time var
-            d[vars.time.var_time] = leaves[0].values[i][vars.time.var_time];
-            return d;
+            d[vars.time.var_time] = leaves[0].values[time][vars.time.var_time];
+
+            aggregation.values[vars.time.current_time] = d;
+
+            //return d;
           });
 
           // Assuming we only aggregate var_x, var_y, var_r
@@ -358,7 +368,7 @@
             }
 
             // Update all time points
-            visualization.params().time.points.forEach(function(time) {
+            vars.time.points.forEach(function(time) {
 
               if(typeof(r.values[time]) === 'undefined') {
                 r.values[time] = {};
@@ -420,3 +430,6 @@
         vars.new_data = vars.new_data.sort(function(a, b) { return d3.descending(a[vars.var_sort], b[vars.var_sort]);});
       }
     }
+
+    if(vars.time.current_time)
+

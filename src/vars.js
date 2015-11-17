@@ -129,8 +129,8 @@
 
     accessor_static: function(d) { return d; },
     accessor_data: function(d) {
-      console.log("DDDD", d, vars.new_data);//, d.values, vars.time.current_time)
-      return d.values[vars.time.current_time]; },
+      return d.values[vars.time.current_time];
+    },
 
     container: "#viz",
 

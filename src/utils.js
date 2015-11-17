@@ -578,11 +578,11 @@
 
         case "path":
 
-          var this_accessor_values = function(d) { return d.values; };
-
-          if(vars.type == "radial") {
-            this_accessor_values = function(d) { return d; };
-          }
+          // var this_accessor_values = function(d) { return d.values; };
+//
+          // if(vars.type == "radial") {
+          //   this_accessor_values = function(d) { return d; };
+          // }
 
           if(typeof params['func'] == 'undefined') {
               params['func'] = d3.svg.line()
@@ -600,7 +600,7 @@
               .style("fill", params_fill)
               .style("stroke", params_stroke)
               .attr('d', function(e) {
-                return params["func"](this_accessor_values(e));
+                return params["func"](d3.values(e.values));
               })
               .attr("transform", function(d) {
                 return "translate(" +  params_translate + ")rotate(" +  params_rotate + ")";
@@ -612,9 +612,7 @@
               .transition().duration(vars.duration)
               .style("fill", params_fill)
               .style("stroke", params_stroke)
-              .attr('d', function(e) {
-                return params["func"](this_accessor_values(e));
-              });
+              .attr('d', function(e) { return params["func"](d3.values(e.values)); })
 
         break;
 
