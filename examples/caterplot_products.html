@@ -11,7 +11,13 @@ d3.json("../../vis-toolkit-datasets/data/exports_2012.json", function(error, exp
 
   visualization = vistk.viz()
     .params({
-      type: 'caterplot',
+      type: function(vars) {
+        if(vars.filter.length === 0) {
+          return 'caterplot';
+        } else {
+          return 'linechart';
+        }
+      },
       margin: {top: 10, right: 10, bottom: 30, left: 30},
       container: '#viz',
       data: exports.data,
@@ -19,7 +25,13 @@ d3.json("../../vis-toolkit-datasets/data/exports_2012.json", function(error, exp
       var_group: 'community_name',
       var_color: 'community_name',
       color: d3.scale.ordinal().domain([0, 9]).range(["#3182bd", "#6baed6", "#9ecae1", "#c6dbef", "#e6550d", "#fd8d3c", "#fdae6b", "#fdd0a2", "#31a354", "#74c476", "#a1d99b", "#c7e9c0", "#756bb1", "#9e9ac8", "#bcbddc", "#dadaeb", "#636363", "#969696", "#bdbdbd", "#d9d9d9"]),
-      var_x: 'community_name',
+      var_x: function(d, i, vars) {
+        if(vars.filter.length === 0) {
+          return 'community_name';
+        } else {
+          return 'year';
+        }
+      },
       var_y: 'distance',
       var_share: 'nb_products',
       var_r: 'share',
