@@ -23,6 +23,8 @@ d3.tsv("../../vis-toolkit-datasets/data/COL_pop_realgdp_dept_2000-2013.txt", fun
     .params({
       dev: true,
       type: 'dotplot',
+      height: 200,
+      width: 500,
       data: departments,
       container: '#viz',
       var_x: 'dept_pop',
@@ -31,7 +33,7 @@ d3.tsv("../../vis-toolkit-datasets/data/COL_pop_realgdp_dept_2000-2013.txt", fun
       x_text: null,
       x_ticks: 2,
       x_format: function(d) { return '$' + d3.format(".2s")(d); },
-      var_group: "country",
+      var_group: 'dept_name',
       var_r: 'nb_products',
       var_share: "avg_products",
       share_cutoff: function(d) { return d.avg_products > 30; },
@@ -39,7 +41,7 @@ d3.tsv("../../vis-toolkit-datasets/data/COL_pop_realgdp_dept_2000-2013.txt", fun
         attr: "name",
         marks: [{
           var_mark: '__aggregated',
-          type: d3.scale.ordinal().domain([true, false]).range(["none", "diamond"]),
+          type: d3.scale.ordinal().domain([true, false]).range(["none", "circle"]),
         }, {
           var_mark: '__aggregated',
           type: d3.scale.ordinal().domain([true, false]).range(["tick", "none"]),
