@@ -578,11 +578,11 @@
 
         case "path":
 
-          // var this_accessor_values = function(d) { return d.values; };
-//
-          // if(vars.type == "radial") {
-          //   this_accessor_values = function(d) { return d; };
-          // }
+          var this_accessor_values = function(d) { return d.values; };
+
+          if(vars.type == "radial") {
+            this_accessor_values = function(d) { return d; };
+          }
 
           if(typeof params['func'] == 'undefined') {
               params['func'] = d3.svg.line()
@@ -600,7 +600,7 @@
               .style("fill", params_fill)
               .style("stroke", params_stroke)
               .attr('d', function(e) {
-                return params["func"](d3.values(e.values));
+                return params["func"](d3.values(this_accessor_values(e)));
               })
               .attr("transform", function(d) {
                 return "translate(" +  params_translate + ")rotate(" +  params_rotate + ")";
@@ -612,7 +612,9 @@
               .transition().duration(vars.duration)
               .style("fill", params_fill)
               .style("stroke", params_stroke)
-              .attr('d', function(e) { return params["func"](d3.values(e.values)); })
+              .attr('d', function(e) {
+                return params["func"](d3.values(this_accessor_values(e)));
+              });
 
         break;
 
@@ -1128,6 +1130,7 @@
             if(typeof item.exit !== "undefined") {
               gItems_exit.call(item.exit, vars)
             } else {
+
               gItems_exit.remove();
             }
 
@@ -1233,7 +1236,13 @@
 
       });
 
+    } else {
+
+      // Remove connect mark if not in config file anymore
+      vars_svg.selectAll(".connect__group").remove();
+
     }
+
 
     // CREATE / UPDATE / REMOVE AXIS
     if(vars.x_axis_show) {
