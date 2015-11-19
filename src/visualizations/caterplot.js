@@ -37,17 +37,7 @@ vars.default_params["caterplot"] = function(scope) {
     }]
   }];
 
-  params.connect = [{
-    marks: [{
-      type: "path",
-      stroke: function(d) { return vars.color(params.accessor_items(d)[vars.var_color]); },
-      func: d3.svg.line()
-           .interpolate(vars.interpolate)
-           .x(function(d) { return params.x_scale[0]["func"](d[vars.var_x]); })
-           .y(function(d) { return params.y_scale[0]["func"](d[vars.var_y]); }),
-      fill: "none"
-    }]
-  }];
+  params.connect = [];
 
   params.x_axis_show = true;
   params.x_axis_translate = [0, scope.height - scope.margin.bottom - scope.margin.top];

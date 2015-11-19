@@ -21,7 +21,18 @@ vars.default_params["radial"] = function(scope) {
 
     vars.new_data = vars.nodes;
 
-    vars.new_data.forEach(function(d) { d.__redraw = true; });
+    vars.new_data.forEach(function(d) {
+
+      d.values = [];
+      d.values[vars.time.current_time] = {};
+      d.values[vars.time.current_time][vars.var_id] = d[vars.var_id];
+      d.values[vars.time.current_time][vars.var_x] = d[vars.var_x];
+      d.values[vars.time.current_time][vars.var_y] = d[vars.var_y];
+      d.values[vars.time.current_time][vars.var_text] = d[vars.var_text];
+
+      d.__redraw = true;
+    });
+
     vars.links.forEach(function(d) { d.__redraw = true; });
 
   }

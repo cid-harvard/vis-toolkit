@@ -49,6 +49,7 @@ vars.default_params["sparkline"] = function(scope) {
 
   params.y_axis_show = false;
   params.y_grid_show = false;
+  params.y_invert = true;
 
   return params;
 

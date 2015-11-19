@@ -2,13 +2,18 @@ vars.default_params["piechart"] = function(scope) {
 
   var params = {};
 
-  params.accessor_data = function(d) { return d.data; };
+  //params.accessor_data = function(d) { return d.data; };
   params.accessor_items = function(d) { return d; };
 
   if(vars.refresh) {
 
     scope.pie = d3.layout.pie().value(function(d) { return d[scope.var_share]; });
     scope.new_data = scope.pie(scope.new_data);
+
+    scope.new_data.forEach(function(d) {
+      d.values = d.data.values;
+    });
+
     scope.new_data.forEach(function(d) { d.__redraw = true; });
 
   }
@@ -25,7 +30,9 @@ vars.default_params["piechart"] = function(scope) {
 
   params.r_scale = d3.scale.linear()
               .range([0, scope.width/6])
-              .domain([0, d3.max(scope.new_data, function(d) { return scope.accessor_data(d)[scope.var_share]; })]);
+              .domain([0, d3.max(scope.new_data, function(d) {
+                return scope.accessor_data(d)[scope.var_share];
+              })]);
 
   params.items = [{
     marks: [{
@@ -36,7 +43,7 @@ vars.default_params["piechart"] = function(scope) {
 
   params.x_axis_show = false;
   params.x_grid_show = false;
-  
+
   params.y_axis_show = false;
   params.y_grid_show = false;
 

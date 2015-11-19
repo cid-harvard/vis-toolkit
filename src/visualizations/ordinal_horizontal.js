@@ -4,7 +4,9 @@ vars.default_params["ordinal_horizontal"] = function(scope) {
 
   params.x_scale = [{
     func: d3.scale.ordinal()
-            .domain(d3.set(vars.new_data.map(function(d) { return d[vars.var_x]; })).values())
+            .domain(d3.set(vars.new_data.map(function(d) {
+              return d.values[vars.time.current_time][vars.var_x];
+            })).values())
             .rangeBands([scope.margin.left, scope.width - scope.margin.left - scope.margin.right]),
   }];
 
@@ -12,7 +14,9 @@ vars.default_params["ordinal_horizontal"] = function(scope) {
     name: "linear",
     func: d3.scale.linear()
             .range([scope.height/2, scope.height/2])
-            .domain([0, d3.max(vars.new_data, function(d) { return d[scope.var_y]; })])
+            .domain([0, d3.max(vars.new_data, function(d) {
+              return d[scope.var_y];
+            })])
             .nice()
   }];
 

@@ -13,7 +13,7 @@ vars.default_params["linechart"] = function(scope) {
 
   params.y_scale = [{
     func: d3.scale.linear()
-            .range([scope.margin.top, scope.height - scope.margin.top - scope.margin.bottom])
+            .range([scope.height - scope.margin.top - scope.margin.bottom, scope.margin.top])
             .domain(d3.extent(Array.prototype.concat.apply([], vars.new_data.map(function(d) {
               return d3.values(d.values);
             })), function(d) {
@@ -58,6 +58,7 @@ vars.default_params["linechart"] = function(scope) {
 
   params.y_axis_show = false
   params.y_grid_show = false;
+  params.y_invert = true;
 
   return params;
 
