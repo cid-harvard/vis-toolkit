@@ -17,13 +17,13 @@
     // 2/ Adds default attributes __var_x and __var_y if no coordinate exist
 
     if(typeof vars.var_x === "function") {
-      vars.var_x = vars.type(vars);
+      vars.var_x = vars.var_x(vars);
     }
 
     if(typeof vars.var_x === "undefined") {
-      vars.data.forEach(function(d, i) {
-        d.__var_x = vars.var_x(d, i, vars);
-      });
+      // vars.data.forEach(function(d, i) {
+      //   d.__var_x = vars.var_x(d, i, vars);
+      // });
       vars.var_x = "__var_x";
     }
 
@@ -197,6 +197,7 @@
         v[vars.var_color] = d[vars.var_color];
         v[vars.var_size] = d[vars.var_size];
         v[vars.var_text] = d[vars.var_text];
+        v[vars.var_r] = d[vars.var_r];
 
         // TODO: make sure there is no existing value for this time
         unique_data[index].values[d[vars.time.var_time]] = v;
@@ -279,20 +280,23 @@
             // Time var
             d[vars.time.var_time] = leaves[0].values[time][vars.time.var_time];
 
-            aggregation.values[vars.time.current_time] = d;
+            aggregation.values[time] = d;
 
             //return d;
           });
 
           // Assuming we only aggregate var_x, var_y, var_r
           leaves.forEach(function(d, i) {
-            d.values.forEach(function(e, j) {
+
+            vars.time.points.forEach(function(time, i) {
+
               if(vars.var_x !== vars.time.var_time) {
-                aggregation.values[j][vars.var_x] += e[vars.var_x];
+                aggregation.values[time][vars.var_x] += d.values[time][vars.var_x];
               }
 
-              aggregation.values[j][vars.var_y] += e[vars.var_y];
-              aggregation.values[j][vars.var_r] += e[vars.var_r];
+              aggregation.values[time][vars.var_y] += d.values[time][vars.var_y];
+              aggregation.values[time][vars.var_r] += d.values[time][vars.var_r];
+
             });
           });
 
