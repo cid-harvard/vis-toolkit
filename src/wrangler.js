@@ -80,7 +80,7 @@
           d.__id = i;
           return d;
 
-        })
+        });
 
         vars.var_id = '__id';
 
@@ -90,6 +90,7 @@
 
       } else {
 
+        // Duplicate data to prevent mutation
         vars.new_data = JSON.parse(JSON.stringify(vars.all_data));
 
       }
@@ -176,6 +177,8 @@
           }
 
           d.__redraw = true;
+
+          d.__index = index;
 
           // Dup for metadata
           var dup = JSON.parse(JSON.stringify(d));

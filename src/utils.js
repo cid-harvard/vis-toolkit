@@ -1001,13 +1001,16 @@
               // Join is based on the curren_time value
               var gItems = vars_svg.selectAll(".mark__group" +  "_" + index_item)
                               .data(vars.new_data, function(d, i) {
-                                d._index_item = index_item;
+                                d.__index_mark = d.__index + '_' + index_item;
                                 return accessor_data(d)[vars.var_id] + "_" + index_item + d.depth;
                               });
 
               // ENTER ITEMS
               var gItems_enter = gItems.enter()
-                              .insert("g", ":first-child");
+                              .insert("g", ":first-child")
+                              .attr('class', function(d) {
+                                return "mark__group" +  "_" + index_item;
+                              })
 
               // ITEMS EXIT
               var gItems_exit = gItems.exit();
