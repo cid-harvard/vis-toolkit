@@ -161,6 +161,7 @@
       var params_stroke_width = utils.init_params("stroke_width", null, params, d, i, vars);
       var params_stroke_opacity = utils.init_params("stroke_opacity", null, params, d, i, vars);
 
+      var params_offset_x = utils.init_params("offset_x", 0, params, d, i, vars);
       var params_offset_y = utils.init_params("offset_y", 0, params, d, i, vars);
 
       // Use the default accessor
@@ -187,13 +188,13 @@
               .attr("x", params_x)
               .attr("y", params_y)
               .attr("dy", ".35em")
-              .attr("transform", "translate(" +  params_translate + ")rotate(" +  params_rotate + ")");
+              .attr("transform", "translate(" + ([params_translate[0] + params_offset_x, params_translate[1] + params_offset_y]) + ")rotate(" +  params_rotate + ")");
 
           items_mark_text
               .classed("highlighted", function(d, i) { return d.__highlighted; })
               .classed("selected", function(d, i) { return d.__selected; })
               .transition().duration(vars.duration)
-              .attr("transform", "translate(" +  params_translate + ")rotate(" +  params_rotate + ")")
+              .attr("transform", "translate(" + ([params_translate[0] + params_offset_x, params_translate[1] + params_offset_y]) + ")rotate(" +  params_rotate + ")")
               .text(function(d) {
 
                 if(typeof params.text !== "undefined") {
