@@ -1,0 +1,105 @@
+<!doctype html>
+<meta charset="utf-8">
+<script src="../js/d3.js"></script>
+<script src="../build/vistk.js"></script>
+<link href="../css/vistk.css" rel="stylesheet">
+<style>
+
+.center {
+  position:relative;
+  margin: 0 auto;
+  clear: left;
+  height: auto;
+  z-index: 0;
+  text-align: center;/* Add This*/
+}​
+
+</style>
+<body>
+<div class='center'>
+  <div id="viz_exports"></div>
+</div>
+<div class='center'>
+  <div id="viz_imports"></div>
+</div>
+<script>
+
+d3.json("../../vis-toolkit-datasets/data/exports_quinn_2012.json", function(error, exports) {
+
+  // Calculate the total exports vs total imports
+
+  var total_exports = 0;
+  var total_imports = 0;
+
+  exports.forEach(function(d) {
+    total_exports += d.export_value;
+    total_imports += d.import_value;
+  })
+
+  var coef_diff = 1;
+
+  var coef_diff = total_imports / total_exports;
+  var ratio = 3 / 4;
+  var width = 400;
+
+
+  var format = d3.format(".2s");
+
+  console.log("total imp:", total_imports, "total exp:", total_exports, "coef: ", coef_diff)
+
+  var visualization_exports = vistk.viz()
+    .params({
+      dev: true,
+      type: "treemap",
+      container: "#viz_exports",
+      width: width,
+      height: width * ratio,
+      margin: {top: 10, right: 10, bottom: 30, left: 30},
+      data: exports,
+      var_id: "code",
+      var_group: "parent_code",
+      var_color: "parent_code",
+      title: function(d) { return "Total exports $" + format(total_exports); },
+      var_size: "export_value",
+      var_sort: "export_value",
+      var_text: "name",
+      time: {
+        var_time: "year",
+        current_time: 2012,
+        parse: function(d) { return d; }
+      },
+      focus: 1121
+    });
+
+  d3.select("#viz_exports").call(visualization_exports);
+
+  var visualization_imports = vistk.viz()
+    .params({
+      dev: true,
+      type: "treemap",
+      container: "#viz_imports",
+      width: width * coef_diff,
+      height: width * ratio * coef_diff,
+      margin: {top: 10, right: 10, bottom: 30, left: 30},
+      data: exports,
+      var_id: "code",
+      var_group: "parent_code",
+      var_color: "parent_code",
+      title: function(d) { return "Total imports $" + format(total_imports); },
+      var_size: "import_value",
+      var_sort: "import_value",
+      var_text: "name",
+      time: {
+        var_time: "year",
+        current_time: 2012,
+        parse: function(d) { return d; }
+      },
+      focus: 1121
+    });
+
+  d3.select("#viz_imports").call(visualization_imports);
+
+});
+
+</script>
+</body>
