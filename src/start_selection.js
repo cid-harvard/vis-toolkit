@@ -6,7 +6,7 @@
       vars.evt.call('start', null);
 
       // If no data, display a user friendly message telling
-      if(!utils.check_data_display()) {
+      if(!utils.check_data_display() && vars.init) {
 
         d3.select(vars.container).selectAll(".message")
           .style('display', 'block')
