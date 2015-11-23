@@ -6,25 +6,33 @@ vars.default_params["rectmap"] = function(scope) {
   params.x_scale = [{
     func: d3.scale.linear()
             .range([scope.margin.left, scope.margin.left])
-            .domain([0, d3.max(vars.new_data, function(d) { return d[vars.var_width]; })])
+            .domain([0, d3.max(vars.new_data, function(d) {
+              return scope.accessor_data(d)[vars.var_width];
+            })])
   }];
 
   params.y_scale = [{
     func: d3.scale.linear()
             .range([scope.margin.top, scope.height - scope.margin.top - scope.margin.bottom])
-            .domain([0, d3.max(vars.new_data, function(d) { return d[vars.var_height]; })])
+            .domain([0, d3.max(vars.new_data, function(d) {
+              return scope.accessor_data(d)[vars.var_height];
+            })])
   }];
 
   params.width_scale = [{
     func: d3.scale.linear()
             .range([scope.margin.left, scope.width - scope.margin.left - scope.margin.right])
-            .domain([0, d3.max(vars.new_data, function(d) { return d[vars.var_width]; })])
+            .domain([0, d3.max(vars.new_data, function(d) {
+              return scope.accessor_data(d)[vars.var_width];
+            })])
   }];
 
   params.height_scale = [{
     func: d3.scale.linear()
             .range([scope.margin.top, scope.height - scope.margin.top - scope.margin.bottom])
-            .domain([0, d3.max(vars.new_data, function(d) { return d[vars.var_height]; })])
+            .domain([0, d3.max(vars.new_data, function(d) {
+              return scope.accessor_data(d)[vars.var_height];
+            })])
   }];
 
 

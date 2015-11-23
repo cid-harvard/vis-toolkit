@@ -25,10 +25,10 @@ vars.default_params["treemap"] = function(scope) {
         .size([scope.width - scope.margin.left - scope.margin.right, scope.height - scope.margin.top - scope.margin.bottom])
         .mode(scope.treemap_mode)
         .value(function(d) {
-          if(typeof scope.var_size === "function") {
-            return scope.var_size(d);
+          if(typeof scope.accessor_data(d)[vars.var_size] === "function") {
+            return scope.accessor_data(d)[vars.var_size](d);
           } else {
-            return d[scope.var_size];
+            return scope.accessor_data(d)[vars.var_size];
           }
         });
 
