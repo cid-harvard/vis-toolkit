@@ -3,8 +3,7 @@
   // Create SVG groups for items marks
   utils.items_group = function(d, i) {
 
-    d3.select(this).attr("class", "mark__group mark__group_" + d._index_item)
-                    .classed("highlighted", function(d, i) { return d.__highlighted; })
+    d3.select(this).classed("highlighted", function(d, i) { return d.__highlighted; })
                     .classed("selected", function(d, i) { return d.__selected; })
                     .on("mouseover",function(d) {
                       vars.evt.call("highlightOn", d);
@@ -1000,7 +999,9 @@
               // PRE-UPDATE ITEMS
               // Join is based on the curren_time value
               var gItems = vars_svg.selectAll(".mark__group" +  "_" + index_item)
-                              .data(vars.new_data, function(d, i) {
+                              .data(vars.new_data.filter(function(d) {
+                                  return typeof accessor_data(d) !== 'undefined';
+                                }), function(d, i) {
                                 d.__index_mark = d.__index + '_' + index_item;
                                 return accessor_data(d)[vars.var_id] + "_" + index_item + d.depth;
                               });
