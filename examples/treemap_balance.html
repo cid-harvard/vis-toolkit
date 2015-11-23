@@ -38,10 +38,14 @@ d3.json("../../vis-toolkit-datasets/data/exports_quinn_2012.json", function(erro
 
   var coef_diff = 1;
 
-  var coef_diff = total_imports / total_exports;
+  if(total_imports > total_exports) {
+    coef_diff = total_imports / total_exports;
+  } else {
+    coef_diff = total_imports / total_exports;
+  }
+
   var ratio = 3 / 4;
   var width = 400;
-
 
   var format = d3.format(".2s");
 

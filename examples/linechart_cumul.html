@@ -31,7 +31,7 @@ d3.json("../../vis-toolkit-datasets/data/partners_usa_2012_csay.json", function(
     width: 900,
     margin: {top: 30, right: 100, bottom: 30, left: 10},
     data: data.data,
-    var_id: "name",
+    var_id: "abbrv",
     var_group: "region_id",
     var_color: "region_id", // TODO: color by final ranking value..
     color: d3.scale.ordinal().domain(["Africa", "Americas", "Asia", "Europe", "Oceania"]).range(["#99237d", "#c72439", "#6bc145", "#88c7ed", "#dd9f98"]),
@@ -99,7 +99,7 @@ d3.json("../../vis-toolkit-datasets/data/partners_usa_2012_csay.json", function(
 
           var this_value = this.value;
           // Find the value year
-          year_offset = d3.range(visualization.params().unique_items.length).map(function() { return 0; });
+          year_offset = d3.range(visualization.params().new_data.length).map(function() { return 0; });
 
           data.data.forEach(function(d) {
             if(+d.year == +this_value) {
