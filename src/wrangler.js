@@ -448,6 +448,10 @@
       }
     }
 
+    vars.new_data = vars.new_data.filter(function(d) {
+      return typeof vars.accessor_data(d)[vars.var_id] !== 'undefined';
+    });
+
     if(vars.redraw_all) {
       vars.new_data.forEach(function(d) { d.__redraw = true; });
     }

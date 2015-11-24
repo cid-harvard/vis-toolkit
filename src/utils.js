@@ -1000,7 +1000,7 @@
               // Join is based on the curren_time value
               var gItems = vars_svg.selectAll(".mark__group" +  "_" + index_item)
                               .data(vars.new_data.filter(function(d) {
-                                  return typeof accessor_data(d) !== 'undefined';
+                                  return typeof accessor_data(d)[vars.var_id] !== 'undefined';
                                 }), function(d, i) {
                                 d.__index_mark = d.__index + '_' + index_item;
                                 return accessor_data(d)[vars.var_id] + "_" + index_item + d.depth;
