@@ -1591,7 +1591,7 @@
         vars.groups[vars.unique_groups.indexOf(d[vars.var_group])] = [];
       }
 
-      var n = {year: d.year, id: i};
+      var n = {year: d[vars.var_time], id: i};
 
       n[vars.var_size] = d[vars.var_size];
       n[vars.var_group] = d[vars.var_group];
