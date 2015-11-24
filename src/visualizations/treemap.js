@@ -4,11 +4,12 @@ vars.default_params["treemap"] = function(scope) {
 
   if(vars.init) {
 
+    // If no group is set, then each item is its own group
     if(typeof vars.var_group === "undefined" || vars.var_group === null) {
       vars.var_group = vars.var_id;
     }
 
-    if(vars.var_group == vars.var_id) {
+    if(vars.var_group === vars.var_id) {
       vars.var_group = "_index_item";
     }
 
@@ -34,15 +35,15 @@ vars.default_params["treemap"] = function(scope) {
 
     vars.new_data = vars.layout.treemap.nodes(vars.root);
 
-    vars.new_data.forEach(function(d) { d.__redraw = true; });
+    // Since we generated new data, need to redraw
+    vars.new_data.forEach(function(d) {
+      d.__redraw = true;
+    });
 
   }
 
-  params.x_scale = [{
-    func: d3.scale.linear()
-            .range([scope.margin.left, scope.width - scope.margin.left - scope.margin.right])
-            .domain([scope.margin.left, scope.width - scope.margin.left - scope.margin.right]),
-  }];
+  // Identity scale
+  params.x_scale = vistk.utils.scale.linear(scope);
 
   params.y_scale = [{
     func: d3.scale.linear()

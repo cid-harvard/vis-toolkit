@@ -116,3 +116,16 @@ vistk.utils.find_unique_values = function(data, key) {
 vistk.utils.list = function(param) {
   return list[param];
 }
+
+vistk.utils.scale = {};
+
+vistk.utils.scale.linear = function(vars) {
+
+  return [{
+    func: d3.scale.linear()
+            .range([vars.margin.left, vars.width - vars.margin.left - vars.margin.right])
+            .domain([vars.margin.left, vars.width - vars.margin.left - vars.margin.right])
+  }];
+
+};
+

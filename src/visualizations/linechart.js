@@ -25,8 +25,6 @@ vars.default_params["linechart"] = function(scope) {
     marks: [{
       type: "circle",
      // fill: function(d) { return vars.color(params.accessor_items(d)[vars.var_color]); }
-    }, {
-      type: "text"
     }],
     accessor_data: function(d) {
       return d.values.filter(function(e) {
@@ -58,7 +56,7 @@ vars.default_params["linechart"] = function(scope) {
 
   params.y_axis_show = false
   params.y_grid_show = false;
-  params.y_invert = true;
+  params.y_invert = false;
 
   return params;
 
