@@ -1,0 +1,67 @@
+<!doctype html>
+<meta charset="utf-8">
+<script src="../js/d3.js"></script>
+<script src="../build/vistk.js"></script>
+<link href="../css/vistk.css" rel="stylesheet">
+<body>
+<div id="viz"></div>
+<script>
+
+d3.tsv("../../vis-toolkit-datasets/data/COL_pop_realgdp_dept_2000-2013.txt", function(error, departments) {
+
+  // Data pre-processing
+  departments.forEach(function(d, i) {
+
+    d.id = i;
+    d.dept_pop = +d.dept_pop;
+    d.realgdp = +d.realgdp;
+    d.realgdp_percap = +d.realgdp_percap;
+    d["sum(export_value)"] = +d["sum(export_value)"];
+    d["value_added"] = +d["value_added"];
+
+  });
+
+  grid = vistk.viz().params({
+    type: "grid",
+    width: 800,
+    height: 600,
+    margin: {top: 30, right: 30, bottom: 30, left: 30},
+    container: "#viz",
+    data: departments,
+    var_group: "dept_name",
+    var_text: "dept_name",
+    var_id: "dept_name",
+    var_color: "realgdp",
+    var_sort: "dept_name",
+    var_sort_asc: false,
+    time: {
+      var_time: "year",
+      parse: d3.time.format("%Y").parse,
+      interval: [],
+      current_time: "2000"
+    },
+    items: [{
+      attr: "name",
+      marks: [{
+        type: "circle",
+        rotate: "0",
+        var_r: "realgdp",
+        var_fill: "realgdp",
+      }, {
+        type: "text",
+        rotate: "-30",
+        translate: 10 // TODO: translate the same distance than the radius
+      }]
+    }],
+    ui: {
+      default: true,
+      sort: ["realgdp", "dept_name", "value_added"]
+    }
+  });
+
+  d3.select("#viz").call(grid);
+
+});
+
+</script>
+</body>
