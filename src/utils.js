@@ -188,7 +188,16 @@
               .attr("x", params_x)
               .attr("y", params_y)
               .attr("dy", ".35em")
-              .attr("transform", "translate(" + ([params_translate[0] + params_offset_x, params_translate[1] + params_offset_y]) + ")rotate(" +  params_rotate + ")");
+              .attr("transform", "translate(" + ([params_translate[0] + params_offset_x, params_translate[1] + params_offset_y]) + ")rotate(" +  params_rotate + ")")
+              .on("mouseover",function(d) { // FIX to prevent hovers
+                d3.event.stopPropagation();
+              })
+              .on("mouseleave", function(d) {
+                d3.event.stopPropagation();
+              })
+              .on("click", function(d) {
+                 d3.event.stopPropagation();
+              });
 
           items_mark_text
               .classed("highlighted", function(d, i) { return d.__highlighted; })
@@ -531,7 +540,16 @@
               .attr("x1", function(d) { return vars.x_scale[0]["func"](d.source.x); })
               .attr("y1", function(d) { return vars.y_scale[0]["func"](d.source.y); })
               .attr("x2", function(d) { return vars.x_scale[0]["func"](d.target.x); })
-              .attr("y2", function(d) { return vars.y_scale[0]["func"](d.target.y); });
+              .attr("y2", function(d) { return vars.y_scale[0]["func"](d.target.y); })
+              .on("mouseover",function(d) { // FIX to prevent hovers
+                d3.event.stopPropagation();
+              })
+              .on("mouseleave", function(d) {
+                d3.event.stopPropagation();
+              })
+              .on("click", function(d) {
+                 d3.event.stopPropagation();
+              });
 
           mark
               .classed("highlighted", function(d, i) { return d.__highlighted; })
@@ -549,27 +567,45 @@
 
           mark.enter().append('line')
               .classed('mark__line_horizontal', true)
-              .classed("items_" + mark_id, true);
+              .classed("items_" + mark_id, true)
+              .on("mouseover",function(d) { // FIX to prevent hovers
+                d3.event.stopPropagation();
+              })
+              .on("mouseleave", function(d) {
+                d3.event.stopPropagation();
+              })
+              .on("click", function(d) {
+                 d3.event.stopPropagation();
+              });
 
           mark
               .classed("highlighted", function(d, i) { return d.__highlighted; })
               .classed("selected", function(d, i) { return d.__selected; })
               .attr("x1", function(d) { return -t[0] + vars.margin.left; })
               .attr("y1", function(d) { return params_offset_y; })
-              .attr("x2", function(d) { return vars.x_scale[0]["func"].range()[1]; })
+              .attr("x2", function(d) { return vars.x_scale[0]["func"].range()[1] -100; })
               .attr("y2", function(d) { return params_offset_y; });
 
           break;
 
         case "line_coord":
 
-          var mark = d3.select(that).selectAll(".mark__line_horizontal").data([d]);
+          var mark = d3.select(that).selectAll(".mark__line_coord").data([d]);
 
           var t = d3.transform(d3.select(that).attr("transform")).translate;
 
           mark.enter().append('line')
-              .classed('mark__line_horizontal', true)
-              .classed("items_" + mark_id, true);
+              .classed('mark__line_coord', true)
+              .classed("items_" + mark_id, true)
+              .on("mouseover",function(d) { // FIX to prevent hovers
+                d3.event.stopPropagation();
+              })
+              .on("mouseleave", function(d) {
+                d3.event.stopPropagation();
+              })
+              .on("click", function(d) {
+                 d3.event.stopPropagation();
+              });
 
           mark
               .classed("highlighted", function(d, i) { return d.__highlighted; })
