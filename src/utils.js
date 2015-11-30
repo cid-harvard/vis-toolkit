@@ -1084,7 +1084,7 @@
                 if(vars.init) {
 
                   gItems_enter
-                      .filter(params.filter)
+                      .filter(function(d, i) { return params.filter(d, i, vars); })
                       .filter(utils.filters.redraw_only)
                       .call(utils.draw_mark, params, vars);
 
@@ -1338,7 +1338,7 @@
       vars_svg.selectAll(".y.grid").transition()
           .duration(vars.duration)
           .call(utils.make_y_axis()
-          .tickSize(-vars.width + vars.margin.left + vars.margin.right, 0, 0)
+          .tickSize(-vars.x_scale[0]["func"].range()[1] + vars.margin.right + vars.y_tickSize, 0, 0)
           .tickFormat(""));
 
     }
