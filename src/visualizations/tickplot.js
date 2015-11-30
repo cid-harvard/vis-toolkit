@@ -5,27 +5,24 @@ vars.default_params["tickplot"] = function(scope) {
   params.accessor_values = function(d) { return d.values; };
   params.accessor_items = function(d) { return d; };
 
-  // Creates horizontal placeholders
-  var placeholders = vars.default_params["ordinal_horizontal"](scope);
-
   params.items = [];
   params.items.marks = [];
-
-  placeholders.forEach(function(p) {
+  console.log("totot")
+  scope.time.points.forEach(function(time) {
 
     // Draw items with a specific filter
     var mark = [{
-        type: "circle",
+        type: "tick",
       }, {
         type: "text"
       }, {
         accessor_data: function(d) {
           return d.values.filter(function(e) {
-            return e[vars.time.var_time] == vars.time.current_time;
+            return e[vars.time.var_time] == time;
           })[0];
         }
       }];
-
+      console.log("Adding", mark)
     params.items.marks.push(mark);
 
   });
