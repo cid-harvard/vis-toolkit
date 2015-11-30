@@ -5,6 +5,7 @@
 
     d3.select(this).classed("highlighted", function(d, i) { return d.__highlighted; })
                     .classed("selected", function(d, i) { return d.__selected; })
+                    .classed("mark__group", true)
                     .on("mouseover",function(d) {
                       vars.evt.call("highlightOn", d);
                     })
@@ -39,7 +40,7 @@
   // Create SVG groups for connect marks
   utils.connect_group = function(d, i) {
 
-    d3.select(this).attr("class", "connect__group connect__group_" + d._index_item)
+    d3.select(this).attr("class", "connect__group connect__group_" + d.__index)
                     .classed("highlighted", function(d, i) { return d.__highlighted; })
                     .classed("selected", function(d, i) { return d.__selected; })
                     .on("mouseover",function(d) {
@@ -1002,7 +1003,6 @@
                               .data(vars.new_data.filter(function(d) {
                                   return typeof accessor_data(d)[vars.var_id] !== 'undefined';
                                 }), function(d, i) {
-                                d.__index_mark = d.__index + '_' + index_item;
                                 return accessor_data(d)[vars.var_id] + "_" + index_item + d.depth;
                               });
 
@@ -1190,8 +1190,7 @@
 
         var gConnect = vars_svg.selectAll(".connect__group")
                         .data(connect_data, function(d, i) {
-                          d._index_item = index_item;
-                          return d[vars.var_id] + "_" + index_item;
+                          return d[vars.var_id] + "_" + d.__index;
                         });
 
         // ENTER CONNECT
