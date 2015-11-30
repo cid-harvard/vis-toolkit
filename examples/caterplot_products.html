@@ -3,6 +3,14 @@
 <script src="../js/d3.js"></script>
 <script src="../build/vistk.js"></script>
 <link href="../css/vistk.css" rel="stylesheet">
+<style>
+
+circle {
+  fill-opacity: .1;
+  stroke-opacity: 1;
+}
+
+</style>
 <body>
 <div id="viz"></div>
 <script>
@@ -32,9 +40,9 @@ d3.json("../../vis-toolkit-datasets/data/exports_2012.json", function(error, exp
           return 'year';
         }
       },
-      var_y: 'distance',
+      var_y: 'value',
       var_share: 'nb_products',
-      var_r: 'share',
+      var_r: 'distance',
       var_text: 'name',
       time: {
         var_time: 'year',

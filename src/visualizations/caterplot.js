@@ -8,7 +8,7 @@ vars.default_params["caterplot"] = function(scope) {
   params.x_scale = [{
     func: d3.scale.ordinal()
             .rangeBands([scope.margin.left, scope.width - scope.margin.left - scope.margin.right])
-            .domain(d3.set(vars.new_data.map(function(d) { return d['community_name']; })).values())
+            .domain(d3.set(vars.new_data.map(function(d) { return d[vars.var_x]; })).values())
   }];
 
   params.y_scale = [{
@@ -28,9 +28,9 @@ vars.default_params["caterplot"] = function(scope) {
                     .range([vars.radius_min, vars.radius_max])
                     .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_r]; })),
         fill: function(d) { return vars.color(vars.accessor_items(d)[vars.var_color]); },
-        translate: function() {
-          return [vars.x_scale[0]['func'].rangeBand() / 4, 0]
-        },
+       // translate: function() {
+       //   return [vars.x_scale[0]['func'].rangeBand() / 4, 0]
+       // },
       }, {
       var_mark: '__highlighted',
       type: d3.scale.ordinal().domain([true, false]).range(['text', 'none'])
