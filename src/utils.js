@@ -400,7 +400,9 @@
             .attr("width", vars.mark.width)
             .attr("x", -vars.mark.width/2)
             .attr("y", -vars.mark.height/2)
-            .attr("transform", "rotate(" + (params_rotate + 45) + ")");
+            .attr("transform", "rotate(" + (params_rotate + 45) + ")")
+            .style("fill", params_fill)
+            .style("stroke", params_stroke);
 
           if(typeof params.class !== "undefined") {
             items_mark_diamond_enter.classed(params.class(vars.accessor_items(d)), true);
@@ -409,7 +411,9 @@
         items_mark_diamond
             .classed("highlighted", function(d, i) { return d.__highlighted; })
             .classed("selected", function(d, i) { return d.__selected; })
-            .transition().duration(vars.duration);
+            .transition().duration(vars.duration)
+            .style("fill", params_fill)
+            .style("stroke", params_stroke);
 
         items_mark_diamond.exit().remove();
 
@@ -1267,7 +1271,9 @@
         .enter()
           .insert("g", ":first-child")
           .attr("class", "x grid")
-          .style("display", function() { return vars.x_grid_show ? "block": "none"; })
+          .style("display", function() {
+            return vars.x_grid_show ? "block": "none";
+          })
           .attr("transform", function() {
             if(vars.x_axis_orient == "top") {
               return "translate(0," + (vars.height - vars.margin.top - vars.margin.bottom) + ")";
@@ -1296,7 +1302,7 @@
       vars_svg.selectAll(".y.grid").transition()
           .duration(vars.duration)
           .call(utils.make_y_axis()
-          .tickSize(-vars.width+vars.margin.left+vars.margin.right, 0, 0)
+          .tickSize(-vars.width + vars.margin.left + vars.margin.right, 0, 0)
           .tickFormat(""));
 
     }
@@ -1413,13 +1419,13 @@
   utils.make_y_axis = function() {
     return d3.svg.axis()
         .scale(vars.y_scale[0]["func"])
+        .ticks(vars.y_ticks)
         // Quick fix to get max value
         .tickValues(vars.y_tickValues)
         .tickFormat(vars.y_format)
         .tickSize(vars.y_tickSize)
         .tickPadding(vars.y_tickPadding)
-
-        .orient("left");
+        .orient(vars.y_axis_orient);
   }
 
   // Title

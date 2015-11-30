@@ -69,6 +69,7 @@
     y_tickPadding: 0,
     y_tickValues: null,
     y_axis_show: false,
+    y_axis_orient: "left",
     y_grid_show: false,
     y_text: true,
     y_text_custom: "",

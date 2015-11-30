@@ -125,24 +125,9 @@
       vars.time.interval = d3.extent(vars.new_data, function(d) { return d[vars.time.var_time]; });
       vars.time.points = vistk.utils.find_unique_values(vars.new_data, vars.time.var_time);
 
-      // In case no tempora values, change the accessor
+      // In case no temporal values, change the accessor
       if(vars.time.var_time === null || vars.type === 'treemap') {
         vars.accessor_data = function(d) { return d; }
-      }
-
-      // Filter data by attribute
-      // TODO: not sure we should remove data, but add an attribute instead would better
-      if(vars.filter.length > 0) {
-
-        if(vars.dev) {
-          console.log("[vars.filter]", vars.filter);
-        }
-
-        vars.new_data = vars.new_data.filter(function(d) {
-          // We don't keep values that are not in the vars.filter array
-          return vars.filter.indexOf(d[vars.var_group]+"") > -1;
-        });
-
       }
 
       var unique_data = [];
@@ -208,6 +193,21 @@
       });
 
       vars.new_data = unique_data;
+
+    }
+
+    // Filter data by attribute
+    // TODO: not sure we should remove data, but add an attribute instead would better
+    if(vars.filter.length > 0) {
+
+      if(vars.dev) {
+        console.log("[vars.filter]", vars.filter);
+      }
+
+      vars.new_data = vars.new_data.filter(function(d) {
+        // We don't keep values that are not in the vars.filter array
+        return vars.filter.indexOf(d[vars.var_group]+"") > -1;
+      });
 
     }
 
@@ -449,7 +449,7 @@
     }
 
     vars.new_data = vars.new_data.filter(function(d) {
-      return typeof vars.accessor_data(d)[vars.var_id] !== 'undefined';
+      return typeof vars.accessor_data(d) !== 'undefined' && typeof vars.accessor_data(d)[vars.var_id] !== 'undefined';
     });
 
     if(vars.redraw_all) {
