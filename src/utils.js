@@ -474,7 +474,6 @@
                 return params.fill(vars.accessor_data(d)[vars.var_color]);
               })
               .attr("transform", function(d) {
-//
                 return "translate("+ -d.x +", "+ -d.y +")";
               })
 
@@ -659,21 +658,6 @@
 
         break;
 
-        case "piechart":
-
-          var scope = {};
-          scope = vistk.utils.merge(scope, vars);
-
-          var piechart_params = vars.default_params["piechart"](scope);
-
-          var chart = d3.select(that).selectAll(".items__chart__piechart").data([d]);
-
-          chart.enter().append('g')
-              .classed('items__chart__piechart', true)
-              .call(utils.draw_chart, piechart_params, d);
-
-        break;
-
         case "star":
 
           var star = d3.superformula()
@@ -763,14 +747,6 @@
                           });
 
           mark.exit().remove();
-
-        break;
-
-
-        case "sparkline":
-
-          // To make sure we removed __highlighted and __selected nodes
-          // d3.select(that).selectAll(".items_" + mark_id).remove();
 
         break;
 
