@@ -6,7 +6,9 @@ vars.default_params["dotplot"] = function(scope) {
     name: "linear",
     func: d3.scale.linear()
             .range([scope.margin.left, scope.width-scope.margin.left-scope.margin.right])
-            .domain(d3.extent(vars.new_data, function(d) { return d[scope.var_x]; }))
+            .domain(d3.extent(vars.new_data, function(d) {
+              return scope.accessor_data(d)[vars.var_x];
+            }))
             .nice()
   }];
 
@@ -14,7 +16,9 @@ vars.default_params["dotplot"] = function(scope) {
     name: "linear",
     func: d3.scale.linear()
             .range([scope.height/2, scope.height/2])
-            .domain(d3.extent(vars.new_data, function(d) { return d[scope.var_y]; }))
+            .domain(d3.extent(vars.new_data, function(d) {
+              return scope.accessor_data(d)[vars.var_y];
+            }))
             .nice()
   }];
 

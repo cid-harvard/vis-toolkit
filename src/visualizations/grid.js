@@ -58,6 +58,8 @@ vars.default_params["grid"] = function(scope) {
   params.x_axis_show = false;
   params.y_axis_show = false;
 
+  params.y_invert = true;
+
   return params;
 
 };
