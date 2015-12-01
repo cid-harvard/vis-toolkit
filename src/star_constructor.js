@@ -7,7 +7,7 @@
     vars = vistk.utils.merge(vars, vars.user_vars);
 
     // Create the top level element conaining the visualization
-    if(!vars.svg) {
+    if(!vars.svg && vars.init && vars.refresh) {
        if(vars.type !== "table") {
 
         vars.root_svg = d3.select(vars.container).append("svg")
@@ -70,8 +70,8 @@
           .attr("y", 80)
           .attr("x", 10)
           .attr("text-anchor", "start")
-          .style("font-size", 70)
-          .text("Loading..");
+          .style("font-size", 40)
+        //  .text("Loading..");
 
 
       } else {

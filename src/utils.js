@@ -410,8 +410,8 @@
             .attr("x", -vars.mark.width/2)
             .attr("y", -vars.mark.height/2)
             .attr("transform", "rotate(" + (params_rotate + 45) + ")")
-            .style("fill", params_fill)
-            .style("stroke", params_stroke);
+           // .style("fill", params_fill)
+           // .style("stroke", params_stroke);
 
           if(typeof params.class !== "undefined") {
             items_mark_diamond_enter.classed(params.class(vars.accessor_items(d)), true);
@@ -421,8 +421,8 @@
             .classed("highlighted", function(d, i) { return d.__highlighted; })
             .classed("selected", function(d, i) { return d.__selected; })
             .transition().duration(vars.duration)
-            .style("fill", params_fill)
-            .style("stroke", params_stroke);
+         //   .style("fill", params_fill)
+         //   .style("stroke", params_stroke);
 
         items_mark_diamond.exit().remove();
 
@@ -971,7 +971,7 @@
   utils.draw_chart = function(vars_svg, context, params) {
 
     if(context.dev) {
-      console.log("[utils.draw_chart] drawing chart of type", context.type, context.connect);
+      console.log("[utils.draw_chart] drawing chart of type", context.type);
     }
 
     var vars = context;
