@@ -9,7 +9,6 @@
 
 d3.json("../../vis-toolkit-datasets/data/diversification_ubiquity_hs4_1995_2012.json", function(error, countries) {
 
-
  var flat_years = vistk.utils.flatten_years(countries);
 
   visualization = vistk.viz()
@@ -22,7 +21,7 @@ d3.json("../../vis-toolkit-datasets/data/diversification_ubiquity_hs4_1995_2012.
       data: flat_years,
       var_id: 'name',
       var_group: 'continent',
-      var_color: 'continent',
+      var_color: 'nb_products',
       var_r: 'nb_products',
       var_x: function(vars) { return vars.width/2; },
       var_y: function(vars) { return vars.height/2; },
@@ -33,13 +32,8 @@ d3.json("../../vis-toolkit-datasets/data/diversification_ubiquity_hs4_1995_2012.
       items: [{
         marks: [{
           type: "arc",
-          rotate: "0",
           fill: function(d, i, vars) {
-            return vars.color(vars.accessor_items(d)[vars.var_color]);
-          },
-          translate: function(d, i, vars) {
-            return [100, 100];
-            // return [vars.width/2, vars.height/2];
+            return vars.color(vars.accessor_data(d)[vars.var_color]);
           }
         }]
       }],
@@ -51,8 +45,7 @@ d3.json("../../vis-toolkit-datasets/data/diversification_ubiquity_hs4_1995_2012.
       ui: {
         default: true,
         options: ["country", "continent"]
-      },
-      selection: ["Angola"]
+      }
     });
 
   d3.select("#viz").call(visualization);

@@ -2,9 +2,6 @@ vars.default_params["piechart"] = function(scope) {
 
   var params = {};
 
-  //params.accessor_data = function(d) { return d.data; };
-  params.accessor_items = function(d) { return d; };
-
   if(vars.refresh) {
 
     scope.pie = d3.layout.pie().value(function(d) { return d[scope.var_share]; });
