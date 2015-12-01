@@ -6,7 +6,7 @@ var w = typeof window === "undefined" ? this : window;
 var vistk = w.vistk || {};
 w.vistk = vistk;
 
-vistk.version = "0.0.25";
+vistk.version = "0.0.26";
 vistk.utils = {};
 
 vistk.viz = function() {
@@ -207,7 +207,16 @@ var utils ={};
               .attr("x", params_x)
               .attr("y", params_y)
               .attr("dy", ".35em")
-              .attr("transform", "translate(" + ([params_translate[0] + params_offset_x, params_translate[1] + params_offset_y]) + ")rotate(" +  params_rotate + ")");
+              .attr("transform", "translate(" + ([params_translate[0] + params_offset_x, params_translate[1] + params_offset_y]) + ")rotate(" +  params_rotate + ")")
+              .on("mouseover",function(d) { // FIX to prevent hovers
+                d3.event.stopPropagation();
+              })
+              .on("mouseleave", function(d) {
+                d3.event.stopPropagation();
+              })
+              .on("click", function(d) {
+                 d3.event.stopPropagation();
+              });
 
           items_mark_text
               .classed("highlighted", function(d, i) { return d.__highlighted; })
@@ -420,8 +429,8 @@ var utils ={};
             .attr("x", -vars.mark.width/2)
             .attr("y", -vars.mark.height/2)
             .attr("transform", "rotate(" + (params_rotate + 45) + ")")
-            .style("fill", params_fill)
-            .style("stroke", params_stroke);
+           // .style("fill", params_fill)
+           // .style("stroke", params_stroke);
 
           if(typeof params.class !== "undefined") {
             items_mark_diamond_enter.classed(params.class(vars.accessor_items(d)), true);
@@ -431,8 +440,8 @@ var utils ={};
             .classed("highlighted", function(d, i) { return d.__highlighted; })
             .classed("selected", function(d, i) { return d.__selected; })
             .transition().duration(vars.duration)
-            .style("fill", params_fill)
-            .style("stroke", params_stroke);
+         //   .style("fill", params_fill)
+         //   .style("stroke", params_stroke);
 
         items_mark_diamond.exit().remove();
 
@@ -484,7 +493,6 @@ var utils ={};
                 return params.fill(vars.accessor_data(d)[vars.var_color]);
               })
               .attr("transform", function(d) {
-//
                 return "translate("+ -d.x +", "+ -d.y +")";
               })
 
@@ -550,7 +558,16 @@ var utils ={};
               .attr("x1", function(d) { return vars.x_scale[0]["func"](d.source.x); })
               .attr("y1", function(d) { return vars.y_scale[0]["func"](d.source.y); })
               .attr("x2", function(d) { return vars.x_scale[0]["func"](d.target.x); })
-              .attr("y2", function(d) { return vars.y_scale[0]["func"](d.target.y); });
+              .attr("y2", function(d) { return vars.y_scale[0]["func"](d.target.y); })
+              .on("mouseover",function(d) { // FIX to prevent hovers
+                d3.event.stopPropagation();
+              })
+              .on("mouseleave", function(d) {
+                d3.event.stopPropagation();
+              })
+              .on("click", function(d) {
+                 d3.event.stopPropagation();
+              });
 
           mark
               .classed("highlighted", function(d, i) { return d.__highlighted; })
@@ -568,27 +585,45 @@ var utils ={};
 
           mark.enter().append('line')
               .classed('mark__line_horizontal', true)
-              .classed("items_" + mark_id, true);
+              .classed("items_" + mark_id, true)
+              .on("mouseover",function(d) { // FIX to prevent hovers
+                d3.event.stopPropagation();
+              })
+              .on("mouseleave", function(d) {
+                d3.event.stopPropagation();
+              })
+              .on("click", function(d) {
+                 d3.event.stopPropagation();
+              });
 
           mark
               .classed("highlighted", function(d, i) { return d.__highlighted; })
               .classed("selected", function(d, i) { return d.__selected; })
               .attr("x1", function(d) { return -t[0] + vars.margin.left; })
               .attr("y1", function(d) { return params_offset_y; })
-              .attr("x2", function(d) { return vars.x_scale[0]["func"].range()[1]; })
+              .attr("x2", function(d) { return vars.x_scale[0]["func"].range()[1] -100; })
               .attr("y2", function(d) { return params_offset_y; });
 
           break;
 
         case "line_coord":
 
-          var mark = d3.select(that).selectAll(".mark__line_horizontal").data([d]);
+          var mark = d3.select(that).selectAll(".mark__line_coord").data([d]);
 
           var t = d3.transform(d3.select(that).attr("transform")).translate;
 
           mark.enter().append('line')
-              .classed('mark__line_horizontal', true)
-              .classed("items_" + mark_id, true);
+              .classed('mark__line_coord', true)
+              .classed("items_" + mark_id, true)
+              .on("mouseover",function(d) { // FIX to prevent hovers
+                d3.event.stopPropagation();
+              })
+              .on("mouseleave", function(d) {
+                d3.event.stopPropagation();
+              })
+              .on("click", function(d) {
+                 d3.event.stopPropagation();
+              });
 
           mark
               .classed("highlighted", function(d, i) { return d.__highlighted; })
@@ -639,21 +674,6 @@ var utils ={};
               .attr('d', function(e) {
                 return params["func"](d3.values(this_accessor_values(e)));
               });
-
-        break;
-
-        case "piechart":
-
-          var scope = {};
-          scope = vistk.utils.merge(scope, vars);
-
-          var piechart_params = vars.default_params["piechart"](scope);
-
-          var chart = d3.select(that).selectAll(".items__chart__piechart").data([d]);
-
-          chart.enter().append('g')
-              .classed('items__chart__piechart', true)
-              .call(utils.draw_chart, piechart_params, d);
 
         break;
 
@@ -746,14 +766,6 @@ var utils ={};
                           });
 
           mark.exit().remove();
-
-        break;
-
-
-        case "sparkline":
-
-          // To make sure we removed __highlighted and __selected nodes
-          // d3.select(that).selectAll(".items_" + mark_id).remove();
 
         break;
 
@@ -978,7 +990,7 @@ var utils ={};
   utils.draw_chart = function(vars_svg, context, params) {
 
     if(context.dev) {
-      console.log("[utils.draw_chart] drawing chart of type", context.type, context.connect);
+      console.log("[utils.draw_chart] drawing chart of type", context.type);
     }
 
     var vars = context;
@@ -1067,7 +1079,7 @@ var utils ={};
                 if(vars.init) {
 
                   gItems_enter
-                      .filter(params.filter)
+                      .filter(function(d, i) { return params.filter(d, i, vars); })
                       .filter(utils.filters.redraw_only)
                       .call(utils.draw_mark, params, vars);
 
@@ -1321,7 +1333,7 @@ var utils ={};
       vars_svg.selectAll(".y.grid").transition()
           .duration(vars.duration)
           .call(utils.make_y_axis()
-          .tickSize(-vars.width + vars.margin.left + vars.margin.right, 0, 0)
+          .tickSize(-vars.x_scale[0]["func"].range()[1] + vars.margin.right + vars.y_tickSize, 0, 0)
           .tickFormat(""));
 
     }
@@ -1947,7 +1959,7 @@ utils.init_params_values = function(var_v, default_value, params, d, i, vars) {
     list: {type: ["sparkline", "dotplot", "barchart", "linechart", "scatterplot", "grid",
                   "stacked", "piechart", "slopegraph", "productspace", "treemap", "geomap",
                   "stackedbar", "ordinal_vertical", "ordinal_horizontal", "matrix", "radial", "rectmap",
-                  "caterplot"],
+                  "caterplot", "tickplot"],
       mark: ['rect', 'circle', 'star', 'shape']
     },
 
@@ -2076,7 +2088,7 @@ utils.init_params_values = function(var_v, default_value, params, d, i, vars) {
     vars = vistk.utils.merge(vars, vars.user_vars);
 
     // Create the top level element conaining the visualization
-    if(!vars.svg) {
+    if(!vars.svg && vars.init && vars.refresh) {
        if(vars.type !== "table") {
 
         vars.root_svg = d3.select(vars.container).append("svg")
@@ -2139,8 +2151,8 @@ utils.init_params_values = function(var_v, default_value, params, d, i, vars) {
           .attr("y", 80)
           .attr("x", 10)
           .attr("text-anchor", "start")
-          .style("font-size", 70)
-          .text("Loading..");
+          .style("font-size", 40)
+        //  .text("Loading..");
 
 
       } else {
@@ -3789,12 +3801,29 @@ vars.default_params["tickplot"] = function(scope) {
 
   params.items = [];
   params.items.marks = [];
-  console.log("totot")
+
+  params.x_scale = [{
+    func: d3.scale.linear()
+            .range([scope.margin.left, scope.width - scope.margin.left - scope.margin.right])
+            .domain(d3.extent(vars.new_data, function(d) {
+              return scope.accessor_data(d)[vars.var_x];
+            })).nice()
+  }];
+
+  params.y_scale = [{
+    func: d3.scale.linear()
+            .range([scope.height - scope.margin.top - scope.margin.bottom, scope.margin.top])
+            .domain(d3.extent(vars.new_data, function(d) {
+              return scope.accessor_data(d)[vars.var_y];
+            })).nice()
+  }];
+
   scope.time.points.forEach(function(time) {
 
     // Draw items with a specific filter
     var mark = [{
         type: "tick",
+        rotate: 90
       }, {
         type: "text"
       }, {
@@ -3808,7 +3837,7 @@ vars.default_params["tickplot"] = function(scope) {
     params.items.marks.push(mark);
 
   });
-
+/*
   params.connect = [{
     marks: [{
       type: "path",
@@ -3822,7 +3851,7 @@ vars.default_params["tickplot"] = function(scope) {
       fill: "none"
     }]
   }];
-
+*/
   params.x_ticks = vars.time.points.length;
   params.x_tickValues = null;
   params.x_axis_orient = "top";
@@ -4238,8 +4267,10 @@ var z = d3.scale.linear().domain([0, 4]).clamp(true),
     selection.each(function(d) {
 
       // Trigger the previous visualization updates (e.g. to clear animations)
-      vars.evt.call("clearAnimations", null);
-      vars.evt.call('start', null);
+      if(vars.init || vars.refresh) {
+        vars.evt.call("clearAnimations", null);
+        vars.evt.call('start', null);
+      }
 
       // If no data, display a user friendly message telling
       if(!utils.check_data_display() && vars.init) {
