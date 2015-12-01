@@ -11,8 +11,6 @@
 
 d3.csv("../../vis-toolkit-datasets/data/atlas_reporting.csv", function(error, data) {
 
-
-
   d3.json("../../vis-toolkit-datasets/data/countries.json", function(error, countries) {
 
     var res = [];
@@ -59,7 +57,7 @@ d3.csv("../../vis-toolkit-datasets/data/atlas_reporting.csv", function(error, da
       d.continent = find_country('cca3', d.exporter);
       d.id = lookup_countries[d.exporter].id;
       d.report = lookup_countries[d.exporter].report;
-
+      //d.year = +d.year;
     })
 
     //data = data.filter(function(d) {
@@ -71,6 +69,7 @@ d3.csv("../../vis-toolkit-datasets/data/atlas_reporting.csv", function(error, da
       container: "#viz",
       height: 600,
       width: 900,
+      dev: true,
       margin: {top: 30, right: 100, bottom: 30, left: 10},
       data: data,
       var_id: "exporter",
@@ -82,19 +81,20 @@ d3.csv("../../vis-toolkit-datasets/data/atlas_reporting.csv", function(error, da
       var_text: "exporter",
       y_text: "ECI Rank",
       var_y: "report",
-     // y_invert: true,
       var_x: "year",
       color: d3.scale.linear().domain([0, 60]).range(["red", "blue"]),
       time: {
         parse: d3.time.format("%Y").parse,
         var_time: 'year',
-        current_time: vistk.utils.max
+        current_time: 2000
       },
       ui: {
         default: true,
         options: ["country", "continent"]
       }
     });
+
+    console.log('data', data)
 
     d3.select("#viz").call(visualization);
 

@@ -7,12 +7,29 @@ vars.default_params["tickplot"] = function(scope) {
 
   params.items = [];
   params.items.marks = [];
-  console.log("totot")
+
+  params.x_scale = [{
+    func: d3.scale.linear()
+            .range([scope.margin.left, scope.width - scope.margin.left - scope.margin.right])
+            .domain(d3.extent(vars.new_data, function(d) {
+              return scope.accessor_data(d)[vars.var_x];
+            })).nice()
+  }];
+
+  params.y_scale = [{
+    func: d3.scale.linear()
+            .range([scope.height - scope.margin.top - scope.margin.bottom, scope.margin.top])
+            .domain(d3.extent(vars.new_data, function(d) {
+              return scope.accessor_data(d)[vars.var_y];
+            })).nice()
+  }];
+
   scope.time.points.forEach(function(time) {
 
     // Draw items with a specific filter
     var mark = [{
         type: "tick",
+        rotate: 90
       }, {
         type: "text"
       }, {
@@ -26,7 +43,7 @@ vars.default_params["tickplot"] = function(scope) {
     params.items.marks.push(mark);
 
   });
-
+/*
   params.connect = [{
     marks: [{
       type: "path",
@@ -40,7 +57,7 @@ vars.default_params["tickplot"] = function(scope) {
       fill: "none"
     }]
   }];
-
+*/
   params.x_ticks = vars.time.points.length;
   params.x_tickValues = null;
   params.x_axis_orient = "top";
