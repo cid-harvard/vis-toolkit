@@ -16,8 +16,19 @@
     // 1/ In case we use functions for X/Y variables
     // 2/ Adds default attributes __var_x and __var_y if no coordinate exist
 
-    if(typeof vars.var_x === "function") {
-      vars.var_x = vars.var_x(vars);
+    // Duplicate the dataset to prevent mutation
+    if(vars.init) {
+
+      // Get a copy of the whole dataset
+      vars.all_data = JSON.parse(JSON.stringify(vars.data));
+
+    }
+
+    if(typeof vars.var_x !== "string" && typeof vars.var_x === "function") {
+      vars.all_data.forEach(function(d, i) {
+        d.__var_x = vars.var_x(d, i, vars);
+      });
+      vars.var_x = "__var_x";
     }
 
     if(typeof vars.var_x === "undefined") {
@@ -28,7 +39,7 @@
     }
 
     if(typeof vars.var_y !== "string" && typeof vars.var_y === "function") {
-      vars.data.forEach(function(d, i) {
+      vars.all_data.forEach(function(d, i) {
         d.__var_y = vars.var_y(d, i, vars);
       });
       vars.var_y = "__var_y";
@@ -46,14 +57,6 @@
     // In case the current_time is set dynamically
     if(typeof vars.time.current_time === "function") {
       vars.time.current_time = vars.time.current_time(vars.data);
-    }
-
-    // Duplicate the dataset to prevent mutation
-    if(vars.init) {
-
-      // Get a copy of the whole dataset
-      vars.all_data = JSON.parse(JSON.stringify(vars.data));
-
     }
 
     // Calculate vars.new_data which should contain two things
@@ -451,7 +454,7 @@
     vars.new_data = vars.new_data.filter(function(d) {
       return typeof vars.accessor_data(d) !== 'undefined' && typeof vars.accessor_data(d)[vars.var_id] !== 'undefined';
     });
-
+    console.log('VVV', vars.new_data)
     if(vars.redraw_all) {
       vars.new_data.forEach(function(d) { d.__redraw = true; });
     }
