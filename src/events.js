@@ -68,7 +68,7 @@
   });
 
   vars.evt.register("highlightOn", function(d) {
-    if(vars.dev) { console.log("[vars.evt.call] selection"); }
+    if(vars.dev) { console.log("[vars.evt.call] highlightOn"); }
   });
 
   vars.evt.register("highlightOut", function(d) {
@@ -81,6 +81,10 @@
 
   });
 
+  vars.evt.register("highlightOut", function(d) {
+    if(vars.dev) { console.log("[vars.evt.call] highlightOut"); }
+  });
+
   vars.evt.register("timeUpdate", function(new_time) {
     if(vars.dev) { console.log("[vars.evt.call] timeUpdate"); }
 
@@ -88,3 +92,9 @@
     d3.select(vars.container).call(vars.this_chart);
 
   });
+
+  vars.evt.register("selection", function(d) {
+    d.__selected = true;
+    d.__redraw = true;
+  });
+
