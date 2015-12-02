@@ -6,51 +6,49 @@
 <div id="viz"></div>
 <script>
 
-d3.json("../../vis-toolkit-datasets/data/diversification_ubiquity_hs4_1995_2012.json", function(error, countries) {
+d3.csv("../../vis-toolkit-datasets/data/atlas_reporting.csv", function(error, countries) {
 
-  var flat_years = vistk.utils.flatten_years(countries);
+  cc = countries;
 
-  var visualization = vistk.viz()
+  distribution = [];
+  lookup_years = [];
+  lookup_size = 0;
 
-    /* WIP
-    .set({
-      dimension: 'bin',
-      func: function() {
+  countries.forEach(function(country) {
 
-        var layout = d3.layout.histogram()
-            .bins(params.x_scale[0]["func"].ticks(20))
-            (values);
+    if(typeof lookup_years[country.year] === 'undefined') {
+      lookup_years[country.year] = lookup_size++;
+      console.log(lookup_years, lookup_years.length)
+      distribution[lookup_years[country.year]] = {};
+      distribution[lookup_years[country.year]].id = country.year;
+      distribution[lookup_years[country.year]].year = country.year;
+      distribution[lookup_years[country.year]].total = 0;
+    }
 
-        return 0;
-      }
-    })
-*/
+    if(country.report_by_exporter === '1') {
+      distribution[lookup_years[country.year]].total++;
+    }
+
+  });
+
+  visualization = vistk.viz()
     .params({
+      dev: true,
       type: 'barchart',
       margin: {top: 10, right: 10, bottom: 30, left: 30},
       container: '#viz',
-      data: flat_years,
-      var_id: 'name',
-      var_group: 'continent',
-      var_color: 'continent',
-      var_x: 'name',
-      var_sort: 'name',
-      var_y: 'avg_products',
-      var_text: 'name_2char',
-      time: {
-        var_time: "year",
-        current_time: "1995",
-        parse: function(d) { return d; }
-      },
-      ui: {
-        default: true,
-        options: ["country", "continent", "year"],
-        sort: ["name", "avg_products"]
-      },
-      selection: ["France"],
-      highlight: ["France", "Germany"],
-      title: "World Countries"
-
+      data: distribution,
+      var_id: 'id',
+      var_group: 'id',
+      var_color: 'total',
+      color: d3.scale.linear().domain([80, 180]).range(["blue", "red"]),
+      var_x: 'id',
+      var_sort: 'id',
+      var_y: 'total',
+      var_text: 'id',
+      x_text_custom: 'Years',
+      y_text_custom: 'Total of countries',
+      title: "Number of countries reporting data every year"
     });
 
   d3.select("#viz").call(visualization);
