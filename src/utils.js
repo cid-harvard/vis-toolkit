@@ -504,20 +504,19 @@
               .classed("items_" + mark_id, true)
               .classed("items__mark__arc", true)
               .attr("fill", params_fill)
-              .style("fill-opacity", function(d, i) {
-                if(d.i == 0)
-                  return .2;
-                else
-                  return 1;
-              });
+              //.style("fill-opacity", function(d, i) {
+              //  if(d.i == 0)
+              //    return .2;
+              //  else
+              //    return 1;
+              //});
 
           mark
               .classed("highlighted", function(d, i) { return d.__highlighted; })
               .classed("selected", function(d, i) { return d.__selected; })
               .transition().duration(vars.duration)
-              .attr("d", function(d) {
-                return arc(d);
-              });
+              .attr("fill", params_fill)
+              .attr("d", arc);
 
         break;
 
@@ -1017,7 +1016,7 @@
               // Join is based on the curren_time value
               var gItems = vars_svg.selectAll(".mark__group" +  "_" + index_item)
                               .data(vars.new_data.filter(function(d) {
-                                  return typeof accessor_data(d)[vars.var_id] !== 'undefined';
+                                  return typeof accessor_data(d) !== 'undefined' && typeof accessor_data(d)[vars.var_id] !== 'undefined';
                                 }), function(d, i) {
                                 return accessor_data(d)[vars.var_id] + "_" + index_item + d.depth;
                               });
@@ -1048,7 +1047,7 @@
 
               if(!vars.flat_scene) {
 
-                if(typeof params.filter == "undefined") {
+                if(typeof params.filter === "undefined") {
                   params.filter = function() {
                     return true;
                   }
@@ -1115,11 +1114,19 @@
 
                 items
                   .filter(params.filter)
+                  .filter(utils.filters.redraw_only)
                   .call(mark_params.update, params, vars, mark_id);
 
                 items.exit()
                   .filter(params.filter)
                   .call(mark_params.exit, params, vars, mark_id);
+
+                if(vars.init) {
+                  vars.new_data.forEach(function(d) {
+                    if(!d.__selected) { d.__redraw = false; }
+                  });
+                }
+
 
                 // TODO: Drawing HTML TYPE MARKS
 
