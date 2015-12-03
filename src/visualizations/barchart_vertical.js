@@ -1,7 +1,6 @@
-vars.default_params["barchart_vertical"] = function(scope) {
+vars.default_params['barchart_vertical'] = function(scope) {
 
   var params = {};
-
 
   params.x_scale = [{
     func: d3.scale.linear()
@@ -26,18 +25,15 @@ vars.default_params["barchart_vertical"] = function(scope) {
       type: "rect",
       x: function(d) {
          return -params.x_scale[0]["func"](scope.accessor_data(d)[scope.var_x]) + scope.margin.left;
-        // return -scope.mark.width/2;
       },
       y: function(d) {
         return -scope.margin.top + scope.mark.width;
       },
       height: function(d) {
-        return scope.mark.width
-        // return scope.height - scope.margin.bottom - scope.margin.top - params.x_scale[0]["func"](scope.accessor_data(d)[scope.var_x]);
+        return scope.mark.width;
       },
       width: function(d) {
         return params.x_scale[0]["func"](scope.accessor_data(d)[scope.var_x]);
-        // return params.y_scale[0]["func"].rangeBand();
       },
       fill: function(d) {
         return scope.color(scope.accessor_items(d)[scope.var_color]);

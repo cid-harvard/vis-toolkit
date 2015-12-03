@@ -431,7 +431,7 @@
 
           }
 
-        })
+        });
 
       }
 
@@ -454,7 +454,7 @@
     vars.new_data = vars.new_data.filter(function(d) {
       return typeof vars.accessor_data(d) !== 'undefined' && typeof vars.accessor_data(d)[vars.var_id] !== 'undefined';
     });
-    console.log('VVV', vars.new_data)
+
     if(vars.redraw_all) {
       vars.new_data.forEach(function(d) { d.__redraw = true; });
     }
