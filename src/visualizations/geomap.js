@@ -57,8 +57,8 @@
 
     vars.new_data.forEach(function(d) {
       var a = vars.svg.append("path").attr("id", "geomap__pre-render").attr("d", vars.path(d))
-      d.x = 0;// a.node().getBBox().x;
-      d.y = 0; //a.node().getBBox().y;
+      d.x = 200;// a.node().getBBox().x;
+      d.y = 50; //a.node().getBBox().y;
       a.remove();
     })
 

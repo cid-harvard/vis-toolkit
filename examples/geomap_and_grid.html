@@ -44,9 +44,7 @@ pp = partners;
             fill: d3.scale.linear()
               .domain([0, 1])
               //.domain([d3.min(vars.new_data, function(d) { return d[vars.var_color]; }), d3.max(vars.new_data, function(d) { return d[vars.var_color]; })])
-              .range(["red", "green"]),
-            rotate: "0",
-            radius: 5
+              .range(["red", "green"])
           }]
         }],
         time: {
@@ -62,16 +60,19 @@ pp = partners;
 
     d3.select("#viz").call(visualization_geomap);
 
-    var visualization_grid = vistk.viz().params({
+    visualization_grid = vistk.viz().params({
       dev: true,
       type: "grid",
       height: 250,
-      width: 600,
+      width: 700,
       margin: {top: 10, right: 10, bottom: 20, left: 10},
       container: "#countries",
       data: partners.data,
       var_group: 'community_id',
       var_color: "share",
+      color: d3.scale.linear()
+            .domain([0, 1])
+            .range(["red", "green"]),
       var_sort: 'total_exports',
       var_sort_asc: true,
       var_id: 'name',
@@ -86,10 +87,8 @@ pp = partners;
       items: [{
         marks: [{
           type: "rect",
-          rotate: "0",
-          width: 25,
-          height: 25,
-          var_r: "total_exports",
+          width: 20,
+          height: 20
         }, {
           type: "text",
           text_anchor: "middle",
@@ -103,14 +102,23 @@ pp = partners;
     d3.select(visualization_grid.container()).selectAll('.mark__group')
       .on('mouseenter', function(d) {
 
-
-        visualization_geomap.params().highlight = [d.name];
         visualization_geomap.params().init = true
         visualization_geomap.params().refresh = true
+        visualization_geomap.params().highlight = [d.name];
         d3.select(visualization_geomap.container()).call(visualization_geomap);
 
+    });
 
-    })
+    d3.select(visualization_geomap.container()).selectAll('.mark__group')
+      .on('mouseenter', function(d) {
+
+        visualization_grid.params().init = true
+        visualization_grid.params().refresh = true
+        visualization_grid.params().highlight = [d.name];
+        d3.select(visualization_grid.container()).call(visualization_grid);
+
+    });
+
 
   }
 
