@@ -1,0 +1,46 @@
+<!doctype html>
+<meta charset="utf-8">
+<script src="../js/d3.js"></script>
+<script src="../build/vistk.js"></script>
+<link href="../css/vistk.css" rel="stylesheet">
+<div id="viz"></div>
+<script>
+
+d3.json("../../vis-toolkit-datasets/data/diversification_ubiquity_hs4_1995_2012.json", function(error, countries) {
+
+  var flat_years = vistk.utils.flatten_years(countries);
+
+  visualization = vistk.viz()
+    .params({
+      type: 'barchart_vertical',
+      margin: {top: 10, right: 10, bottom: 30, left: 50},
+      container: '#viz',
+      data: flat_years,
+      var_id: 'name',
+      var_group: 'continent',
+      var_color: 'continent',
+      var_x: 'avg_products',
+      var_sort: 'name',
+      var_y: 'name',
+      var_text: 'name',
+      time: {
+        var_time: "year",
+        current_time: vistk.utils.min,
+        parse: function(d) { return d; }
+      },
+      ui: {
+        default: true,
+        options: ["country", "continent", "year"],
+        sort: ['continent', "name", 'avg_products', 'nb_products']
+      },
+      selection: ["France"],
+      highlight: ["France", "Germany"],
+      title: "World Countries"
+
+    });
+
+  d3.select("#viz").call(visualization);
+
+});
+
+</script>
