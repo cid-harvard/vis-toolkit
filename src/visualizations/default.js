@@ -10,6 +10,7 @@
         if(vars.list.type.indexOf(vars.type) >= 0) {
 
           var scope = {};
+
           scope = vars.default_params[vars.type](vars);
 
           vars = vistk.utils.merge(vars, scope);

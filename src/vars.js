@@ -93,7 +93,8 @@
     evt: {register: function() {}, call: function() {} },
 
     // SVG Container
-    svg: null,
+    svg: null,      // Contains the svg element
+    root_svg: null, // Contains the group children to the svg element
     ratio: 0.5, // Visualization aspect ratio
 
     duration: 1000,

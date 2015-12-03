@@ -38,6 +38,7 @@
     });
 
     vars.new_data = vars.countries.map(function(d) {
+
       d[vars.var_color] = d.data[vars.var_color];
       d[vars.var_group] = d.data[vars.var_group];
       if(typeof d.x === 'undefined') { d.x = 0; }
@@ -45,7 +46,7 @@
       return d;
     });
 
-    vars.projection = d3.geo.mercator()
+    vars.projection = d3.geo.equirectangular()
                     .scale(100);
 
     // This is the main function that draws the shapes later on
@@ -56,8 +57,8 @@
 
     vars.new_data.forEach(function(d) {
       var a = vars.svg.append("path").attr("id", "geomap__pre-render").attr("d", vars.path(d))
-      d.x = a.node().getBBox().x;
-      d.y = a.node().getBBox().y;
+      d.x = 0;// a.node().getBBox().x;
+      d.y = 0; //a.node().getBBox().y;
       a.remove();
     })
 
