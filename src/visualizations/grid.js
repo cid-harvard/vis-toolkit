@@ -10,12 +10,21 @@ vars.default_params["grid"] = function(scope) {
 
     var nb_dimension =  Math.ceil(Math.sqrt(vars.new_data.length));
 
+    if(typeof scope.width_grid === 'undefined') {
+      scope.width_grid = nb_dimension;
+    }
+
+    if(typeof scope.height_grid === 'undefined') {
+      scope.height_grid = nb_dimension;
+    }
+
     // Create foci for each dimension
     // TOFIX: should update children, not necessary replace
-    d3.range(nb_dimension).map(function(d, i) {
-       d3.range(nb_dimension).map(function(e, j) {
+    d3.range(scope.width_grid).map(function(d, i) {
 
-        var index = i * nb_dimension + j;
+       d3.range(scope.height_grid).map(function(e, j) {
+
+        var index = i * scope.height_grid + j;
 
         // To make sure we don't update more points than necessary
         if(index < vars.new_data.length) {
@@ -33,13 +42,13 @@ vars.default_params["grid"] = function(scope) {
 
   params.x_scale = [{
     func: d3.scale.linear()
-          .domain([0, Math.ceil(Math.sqrt(vars.new_data.length))])
+          .domain([0, scope.width_grid])
           .range([scope.margin.left, scope.width - scope.margin.left - scope.margin.right])
   }];
 
   params.y_scale = [{
     func: d3.scale.linear()
-          .domain([0, Math.ceil(Math.sqrt(vars.new_data.length))])
+          .domain([0, scope.height_grid])
           .range([scope.height - scope.margin.top - scope.margin.bottom, scope.margin.top])
   }];
 
@@ -57,8 +66,6 @@ vars.default_params["grid"] = function(scope) {
 
   params.x_axis_show = false;
   params.y_axis_show = false;
-
-  params.y_invert = true;
 
   return params;
 
