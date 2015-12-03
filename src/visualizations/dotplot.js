@@ -12,6 +12,10 @@ vars.default_params["dotplot"] = function(scope) {
             .nice()
   }];
 
+  if(scope.x_domain !== null) {
+    params.x_scale[0]['func'].domain(scope.x_domain);
+  }
+
   params.y_scale = [{
     name: "linear",
     func: d3.scale.linear()

@@ -58,6 +58,8 @@
     x_text_custom: "",
     x_axis_translate: [0, 0],
     x_invert: false,
+    x_domain: null,
+    x_range: null,
 
     // SCATTERPLOT (INCLUDES DOTPLOT)
     y_type: "linear",
@@ -75,6 +77,8 @@
     y_text_custom: "",
     y_axis_translate: [0, 0],
     y_invert: false,
+    y_domain: null,
+    y_range: null,
 
     r_scale: null,
     r_cutoff: function(d) { return d > 30; },
