@@ -20,7 +20,7 @@ pp = partners;
 
   function ready(error, world, names) {
 
-    visualization = vistk.viz()
+    visualization_geomap = vistk.viz()
       .params({
         dev: true,
         type: "geomap",
@@ -57,50 +57,60 @@ pp = partners;
           default: false
         },
         selection: ["United States"],
+        highlight: ["France"]
       });
 
-    d3.select("#viz").call(visualization);
+    d3.select("#viz").call(visualization_geomap);
 
-
-
-  var visualization = vistk.viz().params({
-    dev: true,
-    type: "grid",
-    height: 250,
-    width: 600,
-    margin: {top: 10, right: 10, bottom: 20, left: 10},
-    container: "#countries",
-    data: partners.data,
-    var_group: 'community_id',
-    var_color: "share",
-    var_sort: 'total_exports',
-    var_sort_asc: true,
-    var_id: 'name',
-    var_text: 'abbrv',
-    width_grid: 25,
-    height_grid: 10,
-    time: {
-      var_time: "year",
-      parse: d3.time.format("%Y").parse,
-      current_time: "1995"
-    },
-    items: [{
-      marks: [{
-        type: "rect",
-        rotate: "0",
-        width: 25,
-        height: 25,
-        var_r: "total_exports",
-      }, {
-        type: "text",
-        text_anchor: "middle",
-        translate: [13, 10]
+    var visualization_grid = vistk.viz().params({
+      dev: true,
+      type: "grid",
+      height: 250,
+      width: 600,
+      margin: {top: 10, right: 10, bottom: 20, left: 10},
+      container: "#countries",
+      data: partners.data,
+      var_group: 'community_id',
+      var_color: "share",
+      var_sort: 'total_exports',
+      var_sort_asc: true,
+      var_id: 'name',
+      var_text: 'abbrv',
+      width_grid: 25,
+      height_grid: 10,
+      time: {
+        var_time: "year",
+        parse: d3.time.format("%Y").parse,
+        current_time: "1995"
+      },
+      items: [{
+        marks: [{
+          type: "rect",
+          rotate: "0",
+          width: 25,
+          height: 25,
+          var_r: "total_exports",
+        }, {
+          type: "text",
+          text_anchor: "middle",
+          translate: [13, 10]
+        }]
       }]
-    }]
-  });
+    });
 
-  d3.select("#countries").call(visualization);
+    d3.select("#countries").call(visualization_grid);
 
+    d3.select(visualization_grid.container()).selectAll('.mark__group')
+      .on('mouseenter', function(d) {
+
+
+        visualization_geomap.params().highlight = [d.name];
+        visualization_geomap.params().init = true
+        visualization_geomap.params().refresh = true
+        d3.select(visualization_geomap.container()).call(visualization_geomap);
+
+
+    })
 
   }
 
