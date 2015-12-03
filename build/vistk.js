@@ -523,20 +523,19 @@ var utils ={};
               .classed("items_" + mark_id, true)
               .classed("items__mark__arc", true)
               .attr("fill", params_fill)
-              .style("fill-opacity", function(d, i) {
-                if(d.i == 0)
-                  return .2;
-                else
-                  return 1;
-              });
+              //.style("fill-opacity", function(d, i) {
+              //  if(d.i == 0)
+              //    return .2;
+              //  else
+              //    return 1;
+              //});
 
           mark
               .classed("highlighted", function(d, i) { return d.__highlighted; })
               .classed("selected", function(d, i) { return d.__selected; })
               .transition().duration(vars.duration)
-              .attr("d", function(d) {
-                return arc(d);
-              });
+              .attr("fill", params_fill)
+              .attr("d", arc);
 
         break;
 
@@ -1036,7 +1035,7 @@ var utils ={};
               // Join is based on the curren_time value
               var gItems = vars_svg.selectAll(".mark__group" +  "_" + index_item)
                               .data(vars.new_data.filter(function(d) {
-                                  return typeof accessor_data(d)[vars.var_id] !== 'undefined';
+                                  return typeof accessor_data(d) !== 'undefined' && typeof accessor_data(d)[vars.var_id] !== 'undefined';
                                 }), function(d, i) {
                                 return accessor_data(d)[vars.var_id] + "_" + index_item + d.depth;
                               });
@@ -1067,7 +1066,7 @@ var utils ={};
 
               if(!vars.flat_scene) {
 
-                if(typeof params.filter == "undefined") {
+                if(typeof params.filter === "undefined") {
                   params.filter = function() {
                     return true;
                   }
@@ -1134,11 +1133,19 @@ var utils ={};
 
                 items
                   .filter(params.filter)
+                  .filter(utils.filters.redraw_only)
                   .call(mark_params.update, params, vars, mark_id);
 
                 items.exit()
                   .filter(params.filter)
                   .call(mark_params.exit, params, vars, mark_id);
+
+                if(vars.init) {
+                  vars.new_data.forEach(function(d) {
+                    if(!d.__selected) { d.__redraw = false; }
+                  });
+                }
+
 
                 // TODO: Drawing HTML TYPE MARKS
 
@@ -1908,7 +1915,8 @@ utils.init_params_values = function(var_v, default_value, params, d, i, vars) {
     evt: {register: function() {}, call: function() {} },
 
     // SVG Container
-    svg: null,
+    svg: null,      // Contains the svg element
+    root_svg: null, // Contains the group children to the svg element
     ratio: 0.5, // Visualization aspect ratio
 
     duration: 1000,
@@ -2058,7 +2066,7 @@ utils.init_params_values = function(var_v, default_value, params, d, i, vars) {
   });
 
   vars.evt.register("highlightOn", function(d) {
-    if(vars.dev) { console.log("[vars.evt.call] selection"); }
+    if(vars.dev) { console.log("[vars.evt.call] highlightOn"); }
   });
 
   vars.evt.register("highlightOut", function(d) {
@@ -2071,6 +2079,10 @@ utils.init_params_values = function(var_v, default_value, params, d, i, vars) {
 
   });
 
+  vars.evt.register("highlightOut", function(d) {
+    if(vars.dev) { console.log("[vars.evt.call] highlightOut"); }
+  });
+
   vars.evt.register("timeUpdate", function(new_time) {
     if(vars.dev) { console.log("[vars.evt.call] timeUpdate"); }
 
@@ -2078,6 +2090,12 @@ utils.init_params_values = function(var_v, default_value, params, d, i, vars) {
     d3.select(vars.container).call(vars.this_chart);
 
   });
+
+  vars.evt.register("selection", function(d) {
+    d.__selected = true;
+    d.__redraw = true;
+  });
+
 
   function chart(selection) {
 
@@ -2182,8 +2200,19 @@ utils.init_params_values = function(var_v, default_value, params, d, i, vars) {
     // 1/ In case we use functions for X/Y variables
     // 2/ Adds default attributes __var_x and __var_y if no coordinate exist
 
-    if(typeof vars.var_x === "function") {
-      vars.var_x = vars.var_x(vars);
+    // Duplicate the dataset to prevent mutation
+    if(vars.init) {
+
+      // Get a copy of the whole dataset
+      vars.all_data = JSON.parse(JSON.stringify(vars.data));
+
+    }
+
+    if(typeof vars.var_x !== "string" && typeof vars.var_x === "function") {
+      vars.all_data.forEach(function(d, i) {
+        d.__var_x = vars.var_x(d, i, vars);
+      });
+      vars.var_x = "__var_x";
     }
 
     if(typeof vars.var_x === "undefined") {
@@ -2194,7 +2223,7 @@ utils.init_params_values = function(var_v, default_value, params, d, i, vars) {
     }
 
     if(typeof vars.var_y !== "string" && typeof vars.var_y === "function") {
-      vars.data.forEach(function(d, i) {
+      vars.all_data.forEach(function(d, i) {
         d.__var_y = vars.var_y(d, i, vars);
       });
       vars.var_y = "__var_y";
@@ -2212,14 +2241,6 @@ utils.init_params_values = function(var_v, default_value, params, d, i, vars) {
     // In case the current_time is set dynamically
     if(typeof vars.time.current_time === "function") {
       vars.time.current_time = vars.time.current_time(vars.data);
-    }
-
-    // Duplicate the dataset to prevent mutation
-    if(vars.init) {
-
-      // Get a copy of the whole dataset
-      vars.all_data = JSON.parse(JSON.stringify(vars.data));
-
     }
 
     // Calculate vars.new_data which should contain two things
@@ -2617,7 +2638,7 @@ utils.init_params_values = function(var_v, default_value, params, d, i, vars) {
     vars.new_data = vars.new_data.filter(function(d) {
       return typeof vars.accessor_data(d) !== 'undefined' && typeof vars.accessor_data(d)[vars.var_id] !== 'undefined';
     });
-
+    console.log('VVV', vars.new_data)
     if(vars.redraw_all) {
       vars.new_data.forEach(function(d) { d.__redraw = true; });
     }
@@ -3094,6 +3115,7 @@ vars.default_params["scatterplot"] = function(scope) {
     });
 
     vars.new_data = vars.countries.map(function(d) {
+
       d[vars.var_color] = d.data[vars.var_color];
       d[vars.var_group] = d.data[vars.var_group];
       if(typeof d.x === 'undefined') { d.x = 0; }
@@ -3101,7 +3123,7 @@ vars.default_params["scatterplot"] = function(scope) {
       return d;
     });
 
-    vars.projection = d3.geo.mercator()
+    vars.projection = d3.geo.equirectangular()
                     .scale(100);
 
     // This is the main function that draws the shapes later on
@@ -3112,8 +3134,8 @@ vars.default_params["scatterplot"] = function(scope) {
 
     vars.new_data.forEach(function(d) {
       var a = vars.svg.append("path").attr("id", "geomap__pre-render").attr("d", vars.path(d))
-      d.x = a.node().getBBox().x;
-      d.y = a.node().getBBox().y;
+      d.x = 0;// a.node().getBBox().x;
+      d.y = 0; //a.node().getBBox().y;
       a.remove();
     })
 
@@ -3159,12 +3181,21 @@ vars.default_params["grid"] = function(scope) {
 
     var nb_dimension =  Math.ceil(Math.sqrt(vars.new_data.length));
 
+    if(typeof scope.width_grid === 'undefined') {
+      scope.width_grid = nb_dimension;
+    }
+
+    if(typeof scope.height_grid === 'undefined') {
+      scope.height_grid = nb_dimension;
+    }
+
     // Create foci for each dimension
     // TOFIX: should update children, not necessary replace
-    d3.range(nb_dimension).map(function(d, i) {
-       d3.range(nb_dimension).map(function(e, j) {
+    d3.range(scope.width_grid).map(function(d, i) {
 
-        var index = i * nb_dimension + j;
+       d3.range(scope.height_grid).map(function(e, j) {
+
+        var index = i * scope.height_grid + j;
 
         // To make sure we don't update more points than necessary
         if(index < vars.new_data.length) {
@@ -3182,13 +3213,13 @@ vars.default_params["grid"] = function(scope) {
 
   params.x_scale = [{
     func: d3.scale.linear()
-          .domain([0, Math.ceil(Math.sqrt(vars.new_data.length))])
+          .domain([0, scope.width_grid])
           .range([scope.margin.left, scope.width - scope.margin.left - scope.margin.right])
   }];
 
   params.y_scale = [{
     func: d3.scale.linear()
-          .domain([0, Math.ceil(Math.sqrt(vars.new_data.length))])
+          .domain([0, scope.height_grid])
           .range([scope.height - scope.margin.top - scope.margin.bottom, scope.margin.top])
   }];
 
@@ -3206,8 +3237,6 @@ vars.default_params["grid"] = function(scope) {
 
   params.x_axis_show = false;
   params.y_axis_show = false;
-
-  params.y_invert = true;
 
   return params;
 
@@ -3310,9 +3339,6 @@ vars.default_params["stacked"] = function(scope) {
 vars.default_params["piechart"] = function(scope) {
 
   var params = {};
-
-  //params.accessor_data = function(d) { return d.data; };
-  params.accessor_items = function(d) { return d; };
 
   if(vars.refresh) {
 
@@ -3796,11 +3822,7 @@ vars.default_params["tickplot"] = function(scope) {
 
   var params = {};
 
-  params.accessor_values = function(d) { return d.values; };
-  params.accessor_items = function(d) { return d; };
-
   params.items = [];
-  params.items.marks = [];
 
   params.x_scale = [{
     func: d3.scale.linear()
@@ -3820,38 +3842,26 @@ vars.default_params["tickplot"] = function(scope) {
 
   scope.time.points.forEach(function(time) {
 
+    var item = {};
+    item.marks = [];
     // Draw items with a specific filter
     var mark = [{
-        type: "tick",
+        type: "rect",
         rotate: 90
-      }, {
-        type: "text"
-      }, {
-        accessor_data: function(d) {
-          return d.values.filter(function(e) {
-            return e[vars.time.var_time] == time;
-          })[0];
-        }
       }];
-      console.log("Adding", mark)
-    params.items.marks.push(mark);
+
+    item.marks[0] = mark;
+
+    item.accessor_data = function(d) {
+      return d.values.filter(function(e) {
+        return e.year == time;
+      })[0];
+    };
+
+    params.items = params.items.concat(item);
 
   });
-/*
-  params.connect = [{
-    marks: [{
-      type: "path",
-      stroke: function(d) {
-        return vars.color(params.accessor_items(d)[vars.var_color]);
-      },
-      func: d3.svg.line()
-           .interpolate(vars.interpolate)
-           .x(function(d) { return params.x_scale[0]["func"](d[vars.var_x]); })
-           .y(function(d) { return params.y_scale[0]["func"](d[vars.var_y]); }),
-      fill: "none"
-    }]
-  }];
-*/
+
   params.x_ticks = vars.time.points.length;
   params.x_tickValues = null;
   params.x_axis_orient = "top";
@@ -4672,6 +4682,7 @@ var z = d3.scale.linear().domain([0, 4]).clamp(true),
         if(vars.list.type.indexOf(vars.type) >= 0) {
 
           var scope = {};
+
           scope = vars.default_params[vars.type](vars);
 
           vars = vistk.utils.merge(vars, scope);
