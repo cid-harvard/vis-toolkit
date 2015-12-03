@@ -48,7 +48,7 @@ vars.default_params["stacked"] = function(scope) {
   params.x_scale = [{
     func: d3.time.scale()
             .range([scope.margin.left, scope.width - scope.margin.left - scope.margin.right])
-            .domain([vars.time.parse(vars.time.interval[0]), vars.time.parse(vars.time.interval[1])])
+            .domain(vars.time.interval)
   }];
 
   params.y_scale = [{
@@ -71,7 +71,7 @@ vars.default_params["stacked"] = function(scope) {
       },
       func: d3.svg.area()
               .interpolate('cardinal')
-              .x(function(d) { return params.x_scale[0]["func"](vars.time.parse(d[vars.time.var_time])); })
+              .x(function(d) { return params.x_scale[0]["func"](d[vars.time.var_time]); })
               .y0(function(d) { return params.y_scale[0]["func"](d.y0); })
               .y1(function(d) { return params.y_scale[0]["func"](d.y0 + d.y); })
     }]
