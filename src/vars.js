@@ -148,8 +148,8 @@
 
     list: {type: ["sparkline", "dotplot", "barchart", "linechart", "scatterplot", "grid",
                   "stacked", "piechart", "slopegraph", "productspace", "treemap", "geomap",
-                  "stackedbar", "ordinal_vertical", "ordinal_horizontal", "matrix", "radial", "rectmap",
-                  "caterplot", "tickplot"],
+                  "stackedbar", "ordinal_vertical", "ordinal_horizontal", "matrix", "radial",
+                  "rectmap", "caterplot", "tickplot", "barchart_vertical"],
       mark: ['rect', 'circle', 'star', 'shape']
     },
 
