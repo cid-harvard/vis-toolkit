@@ -53,8 +53,32 @@ d3.json("../../vis-toolkit-datasets/data/partners_usa_2012_csay.json", function(
               .domain([0, 1])
               //.domain([d3.min(vars.new_data, function(d) { return d[vars.var_color]; }), d3.max(vars.new_data, function(d) { return d[vars.var_color]; })])
               .range(["red", "green"])
-          }]
+          }],
+          evt:[{
+            type: "highlightOn",
+            callback: function(d, i, vars) {
+
+              d3.selectAll('.mark__group').filter(function(e) {
+                return e.name !== d.name;
+              }).style('opacity', .5);
+
+              visualization_grid.params().refresh = true
+              visualization_grid.params().highlight = [d.name];
+              d3.select(visualization_grid.container()).call(visualization_grid);
+
+            }
+          }, {
+            type: "highlightOut",
+            callback: function(d, i, vars) {
+
+              visualization_grid.params().refresh = true
+              visualization_grid.params().highlight = [];
+              d3.select(visualization_grid.container()).call(visualization_grid);
+              d3.selectAll('.mark__group').style('opacity', 1);
+            }
+          }],
         }],
+
         time: {
           var_time: "year",
           current_time: 2012
@@ -96,42 +120,42 @@ d3.json("../../vis-toolkit-datasets/data/partners_usa_2012_csay.json", function(
         marks: [{
           type: "rect",
           width: 20,
-          height: 20
+          height: 20,
+          fill: function(d, i, vars) {
+            return vars.color(vars.accessor_data(d)[vars.var_color]);
+          }
         }, {
           type: "text",
           text_anchor: "middle",
           translate: [13, 10],
         }],
         evt:[{
-          register: "highlightOn",
-          callback: function(d) {
-            alert("CUSTOM EVENT!!!")
+          type: "highlightOn",
+          callback: function(d, i, vars) {
+
+            d3.selectAll('.mark__group').filter(function(e) {
+              return e.name !== d.name;
+            }).style('opacity', .5);
+
+            visualization_geomap.params().refresh = true
+            visualization_geomap.params().highlight = [d.name];
+            d3.select(visualization_geomap.container()).call(visualization_geomap);
+
+          }
+        }, {
+          type: "highlightOut",
+          callback: function(d, i, vars) {
+
+            visualization_geomap.params().refresh = true
+            visualization_geomap.params().highlight = [];
+            d3.select(visualization_geomap.container()).call(visualization_geomap);
+            d3.selectAll('.mark__group').style('opacity', 1);
           }
         }]
       }]
     });
 
     d3.select("#countries").call(visualization_grid);
-
-    d3.select(visualization_grid.container()).selectAll('.mark__group')
-      .on('mouseenter', function(d) {
-
-        // visualization_geomap.params().init = true
-        visualization_geomap.params().refresh = true
-        visualization_geomap.params().highlight = [d.name];
-        d3.select(visualization_geomap.container()).call(visualization_geomap);
-
-    });
-
-    d3.select(visualization_geomap.container()).selectAll('.mark__group')
-      .on('mouseenter', function(d) {
-
-        // visualization_grid.params().init = true
-        visualization_grid.params().refresh = true
-        visualization_grid.params().highlight = [d.name];
-        d3.select(visualization_grid.container()).call(visualization_grid);
-
-    });
 
   }
 
