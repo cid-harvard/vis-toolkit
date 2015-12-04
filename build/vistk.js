@@ -174,7 +174,7 @@ var utils ={};
       var params_width = utils.init_params("width", 10, params, d, i, vars);
       var params_rotate = utils.init_params("rotate", 0, params, d, i, vars);
       var params_scale = utils.init_params("scale", 1, params, d, i, vars);
-      var params_fill = utils.init_params("fill", vars.color(vars.accessor_items(d)[vars.var_color]), params, d, i, vars);
+      var params_fill = utils.init_params("fill", null, params, d, i, vars);
 
       var params_stroke = utils.init_params("stroke", null, params, d, i, vars);
       var params_stroke_width = utils.init_params("stroke_width", null, params, d, i, vars);
@@ -209,13 +209,19 @@ var utils ={};
               .attr("dy", ".35em")
               .attr("transform", "translate(" + ([params_translate[0] + params_offset_x, params_translate[1] + params_offset_y]) + ")rotate(" +  params_rotate + ")")
               .on("mouseover",function(d) { // FIX to prevent hovers
-                d3.event.stopPropagation();
+                if(typeof vars.evt !== 'undefined' && vars.evt == 'none') {
+                  d3.event.stopPropagation();
+                }
               })
               .on("mouseleave", function(d) {
-                d3.event.stopPropagation();
+                if(typeof vars.evt !== 'undefined' && vars.evt == 'none') {
+                  d3.event.stopPropagation();
+                }
               })
               .on("click", function(d) {
-                 d3.event.stopPropagation();
+                if(typeof vars.evt !== 'undefined' && vars.evt == 'none') {
+                  d3.event.stopPropagation();
+                }
               });
 
           items_mark_text
@@ -429,7 +435,11 @@ var utils ={};
             .attr("x", -vars.mark.width/2)
             .attr("y", -vars.mark.height/2)
             .attr("transform", "rotate(" + (params_rotate + 45) + ")")
-           // .style("fill", params_fill)
+
+            if(params_fill !== null) {
+              items_mark_diamond_enter.style("fill", params_fill)
+            }
+
            // .style("stroke", params_stroke);
 
           if(typeof params.class !== "undefined") {
@@ -1059,6 +1069,16 @@ var utils ={};
                     + ", " + vars.y_scale[0]["func"](accessor_data(d)[vars.var_y]) + ")";
                 });
               }
+
+              // IN CASE OF CUSTOM EVENTS FOR ITEMS
+              if(vars.init && typeof item.evt !== "undefined") {
+
+                item.evt.forEach(function(e) {
+                  vars.evt.register(e.type, e.callback);
+                })
+
+              }
+
             }
 
            // APPEND AND UPDATE ITEMS MARK
@@ -1094,6 +1114,7 @@ var utils ={};
                   gItems.each(utils.items_group);
                 }
 
+                // CUSTOM SELECTION EVENT
                 if(vars.init && typeof params.evt !== 'undefined') {
                   vars.evt.register("selection", params.evt[0].func)
                 }
@@ -1880,6 +1901,8 @@ utils.init_params_values = function(var_v, default_value, params, d, i, vars) {
     x_text_custom: "",
     x_axis_translate: [0, 0],
     x_invert: false,
+    x_domain: null,
+    x_range: null,
 
     // SCATTERPLOT (INCLUDES DOTPLOT)
     y_type: "linear",
@@ -1897,6 +1920,8 @@ utils.init_params_values = function(var_v, default_value, params, d, i, vars) {
     y_text_custom: "",
     y_axis_translate: [0, 0],
     y_invert: false,
+    y_domain: null,
+    y_range: null,
 
     r_scale: null,
     r_cutoff: function(d) { return d > 30; },
@@ -1966,8 +1991,8 @@ utils.init_params_values = function(var_v, default_value, params, d, i, vars) {
 
     list: {type: ["sparkline", "dotplot", "barchart", "linechart", "scatterplot", "grid",
                   "stacked", "piechart", "slopegraph", "productspace", "treemap", "geomap",
-                  "stackedbar", "ordinal_vertical", "ordinal_horizontal", "matrix", "radial", "rectmap",
-                  "caterplot", "tickplot"],
+                  "stackedbar", "ordinal_vertical", "ordinal_horizontal", "matrix", "radial",
+                  "rectmap", "caterplot", "tickplot", "barchart_vertical"],
       mark: ['rect', 'circle', 'star', 'shape']
     },
 
@@ -2092,7 +2117,7 @@ utils.init_params_values = function(var_v, default_value, params, d, i, vars) {
   });
 
   vars.evt.register("selection", function(d) {
-    d.__selected = true;
+    d.__selected = !d.__selected;
     d.__redraw = true;
   });
 
@@ -2341,10 +2366,10 @@ utils.init_params_values = function(var_v, default_value, params, d, i, vars) {
           if(vars.filter.indexOf(d[vars.var_group]) > -1) {
             d.__filtered = true;
           }
-          if(vars.highlight.indexOf(vars.var_id) > -1) {
+          if(vars.highlight.indexOf(d[vars.var_id]) > -1) {
             d.__highlighted = true;
           }
-          if(vars.selection.indexOf(vars.var_id) > -1) {
+          if(vars.selection.indexOf(d[vars.var_id]) > -1) {
             d.__selected = true;
           }
 
@@ -2615,7 +2640,7 @@ utils.init_params_values = function(var_v, default_value, params, d, i, vars) {
 
           }
 
-        })
+        });
 
       }
 
@@ -2638,7 +2663,7 @@ utils.init_params_values = function(var_v, default_value, params, d, i, vars) {
     vars.new_data = vars.new_data.filter(function(d) {
       return typeof vars.accessor_data(d) !== 'undefined' && typeof vars.accessor_data(d)[vars.var_id] !== 'undefined';
     });
-    console.log('VVV', vars.new_data)
+
     if(vars.redraw_all) {
       vars.new_data.forEach(function(d) { d.__redraw = true; });
     }
@@ -2871,6 +2896,11 @@ vars.default_params["dotplot"] = function(scope) {
             }))
             .nice()
   }];
+
+  // Custom domain for X-scale
+  if(scope.x_domain !== null && scope.x_domain.length !== 2) {
+    params.x_scale[0]['func'].domain(scope.x_domain);
+  }
 
   params.y_scale = [{
     name: "linear",
@@ -3134,8 +3164,8 @@ vars.default_params["scatterplot"] = function(scope) {
 
     vars.new_data.forEach(function(d) {
       var a = vars.svg.append("path").attr("id", "geomap__pre-render").attr("d", vars.path(d))
-      d.x = 0;// a.node().getBBox().x;
-      d.y = 0; //a.node().getBBox().y;
+      d.x = 200;// a.node().getBBox().x;
+      d.y = 50; //a.node().getBBox().y;
       a.remove();
     })
 
@@ -3292,7 +3322,7 @@ vars.default_params["stacked"] = function(scope) {
   params.x_scale = [{
     func: d3.time.scale()
             .range([scope.margin.left, scope.width - scope.margin.left - scope.margin.right])
-            .domain([vars.time.parse(vars.time.interval[0]), vars.time.parse(vars.time.interval[1])])
+            .domain(vars.time.interval)
   }];
 
   params.y_scale = [{
@@ -3315,7 +3345,7 @@ vars.default_params["stacked"] = function(scope) {
       },
       func: d3.svg.area()
               .interpolate('cardinal')
-              .x(function(d) { return params.x_scale[0]["func"](vars.time.parse(d[vars.time.var_time])); })
+              .x(function(d) { return params.x_scale[0]["func"](d[vars.time.var_time]); })
               .y0(function(d) { return params.y_scale[0]["func"](d.y0); })
               .y1(function(d) { return params.y_scale[0]["func"](d.y0 + d.y); })
     }]
@@ -3872,6 +3902,68 @@ vars.default_params["tickplot"] = function(scope) {
   params.y_axis_show = false
   params.y_grid_show = false;
   params.y_invert = true;
+
+  return params;
+
+};
+
+vars.default_params['barchart_vertical'] = function(scope) {
+
+  var params = {};
+
+  params.x_scale = [{
+    func: d3.scale.linear()
+            .range([scope.height - scope.margin.top - scope.margin.bottom, scope.margin.top])
+            .domain(d3.extent(vars.new_data, function(d) {
+              return scope.accessor_data(d)[vars.var_x];
+            }))
+            .nice()
+  }];
+
+
+  params.y_scale = [{
+    func: d3.scale.ordinal()
+            .rangeRoundBands([scope.margin.left, scope.width - scope.margin.left - scope.margin.right], .1)
+            .domain(vars.new_data.map(function(d) {
+              return scope.accessor_data(d)[vars.var_y];
+            }))
+  }];
+
+  params.items = [{
+    marks: [{
+      type: "rect",
+      x: function(d) {
+         return -params.x_scale[0]["func"](scope.accessor_data(d)[scope.var_x]) + scope.margin.left;
+      },
+      y: function(d) {
+        return -scope.margin.top + scope.mark.width;
+      },
+      height: function(d) {
+        return scope.mark.width;
+      },
+      width: function(d) {
+        return params.x_scale[0]["func"](scope.accessor_data(d)[scope.var_x]);
+      },
+      fill: function(d) {
+        return scope.color(scope.accessor_items(d)[scope.var_color]);
+      }
+    }, {
+      type: 'text',
+      text: function(d) {
+        return d[scope.var_x];
+      },
+      translate: [50, 5],
+      text_anchor: 'start'
+    }]
+  }];
+
+  params.x_axis_show = false;
+  params.x_axis_translate = [0, scope.height - scope.margin.bottom - scope.margin.top];
+  params.x_grid_show = false;
+
+  params.y_axis_show = true;
+  params.y_axis_translate = [scope.margin.left, 0];
+  params.y_grid_show = true;
 
   return params;
 
