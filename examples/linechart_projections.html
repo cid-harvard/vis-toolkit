@@ -1,46 +1,94 @@
 <!doctype html>
 <meta charset="utf-8">
 <script src="../js/d3.js"></script>
-<script src="../js/vistk.js"></script>
+<script src="../build/vistk.js"></script>
 <link href="../css/vistk.css" rel="stylesheet">
 <body>
 <div id="viz"></div>
 <body>
-
 <script src="../js/d3.js"></script>
 <script>
 
 d3.csv("../../vis-toolkit-datasets/data/atlas_growth_projections_2023.csv", function(error, data) {
 
-  dd = data
+  d3.json("../../vis-toolkit-datasets/data/countries.json", function(error, countries) {
 
-  var res = [];
+    res = [];
 
-  // This is what the result should look like
-  // {name: d.Country, year: k, rank: +d[k], id: d.Country.replace(" ", "_"), category: +d[k]%5})
+    function find_country(var_filter, value) {
 
-  // TODO
-  // [ ] Format the data properly
-  // [ ] Merge with previous ranking datasets
-  // [ ] Show uncertain data (e.g. growth projections) in a different way (e.g. dashed line)
+      var metadata = countries.filter(function(d) {
+        return d['name'][var_filter] == value;
+      })
 
-  visualization = vistk.viz()
-    .type("linechart")
-    .container("#viz")
-    .height(600)
-    .width(900)
-    .data(res)
-    .id("id")
-    .group("category")
-    .color("name")
-    .title("Products")
-    .group("category")
-    .text("name")
+      if(metadata.length == 0) {
+        return "ERROR";
+      } else {
+        return metadata[0]['region'];
+      }
 
-  d3.select("#viz").call(visualization)
+    }
 
-})
+    data.forEach(function(d) {
+
+      // Create ids for countries
+     // for(var k in d) {
+
+      var v = {};
+      v.name = d.iso;
+      v.year = "2012";
+      v.value = +d["tg2012"];
+      v.continent = "Europe";
+
+      res.push(v);
+
+      var v = {};
+      v.name = d.iso;
+      v.year = "2013";
+      v.value = +d["tg2013"];
+      v.continent = "Europe";
+
+      res.push(v);
+
+      //  if(k != "Country") {
+      //    res.push({name: d.Country, year: k, rank: +d[k], continent: find_country('common', d.//Country)})
+      //  }
+
+     // }
+    });
+
+    visualization = vistk.viz().params({
+      type: "linechart",
+      container: "#viz",
+      height: 600,
+      width: 900,
+      margin: {top: 30, right: 100, bottom: 30, left: 10},
+      data: res,
+      var_id: "name",
+      var_group: "continent",
+      var_color: "continent", // TODO: color by final ranking value..
+      color: d3.scale.ordinal().domain(["Africa", "Americas", "Asia", "Europe", "Oceania"]).range(["#99237d", "#c72439", "#6bc145", "#88c7ed", "#dd9f98"]),
+      var_text: "name",
+      y_text: "ECI Rank",
+      var_y: "value",
+      var_x: 'year',
+      time: {
+        parse: d3.time.format("%Y").parse,
+        var_time: 'year',
+        current_time: '2013'
+      },
+      selection: ["Japan", "Switzerland", "Germany"],
+      highlight: "France",
+      ui: {
+        default: true,
+        options: ["country", "continent"]
+      }
+    });
+
+    d3.select("#viz").call(visualization);
+
+  });
+
+});
 
 </script>
-</body>
-</html>
