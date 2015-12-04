@@ -155,7 +155,7 @@
       var params_width = utils.init_params("width", 10, params, d, i, vars);
       var params_rotate = utils.init_params("rotate", 0, params, d, i, vars);
       var params_scale = utils.init_params("scale", 1, params, d, i, vars);
-      var params_fill = utils.init_params("fill", vars.color(vars.accessor_items(d)[vars.var_color]), params, d, i, vars);
+      var params_fill = utils.init_params("fill", null, params, d, i, vars);
 
       var params_stroke = utils.init_params("stroke", null, params, d, i, vars);
       var params_stroke_width = utils.init_params("stroke_width", null, params, d, i, vars);
@@ -410,7 +410,11 @@
             .attr("x", -vars.mark.width/2)
             .attr("y", -vars.mark.height/2)
             .attr("transform", "rotate(" + (params_rotate + 45) + ")")
-           // .style("fill", params_fill)
+
+            if(params_fill !== null) {
+              items_mark_diamond_enter.style("fill", params_fill)
+            }
+
            // .style("stroke", params_stroke);
 
           if(typeof params.class !== "undefined") {

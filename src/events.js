@@ -94,7 +94,7 @@
   });
 
   vars.evt.register("selection", function(d) {
-    d.__selected = true;
+    d.__selected = !d.__selected;
     d.__redraw = true;
   });
 

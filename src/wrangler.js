@@ -157,10 +157,10 @@
           if(vars.filter.indexOf(d[vars.var_group]) > -1) {
             d.__filtered = true;
           }
-          if(vars.highlight.indexOf(vars.var_id) > -1) {
+          if(vars.highlight.indexOf(d[vars.var_id]) > -1) {
             d.__highlighted = true;
           }
-          if(vars.selection.indexOf(vars.var_id) > -1) {
+          if(vars.selection.indexOf(d[vars.var_id]) > -1) {
             d.__selected = true;
           }
 
