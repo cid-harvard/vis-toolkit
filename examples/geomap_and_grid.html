@@ -6,13 +6,21 @@
 <script src="../js/queue.v1.min.js"></script>
 <script src="../js/topojson.js"></script>
 <body>
+<style>
+
+text: {
+  stroke: white;
+  fill: white;
+}
+
+</style>
 <div id="viz"></div>
+Countries: <span onclick='sort_by("name");'>NAME</span> <span onclick='sort_by("eci");'>ECI</span> <span onclick='sort_by("population");'>Population</span>
 <div id="countries"></div>
 <script>
 
 d3.json("../../vis-toolkit-datasets/data/partners_usa_2012_csay.json", function(error, partners) {
 
-pp = partners;
   queue()
       .defer(d3.json, "../shapefiles/world/world-110m.json")
       .defer(d3.tsv, "../../vis-toolkit-datasets/data/world-country-names.tsv")
@@ -92,7 +100,13 @@ pp = partners;
         }, {
           type: "text",
           text_anchor: "middle",
-          translate: [13, 10]
+          translate: [13, 10],
+        }],
+        evt:[{
+          register: "highlightOn",
+          callback: function(d) {
+            alert("CUSTOM EVENT!!!")
+          }
         }]
       }]
     });
@@ -102,7 +116,7 @@ pp = partners;
     d3.select(visualization_grid.container()).selectAll('.mark__group')
       .on('mouseenter', function(d) {
 
-        visualization_geomap.params().init = true
+        // visualization_geomap.params().init = true
         visualization_geomap.params().refresh = true
         visualization_geomap.params().highlight = [d.name];
         d3.select(visualization_geomap.container()).call(visualization_geomap);
@@ -112,17 +126,24 @@ pp = partners;
     d3.select(visualization_geomap.container()).selectAll('.mark__group')
       .on('mouseenter', function(d) {
 
-        visualization_grid.params().init = true
+        // visualization_grid.params().init = true
         visualization_grid.params().refresh = true
         visualization_grid.params().highlight = [d.name];
         d3.select(visualization_grid.container()).call(visualization_grid);
 
     });
 
-
   }
 
 });
+
+function sort_by(param) {
+
+  visualization_grid.params().refresh = true
+  visualization_grid.params().sort = param;
+  d3.select(visualization_grid.container()).call(visualization_grid);
+
+}
 
 </script>
 </body>
