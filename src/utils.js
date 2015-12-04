@@ -190,13 +190,19 @@
               .attr("dy", ".35em")
               .attr("transform", "translate(" + ([params_translate[0] + params_offset_x, params_translate[1] + params_offset_y]) + ")rotate(" +  params_rotate + ")")
               .on("mouseover",function(d) { // FIX to prevent hovers
-                d3.event.stopPropagation();
+                if(typeof vars.evt !== 'undefined' && vars.evt == 'none') {
+                  d3.event.stopPropagation();
+                }
               })
               .on("mouseleave", function(d) {
-                d3.event.stopPropagation();
+                if(typeof vars.evt !== 'undefined' && vars.evt == 'none') {
+                  d3.event.stopPropagation();
+                }
               })
               .on("click", function(d) {
-                 d3.event.stopPropagation();
+                if(typeof vars.evt !== 'undefined' && vars.evt == 'none') {
+                  d3.event.stopPropagation();
+                }
               });
 
           items_mark_text
@@ -1044,6 +1050,16 @@
                     + ", " + vars.y_scale[0]["func"](accessor_data(d)[vars.var_y]) + ")";
                 });
               }
+
+              // IN CASE OF CUSTOM EVENTS FOR ITEMS
+              if(vars.init && typeof item.evt !== "undefined") {
+
+                item.evt.forEach(function(e) {
+                  vars.evt.register(e.type, e.callback);
+                })
+
+              }
+
             }
 
            // APPEND AND UPDATE ITEMS MARK
@@ -1079,6 +1095,7 @@
                   gItems.each(utils.items_group);
                 }
 
+                // CUSTOM SELECTION EVENT
                 if(vars.init && typeof params.evt !== 'undefined') {
                   vars.evt.register("selection", params.evt[0].func)
                 }
