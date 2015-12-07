@@ -29,6 +29,10 @@ vars.default_params["linechart"] = function(scope) {
       var_mark: '__highlighted',
       type: d3.scale.ordinal().domain([true, false]).range(['text', 'none']),
       translate: [10, 0]
+    }, {
+      var_mark: '__selected',
+      type: d3.scale.ordinal().domain([true, false]).range(['text', 'none']),
+      translate: [10, 0]
     }],
     accessor_data: function(d) {
       return d.values.filter(function(e) {

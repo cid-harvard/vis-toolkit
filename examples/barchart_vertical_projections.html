@@ -8,11 +8,9 @@
 
 d3.csv("../../vis-toolkit-datasets/data/atlas_growth_projections_2023.csv", function(error, data) {
 
-
   data = data.filter(function(d, i) {
     return d.value != '';
   })
-
 
   data.forEach(function(d, i) {
     d.value = +d.value;

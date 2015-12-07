@@ -30,7 +30,7 @@ vars.default_params['barchart_vertical'] = function(scope) {
          return -params.x_scale[0]["func"](scope.accessor_data(d)[scope.var_x]) + scope.margin.left;
       },
       y: function(d) {
-        return 10;
+        return 0;
 //        return -scope.margin.top + scope.mark.width;
       },
       height: function(d) {
@@ -45,9 +45,9 @@ vars.default_params['barchart_vertical'] = function(scope) {
     }, {
       type: 'text',
       text: function(d) {
-        return d[vars.var_x];
+        return scope.accessor_data(d)[vars.var_x];
       },
-      translate: [0, 15],
+      translate: [0, 5],
       text_anchor: 'start'
     }]
   }];
