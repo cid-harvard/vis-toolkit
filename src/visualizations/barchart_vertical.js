@@ -2,19 +2,22 @@ vars.default_params['barchart_vertical'] = function(scope) {
 
   var params = {};
 
+  // params.x_scale = vistk.utils.scale.linear(scope);
+
   params.x_scale = [{
     func: d3.scale.linear()
-            .range([scope.height - scope.margin.top - scope.margin.bottom, scope.margin.top])
-            .domain(d3.extent(vars.new_data, function(d) {
+            .range([scope.width - scope.margin.left - scope.margin.right, scope.margin.left])
+            .domain([d3.max(vars.new_data, function(d) {
               return scope.accessor_data(d)[vars.var_x];
-            }))
+            }), d3.min(vars.new_data, function(d) {
+              return scope.accessor_data(d)[vars.var_x];
+            })])
             .nice()
   }];
 
-
   params.y_scale = [{
     func: d3.scale.ordinal()
-            .rangeRoundBands([scope.margin.left, scope.width - scope.margin.left - scope.margin.right], .1)
+            .rangeRoundBands([scope.height - scope.margin.top - scope.margin.bottom, scope.margin.top], .1)
             .domain(vars.new_data.map(function(d) {
               return scope.accessor_data(d)[vars.var_y];
             }))
@@ -27,13 +30,14 @@ vars.default_params['barchart_vertical'] = function(scope) {
          return -params.x_scale[0]["func"](scope.accessor_data(d)[scope.var_x]) + scope.margin.left;
       },
       y: function(d) {
-        return -scope.margin.top + scope.mark.width;
+        return 10;
+//        return -scope.margin.top + scope.mark.width;
       },
       height: function(d) {
         return scope.mark.width;
       },
       width: function(d) {
-        return params.x_scale[0]["func"](scope.accessor_data(d)[scope.var_x]);
+        return params.x_scale[0]["func"](scope.accessor_data(d)[scope.var_x]) - scope.margin.left;
       },
       fill: function(d) {
         return scope.color(scope.accessor_items(d)[scope.var_color]);
@@ -41,9 +45,9 @@ vars.default_params['barchart_vertical'] = function(scope) {
     }, {
       type: 'text',
       text: function(d) {
-        return d[scope.var_x];
+        return d[vars.var_x];
       },
-      translate: [50, 5],
+      translate: [0, 15],
       text_anchor: 'start'
     }]
   }];

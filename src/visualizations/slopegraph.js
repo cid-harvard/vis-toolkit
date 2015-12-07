@@ -14,7 +14,9 @@ vars.default_params["slopegraph"] = function(scope) {
   params.y_scale = [{
     func: d3.scale.linear()
             .range([scope.height - scope.margin.top - scope.margin.bottom, scope.margin.top])
-            .domain(d3.extent(Array.prototype.concat.apply([], vars.new_data.map(function(d) { return d.values; }) ), function(d) { return d[vars.var_y]; }))
+              .domain(d3.extent(vars.new_data, function(d) {
+                return scope.accessor_data(d)[vars.var_y];
+              }))
   }];
 
   params.items = [{

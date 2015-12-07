@@ -13,7 +13,7 @@ vars.default_params["dotplot"] = function(scope) {
   }];
 
   // Custom domain for X-scale
-  if(scope.x_domain !== null && scope.x_domain.length !== 2) {
+  if(scope.x_domain !== null && scope.x_domain.length === 2) {
     params.x_scale[0]['func'].domain(scope.x_domain);
   }
 
