@@ -6,7 +6,7 @@ var w = typeof window === "undefined" ? this : window;
 var vistk = w.vistk || {};
 w.vistk = vistk;
 
-vistk.version = "0.0.26";
+vistk.version = "0.0.28";
 vistk.utils = {};
 
 vistk.viz = function() {
@@ -1102,6 +1102,9 @@ var utils ={};
                       .filter(utils.filters.redraw_only)
                       .call(utils.draw_mark, params, vars);
 
+                  // Bind events to groups after marks have been created
+                  gItems_enter.each(utils.items_group);
+
                 }
 
                 gItems
@@ -1109,10 +1112,6 @@ var utils ={};
                     .filter(utils.filters.redraw_only)
                     .call(utils.draw_mark, params, vars);
 
-                if(vars.init) {
-                  // Bind events to groups after marks have been created
-                  gItems.each(utils.items_group);
-                }
 
                 // CUSTOM SELECTION EVENT
                 if(vars.init && typeof params.evt !== 'undefined') {
@@ -1203,7 +1202,8 @@ var utils ={};
             }
 
             // Make sure we won't re-draw all nodes next time
-            if(vars.type == "productspace" || vars.type == "treemap" || vars.type == "scatterplot") {
+      //      if(vars.type == "productspace" || vars.type == "treemap" || vars.type == "scatterplot" || vars.type == "geomap") {
+            if(vars.init && vars.type !== 'linechart' && vars.type !== 'slopegraph') {
               vars.new_data.forEach(function(d) {
                 if(!d.__selected) { d.__redraw = false; }
               });
@@ -2898,7 +2898,7 @@ vars.default_params["dotplot"] = function(scope) {
   }];
 
   // Custom domain for X-scale
-  if(scope.x_domain !== null && scope.x_domain.length !== 2) {
+  if(scope.x_domain !== null && scope.x_domain.length === 2) {
     params.x_scale[0]['func'].domain(scope.x_domain);
   }
 
@@ -3115,7 +3115,7 @@ vars.default_params["scatterplot"] = function(scope) {
   params.accessor_data = function(d) { return d; };
   params.accessor_values = function(d) { return d.data.values; };
 
-  if(vars.refresh) {
+  if(vars.init) {
 
     // countries contains bot the data and coordinates for shapes drawing
     vars.countries = topojson.object(vars.topology, vars.topology.objects.countries).geometries;
@@ -3436,7 +3436,9 @@ vars.default_params["slopegraph"] = function(scope) {
   params.y_scale = [{
     func: d3.scale.linear()
             .range([scope.height - scope.margin.top - scope.margin.bottom, scope.margin.top])
-            .domain(d3.extent(Array.prototype.concat.apply([], vars.new_data.map(function(d) { return d.values; }) ), function(d) { return d[vars.var_y]; }))
+              .domain(d3.extent(vars.new_data, function(d) {
+                return scope.accessor_data(d)[vars.var_y];
+              }))
   }];
 
   params.items = [{
@@ -3911,19 +3913,22 @@ vars.default_params['barchart_vertical'] = function(scope) {
 
   var params = {};
 
+  // params.x_scale = vistk.utils.scale.linear(scope);
+
   params.x_scale = [{
     func: d3.scale.linear()
-            .range([scope.height - scope.margin.top - scope.margin.bottom, scope.margin.top])
-            .domain(d3.extent(vars.new_data, function(d) {
+            .range([scope.width - scope.margin.left - scope.margin.right, scope.margin.left])
+            .domain([d3.max(vars.new_data, function(d) {
               return scope.accessor_data(d)[vars.var_x];
-            }))
+            }), d3.min(vars.new_data, function(d) {
+              return scope.accessor_data(d)[vars.var_x];
+            })])
             .nice()
   }];
 
-
   params.y_scale = [{
     func: d3.scale.ordinal()
-            .rangeRoundBands([scope.margin.left, scope.width - scope.margin.left - scope.margin.right], .1)
+            .rangeRoundBands([scope.height - scope.margin.top - scope.margin.bottom, scope.margin.top], .1)
             .domain(vars.new_data.map(function(d) {
               return scope.accessor_data(d)[vars.var_y];
             }))
@@ -3936,13 +3941,14 @@ vars.default_params['barchart_vertical'] = function(scope) {
          return -params.x_scale[0]["func"](scope.accessor_data(d)[scope.var_x]) + scope.margin.left;
       },
       y: function(d) {
-        return -scope.margin.top + scope.mark.width;
+        return 10;
+//        return -scope.margin.top + scope.mark.width;
       },
       height: function(d) {
         return scope.mark.width;
       },
       width: function(d) {
-        return params.x_scale[0]["func"](scope.accessor_data(d)[scope.var_x]);
+        return params.x_scale[0]["func"](scope.accessor_data(d)[scope.var_x]) - scope.margin.left;
       },
       fill: function(d) {
         return scope.color(scope.accessor_items(d)[scope.var_color]);
@@ -3950,9 +3956,9 @@ vars.default_params['barchart_vertical'] = function(scope) {
     }, {
       type: 'text',
       text: function(d) {
-        return d[scope.var_x];
+        return d[vars.var_x];
       },
-      translate: [50, 5],
+      translate: [0, 15],
       text_anchor: 'start'
     }]
   }];
