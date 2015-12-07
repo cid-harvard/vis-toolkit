@@ -62,7 +62,7 @@ d3.json("../../vis-toolkit-datasets/data/partners_usa_2012_csay.json", function(
                 return e.name !== d.name;
               }).style('opacity', .5);
 
-              visualization_grid.params().refresh = true
+              // visualization_grid.params().refresh = true
               visualization_grid.params().highlight = [d.name];
               d3.select(visualization_grid.container()).call(visualization_grid);
 
@@ -71,7 +71,7 @@ d3.json("../../vis-toolkit-datasets/data/partners_usa_2012_csay.json", function(
             type: "highlightOut",
             callback: function(d, i, vars) {
 
-              visualization_grid.params().refresh = true
+              // visualization_grid.params().refresh = true
               visualization_grid.params().highlight = [];
               d3.select(visualization_grid.container()).call(visualization_grid);
               d3.selectAll('.mark__group').style('opacity', 1);
@@ -137,7 +137,7 @@ d3.json("../../vis-toolkit-datasets/data/partners_usa_2012_csay.json", function(
               return e.name !== d.name;
             }).style('opacity', .5);
 
-            visualization_geomap.params().refresh = true
+            // visualization_geomap.params().refresh = true
             visualization_geomap.params().highlight = [d.name];
             d3.select(visualization_geomap.container()).call(visualization_geomap);
 
@@ -146,7 +146,7 @@ d3.json("../../vis-toolkit-datasets/data/partners_usa_2012_csay.json", function(
           type: "highlightOut",
           callback: function(d, i, vars) {
 
-            visualization_geomap.params().refresh = true
+            // visualization_geomap.params().refresh = true
             visualization_geomap.params().highlight = [];
             d3.select(visualization_geomap.container()).call(visualization_geomap);
             d3.selectAll('.mark__group').style('opacity', 1);
