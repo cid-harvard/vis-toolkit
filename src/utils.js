@@ -1083,6 +1083,9 @@
                       .filter(utils.filters.redraw_only)
                       .call(utils.draw_mark, params, vars);
 
+                  // Bind events to groups after marks have been created
+                  gItems_enter.each(utils.items_group);
+
                 }
 
                 gItems
@@ -1090,10 +1093,6 @@
                     .filter(utils.filters.redraw_only)
                     .call(utils.draw_mark, params, vars);
 
-                if(vars.init) {
-                  // Bind events to groups after marks have been created
-                  gItems.each(utils.items_group);
-                }
 
                 // CUSTOM SELECTION EVENT
                 if(vars.init && typeof params.evt !== 'undefined') {
@@ -1184,7 +1183,8 @@
             }
 
             // Make sure we won't re-draw all nodes next time
-            if(vars.type == "productspace" || vars.type == "treemap" || vars.type == "scatterplot") {
+      //      if(vars.type == "productspace" || vars.type == "treemap" || vars.type == "scatterplot" || vars.type == "geomap") {
+            if(vars.init && vars.type !== 'linechart' && vars.type !== 'slopegraph') {
               vars.new_data.forEach(function(d) {
                 if(!d.__selected) { d.__redraw = false; }
               });
