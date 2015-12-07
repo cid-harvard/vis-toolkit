@@ -1,0 +1,173 @@
+<!doctype html>
+<meta charset="utf-8">
+<script src="../js/d3.js"></script>
+<script src="../build/vistk.js"></script>
+<link href="../css/vistk.css" rel="stylesheet">
+<script src="../js/queue.v1.min.js"></script>
+<script src="../js/topojson.js"></script>
+<body>
+<style>
+
+text: {
+  stroke: white;
+  fill: white;
+}
+
+</style>
+<div id="viz"></div>
+Countries: <span onclick='sort_by("name");'>NAME</span> <span onclick='sort_by("eci");'>ECI</span> <span onclick='sort_by("population");'>Population</span>
+<div id="countries"></div>
+<script>
+
+d3.json("../../vis-toolkit-datasets/data/partners_usa_2012_csay.json", function(error, partners) {
+
+  queue()
+      .defer(d3.json, "../shapefiles/world/world-110m.json")
+      .defer(d3.tsv, "../../vis-toolkit-datasets/data/world-country-names.tsv")
+      .await(ready);
+
+  function ready(error, world, names) {
+
+    visualization_geomap = vistk.viz()
+      .params({
+        dev: true,
+        type: "geomap",
+        container: "#viz",
+        height: 400,
+        width: 600,
+        margin: {top: 10, right: 10, bottom: 10, left: 10},
+        data: partners.data,
+        topology: world,
+        names: names,
+        var_id: "name",
+        var_x: "x",
+        var_y: "y",
+        var_group: "continent",
+        var_color: "share",
+        vars_text: "name",
+        items: [{
+          attr: "name",
+          marks: [{
+            type: "shape",
+            fill: d3.scale.linear()
+              .domain([0, 1])
+              //.domain([d3.min(vars.new_data, function(d) { return d[vars.var_color]; }), d3.max(vars.new_data, function(d) { return d[vars.var_color]; })])
+              .range(["red", "green"])
+          }],
+          evt:[{
+            type: "highlightOn",
+            callback: function(d, i, vars) {
+
+              d3.selectAll('.mark__group').filter(function(e) {
+                return e.name !== d.name;
+              }).style('opacity', .5);
+
+              // visualization_grid.params().refresh = true
+              visualization_grid.params().highlight = [d.name];
+              d3.select(visualization_grid.container()).call(visualization_grid);
+
+            }
+          }, {
+            type: "highlightOut",
+            callback: function(d, i, vars) {
+
+              // visualization_grid.params().refresh = true
+              visualization_grid.params().highlight = [];
+              d3.select(visualization_grid.container()).call(visualization_grid);
+              d3.selectAll('.mark__group').style('opacity', 1);
+            }
+          }],
+        }],
+
+        time: {
+          var_time: "year",
+          current_time: 2012
+        },
+        ui: {
+          default: false
+        },
+        selection: ["United States"],
+        highlight: ["France"]
+      });
+
+    d3.select("#viz").call(visualization_geomap);
+
+    visualization_grid = vistk.viz().params({
+      dev: true,
+      type: "grid",
+      height: 250,
+      width: 700,
+      margin: {top: 10, right: 10, bottom: 20, left: 10},
+      container: "#countries",
+      data: partners.data,
+      var_group: 'community_id',
+      var_color: "share",
+      color: d3.scale.linear()
+            .domain([0, 1])
+            .range(["red", "green"]),
+      var_sort: 'total_exports',
+      var_sort_asc: true,
+      var_id: 'name',
+      var_text: 'abbrv',
+      width_grid: 25,
+      height_grid: 10,
+      time: {
+        var_time: "year",
+        parse: d3.time.format("%Y").parse,
+        current_time: "1995"
+      },
+      items: [{
+        marks: [{
+          type: "rect",
+          width: 20,
+          height: 20,
+          fill: function(d, i, vars) {
+            return vars.color(vars.accessor_data(d)[vars.var_color]);
+          }
+        }, {
+          type: "text",
+          text_anchor: "middle",
+          translate: [13, 10],
+        }],
+        evt:[{
+          type: "highlightOn",
+          callback: function(d, i, vars) {
+
+            d3.selectAll('.mark__group').filter(function(e) {
+              return e.name !== d.name;
+            }).style('opacity', .5);
+
+            // visualization_geomap.params().refresh = true
+            visualization_geomap.params().highlight = [d.name];
+            d3.select(visualization_geomap.container()).call(visualization_geomap);
+
+          }
+        }, {
+          type: "highlightOut",
+          callback: function(d, i, vars) {
+
+            // visualization_geomap.params().refresh = true
+            visualization_geomap.params().highlight = [];
+            d3.select(visualization_geomap.container()).call(visualization_geomap);
+            d3.selectAll('.mark__group').style('opacity', 1);
+          }
+        }]
+      }]
+    });
+
+    d3.select("#countries").call(visualization_grid);
+
+  }
+
+});
+
+function sort_by(param) {
+
+  visualization_grid.params().refresh = true
+  visualization_grid.params().sort = param;
+  d3.select(visualization_grid.container()).call(visualization_grid);
+
+}
+
+</script>
+</body>
