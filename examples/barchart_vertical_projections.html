@@ -1,0 +1,56 @@
+<!doctype html>
+<meta charset="utf-8">
+<script src="../js/d3.js"></script>
+<script src="../build/vistk.js"></script>
+<link href="../css/vistk.css" rel="stylesheet">
+<div id="viz"></div>
+<script>
+
+d3.csv("../../vis-toolkit-datasets/data/atlas_growth_projections_2023.csv", function(error, data) {
+
+
+  data = data.filter(function(d, i) {
+    return d.value != '';
+  })
+
+
+  data.forEach(function(d, i) {
+    d.value = +d.value;
+  })
+
+  visualization = vistk.viz()
+    .params({
+      type: 'barchart_vertical',
+      width: 500,
+      height: 1500,
+      margin: {top: 10, right: 10, bottom: 30, left: 50},
+      container: '#viz',
+      data: data,
+      var_id: 'iso',
+      var_group: 'iso',
+      var_color: 'value',
+      color: d3.scale.linear().domain([0, 10]).range(["blue", "red"]),
+      var_x: 'value',
+      var_sort: 'value',
+      var_y: 'iso',
+      var_text: 'iso',
+      time: {
+        var_time: "year",
+        current_time: 2013,
+        parse: d3.time.format("%Y").parse,
+      },
+      ui: {
+        default: true,
+        options: ["country", "continent", "year"],
+        sort: ['continent', "name", 'value']
+      },
+      selection: ["France"],
+      highlight: ["France", "Germany"],
+      title: "World Countries"
+    });
+
+  d3.select("#viz").call(visualization);
+
+});
+
+</script>

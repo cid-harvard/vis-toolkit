@@ -12,36 +12,34 @@
 d3.csv("../../vis-toolkit-datasets/data/atlas_growth_projections_2023.csv", function(error, data) {
 
   visualization = vistk.viz().params({
-    type: "linechart",
+    type: "slopegraph",
     container: "#viz",
     height: 600,
-    width: 900,
-    margin: {top: 30, right: 100, bottom: 30, left: 10},
+    width: 400,
+    margin: {top: 30, right: 100, bottom: 30, left: 100},
     data: data,
-    var_id: "iso",
+    var_id: "iso", // Should be ["continent", "id"] to allow aggregation and filtering
     var_group: "continent",
-    var_color: "value", // TODO: color by final ranking value..
-//    color: d3.scale.ordinal().domain(["Africa", "Americas", "Asia", "Europe", "Oceania"]).range(["#99237d", "#c72439", "#6bc145", "#88c7ed", "#dd9f98"]),
-    color: d3.scale.linear().domain([0, 8]).range(["blue", "red"]),
+    var_color: "category", // TODO: color by final ranking value..
     var_text: "iso",
     y_text: "ECI Rank",
     var_y: "value",
-    var_x: 'year',
+    y_invert: true,
+    var_x: "year",
     time: {
       parse: d3.time.format("%Y").parse,
       var_time: 'year',
-      current_time: '2013'
+      current_time: '2013',
+      filter: ['2003', '2013']
     },
     selection: ["Japan", "Switzerland", "Germany"],
     highlight: "France",
     ui: {
-      default: true,
-      options: ["country", "continent"]
-    }
+      default: true
+    },
   });
 
   d3.select("#viz").call(visualization);
 
 });
-
 </script>
