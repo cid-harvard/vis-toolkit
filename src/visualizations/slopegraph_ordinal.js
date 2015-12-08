@@ -1,4 +1,4 @@
-vars.default_params["slopegraph"] = function(scope) {
+vars.default_params["slopegraph_ordinal"] = function(scope) {
 
   var params = {};
 
@@ -12,11 +12,9 @@ vars.default_params["slopegraph"] = function(scope) {
   }];
 
   params.y_scale = [{
-    func: d3.scale.linear()
-            .range([scope.height - scope.margin.top - scope.margin.bottom, scope.margin.top])
-            .domain(d3.extent(vars.new_data, function(d) {
-              return scope.accessor_data(d)[vars.var_y];
-            }))
+    func: d3.scale.ordinal()
+            .domain(d3.set(vars.new_data.map(function(d) { return d[vars.var_y]; })).values())
+            .rangeBands([scope.margin.left, scope.width - scope.margin.left - scope.margin.right])
   }];
 
   params.items = [{

@@ -147,7 +147,7 @@
     _user_vars: {},
 
     list: {type: ["sparkline", "dotplot", "barchart", "linechart", "scatterplot", "grid",
-                  "stacked", "piechart", "slopegraph", "productspace", "treemap", "geomap",
+                  "stacked", "piechart", "slopegraph", "slopegraph_ordinal", "productspace", "treemap", "geomap",
                   "stackedbar", "ordinal_vertical", "ordinal_horizontal", "matrix", "radial",
                   "rectmap", "caterplot", "tickplot", "barchart_vertical"],
       mark: ['rect', 'circle', 'star', 'shape']

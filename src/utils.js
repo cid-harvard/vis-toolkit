@@ -1184,7 +1184,7 @@
 
             // Make sure we won't re-draw all nodes next time
       //      if(vars.type == "productspace" || vars.type == "treemap" || vars.type == "scatterplot" || vars.type == "geomap") {
-            if(vars.init && vars.type !== 'linechart' && vars.type !== 'slopegraph') {
+            if(vars.init && vars.type !== 'linechart' && vars.type !== 'slopegraph' && vars.type !== 'slopegraph_ordinal') {
               vars.new_data.forEach(function(d) {
                 if(!d.__selected) { d.__redraw = false; }
               });
