@@ -464,9 +464,9 @@ var utils ={};
           items_mark_tick.enter().append('line')
               .classed('items__mark__tick', true)
               .classed("items_" + mark_id, true)
-              // .attr("x1", function(d) { return 0; })
-              // .attr("y1", function(d) { return -20; })
-              // .attr("x2", function(d) { return 0; })
+              .style("stroke", params.stroke(d[vars.var_color]))
+              .style("stroke-width", params_stroke_width)
+              .style("stroke-opacity", params_stroke_opacity)
               .attr("y2", function(d) { return -20; })
               .attr("transform", "translate(" +  params_translate + ")rotate(" + params_rotate + ")scale(" + params_scale + ")");
 
@@ -568,6 +568,7 @@ var utils ={};
               .attr("y1", function(d) { return vars.y_scale[0]["func"](d.source.y); })
               .attr("x2", function(d) { return vars.x_scale[0]["func"](d.target.x); })
               .attr("y2", function(d) { return vars.y_scale[0]["func"](d.target.y); })
+              .style("stroke", params_stroke)
               .on("mouseover",function(d) { // FIX to prevent hovers
                 d3.event.stopPropagation();
               })
@@ -1203,7 +1204,7 @@ var utils ={};
 
             // Make sure we won't re-draw all nodes next time
       //      if(vars.type == "productspace" || vars.type == "treemap" || vars.type == "scatterplot" || vars.type == "geomap") {
-            if(vars.init && vars.type !== 'linechart' && vars.type !== 'slopegraph') {
+            if(vars.init && vars.type !== 'linechart' && vars.type !== 'slopegraph' && vars.type !== 'slopegraph_ordinal') {
               vars.new_data.forEach(function(d) {
                 if(!d.__selected) { d.__redraw = false; }
               });
@@ -1767,6 +1768,7 @@ utils.init_params_values = function(var_v, default_value, params, d, i, vars) {
 
   }
 
+  // Turns parameters into actual values
   utils.mark_params = function(params, vars, d, i) {
 
     var mark_params = {};
@@ -1805,7 +1807,7 @@ utils.init_params_values = function(var_v, default_value, params, d, i, vars) {
 
     // Specific to marks / charts
     mark_params.rotate = utils.init_params("rotate", 0, params, d, i, vars);
-    mark_params.fill = utils.init_params("fill", vars.color(vars.accessor_items(d)[vars.var_color]), params, d, i, vars);
+    mark_params.fill = utils.init_params("fill", vars.color(vars.accessor_data(d)[vars.var_color]), params, d, i, vars);
     mark_params.stroke = utils.init_params("stroke", 0, params, d, i, vars);
     mark_params.text_anchor = utils.init_params("text_anchor", "end", params, d, i, vars);
 
@@ -1990,7 +1992,7 @@ utils.init_params_values = function(var_v, default_value, params, d, i, vars) {
     _user_vars: {},
 
     list: {type: ["sparkline", "dotplot", "barchart", "linechart", "scatterplot", "grid",
-                  "stacked", "piechart", "slopegraph", "productspace", "treemap", "geomap",
+                  "stacked", "piechart", "slopegraph", "slopegraph_ordinal", "productspace", "treemap", "geomap",
                   "stackedbar", "ordinal_vertical", "ordinal_horizontal", "matrix", "radial",
                   "rectmap", "caterplot", "tickplot", "barchart_vertical"],
       mark: ['rect', 'circle', 'star', 'shape']
@@ -2654,13 +2656,29 @@ utils.init_params_values = function(var_v, default_value, params, d, i, vars) {
       }
 
       if(typeof vars.var_sort_asc !== "undefined" && !vars.var_sort_asc) {
-        vars.new_data = vars.new_data.sort(function(a, b) { return d3.ascending(a[vars.var_sort], b[vars.var_sort]);});
+        vars.new_data = vars.new_data.sort(function(a, b) {
+          if(typeof vars.accessor_data(a) !== 'undefined' && typeof vars.accessor_data(b) !== 'undefined')
+            return d3.ascending(vars.accessor_data(a)[vars.var_sort], vars.accessor_data(b)[vars.var_sort]);
+        });
       } else {
-        vars.new_data = vars.new_data.sort(function(a, b) { return d3.descending(a[vars.var_sort], b[vars.var_sort]);});
+        vars.new_data = vars.new_data.sort(function(a, b) {
+          if(typeof vars.accessor_data(a) !== 'undefined' && typeof vars.accessor_data(b) !== 'undefined')
+            return d3.descending(vars.accessor_data(a)[vars.var_sort], vars.accessor_data(b)[vars.var_sort]);
+        });
       }
     }
 
     vars.new_data = vars.new_data.filter(function(d) {
+
+      // Making sure we re-draw highlighted items
+      if(vars.highlight.indexOf(d[vars.var_id]) > -1) {
+        d.__highlighted = true;
+        d.__redraw = true;
+      } else if(d.__highlighted) {
+        d.__highlighted = false;
+        d.__redraw = true;
+      }
+
       return typeof vars.accessor_data(d) !== 'undefined' && typeof vars.accessor_data(d)[vars.var_id] !== 'undefined';
     });
 
@@ -3012,6 +3030,10 @@ vars.default_params["linechart"] = function(scope) {
      // fill: function(d) { return vars.color(params.accessor_items(d)[vars.var_color]); }
     }, {
       var_mark: '__highlighted',
+      type: d3.scale.ordinal().domain([true, false]).range(['text', 'none']),
+      translate: [10, 0]
+    }, {
+      var_mark: '__selected',
       type: d3.scale.ordinal().domain([true, false]).range(['text', 'none']),
       translate: [10, 0]
     }],
@@ -3436,9 +3458,76 @@ vars.default_params["slopegraph"] = function(scope) {
   params.y_scale = [{
     func: d3.scale.linear()
             .range([scope.height - scope.margin.top - scope.margin.bottom, scope.margin.top])
-              .domain(d3.extent(vars.new_data, function(d) {
-                return scope.accessor_data(d)[vars.var_y];
-              }))
+            .domain(d3.extent(vars.new_data, function(d) {
+              return scope.accessor_data(d)[vars.var_y];
+            }))
+  }];
+
+  params.items = [{
+    attr: "right_label",
+    marks: [{
+      type: "text",
+      text_anchor: "start"
+    }]
+  }, {
+    attr: "left_label",
+    accessor_data: function(d) {
+      return d.values.filter(function(e) {
+        return e.year == "2003";
+      })[0];
+    },
+    marks: [{
+      type: "text",
+      text_anchor: "end",
+      translate: [- 20, 0]
+      // translate: [-(scope.width-scope.margin.left-scope.margin.right-scope.margin.left+20), 0]
+    }]
+  }];
+
+  params.connect = [{
+    attr: vars.time.var_time,
+    marks: [{
+      type: "path",
+      rotate: "0",
+      stroke: function(d) { return "black"; },
+      func: d3.svg.line()
+           .interpolate(vars.interpolate)
+           .x(function(d) { return vars.x_scale[0]["func"](d[vars.var_x]); })
+           .y(function(d) { return vars.y_scale[0]["func"](d[vars.var_y]); }),
+    }]
+  }];
+
+  params.x_ticks = vars.time.points.length;
+  params.x_tickValues = vars.time.interval;
+  params.x_axis_orient = "top";
+  params.x_axis_show = true;
+  params.x_grid_show = false;
+  params.x_text = false;
+
+  params.y_axis_show = false;
+  params.y_grid_show = false;
+
+  return params;
+
+};
+
+vars.default_params["slopegraph_ordinal"] = function(scope) {
+
+  var params = {};
+
+  params.accessor_values = function(d) { return d.values; };
+  params.accessor_items = function(d) { return d.values; };
+
+  params.x_scale = [{
+    func: d3.scale.linear()
+            .range([scope.margin.left, scope.width - scope.margin.left - scope.margin.right])
+            .domain(scope.time.interval)
+  }];
+
+  params.y_scale = [{
+    func: d3.scale.ordinal()
+            .domain(d3.set(vars.new_data.map(function(d) { return d[vars.var_y]; })).values())
+            .rangeBands([scope.margin.left, scope.width - scope.margin.left - scope.margin.right])
   }];
 
   params.items = [{
@@ -3941,7 +4030,7 @@ vars.default_params['barchart_vertical'] = function(scope) {
          return -params.x_scale[0]["func"](scope.accessor_data(d)[scope.var_x]) + scope.margin.left;
       },
       y: function(d) {
-        return 10;
+        return 0;
 //        return -scope.margin.top + scope.mark.width;
       },
       height: function(d) {
@@ -3956,9 +4045,9 @@ vars.default_params['barchart_vertical'] = function(scope) {
     }, {
       type: 'text',
       text: function(d) {
-        return d[vars.var_x];
+        return scope.accessor_data(d)[vars.var_x];
       },
-      translate: [0, 15],
+      translate: [0, 5],
       text_anchor: 'start'
     }]
   }];
