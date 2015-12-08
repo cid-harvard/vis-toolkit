@@ -14,7 +14,7 @@ d3.csv("../../vis-toolkit-datasets/data/atlas_growth_projections_2023.csv", func
   visualization = vistk.viz().params({
     type: "slopegraph",
     container: "#viz",
-    height: 600,
+    height: 1000,
     width: 400,
     margin: {top: 30, right: 100, bottom: 30, left: 100},
     data: data,
@@ -23,7 +23,7 @@ d3.csv("../../vis-toolkit-datasets/data/atlas_growth_projections_2023.csv", func
     var_color: "category", // TODO: color by final ranking value..
     var_text: "iso",
     y_text: "ECI Rank",
-    var_y: "value",
+    var_y: "rank",
     y_invert: true,
     var_x: "year",
     time: {
