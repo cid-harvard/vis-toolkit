@@ -445,13 +445,29 @@
       }
 
       if(typeof vars.var_sort_asc !== "undefined" && !vars.var_sort_asc) {
-        vars.new_data = vars.new_data.sort(function(a, b) { return d3.ascending(a[vars.var_sort], b[vars.var_sort]);});
+        vars.new_data = vars.new_data.sort(function(a, b) {
+          if(typeof vars.accessor_data(a) !== 'undefined' && typeof vars.accessor_data(b) !== 'undefined')
+            return d3.ascending(vars.accessor_data(a)[vars.var_sort], vars.accessor_data(b)[vars.var_sort]);
+        });
       } else {
-        vars.new_data = vars.new_data.sort(function(a, b) { return d3.descending(a[vars.var_sort], b[vars.var_sort]);});
+        vars.new_data = vars.new_data.sort(function(a, b) {
+          if(typeof vars.accessor_data(a) !== 'undefined' && typeof vars.accessor_data(b) !== 'undefined')
+            return d3.descending(vars.accessor_data(a)[vars.var_sort], vars.accessor_data(b)[vars.var_sort]);
+        });
       }
     }
 
     vars.new_data = vars.new_data.filter(function(d) {
+
+      // Making sure we re-draw highlighted items
+      if(vars.highlight.indexOf(d[vars.var_id]) > -1) {
+        d.__highlighted = true;
+        d.__redraw = true;
+      } else if(d.__highlighted) {
+        d.__highlighted = false;
+        d.__redraw = true;
+      }
+
       return typeof vars.accessor_data(d) !== 'undefined' && typeof vars.accessor_data(d)[vars.var_id] !== 'undefined';
     });
 

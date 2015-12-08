@@ -445,9 +445,9 @@
           items_mark_tick.enter().append('line')
               .classed('items__mark__tick', true)
               .classed("items_" + mark_id, true)
-              // .attr("x1", function(d) { return 0; })
-              // .attr("y1", function(d) { return -20; })
-              // .attr("x2", function(d) { return 0; })
+              .style("stroke", params.stroke(d[vars.var_color]))
+              .style("stroke-width", params_stroke_width)
+              .style("stroke-opacity", params_stroke_opacity)
               .attr("y2", function(d) { return -20; })
               .attr("transform", "translate(" +  params_translate + ")rotate(" + params_rotate + ")scale(" + params_scale + ")");
 
@@ -549,6 +549,7 @@
               .attr("y1", function(d) { return vars.y_scale[0]["func"](d.source.y); })
               .attr("x2", function(d) { return vars.x_scale[0]["func"](d.target.x); })
               .attr("y2", function(d) { return vars.y_scale[0]["func"](d.target.y); })
+              .style("stroke", params_stroke)
               .on("mouseover",function(d) { // FIX to prevent hovers
                 d3.event.stopPropagation();
               })
@@ -1748,6 +1749,7 @@ utils.init_params_values = function(var_v, default_value, params, d, i, vars) {
 
   }
 
+  // Turns parameters into actual values
   utils.mark_params = function(params, vars, d, i) {
 
     var mark_params = {};
@@ -1786,7 +1788,7 @@ utils.init_params_values = function(var_v, default_value, params, d, i, vars) {
 
     // Specific to marks / charts
     mark_params.rotate = utils.init_params("rotate", 0, params, d, i, vars);
-    mark_params.fill = utils.init_params("fill", vars.color(vars.accessor_items(d)[vars.var_color]), params, d, i, vars);
+    mark_params.fill = utils.init_params("fill", vars.color(vars.accessor_data(d)[vars.var_color]), params, d, i, vars);
     mark_params.stroke = utils.init_params("stroke", 0, params, d, i, vars);
     mark_params.text_anchor = utils.init_params("text_anchor", "end", params, d, i, vars);
 
