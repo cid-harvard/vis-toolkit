@@ -15,7 +15,9 @@ text: {
 
 </style>
 <div id="viz"></div>
-Countries: <span onclick='sort_by("name");'>NAME</span> <span onclick='sort_by("eci");'>ECI</span> <span onclick='sort_by("population");'>Population</span>
+
+<!-- Countries: <span onclick='sort_by("name");'>NAME</span> <span onclick='sort_by("eci");'>ECI</span> <span onclick='sort_by("population");'>Population</span>-->
+
 <div id="countries"></div>
 <script>
 
@@ -63,8 +65,8 @@ d3.json("../../vis-toolkit-datasets/data/partners_usa_2012_csay.json", function(
               }).style('opacity', .5);
 
               // visualization_grid.params().refresh = true
-              visualization_grid.params().highlight = [d.name];
-              d3.select(visualization_grid.container()).call(visualization_grid);
+              visualization_tick.params().highlight = [d.name];
+              d3.select(visualization_tick.container()).call(visualization_tick);
 
             }
           }, {
@@ -72,8 +74,8 @@ d3.json("../../vis-toolkit-datasets/data/partners_usa_2012_csay.json", function(
             callback: function(d, i, vars) {
 
               // visualization_grid.params().refresh = true
-              visualization_grid.params().highlight = [];
-              d3.select(visualization_grid.container()).call(visualization_grid);
+              visualization_tick.params().highlight = [];
+              d3.select(visualization_tick.container()).call(visualization_tick);
               d3.selectAll('.mark__group').style('opacity', 1);
             }
           }],
@@ -92,15 +94,16 @@ d3.json("../../vis-toolkit-datasets/data/partners_usa_2012_csay.json", function(
 
     d3.select("#viz").call(visualization_geomap);
 
-    visualization_grid = vistk.viz().params({
+    visualization_tick = vistk.viz().params({
       dev: true,
-      type: "grid",
-      height: 250,
+      type: "dotplot",
+      height: 60,
       width: 700,
       margin: {top: 10, right: 10, bottom: 20, left: 10},
       container: "#countries",
       data: partners.data,
-      var_group: 'community_id',
+      var_x: 'share',
+      var_y: function() { return this.height/2; },
       var_color: "share",
       color: d3.scale.linear()
             .domain([0, 1])
@@ -109,25 +112,31 @@ d3.json("../../vis-toolkit-datasets/data/partners_usa_2012_csay.json", function(
       var_sort_asc: true,
       var_id: 'name',
       var_text: 'abbrv',
-      width_grid: 25,
-      height_grid: 10,
       time: {
         var_time: "year",
         parse: d3.time.format("%Y").parse,
         current_time: "1995"
       },
+      x_format: function(d) { return '$' + d3.format(".2s")(d); },
       items: [{
+        attr: "name",
         marks: [{
-          type: "rect",
-          width: 20,
-          height: 20,
-          fill: function(d, i, vars) {
-            return vars.color(vars.accessor_data(d)[vars.var_color]);
-          }
+          type: "tick",
+          stroke: d3.scale.linear()
+            .domain([0, 1])
+            .range(["red", "green"]),
+          stroke_width: 5,
+          stroke_opacity: 0.5
         }, {
-          type: "text",
-          text_anchor: "middle",
-          translate: [13, 10],
+          var_mark: '__highlighted',
+          type: d3.scale.ordinal().domain([true, false]).range(['text', 'none']),
+          translate: [0, -30],
+          text_anchor: "middle"
+        }, {
+          var_mark: '__selected',
+          type: d3.scale.ordinal().domain([true, false]).range(['text', 'none']),
+          translate: [0, -30],
+          text_anchor: "middle"
         }],
         evt:[{
           type: "highlightOn",
@@ -146,16 +155,17 @@ d3.json("../../vis-toolkit-datasets/data/partners_usa_2012_csay.json", function(
           type: "highlightOut",
           callback: function(d, i, vars) {
 
-            // visualization_geomap.params().refresh = true
+            visualization_geomap.params().refresh = true
             visualization_geomap.params().highlight = [];
             d3.select(visualization_geomap.container()).call(visualization_geomap);
             d3.selectAll('.mark__group').style('opacity', 1);
           }
         }]
-      }]
+      }],
+      selection: ['CAN'],
     });
 
-    d3.select("#countries").call(visualization_grid);
+    d3.select("#countries").call(visualization_tick);
 
   }
 
@@ -163,9 +173,9 @@ d3.json("../../vis-toolkit-datasets/data/partners_usa_2012_csay.json", function(
 
 function sort_by(param) {
 
-  visualization_grid.params().refresh = true
-  visualization_grid.params().sort = param;
-  d3.select(visualization_grid.container()).call(visualization_grid);
+  visualization_tick.params().refresh = true
+  visualization_tick.params().sort = param;
+  d3.select(visualization_tick.container()).call(visualization_tick);
 
 }
 
