@@ -174,7 +174,7 @@ var utils ={};
       var params_width = utils.init_params("width", 10, params, d, i, vars);
       var params_rotate = utils.init_params("rotate", 0, params, d, i, vars);
       var params_scale = utils.init_params("scale", 1, params, d, i, vars);
-      var params_fill = utils.init_params("fill", null, params, d, i, vars);
+      var params_fill = utils.init_params("fill", null, params, vars.accessor_data(d), i, vars);
 
       var params_stroke = utils.init_params("stroke", null, params, d, i, vars);
       var params_stroke_width = utils.init_params("stroke_width", null, params, d, i, vars);
@@ -230,6 +230,7 @@ var utils ={};
               .classed("selected", function(d, i) { return d.__selected; })
               .transition().duration(vars.duration)
               .style("fill", params_fill)
+              .style("stroke", params_stroke)
               .attr("transform", "translate(" + ([params_translate[0] + params_offset_x, params_translate[1] + params_offset_y]) + ")rotate(" +  params_rotate + ")")
               .text(function(d) {
 
@@ -702,11 +703,12 @@ var utils ={};
                 return "translate(" +  params_translate + ")rotate(" +  params_rotate + ")";
               });
 
+
+
           mark
               .classed("highlighted", function(e, j) { return e.__highlighted; })
               .classed("selected", function(e, j) { return e.__selected; })
               .transition().duration(vars.duration)
-              .style("fill", params_fill)
               .style("stroke", params_stroke)
               .attr('d', function(e) {
                 return params["func"](d3.values(this_accessor_values(e)));
@@ -1893,7 +1895,6 @@ utils.init_params_values = function(var_v, default_value, params, d, i, vars) {
     });
 
     if(index > -1) {
-      console.log('remove', data[vars.var_id])
       vars[arr].splice(index, 1);
     }
   }
@@ -3062,9 +3063,9 @@ vars.default_params["barchart"] = function(scope) {
   params.x_axis_translate = [0, scope.height - scope.margin.bottom - scope.margin.top];
   params.x_grid_show = false;
 
-  params.y_axis_show = true;
+  //params.y_axis_show = true;
   params.y_axis_translate = [scope.margin.left, -10];
-  params.y_grid_show = true;
+  //params.y_grid_show = true;
 
   return params;
 
@@ -3215,7 +3216,9 @@ vars.default_params["scatterplot"] = function(scope) {
     vars.countries.forEach(function(d) {
 
       // Retrieve the country name based on its id
-      d[vars.var_id] = vars.names.filter(function(n) { return d.id == n.id; })[0][vars.var_id];
+      d[vars.var_id] = vars.names.filter(function(n) {
+        return d.id == n.id;
+      })[0][vars.var_id];
 
       // TODO: should merge on a more reliable join (e.g. 2-char)
       d.data = vars.new_data.filter(function(n) {
