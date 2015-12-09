@@ -204,6 +204,7 @@ var utils ={};
               .classed("items__mark__text", true)
               .classed("items_" + mark_id, true)
               .style("text-anchor", params.text_anchor)
+              .style("fill", params_fill)
               .attr("x", params_x)
               .attr("y", params_y)
               .attr("dy", ".35em")
@@ -228,6 +229,7 @@ var utils ={};
               .classed("highlighted", function(d, i) { return d.__highlighted; })
               .classed("selected", function(d, i) { return d.__selected; })
               .transition().duration(vars.duration)
+              .style("fill", params_fill)
               .attr("transform", "translate(" + ([params_translate[0] + params_offset_x, params_translate[1] + params_offset_y]) + ")rotate(" +  params_rotate + ")")
               .text(function(d) {
 
@@ -405,7 +407,6 @@ var utils ={};
                   .attr("height", params_height)
                   .attr("width", params_width)
                   .attr("transform", "rotate(" + params_rotate + ")")
-                  .style("fill", params_fill)
                   .style("stroke", params_stroke);
 
         items_mark_rect
@@ -416,8 +417,33 @@ var utils ={};
             .attr("y", params.y || 0)
             .attr("height", params_height)
             .attr("width", params_width)
-            .style("fill", params_fill)
             .style("stroke", params_stroke);
+
+          if(typeof params.fill !== "undefined") {
+
+            if(typeof params.fill === "function") {
+
+              items_mark_rect.style("fill", params.fill(d, i, vars));
+
+            } else {
+
+              items_mark_rect.style("fill", function(d) {
+                return params.fill(vars.accessor_items(d)[vars.var_color]);
+              });
+
+            }
+
+          } else if(vars.var_color !== null) {
+
+            items_mark_rect.style("fill", function(d) {
+              return vars.color(vars.accessor_items(d)[vars.var_color]);
+            });
+
+            items_mark_rect.style("fill", function(d) {
+              return vars.color(vars.accessor_items(d)[vars.var_color]);
+            });
+
+          }
 
         items_mark_rect.exit().remove();
 
@@ -736,7 +762,7 @@ var utils ={};
           mark.enter().append('polygon')
               .classed("items_" + mark_id, true)
               .classed('items__mark__triangle', true)
-              .attr('fill', '#ED4036')
+              .attr('fill', params_fill)
               .attr('stroke-width', 0)
               .attr('points','-10,5 0,-15 10,5');
 
@@ -2306,16 +2332,6 @@ utils.init_params_values = function(var_v, default_value, params, d, i, vars) {
       vars.time.current_time = vars.time.current_time(vars.data);
     }
 
-    // Making sure with have an array (in case of individual highlight)
-    if(typeof vars.highlight !== 'object') {
-      vars.highlight = [vars.highlight];
-    }
-
-    // Making sure with have an array (in case of individual selection)
-    if(typeof vars.selection !== 'object') {
-      vars.selection = [vars.selection];
-    }
-
     // Calculate vars.new_data which should contain two things
     // 1/ The list of all items (e.g. countries, products)
     // 2/ The metadata for each items
@@ -3032,6 +3048,13 @@ vars.default_params["barchart"] = function(scope) {
       fill: function(d) {
         return scope.color(scope.accessor_items(d)[scope.var_color]);
       }
+    }, {
+      type: 'text',
+      text: function(d) {
+        return scope.accessor_data(d)[vars.var_y];
+      },
+      translate: [params.x_scale[0]["func"].rangeBand() / 4, -20],
+      text_anchor: 'middle'
     }]
   }];
 
@@ -3040,7 +3063,7 @@ vars.default_params["barchart"] = function(scope) {
   params.x_grid_show = false;
 
   params.y_axis_show = true;
-  params.y_axis_translate = [scope.margin.left, 0];
+  params.y_axis_translate = [scope.margin.left, -10];
   params.y_grid_show = true;
 
   return params;
@@ -3535,6 +3558,7 @@ vars.default_params["slopegraph"] = function(scope) {
     marks: [{
       type: "path",
       rotate: "0",
+      fill: 'red',
       stroke: function(d) { return "black"; },
       func: d3.svg.line()
            .interpolate(vars.interpolate)
