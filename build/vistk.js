@@ -569,6 +569,7 @@ var utils ={};
               .attr("x2", function(d) { return vars.x_scale[0]["func"](d.target.x); })
               .attr("y2", function(d) { return vars.y_scale[0]["func"](d.target.y); })
               .style("stroke", params_stroke)
+              .style("stroke-dasharray", ("3, 3"))
               .on("mouseover",function(d) { // FIX to prevent hovers
                 d3.event.stopPropagation();
               })
@@ -1843,6 +1844,34 @@ utils.init_params_values = function(var_v, default_value, params, d, i, vars) {
     return params_values;
   }
 
+  utils.push_array = function(arr, data) {
+    var index = -1;
+    vars[arr].forEach(function(d, i) {
+      if(d === data[vars.var_id]) {
+        index = i;
+      }
+    });
+
+    if(index < 0) {
+      vars[arr].push(data[vars.var_id])
+    }
+  }
+
+  // Find index and removes it
+  utils.pop_array = function(arr, data) {
+    var index = -1;
+    vars[arr].forEach(function(d, i) {
+      if(d === data[vars.var_id]) {
+        index = i;
+      }
+    });
+
+    if(index > -1) {
+      console.log('remove', data[vars.var_id])
+      vars[arr].splice(index, 1);
+    }
+  }
+
 
   // Default parameters for all charts
   var default_vars = {
@@ -2088,6 +2117,7 @@ utils.init_params_values = function(var_v, default_value, params, d, i, vars) {
   });
 
   vars.evt.register("highlightOn", function(d) {
+    utils.push_array('highlight', d);
     d.__highlighted = true;
     d.__redraw = true;
   });
@@ -2097,6 +2127,7 @@ utils.init_params_values = function(var_v, default_value, params, d, i, vars) {
   });
 
   vars.evt.register("highlightOut", function(d) {
+    utils.pop_array('highlight', d);
     d.__highlighted = false;
     d.__redraw = true;
 
@@ -2119,6 +2150,11 @@ utils.init_params_values = function(var_v, default_value, params, d, i, vars) {
   });
 
   vars.evt.register("selection", function(d) {
+    if(d.__selected) {
+      utils.pop_array('highlight', d);
+    } else {
+      utils.pop_array('highlight', d);
+    }
     d.__selected = !d.__selected;
     d.__redraw = true;
   });
@@ -2268,6 +2304,16 @@ utils.init_params_values = function(var_v, default_value, params, d, i, vars) {
     // In case the current_time is set dynamically
     if(typeof vars.time.current_time === "function") {
       vars.time.current_time = vars.time.current_time(vars.data);
+    }
+
+    // Making sure with have an array (in case of individual highlight)
+    if(typeof vars.highlight !== 'object') {
+      vars.highlight = [vars.highlight];
+    }
+
+    // Making sure with have an array (in case of individual selection)
+    if(typeof vars.selection !== 'object') {
+      vars.selection = [vars.selection];
     }
 
     // Calculate vars.new_data which should contain two things
@@ -3909,16 +3955,19 @@ vars.default_params["caterplot"] = function(scope) {
 
   params.items = [{
     marks: [{
-        type: 'circle',
-        r_scale: d3.scale.linear()
-                    .range([vars.radius_min, vars.radius_max])
-                    .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_r]; })),
-        fill: function(d) { return vars.color(vars.accessor_items(d)[vars.var_color]); },
-       // translate: function() {
-       //   return [vars.x_scale[0]['func'].rangeBand() / 4, 0]
-       // },
-      }, {
+    type: 'circle',
+    r_scale: d3.scale.linear()
+                .range([vars.radius_min, vars.radius_max])
+                .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_r]; })),
+    fill: function(d) { return vars.color(vars.accessor_items(d)[vars.var_color]); },
+   // translate: function() {
+   //   return [vars.x_scale[0]['func'].rangeBand() / 4, 0]
+   // },
+     }, {
       var_mark: '__highlighted',
+      type: d3.scale.ordinal().domain([true, false]).range(['text', 'none'])
+    }, {
+      var_mark: '__selected',
       type: d3.scale.ordinal().domain([true, false]).range(['text', 'none'])
     }]
   }];
