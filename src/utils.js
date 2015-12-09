@@ -185,6 +185,7 @@
               .classed("items__mark__text", true)
               .classed("items_" + mark_id, true)
               .style("text-anchor", params.text_anchor)
+              .style("fill", params_fill)
               .attr("x", params_x)
               .attr("y", params_y)
               .attr("dy", ".35em")
@@ -209,6 +210,7 @@
               .classed("highlighted", function(d, i) { return d.__highlighted; })
               .classed("selected", function(d, i) { return d.__selected; })
               .transition().duration(vars.duration)
+              .style("fill", params_fill)
               .attr("transform", "translate(" + ([params_translate[0] + params_offset_x, params_translate[1] + params_offset_y]) + ")rotate(" +  params_rotate + ")")
               .text(function(d) {
 
@@ -386,7 +388,6 @@
                   .attr("height", params_height)
                   .attr("width", params_width)
                   .attr("transform", "rotate(" + params_rotate + ")")
-                  .style("fill", params_fill)
                   .style("stroke", params_stroke);
 
         items_mark_rect
@@ -397,8 +398,33 @@
             .attr("y", params.y || 0)
             .attr("height", params_height)
             .attr("width", params_width)
-            .style("fill", params_fill)
             .style("stroke", params_stroke);
+
+          if(typeof params.fill !== "undefined") {
+
+            if(typeof params.fill === "function") {
+
+              items_mark_rect.style("fill", params.fill(d, i, vars));
+
+            } else {
+
+              items_mark_rect.style("fill", function(d) {
+                return params.fill(vars.accessor_items(d)[vars.var_color]);
+              });
+
+            }
+
+          } else if(vars.var_color !== null) {
+
+            items_mark_rect.style("fill", function(d) {
+              return vars.color(vars.accessor_items(d)[vars.var_color]);
+            });
+
+            items_mark_rect.style("fill", function(d) {
+              return vars.color(vars.accessor_items(d)[vars.var_color]);
+            });
+
+          }
 
         items_mark_rect.exit().remove();
 
@@ -717,7 +743,7 @@
           mark.enter().append('polygon')
               .classed("items_" + mark_id, true)
               .classed('items__mark__triangle', true)
-              .attr('fill', '#ED4036')
+              .attr('fill', params_fill)
               .attr('stroke-width', 0)
               .attr('points','-10,5 0,-15 10,5');
 
