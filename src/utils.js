@@ -1824,3 +1824,31 @@ utils.init_params_values = function(var_v, default_value, params, d, i, vars) {
 */
     return params_values;
   }
+
+  utils.push_array = function(arr, data) {
+    var index = -1;
+    vars[arr].forEach(function(d, i) {
+      if(d === data[vars.var_id]) {
+        index = i;
+      }
+    });
+
+    if(index < 0) {
+      vars[arr].push(data[vars.var_id])
+    }
+  }
+
+  // Find index and removes it
+  utils.pop_array = function(arr, data) {
+    var index = -1;
+    vars[arr].forEach(function(d, i) {
+      if(d === data[vars.var_id]) {
+        index = i;
+      }
+    });
+
+    if(index > -1) {
+      console.log('remove', data[vars.var_id])
+      vars[arr].splice(index, 1);
+    }
+  }

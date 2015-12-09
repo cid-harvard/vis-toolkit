@@ -63,6 +63,7 @@
   });
 
   vars.evt.register("highlightOn", function(d) {
+    utils.push_array('highlight', d);
     d.__highlighted = true;
     d.__redraw = true;
   });
@@ -72,6 +73,7 @@
   });
 
   vars.evt.register("highlightOut", function(d) {
+    utils.pop_array('highlight', d);
     d.__highlighted = false;
     d.__redraw = true;
 
@@ -94,6 +96,11 @@
   });
 
   vars.evt.register("selection", function(d) {
+    if(d.__selected) {
+      utils.pop_array('highlight', d);
+    } else {
+      utils.pop_array('highlight', d);
+    }
     d.__selected = !d.__selected;
     d.__redraw = true;
   });
