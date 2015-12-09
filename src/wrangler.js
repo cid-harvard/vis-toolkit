@@ -59,16 +59,6 @@
       vars.time.current_time = vars.time.current_time(vars.data);
     }
 
-    // Making sure with have an array (in case of individual highlight)
-    if(typeof vars.highlight !== 'object') {
-      vars.highlight = [vars.highlight];
-    }
-
-    // Making sure with have an array (in case of individual selection)
-    if(typeof vars.selection !== 'object') {
-      vars.selection = [vars.selection];
-    }
-
     // Calculate vars.new_data which should contain two things
     // 1/ The list of all items (e.g. countries, products)
     // 2/ The metadata for each items

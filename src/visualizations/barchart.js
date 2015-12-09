@@ -34,6 +34,13 @@ vars.default_params["barchart"] = function(scope) {
       fill: function(d) {
         return scope.color(scope.accessor_items(d)[scope.var_color]);
       }
+    }, {
+      type: 'text',
+      text: function(d) {
+        return scope.accessor_data(d)[vars.var_y];
+      },
+      translate: [params.x_scale[0]["func"].rangeBand() / 4, -20],
+      text_anchor: 'middle'
     }]
   }];
 
@@ -42,7 +49,7 @@ vars.default_params["barchart"] = function(scope) {
   params.x_grid_show = false;
 
   params.y_axis_show = true;
-  params.y_axis_translate = [scope.margin.left, 0];
+  params.y_axis_translate = [scope.margin.left, -10];
   params.y_grid_show = true;
 
   return params;

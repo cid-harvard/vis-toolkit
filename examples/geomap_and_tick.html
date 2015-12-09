@@ -21,7 +21,8 @@ text: {
 <div id="countries"></div>
 <script>
 
-d3.json("../../vis-toolkit-datasets/data/partners_usa_2012_csay.json", function(error, partners) {
+//d3.json("../../vis-toolkit-datasets/data/partners_usa_2012_csay.json", function(error, partners) {
+d3.csv("../../vis-toolkit-datasets/data/atlas_growth_projections_2024.csv", function(error, data) {
 
   queue()
       .defer(d3.json, "../shapefiles/world/world-110m.json")
@@ -38,21 +39,19 @@ d3.json("../../vis-toolkit-datasets/data/partners_usa_2012_csay.json", function(
         height: 400,
         width: 600,
         margin: {top: 10, right: 10, bottom: 10, left: 10},
-        data: partners.data,
+        data: data,
         topology: world,
         names: names,
-        var_id: "name",
+        var_id: "countryname",
         var_x: "x",
         var_y: "y",
-        var_group: "continent",
-        var_color: "share",
-        vars_text: "name",
+        var_color: "value",
+        vars_text: "countryname",
         items: [{
-          attr: "name",
           marks: [{
             type: "shape",
             fill: d3.scale.linear()
-              .domain([0, 1])
+              .domain([0, 7])
               //.domain([d3.min(vars.new_data, function(d) { return d[vars.var_color]; }), d3.max(vars.new_data, function(d) { return d[vars.var_color]; })])
               .range(["red", "green"])
           }],
@@ -61,11 +60,11 @@ d3.json("../../vis-toolkit-datasets/data/partners_usa_2012_csay.json", function(
             callback: function(d, i, vars) {
 
               d3.selectAll('.mark__group').filter(function(e) {
-                return e.name !== d.name;
+                return e.countryname !== d.countryname;
               }).style('opacity', .5);
 
               // visualization_grid.params().refresh = true
-              visualization_tick.params().highlight = [d.name];
+              visualization_tick.params().highlight = [d.countryname];
               d3.select(visualization_tick.container()).call(visualization_tick);
 
             }
@@ -83,7 +82,7 @@ d3.json("../../vis-toolkit-datasets/data/partners_usa_2012_csay.json", function(
 
         time: {
           var_time: "year",
-          current_time: 2012
+          current_time: 2014
         },
         ui: {
           default: false
@@ -101,29 +100,29 @@ d3.json("../../vis-toolkit-datasets/data/partners_usa_2012_csay.json", function(
       width: 700,
       margin: {top: 10, right: 10, bottom: 20, left: 10},
       container: "#countries",
-      data: partners.data,
-      var_x: 'share',
+      data: data,
+      var_x: 'value',
       var_y: function() { return this.height/2; },
-      var_color: "share",
+      var_color: "value",
       color: d3.scale.linear()
-            .domain([0, 1])
+            .domain([0, 7])
             .range(["red", "green"]),
-      var_sort: 'total_exports',
+      var_sort: 'value',
       var_sort_asc: true,
-      var_id: 'name',
-      var_text: 'abbrv',
+      var_id: 'countryname',
+      var_text: 'countryname',
       time: {
         var_time: "year",
         parse: d3.time.format("%Y").parse,
-        current_time: "1995"
+        current_time: 2014
       },
-      x_format: function(d) { return '$' + d3.format(".2s")(d); },
+      //x_format: function(d) { return '$' + d3.format(".2s")(d); },
       items: [{
         attr: "name",
         marks: [{
           type: "tick",
           stroke: d3.scale.linear()
-            .domain([0, 1])
+            .domain([0, 7])
             .range(["red", "green"]),
           stroke_width: 5,
           stroke_opacity: 0.5
@@ -143,11 +142,11 @@ d3.json("../../vis-toolkit-datasets/data/partners_usa_2012_csay.json", function(
           callback: function(d, i, vars) {
 
             d3.selectAll('.mark__group').filter(function(e) {
-              return e.name !== d.name;
+              return e.countryname !== d.countryname;
             }).style('opacity', .5);
 
             // visualization_geomap.params().refresh = true
-            visualization_geomap.params().highlight = [d.name];
+            visualization_geomap.params().highlight = [d.countryname];
             d3.select(visualization_geomap.container()).call(visualization_geomap);
 
           }

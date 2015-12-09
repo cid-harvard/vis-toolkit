@@ -45,6 +45,7 @@ vars.default_params["slopegraph"] = function(scope) {
     marks: [{
       type: "path",
       rotate: "0",
+      fill: 'red',
       stroke: function(d) { return "black"; },
       func: d3.svg.line()
            .interpolate(vars.interpolate)
