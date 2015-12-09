@@ -44,12 +44,13 @@ d3.csv("../../vis-toolkit-datasets/data/atlas_growth_projections_2024.csv", func
           }
           return d.values['2014']['rank'] + '.' + d['countryname'] + text_change;
         },
-        fill: function(d) {
+        stroke: function(d) {
           var scale = d3.scale.linear()
-            .domain([-20, 0, 20])
-            .range(["red", "black", "green"]);
+            .domain([-1, 0, 1])
+            .range(["red", "black", "#006400"]);
           var change = d.values['2004']['rank'] - d.values['2014']['rank'];
-          return scale(change);
+          var change_bin = change > 0 ? 1 : change < 0 ? -1: 0;
+          return scale(change_bin);
         },
         translate: [20, 0],
      // }, {
@@ -76,15 +77,13 @@ d3.csv("../../vis-toolkit-datasets/data/atlas_growth_projections_2024.csv", func
       marks: [{
         type: "path",
         rotate: "0",
-        stroke: function(d) {
-          return "red";
-        },
         fill: function(d) {
           var scale = d3.scale.linear()
-            .domain([-40, 0, 40])
+            .domain([-1, 0, 1])
             .range(["red", "black", "green"]);
           var change = d.values['2004']['rank'] - d.values['2014']['rank'];
-          return scale(change);
+          var change_bin = change > 0 ? 1 : change < 0 ? -1: 0;
+          return scale(change_bin);
         },
         func: function(d, i, vars) {
           return d3.svg.line()
@@ -100,8 +99,7 @@ d3.csv("../../vis-toolkit-datasets/data/atlas_growth_projections_2024.csv", func
       current_time: '2014',
       filter: ['2004', '2014']
     },
-    selection: ["India", "Uganda", "Kenya", "Tanzania"],
-    highlight: ["India"],
+    selection: ["IND", "UGA", "KEN", "TZA", "EGY"],
     ui: {
       default: true
     },

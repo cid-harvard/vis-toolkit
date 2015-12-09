@@ -6,7 +6,7 @@
 <div id="viz"></div>
 <script>
 
-d3.csv("../../vis-toolkit-datasets/data/atlas_growth_projections_2023.csv", function(error, data) {
+d3.csv("../../vis-toolkit-datasets/data/atlas_growth_projections_2024.csv", function(error, data) {
 
   data = data.filter(function(d, i) {
     return d.value != '';
@@ -27,14 +27,14 @@ d3.csv("../../vis-toolkit-datasets/data/atlas_growth_projections_2023.csv", func
       var_id: 'iso',
       var_group: 'iso',
       var_color: 'value',
-      color: d3.scale.linear().domain([0, 10]).range(["blue", "red"]),
+      color: d3.scale.linear().domain([0, 7]).range(["blue", "red"]),
       var_x: 'value',
       var_sort: 'value',
-      var_y: 'iso',
-      var_text: 'iso',
+      var_y: 'countryname',
+      y_axis_show: false,
       time: {
         var_time: "year",
-        current_time: 2013,
+        current_time: "2014",
         parse: d3.time.format("%Y").parse,
       },
       ui: {
@@ -42,9 +42,8 @@ d3.csv("../../vis-toolkit-datasets/data/atlas_growth_projections_2023.csv", func
         options: ["country", "continent", "year"],
         sort: ['continent', "name", 'value']
       },
-      selection: ["France"],
-      highlight: ["France", "Germany"],
-      title: "World Countries"
+      selection: ["IND"],
+      highlight: ["France", "Germany"]
     });
 
   d3.select("#viz").call(visualization);
