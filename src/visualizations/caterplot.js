@@ -23,16 +23,19 @@ vars.default_params["caterplot"] = function(scope) {
 
   params.items = [{
     marks: [{
-        type: 'circle',
-        r_scale: d3.scale.linear()
-                    .range([vars.radius_min, vars.radius_max])
-                    .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_r]; })),
-        fill: function(d) { return vars.color(vars.accessor_items(d)[vars.var_color]); },
-       // translate: function() {
-       //   return [vars.x_scale[0]['func'].rangeBand() / 4, 0]
-       // },
-      }, {
+    type: 'circle',
+    r_scale: d3.scale.linear()
+                .range([vars.radius_min, vars.radius_max])
+                .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_r]; })),
+    fill: function(d) { return vars.color(vars.accessor_items(d)[vars.var_color]); },
+   // translate: function() {
+   //   return [vars.x_scale[0]['func'].rangeBand() / 4, 0]
+   // },
+     }, {
       var_mark: '__highlighted',
+      type: d3.scale.ordinal().domain([true, false]).range(['text', 'none'])
+    }, {
+      var_mark: '__selected',
       type: d3.scale.ordinal().domain([true, false]).range(['text', 'none'])
     }]
   }];
