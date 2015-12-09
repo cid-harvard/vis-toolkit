@@ -17,7 +17,9 @@
     vars.countries.forEach(function(d) {
 
       // Retrieve the country name based on its id
-      d[vars.var_id] = vars.names.filter(function(n) { return d.id == n.id; })[0][vars.var_id];
+      d[vars.var_id] = vars.names.filter(function(n) {
+        return d.id == n.id;
+      })[0][vars.var_id];
 
       // TODO: should merge on a more reliable join (e.g. 2-char)
       d.data = vars.new_data.filter(function(n) {
