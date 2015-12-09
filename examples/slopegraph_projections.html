@@ -9,7 +9,7 @@
 <script src="../js/d3.js"></script>
 <script>
 
-d3.csv("../../vis-toolkit-datasets/data/atlas_growth_projections_2023.csv", function(error, data) {
+d3.csv("../../vis-toolkit-datasets/data/atlas_growth_projections_2024.csv", function(error, data) {
 
   visualization = vistk.viz().params({
     type: "slopegraph",
@@ -30,20 +30,22 @@ d3.csv("../../vis-toolkit-datasets/data/atlas_growth_projections_2023.csv", func
       attr: "right_label",
       marks: [{
         type: "text",
-        text_anchor: "start"
+        text_anchor: "start",
+        text: function(d, i, vars) {
+          return d['rank'] + '.' + d['countryname'];
+        },
       }]
     }, {
       attr: "left_label",
       accessor_data: function(d) {
         return d.values.filter(function(e) {
-          return e.year == "2003";
+          return e.year == 2004;
         })[0];
       },
       marks: [{
         type: "text",
         text_anchor: "end",
         translate: [- 20, 0]
-        // translate: [-(scope.width-scope.margin.left-scope.margin.right-scope.margin.left+20), 0]
       }]
     }],
     connect: [{
@@ -64,8 +66,8 @@ d3.csv("../../vis-toolkit-datasets/data/atlas_growth_projections_2023.csv", func
     time: {
       parse: d3.time.format("%Y").parse,
       var_time: 'year',
-      current_time: '2013',
-      filter: ['2003', '2013']
+      current_time: '2014',
+      filter: ['2004', '2014']
     },
     selection: ["Japan", "Switzerland", "Germany"],
     highlight: "France",

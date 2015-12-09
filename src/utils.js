@@ -550,6 +550,7 @@
               .attr("x2", function(d) { return vars.x_scale[0]["func"](d.target.x); })
               .attr("y2", function(d) { return vars.y_scale[0]["func"](d.target.y); })
               .style("stroke", params_stroke)
+              .style("stroke-dasharray", ("3, 3"))
               .on("mouseover",function(d) { // FIX to prevent hovers
                 d3.event.stopPropagation();
               })
