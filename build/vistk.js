@@ -3995,7 +3995,10 @@ vars.default_params["caterplot"] = function(scope) {
       type: d3.scale.ordinal().domain([true, false]).range(['text', 'none'])
     }, {
       var_mark: '__selected',
-      type: d3.scale.ordinal().domain([true, false]).range(['text', 'none'])
+      type: d3.scale.ordinal().domain([true, false]).range(['text', 'none']),
+      translate: function(d) {
+        return [10, -20];
+      }
     }]
   }];
 
