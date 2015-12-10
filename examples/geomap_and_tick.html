@@ -31,6 +31,13 @@ d3.csv("../../vis-toolkit-datasets/data/atlas_growth_projections_2024.csv", func
 
   function ready(error, world, names) {
 
+    var color_scale = d3.scale.linear()
+              .domain([1, 5])
+              //.domain([d3.min(vars.new_data, function(d) { return d[vars.var_color]; }), d3.max(vars.new_data, function(d) { return d[vars.var_color]; })])
+              .range(["black", "green"])
+
+    var selection = ['India'];
+
     visualization_geomap = vistk.viz()
       .params({
         dev: true,
@@ -46,25 +53,22 @@ d3.csv("../../vis-toolkit-datasets/data/atlas_growth_projections_2024.csv", func
         var_x: "x",
         var_y: "y",
         var_color: "value",
-        var_text: "countryname",
+        var_text: "name",
         items: [{
           marks: [{
             type: "shape",
-            fill: d3.scale.linear()
-              .domain([0, 7])
-              //.domain([d3.min(vars.new_data, function(d) { return d[vars.var_color]; }), d3.max(vars.new_data, function(d) { return d[vars.var_color]; })])
-              .range(["red", "green"])
+            fill: color_scale
           }],
           evt:[{
             type: "highlightOn",
             callback: function(d, i, vars) {
 
               d3.selectAll('.mark__group').filter(function(e) {
-                return e.countryname !== d.countryname;
+                return e.name !== d.name;
               }).style('opacity', .5);
 
               // visualization_grid.params().refresh = true
-              visualization_tick.params().highlight = [d.countryname];
+              visualization_tick.params().highlight = [d.name];
               d3.select(visualization_tick.container()).call(visualization_tick);
 
             }
@@ -87,8 +91,7 @@ d3.csv("../../vis-toolkit-datasets/data/atlas_growth_projections_2024.csv", func
         ui: {
           default: false
         },
-        selection: ["United States"],
-        highlight: ["France"]
+        selection: selection
       });
 
     d3.select("#viz").call(visualization_geomap);
@@ -104,13 +107,14 @@ d3.csv("../../vis-toolkit-datasets/data/atlas_growth_projections_2024.csv", func
       var_x: 'value',
       var_y: function() { return this.height/2; },
       var_color: "value",
-      color: d3.scale.linear()
-            .domain([0, 7])
-            .range(["red", "green"]),
+      color: color_scale,
       var_sort: 'value',
       var_sort_asc: true,
-      var_id: 'countryname',
-      var_text: 'countryname',
+      var_id: 'name',
+      var_text: 'name',
+      x_domain: [0, 8],
+      x_tickValues: null,
+      x_text_custom: 'Projected growth',
       time: {
         var_time: "year",
         parse: d3.time.format("%Y").parse,
@@ -121,9 +125,7 @@ d3.csv("../../vis-toolkit-datasets/data/atlas_growth_projections_2024.csv", func
         attr: "name",
         marks: [{
           type: "tick",
-          stroke: d3.scale.linear()
-            .domain([0, 7])
-            .range(["red", "green"]),
+          stroke: color_scale,
           stroke_width: 5,
           stroke_opacity: 0.5
         }, {
@@ -142,11 +144,11 @@ d3.csv("../../vis-toolkit-datasets/data/atlas_growth_projections_2024.csv", func
           callback: function(d, i, vars) {
 
             d3.selectAll('.mark__group').filter(function(e) {
-              return e.countryname !== d.countryname;
+              return e.name !== d.name;
             }).style('opacity', .5);
 
             // visualization_geomap.params().refresh = true
-            visualization_geomap.params().highlight = [d.countryname];
+            visualization_geomap.params().highlight = [d.name];
             d3.select(visualization_geomap.container()).call(visualization_geomap);
 
           }
@@ -161,7 +163,7 @@ d3.csv("../../vis-toolkit-datasets/data/atlas_growth_projections_2024.csv", func
           }
         }]
       }],
-      selection: ['CAN'],
+      selection: selection,
     });
 
     d3.select("#countries").call(visualization_tick);

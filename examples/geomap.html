@@ -16,7 +16,35 @@ d3.json("../../vis-toolkit-datasets/data/partners_usa_2012_csay.json", function(
       .defer(d3.tsv, "../../vis-toolkit-datasets/data/world-country-names.tsv")
       .await(ready);
 
+
   function ready(error, world, names) {
+
+    console.log('data', partners.data)
+// DATA
+// abbrv: "ABW"
+// continent: "Americas"
+// id: 1
+// item_id: 1
+// name: "Aruba"
+// region_id: 21
+// share: 0.0014298914240586961
+// value: 229834515
+// year: 1995
+
+// NAMES
+// id: "24"
+// name: "Angola"
+
+// WORLD / COUNTRIES
+// arcs: Array[1]
+// id: 4
+// type: "Polygon"
+
+// Since we need to connect topologies to data, we go throught countries
+
+      console.log('names', names)
+      console.log('topology', world)
+
 
     visualization = vistk.viz()
       .params({
