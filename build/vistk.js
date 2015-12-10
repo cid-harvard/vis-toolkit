@@ -6,7 +6,7 @@ var w = typeof window === "undefined" ? this : window;
 var vistk = w.vistk || {};
 w.vistk = vistk;
 
-vistk.version = "0.0.28";
+vistk.version = "{{ VERSION }}";
 vistk.utils = {};
 
 vistk.viz = function() {
@@ -174,7 +174,7 @@ var utils ={};
       var params_width = utils.init_params("width", 10, params, d, i, vars);
       var params_rotate = utils.init_params("rotate", 0, params, d, i, vars);
       var params_scale = utils.init_params("scale", 1, params, d, i, vars);
-      var params_fill = utils.init_params("fill", null, params, vars.accessor_data(d), i, vars);
+      var params_fill = utils.init_params("fill", null, params, d, i, vars);
 
       var params_stroke = utils.init_params("stroke", null, params, d, i, vars);
       var params_stroke_width = utils.init_params("stroke_width", null, params, d, i, vars);
@@ -1048,7 +1048,7 @@ var utils ={};
 
     }
 
-    if(vars.y_invert) {
+    if(typeof vars._user_vars.y_invert !== 'undefined' && vars._user_vars.y_invert) {
       vars.y_scale[0]["func"].range([vars.y_scale[0]["func"].range()[1], vars.y_scale[0]["func"].range()[0]]);
     }
 
@@ -1349,10 +1349,11 @@ var utils ={};
     }
 
     if(vars.y_axis_show) {
-       vars_svg.call(utils.y_axis);
+      vars_svg.call(utils.y_axis);
     } else {
-       vars_svg.selectAll(".y.axis").remove();
+      vars_svg.selectAll(".y.axis").remove();
     }
+
 
     if(vars.x_grid_show) {
 
@@ -1394,6 +1395,10 @@ var utils ={};
           .tickSize(-vars.x_scale[0]["func"].range()[1] + vars.margin.right + vars.y_tickSize, 0, 0)
           .tickFormat(""));
 
+    }
+
+    if(typeof vars._user_vars.y_grid_show !== 'undefined' && !vars._user_vars.y_grid_show) {
+      vars_svg.selectAll(".y.grid").remove();
     }
 
     if(vars.refresh) {
@@ -4119,14 +4124,14 @@ vars.default_params['barchart_vertical'] = function(scope) {
         return params.x_scale[0]["func"](scope.accessor_data(d)[scope.var_x]) - scope.margin.left;
       },
       fill: function(d) {
-        return scope.color(scope.accessor_items(d)[scope.var_color]);
+        return scope.color(scope.accessor_data(d)[scope.var_color]);
       }
     }, {
       type: 'text',
       text: function(d) {
         return scope.accessor_data(d)[vars.var_x];
       },
-      translate: [0, 5],
+      translate: [2, 5],
       text_anchor: 'start'
     }]
   }];
