@@ -34,7 +34,7 @@ d3.csv("../../vis-toolkit-datasets/data/atlas_growth_projections_2024.csv", func
     var color_scale = d3.scale.linear()
               .domain([1, 5])
               //.domain([d3.min(vars.new_data, function(d) { return d[vars.var_color]; }), d3.max(vars.new_data, function(d) { return d[vars.var_color]; })])
-              .range(["black", "green"])
+              .range(["#e5f5f9", "#2ca25f"])
 
     var selection = ['India'];
 
@@ -127,7 +127,7 @@ d3.csv("../../vis-toolkit-datasets/data/atlas_growth_projections_2024.csv", func
           type: "tick",
           stroke: color_scale,
           stroke_width: 5,
-          stroke_opacity: 0.5
+          stroke_opacity: 0.7
         }, {
           var_mark: '__highlighted',
           type: d3.scale.ordinal().domain([true, false]).range(['text', 'none']),

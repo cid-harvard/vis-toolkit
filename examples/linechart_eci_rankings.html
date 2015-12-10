@@ -1,0 +1,48 @@
+<!doctype html>
+<meta charset="utf-8">
+<script src="../js/d3.js"></script>
+<script src="../build/vistk.js"></script>
+<link href="../css/vistk.css" rel="stylesheet">
+<body>
+<div id="viz"></div>
+<body>
+<script src="../js/d3.js"></script>
+<script>
+
+d3.csv("../../vis-toolkit-datasets/data/atlas_eci_rankings_2004_2014.csv", function(error, data) {
+
+  visualization = vistk.viz().params({
+    type: "linechart",
+    container: "#viz",
+    height: 1000,
+    width: 900,
+    margin: {top: 20, right: 100, bottom: 30, left: 10},
+    data: data,
+    var_id: "iso",
+    var_group: "continent",
+    var_color: "rank_eci", // TODO: color by final ranking value..
+//    color: d3.scale.ordinal().domain(["Africa", "Americas", "Asia", "Europe", "Oceania"]).range(["#99237d", "#c72439", "#6bc145", "#88c7ed", "#dd9f98"]),
+    color: d3.scale.linear().domain([0, 200]).range(["red", "blue"]),
+    var_text: "name",
+    y_text: "ECI Rank",
+    var_y: "rank_eci",
+    var_x: 'year',
+    y_invert: true,
+    time: {
+      parse: d3.time.format("%Y").parse,
+      var_time: 'year',
+      current_time: '2014'
+    },
+    selection: ["JPN", "IND", "UGA", "KEN"],
+    highlight: ["IND"],
+    ui: {
+      default: true,
+      options: ["country", "continent"]
+    }
+  });
+
+  d3.select("#viz").call(visualization);
+
+});
+
+</script>

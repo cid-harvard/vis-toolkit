@@ -3,6 +3,12 @@
 <script src="../js/d3.js"></script>
 <script src="../build/vistk.js"></script>
 <link href="../css/vistk.css" rel="stylesheet">
+
+<style>
+.domain, .x__axis__label {
+  visibility: hidden;
+}
+</style>
 <div id="viz"></div>
 <script>
 
@@ -21,7 +27,7 @@ d3.csv("../../vis-toolkit-datasets/data/atlas_growth_projections_2024.csv", func
       type: 'barchart_vertical',
       width: 500,
       height: 1500,
-      margin: {top: 10, right: 10, bottom: 30, left: 50},
+      margin: {top: 10, right: 25, bottom: 30, left: 100},
       container: '#viz',
       data: data,
       var_id: 'iso',
@@ -31,7 +37,8 @@ d3.csv("../../vis-toolkit-datasets/data/atlas_growth_projections_2024.csv", func
       var_x: 'value',
       var_sort: 'value',
       var_y: 'countryname',
-      y_axis_show: false,
+      y_text_custom: "",
+      y_grid_show: false,
       time: {
         var_time: "year",
         current_time: "2014",
