@@ -40,14 +40,14 @@ vars.default_params['barchart_vertical'] = function(scope) {
         return params.x_scale[0]["func"](scope.accessor_data(d)[scope.var_x]) - scope.margin.left;
       },
       fill: function(d) {
-        return scope.color(scope.accessor_items(d)[scope.var_color]);
+        return scope.color(scope.accessor_data(d)[scope.var_color]);
       }
     }, {
       type: 'text',
       text: function(d) {
         return scope.accessor_data(d)[vars.var_x];
       },
-      translate: [0, 5],
+      translate: [2, 5],
       text_anchor: 'start'
     }]
   }];
