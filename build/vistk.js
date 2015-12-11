@@ -1340,6 +1340,9 @@ var utils ={};
 
     }
 
+    if(typeof vars._user_vars.x_tickValues !== 'undefined') {
+      vars.x_tickValues = vars._user_vars.x_tickValues;
+    }
 
     // CREATE / UPDATE / REMOVE AXIS
     if(vars.x_axis_show) {
@@ -1353,7 +1356,6 @@ var utils ={};
     } else {
       vars_svg.selectAll(".y.axis").remove();
     }
-
 
     if(vars.x_grid_show) {
 
@@ -3234,14 +3236,17 @@ vars.default_params["scatterplot"] = function(scope) {
       // 1/ No data
       // 2/ Current country
       if(typeof d.data == "undefined") {
+
         var data = {}
-        data[vars.var_id] = "N/A"
+        data[vars.var_id] = d[vars.var_id];
         d.data = data;
+
       }
 
       d.__redraw = true;
 
     });
+
 
     vars.new_data = vars.countries.map(function(d) {
 
