@@ -3108,11 +3108,17 @@ vars.default_params["linechart"] = function(scope) {
     }, {
       var_mark: '__highlighted',
       type: d3.scale.ordinal().domain([true, false]).range(['text', 'none']),
-      translate: [10, 0]
+      translate: [10, 0],
+      text: function(d) {
+        return d[vars.var_y] + ' ' + d[vars.var_text];
+      }
     }, {
       var_mark: '__selected',
       type: d3.scale.ordinal().domain([true, false]).range(['text', 'none']),
-      translate: [10, 0]
+      translate: [10, 0],
+      text: function(d) {
+        return d.values[vars.time.current_time][vars.var_y] + ' ' + d[vars.var_text];
+      }
     }],
     accessor_data: function(d) {
       return d.values.filter(function(e) {
@@ -3214,7 +3220,7 @@ vars.default_params["scatterplot"] = function(scope) {
   params.accessor_data = function(d) { return d; };
   params.accessor_values = function(d) { return d.data.values; };
 
-  if(vars.init) {
+  if(vars.init || vars.refresh) {
 
     // countries contains bot the data and coordinates for shapes drawing
     vars.countries = topojson.object(vars.topology, vars.topology.objects.countries).geometries;
@@ -3240,7 +3246,9 @@ vars.default_params["scatterplot"] = function(scope) {
         var data = {}
         data[vars.var_id] = d[vars.var_id];
         d.data = data;
-
+        d.data.__no_data = true;
+      } else {
+        d.data.__no_data = false;
       }
 
       d.__redraw = true;

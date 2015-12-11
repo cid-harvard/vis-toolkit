@@ -45,7 +45,7 @@ d3.csv("../../vis-toolkit-datasets/data/atlas_growth_projections_2024.csv", func
         parse: d3.time.format("%Y").parse,
       },
       ui: {
-        default: true,
+        default: false,
         options: ["country", "continent", "year"],
         sort: ['continent', "name", 'value']
       },

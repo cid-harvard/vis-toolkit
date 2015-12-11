@@ -22,7 +22,7 @@ d3.csv("../../vis-toolkit-datasets/data/atlas_growth_projections_2024.csv", func
     var_group: "continent",
     var_color: 'value',
     color: d3.scale.linear().domain([0, 10]).range(["blue", "red"]),
-    var_text: "countryname",
+    var_text: "name",
     y_text: "ECI Rank",
     var_y: "rank",
     y_invert: true,
@@ -42,7 +42,7 @@ d3.csv("../../vis-toolkit-datasets/data/atlas_growth_projections_2024.csv", func
           } else {
             text_change = ' = ' + change + '';
           }
-          return d.values['2014']['rank'] + '.' + d['countryname'] + text_change;
+          return d.values['2014']['rank'] + '.' + d['name'] + text_change;
         },
         stroke: function(d) {
           var scale = d3.scale.linear()
@@ -69,7 +69,7 @@ d3.csv("../../vis-toolkit-datasets/data/atlas_growth_projections_2024.csv", func
         text_anchor: "end",
         translate: [-20, 0],
         text: function(d) {
-          return d['countryname'] + '.' + d.values['2004']['rank'];
+          return d['name'] + '.' + d.values['2004']['rank'];
         }
       }]
     }],

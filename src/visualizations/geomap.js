@@ -8,7 +8,7 @@
   params.accessor_data = function(d) { return d; };
   params.accessor_values = function(d) { return d.data.values; };
 
-  if(vars.init) {
+  if(vars.init || vars.refresh) {
 
     // countries contains bot the data and coordinates for shapes drawing
     vars.countries = topojson.object(vars.topology, vars.topology.objects.countries).geometries;
@@ -34,7 +34,9 @@
         var data = {}
         data[vars.var_id] = d[vars.var_id];
         d.data = data;
-
+        d.data.__no_data = true;
+      } else {
+        d.data.__no_data = false;
       }
 
       d.__redraw = true;
