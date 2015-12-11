@@ -1321,6 +1321,9 @@
 
     }
 
+    if(typeof vars._user_vars.x_tickValues !== 'undefined') {
+      vars.x_tickValues = vars._user_vars.x_tickValues;
+    }
 
     // CREATE / UPDATE / REMOVE AXIS
     if(vars.x_axis_show) {
@@ -1334,7 +1337,6 @@
     } else {
       vars_svg.selectAll(".y.axis").remove();
     }
-
 
     if(vars.x_grid_show) {
 

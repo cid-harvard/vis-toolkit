@@ -30,14 +30,17 @@
       // 1/ No data
       // 2/ Current country
       if(typeof d.data == "undefined") {
+
         var data = {}
-        data[vars.var_id] = "N/A"
+        data[vars.var_id] = d[vars.var_id];
         d.data = data;
+
       }
 
       d.__redraw = true;
 
     });
+
 
     vars.new_data = vars.countries.map(function(d) {
 
