@@ -6,7 +6,7 @@ var w = typeof window === "undefined" ? this : window;
 var vistk = w.vistk || {};
 w.vistk = vistk;
 
-vistk.version = "{{ VERSION }}";
+vistk.version = "0.0.28";
 vistk.utils = {};
 
 vistk.viz = function() {
