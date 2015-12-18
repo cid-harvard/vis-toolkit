@@ -42,7 +42,7 @@ d3.csv("../../vis-toolkit-datasets/data/atlas_growth_projections_2024.csv", func
 
     visualization_geomap = vistk.viz()
       .params({
-        dev: true,
+        dev: false,
         type: "geomap",
         container: "#viz",
         height: 400,
@@ -105,7 +105,7 @@ d3.csv("../../vis-toolkit-datasets/data/atlas_growth_projections_2024.csv", func
     d3.select("#viz").call(visualization_geomap);
 
     visualization_tick = vistk.viz().params({
-      dev: true,
+      dev: false,
       type: "dotplot",
       height: 60,
       width: 590,
