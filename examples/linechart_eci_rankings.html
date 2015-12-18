@@ -4,13 +4,14 @@
 <script src="../build/vistk.js"></script>
 <link href="../css/vistk.css" rel="stylesheet">
 <body>
+
 <div id="viz"></div>
+
 <body>
 <script src="../js/d3.js"></script>
 <script>
 
 d3.csv("../../vis-toolkit-datasets/data/atlas_eci_rankings_2004_2014.csv", function(error, data) {
-
 
   d3.json("../../vis-toolkit-datasets/data/countries.json", function(error, countries) {
 
@@ -38,7 +39,7 @@ d3.csv("../../vis-toolkit-datasets/data/atlas_eci_rankings_2004_2014.csv", funct
       type: "linechart",
       container: "#viz",
       height: 1000,
-      width: 800,
+      width: 600,
       margin: {top: 20, right: 100, bottom: 30, left: 10},
       data: data,
       var_id: "iso",
@@ -56,12 +57,13 @@ d3.csv("../../vis-toolkit-datasets/data/atlas_eci_rankings_2004_2014.csv", funct
       time: {
         parse: d3.time.format("%Y").parse,
         var_time: 'year',
-        current_time: '2014'
+        current_time: '2014',
+        filter_interval: [2004, 2014]
       },
-      selection: ["JPN", "IND", "UGA", "KEN"],
+      selection: ["JPN", "DEU", "CHE", "KOR", "USA", "GBR", "FRA", "CHN", "MEX", "THAI", "TUR", "IND", "BRA"],
       highlight: ["IND"],
       ui: {
-        default: true,
+        default: false,
         options: ["country", "continent"]
       }
     });
