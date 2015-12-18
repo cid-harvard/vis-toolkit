@@ -25,7 +25,12 @@
     "grunt-contrib-watch": "~0.6.1",
     "grunt-contrib-jshint": "~0.11.2",
     "grunt-contrib-jasmine": "*",
-    "grunt-string-replace": "*"
+    "grunt-string-replace": "*",
+    "d3": "~3.5.5",
+    "vows": "0.8"
+  },
+  "scripts": {
+    "test": "vows; echo"
   },
   "dependencies": {}
 }
