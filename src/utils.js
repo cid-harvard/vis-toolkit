@@ -448,11 +448,9 @@
               items_mark_diamond_enter.style("fill", params_fill)
             }
 
-           // .style("stroke", params_stroke);
-
-          if(typeof params.class !== "undefined") {
-            items_mark_diamond_enter.classed(params.class(vars.accessor_items(d)), true);
-          }
+        if(typeof params.class !== "undefined") {
+          items_mark_diamond_enter.classed(params.class(vars.accessor_items(d)), true);
+        }
 
         items_mark_diamond
             .classed("highlighted", function(d, i) { return d.__highlighted; })
@@ -577,7 +575,7 @@
               .attr("x2", function(d) { return vars.x_scale[0]["func"](d.target.x); })
               .attr("y2", function(d) { return vars.y_scale[0]["func"](d.target.y); })
               .style("stroke", params_stroke)
-              .style("stroke-dasharray", ("3, 3"))
+              // .style("stroke-dasharray", ("3, 3"))
               .on("mouseover",function(d) { // FIX to prevent hovers
                 d3.event.stopPropagation();
               })
@@ -683,8 +681,6 @@
               .attr("transform", function(d) {
                 return "translate(" +  params_translate + ")rotate(" +  params_rotate + ")";
               });
-
-
 
           mark
               .classed("highlighted", function(e, j) { return e.__highlighted; })

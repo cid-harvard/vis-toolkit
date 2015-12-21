@@ -38,10 +38,11 @@ d3.json("../../vis-toolkit-datasets/data/diversification_ubiquity_hs4_1995_2012.
       attr: "name",
       marks: [{
         type: "circle",
-        rotate: "0",
         var_r: "nb_products",
         var_fill: "nb_products",
-        fill: function(d, i, vars) { return vars.color(vars.accessor_items(d)[vars.var_color]); }
+        fill: function(d, i, vars) {
+          return vars.color(vars.accessor_items(d)[vars.var_color]);
+        }
       }, {
         type: "text",
         rotate: "-30",
