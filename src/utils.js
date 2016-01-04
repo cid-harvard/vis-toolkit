@@ -497,6 +497,9 @@
           items_mark_shape.enter().insert("path")
               .classed('items__mark__shape', true)
               .classed("items_" + mark_id, true)
+              .style("fill", function(d, i) {
+                return params.fill(vars.accessor_data(d)[vars.var_color]);
+              })
               .attr("transform", function(d) {
                 return "translate("+ -d.x +", "+ -d.y +")";
               })

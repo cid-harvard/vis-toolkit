@@ -129,7 +129,7 @@
       vars.time.points = vistk.utils.find_unique_values(vars.new_data, vars.time.var_time);
 
       // In case no temporal values, change the accessor
-      if(vars.time.var_time === null || vars.type === 'treemap') {
+      if(vars.time.var_time === null || vars.type === 'treemap' || vars.type === 'dotplot') {
         vars.accessor_data = function(d) { return d; }
       }
 
@@ -467,7 +467,7 @@
         d.__highlighted = false;
         d.__redraw = true;
       }
-
+      console.log(vars.accessor_data(d), d)
       return typeof vars.accessor_data(d) !== 'undefined' && typeof vars.accessor_data(d)[vars.var_id] !== 'undefined';
     });
 
