@@ -16,15 +16,21 @@
 
     vars.countries.forEach(function(d) {
 
+      if(typeof vars.var_names === 'undefined') {
+        vars.var_names = vars.var_id;
+      }
+
       // Retrieve the country name based on its id
-      d[vars.var_id] = vars.names.filter(function(n) {
+      d[vars.var_names] = vars.names.filter(function(n) {
         return d.id == n.id;
-      })[0][vars.var_id];
+      })[0][vars.var_names];
+
 
       // TODO: should merge on a more reliable join (e.g. 2-char)
       d.data = vars.new_data.filter(function(n) {
-        return d[vars.var_id] === n[vars.var_id];
+        return d[vars.var_names] === n[vars.var_names];
       })[0];
+
 
       // Two reasons why it is not defined
       // 1/ No data
@@ -32,9 +38,12 @@
       if(typeof d.data == "undefined") {
 
         var data = {}
-        data[vars.var_id] = d[vars.var_id];
+        data[vars.var_id] = d;
+        data[vars.var_names] = d[vars.var_names];
+
         d.data = data;
         d.data.__no_data = true;
+
       } else {
         d.data.__no_data = false;
       }
@@ -43,15 +52,16 @@
 
     });
 
-
     vars.new_data = vars.countries.map(function(d) {
-
+      d[vars.var_id] = d.data[vars.var_id];
       d[vars.var_color] = d.data[vars.var_color];
       d[vars.var_group] = d.data[vars.var_group];
       if(typeof d.x === 'undefined') { d.x = 0; }
       if(typeof d.y === 'undefined') { d.y = 0; }
       return d;
     });
+
+    console.log("VNEW", vars.new_data)
 
     vars.projection = d3.geo.equirectangular()
                     .scale(100);
