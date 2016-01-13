@@ -541,7 +541,7 @@
           mark.enter().append("path")
               .classed("items_" + mark_id, true)
               .classed("items__mark__arc", true)
-              .attr("fill", params_fill)
+              .attr("fill", params_fill);
               //.style("fill-opacity", function(d, i) {
               //  if(d.i == 0)
               //    return .2;
