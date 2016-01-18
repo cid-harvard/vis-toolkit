@@ -1,28 +1,30 @@
-var vows = require("vows"),
-    assert = require("assert");
+var test = require('tape');
 
-var d3 = require("d3");
+d3 = require("d3");
+vistk = require("../build/vistk.js");
 
-var suite = vows.describe("vistk");
+test('VisTK metadata checks', function (t) {
 
-require("../build/vistk.js");
+    t.plan(1);
+    t.equal(typeof vistk.version, 'string');
 
-
-
-suite.addBatch({
-  "vistk": {
-    "is not a global": function() {
-      assert.equal("vistk" in global, false);
-    }
-  }
 });
 
-suite.addBatch({
-  "vistk.version": {
-    "is not a string": function() {
-      assert.isString(vistk.version, true);
-    }
-  }
+test('An empty configuration object returns an object with default values', function (t) {
+
+    t.plan(1);
+    var visualization = vistk.viz().params({});
+    t.equal(typeof visualization.params(), 'object');
+
 });
 
-suite.export(module);
+test('A dataset with no attribute is augmented with attributes', function (t) {
+
+    t.plan(1);
+    var data = ['A', 'B', 'C'];
+    var visualization = vistk.viz().params({data: data});
+
+    // Default ids
+    t.equal(visualization.params().new_data[0].__id, 0);
+
+});
