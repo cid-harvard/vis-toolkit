@@ -15,6 +15,14 @@ module.exports = function(grunt) {
       }
     },
 
+    tape: {
+      options: {
+        pretty: true
+        output: 'console'
+      },
+      files: ['test/*.js']
+    },
+
     pkg: grunt.file.readJSON('package.json'),
 
     concat: {
@@ -58,18 +66,14 @@ module.exports = function(grunt) {
       tasks: ['string-replace']
     },
 
-    jasmine : {
-      src : ['js/d3.js', 'build/vistk.js'],
-      specs : 'test/specs/*.js',
-      helpers : 'test/specs/helpers/*.js'
-    }
   });
 
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-jshint');
-  grunt.loadNpmTasks('grunt-contrib-jasmine');
   grunt.loadNpmTasks('grunt-string-replace');
+  grunt.loadNpmTasks('grunt-tape');
 
   grunt.registerTask('default', ['concat', 'string-replace']);
+  grunt.registerTask('test', ['tape:pretty']);
 };
