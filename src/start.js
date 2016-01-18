@@ -8,10 +8,14 @@ w.vistk = vistk;
 vistk.version = "{{ VERSION }}";
 vistk.utils = {};
 
+if(typeof module === "object" && module.exports) {
+  module.exports = vistk;
+}
+
 vistk.viz = function() {
 
-// Init parameters for the current chart
-var vars = {};
+  // Init parameters for the current chart
+  var vars = {};
 
-// Private functions
-var utils ={};
+  // Private functions
+  var utils ={};
