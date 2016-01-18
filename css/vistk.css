@@ -331,6 +331,22 @@ g:hover .items__mark__circle.highlighted {
   stroke-width: 2.5px;
 }
 
+.items__mark__arc.highlighted {
+  stroke-opacity: 1;
+  stroke: black;
+  stroke-width: 2.5px;
+}
+
+g:hover .items__mark__arc.highlighted {
+  stroke-opacity: 1;
+  stroke: black;
+  stroke-width: 2.5px;
+}
+
+g:hover .items__mark__arc:not(.highlighted) {
+  opacity: .1;
+}
+
 .items__mark__star {
   fill: yellow;
   stroke-width: .5px;
