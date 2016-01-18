@@ -3,7 +3,7 @@ var test = require('tape');
 d3 = require("d3");
 vistk = require("../build/vistk.js");
 
-test('metadata checks', function (t) {
+test('vistk version should be defined and defined as a string', function (t) {
 
     t.plan(1);
     t.equal(typeof vistk.version, 'string');
