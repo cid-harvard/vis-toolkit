@@ -12,23 +12,25 @@
     // 1 - Init and define default parameters
     vars.items_data = [];
 
+    // Duplicates the whole dataset
+    vars.evt.register('init', utils.duplicate_data);
+
+    if(vars.init) {
+      vars.evt.call('init');
+    }
     // Each item needs coordinates
     // 1/ In case we use functions for X/Y variables
     // 2/ Adds default attributes __var_x and __var_y if no coordinate exist
 
-    // Duplicate the dataset to prevent mutation
-    if(vars.init) {
-
-      // Get a copy of the whole dataset
-      vars.all_data = JSON.parse(JSON.stringify(vars.data));
-
-    }
 
     if(typeof vars.var_x !== "string" && typeof vars.var_x === "function") {
+
       vars.all_data.forEach(function(d, i) {
         d.__var_x = vars.var_x(d, i, vars);
       });
+
       vars.var_x = "__var_x";
+
     }
 
     if(typeof vars.var_x === "undefined") {
@@ -36,13 +38,17 @@
       //   d.__var_x = vars.var_x(d, i, vars);
       // });
       vars.var_x = "__var_x";
+
     }
 
     if(typeof vars.var_y !== "string" && typeof vars.var_y === "function") {
+
       vars.all_data.forEach(function(d, i) {
         d.__var_y = vars.var_y(d, i, vars);
       });
+
       vars.var_y = "__var_y";
+
     }
 
     // In case the chart type is a function
@@ -129,7 +135,7 @@
       vars.time.points = vistk.utils.find_unique_values(vars.new_data, vars.time.var_time);
 
       // In case no temporal values, change the accessor
-      if(vars.time.var_time === null || vars.type === 'treemap' || vars.type === 'dotplot') {
+      if(vars.time.var_time === null || vars.type === 'treemap') {
         vars.accessor_data = function(d) { return d; }
       }
 
@@ -467,7 +473,7 @@
         d.__highlighted = false;
         d.__redraw = true;
       }
-      console.log(vars.accessor_data(d), d)
+
       return typeof vars.accessor_data(d) !== 'undefined' && typeof vars.accessor_data(d)[vars.var_id] !== 'undefined';
     });
 

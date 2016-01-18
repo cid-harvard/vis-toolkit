@@ -1885,3 +1885,7 @@ utils.init_params_values = function(var_v, default_value, params, d, i, vars) {
       vars[arr].splice(index, 1);
     }
   }
+
+  utils.duplicate_data = function() {
+    vars.all_data = JSON.parse(JSON.stringify(vars.data));
+  }
