@@ -1,4 +1,4 @@
-vars.default_params["scatterplot"] = function(scope) {
+vars.default_params['scatterplot'] = function(scope) {
 
   var params = {};
 
@@ -6,7 +6,7 @@ vars.default_params["scatterplot"] = function(scope) {
     func: d3.scale.linear()
             .range([scope.margin.left, scope.width - scope.margin.left - scope.margin.right])
             .domain(d3.extent(vars.new_data, function(d) {
-              return scope.accessor_data(d)[vars.var_x];
+              return scope.accessor_data(d)[scope.var_x];
             })).nice()
   }];
 
@@ -14,28 +14,28 @@ vars.default_params["scatterplot"] = function(scope) {
     func: d3.scale.linear()
             .range([scope.height - scope.margin.top - scope.margin.bottom, scope.margin.top])
             .domain(d3.extent(vars.new_data, function(d) {
-              return scope.accessor_data(d)[vars.var_y];
+              return scope.accessor_data(d)[scope.var_y];
             })).nice()
   }];
 
   params.r_scale = d3.scale.linear()
-              .range([vars.radius_min, vars.radius_max])
+              .range([scope.radius_min, scope.radius_max])
               .domain(d3.extent(vars.new_data, function(d) {
-                return scope.accessor_data(d)[vars.var_r];
+                return scope.accessor_data(d)[scope.var_r];
               }));
 
   params.items = [{
     marks: [{
-        type: "circle",
+        type: 'circle',
         r_scale: d3.scale.linear()
-                    .range([vars.radius_min, vars.radius_max])
+                    .range([scope.radius_min, scope.radius_max])
                     .domain(d3.extent(vars.new_data, function(d) {
-                      return scope.accessor_data(d)[vars.var_r];
+                      return scope.accessor_data(d)[scope.var_r];
                     })),
-        fill: function(d) { return vars.color(vars.accessor_items(d)[vars.var_color]); }
+        fill: function(d) { return vars.color(vars.accessor_items(d)[scope.var_color]); }
       }, {
       var_mark: '__highlighted',
-      type: d3.scale.ordinal().domain([true, false]).range(["text", "none"])
+      type: d3.scale.ordinal().domain([true, false]).range(['text', 'none'])
     }]
   }];
 
