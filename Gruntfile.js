@@ -39,9 +39,9 @@ module.exports = function(grunt) {
               'src/visualizations/treemap.js', 'src/visualizations/radial.js', 'src/visualizations/stackedbar.js', 'src/visualizations/rectmap.js',
               'src/visualizations/caterplot.js', 'src/visualizations/tickplot.js', 'src/visualizations/barchart_vertical.js',
               'src/visualizations/productspace.js', 'src/visualizations/ordinal_vertical.js', 'src/visualizations/ordinal_horizontal.js', 'src/visualizations/matrix.js',
-              'src/start_selection.js', 'src/visualizations/table.js',
-              'src/visualizations/boxplot.js', 'src/visualizations/none.js',
-              'src/visualizations/default.js', 'src/ui.js', 'src/getterssetters.js',
+              'src/start_selection.js', 'src/templates/table.js',
+              'src/templates/boxplot.js', 'src/templates/none.js',
+              'src/templates/default.js', 'src/ui.js', 'src/getterssetters.js',
               'src/end_constructor.js', 'src/end.js'],
         dest: 'build/vistk.js',
       },
@@ -60,7 +60,7 @@ module.exports = function(grunt) {
 
     watch: {
       concat: {
-        files: ['src/*.js', 'src/visualizations/*.js', 'src/marks/*.js'],
+        files: ['src/*.js', 'src/**/*.js'],
         tasks: ['string-replace', 'concat']
       },
       tasks: ['string-replace']

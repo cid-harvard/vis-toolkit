@@ -303,8 +303,6 @@
               })
              .html("Clear highlight");
 
-
-
       d3.select(vars.container).selectAll(".toggleLanguage").data(["toggleLanguage"]).enter().append("button")
                .attr("type", "button")
                .attr("class", "toggleLanguage")
