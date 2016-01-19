@@ -74,11 +74,43 @@ jsdom.env({
 
       test('we should have 120 circles', function (t) {
 
-          t.plan(1);
-          t.equal(d3.selectAll('circle')[0].length, 120);
+        t.plan(1);
+        t.equal(d3.selectAll('circle')[0].length, 120);
 
       });
 
+      test('if time changes, we should still have 120 circles', function (t) {
+
+        visualization.params().time.current_time = 2012;
+        d3.select("#viz").call(visualization);
+
+        t.plan(2);
+        t.equal(visualization.params().time.current_time, 2012);
+        t.equal(d3.selectAll('circle')[0].length, 120);
+
+      });
+
+      test('if filter by continent Oceania only 3 circles left', function (t) {
+
+        visualization.params().filter = ['Oceania'];
+        d3.select("#viz").call(visualization);
+
+        t.plan(2);
+        t.deepEqual(visualization.params().filter, ['Oceania']);
+        t.equal(d3.selectAll('circle')[0].length, 3);
+
+      });
+
+      test('if filter is reset, back to 120 circles', function (t) {
+
+        visualization.params().filter = [];
+        d3.select("#viz").call(visualization);
+
+        t.plan(2);
+        t.deepEqual(visualization.params().filter, []);
+        t.equal(d3.selectAll('circle')[0].length, 120);
+
+      });
 
     });
 
