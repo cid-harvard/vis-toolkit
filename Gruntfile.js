@@ -75,5 +75,5 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-tape');
 
   grunt.registerTask('default', ['concat', 'string-replace']);
-  grunt.registerTask('test', ['tape:pretty']);
+  grunt.registerTask('test', ['tape']);
 };
