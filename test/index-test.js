@@ -53,8 +53,8 @@ test('check if selection and highlight classes are set', function (t) {
 
     t.plan(2);
     var data = ['A', 'B', 'C'];
-    var selection = [data[0]],
-    var highlight: [data[0], data[1]],
+    var selection = [data[0]];
+    var highlight = [data[0], data[1]];
 
     var visualization = vistk.viz().params({
         data: data,
@@ -70,25 +70,29 @@ test('check if selection and highlight classes are set', function (t) {
 
 test('check if selection and highlight classes are set', function (t) {
 
-    t.plan(2);
+    t.plan(4);
     var data = ['A', 'B', 'C'];
 
     var items_rect = [{
         marks: [{
-          type: "rect";
+          type: "rect"
         }]
     }];
 
     var items_circle = [{
         marks: [{
-          type: "circle";
+          type: "circle"
         }]
     }];
 
+    // we draw rectangles first
     var visualization = vistk.viz().params({data: data, items: items_rect});
     t.equal(d3.select(visualization.params().container).selectAll('rect')[0].length, data.length);
+    t.equal(d3.select(visualization.params().container).selectAll('circle')[0].length, 0);
 
+    // then we replace them by circles
     visualization.params({data: data, items: items_rect});
+    t.equal(d3.select(visualization.params().container).selectAll('rect')[0].length, 0);
     t.equal(d3.select(visualization.params().container).selectAll('circle')[0].length, data.length);
 
 });
