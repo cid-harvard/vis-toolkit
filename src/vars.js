@@ -1,4 +1,3 @@
-
   // Default parameters for all charts
   var default_vars = {
     // PUBLIC (set by the user)
