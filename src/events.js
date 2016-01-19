@@ -104,4 +104,3 @@
     d.__selected = !d.__selected;
     d.__redraw = true;
   });
-

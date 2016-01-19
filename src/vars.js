@@ -1,15 +1,13 @@
   // Default parameters for all charts
   var default_vars = {
     // PUBLIC (set by the user)
-    container : "",
     this_chart: null,
 
     new_data: null,
-    time_data: null,
 
     dev : false,
     id : "id",
-    id_var : "id",
+
     var_group: null,
     data: [],
     links: [],
