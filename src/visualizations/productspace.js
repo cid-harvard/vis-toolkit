@@ -2,14 +2,6 @@ vars.default_params["productspace"] = function(scope) {
 
   var params = {};
 
-  var accessor_values = function(d) {
-    return d.values.filter(function(v) {
-      if(v[vars.time.var_time] === vars.time.current_time) {
-        return v;
-      }
-    })[0];
-  }
-
   params.x_scale = [{
     func: d3.scale.linear()
             .range([0, vars.width-vars.margin.left-vars.margin.right])
@@ -32,7 +24,9 @@ vars.default_params["productspace"] = function(scope) {
      // r_scale: d3.scale.linear()
      //             .range([10, 30])
      //             .domain(d3.extent(vars.new_data, function(d) { return accessor_values(d)[vars.var_r]; })),
-      fill: function(d) { return vars.color(vars.accessor_items(accessor_values(d))[vars.var_color]); }
+      fill: function(d) {
+        return vars.color(scope.accessor_data(d)[vars.var_color]);
+      }
     }, {
       type: "text",
       rotate: "30",

@@ -1283,7 +1283,6 @@
               .filter(params.filter)
               .filter(utils.filters.redraw_only)
               .call(utils.draw_mark, params, vars)
-
           }
 
           gConnect
