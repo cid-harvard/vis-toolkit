@@ -150,8 +150,8 @@
       var params_y = utils.init_params("y", 0, params, d, i, vars);
 
       var default_height = params_type === 'div' || params_type === 'divtext' ? "auto": 10;
-      var params_height = utils.init_params("height", default_height, params, d, i, vars);
 
+      var params_height = utils.init_params("height", default_height, params, d, i, vars);
       var params_width = utils.init_params("width", 10, params, d, i, vars);
       var params_rotate = utils.init_params("rotate", 0, params, d, i, vars);
       var params_scale = utils.init_params("scale", 1, params, d, i, vars);
@@ -470,7 +470,7 @@
           items_mark_tick.enter().append('line')
               .classed('items__mark__tick', true)
               .classed("items_" + mark_id, true)
-              .style("stroke", params.stroke(d[vars.var_color]))
+              .style("stroke", params_stroke) //params.stroke(d[vars.var_color]))
               .style("stroke-width", params_stroke_width)
               .style("stroke-opacity", params_stroke_opacity)
               .attr("y2", function(d) { return -20; })
@@ -497,9 +497,7 @@
           items_mark_shape.enter().insert("path")
               .classed('items__mark__shape', true)
               .classed("items_" + mark_id, true)
-              .style("fill", function(d, i) {
-                return params.fill(vars.accessor_data(d)[vars.var_color]);
-              })
+              .style("fill", params_fill)
               .attr("transform", function(d) {
                 return "translate("+ -d.x +", "+ -d.y +")";
               })
@@ -508,9 +506,7 @@
               .classed("highlighted", function(d, i) { return d.__highlighted; })
               .classed("selected", function(d, i) { return d.__selected; })
               .attr("d", vars.path)
-              .style("fill", function(d, i) {
-                return params.fill(vars.accessor_data(d)[vars.var_color]);
-              })
+              .style("fill", params_fill)
               .attr("transform", function(d) {
                 return "translate("+ -d.x +", "+ -d.y +")";
               })
@@ -826,31 +822,31 @@
               .style("stroke-width", params_stroke_width)
               .style("stroke-opacity", params_stroke_opacity);
 
-          if(typeof params.fill !== "undefined") {
+              if(typeof params.fill !== "undefined") {
 
-            if(typeof params.fill === "function") {
+                if(typeof params.fill === "function") {
 
-              mark.style("fill", params.fill(d, i, vars));
+                  mark.style("fill", params.fill(d, i, vars));
 
-            } else {
+                } else {
 
-              mark_enter.style("fill", function(d) {
-                return params.fill(vars.accessor_items(d)[vars.var_color]);
-              });
+                  mark_enter.style("fill", function(d) {
+                    return params.fill(vars.accessor_items(d)[vars.var_color]);
+                  });
 
-            }
+                }
 
-          } else if(vars.var_color !== null) {
+              } else if(vars.var_color !== null) {
 
-            mark_enter.style("fill", function(d) {
-              return vars.color(vars.accessor_items(d)[vars.var_color]);
-            });
+                mark_enter.style("fill", function(d) {
+                  return vars.color(vars.accessor_items(d)[vars.var_color]);
+                });
 
-            mark.style("fill", function(d) {
-              return vars.color(vars.accessor_items(d)[vars.var_color]);
-            });
+                mark.style("fill", function(d) {
+                  return vars.color(vars.accessor_items(d)[vars.var_color]);
+                });
 
-          }
+              }
 
           if(typeof params.opacity !== "undefined") {
 
