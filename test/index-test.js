@@ -113,53 +113,27 @@ jsdom.env({
 
     test('check if marks are created properly', function (t) {
 
-        t.plan(4);
+        t.plan(1);
         var data = ['A', 'B', 'C'];
 
-        var items_rect = [{
-            marks: [{
-              type: "rect"
-            }]
-        }];
+        var visualization = vistk.viz()
+            .params({
+              type: 'ordinal_horizontal',
+              data: data,
+              var_x: '__id',
+              var_y: '__id',
+              items: [{
+                marks: [{
+                  type: "text",
+                 }]
+              }]
+            });
 
-        var items_circle = [{
-            marks: [{
-              type: "circle"
-            }]
-        }];
-
-        // we draw rectangles first
-        var visualization = vistk.viz().params({data: data, items: items_rect});
         d3.select("#viz").call(visualization);
 
-        t.equal(d3.select(visualization.params().container).selectAll('rect')[0].length, data.length);
-        t.equal(d3.select(visualization.params().container).selectAll('circle')[0].length, 0);
-
-        // then we replace them by circles
-        visualization.params({data: data, items: items_rect});
-        d3.select("#viz").call(visualization);
-        t.equal(d3.select(visualization.params().container).selectAll('rect')[0].length, 0);
-        t.equal(d3.select(visualization.params().container).selectAll('circle')[0].length, data.length);
+        t.equal(d3.select(visualization.params().container).selectAll('text')[0].length, 10);
 
     });
-
-
-    test('if the dataset is temporal, then only items are returned', function (t) {
-
-        t.plan(2);
-        var data = [{id: 1, time: 0}, {id: 1, time: 1}];
-        var visualization = vistk.viz().params({data: data});
-        d3.select("#viz").call(visualization);
-        t.equal(visualization.params().new_data[0].length, 1);
-        t.equal(visualization.params().new_data[0].values.length, 2);
-
-    });
-
-
 
   }
 });
-
-
-
-
