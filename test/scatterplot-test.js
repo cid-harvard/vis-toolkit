@@ -28,9 +28,6 @@ jsdom.env({
           var_x: 'nb_products',
           var_y: 'avg_products',
           var_r: 'nb_products',
-          var_share: "avg_products",
-          share_cutoff: function(d) { return d.avg_products > 30; },
-          var_text: 'name_2char',
           time: {
             var_time: "year",
             current_time: "1995",
@@ -40,34 +37,10 @@ jsdom.env({
             domain: [0, 700]
           }],
           items: [{
-            attr: "name",
             marks: [{
-              var_mark: '__aggregated',
-              type: d3.scale.ordinal().domain([true, false]).range(["none", "circle"]),
-              rotate: "0"
-            }, {
-              var_mark: '__selected',
-              type: d3.scale.ordinal().domain([true, false]).range(["star", "none"]),
-              rotate: "0"
-            }, {
-              var_mark: '__aggregated',
-              type: d3.scale.ordinal().domain([true, false]).range(["circle", "none"]),
-              var_r: "nb_products",
-              var_fill: "nb_products",
-              rotate: 0,
-              var_share: "avg_products"
-            }, {
-              type: "text",
-              rotate: "-30"
+              type: 'circle',
             }]
-          }],
-          ui: {
-            default: true,
-            options: ["country", "continent"]
-          },
-          selection: ["France"],
-          highlight: ["France", "Germany"],
-          title: "World Countries"
+          }]
         });
 
       d3.select("#viz").call(visualization);
@@ -102,6 +75,18 @@ jsdom.env({
       });
 
       test('if filter is reset, back to 120 circles', function (t) {
+
+        visualization.params().filter = [];
+        visualization.params().refresh = true;
+        d3.select("#viz").call(visualization);
+
+        t.plan(2);
+        t.deepEqual(visualization.params().filter, []);
+        t.equal(d3.selectAll('circle')[0].length, 120);
+
+      });
+
+      test('if aggregate by continent, only 120 circles', function (t) {
 
         visualization.params().filter = [];
         d3.select("#viz").call(visualization);
