@@ -4,7 +4,7 @@ var test = require('tape');
 jsdom.env({
   html:'<html><body><div id="viz"></div></body></html>',
   scripts: ["https://cid-harvard.github.io/vis-toolkit/js/d3.js",
-    "../build/vistk.js"],
+    "build/vistk.js"],
   features: { QuerySelector:true },
   done: function (err, window) {
 
