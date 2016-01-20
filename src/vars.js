@@ -1,13 +1,13 @@
   // Default parameters for all charts
   var default_vars = {
-    // PUBLIC (set by the user)
+
     this_chart: null,
 
     new_data: null,
 
     dev : false,
     id : "id",
-
+    id_var : "id",
     var_group: null,
     data: [],
     links: [],
@@ -58,7 +58,7 @@
     x_domain: null,
     x_range: null,
 
-    // SCATTERPLOT (INCLUDES DOTPLOT)
+    // SCATTERPLOT (extends DOTPLOT)
     y_type: "linear",
     y_scale: [],
     y_ticks: 5,
@@ -83,27 +83,32 @@
     // Automatically generate UI elements
     ui: true,
 
-    lang: 'en_US', // 'es_ES, fr_FR', ..
+    lang: 'en_US', // 'es_ES, fr_FR'
     locales: {}, // Translations for various lang
 
     // Graphical properties for graphical marks
     color: d3.scale.category20c(),
     size: d3.scale.linear(),
 
+    // Events management
     dispatch: [],
     evt: {register: function() {}, call: function() {} },
 
     // SVG Container
+    container: "#viz",
     svg: null,      // Contains the svg element
     root_svg: null, // Contains the group children to the svg element
     ratio: 0.5, // Visualization aspect ratio
 
+    // Animation and interpolation
     duration: 1000,
     interpolate: "monotone",
 
     layout: {},
 
     padding: 1,
+
+    // TREEMAP
     treemap_mode: 'squarify',
 
     treemap: {
@@ -135,8 +140,6 @@
       return d.values[vars.time.current_time];
     },
 
-    container: "#viz",
-
     refresh: true,
     init: true,
     redraw_all: false,
@@ -153,6 +156,7 @@
     default_params: {},
     default_marks: {},
 
+    // Order we use to draw the various marks
     z_index: [
  //     {selector: '.mark__group', attribute: '__aggregated', type: 'productspace', weight: 1},
       {selector: '.connect__group', type: 'productspace', weight: 1, event: 'highlightOut'},
