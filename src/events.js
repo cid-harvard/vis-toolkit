@@ -38,14 +38,13 @@
 
   if (!vars.data) { vars.data = []; }
 
-
   // Calculate default chart dimensions
-  var parent_width = d3.select(vars.container).style('width');
-  // Remove the 'px'
-  parent_width = parent_width.substring(0, parent_width.length-2);
-  vars.width = parseInt(parent_width);
-  vars.width = vars.width - vars.margin.left - vars.margin.right;
-  vars.height = vars.width * vars.ratio;
+  // var parent_width = d3.select(vars.container).style('width');
+  // // Remove the 'px'
+  // parent_width = parent_width.substring(0, parent_width.length-2);
+  // vars.width = parseInt(parent_width);
+  // vars.width = vars.width - vars.margin.left - vars.margin.right;
+  // vars.height = vars.width * vars.ratio;
 
   // List of events
   vars.dispatch = d3.dispatch('init', 'start', 'finish', 'end', 'highlightOn', 'highlightOut', 'selection', 'resize', 'clearAnimations', 'timeUpdate');
