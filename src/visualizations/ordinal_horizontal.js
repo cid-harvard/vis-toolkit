@@ -5,7 +5,7 @@ vars.default_params["ordinal_horizontal"] = function(scope) {
   params.x_scale = [{
     func: d3.scale.ordinal()
             .domain(d3.set(vars.new_data.map(function(d) {
-              return d.values[vars.time.current_time][vars.var_x];
+              return scope.accessor_data(d)[vars.var_x];
             })).values())
             .rangeBands([scope.margin.left, scope.width - scope.margin.left - scope.margin.right]),
   }];

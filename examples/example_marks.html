@@ -14,6 +14,7 @@ var visualization = vistk.viz()
       dev: true,
       height: 200,
       width: 500,
+      margin: {top: 30, right: 100, bottom: 30, left: 10},
       type: 'ordinal_horizontal',
       data: data,
       container: '#viz',
@@ -25,12 +26,12 @@ var visualization = vistk.viz()
           type: function(d) { return d; }
         }, {
           type: "text",
-          rotate: 0,
+          rotate: 45,
           text_anchor: 'middle',
           translate: [0, 20]
         }]
       }],
-      var_text:  "value"
+      var_text: '__value'
     });
 
 d3.select("#viz").call(visualization);
