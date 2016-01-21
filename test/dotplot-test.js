@@ -106,7 +106,8 @@ jsdom.env({
       d3.select("#viz").call(visualization);
 
       t.equal(d3.select("#viz").selectAll('g')[0].length, 2);
-
+      t.equal(d3.select("#viz").selectAll('text')[0].length, 1);
+      t.equal(d3.select("#viz").selectAll('text')[0][0], 1);
     });
 
   }
