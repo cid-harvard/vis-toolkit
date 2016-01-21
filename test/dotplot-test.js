@@ -30,7 +30,82 @@ jsdom.env({
     test('we should have 3 circles', function (t) {
 
       t.plan(1);
-      t.equal(d3.selectAll('circle')[0].length, 3);
+      t.equal(d3.select("#viz").selectAll('circle')[0].length, 3);
+
+    });
+
+    test('if filter, we should have 1 circle left', function (t) {
+
+      t.plan(1);
+
+      visualization.params().filter = ['A'];
+      visualization.params().refresh = true;
+      d3.select("#viz").call(visualization);
+
+      t.equal(d3.select("#viz").selectAll('circle')[0].length, 1);
+
+    });
+
+    test('if time update, we should still have 2 circles', function (t) {
+
+      t.plan(1);
+
+      var data = [{id: 1, time: 0, value: 0},
+                  {id: 1, time: 1, value: 1},
+                  {id: 2, time: 0, value: 2},
+                  {id: 2, time: 1, value: 3}
+                  ];
+
+      var visualization = vistk.viz().params({
+          data: data,
+          dev: true,
+          data: data,
+          width: 800,
+          height: 500,
+          type: 'dotplot',
+          var_x: 'value',
+          var_id: 'id',
+          var_y: function() { return this.height/2; },
+          var_text: 'value',
+          time: {
+            var_time: 'time',
+            current_time: 0
+          },
+      });
+
+      d3.select("#viz").call(visualization);
+
+      t.equal(d3.select("#viz").selectAll('circle')[0].length, 2);
+
+    });
+
+
+    test('if no data, only show a text', function (t) {
+
+      t.plan(1);
+
+      var data = [];
+
+      var visualization = vistk.viz().params({
+          data: data,
+          dev: true,
+          data: data,
+          width: 800,
+          height: 500,
+          type: 'dotplot',
+          var_x: 'value',
+          var_id: 'id',
+          var_y: function() { return this.height/2; },
+          var_text: 'value',
+          time: {
+            var_time: 'time',
+            current_time: 0
+          },
+      });
+
+      d3.select("#viz").call(visualization);
+
+      t.equal(d3.select("#viz").selectAll('g')[0].length, 2);
 
     });
 
