@@ -1315,6 +1315,10 @@
 
     }
 
+    if(!utils.check_data_display()) {
+      return;
+    }
+
     if(typeof vars._user_vars.x_tickValues !== 'undefined') {
       vars.x_tickValues = vars._user_vars.x_tickValues;
     }
