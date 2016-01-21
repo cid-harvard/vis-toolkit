@@ -1,0 +1,26 @@
+<!doctype html>
+<meta charset="utf-8">
+<script src="../js/d3.js" charset="utf-8"></script>
+<script src="../build/vistk.js"></script>
+<link href="../css/vistk.css" rel="stylesheet">
+<body>
+<div id="viz"></div>
+<script>
+
+var data = [{__id: 'A'}, {__id: 'B'}, {__id: 'C'}];
+
+var visualization = vistk.viz()
+    .params({
+      dev: true,
+      data: data,
+      width: 800,
+      height: 500,
+      type: 'dotplot',
+      var_x: '__id',
+      var_y: function() { return this.height/2; },
+      var_text: '__value'
+    });
+
+d3.select("#viz").call(visualization);
+
+</script>
