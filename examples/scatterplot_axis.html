@@ -50,6 +50,25 @@ d3.json("../../vis-toolkit-datasets/data/diversification_ubiquity_hs4_1995_2012.
           var_mark: '__highlighted',
           type: d3.scale.ordinal().domain([true, false]).range(["rect", "none"]),
           translate: function(d, i, vars) {
+            return [-vars.x_scale[0]["func"](d[vars.var_x]), -10];
+          },
+          height: 20,
+          width: 30,
+          fill: function() { return 'white'}
+        }, {
+          var_mark: '__highlighted',
+          type: d3.scale.ordinal().domain([true, false]).range(["text", "none"]),
+          translate: function(d, i, vars) {
+            return [-vars.x_scale[0]["func"](d[vars.var_x])+25, 0];
+          },
+          text_anchor: 'end',
+          text: function(d, i, vars) {
+            return d[vars.var_x];
+          }
+        }, {
+          var_mark: '__highlighted',
+          type: d3.scale.ordinal().domain([true, false]).range(["rect", "none"]),
+          translate: function(d, i, vars) {
             return [-15, -vars.y_scale[0]["func"](d[vars.var_y]) + vars.height - vars.margin.bottom - vars.margin.top];
           },
           height: 20,
