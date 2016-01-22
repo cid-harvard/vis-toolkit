@@ -47,25 +47,35 @@ d3.json("../../vis-toolkit-datasets/data/diversification_ubiquity_hs4_1995_2012.
           translate: function(d, i, vars) {
             return [0, -vars.y_scale[0]["func"](d[vars.var_y]) + vars.height - vars.margin.bottom - vars.margin.top]; }
         }, {
+          var_mark: '__highlighted',
+          type: d3.scale.ordinal().domain([true, false]).range(["rect", "none"]),
+          translate: function(d, i, vars) {
+            return [-15, -vars.y_scale[0]["func"](d[vars.var_y]) + vars.height - vars.margin.bottom - vars.margin.top];
+          },
+          height: 20,
+          width: 30,
+          fill: function() { return 'white'}
+        }, {
+          var_mark: '__highlighted',
+          type: d3.scale.ordinal().domain([true, false]).range(["text", "none"]),
+          translate: function(d, i, vars) {
+            return [0, -vars.y_scale[0]["func"](d[vars.var_y]) + vars.height - vars.margin.bottom - vars.margin.top + 10];
+          },
+          text_anchor: 'middle',
+          text: function(d, i, vars) {
+            return d[vars.var_x];
+          }
+        }, {
           type: "circle",
           rotate: "0",
           fill: function(d, i, vars) {
             return vars.color(vars.accessor_items(d)[vars.var_color]); }
-        }, {
-          var_mark: '__selected',
-          type: d3.scale.ordinal().domain([true, false]).range(["star", "none"]),
-          rotate: "0"
-        }, {
-          type: "text",
-          rotate: "-30"
         }]
       }],
       ui: {
         default: true,
         options: ["country", "continent"]
       },
-      selection: ["France"],
-      highlight: ["France", "Germany"],
       title: "World Countries"
     });
 
