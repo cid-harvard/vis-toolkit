@@ -1,0 +1,75 @@
+<!doctype html>
+<meta charset="utf-8">
+<script src="../js/d3.js"></script>
+<script src="../build/vistk.js"></script>
+<link href="../css/vistk.css" rel="stylesheet">
+<body>
+<div id="viz"></div>
+<script>
+
+d3.json("../../vis-toolkit-datasets/data/diversification_ubiquity_hs4_1995_2012.json", function(error, countries) {
+
+  var flat_years = vistk.utils.flatten_years(countries);
+
+  visualization = vistk.viz()
+    .params({
+      type: 'scatterplot',
+      margin: {top: 10, right: 10, bottom: 30, left: 30},
+      container: '#viz',
+      data: flat_years,
+      var_id: 'name',
+      var_group: 'continent',
+      var_color: 'continent',
+      var_x: 'nb_products',
+      var_y: 'avg_products',
+      var_r: 'nb_products',
+      var_share: "avg_products",
+      share_cutoff: function(d) { return d.avg_products > 30; },
+      var_text: 'name_2char',
+      time: {
+        var_time: "year",
+        current_time: "1995",
+        parse: function(d) { return d; }
+      },
+      x_scale: [{
+        domain: [0, 700]
+      }],
+      items: [{
+        attr: "name",
+        marks: [{
+          type: "tick",
+          rotate: "90",
+          translate: function(d, i, vars) {
+            return [-vars.x_scale[0]["func"](d[vars.var_x])+30, 0]; }
+        }, {
+          type: "tick",
+          rotate: "0",
+          translate: function(d, i, vars) {
+            return [0, -vars.y_scale[0]["func"](d[vars.var_y]) + vars.height - vars.margin.bottom - vars.margin.top]; }
+        }, {
+          type: "circle",
+          rotate: "0",
+          fill: function(d, i, vars) {
+            return vars.color(vars.accessor_items(d)[vars.var_color]); }
+        }, {
+          var_mark: '__selected',
+          type: d3.scale.ordinal().domain([true, false]).range(["star", "none"]),
+          rotate: "0"
+        }, {
+          type: "text",
+          rotate: "-30"
+        }]
+      }],
+      ui: {
+        default: true,
+        options: ["country", "continent"]
+      },
+      selection: ["France"],
+      highlight: ["France", "Germany"],
+      title: "World Countries"
+    });
+
+  d3.select("#viz").call(visualization);
+
+});
+</script>
