@@ -213,15 +213,7 @@
               .style("fill", params_fill)
               .style("stroke", params_stroke)
               .attr("transform", "translate(" + ([params_translate[0] + params_offset_x, params_translate[1] + params_offset_y]) + ")rotate(" +  params_rotate + ")")
-              .text(function(d) {
-
-                if(typeof params.text !== "undefined") {
-                  return params.text(d);
-                } else {
-                  return vars.accessor_data(d)[vars.var_text];
-                }
-
-              });
+              .text(params_text);
 
         items_mark_text.exit().remove();
 
@@ -388,7 +380,7 @@
                   .attr("y", params.y || 0)
                   .attr("height", params_height)
                   .attr("width", params_width)
-                  .attr("transform", "rotate(" + params_rotate + ")")
+                  .attr("transform", "translate(" +  params_translate + ")rotate(" + params_rotate + ")scale(" + params_scale + ")")
                   .style("stroke", params_stroke);
 
         items_mark_rect
@@ -399,6 +391,7 @@
             .attr("y", params.y || 0)
             .attr("height", params_height)
             .attr("width", params_width)
+            .attr("transform", "translate(" +  params_translate + ")rotate(" + params_rotate + ")scale(" + params_scale + ")")
             .style("stroke", params_stroke);
 
           if(typeof params.fill !== "undefined") {
