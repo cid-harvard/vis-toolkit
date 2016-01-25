@@ -384,7 +384,8 @@
                   .attr("height", params_height)
                   .attr("width", params_width)
                   .attr("transform", "translate(" +  params_translate + ")rotate(" + params_rotate + ")scale(" + params_scale + ")")
-                  .style("stroke", params_stroke);
+                  .style("stroke", params_stroke)
+                  .style("stroke-width", params_stroke_width);
 
         items_mark_rect
             .classed("highlighted", function(d, i) { return d.__highlighted; })
@@ -395,7 +396,8 @@
             .attr("height", params_height)
             .attr("width", params_width)
             .attr("transform", "translate(" +  params_translate + ")rotate(" + params_rotate + ")scale(" + params_scale + ")")
-            .style("stroke", params_stroke);
+            .style("stroke", params_stroke)
+            .style("stroke-width", params_stroke_width);
 
           if(typeof params.fill !== "undefined") {
 
@@ -611,10 +613,12 @@
           mark
               .classed("highlighted", function(d, i) { return d.__highlighted; })
               .classed("selected", function(d, i) { return d.__selected; })
-              .attr("x1", function(d) { return -t[0] + vars.margin.left; })
+              //.attr("x1", function(d) { return -t[0] + vars.margin.left; })
+              //.attr("x2", function(d) { return vars.x_scale[0]["func"].range()[1] -100 + params_offset_right; })
+              .attr("x1", function(d) { return -t[0]; })
+              .attr("x2", function(d) { return vars.x_scale[0]["func"].range()[1] -t[0] - params_offset_right; })
               .attr("y1", function(d) { return params_offset_y; })
-              .attr("x2", function(d) { return vars.x_scale[0]["func"].range()[1] -100 + params_offset_right; })
-              .attr("y2", function(d) { return params_offset_y; });
+              .attr("y2", function(d) { return params_offset_y; })
 
           break;
 
@@ -640,10 +644,12 @@
           mark
               .classed("highlighted", function(d, i) { return d.__highlighted; })
               .classed("selected", function(d, i) { return d.__selected; })
-              .attr("x1", function(d) { return params_offset_x; })
-              .attr("y1", function(d) { return -t[1] - vars.margin.top + params_offset_top; })
-              .attr("x2", function(d) { return params_offset_x; })
-              .attr("y2", function(d) { return vars.y_scale[0]["func"].range()[1]; });
+              //.attr("x1", function(d) { return params_offset_x; })
+              //.attr("y1", function(d) { return -t[1] - vars.margin.top + params_offset_top; })
+              //.attr("x2", function(d) { return params_offset_x; })
+              //.attr("y2", function(d) { return vars.y_scale[0]["func"].range()[1]; })
+              .attr("y2", params_offset_top)
+              .attr("y1", function(d) { return vars.height - vars.margin.top - vars.margin.bottom - t[1]; });
 
           break;
 
