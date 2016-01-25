@@ -3,7 +3,7 @@ var test = require('tape');
 
 jsdom.env({
   html:'<html><body><div id="viz"></div></body></html>',
-  scripts: ["https://cid-harvard.github.io/vis-toolkit/js/d3.js",
+  scripts: ["js/d3.js",
     "build/vistk.js"],
   features: { QuerySelector:true },
   done: function (err, window) {
@@ -22,6 +22,7 @@ jsdom.env({
 
         t.plan(1);
         var visualization = vistk.viz().params({});
+        d3.select("#viz").call(visualization);
         t.equal(typeof visualization.params(), 'object');
 
     });
@@ -30,9 +31,29 @@ jsdom.env({
 
         t.plan(1);
         var visualization = vistk.viz().params({});
+        d3.select("#viz").call(visualization);
         t.equal(visualization.params().container, "#viz");
 
     });
+
+    test('default var_x is "__var_x"', function (t) {
+
+        t.plan(1);
+        var visualization = vistk.viz().params({});
+        d3.select("#viz").call(visualization);
+        t.equal(visualization.params().var_x, "__var_x");
+
+    });
+
+    test('default var_y is "__var_y"', function (t) {
+
+        t.plan(1);
+        var visualization = vistk.viz().params({});
+        d3.select("#viz").call(visualization);
+        t.equal(visualization.params().var_y, "__var_y");
+
+    });
+
 
     test('a dataset of same size is returned by VisTK', function (t) {
 
@@ -131,7 +152,7 @@ jsdom.env({
 
         d3.select("#viz").call(visualization);
 
-        t.equal(d3.select(visualization.params().container).selectAll('text')[0].length, 10);
+        t.equal(d3.select("#viz").selectAll('text')[0].length, data.length);
 
     });
 

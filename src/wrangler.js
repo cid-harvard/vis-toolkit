@@ -34,11 +34,7 @@
     }
 
     if(typeof vars.var_x === "undefined") {
-      // vars.data.forEach(function(d, i) {
-      //   d.__var_x = vars.var_x(d, i, vars);
-      // });
       vars.var_x = "__var_x";
-
     }
 
     if(typeof vars.var_y !== "string" && typeof vars.var_y === "function") {
@@ -49,6 +45,11 @@
 
       vars.var_y = "__var_y";
 
+    }
+
+
+    if(typeof vars.var_y === "undefined") {
+      vars.var_y = "__var_y";
     }
 
     // In case the chart type is a function
