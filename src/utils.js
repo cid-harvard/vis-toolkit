@@ -164,6 +164,8 @@
       var params_offset_x = utils.init_params("offset_x", 0, params, d, i, vars);
       var params_offset_y = utils.init_params("offset_y", 0, params, d, i, vars);
 
+      var params_offset_right = utils.init_params("offset_right", 0, params, d, i, vars);
+
       // Use the default accessor
       var accessor_data = vars.accessor_data;
 
@@ -610,7 +612,7 @@
               .classed("selected", function(d, i) { return d.__selected; })
               .attr("x1", function(d) { return -t[0] + vars.margin.left; })
               .attr("y1", function(d) { return params_offset_y; })
-              .attr("x2", function(d) { return vars.x_scale[0]["func"].range()[1] -100; })
+              .attr("x2", function(d) { return vars.x_scale[0]["func"].range()[1] -100 + params_offset_right; })
               .attr("y2", function(d) { return params_offset_y; });
 
           break;
@@ -1111,7 +1113,6 @@
                     .filter(utils.filters.redraw_only)
                     .call(utils.draw_mark, params, vars);
 
-
                 // CUSTOM SELECTION EVENT
                 if(vars.init && typeof params.evt !== 'undefined') {
                   vars.evt.register("selection", params.evt[0].func)
@@ -1164,7 +1165,6 @@
                     if(!d.__selected) { d.__redraw = false; }
                   });
                 }
-
 
                 // TODO: Drawing HTML TYPE MARKS
 
@@ -1821,7 +1821,6 @@ utils.init_params_values = function(var_v, default_value, params, d, i, vars) {
 
     return mark_params;
   }
-
 
   utils.mark_params_values = function(params, vars, d, i) {
 
