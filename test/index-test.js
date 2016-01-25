@@ -54,6 +54,25 @@ jsdom.env({
 
     });
 
+    test('default chart type is "none"', function (t) {
+
+        t.plan(1);
+        var visualization = vistk.viz().params({});
+        d3.select("#viz").call(visualization);
+        t.equal(visualization.params().type, "none");
+
+    });
+
+    test('if chart type is "function" then run it', function (t) {
+
+        t.plan(1);
+        var visualization = vistk.viz().params({
+            type: function() { return 'scatterplot'; }
+        });
+        d3.select("#viz").call(visualization);
+        t.equal(visualization.params().type, "scatterplot");
+
+    });
 
     test('a dataset of same size is returned by VisTK', function (t) {
 

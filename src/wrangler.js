@@ -47,7 +47,6 @@
 
     }
 
-
     if(typeof vars.var_y === "undefined") {
       vars.var_y = "__var_y";
     }

@@ -4,8 +4,7 @@ var test = require('tape');
 jsdom.env({
   html:'<html><body><div id="viz"></div></body></html>',
   features: { QuerySelector:true }, //you need query selector for D3 to work
-  scripts: ["https://cid-harvard.github.io/vis-toolkit/js/d3.js",
-    "https://cid-harvard.github.io/vis-toolkit/build/vistk.js"],
+  scripts: ["js/d3.js", "build/vistk.js"],
   done: function (err, window) {
 
     var d3 = window.d3;
@@ -41,6 +40,7 @@ jsdom.env({
       visualization.params().filter = ['A'];
       visualization.params().refresh = true;
       d3.select("#viz").call(visualization);
+
 
       t.equal(d3.select("#viz").selectAll('circle')[0].length, 1);
 
