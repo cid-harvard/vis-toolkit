@@ -165,6 +165,7 @@
       var params_offset_y = utils.init_params("offset_y", 0, params, d, i, vars);
 
       var params_offset_right = utils.init_params("offset_right", 0, params, d, i, vars);
+      var params_offset_top = utils.init_params("offset_top", 0, params, d, i, vars);
 
       // Use the default accessor
       var accessor_data = vars.accessor_data;
@@ -614,6 +615,35 @@
               .attr("y1", function(d) { return params_offset_y; })
               .attr("x2", function(d) { return vars.x_scale[0]["func"].range()[1] -100 + params_offset_right; })
               .attr("y2", function(d) { return params_offset_y; });
+
+          break;
+
+        case "line_vertical":
+
+          var mark = d3.select(that).selectAll(".mark__line_vertical.items_" + mark_id).data([d]);
+
+          var t = d3.transform(d3.select(that).attr("transform")).translate;
+
+          mark.enter().append('line')
+              .classed('mark__line_horizontal', true)
+              .classed("items_" + mark_id, true)
+              .on("mouseover",function(d) { // FIX to prevent hovers
+                d3.event.stopPropagation();
+              })
+              .on("mouseleave", function(d) {
+                d3.event.stopPropagation();
+              })
+              .on("click", function(d) {
+                 d3.event.stopPropagation();
+              });
+
+          mark
+              .classed("highlighted", function(d, i) { return d.__highlighted; })
+              .classed("selected", function(d, i) { return d.__selected; })
+              .attr("x1", function(d) { return params_offset_x; })
+              .attr("y1", function(d) { return -t[1] - vars.margin.top + params_offset_top; })
+              .attr("x2", function(d) { return params_offset_x; })
+              .attr("y2", function(d) { return vars.y_scale[0]["func"].range()[1]; });
 
           break;
 
