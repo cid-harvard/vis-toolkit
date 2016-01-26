@@ -355,9 +355,15 @@
 
       // Transform key/value into values tab only
       if(typeof vars.set['__aggregated'] !== 'undefined' && vars.set['__aggregated']) {
-        vars.new_data = vars.new_data.concat(nested_data.map(function(d) { return d.values; }));
+
+        vars.new_data = vars.new_data.concat(nested_data.map(function(d) {
+          return d.values;
+        }));
+
       } else {
+
         vars.new_data = nested_data.map(function(d) { return d.values; });
+
       }
 
     }

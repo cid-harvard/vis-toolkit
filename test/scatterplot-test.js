@@ -28,6 +28,7 @@ jsdom.env({
           var_x: 'nb_products',
           var_y: 'avg_products',
           var_r: 'nb_products',
+          duration: 0,
           time: {
             var_time: "year",
             current_time: "1995",
@@ -86,14 +87,16 @@ jsdom.env({
 
       });
 
-      test('if aggregate by continent, only 120 circles', function (t) {
+      test('if aggregate by continent, only 5 circles', function (t) {
 
-        visualization.params().filter = [];
+        visualization.params().set['__aggregated'] = false;
+        visualization.params().aggregate = 'continent';
+        visualization.params().refresh = true;
         d3.select("#viz").call(visualization);
 
         t.plan(2);
-        t.deepEqual(visualization.params().filter, []);
-        t.equal(d3.selectAll('circle')[0].length, 120);
+        t.deepEqual(visualization.params().aggregate, visualization.params().var_group);
+        t.equal(d3.selectAll('circle')[0].length, 5);
 
       });
 
