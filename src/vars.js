@@ -122,7 +122,6 @@
     },
 
     radius: 5,
-
     radius_min: 2,
     radius_max: 10,
 
@@ -166,6 +165,7 @@
       {selector: '.connect__group', attribute: '__highlighted', type: 'productspace', weight: 1, event: 'highlightOn'},
       {selector: '.mark__group', attribute: '__highlighted', type: 'productspace', weight: 1, event: 'highlightOn'},
       {selector: '.mark__group', attribute: '__highlighted__adjacent', type: 'productspace', weight: 1, event: 'highlightOn'},
+      {selector: '.mark__group', attribute: '__highlighted', type: 'scatterplot', weight: 1, event: 'highlightOn'},
     ],
 
     set: [],
