@@ -1,10 +1,8 @@
 
-      // FUNCTIONS TO CREATE UI ELEMENTS
-      // Those functions are companion to the charts, not required
-
+      // Creates widgets to tweat the chart's parameters
       if(vars.ui.default) {
 
-        // BUILDING THE UI elements
+        // Building the UI elements
         d3.select(vars.container).selectAll(".break").data([vars.var_id])
           .enter()
             .append("p")
@@ -305,8 +303,6 @@
               })
              .html("Clear highlight");
 
-
-
       d3.select(vars.container).selectAll(".toggleLanguage").data(["toggleLanguage"]).enter().append("button")
                .attr("type", "button")
                .attr("class", "toggleLanguage")
@@ -505,6 +501,5 @@
 
   });
 
-
-    vars.evt.call('finish', null);
+  vars.evt.call('finish', null);
 }

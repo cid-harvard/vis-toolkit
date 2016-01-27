@@ -1,4 +1,4 @@
-vars.default_params["piechart"] = function(scope) {
+vars.default_params['piechart'] = function(scope) {
 
   var params = {};
 
@@ -33,8 +33,10 @@ vars.default_params["piechart"] = function(scope) {
 
   params.items = [{
     marks: [{
-      type: "arc",
-      fill: function(d) { return scope.color(scope.accessor_items(d)[scope.var_color]); }
+      type: 'arc',
+      fill: function(d) {
+        return scope.color(scope.accessor_items(d)[scope.var_color]);
+      }
     }]
   }];
 
@@ -43,10 +45,6 @@ vars.default_params["piechart"] = function(scope) {
 
   params.y_axis_show = false;
   params.y_grid_show = false;
-
-  params.postprocessing = function() {
-
-  }
 
   return params;
 

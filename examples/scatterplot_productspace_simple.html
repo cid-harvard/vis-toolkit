@@ -1,0 +1,47 @@
+<!doctype html>
+<meta charset="utf-8">
+<script src="../js/d3.js"></script>
+<script src="../build/vistk.js"></script>
+<link href="../css/vistk.css" rel="stylesheet">
+<body>
+<div id="viz"></div>
+<script>
+
+d3.json("../../vis-toolkit-datasets/data/colombia_product_space.json", function(graph) {
+  d3.json("../../vis-toolkit-datasets/data/colombia_products_location930_2012.json", function(exports) {
+
+      visualization = vistk.viz()
+        .params({
+          dev: true,
+          type: "productspace",
+          container: "#viz",
+          width: 800,
+          height: 500,
+          nodes: graph.nodes,
+          links: graph.edges,
+          data: exports.data,
+          var_x: 'x',
+          var_y: 'y',
+          var_color: 'product_id',
+          var_group: 'group_name_en',
+          x_axis_show: false,
+          x_grid_show: false,
+          y_axis_show: false,
+          y_grid_show: false,
+          y_invert: true,
+          radius: 4,
+          var_id: "product_id",
+          var_text: 'name_en',
+          time: {
+            var_time: "year",
+            current_time: "2012",
+            parse: function(d) { return d; }
+          },
+        });
+
+      d3.select("#viz").call(visualization);
+
+  });
+
+});
+</script>

@@ -15,6 +15,14 @@ module.exports = function(grunt) {
       }
     },
 
+    tape: {
+      options: {
+        pretty: true,
+        output: 'console'
+      },
+      files: ['test/*.js']
+    },
+
     pkg: grunt.file.readJSON('package.json'),
 
     concat: {
@@ -25,15 +33,10 @@ module.exports = function(grunt) {
         src: ['js/superformula.js', 'src/start.js', 'src/utils.js', 'src/vars.js',
               'src/events.js', 'src/star_constructor.js', 'src/wrangler.js', 'src/locales.js',
               'src/marks/svg_rect.js', 'src/marks/svg_circle.js',
-              'src/visualizations/sparkline.js', 'src/visualizations/dotplot.js',
-              'src/visualizations/barchart.js', 'src/visualizations/linechart.js', 'src/visualizations/scatterplot.js', 'src/visualizations/geomap.js',
-              'src/visualizations/grid.js', 'src/visualizations/stacked.js', 'src/visualizations/piechart.js', 'src/visualizations/slopegraph.js', 'src/visualizations/slopegraph_ordinal.js',
-              'src/visualizations/treemap.js', 'src/visualizations/radial.js', 'src/visualizations/stackedbar.js', 'src/visualizations/rectmap.js',
-              'src/visualizations/caterplot.js', 'src/visualizations/tickplot.js', 'src/visualizations/barchart_vertical.js',
-              'src/visualizations/productspace.js', 'src/visualizations/ordinal_vertical.js', 'src/visualizations/ordinal_horizontal.js', 'src/visualizations/matrix.js',
-              'src/start_selection.js', 'src/visualizations/table.js',
-              'src/visualizations/boxplot.js', 'src/visualizations/none.js',
-              'src/visualizations/default.js', 'src/ui.js', 'src/getterssetters.js',
+              'src/visualizations/*.js',
+              'src/start_selection.js', 'src/templates/table.js',
+              'src/templates/boxplot.js', 'src/templates/none.js',
+              'src/templates/default.js', 'src/ui.js', 'src/getterssetters.js',
               'src/end_constructor.js', 'src/end.js'],
         dest: 'build/vistk.js',
       },
@@ -52,24 +55,20 @@ module.exports = function(grunt) {
 
     watch: {
       concat: {
-        files: ['src/*.js', 'src/visualizations/*.js', 'src/marks/*.js'],
+        files: ['src/*.js', 'src/**/*.js'],
         tasks: ['string-replace', 'concat']
       },
       tasks: ['string-replace']
     },
 
-    jasmine : {
-      src : ['js/d3.js', 'build/vistk.js'],
-      specs : 'test/specs/*.js',
-      helpers : 'test/specs/helpers/*.js'
-    }
   });
 
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-jshint');
-  grunt.loadNpmTasks('grunt-contrib-jasmine');
   grunt.loadNpmTasks('grunt-string-replace');
+  grunt.loadNpmTasks('grunt-tape');
 
   grunt.registerTask('default', ['concat', 'string-replace']);
+  grunt.registerTask('test', ['tape']);
 };

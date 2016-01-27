@@ -2,12 +2,85 @@ vars.default_params["productspace"] = function(scope) {
 
   var params = {};
 
-  var accessor_values = function(d) {
-    return d.values.filter(function(v) {
-      if(v[vars.time.var_time] === vars.time.current_time) {
-        return v;
-      }
-    })[0];
+  if(vars.init || vars.refresh) {
+
+    // Links between items
+    // Used for product space
+    if(vars.links !== null && vars.type === 'productspace') {
+
+      vars.links.forEach(function(d, i) {
+
+        if(typeof d.source === "string") {
+          d.source = vistk.utils.find_node_by_id(vars.nodes, d.source);
+        }
+
+        if(typeof d.target === "string") {
+          d.target = vistk.utils.find_node_by_id(vars.nodes, d.target);
+        }
+
+        d.__redraw = true;
+
+      });
+
+    }
+
+    // Flagging missing nodes with __missing true attribute
+    if(typeof vars.nodes !== "undefined" && vars.type === 'productspace') {
+
+      vars.new_data = utils.join(vars.nodes, vars.new_data, vars.var_node_id, vars.var_id, function(new_data, node) {
+          var r = new_data;
+          if(typeof node === 'undefined') {
+            return;
+          }
+
+          // Update all time points
+          vars.time.points.forEach(function(time) {
+
+            if(typeof(r.values[time]) === 'undefined') {
+              r.values[time] = {};
+              r.values[time][vars.var_id] = vars.var_id;
+            }
+
+            r.values[time].x = node.x;
+            r.values[time].y = node.y;
+          });
+
+          // Keep the metadata
+          r.x = node.x;
+          r.y = node.y;
+
+          r.__redraw = true;
+          return r;
+      });
+
+      // Remove missing nodes
+      // vars.new_data = vars.new_data.filter(function(d) {
+      //  return !d.__missing;
+      // });
+
+      // Go through again the list of nodes
+      // to make sure we display all the nodes
+      vars.nodes.forEach(function(d, i) {
+
+        var node = vistk.utils.find_node_coordinates_by_id(vars.new_data, vars.var_id, d[vars.var_node_id]);
+
+        if(typeof node === "undefined") {
+
+          d.values = [];
+          d[vars.var_r] = 0;
+          d[vars.var_id] = d.id;
+
+          utils.init_item(d);
+          d.__redraw = true;
+
+          vars.new_data.push(d);
+
+        }
+
+      });
+
+    }
+
   }
 
   params.x_scale = [{
@@ -32,7 +105,9 @@ vars.default_params["productspace"] = function(scope) {
      // r_scale: d3.scale.linear()
      //             .range([10, 30])
      //             .domain(d3.extent(vars.new_data, function(d) { return accessor_values(d)[vars.var_r]; })),
-      fill: function(d) { return vars.color(vars.accessor_items(accessor_values(d))[vars.var_color]); }
+      fill: function(d) {
+        return vars.color(scope.accessor_data(d)[vars.var_color]);
+      }
     }, {
       type: "text",
       rotate: "30",
@@ -57,6 +132,7 @@ vars.default_params["productspace"] = function(scope) {
 
 
   if(vars.init) {
+
     vars.evt.register("highlightOn", function(d) {
 
       // Make sure the highlighted node is above other nodes

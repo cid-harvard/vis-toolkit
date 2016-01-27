@@ -1,4 +1,4 @@
-      case "none":
+      case "force":
 
         var none_params = function(scope) {
 

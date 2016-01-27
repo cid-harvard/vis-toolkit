@@ -1,10 +1,10 @@
 {
   "name": "vis-toolkit",
-  "version": "0.0.28",
+  "version": "0.0.29",
   "description": "vis-toolkit ===================",
   "main": "\"\"",
   "scripts": {
-    "test": "echo \"Dummy test case! This will always pass until there are legit tests.\" && exit 0"
+    "test": "vows; echo"
   },
   "repository": {
     "type": "git",
@@ -15,22 +15,18 @@
     "bower"
   ],
   "author": "romsson",
-  "license": "BSD",
   "bugs": {
     "url": "https://github.com/cid-harvard/vis-toolkit/"
   },
   "devDependencies": {
+    "d3": "~3.5.5",
     "grunt": "~0.4.5",
     "grunt-contrib-concat": "~0.3.0",
-    "grunt-contrib-watch": "~0.6.1",
     "grunt-contrib-jshint": "~0.11.2",
-    "grunt-contrib-jasmine": "*",
+    "grunt-contrib-watch": "~0.6.1",
     "grunt-string-replace": "*",
-    "d3": "~3.5.5",
-    "vows": "0.8"
+    "grunt-tape": "~0.0.2"
   },
-  "scripts": {
-    "test": "vows; echo"
-  },
-  "dependencies": {}
+  "dependencies": {},
+  "license": "MIT"
 }

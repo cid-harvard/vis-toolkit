@@ -1,0 +1,67 @@
+<!doctype html>
+<meta charset="utf-8">
+<script src="../js/d3.js"></script>
+<script src="../build/vistk.js"></script>
+<link href="../css/vistk.css" rel="stylesheet">
+<body>
+<div id="viz"></div>
+<script>
+
+
+// https://docs.google.com/spreadsheets/d/1maRAYOU6_Gt5rHuUkOjddfgWHOXwCdR6tcR2CPn6tpc/edit#gid=0
+var data = [
+            {name: 'Bitcoin', value: 5000000000},
+            {name: 'Silver', value: 14000000000},
+            {name: 'Apple', value: 616000000000},
+            {name: 'Fed\'s balance sheet', value: 4500000000000},
+            {name: 'Coins and banknotes', value: 5000000000000},
+            {name: 'Commercial real estate', value: 7600000000000},
+            {name: 'Gold', value: 7800000000000},
+            {name: 'Narrow money', value: 28600000000000},
+            {name: 'All stock markets', value: 70000000000000},
+            {name: 'Board money', value: 80900000000000},
+            {name: 'All global debt', value: 199000000000000},
+            {name: 'Derivative', value: 630000000000000},
+          ];
+
+var chunk_size = 5000000000;
+
+var rect_w = 10;
+var rect_h = 10;
+
+data.forEach(function(d, i) {
+
+  d.chunks = d3.range(Math.floor(d.value / chunk_size)).map(function(e, j) {
+    return {id: j, value: chunk_size};
+  });
+
+  var visualization = vistk.viz().params({
+      dev: true,
+      type: "grid",
+      width: 800,
+      height: rect_h  * Math.ceil(Math.sqrt(d.chunks.length)) + 150,
+      margin: {top: 30, right: 30, bottom: 30, left: 30},
+      container: "#viz",
+      data: d.chunks,
+      var_group: 'id',
+      var_color: 'id',
+      var_id: 'id',
+      var_text: 'id',
+      var_r: "value",
+      items: [{
+        marks: [{
+          type: "rect",
+          width: rect_w,
+          height: rect_h,
+          var_fill: "__value"
+        }]
+      }],
+      title: d.name + " ( " + Math.ceil(Math.sqrt(d.chunks.length)) + " )"
+    });
+
+  d3.select("#viz").call(visualization);
+
+});
+
+</script>
+</body>

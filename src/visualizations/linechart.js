@@ -24,20 +24,21 @@ vars.default_params["linechart"] = function(scope) {
   params.items = [{
     marks: [{
       type: "circle",
-     // fill: function(d) { return vars.color(params.accessor_items(d)[vars.var_color]); }
+      fill: function(d) {
+        return vars.color(params.accessor_items(d)[vars.var_color]); }
     }, {
       var_mark: '__highlighted',
       type: d3.scale.ordinal().domain([true, false]).range(['text', 'none']),
       translate: [10, 0],
       text: function(d) {
-        return d[vars.var_y] + ' ' + d[vars.var_text];
+        return scope.accessor_data(d)[vars.var_y] + ' ' + d[vars.var_text];
       }
     }, {
       var_mark: '__selected',
       type: d3.scale.ordinal().domain([true, false]).range(['text', 'none']),
       translate: [10, 0],
       text: function(d) {
-        return d.values[vars.time.current_time][vars.var_y] + ' ' + d[vars.var_text];
+        return scope.accessor_data(d)[vars.var_y] + ' ' + d[vars.var_text];
       }
     }],
     accessor_data: function(d) {
@@ -46,6 +47,7 @@ vars.default_params["linechart"] = function(scope) {
       })[0];
     }
   }];
+
 
   params.connect = [{
     marks: [{

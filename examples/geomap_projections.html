@@ -134,7 +134,13 @@ d3.csv("../../vis-toolkit-datasets/data/atlas_growth_projections_2024.csv", func
         attr: "name",
         marks: [{
           type: "tick",
-          stroke: color_scale,
+          stroke: function(d, i, vars) {
+            if(typeof d === 'undefined') {
+              return 'white';
+            } else {
+              return color_scale(d[vars.var_color]);
+            }
+          },
           stroke_width: 5,
           stroke_opacity: 0.7
         }, {

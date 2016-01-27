@@ -150,8 +150,8 @@
       var params_y = utils.init_params("y", 0, params, d, i, vars);
 
       var default_height = params_type === 'div' || params_type === 'divtext' ? "auto": 10;
-      var params_height = utils.init_params("height", default_height, params, d, i, vars);
 
+      var params_height = utils.init_params("height", default_height, params, d, i, vars);
       var params_width = utils.init_params("width", 10, params, d, i, vars);
       var params_rotate = utils.init_params("rotate", 0, params, d, i, vars);
       var params_scale = utils.init_params("scale", 1, params, d, i, vars);
@@ -163,6 +163,9 @@
 
       var params_offset_x = utils.init_params("offset_x", 0, params, d, i, vars);
       var params_offset_y = utils.init_params("offset_y", 0, params, d, i, vars);
+
+      var params_offset_right = utils.init_params("offset_right", 0, params, d, i, vars);
+      var params_offset_top = utils.init_params("offset_top", 0, params, d, i, vars);
 
       // Use the default accessor
       var accessor_data = vars.accessor_data;
@@ -213,15 +216,7 @@
               .style("fill", params_fill)
               .style("stroke", params_stroke)
               .attr("transform", "translate(" + ([params_translate[0] + params_offset_x, params_translate[1] + params_offset_y]) + ")rotate(" +  params_rotate + ")")
-              .text(function(d) {
-
-                if(typeof params.text !== "undefined") {
-                  return params.text(d);
-                } else {
-                  return vars.accessor_data(d)[vars.var_text];
-                }
-
-              });
+              .text(params_text);
 
         items_mark_text.exit().remove();
 
@@ -388,8 +383,9 @@
                   .attr("y", params.y || 0)
                   .attr("height", params_height)
                   .attr("width", params_width)
-                  .attr("transform", "rotate(" + params_rotate + ")")
-                  .style("stroke", params_stroke);
+                  .attr("transform", "translate(" +  params_translate + ")rotate(" + params_rotate + ")scale(" + params_scale + ")")
+                  .style("stroke", params_stroke)
+                  .style("stroke-width", params_stroke_width);
 
         items_mark_rect
             .classed("highlighted", function(d, i) { return d.__highlighted; })
@@ -399,7 +395,9 @@
             .attr("y", params.y || 0)
             .attr("height", params_height)
             .attr("width", params_width)
-            .style("stroke", params_stroke);
+            .attr("transform", "translate(" +  params_translate + ")rotate(" + params_rotate + ")scale(" + params_scale + ")")
+            .style("stroke", params_stroke)
+            .style("stroke-width", params_stroke_width);
 
           if(typeof params.fill !== "undefined") {
 
@@ -448,11 +446,9 @@
               items_mark_diamond_enter.style("fill", params_fill)
             }
 
-           // .style("stroke", params_stroke);
-
-          if(typeof params.class !== "undefined") {
-            items_mark_diamond_enter.classed(params.class(vars.accessor_items(d)), true);
-          }
+        if(typeof params.class !== "undefined") {
+          items_mark_diamond_enter.classed(params.class(vars.accessor_items(d)), true);
+        }
 
         items_mark_diamond
             .classed("highlighted", function(d, i) { return d.__highlighted; })
@@ -472,7 +468,7 @@
           items_mark_tick.enter().append('line')
               .classed('items__mark__tick', true)
               .classed("items_" + mark_id, true)
-              .style("stroke", params.stroke(d[vars.var_color]))
+              .style("stroke", params_stroke)
               .style("stroke-width", params_stroke_width)
               .style("stroke-opacity", params_stroke_opacity)
               .attr("y2", function(d) { return -20; })
@@ -507,12 +503,36 @@
               .classed("highlighted", function(d, i) { return d.__highlighted; })
               .classed("selected", function(d, i) { return d.__selected; })
               .attr("d", vars.path)
-              .style("fill", function(d, i) {
-                return params.fill(vars.accessor_data(d)[vars.var_color]);
-              })
               .attr("transform", function(d) {
                 return "translate("+ -d.x +", "+ -d.y +")";
-              })
+              });
+
+              if(typeof params.fill !== "undefined") {
+
+                if(typeof params.fill === "function") {
+
+                  items_mark_shape.style("fill", params.fill(d[vars.var_color]));
+
+
+                } else {
+
+                  items_mark_shape.style("fill", function(d) {
+                    return params.fill(vars.accessor_items(d)[vars.var_color]);
+                  });
+
+                }
+
+              } else if(vars.var_color !== null) {
+
+                items_mark_shape.style("fill", function(d) {
+                  return vars.color(vars.accessor_items(d)[vars.var_color]);
+                });
+
+                items_mark_shape.style("fill", function(d) {
+                  return vars.color(vars.accessor_items(d)[vars.var_color]);
+                });
+
+              }
 
             items_mark_shape.exit().remove();
 
@@ -540,7 +560,7 @@
           mark.enter().append("path")
               .classed("items_" + mark_id, true)
               .classed("items__mark__arc", true)
-              .attr("fill", params_fill)
+              .attr("fill", params_fill);
               //.style("fill-opacity", function(d, i) {
               //  if(d.i == 0)
               //    return .2;
@@ -577,7 +597,7 @@
               .attr("x2", function(d) { return vars.x_scale[0]["func"](d.target.x); })
               .attr("y2", function(d) { return vars.y_scale[0]["func"](d.target.y); })
               .style("stroke", params_stroke)
-              .style("stroke-dasharray", ("3, 3"))
+              // .style("stroke-dasharray", ("3, 3"))
               .on("mouseover",function(d) { // FIX to prevent hovers
                 d3.event.stopPropagation();
               })
@@ -618,10 +638,43 @@
           mark
               .classed("highlighted", function(d, i) { return d.__highlighted; })
               .classed("selected", function(d, i) { return d.__selected; })
-              .attr("x1", function(d) { return -t[0] + vars.margin.left; })
+              //.attr("x1", function(d) { return -t[0] + vars.margin.left; })
+              //.attr("x2", function(d) { return vars.x_scale[0]["func"].range()[1] -100 + params_offset_right; })
+              .attr("x1", function(d) { return -t[0]; })
+              .attr("x2", function(d) { return vars.x_scale[0]["func"].range()[1] -t[0] - params_offset_right; })
               .attr("y1", function(d) { return params_offset_y; })
-              .attr("x2", function(d) { return vars.x_scale[0]["func"].range()[1] -100; })
-              .attr("y2", function(d) { return params_offset_y; });
+              .attr("y2", function(d) { return params_offset_y; })
+
+          break;
+
+        case "line_vertical":
+
+          var mark = d3.select(that).selectAll(".mark__line_vertical.items_" + mark_id).data([d]);
+
+          var t = d3.transform(d3.select(that).attr("transform")).translate;
+
+          mark.enter().append('line')
+              .classed('mark__line_horizontal', true)
+              .classed("items_" + mark_id, true)
+              .on("mouseover",function(d) { // FIX to prevent hovers
+                d3.event.stopPropagation();
+              })
+              .on("mouseleave", function(d) {
+                d3.event.stopPropagation();
+              })
+              .on("click", function(d) {
+                 d3.event.stopPropagation();
+              });
+
+          mark
+              .classed("highlighted", function(d, i) { return d.__highlighted; })
+              .classed("selected", function(d, i) { return d.__selected; })
+              //.attr("x1", function(d) { return params_offset_x; })
+              //.attr("y1", function(d) { return -t[1] - vars.margin.top + params_offset_top; })
+              //.attr("x2", function(d) { return params_offset_x; })
+              //.attr("y2", function(d) { return vars.y_scale[0]["func"].range()[1]; })
+              .attr("y2", params_offset_top)
+              .attr("y1", function(d) { return vars.height - vars.margin.top - vars.margin.bottom - t[1]; });
 
           break;
 
@@ -684,13 +737,11 @@
                 return "translate(" +  params_translate + ")rotate(" +  params_rotate + ")";
               });
 
-
-
           mark
               .classed("highlighted", function(e, j) { return e.__highlighted; })
               .classed("selected", function(e, j) { return e.__selected; })
               .transition().duration(vars.duration)
-              .style("stroke", params_stroke)
+           //   .style("stroke", params_stroke)
               .attr('d', function(e) {
                 return params["func"](d3.values(this_accessor_values(e)));
               });
@@ -824,34 +875,36 @@
                 }
               })
               .style("stroke", params_stroke)
+              .style("fill", params_fill)
               .style("stroke-width", params_stroke_width)
               .style("stroke-opacity", params_stroke_opacity);
 
-          if(typeof params.fill !== "undefined") {
 
-            if(typeof params.fill === "function") {
+              if(typeof params.fill !== "undefined") {
 
-              mark.style("fill", params.fill(d, i, vars));
+                if(typeof params.fill === "function") {
 
-            } else {
+                  mark.style("fill", params.fill(d, i, vars));
 
-              mark_enter.style("fill", function(d) {
-                return params.fill(vars.accessor_items(d)[vars.var_color]);
-              });
+                } else {
 
-            }
+                  mark_enter.style("fill", function(d) {
+                    return params.fill(vars.accessor_items(d)[vars.var_color]);
+                  });
 
-          } else if(vars.var_color !== null) {
+                }
 
-            mark_enter.style("fill", function(d) {
-              return vars.color(vars.accessor_items(d)[vars.var_color]);
-            });
+              } else if(vars.var_color !== null) {
 
-            mark.style("fill", function(d) {
-              return vars.color(vars.accessor_items(d)[vars.var_color]);
-            });
+                mark_enter.style("fill", function(d) {
+                  return vars.color(vars.accessor_items(d)[vars.var_color]);
+                });
 
-          }
+                mark.style("fill", function(d) {
+                  return vars.color(vars.accessor_items(d)[vars.var_color]);
+                });
+
+              }
 
           if(typeof params.opacity !== "undefined") {
 
@@ -1123,7 +1176,6 @@
                     .filter(utils.filters.redraw_only)
                     .call(utils.draw_mark, params, vars);
 
-
                 // CUSTOM SELECTION EVENT
                 if(vars.init && typeof params.evt !== 'undefined') {
                   vars.evt.register("selection", params.evt[0].func)
@@ -1176,7 +1228,6 @@
                     if(!d.__selected) { d.__redraw = false; }
                   });
                 }
-
 
                 // TODO: Drawing HTML TYPE MARKS
 
@@ -1288,7 +1339,6 @@
               .filter(params.filter)
               .filter(utils.filters.redraw_only)
               .call(utils.draw_mark, params, vars)
-
           }
 
           gConnect
@@ -1319,6 +1369,10 @@
       // Remove connect mark if not in config file anymore
       vars_svg.selectAll(".connect__group").remove();
 
+    }
+
+    if(!utils.check_data_display()) {
+      return;
     }
 
     if(typeof vars._user_vars.x_tickValues !== 'undefined') {
@@ -1593,36 +1647,6 @@
 
   utils.filters = {};
 
-  utils.init_item = function(d) {
-    d.__aggregated = false;
-    d.__selected = false;
-    d.__selected__adjacent = false;
-    d.__highlighted = false;
-    d.__highlighted__adjacent = false;
-    d.__missing = false;
-    d.__redraw = false;
-  }
-
-  utils.init_params = function(v, default_value, params, d, i, vars) {
-
-    var result = default_value;
-
-    if(typeof params[v] !== "undefined") {
-      if(typeof params[v] === "function") {
-        result = params[v](d, i, vars);
-      } else if(typeof params[v] === "string") {
-        result = params[v];
-      } else if(typeof params[v] === "number") {
-        result = params[v];
-      } else {
-        result = params[v];
-      }
-    }
-
-    return result;
-
-  }
-
   utils.filters.redraw_only = function(d) { return d.__redraw; }
 
   utils.find_adjacent_links = function(d, links) {
@@ -1765,7 +1789,41 @@
       return output;
   };
 
-utils.init_params_values = function(var_v, default_value, params, d, i, vars) {
+
+  utils.init_item = function(d) {
+    d.__aggregated = false;
+    d.__selected = false;
+    d.__selected__adjacent = false;
+    d.__highlighted = false;
+    d.__highlighted__adjacent = false;
+    d.__missing = false;
+    d.__redraw = false;
+  }
+
+  utils.init_params = function(v, default_value, params, d, i, vars) {
+
+    var result = default_value;
+
+    if(typeof params[v] !== "undefined") {
+      if(typeof params[v] === "function") {
+        //if(v === 'stroke' || v === 'stroke') {
+        //  result = params[v](d[vars.var_color], i, vars);
+        //} else {
+          result = params[v](d, i, vars);
+        //}
+      } else if(typeof params[v] === "string") {
+        result = params[v];
+      } else if(typeof params[v] === "number") {
+        result = params[v];
+      } else {
+        result = params[v];
+      }
+    }
+
+    return result;
+  }
+
+  utils.init_params_values = function(var_v, default_value, params, d, i, vars) {
 
     var result = default_value;
 
@@ -1782,7 +1840,6 @@ utils.init_params_values = function(var_v, default_value, params, d, i, vars) {
     }
 
     return result;
-
   }
 
   // Turns parameters into actual values
@@ -1830,7 +1887,6 @@ utils.init_params_values = function(var_v, default_value, params, d, i, vars) {
 
     return mark_params;
   }
-
 
   utils.mark_params_values = function(params, vars, d, i) {
 
@@ -1885,4 +1941,8 @@ utils.init_params_values = function(var_v, default_value, params, d, i, vars) {
     if(index > -1) {
       vars[arr].splice(index, 1);
     }
+  }
+
+  utils.duplicate_data = function() {
+    vars.all_data = JSON.parse(JSON.stringify(vars.data));
   }

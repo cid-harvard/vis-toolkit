@@ -10,7 +10,9 @@ vars.default_params["ordinal_vertical"] = function(scope) {
 
   params.y_scale = [{
     func: d3.scale.ordinal()
-            .domain(d3.set(vars.new_data.map(function(d) { return d[vars.var_y]; })).values())
+            .domain(d3.set(vars.new_data.map(function(d) {
+              return d[vars.var_y];
+            })).values())
             .rangeBands([scope.margin.left, scope.width - scope.margin.left - scope.margin.right])
   }];
 

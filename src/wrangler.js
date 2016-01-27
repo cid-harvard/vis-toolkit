@@ -12,36 +12,42 @@
     // 1 - Init and define default parameters
     vars.items_data = [];
 
+    // Duplicates the whole dataset
+    vars.evt.register('init', utils.duplicate_data);
+
+    if(vars.init) {
+      vars.evt.call('init');
+    }
     // Each item needs coordinates
     // 1/ In case we use functions for X/Y variables
     // 2/ Adds default attributes __var_x and __var_y if no coordinate exist
 
-    // Duplicate the dataset to prevent mutation
-    if(vars.init) {
-
-      // Get a copy of the whole dataset
-      vars.all_data = JSON.parse(JSON.stringify(vars.data));
-
-    }
 
     if(typeof vars.var_x !== "string" && typeof vars.var_x === "function") {
+
       vars.all_data.forEach(function(d, i) {
         d.__var_x = vars.var_x(d, i, vars);
       });
+
       vars.var_x = "__var_x";
+
     }
 
     if(typeof vars.var_x === "undefined") {
-      // vars.data.forEach(function(d, i) {
-      //   d.__var_x = vars.var_x(d, i, vars);
-      // });
       vars.var_x = "__var_x";
     }
 
     if(typeof vars.var_y !== "string" && typeof vars.var_y === "function") {
+
       vars.all_data.forEach(function(d, i) {
         d.__var_y = vars.var_y(d, i, vars);
       });
+
+      vars.var_y = "__var_y";
+
+    }
+
+    if(typeof vars.var_y === "undefined") {
       vars.var_y = "__var_y";
     }
 
@@ -349,89 +355,14 @@
 
       // Transform key/value into values tab only
       if(typeof vars.set['__aggregated'] !== 'undefined' && vars.set['__aggregated']) {
-        vars.new_data = vars.new_data.concat(nested_data.map(function(d) { return d.values; }));
+
+        vars.new_data = vars.new_data.concat(nested_data.map(function(d) {
+          return d.values;
+        }));
+
       } else {
+
         vars.new_data = nested_data.map(function(d) { return d.values; });
-      }
-
-    }
-
-    if(vars.init || vars.refresh) {
-
-      // Links between items
-      // Used for product space
-      if(vars.links !== null && vars.type === 'productspace') {
-
-        vars.links.forEach(function(d, i) {
-
-          if(typeof d.source === "string") {
-            d.source = vistk.utils.find_node_by_id(vars.nodes, d.source);
-          }
-
-          if(typeof d.target === "string") {
-            d.target = vistk.utils.find_node_by_id(vars.nodes, d.target);
-          }
-
-          d.__redraw = true;
-
-        });
-
-      }
-
-      // Flagging missing nodes with __missing true attribute
-      if(typeof vars.nodes !== "undefined" && vars.type === 'productspace') {
-
-        vars.new_data = utils.join(vars.nodes, vars.new_data, vars.var_node_id, vars.var_id, function(new_data, node) {
-            var r = new_data;
-            if(typeof node === 'undefined') {
-              return;
-            }
-
-            // Update all time points
-            vars.time.points.forEach(function(time) {
-
-              if(typeof(r.values[time]) === 'undefined') {
-                r.values[time] = {};
-                r.values[time][vars.var_id] = vars.var_id;
-              }
-
-              r.values[time].x = node.x;
-              r.values[time].y = node.y;
-            });
-
-            // Keep the metadata
-            r.x = node.x;
-            r.y = node.y;
-
-            r.__redraw = true;
-            return r;
-        });
-
-        // Remove missing nodes
-        // vars.new_data = vars.new_data.filter(function(d) {
-        //  return !d.__missing;
-        // });
-
-        // Go through again the list of nodes
-        // to make sure we display all the nodes
-        vars.nodes.forEach(function(d, i) {
-
-          var node = vistk.utils.find_node_coordinates_by_id(vars.new_data, vars.var_id, d[vars.var_node_id]);
-
-          if(typeof node === "undefined") {
-
-            d.values = [];
-            d[vars.var_r] = 0;
-            d[vars.var_id] = d.id;
-
-            utils.init_item(d);
-            d.__redraw = true;
-
-            vars.new_data.push(d);
-
-          }
-
-        });
 
       }
 

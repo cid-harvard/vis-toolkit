@@ -6,16 +6,20 @@ var w = typeof window === "undefined" ? this : window;
 var vistk = w.vistk || {};
 w.vistk = vistk;
 
-vistk.version = "0.0.28";
+vistk.version = "0.0.29";
 vistk.utils = {};
+
+if(typeof module === "object" && module.exports) {
+  module.exports = vistk;
+}
 
 vistk.viz = function() {
 
-// Init parameters for the current chart
-var vars = {};
+  // Init parameters for the current chart
+  var vars = {};
 
-// Private functions
-var utils ={};
+  // Private functions
+  var utils ={};
 
   // LIST OF PRIVATE UTILS FUNCTIONS
 
@@ -169,8 +173,8 @@ var utils ={};
       var params_y = utils.init_params("y", 0, params, d, i, vars);
 
       var default_height = params_type === 'div' || params_type === 'divtext' ? "auto": 10;
-      var params_height = utils.init_params("height", default_height, params, d, i, vars);
 
+      var params_height = utils.init_params("height", default_height, params, d, i, vars);
       var params_width = utils.init_params("width", 10, params, d, i, vars);
       var params_rotate = utils.init_params("rotate", 0, params, d, i, vars);
       var params_scale = utils.init_params("scale", 1, params, d, i, vars);
@@ -182,6 +186,9 @@ var utils ={};
 
       var params_offset_x = utils.init_params("offset_x", 0, params, d, i, vars);
       var params_offset_y = utils.init_params("offset_y", 0, params, d, i, vars);
+
+      var params_offset_right = utils.init_params("offset_right", 0, params, d, i, vars);
+      var params_offset_top = utils.init_params("offset_top", 0, params, d, i, vars);
 
       // Use the default accessor
       var accessor_data = vars.accessor_data;
@@ -232,15 +239,7 @@ var utils ={};
               .style("fill", params_fill)
               .style("stroke", params_stroke)
               .attr("transform", "translate(" + ([params_translate[0] + params_offset_x, params_translate[1] + params_offset_y]) + ")rotate(" +  params_rotate + ")")
-              .text(function(d) {
-
-                if(typeof params.text !== "undefined") {
-                  return params.text(d);
-                } else {
-                  return vars.accessor_data(d)[vars.var_text];
-                }
-
-              });
+              .text(params_text);
 
         items_mark_text.exit().remove();
 
@@ -407,8 +406,9 @@ var utils ={};
                   .attr("y", params.y || 0)
                   .attr("height", params_height)
                   .attr("width", params_width)
-                  .attr("transform", "rotate(" + params_rotate + ")")
-                  .style("stroke", params_stroke);
+                  .attr("transform", "translate(" +  params_translate + ")rotate(" + params_rotate + ")scale(" + params_scale + ")")
+                  .style("stroke", params_stroke)
+                  .style("stroke-width", params_stroke_width);
 
         items_mark_rect
             .classed("highlighted", function(d, i) { return d.__highlighted; })
@@ -418,7 +418,9 @@ var utils ={};
             .attr("y", params.y || 0)
             .attr("height", params_height)
             .attr("width", params_width)
-            .style("stroke", params_stroke);
+            .attr("transform", "translate(" +  params_translate + ")rotate(" + params_rotate + ")scale(" + params_scale + ")")
+            .style("stroke", params_stroke)
+            .style("stroke-width", params_stroke_width);
 
           if(typeof params.fill !== "undefined") {
 
@@ -467,11 +469,9 @@ var utils ={};
               items_mark_diamond_enter.style("fill", params_fill)
             }
 
-           // .style("stroke", params_stroke);
-
-          if(typeof params.class !== "undefined") {
-            items_mark_diamond_enter.classed(params.class(vars.accessor_items(d)), true);
-          }
+        if(typeof params.class !== "undefined") {
+          items_mark_diamond_enter.classed(params.class(vars.accessor_items(d)), true);
+        }
 
         items_mark_diamond
             .classed("highlighted", function(d, i) { return d.__highlighted; })
@@ -491,7 +491,7 @@ var utils ={};
           items_mark_tick.enter().append('line')
               .classed('items__mark__tick', true)
               .classed("items_" + mark_id, true)
-              .style("stroke", params.stroke(d[vars.var_color]))
+              .style("stroke", params_stroke)
               .style("stroke-width", params_stroke_width)
               .style("stroke-opacity", params_stroke_opacity)
               .attr("y2", function(d) { return -20; })
@@ -526,12 +526,36 @@ var utils ={};
               .classed("highlighted", function(d, i) { return d.__highlighted; })
               .classed("selected", function(d, i) { return d.__selected; })
               .attr("d", vars.path)
-              .style("fill", function(d, i) {
-                return params.fill(vars.accessor_data(d)[vars.var_color]);
-              })
               .attr("transform", function(d) {
                 return "translate("+ -d.x +", "+ -d.y +")";
-              })
+              });
+
+              if(typeof params.fill !== "undefined") {
+
+                if(typeof params.fill === "function") {
+
+                  items_mark_shape.style("fill", params.fill(d[vars.var_color]));
+
+
+                } else {
+
+                  items_mark_shape.style("fill", function(d) {
+                    return params.fill(vars.accessor_items(d)[vars.var_color]);
+                  });
+
+                }
+
+              } else if(vars.var_color !== null) {
+
+                items_mark_shape.style("fill", function(d) {
+                  return vars.color(vars.accessor_items(d)[vars.var_color]);
+                });
+
+                items_mark_shape.style("fill", function(d) {
+                  return vars.color(vars.accessor_items(d)[vars.var_color]);
+                });
+
+              }
 
             items_mark_shape.exit().remove();
 
@@ -559,7 +583,7 @@ var utils ={};
           mark.enter().append("path")
               .classed("items_" + mark_id, true)
               .classed("items__mark__arc", true)
-              .attr("fill", params_fill)
+              .attr("fill", params_fill);
               //.style("fill-opacity", function(d, i) {
               //  if(d.i == 0)
               //    return .2;
@@ -596,7 +620,7 @@ var utils ={};
               .attr("x2", function(d) { return vars.x_scale[0]["func"](d.target.x); })
               .attr("y2", function(d) { return vars.y_scale[0]["func"](d.target.y); })
               .style("stroke", params_stroke)
-              .style("stroke-dasharray", ("3, 3"))
+              // .style("stroke-dasharray", ("3, 3"))
               .on("mouseover",function(d) { // FIX to prevent hovers
                 d3.event.stopPropagation();
               })
@@ -637,10 +661,43 @@ var utils ={};
           mark
               .classed("highlighted", function(d, i) { return d.__highlighted; })
               .classed("selected", function(d, i) { return d.__selected; })
-              .attr("x1", function(d) { return -t[0] + vars.margin.left; })
+              //.attr("x1", function(d) { return -t[0] + vars.margin.left; })
+              //.attr("x2", function(d) { return vars.x_scale[0]["func"].range()[1] -100 + params_offset_right; })
+              .attr("x1", function(d) { return -t[0]; })
+              .attr("x2", function(d) { return vars.x_scale[0]["func"].range()[1] -t[0] - params_offset_right; })
               .attr("y1", function(d) { return params_offset_y; })
-              .attr("x2", function(d) { return vars.x_scale[0]["func"].range()[1] -100; })
-              .attr("y2", function(d) { return params_offset_y; });
+              .attr("y2", function(d) { return params_offset_y; })
+
+          break;
+
+        case "line_vertical":
+
+          var mark = d3.select(that).selectAll(".mark__line_vertical.items_" + mark_id).data([d]);
+
+          var t = d3.transform(d3.select(that).attr("transform")).translate;
+
+          mark.enter().append('line')
+              .classed('mark__line_horizontal', true)
+              .classed("items_" + mark_id, true)
+              .on("mouseover",function(d) { // FIX to prevent hovers
+                d3.event.stopPropagation();
+              })
+              .on("mouseleave", function(d) {
+                d3.event.stopPropagation();
+              })
+              .on("click", function(d) {
+                 d3.event.stopPropagation();
+              });
+
+          mark
+              .classed("highlighted", function(d, i) { return d.__highlighted; })
+              .classed("selected", function(d, i) { return d.__selected; })
+              //.attr("x1", function(d) { return params_offset_x; })
+              //.attr("y1", function(d) { return -t[1] - vars.margin.top + params_offset_top; })
+              //.attr("x2", function(d) { return params_offset_x; })
+              //.attr("y2", function(d) { return vars.y_scale[0]["func"].range()[1]; })
+              .attr("y2", params_offset_top)
+              .attr("y1", function(d) { return vars.height - vars.margin.top - vars.margin.bottom - t[1]; });
 
           break;
 
@@ -703,13 +760,11 @@ var utils ={};
                 return "translate(" +  params_translate + ")rotate(" +  params_rotate + ")";
               });
 
-
-
           mark
               .classed("highlighted", function(e, j) { return e.__highlighted; })
               .classed("selected", function(e, j) { return e.__selected; })
               .transition().duration(vars.duration)
-              .style("stroke", params_stroke)
+           //   .style("stroke", params_stroke)
               .attr('d', function(e) {
                 return params["func"](d3.values(this_accessor_values(e)));
               });
@@ -843,34 +898,36 @@ var utils ={};
                 }
               })
               .style("stroke", params_stroke)
+              .style("fill", params_fill)
               .style("stroke-width", params_stroke_width)
               .style("stroke-opacity", params_stroke_opacity);
 
-          if(typeof params.fill !== "undefined") {
 
-            if(typeof params.fill === "function") {
+              if(typeof params.fill !== "undefined") {
 
-              mark.style("fill", params.fill(d, i, vars));
+                if(typeof params.fill === "function") {
 
-            } else {
+                  mark.style("fill", params.fill(d, i, vars));
 
-              mark_enter.style("fill", function(d) {
-                return params.fill(vars.accessor_items(d)[vars.var_color]);
-              });
+                } else {
 
-            }
+                  mark_enter.style("fill", function(d) {
+                    return params.fill(vars.accessor_items(d)[vars.var_color]);
+                  });
 
-          } else if(vars.var_color !== null) {
+                }
 
-            mark_enter.style("fill", function(d) {
-              return vars.color(vars.accessor_items(d)[vars.var_color]);
-            });
+              } else if(vars.var_color !== null) {
 
-            mark.style("fill", function(d) {
-              return vars.color(vars.accessor_items(d)[vars.var_color]);
-            });
+                mark_enter.style("fill", function(d) {
+                  return vars.color(vars.accessor_items(d)[vars.var_color]);
+                });
 
-          }
+                mark.style("fill", function(d) {
+                  return vars.color(vars.accessor_items(d)[vars.var_color]);
+                });
+
+              }
 
           if(typeof params.opacity !== "undefined") {
 
@@ -1142,7 +1199,6 @@ var utils ={};
                     .filter(utils.filters.redraw_only)
                     .call(utils.draw_mark, params, vars);
 
-
                 // CUSTOM SELECTION EVENT
                 if(vars.init && typeof params.evt !== 'undefined') {
                   vars.evt.register("selection", params.evt[0].func)
@@ -1195,7 +1251,6 @@ var utils ={};
                     if(!d.__selected) { d.__redraw = false; }
                   });
                 }
-
 
                 // TODO: Drawing HTML TYPE MARKS
 
@@ -1307,7 +1362,6 @@ var utils ={};
               .filter(params.filter)
               .filter(utils.filters.redraw_only)
               .call(utils.draw_mark, params, vars)
-
           }
 
           gConnect
@@ -1338,6 +1392,10 @@ var utils ={};
       // Remove connect mark if not in config file anymore
       vars_svg.selectAll(".connect__group").remove();
 
+    }
+
+    if(!utils.check_data_display()) {
+      return;
     }
 
     if(typeof vars._user_vars.x_tickValues !== 'undefined') {
@@ -1612,36 +1670,6 @@ var utils ={};
 
   utils.filters = {};
 
-  utils.init_item = function(d) {
-    d.__aggregated = false;
-    d.__selected = false;
-    d.__selected__adjacent = false;
-    d.__highlighted = false;
-    d.__highlighted__adjacent = false;
-    d.__missing = false;
-    d.__redraw = false;
-  }
-
-  utils.init_params = function(v, default_value, params, d, i, vars) {
-
-    var result = default_value;
-
-    if(typeof params[v] !== "undefined") {
-      if(typeof params[v] === "function") {
-        result = params[v](d, i, vars);
-      } else if(typeof params[v] === "string") {
-        result = params[v];
-      } else if(typeof params[v] === "number") {
-        result = params[v];
-      } else {
-        result = params[v];
-      }
-    }
-
-    return result;
-
-  }
-
   utils.filters.redraw_only = function(d) { return d.__redraw; }
 
   utils.find_adjacent_links = function(d, links) {
@@ -1784,7 +1812,41 @@ var utils ={};
       return output;
   };
 
-utils.init_params_values = function(var_v, default_value, params, d, i, vars) {
+
+  utils.init_item = function(d) {
+    d.__aggregated = false;
+    d.__selected = false;
+    d.__selected__adjacent = false;
+    d.__highlighted = false;
+    d.__highlighted__adjacent = false;
+    d.__missing = false;
+    d.__redraw = false;
+  }
+
+  utils.init_params = function(v, default_value, params, d, i, vars) {
+
+    var result = default_value;
+
+    if(typeof params[v] !== "undefined") {
+      if(typeof params[v] === "function") {
+        //if(v === 'stroke' || v === 'stroke') {
+        //  result = params[v](d[vars.var_color], i, vars);
+        //} else {
+          result = params[v](d, i, vars);
+        //}
+      } else if(typeof params[v] === "string") {
+        result = params[v];
+      } else if(typeof params[v] === "number") {
+        result = params[v];
+      } else {
+        result = params[v];
+      }
+    }
+
+    return result;
+  }
+
+  utils.init_params_values = function(var_v, default_value, params, d, i, vars) {
 
     var result = default_value;
 
@@ -1801,7 +1863,6 @@ utils.init_params_values = function(var_v, default_value, params, d, i, vars) {
     }
 
     return result;
-
   }
 
   // Turns parameters into actual values
@@ -1849,7 +1910,6 @@ utils.init_params_values = function(var_v, default_value, params, d, i, vars) {
 
     return mark_params;
   }
-
 
   utils.mark_params_values = function(params, vars, d, i) {
 
@@ -1906,15 +1966,16 @@ utils.init_params_values = function(var_v, default_value, params, d, i, vars) {
     }
   }
 
+  utils.duplicate_data = function() {
+    vars.all_data = JSON.parse(JSON.stringify(vars.data));
+  }
 
   // Default parameters for all charts
   var default_vars = {
-    // PUBLIC (set by the user)
-    container : "",
+
     this_chart: null,
 
     new_data: null,
-    time_data: null,
 
     dev : false,
     id : "id",
@@ -1969,7 +2030,7 @@ utils.init_params_values = function(var_v, default_value, params, d, i, vars) {
     x_domain: null,
     x_range: null,
 
-    // SCATTERPLOT (INCLUDES DOTPLOT)
+    // SCATTERPLOT (extends DOTPLOT)
     y_type: "linear",
     y_scale: [],
     y_ticks: 5,
@@ -1994,27 +2055,34 @@ utils.init_params_values = function(var_v, default_value, params, d, i, vars) {
     // Automatically generate UI elements
     ui: true,
 
-    lang: 'en_US', // 'es_ES, fr_FR', ..
+    lang: 'en_US', // 'es_ES, fr_FR'
     locales: {}, // Translations for various lang
 
     // Graphical properties for graphical marks
     color: d3.scale.category20c(),
     size: d3.scale.linear(),
 
+    // Events management
     dispatch: [],
     evt: {register: function() {}, call: function() {} },
 
     // SVG Container
+    container: "#viz",
     svg: null,      // Contains the svg element
     root_svg: null, // Contains the group children to the svg element
     ratio: 0.5, // Visualization aspect ratio
 
+    width: 800,
+    height: 400,
+    // Animation and interpolation
     duration: 1000,
     interpolate: "monotone",
 
     layout: {},
 
     padding: 1,
+
+    // TREEMAP
     treemap_mode: 'squarify',
 
     treemap: {
@@ -2026,7 +2094,6 @@ utils.init_params_values = function(var_v, default_value, params, d, i, vars) {
     },
 
     radius: 5,
-
     radius_min: 2,
     radius_max: 10,
 
@@ -2046,8 +2113,6 @@ utils.init_params_values = function(var_v, default_value, params, d, i, vars) {
       return d.values[vars.time.current_time];
     },
 
-    container: "#viz",
-
     refresh: true,
     init: true,
     redraw_all: false,
@@ -2064,6 +2129,7 @@ utils.init_params_values = function(var_v, default_value, params, d, i, vars) {
     default_params: {},
     default_marks: {},
 
+    // Order we use to draw the various marks
     z_index: [
  //     {selector: '.mark__group', attribute: '__aggregated', type: 'productspace', weight: 1},
       {selector: '.connect__group', type: 'productspace', weight: 1, event: 'highlightOut'},
@@ -2071,6 +2137,7 @@ utils.init_params_values = function(var_v, default_value, params, d, i, vars) {
       {selector: '.connect__group', attribute: '__highlighted', type: 'productspace', weight: 1, event: 'highlightOn'},
       {selector: '.mark__group', attribute: '__highlighted', type: 'productspace', weight: 1, event: 'highlightOn'},
       {selector: '.mark__group', attribute: '__highlighted__adjacent', type: 'productspace', weight: 1, event: 'highlightOn'},
+      {selector: '.mark__group', attribute: '__highlighted', type: 'scatterplot', weight: 1, event: 'highlightOn'},
     ],
 
     set: [],
@@ -2126,9 +2193,13 @@ utils.init_params_values = function(var_v, default_value, params, d, i, vars) {
 
   if (!vars.data) { vars.data = []; }
 
-  vars.width = parseInt(d3.select("body").style('width').substring(0, d3.select("body").style('width').length-2));
-  vars.width = vars.width - vars.margin.left - vars.margin.right;
-  vars.height = vars.width * vars.ratio;
+  // Calculate default chart dimensions
+  // var parent_width = d3.select(vars.container).style('width');
+  // // Remove the 'px'
+  // parent_width = parent_width.substring(0, parent_width.length-2);
+  // vars.width = parseInt(parent_width);
+  // vars.width = vars.width - vars.margin.left - vars.margin.right;
+  // vars.height = vars.width * vars.ratio;
 
   // List of events
   vars.dispatch = d3.dispatch('init', 'start', 'finish', 'end', 'highlightOn', 'highlightOut', 'selection', 'resize', 'clearAnimations', 'timeUpdate');
@@ -2146,9 +2217,9 @@ utils.init_params_values = function(var_v, default_value, params, d, i, vars) {
   });
 
   // Default events
-  d3.select(window).on('resize', function(d) {
-    vars.evt.call("resize", d);
-  });
+  // d3.select(window).on('resize', function(d) {
+  //   vars.evt.call("resize", d);
+  // });
 
   vars.evt.register("highlightOn", function(d) {
     utils.push_array('highlight', d);
@@ -2192,7 +2263,6 @@ utils.init_params_values = function(var_v, default_value, params, d, i, vars) {
     d.__selected = !d.__selected;
     d.__redraw = true;
   });
-
 
   function chart(selection) {
 
@@ -2293,36 +2363,42 @@ utils.init_params_values = function(var_v, default_value, params, d, i, vars) {
     // 1 - Init and define default parameters
     vars.items_data = [];
 
+    // Duplicates the whole dataset
+    vars.evt.register('init', utils.duplicate_data);
+
+    if(vars.init) {
+      vars.evt.call('init');
+    }
     // Each item needs coordinates
     // 1/ In case we use functions for X/Y variables
     // 2/ Adds default attributes __var_x and __var_y if no coordinate exist
 
-    // Duplicate the dataset to prevent mutation
-    if(vars.init) {
-
-      // Get a copy of the whole dataset
-      vars.all_data = JSON.parse(JSON.stringify(vars.data));
-
-    }
 
     if(typeof vars.var_x !== "string" && typeof vars.var_x === "function") {
+
       vars.all_data.forEach(function(d, i) {
         d.__var_x = vars.var_x(d, i, vars);
       });
+
       vars.var_x = "__var_x";
+
     }
 
     if(typeof vars.var_x === "undefined") {
-      // vars.data.forEach(function(d, i) {
-      //   d.__var_x = vars.var_x(d, i, vars);
-      // });
       vars.var_x = "__var_x";
     }
 
     if(typeof vars.var_y !== "string" && typeof vars.var_y === "function") {
+
       vars.all_data.forEach(function(d, i) {
         d.__var_y = vars.var_y(d, i, vars);
       });
+
+      vars.var_y = "__var_y";
+
+    }
+
+    if(typeof vars.var_y === "undefined") {
       vars.var_y = "__var_y";
     }
 
@@ -2630,89 +2706,14 @@ utils.init_params_values = function(var_v, default_value, params, d, i, vars) {
 
       // Transform key/value into values tab only
       if(typeof vars.set['__aggregated'] !== 'undefined' && vars.set['__aggregated']) {
-        vars.new_data = vars.new_data.concat(nested_data.map(function(d) { return d.values; }));
+
+        vars.new_data = vars.new_data.concat(nested_data.map(function(d) {
+          return d.values;
+        }));
+
       } else {
+
         vars.new_data = nested_data.map(function(d) { return d.values; });
-      }
-
-    }
-
-    if(vars.init || vars.refresh) {
-
-      // Links between items
-      // Used for product space
-      if(vars.links !== null && vars.type === 'productspace') {
-
-        vars.links.forEach(function(d, i) {
-
-          if(typeof d.source === "string") {
-            d.source = vistk.utils.find_node_by_id(vars.nodes, d.source);
-          }
-
-          if(typeof d.target === "string") {
-            d.target = vistk.utils.find_node_by_id(vars.nodes, d.target);
-          }
-
-          d.__redraw = true;
-
-        });
-
-      }
-
-      // Flagging missing nodes with __missing true attribute
-      if(typeof vars.nodes !== "undefined" && vars.type === 'productspace') {
-
-        vars.new_data = utils.join(vars.nodes, vars.new_data, vars.var_node_id, vars.var_id, function(new_data, node) {
-            var r = new_data;
-            if(typeof node === 'undefined') {
-              return;
-            }
-
-            // Update all time points
-            vars.time.points.forEach(function(time) {
-
-              if(typeof(r.values[time]) === 'undefined') {
-                r.values[time] = {};
-                r.values[time][vars.var_id] = vars.var_id;
-              }
-
-              r.values[time].x = node.x;
-              r.values[time].y = node.y;
-            });
-
-            // Keep the metadata
-            r.x = node.x;
-            r.y = node.y;
-
-            r.__redraw = true;
-            return r;
-        });
-
-        // Remove missing nodes
-        // vars.new_data = vars.new_data.filter(function(d) {
-        //  return !d.__missing;
-        // });
-
-        // Go through again the list of nodes
-        // to make sure we display all the nodes
-        vars.nodes.forEach(function(d, i) {
-
-          var node = vistk.utils.find_node_coordinates_by_id(vars.new_data, vars.var_id, d[vars.var_node_id]);
-
-          if(typeof node === "undefined") {
-
-            d.values = [];
-            d[vars.var_r] = 0;
-            d[vars.var_id] = d.id;
-
-            utils.init_item(d);
-            d.__redraw = true;
-
-            vars.new_data.push(d);
-
-          }
-
-        });
 
       }
 
@@ -2914,112 +2915,6 @@ vars.default_marks["circle"] = function(scope) {
 
 }
 
-vars.default_params["sparkline"] = function(scope) {
-
-  var params = {};
-
-  params.x_scale = [{
-    func: d3.scale.linear()
-            .range([scope.margin.left, scope.width - scope.margin.left - scope.margin.right])
-            .domain(scope.time.interval)
-  }];
-
-  params.y_scale = [{
-    func: d3.scale.linear()
-            .range([scope.margin.top, scope.height - scope.margin.top - scope.margin.bottom])
-            .domain(d3.extent(Array.prototype.concat.apply([], vars.new_data.map(function(d) {
-              return d3.values(d.values);
-            })), function(d) {
-              return d[vars.var_y];
-            }))
-  }];
-
-  params.items = [{
-    marks: [{
-      type: "circle",
-      rotate: "0",
-    }, {
-      type: "text",
-      rotate: "0",
-      translate: [-20, 0],
-      text_anchor: "end"
-    }]
-  }];
-
-  params.connect = [{
-    attr: scope.time.var_time,
-    marks: [{
-      type: "path",
-      rotate: "0",
-      stroke: function(d) { return "black"; },
-      func: d3.svg.line()
-           .interpolate(scope.interpolate)
-           .x(function(d) { return params.x_scale[0]["func"](d[scope.var_x]); })
-           .y(function(d) { return params.y_scale[0]["func"](d[scope.var_y]); }),
-      fill: 'none'
-    }]
-  }];
-
-  params.x_axis_show = false;
-  params.x_grid_show = false;
-
-  params.y_axis_show = false;
-  params.y_grid_show = false;
-  params.y_invert = true;
-
-  return params;
-
-};
-
-vars.default_params["dotplot"] = function(scope) {
-
-  var params = {};
-
-  params.x_scale = [{
-    name: "linear",
-    func: d3.scale.linear()
-            .range([scope.margin.left, scope.width-scope.margin.left-scope.margin.right])
-            .domain(d3.extent(vars.new_data, function(d) {
-              return scope.accessor_data(d)[vars.var_x];
-            }))
-            .nice()
-  }];
-
-  // Custom domain for X-scale
-  if(scope.x_domain !== null && scope.x_domain.length === 2) {
-    params.x_scale[0]['func'].domain(scope.x_domain);
-  }
-
-  params.y_scale = [{
-    name: "linear",
-    func: d3.scale.linear()
-            .range([scope.height/2, scope.height/2])
-            .domain(d3.extent(vars.new_data, function(d) {
-              return scope.accessor_data(d)[vars.var_y];
-            }))
-            .nice()
-  }];
-
-  params.items = [{
-    attr: "name",
-    marks: [{
-      type: "circle",
-    },{
-      type: "text",
-      rotate: "-90"
-    }]
-  }];
-
-  params.x_axis_show = true;
-  params.x_tickValues = [params.x_scale[0]["func"].domain()[0], params.x_scale[0]["func"].domain()[1]];
-  params.x_axis_translate = [0, scope.height/2];
-
-  params.y_axis_show = false;
-
-  return params;
-
-};
-
 vars.default_params["barchart"] = function(scope) {
 
   var params = {};
@@ -3028,7 +2923,7 @@ vars.default_params["barchart"] = function(scope) {
     func: d3.scale.ordinal()
             .rangeRoundBands([scope.margin.left, scope.width - scope.margin.left - scope.margin.right], .1)
             .domain(vars.new_data.map(function(d) {
-              return scope.accessor_data(d)[vars.var_x];
+              return scope.accessor_data(d)[scope.var_x];
             }))
   }];
 
@@ -3036,15 +2931,14 @@ vars.default_params["barchart"] = function(scope) {
     func: d3.scale.linear()
             .range([scope.height - scope.margin.top - scope.margin.bottom, scope.margin.top])
             .domain(d3.extent(vars.new_data, function(d) {
-              return scope.accessor_data(d)[vars.var_y];
+              return scope.accessor_data(d)[scope.var_y];
             }))
             .nice()
   }];
 
   params.items = [{
-    attr: "bar",
     marks: [{
-      type: "rect",
+      type: 'rect',
       x: function() { return -scope.mark.width/2; },
       y: function(d) { return -scope.margin.top; },
       height: function(d) {
@@ -3059,9 +2953,9 @@ vars.default_params["barchart"] = function(scope) {
     }, {
       type: 'text',
       text: function(d) {
-        return scope.accessor_data(d)[vars.var_y];
+        return scope.accessor_data(d)[scope.var_y];
       },
-      translate: [params.x_scale[0]["func"].rangeBand() / 4, -20],
+      translate: [params.x_scale[0]['func'].rangeBand() / 4, -20],
       text_anchor: 'middle'
     }]
   }];
@@ -3070,15 +2964,81 @@ vars.default_params["barchart"] = function(scope) {
   params.x_axis_translate = [0, scope.height - scope.margin.bottom - scope.margin.top];
   params.x_grid_show = false;
 
-  //params.y_axis_show = true;
+  // params.y_axis_show = true;
   params.y_axis_translate = [scope.margin.left, -10];
-  //params.y_grid_show = true;
+  // params.y_grid_show = true;
 
   return params;
 
 };
 
-vars.default_params["linechart"] = function(scope) {
+vars.default_params['barchart_vertical'] = function(scope) {
+
+  var params = {};
+
+  // params.x_scale = vistk.utils.scale.linear(scope);
+
+  params.x_scale = [{
+    func: d3.scale.linear()
+            .range([scope.width - scope.margin.left - scope.margin.right, scope.margin.left])
+            .domain([d3.max(vars.new_data, function(d) {
+              return scope.accessor_data(d)[vars.var_x];
+            }), d3.min(vars.new_data, function(d) {
+              return scope.accessor_data(d)[vars.var_x];
+            })])
+            .nice()
+  }];
+
+  params.y_scale = [{
+    func: d3.scale.ordinal()
+            .rangeRoundBands([scope.height - scope.margin.top - scope.margin.bottom, scope.margin.top], .1)
+            .domain(vars.new_data.map(function(d) {
+              return scope.accessor_data(d)[vars.var_y];
+            }))
+  }];
+
+  params.items = [{
+    marks: [{
+      type: "rect",
+      x: function(d) {
+         return -params.x_scale[0]["func"](scope.accessor_data(d)[scope.var_x]) + scope.margin.left;
+      },
+      y: function(d) {
+        return 0;
+//        return -scope.margin.top + scope.mark.width;
+      },
+      height: function(d) {
+        return scope.mark.width;
+      },
+      width: function(d) {
+        return params.x_scale[0]["func"](scope.accessor_data(d)[scope.var_x]) - scope.margin.left;
+      },
+      fill: function(d) {
+        return scope.color(scope.accessor_data(d)[scope.var_color]);
+      }
+    }, {
+      type: 'text',
+      text: function(d) {
+        return scope.accessor_data(d)[vars.var_x];
+      },
+      translate: [2, 5],
+      text_anchor: 'start'
+    }]
+  }];
+
+  params.x_axis_show = false;
+  params.x_axis_translate = [0, scope.height - scope.margin.bottom - scope.margin.top];
+  params.x_grid_show = false;
+
+  params.y_axis_show = true;
+  params.y_axis_translate = [scope.margin.left, 0];
+  params.y_grid_show = true;
+
+  return params;
+
+};
+
+vars.default_params['caterplot'] = function(scope) {
 
   var params = {};
 
@@ -3086,116 +3046,44 @@ vars.default_params["linechart"] = function(scope) {
   params.accessor_items = function(d) { return d; };
 
   params.x_scale = [{
-    func: d3.scale.linear()
-            .range([scope.margin.left, scope.width - scope.margin.left - scope.margin.right])
-            .domain(vars.time.interval)
+    func: d3.scale.ordinal()
+            .rangeBands([scope.margin.left, scope.width - scope.margin.left - scope.margin.right])
+            .domain(d3.set(vars.new_data.map(function(d) { return d[vars.var_x]; })).values())
   }];
 
   params.y_scale = [{
     func: d3.scale.linear()
             .range([scope.height - scope.margin.top - scope.margin.bottom, scope.margin.top])
-            .domain(d3.extent(Array.prototype.concat.apply([], vars.new_data.map(function(d) {
-              return d3.values(d.values);
-            })), function(d) {
-              return d[vars.var_y];
-            }))
-  }];
-
-  params.items = [{
-    marks: [{
-      type: "circle",
-     // fill: function(d) { return vars.color(params.accessor_items(d)[vars.var_color]); }
-    }, {
-      var_mark: '__highlighted',
-      type: d3.scale.ordinal().domain([true, false]).range(['text', 'none']),
-      translate: [10, 0],
-      text: function(d) {
-        return d[vars.var_y] + ' ' + d[vars.var_text];
-      }
-    }, {
-      var_mark: '__selected',
-      type: d3.scale.ordinal().domain([true, false]).range(['text', 'none']),
-      translate: [10, 0],
-      text: function(d) {
-        return d.values[vars.time.current_time][vars.var_y] + ' ' + d[vars.var_text];
-      }
-    }],
-    accessor_data: function(d) {
-      return d.values.filter(function(e) {
-        return e[vars.time.var_time] == vars.time.current_time;
-      })[0];
-    }
-  }];
-
-  params.connect = [{
-    marks: [{
-      type: "path",
-      stroke: function(d) {
-        return vars.color(params.accessor_items(d)[vars.var_color]);
-      },
-      func: d3.svg.line()
-           .interpolate(vars.interpolate)
-           .x(function(d) { return params.x_scale[0]["func"](d[vars.var_x]); })
-           .y(function(d) { return params.y_scale[0]["func"](d[vars.var_y]); }),
-      fill: "none"
-    }]
-  }];
-
-  params.x_ticks = vars.time.points.length;
-  params.x_tickValues = null;
-  params.x_axis_orient = "top";
-  params.x_axis_show = true;
-  params.x_grid_show = true;
-  params.x_text = false;
-
-  params.y_axis_show = false
-  params.y_grid_show = false;
-  params.y_invert = false;
-
-  return params;
-
-};
-
-vars.default_params["scatterplot"] = function(scope) {
-
-  var params = {};
-
-  params.x_scale = [{
-    func: d3.scale.linear()
-            .range([scope.margin.left, scope.width - scope.margin.left - scope.margin.right])
-            .domain(d3.extent(vars.new_data, function(d) {
-              return scope.accessor_data(d)[vars.var_x];
-            })).nice()
-  }];
-
-  params.y_scale = [{
-    func: d3.scale.linear()
-            .range([scope.height - scope.margin.top - scope.margin.bottom, scope.margin.top])
-            .domain(d3.extent(vars.new_data, function(d) {
-              return scope.accessor_data(d)[vars.var_y];
-            })).nice()
+            .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_y]; })).nice()
   }];
 
   params.r_scale = d3.scale.linear()
               .range([vars.radius_min, vars.radius_max])
-              .domain(d3.extent(vars.new_data, function(d) {
-                return scope.accessor_data(d)[vars.var_r];
-              }));
+              .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_r]; }));
 
   params.items = [{
     marks: [{
-        type: "circle",
-        r_scale: d3.scale.linear()
-                    .range([vars.radius_min, vars.radius_max])
-                    .domain(d3.extent(vars.new_data, function(d) {
-                      return scope.accessor_data(d)[vars.var_r];
-                    })),
-        fill: function(d) { return vars.color(vars.accessor_items(d)[vars.var_color]); }
-      }, {
+    type: 'circle',
+    r_scale: d3.scale.linear()
+                .range([vars.radius_min, vars.radius_max])
+                .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_r]; })),
+    fill: function(d) { return vars.color(vars.accessor_items(d)[vars.var_color]); },
+   // translate: function() {
+   //   return [vars.x_scale[0]['func'].rangeBand() / 4, 0]
+   // },
+     }, {
       var_mark: '__highlighted',
-      type: d3.scale.ordinal().domain([true, false]).range(["text", "none"])
+      type: d3.scale.ordinal().domain([true, false]).range(['text', 'none'])
+    }, {
+      var_mark: '__selected',
+      type: d3.scale.ordinal().domain([true, false]).range(['text', 'none']),
+      translate: function(d) {
+        return [10, -20];
+      }
     }]
   }];
+
+  params.connect = [];
 
   params.x_axis_show = true;
   params.x_axis_translate = [0, scope.height - scope.margin.bottom - scope.margin.top];
@@ -3205,6 +3093,53 @@ vars.default_params["scatterplot"] = function(scope) {
   params.y_axis_show = true;
   params.y_axis_translate = [scope.margin.left, 0];
   params.y_grid_show = true;
+  params.y_invert = false;
+
+  return params;
+
+};
+
+vars.default_params['dotplot'] = function(scope) {
+
+  var params = {};
+
+  params.x_scale = [{
+    func: d3.scale.linear()
+            .range([scope.margin.left, scope.width-scope.margin.left-scope.margin.right])
+            .domain(d3.extent(vars.new_data, function(d) {
+              return scope.accessor_data(d)[vars.var_x];
+            }))
+            .nice()
+  }];
+
+  // If custom domain for X-scale
+  if(scope.x_domain !== null && scope.x_domain.length === 2) {
+    params.x_scale[0]['func'].domain(scope.x_domain);
+  }
+
+  params.y_scale = [{
+    func: d3.scale.linear()
+            .range([scope.height/2, scope.height/2])
+            .domain(d3.extent(vars.new_data, function(d) {
+              return scope.accessor_data(d)[vars.var_y];
+            }))
+            .nice()
+  }];
+
+  params.items = [{
+    marks: [{
+      type: 'circle',
+    },{
+      type: 'text',
+      rotate: '-90'
+    }]
+  }];
+
+  params.x_axis_show = true;
+  params.x_tickValues = [params.x_scale[0]['func'].domain()[0], params.x_scale[0]['func'].domain()[1]];
+  params.x_axis_translate = [0, scope.height/2];
+
+  params.y_axis_show = false;
 
   return params;
 
@@ -3228,15 +3163,21 @@ vars.default_params["scatterplot"] = function(scope) {
 
     vars.countries.forEach(function(d) {
 
+      if(typeof vars.var_names === 'undefined') {
+        vars.var_names = vars.var_id;
+      }
+
       // Retrieve the country name based on its id
-      d[vars.var_id] = vars.names.filter(function(n) {
+      d[vars.var_names] = vars.names.filter(function(n) {
         return d.id == n.id;
-      })[0][vars.var_id];
+      })[0][vars.var_names];
+
 
       // TODO: should merge on a more reliable join (e.g. 2-char)
       d.data = vars.new_data.filter(function(n) {
-        return d[vars.var_id] === n[vars.var_id];
+        return d[vars.var_names] === n[vars.var_names];
       })[0];
+
 
       // Two reasons why it is not defined
       // 1/ No data
@@ -3244,9 +3185,12 @@ vars.default_params["scatterplot"] = function(scope) {
       if(typeof d.data == "undefined") {
 
         var data = {}
-        data[vars.var_id] = d[vars.var_id];
+        data[vars.var_id] = d;
+        data[vars.var_names] = d[vars.var_names];
+
         d.data = data;
         d.data.__no_data = true;
+
       } else {
         d.data.__no_data = false;
       }
@@ -3255,15 +3199,16 @@ vars.default_params["scatterplot"] = function(scope) {
 
     });
 
-
     vars.new_data = vars.countries.map(function(d) {
-
+      d[vars.var_id] = d.data[vars.var_id];
       d[vars.var_color] = d.data[vars.var_color];
       d[vars.var_group] = d.data[vars.var_group];
       if(typeof d.x === 'undefined') { d.x = 0; }
       if(typeof d.y === 'undefined') { d.y = 0; }
       return d;
     });
+
+    console.log("VNEW", vars.new_data)
 
     vars.projection = d3.geo.equirectangular()
                     .scale(100);
@@ -3384,55 +3329,15 @@ vars.default_params["grid"] = function(scope) {
 
 };
 
-vars.default_params["stacked"] = function(scope) {
+vars.default_params["linechart"] = function(scope) {
 
   var params = {};
 
   params.accessor_values = function(d) { return d.values; };
   params.accessor_items = function(d) { return d; };
 
-
-  // Chart specific metadata: stacked
-  if(vars.refresh) {
-
-    // Make sure all items and all ranks are there
-    vars.new_data.forEach(function(c) {
-
-      vars.time.points.forEach(function(y) {
-        var is_year = false;
-
-        c.values.forEach(function(v) {
-
-          if(v[vars.time.var_time] == y) {
-            is_year = true;
-          }
-        });
-
-        if(!is_year) {
-
-          // Set missing values to null
-          var v = {date: y, year: y};
-
-          v[vars.time.var_time] = y;
-          v[vars.var_y] = 0;
-          c.values.push(v);
-
-        }
-
-      });
-
-    });
-
-    vars.stack = d3.layout.stack()
-        .values(function(d) { return d3.values(d.values); })
-        .x(function(d) { return d[vars.time.var_time]; })
-        .y(function(d) { return d[vars.var_y]; });
-
-     vars.new_data = vars.stack(vars.new_data);
-  }
-
   params.x_scale = [{
-    func: d3.time.scale()
+    func: d3.scale.linear()
             .range([scope.margin.left, scope.width - scope.margin.left - scope.margin.right])
             .domain(vars.time.interval)
   }];
@@ -3443,42 +3348,337 @@ vars.default_params["stacked"] = function(scope) {
             .domain(d3.extent(Array.prototype.concat.apply([], vars.new_data.map(function(d) {
               return d3.values(d.values);
             })), function(d) {
-              return d.y + d.y0;
+              return d[vars.var_y];
             }))
   }];
 
+  params.items = [{
+    marks: [{
+      type: "circle",
+      fill: function(d) {
+        return vars.color(params.accessor_items(d)[vars.var_color]); }
+    }, {
+      var_mark: '__highlighted',
+      type: d3.scale.ordinal().domain([true, false]).range(['text', 'none']),
+      translate: [10, 0],
+      text: function(d) {
+        return scope.accessor_data(d)[vars.var_y] + ' ' + d[vars.var_text];
+      }
+    }, {
+      var_mark: '__selected',
+      type: d3.scale.ordinal().domain([true, false]).range(['text', 'none']),
+      translate: [10, 0],
+      text: function(d) {
+        return scope.accessor_data(d)[vars.var_y] + ' ' + d[vars.var_text];
+      }
+    }],
+    accessor_data: function(d) {
+      return d.values.filter(function(e) {
+        return e[vars.time.var_time] == vars.time.current_time;
+      })[0];
+    }
+  }];
+
+
   params.connect = [{
-    attr: vars.time.var_time,
     marks: [{
       type: "path",
-      fill: function(d) { return vars.color(params.accessor_items(d)[vars.var_color]); },
       stroke: function(d) {
-        return "black";
+        return vars.color(params.accessor_items(d)[vars.var_color]);
       },
-      func: d3.svg.area()
-              .interpolate('cardinal')
-              .x(function(d) { return params.x_scale[0]["func"](d[vars.time.var_time]); })
-              .y0(function(d) { return params.y_scale[0]["func"](d.y0); })
-              .y1(function(d) { return params.y_scale[0]["func"](d.y0 + d.y); })
+      func: d3.svg.line()
+           .interpolate(vars.interpolate)
+           .x(function(d) { return params.x_scale[0]["func"](d[vars.var_x]); })
+           .y(function(d) { return params.y_scale[0]["func"](d[vars.var_y]); }),
+      fill: "none"
     }]
   }];
 
-  params.x_axis_show = true;
-  params.x_axis_translate = [0, scope.height - scope.margin.bottom - scope.margin.top];
-  params.x_grid_show = true;
   params.x_ticks = vars.time.points.length;
-  params.x_format = d3.time.format("%Y");
+  params.x_tickValues = null;
+  params.x_axis_orient = "top";
+  params.x_axis_show = true;
+  params.x_grid_show = true;
   params.x_text = false;
 
-  params.y_axis_show = true;
-  params.y_axis_translate = [scope.margin.left, 0];
-  params.y_grid_show = true;
+  params.y_axis_show = false
+  params.y_grid_show = false;
+  params.y_invert = false;
 
   return params;
 
 };
 
-vars.default_params["piechart"] = function(scope) {
+vars.default_params["matrix"] = function(scope) {
+
+  var params = {};
+
+  // vars.new_data = miserabels
+
+  // A matrix is a permutation of two ordinal scales
+  // Each cell is a graphical mark
+
+
+  if(vars.refresh) {
+
+    // Prepare data
+
+    // Duplicate and create
+
+
+  }
+
+
+
+  params.connect = [{
+    marks: [{
+      type: "rect"
+    }]
+  }];
+
+// Horizontal ordinal scale
+// var x = d3.scale.ordinal().rangeBands([0, vars.width]),
+var z = d3.scale.linear().domain([0, 4]).clamp(true),
+    c = d3.scale.category10().domain(d3.range(10));
+
+  // TODO: Re-use previous scales
+  // vars.default_params["ordinal_vertical"]
+  // vars.default_params["ordinal_horizontal"]
+  params.x_scale = [{
+    func: d3.scale.ordinal()
+            .domain(d3.set(vars.new_data.map(function(d) { return d[vars.var_x]; })).values())
+            .rangeBands([scope.margin.left, scope.width - scope.margin.left - scope.margin.right]),
+  }];
+
+  /* Prototyping ideal configuration
+  params.items = [{
+    marks: [{
+      type: 'text'
+    }],
+    marks: [{
+      type: 'text'
+    }]
+   }];
+  */
+
+  var matrix = [],
+      nodes = vars.nodes,
+      n = vars.nodes.length;
+
+  // Compute index per node.
+  nodes.forEach(function(node, i) {
+    node.index = i;
+    node.count = 0;
+    matrix[i] = d3.range(n).map(function(j) { return {x: j, y: i, z: 0}; });
+  });
+
+  // Convert links to matrix; count character occurrences.
+  vars.links.forEach(function(link) {
+    matrix[link.source][link.target].z += link.value;
+    matrix[link.target][link.source].z += link.value;
+    matrix[link.source][link.source].z += link.value;
+    matrix[link.target][link.target].z += link.value;
+    nodes[link.source].count += link.value;
+    nodes[link.target].count += link.value;
+  });
+
+  // Precompute the orders.
+  var orders = {
+    name: d3.range(n).sort(function(a, b) { return d3.ascending(nodes[a].name, nodes[b].name); }),
+    count: d3.range(n).sort(function(a, b) { return nodes[b].count - nodes[a].count; }),
+    group: d3.range(n).sort(function(a, b) { return nodes[b].group - nodes[a].group; })
+  };
+
+  // The default sort order.
+  params.x_scale[0]['func'].domain(orders.name);
+
+  vars.svg.append("rect")
+      .attr("class", "background")
+      .attr("width", vars.width)
+      .attr("height", vars.height);
+
+  var row = vars.svg.selectAll(".row")
+      .data(matrix)
+    .enter().append("g")
+      .attr("class", "row")
+      .attr("transform", function(d, i) { return "translate(0," + params.x_scale[0]['func'](i) + ")"; })
+      .each(row);
+
+  row.append("line")
+      .attr("x2", vars.width);
+
+  row.append("text")
+      .attr("x", -6)
+      .attr("y", params.x_scale[0]['func'].rangeBand() / 2)
+      .attr("dy", ".32em")
+      .attr("text-anchor", "end")
+      .text(function(d, i) { return nodes[i].name; });
+
+  var column = vars.svg.selectAll(".column")
+      .data(matrix)
+    .enter().append("g")
+      .attr("class", "column")
+      .attr("transform", function(d, i) { return "translate(" + params.x_scale[0]['func'](i) + ")rotate(-90)"; });
+
+  column.append("line")
+      .attr("x1", -vars.width);
+
+  column.append("text")
+      .attr("x", 6)
+      .attr("y", params.x_scale[0]['func'].rangeBand() / 2)
+      .attr("dy", ".32em")
+      .attr("text-anchor", "start")
+      .text(function(d, i) { return nodes[i].name; });
+
+  function row(row) {
+    var cell = d3.select(this).selectAll(".cell")
+        .data(row.filter(function(d) { return d.z; }))
+      .enter().append("rect")
+        .attr("class", "cell")
+        .attr("x", function(d) { return params.x_scale[0]['func'](d.x); })
+        .attr("width", params.x_scale[0]['func'].rangeBand())
+        .attr("height", params.x_scale[0]['func'].rangeBand())
+        .style("fill-opacity", function(d) { return z(d.z); })
+        .style("fill", function(d) { return nodes[d.x].group == nodes[d.y].group ? c(nodes[d.x].group) : null; })
+
+  }
+
+  return params;
+
+};
+
+vars.default_params["productspace"] = function(scope) {
+
+  var params = {};
+
+  params.x_scale = [{
+    func: d3.scale.linear()
+            .range([scope.margin.left, vars.width-vars.margin.left-vars.margin.right])
+            .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_x]; })).nice()
+  }];
+
+  params.y_scale = [{
+    func: d3.scale.linear()
+            .range([vars.height-vars.margin.top-vars.margin.bottom, vars.margin.top])
+            .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_y]; })).nice(),
+  }];
+
+  params.r_scale = d3.scale.linear()
+              .range([10, 30])
+              .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_r]; }));
+
+  params.items = [{
+    marks: [{
+      type: "circle",
+      r_scale: d3.scale.linear()
+                  .range([10, 30])
+                  .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_r]; })),
+      fill: function(d) { return vars.color(vars.accessor_items(d)[vars.var_color]); }
+    }, {
+      type: "text",
+      rotate: "30",
+      translate: null
+    }]
+  }];
+
+  params.connect = [{
+    attr: "links",
+    type: "items",
+    marks: [{
+      type: "line",
+      rotate: "0",
+      func: null,
+    }]
+  }];
+
+  params.x_axis_show = false;
+  params.x_grid_show = false;
+
+  params.y_axis_show = false;
+  params.y_grid_show = false;
+
+  return params;
+
+};
+
+
+vars.default_params["ordinal_horizontal"] = function(scope) {
+
+  var params = {};
+
+  params.x_scale = [{
+    func: d3.scale.ordinal()
+            .domain(d3.set(vars.new_data.map(function(d) {
+              return scope.accessor_data(d)[vars.var_x];
+            })).values())
+            .rangeBands([scope.margin.left, scope.width - scope.margin.left - scope.margin.right]),
+  }];
+
+  params.y_scale = [{
+    name: "linear",
+    func: d3.scale.linear()
+            .range([scope.height/2, scope.height/2])
+            .domain([0, d3.max(vars.new_data, function(d) {
+              return d[scope.var_y];
+            })])
+            .nice()
+  }];
+
+  params.items = [{
+    marks: [{
+      type: "circle"
+    },{
+      type: "text"
+    }]
+  }];
+
+  params.connect = [];
+
+  params.x_axis_show = false;
+
+  params.y_axis_show = false;
+
+  return params;
+
+}
+
+vars.default_params["ordinal_vertical"] = function(scope) {
+
+  var params = {};
+
+  params.x_scale = [{
+    func: d3.scale.linear()
+            .range([scope.width/2, scope.width/2])
+            .nice()
+  }];
+
+  params.y_scale = [{
+    func: d3.scale.ordinal()
+            .domain(d3.set(vars.new_data.map(function(d) {
+              return d[vars.var_y];
+            })).values())
+            .rangeBands([scope.margin.left, scope.width - scope.margin.left - scope.margin.right])
+  }];
+
+  params.items = [{
+    marks: [{
+      type: "circle"
+    },{
+      type: "text"
+    }]
+  }];
+
+  params.connect = [];
+
+  params.x_axis_show = false;
+
+  params.y_axis_show = false;
+
+  return params;
+
+}
+
+vars.default_params['piechart'] = function(scope) {
 
   var params = {};
 
@@ -3513,8 +3713,10 @@ vars.default_params["piechart"] = function(scope) {
 
   params.items = [{
     marks: [{
-      type: "arc",
-      fill: function(d) { return scope.color(scope.accessor_items(d)[scope.var_color]); }
+      type: 'arc',
+      fill: function(d) {
+        return scope.color(scope.accessor_items(d)[scope.var_color]);
+      }
     }]
   }];
 
@@ -3524,9 +3726,494 @@ vars.default_params["piechart"] = function(scope) {
   params.y_axis_show = false;
   params.y_grid_show = false;
 
-  params.postprocessing = function() {
+  return params;
+
+};
+
+vars.default_params["productspace"] = function(scope) {
+
+  var params = {};
+
+  if(vars.init || vars.refresh) {
+
+    // Links between items
+    // Used for product space
+    if(vars.links !== null && vars.type === 'productspace') {
+
+      vars.links.forEach(function(d, i) {
+
+        if(typeof d.source === "string") {
+          d.source = vistk.utils.find_node_by_id(vars.nodes, d.source);
+        }
+
+        if(typeof d.target === "string") {
+          d.target = vistk.utils.find_node_by_id(vars.nodes, d.target);
+        }
+
+        d.__redraw = true;
+
+      });
+
+    }
+
+    // Flagging missing nodes with __missing true attribute
+    if(typeof vars.nodes !== "undefined" && vars.type === 'productspace') {
+
+      vars.new_data = utils.join(vars.nodes, vars.new_data, vars.var_node_id, vars.var_id, function(new_data, node) {
+          var r = new_data;
+          if(typeof node === 'undefined') {
+            return;
+          }
+
+          // Update all time points
+          vars.time.points.forEach(function(time) {
+
+            if(typeof(r.values[time]) === 'undefined') {
+              r.values[time] = {};
+              r.values[time][vars.var_id] = vars.var_id;
+            }
+
+            r.values[time].x = node.x;
+            r.values[time].y = node.y;
+          });
+
+          // Keep the metadata
+          r.x = node.x;
+          r.y = node.y;
+
+          r.__redraw = true;
+          return r;
+      });
+
+      // Remove missing nodes
+      // vars.new_data = vars.new_data.filter(function(d) {
+      //  return !d.__missing;
+      // });
+
+      // Go through again the list of nodes
+      // to make sure we display all the nodes
+      vars.nodes.forEach(function(d, i) {
+
+        var node = vistk.utils.find_node_coordinates_by_id(vars.new_data, vars.var_id, d[vars.var_node_id]);
+
+        if(typeof node === "undefined") {
+
+          d.values = [];
+          d[vars.var_r] = 0;
+          d[vars.var_id] = d.id;
+
+          utils.init_item(d);
+          d.__redraw = true;
+
+          vars.new_data.push(d);
+
+        }
+
+      });
+
+    }
 
   }
+
+  params.x_scale = [{
+    func: d3.scale.linear()
+            .range([0, vars.width-vars.margin.left-vars.margin.right])
+            .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_x]; })).nice()
+  }];
+
+  params.y_scale = [{
+    func: d3.scale.linear()
+            .range([vars.height-vars.margin.top-vars.margin.bottom, vars.margin.top])
+            .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_y]; })).nice(),
+  }];
+
+  //params.r_scale = d3.scale.linear()
+  //            .range([10, 30])
+  //            .domain(d3.extent(vars.new_data, function(d) { return accessor_values(d)[vars.var_r]; }));
+
+  params.items = [{
+    marks: [{
+      type: "circle",
+     // r_scale: d3.scale.linear()
+     //             .range([10, 30])
+     //             .domain(d3.extent(vars.new_data, function(d) { return accessor_values(d)[vars.var_r]; })),
+      fill: function(d) {
+        return vars.color(scope.accessor_data(d)[vars.var_color]);
+      }
+    }, {
+      type: "text",
+      rotate: "30",
+      translate: null
+    }]
+  }];
+
+  params.connect = [{
+    attr: "links",
+    type: "items",
+    marks: [{
+      type: "line",
+      func: null,
+    }]
+  }];
+
+  params.x_axis_show = false;
+  params.x_grid_show = false;
+
+  params.y_axis_show = false;
+  params.y_grid_show = false;
+
+
+  if(vars.init) {
+
+    vars.evt.register("highlightOn", function(d) {
+
+      // Make sure the highlighted node is above other nodes
+      vars.svg.selectAll('.mark__group').sort(function(a, b) { return a.__highlighted ;})
+
+      var adjacent_links = utils.find_adjacent_links(d, vars.links);
+
+      adjacent_links.forEach(function(e) {
+
+          // Redraw adjacent links
+          e.__highlighted__adjacent = true;
+          e.__redraw = true;
+
+         vars.new_data.forEach(function(f, k) {
+
+           if(f[vars.var_id] === e.target[vars.var_id] || f[vars.var_id] === e.source[vars.var_id]) {
+            // Redraw adjacent nodes
+             f.__highlighted__adjacent = true;
+             f.__redraw = true;
+           }
+
+         });
+
+      });
+
+    });
+
+    vars.evt.register("highlightOut", function(d) {
+
+      vars.new_data.forEach(function(f, k) {
+        if(f.__highlighted__adjacent) {
+          f.__highlighted__adjacent = false;
+          f.__redraw = true;
+        }
+      });
+
+      vars.links.forEach(function(f, k) {
+        if(f.__highlighted__adjacent) {
+          f.__highlighted__adjacent = false;
+          f.__redraw = true;
+        }
+      });
+
+      d3.select(vars.container).selectAll(".connect__line")
+        .classed("highlighted", function(d, i) { return false; })
+        .classed("highlighted__adjacent", function(d, i) { return false; })
+
+      d3.select(vars.container).selectAll("circle")
+        .classed("highlighted", function(d, i) { return false; })
+        .classed("highlighted__adjacent", function(d, i) { return false; })
+
+    });
+
+    vars.evt.register("selection", function(d) {
+
+      // Make sure the highlighted node is above other nodes
+      // vars.svg.selectAll('.mark__group').sort(function(a, b) { return a.__highlighted ;})
+
+      vars.new_data.forEach(function(f, k) {
+        if(f.__selected) {
+          f.__selected = false;
+          f.__redraw = true;
+        }
+
+        if(f.__selected__adjacent) {
+          f.__selected__adjacent = false;
+          f.__redraw = true;
+        }
+
+      });
+
+      vars.links.forEach(function(f, k) {
+        if(f.__selected) {
+          f.__selected = false;
+          f.__redraw = true;
+        }
+
+        if(f.__selected__adjacent) {
+          f.__selected__adjacent = false;
+          f.__redraw = true;
+        }
+
+      });
+
+      d.__selected = true;
+      d.__redraw = true;
+
+      var adjacent_links = utils.find_adjacent_links(d, vars.links);
+
+      adjacent_links.forEach(function(e) {
+
+        // Update links
+        e.__selected = true;
+        e.__selected__adjacent = true;
+        e.__redraw = true;
+
+        vars.new_data.forEach(function(f, k) {
+
+          if(f[vars.var_id] === e.target[vars.var_id] || f[vars.var_id] === e.source[vars.var_id]) {
+
+            // Update nodes
+            f.__selected = true;
+            f.__selected__adjacent = true;
+            f.__redraw = true;
+          }
+
+        });
+
+      });
+
+      d3.select(vars.container).selectAll(".connect__line")
+        .classed("selected", function(d, i) { return d.__selected; })
+        .classed("selected__adjacent", function(d, i) { return d.__selected__adjacent; })
+
+      d3.select(vars.container).selectAll("circle")
+        .classed("selected", function(d, i) { return d.__selected; })
+        .classed("selected__adjacent", function(d, i) { return d.__selected__adjacent; })
+
+    });
+  }
+
+  return params;
+
+};
+
+vars.default_params["radial"] = function(scope) {
+
+  var params = {};
+
+  params.var_x = 'x';
+  params.var_y = 'y';
+
+  if(vars.refresh) {
+
+    utils.create_hierarchy(scope);
+
+    var tree = d3.layout.tree()
+        .size([360, scope.width / 3 - 120])
+        .separation(function(a, b) { return (a.parent == b.parent ? 1 : 2) / a.depth; });
+
+    var diagonal = d3.svg.diagonal.radial()
+        .projection(function(d) { return [d.y, d.x / 180 * Math.PI]; });
+
+    vars.nodes = tree.nodes(vars.root);
+    vars.links = tree.links(vars.nodes);
+
+    vars.new_data = vars.nodes;
+
+    vars.new_data.forEach(function(d) {
+
+      d.values = [];
+      d.values[vars.time.current_time] = {};
+      d.values[vars.time.current_time][vars.var_id] = d[vars.var_id];
+      d.values[vars.time.current_time][vars.var_x] = d[vars.var_x];
+      d.values[vars.time.current_time][vars.var_y] = d[vars.var_y];
+      d.values[vars.time.current_time][vars.var_text] = d[vars.var_text];
+
+      d.__redraw = true;
+    });
+
+    vars.links.forEach(function(d) { d.__redraw = true; });
+
+  }
+
+  params.x_scale = [{
+    func: d3.scale.linear()
+            .range([0, scope.width-scope.margin.left-scope.margin.right])
+            .domain(d3.extent(vars.new_data, function(d) { return d.x; })).nice()
+  }];
+
+  params.y_scale = [{
+    func: d3.scale.linear()
+            .range([scope.height-scope.margin.top-scope.margin.bottom, scope.margin.top])
+            .domain(d3.extent(vars.new_data, function(d) { return d.y; })).nice(),
+  }];
+
+  params.r_scale = d3.scale.linear()
+              .range([10, 30])
+              .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_r]; }));
+
+/*
+  params.connect = [{
+    attr: "links",
+    type: "items",
+    marks: [{
+      type: "line",
+      rotate: "0",
+      func: null,
+    }]
+  }];
+  */
+
+  params.connect = [{
+    attr: vars.time.var_time,
+    marks: [{
+      type: "path",
+     // fill: function(d) { return vars.color(params.accessor_items(d)[vars.var_color]); },
+      stroke: function(d) {
+        return "black";
+      },
+      func: diagonal,
+      translate: [scope.width / 2, scope.height / 2]
+    }]
+  }];
+
+  params.items = [{
+    marks: [{
+      type: "text",
+  //    rotate: function(d) { return d.x - 90; },
+  //      translate: function(d) { return [d.y, 0]; }
+  //    filter: function(d, i) { return d.depth == 1 && d.dx > 30 && d.dy > 30; }
+    }, {
+      type: "circle",
+ //     filter: function(d, i) { return d.depth == 2; },
+      r: 10,
+      x: 0,
+      y: 0,
+      rotate: function(d) { return d.x - 90; },
+      translate: function(d) { return [d.y, 0]; }
+    }]
+  }];
+
+
+  return params;
+
+};
+
+vars.default_params["rectmap"] = function(scope) {
+
+  var params = {};
+
+
+  params.x_scale = [{
+    func: d3.scale.linear()
+            .range([scope.margin.left, scope.margin.left])
+            .domain([0, d3.max(vars.new_data, function(d) {
+              return scope.accessor_data(d)[vars.var_width];
+            })])
+  }];
+
+  params.y_scale = [{
+    func: d3.scale.linear()
+            .range([scope.margin.top, scope.height - scope.margin.top - scope.margin.bottom])
+            .domain([0, d3.max(vars.new_data, function(d) {
+              return scope.accessor_data(d)[vars.var_height];
+            })])
+  }];
+
+  params.width_scale = [{
+    func: d3.scale.linear()
+            .range([scope.margin.left, scope.width - scope.margin.left - scope.margin.right])
+            .domain([0, d3.max(vars.new_data, function(d) {
+              return scope.accessor_data(d)[vars.var_width];
+            })])
+  }];
+
+  params.height_scale = [{
+    func: d3.scale.linear()
+            .range([scope.margin.top, scope.height - scope.margin.top - scope.margin.bottom])
+            .domain([0, d3.max(vars.new_data, function(d) {
+              return scope.accessor_data(d)[vars.var_height];
+            })])
+  }];
+
+
+  if(vars.init) {
+
+    vars.new_data.forEach(function(d) {
+      d.x = 0;
+      d.y = 0;
+      d.dx = params.width_scale[0]["func"](d[vars.var_width]);
+      d.dy = params.width_scale[0]["func"](d[vars.var_height]);
+    });
+
+  }
+
+  params.items = [{
+    marks: [{
+     type: "text",
+     x: function(d) { return params.width_scale[0]["func"](d[vars.var_width]); },
+     y: function(d) { return params.height_scale[0]["func"](d[vars.var_height]) - 10; },
+     text_anchor: "end"
+   //  filter: function(d, i) { return d.depth == vars.treemap.depth_text && d.dx > vars.treemap.dx && d.d_y >  vars.treemap.d_y; }
+   }, {
+      type: "rect",
+   //   filter: function(d, i) { return d.depth == vars.treemap.depth_rect; },
+      x: 0,
+      y: 0,
+      width: function(d) { return params.width_scale[0]["func"](d[vars.var_width]); },
+      height: function(d) { return params.height_scale[0]["func"](d[vars.var_height]); }
+    }]
+  }];
+
+  params.var_x = 'x';
+  params.var_y = 'y';
+
+  return params;
+
+};
+
+vars.default_params['scatterplot'] = function(scope) {
+
+  var params = {};
+
+  params.x_scale = [{
+    func: d3.scale.linear()
+            .range([scope.margin.left, scope.width - scope.margin.left - scope.margin.right])
+            .domain(d3.extent(vars.new_data, function(d) {
+              return scope.accessor_data(d)[scope.var_x];
+            })).nice()
+  }];
+
+  params.y_scale = [{
+    func: d3.scale.linear()
+            .range([scope.height - scope.margin.top - scope.margin.bottom, scope.margin.top])
+            .domain(d3.extent(vars.new_data, function(d) {
+              return scope.accessor_data(d)[scope.var_y];
+            })).nice()
+  }];
+
+  params.r_scale = d3.scale.linear()
+              .range([scope.radius_min, scope.radius_max])
+              .domain(d3.extent(vars.new_data, function(d) {
+                return scope.accessor_data(d)[scope.var_r];
+              }));
+
+  params.items = [{
+    marks: [{
+        type: 'circle',
+        r_scale: d3.scale.linear()
+                    .range([scope.radius_min, scope.radius_max])
+                    .domain(d3.extent(vars.new_data, function(d) {
+                      return scope.accessor_data(d)[scope.var_r];
+                    })),
+        fill: function(d) { return vars.color(vars.accessor_items(d)[scope.var_color]); }
+      }, {
+      var_mark: '__highlighted',
+      type: d3.scale.ordinal().domain([true, false]).range(['text', 'none'])
+    }]
+  }];
+
+  params.x_axis_show = true;
+  params.x_axis_translate = [0, scope.height - scope.margin.bottom - scope.margin.top];
+  params.x_grid_show = true;
+  params.x_ticks = 10;
+
+  params.y_axis_show = true;
+  params.y_axis_translate = [scope.margin.left, 0];
+  params.y_grid_show = true;
 
   return params;
 
@@ -3669,6 +4356,273 @@ vars.default_params["slopegraph_ordinal"] = function(scope) {
 
 };
 
+vars.default_params["sparkline"] = function(scope) {
+
+  var params = {};
+
+  params.x_scale = [{
+    func: d3.scale.linear()
+            .range([scope.margin.left, scope.width - scope.margin.left - scope.margin.right])
+            .domain(scope.time.interval)
+  }];
+
+  params.y_scale = [{
+    func: d3.scale.linear()
+            .range([scope.margin.top, scope.height - scope.margin.top - scope.margin.bottom])
+            .domain(d3.extent(Array.prototype.concat.apply([], vars.new_data.map(function(d) {
+              return d3.values(d.values);
+            })), function(d) {
+              return d[vars.var_y];
+            }))
+  }];
+
+  params.items = [{
+    marks: [{
+      type: "circle",
+      rotate: "0",
+    }, {
+      type: "text",
+      rotate: "0",
+      translate: [-20, 0],
+      text_anchor: "end"
+    }]
+  }];
+
+  params.connect = [{
+    attr: scope.time.var_time,
+    marks: [{
+      type: "path",
+      rotate: "0",
+      stroke: function(d) { return "black"; },
+      func: d3.svg.line()
+           .interpolate(scope.interpolate)
+           .x(function(d) { return params.x_scale[0]["func"](d[scope.var_x]); })
+           .y(function(d) { return params.y_scale[0]["func"](d[scope.var_y]); }),
+      fill: 'none'
+    }]
+  }];
+
+  params.x_axis_show = false;
+  params.x_grid_show = false;
+
+  params.y_axis_show = false;
+  params.y_grid_show = false;
+  params.y_invert = true;
+
+  return params;
+
+};
+
+vars.default_params["stacked"] = function(scope) {
+
+  var params = {};
+
+  params.accessor_values = function(d) { return d.values; };
+  params.accessor_items = function(d) { return d; };
+
+
+  // Chart specific metadata: stacked
+  if(vars.refresh) {
+
+    // Make sure all items and all ranks are there
+    vars.new_data.forEach(function(c) {
+
+      vars.time.points.forEach(function(y) {
+        var is_year = false;
+
+        c.values.forEach(function(v) {
+
+          if(v[vars.time.var_time] == y) {
+            is_year = true;
+          }
+        });
+
+        if(!is_year) {
+
+          // Set missing values to null
+          var v = {date: y, year: y};
+
+          v[vars.time.var_time] = y;
+          v[vars.var_y] = 0;
+          c.values.push(v);
+
+        }
+
+      });
+
+    });
+
+    vars.stack = d3.layout.stack()
+        .values(function(d) { return d3.values(d.values); })
+        .x(function(d) { return d[vars.time.var_time]; })
+        .y(function(d) { return d[vars.var_y]; });
+
+     vars.new_data = vars.stack(vars.new_data);
+  }
+
+  params.x_scale = [{
+    func: d3.time.scale()
+            .range([scope.margin.left, scope.width - scope.margin.left - scope.margin.right])
+            .domain(vars.time.interval)
+  }];
+
+  params.y_scale = [{
+    func: d3.scale.linear()
+            .range([scope.height - scope.margin.top - scope.margin.bottom, scope.margin.top])
+            .domain(d3.extent(Array.prototype.concat.apply([], vars.new_data.map(function(d) {
+              return d3.values(d.values);
+            })), function(d) {
+              return d.y + d.y0;
+            }))
+  }];
+
+  params.connect = [{
+    attr: vars.time.var_time,
+    marks: [{
+      type: "path",
+      fill: function(d) { return vars.color(params.accessor_items(d)[vars.var_color]); },
+      stroke: function(d) {
+        return "black";
+      },
+      func: d3.svg.area()
+              .interpolate('cardinal')
+              .x(function(d) { return params.x_scale[0]["func"](d[vars.time.var_time]); })
+              .y0(function(d) { return params.y_scale[0]["func"](d.y0); })
+              .y1(function(d) { return params.y_scale[0]["func"](d.y0 + d.y); })
+    }]
+  }];
+
+  params.x_axis_show = true;
+  params.x_axis_translate = [0, scope.height - scope.margin.bottom - scope.margin.top];
+  params.x_grid_show = true;
+  params.x_ticks = vars.time.points.length;
+  params.x_format = d3.time.format("%Y");
+  params.x_text = false;
+
+  params.y_axis_show = true;
+  params.y_axis_translate = [scope.margin.left, 0];
+  params.y_grid_show = true;
+
+  return params;
+
+};
+
+vars.default_params["stackedbar"] = function(scope) {
+
+  var params = {};
+
+  if(vars.refresh) {
+
+    var y0 = 0;
+
+    vars.new_data.forEach(function(d) {
+
+      d["y0"] = y0;
+      y0 += d[vars.var_y];
+     // d[vars.var_y] = y0;
+
+    });
+
+    vars.var_y = "y0";
+
+  }
+
+  params.x_scale = [{
+    func: d3.scale.linear()
+            .range([scope.height/2, scope.height/2])
+            .domain([0, d3.max(vars.new_data, function(d) { return d[scope.var_x]; })])
+            .nice()
+  }];
+
+  params.y_scale = [{
+    func: d3.scale.linear()
+            .range([scope.height - scope.margin.top - scope.margin.bottom, scope.margin.top])
+            .domain([d3.max(vars.new_data, function(d) { return d[vars.var_height] + d['y0']; }), 0])
+  }];
+
+  params.items = [{
+    attr: "bar",
+    marks: [{
+      type: "rect",
+      x: function() { return -vars.mark.width/2; },
+      y: 0,
+      height: function(d) { return params.y_scale[0]["func"](d[vars.var_height]) -10; },
+      width: function(d) { return vars.mark.width*10; },
+      fill: function(d) { return scope.color(scope.accessor_items(d)[scope.var_color]); }
+    }]
+  }];
+
+  params.x_axis_show = true;
+  params.x_axis_translate = [0, scope.height - scope.margin.bottom - scope.margin.top];
+  params.x_grid_show = false;
+
+  params.y_axis_show = true;
+  params.y_axis_translate = [scope.margin.left, 0];
+  params.y_grid_show = true;
+
+  return params;
+
+};
+
+vars.default_params["tickplot"] = function(scope) {
+
+  var params = {};
+
+  params.items = [];
+
+  params.x_scale = [{
+    func: d3.scale.linear()
+            .range([scope.margin.left, scope.width - scope.margin.left - scope.margin.right])
+            .domain(d3.extent(vars.new_data, function(d) {
+              return scope.accessor_data(d)[vars.var_x];
+            })).nice()
+  }];
+
+  params.y_scale = [{
+    func: d3.scale.linear()
+            .range([scope.height - scope.margin.top - scope.margin.bottom, scope.margin.top])
+            .domain(d3.extent(vars.new_data, function(d) {
+              return scope.accessor_data(d)[vars.var_y];
+            })).nice()
+  }];
+
+  scope.time.points.forEach(function(time) {
+
+    var item = {};
+    item.marks = [];
+    // Draw items with a specific filter
+    var mark = [{
+        type: "rect",
+        rotate: 90
+      }];
+
+    item.marks[0] = mark;
+
+    item.accessor_data = function(d) {
+      return d.values.filter(function(e) {
+        return e.year == time;
+      })[0];
+    };
+
+    params.items = params.items.concat(item);
+
+  });
+
+  params.x_ticks = vars.time.points.length;
+  params.x_tickValues = null;
+  params.x_axis_orient = "top";
+  params.x_axis_show = true;
+  params.x_grid_show = true;
+  params.x_text = false;
+
+  params.y_axis_show = false
+  params.y_grid_show = false;
+  params.y_invert = true;
+
+  return params;
+
+};
+
 vars.default_params["treemap"] = function(scope) {
 
   var params = {};
@@ -3738,820 +4692,6 @@ vars.default_params["treemap"] = function(scope) {
 
   params.var_x = 'x';
   params.var_y = 'y';
-
-  return params;
-
-};
-
-vars.default_params["radial"] = function(scope) {
-
-  var params = {};
-
-  params.var_x = 'x';
-  params.var_y = 'y';
-
-  if(vars.refresh) {
-
-    utils.create_hierarchy(scope);
-
-    var tree = d3.layout.tree()
-        .size([360, scope.width / 3 - 120])
-        .separation(function(a, b) { return (a.parent == b.parent ? 1 : 2) / a.depth; });
-
-    var diagonal = d3.svg.diagonal.radial()
-        .projection(function(d) { return [d.y, d.x / 180 * Math.PI]; });
-
-    vars.nodes = tree.nodes(vars.root);
-    vars.links = tree.links(vars.nodes);
-
-    vars.new_data = vars.nodes;
-
-    vars.new_data.forEach(function(d) {
-
-      d.values = [];
-      d.values[vars.time.current_time] = {};
-      d.values[vars.time.current_time][vars.var_id] = d[vars.var_id];
-      d.values[vars.time.current_time][vars.var_x] = d[vars.var_x];
-      d.values[vars.time.current_time][vars.var_y] = d[vars.var_y];
-      d.values[vars.time.current_time][vars.var_text] = d[vars.var_text];
-
-      d.__redraw = true;
-    });
-
-    vars.links.forEach(function(d) { d.__redraw = true; });
-
-  }
-
-  params.x_scale = [{
-    func: d3.scale.linear()
-            .range([0, scope.width-scope.margin.left-scope.margin.right])
-            .domain(d3.extent(vars.new_data, function(d) { return d.x; })).nice()
-  }];
-
-  params.y_scale = [{
-    func: d3.scale.linear()
-            .range([scope.height-scope.margin.top-scope.margin.bottom, scope.margin.top])
-            .domain(d3.extent(vars.new_data, function(d) { return d.y; })).nice(),
-  }];
-
-  params.r_scale = d3.scale.linear()
-              .range([10, 30])
-              .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_r]; }));
-
-/*
-  params.connect = [{
-    attr: "links",
-    type: "items",
-    marks: [{
-      type: "line",
-      rotate: "0",
-      func: null,
-    }]
-  }];
-  */
-
-  params.connect = [{
-    attr: vars.time.var_time,
-    marks: [{
-      type: "path",
-     // fill: function(d) { return vars.color(params.accessor_items(d)[vars.var_color]); },
-      stroke: function(d) {
-        return "black";
-      },
-      func: diagonal,
-      translate: [scope.width / 2, scope.height / 2]
-    }]
-  }];
-
-  params.items = [{
-    marks: [{
-      type: "text",
-  //    rotate: function(d) { return d.x - 90; },
-  //      translate: function(d) { return [d.y, 0]; }
-  //    filter: function(d, i) { return d.depth == 1 && d.dx > 30 && d.dy > 30; }
-    }, {
-      type: "circle",
- //     filter: function(d, i) { return d.depth == 2; },
-      r: 10,
-      x: 0,
-      y: 0,
-      rotate: function(d) { return d.x - 90; },
-      translate: function(d) { return [d.y, 0]; }
-    }]
-  }];
-
-
-  return params;
-
-};
-
-vars.default_params["stackedbar"] = function(scope) {
-
-  var params = {};
-
-  if(vars.refresh) {
-
-    var y0 = 0;
-
-    vars.new_data.forEach(function(d) {
-
-      d["y0"] = y0;
-      y0 += d[vars.var_y];
-     // d[vars.var_y] = y0;
-
-    });
-
-    vars.var_y = "y0";
-
-  }
-
-  params.x_scale = [{
-    func: d3.scale.linear()
-            .range([scope.height/2, scope.height/2])
-            .domain([0, d3.max(vars.new_data, function(d) { return d[scope.var_x]; })])
-            .nice()
-  }];
-
-  params.y_scale = [{
-    func: d3.scale.linear()
-            .range([scope.height - scope.margin.top - scope.margin.bottom, scope.margin.top])
-            .domain([d3.max(vars.new_data, function(d) { return d[vars.var_height] + d['y0']; }), 0])
-  }];
-
-  params.items = [{
-    attr: "bar",
-    marks: [{
-      type: "rect",
-      x: function() { return -vars.mark.width/2; },
-      y: 0,
-      height: function(d) { return params.y_scale[0]["func"](d[vars.var_height]) -10; },
-      width: function(d) { return vars.mark.width*10; },
-      fill: function(d) { return scope.color(scope.accessor_items(d)[scope.var_color]); }
-    }]
-  }];
-
-  params.x_axis_show = true;
-  params.x_axis_translate = [0, scope.height - scope.margin.bottom - scope.margin.top];
-  params.x_grid_show = false;
-
-  params.y_axis_show = true;
-  params.y_axis_translate = [scope.margin.left, 0];
-  params.y_grid_show = true;
-
-  return params;
-
-};
-
-vars.default_params["rectmap"] = function(scope) {
-
-  var params = {};
-
-
-  params.x_scale = [{
-    func: d3.scale.linear()
-            .range([scope.margin.left, scope.margin.left])
-            .domain([0, d3.max(vars.new_data, function(d) {
-              return scope.accessor_data(d)[vars.var_width];
-            })])
-  }];
-
-  params.y_scale = [{
-    func: d3.scale.linear()
-            .range([scope.margin.top, scope.height - scope.margin.top - scope.margin.bottom])
-            .domain([0, d3.max(vars.new_data, function(d) {
-              return scope.accessor_data(d)[vars.var_height];
-            })])
-  }];
-
-  params.width_scale = [{
-    func: d3.scale.linear()
-            .range([scope.margin.left, scope.width - scope.margin.left - scope.margin.right])
-            .domain([0, d3.max(vars.new_data, function(d) {
-              return scope.accessor_data(d)[vars.var_width];
-            })])
-  }];
-
-  params.height_scale = [{
-    func: d3.scale.linear()
-            .range([scope.margin.top, scope.height - scope.margin.top - scope.margin.bottom])
-            .domain([0, d3.max(vars.new_data, function(d) {
-              return scope.accessor_data(d)[vars.var_height];
-            })])
-  }];
-
-
-  if(vars.init) {
-
-    vars.new_data.forEach(function(d) {
-      d.x = 0;
-      d.y = 0;
-      d.dx = params.width_scale[0]["func"](d[vars.var_width]);
-      d.dy = params.width_scale[0]["func"](d[vars.var_height]);
-    });
-
-  }
-
-  params.items = [{
-    marks: [{
-     type: "text",
-     x: function(d) { return params.width_scale[0]["func"](d[vars.var_width]); },
-     y: function(d) { return params.height_scale[0]["func"](d[vars.var_height]) - 10; },
-     text_anchor: "end"
-   //  filter: function(d, i) { return d.depth == vars.treemap.depth_text && d.dx > vars.treemap.dx && d.d_y >  vars.treemap.d_y; }
-   }, {
-      type: "rect",
-   //   filter: function(d, i) { return d.depth == vars.treemap.depth_rect; },
-      x: 0,
-      y: 0,
-      width: function(d) { return params.width_scale[0]["func"](d[vars.var_width]); },
-      height: function(d) { return params.height_scale[0]["func"](d[vars.var_height]); }
-    }]
-  }];
-
-  params.var_x = 'x';
-  params.var_y = 'y';
-
-  return params;
-
-};
-
-vars.default_params["caterplot"] = function(scope) {
-
-  var params = {};
-
-  params.accessor_values = function(d) { return d.values; };
-  params.accessor_items = function(d) { return d; };
-
-  params.x_scale = [{
-    func: d3.scale.ordinal()
-            .rangeBands([scope.margin.left, scope.width - scope.margin.left - scope.margin.right])
-            .domain(d3.set(vars.new_data.map(function(d) { return d[vars.var_x]; })).values())
-  }];
-
-  params.y_scale = [{
-    func: d3.scale.linear()
-            .range([scope.height - scope.margin.top - scope.margin.bottom, scope.margin.top])
-            .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_y]; })).nice()
-  }];
-
-  params.r_scale = d3.scale.linear()
-              .range([vars.radius_min, vars.radius_max])
-              .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_r]; }));
-
-  params.items = [{
-    marks: [{
-    type: 'circle',
-    r_scale: d3.scale.linear()
-                .range([vars.radius_min, vars.radius_max])
-                .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_r]; })),
-    fill: function(d) { return vars.color(vars.accessor_items(d)[vars.var_color]); },
-   // translate: function() {
-   //   return [vars.x_scale[0]['func'].rangeBand() / 4, 0]
-   // },
-     }, {
-      var_mark: '__highlighted',
-      type: d3.scale.ordinal().domain([true, false]).range(['text', 'none'])
-    }, {
-      var_mark: '__selected',
-      type: d3.scale.ordinal().domain([true, false]).range(['text', 'none']),
-      translate: function(d) {
-        return [10, -20];
-      }
-    }]
-  }];
-
-  params.connect = [];
-
-  params.x_axis_show = true;
-  params.x_axis_translate = [0, scope.height - scope.margin.bottom - scope.margin.top];
-  params.x_grid_show = true;
-  params.x_ticks = 10;
-
-  params.y_axis_show = true;
-  params.y_axis_translate = [scope.margin.left, 0];
-  params.y_grid_show = true;
-  params.y_invert = false;
-
-  return params;
-
-};
-
-vars.default_params["tickplot"] = function(scope) {
-
-  var params = {};
-
-  params.items = [];
-
-  params.x_scale = [{
-    func: d3.scale.linear()
-            .range([scope.margin.left, scope.width - scope.margin.left - scope.margin.right])
-            .domain(d3.extent(vars.new_data, function(d) {
-              return scope.accessor_data(d)[vars.var_x];
-            })).nice()
-  }];
-
-  params.y_scale = [{
-    func: d3.scale.linear()
-            .range([scope.height - scope.margin.top - scope.margin.bottom, scope.margin.top])
-            .domain(d3.extent(vars.new_data, function(d) {
-              return scope.accessor_data(d)[vars.var_y];
-            })).nice()
-  }];
-
-  scope.time.points.forEach(function(time) {
-
-    var item = {};
-    item.marks = [];
-    // Draw items with a specific filter
-    var mark = [{
-        type: "rect",
-        rotate: 90
-      }];
-
-    item.marks[0] = mark;
-
-    item.accessor_data = function(d) {
-      return d.values.filter(function(e) {
-        return e.year == time;
-      })[0];
-    };
-
-    params.items = params.items.concat(item);
-
-  });
-
-  params.x_ticks = vars.time.points.length;
-  params.x_tickValues = null;
-  params.x_axis_orient = "top";
-  params.x_axis_show = true;
-  params.x_grid_show = true;
-  params.x_text = false;
-
-  params.y_axis_show = false
-  params.y_grid_show = false;
-  params.y_invert = true;
-
-  return params;
-
-};
-
-vars.default_params['barchart_vertical'] = function(scope) {
-
-  var params = {};
-
-  // params.x_scale = vistk.utils.scale.linear(scope);
-
-  params.x_scale = [{
-    func: d3.scale.linear()
-            .range([scope.width - scope.margin.left - scope.margin.right, scope.margin.left])
-            .domain([d3.max(vars.new_data, function(d) {
-              return scope.accessor_data(d)[vars.var_x];
-            }), d3.min(vars.new_data, function(d) {
-              return scope.accessor_data(d)[vars.var_x];
-            })])
-            .nice()
-  }];
-
-  params.y_scale = [{
-    func: d3.scale.ordinal()
-            .rangeRoundBands([scope.height - scope.margin.top - scope.margin.bottom, scope.margin.top], .1)
-            .domain(vars.new_data.map(function(d) {
-              return scope.accessor_data(d)[vars.var_y];
-            }))
-  }];
-
-  params.items = [{
-    marks: [{
-      type: "rect",
-      x: function(d) {
-         return -params.x_scale[0]["func"](scope.accessor_data(d)[scope.var_x]) + scope.margin.left;
-      },
-      y: function(d) {
-        return 0;
-//        return -scope.margin.top + scope.mark.width;
-      },
-      height: function(d) {
-        return scope.mark.width;
-      },
-      width: function(d) {
-        return params.x_scale[0]["func"](scope.accessor_data(d)[scope.var_x]) - scope.margin.left;
-      },
-      fill: function(d) {
-        return scope.color(scope.accessor_data(d)[scope.var_color]);
-      }
-    }, {
-      type: 'text',
-      text: function(d) {
-        return scope.accessor_data(d)[vars.var_x];
-      },
-      translate: [2, 5],
-      text_anchor: 'start'
-    }]
-  }];
-
-  params.x_axis_show = false;
-  params.x_axis_translate = [0, scope.height - scope.margin.bottom - scope.margin.top];
-  params.x_grid_show = false;
-
-  params.y_axis_show = true;
-  params.y_axis_translate = [scope.margin.left, 0];
-  params.y_grid_show = true;
-
-  return params;
-
-};
-
-vars.default_params["productspace"] = function(scope) {
-
-  var params = {};
-
-  var accessor_values = function(d) {
-    return d.values.filter(function(v) {
-      if(v[vars.time.var_time] === vars.time.current_time) {
-        return v;
-      }
-    })[0];
-  }
-
-  params.x_scale = [{
-    func: d3.scale.linear()
-            .range([0, vars.width-vars.margin.left-vars.margin.right])
-            .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_x]; })).nice()
-  }];
-
-  params.y_scale = [{
-    func: d3.scale.linear()
-            .range([vars.height-vars.margin.top-vars.margin.bottom, vars.margin.top])
-            .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_y]; })).nice(),
-  }];
-
-  //params.r_scale = d3.scale.linear()
-  //            .range([10, 30])
-  //            .domain(d3.extent(vars.new_data, function(d) { return accessor_values(d)[vars.var_r]; }));
-
-  params.items = [{
-    marks: [{
-      type: "circle",
-     // r_scale: d3.scale.linear()
-     //             .range([10, 30])
-     //             .domain(d3.extent(vars.new_data, function(d) { return accessor_values(d)[vars.var_r]; })),
-      fill: function(d) { return vars.color(vars.accessor_items(accessor_values(d))[vars.var_color]); }
-    }, {
-      type: "text",
-      rotate: "30",
-      translate: null
-    }]
-  }];
-
-  params.connect = [{
-    attr: "links",
-    type: "items",
-    marks: [{
-      type: "line",
-      func: null,
-    }]
-  }];
-
-  params.x_axis_show = false;
-  params.x_grid_show = false;
-
-  params.y_axis_show = false;
-  params.y_grid_show = false;
-
-
-  if(vars.init) {
-    vars.evt.register("highlightOn", function(d) {
-
-      // Make sure the highlighted node is above other nodes
-      vars.svg.selectAll('.mark__group').sort(function(a, b) { return a.__highlighted ;})
-
-      var adjacent_links = utils.find_adjacent_links(d, vars.links);
-
-      adjacent_links.forEach(function(e) {
-
-          // Redraw adjacent links
-          e.__highlighted__adjacent = true;
-          e.__redraw = true;
-
-         vars.new_data.forEach(function(f, k) {
-
-           if(f[vars.var_id] === e.target[vars.var_id] || f[vars.var_id] === e.source[vars.var_id]) {
-            // Redraw adjacent nodes
-             f.__highlighted__adjacent = true;
-             f.__redraw = true;
-           }
-
-         });
-
-      });
-
-    });
-
-    vars.evt.register("highlightOut", function(d) {
-
-      vars.new_data.forEach(function(f, k) {
-        if(f.__highlighted__adjacent) {
-          f.__highlighted__adjacent = false;
-          f.__redraw = true;
-        }
-      });
-
-      vars.links.forEach(function(f, k) {
-        if(f.__highlighted__adjacent) {
-          f.__highlighted__adjacent = false;
-          f.__redraw = true;
-        }
-      });
-
-      d3.select(vars.container).selectAll(".connect__line")
-        .classed("highlighted", function(d, i) { return false; })
-        .classed("highlighted__adjacent", function(d, i) { return false; })
-
-      d3.select(vars.container).selectAll("circle")
-        .classed("highlighted", function(d, i) { return false; })
-        .classed("highlighted__adjacent", function(d, i) { return false; })
-
-    });
-
-    vars.evt.register("selection", function(d) {
-
-      // Make sure the highlighted node is above other nodes
-      // vars.svg.selectAll('.mark__group').sort(function(a, b) { return a.__highlighted ;})
-
-      vars.new_data.forEach(function(f, k) {
-        if(f.__selected) {
-          f.__selected = false;
-          f.__redraw = true;
-        }
-
-        if(f.__selected__adjacent) {
-          f.__selected__adjacent = false;
-          f.__redraw = true;
-        }
-
-      });
-
-      vars.links.forEach(function(f, k) {
-        if(f.__selected) {
-          f.__selected = false;
-          f.__redraw = true;
-        }
-
-        if(f.__selected__adjacent) {
-          f.__selected__adjacent = false;
-          f.__redraw = true;
-        }
-
-      });
-
-      d.__selected = true;
-      d.__redraw = true;
-
-      var adjacent_links = utils.find_adjacent_links(d, vars.links);
-
-      adjacent_links.forEach(function(e) {
-
-        // Update links
-        e.__selected = true;
-        e.__selected__adjacent = true;
-        e.__redraw = true;
-
-        vars.new_data.forEach(function(f, k) {
-
-          if(f[vars.var_id] === e.target[vars.var_id] || f[vars.var_id] === e.source[vars.var_id]) {
-
-            // Update nodes
-            f.__selected = true;
-            f.__selected__adjacent = true;
-            f.__redraw = true;
-          }
-
-        });
-
-      });
-
-      d3.select(vars.container).selectAll(".connect__line")
-        .classed("selected", function(d, i) { return d.__selected; })
-        .classed("selected__adjacent", function(d, i) { return d.__selected__adjacent; })
-
-      d3.select(vars.container).selectAll("circle")
-        .classed("selected", function(d, i) { return d.__selected; })
-        .classed("selected__adjacent", function(d, i) { return d.__selected__adjacent; })
-
-    });
-  }
-
-  return params;
-
-};
-
-vars.default_params["ordinal_vertical"] = function(scope) {
-
-  var params = {};
-
-  params.x_scale = [{
-    func: d3.scale.linear()
-            .range([scope.width/2, scope.width/2])
-            .nice()
-  }];
-
-  params.y_scale = [{
-    func: d3.scale.ordinal()
-            .domain(d3.set(vars.new_data.map(function(d) { return d[vars.var_y]; })).values())
-            .rangeBands([scope.margin.left, scope.width - scope.margin.left - scope.margin.right])
-  }];
-
-  params.items = [{
-    marks: [{
-      type: "circle"
-    },{
-      type: "text"
-    }]
-  }];
-
-  params.connect = [];
-
-  params.x_axis_show = false;
-
-  params.y_axis_show = false;
-
-  return params;
-
-}
-
-vars.default_params["ordinal_horizontal"] = function(scope) {
-
-  var params = {};
-
-  params.x_scale = [{
-    func: d3.scale.ordinal()
-            .domain(d3.set(vars.new_data.map(function(d) {
-              return d.values[vars.time.current_time][vars.var_x];
-            })).values())
-            .rangeBands([scope.margin.left, scope.width - scope.margin.left - scope.margin.right]),
-  }];
-
-  params.y_scale = [{
-    name: "linear",
-    func: d3.scale.linear()
-            .range([scope.height/2, scope.height/2])
-            .domain([0, d3.max(vars.new_data, function(d) {
-              return d[scope.var_y];
-            })])
-            .nice()
-  }];
-
-  params.items = [{
-    marks: [{
-      type: "circle"
-    },{
-      type: "text"
-    }]
-  }];
-
-  params.connect = [];
-
-  params.x_axis_show = false;
-
-  params.y_axis_show = false;
-
-  return params;
-
-}
-
-vars.default_params["matrix"] = function(scope) {
-
-  var params = {};
-
-  // vars.new_data = miserabels
-
-  // A matrix is a permutation of two ordinal scales
-  // Each cell is a graphical mark
-
-
-  if(vars.refresh) {
-
-    // Prepare data
-
-    // Duplicate and create
-
-
-  }
-
-
-
-  params.connect = [{
-    marks: [{
-      type: "rect"
-    }]
-  }];
-
-// Horizontal ordinal scale
-// var x = d3.scale.ordinal().rangeBands([0, vars.width]),
-var z = d3.scale.linear().domain([0, 4]).clamp(true),
-    c = d3.scale.category10().domain(d3.range(10));
-
-  // TODO: Re-use previous scales
-  // vars.default_params["ordinal_vertical"]
-  // vars.default_params["ordinal_horizontal"]
-  params.x_scale = [{
-    func: d3.scale.ordinal()
-            .domain(d3.set(vars.new_data.map(function(d) { return d[vars.var_x]; })).values())
-            .rangeBands([scope.margin.left, scope.width - scope.margin.left - scope.margin.right]),
-  }];
-
-  /* Prototyping ideal configuration
-  params.items = [{
-    marks: [{
-      type: 'text'
-    }],
-    marks: [{
-      type: 'text'
-    }]
-   }];
-  */
-
-  var matrix = [],
-      nodes = vars.nodes,
-      n = vars.nodes.length;
-
-  // Compute index per node.
-  nodes.forEach(function(node, i) {
-    node.index = i;
-    node.count = 0;
-    matrix[i] = d3.range(n).map(function(j) { return {x: j, y: i, z: 0}; });
-  });
-
-  // Convert links to matrix; count character occurrences.
-  vars.links.forEach(function(link) {
-    matrix[link.source][link.target].z += link.value;
-    matrix[link.target][link.source].z += link.value;
-    matrix[link.source][link.source].z += link.value;
-    matrix[link.target][link.target].z += link.value;
-    nodes[link.source].count += link.value;
-    nodes[link.target].count += link.value;
-  });
-
-  // Precompute the orders.
-  var orders = {
-    name: d3.range(n).sort(function(a, b) { return d3.ascending(nodes[a].name, nodes[b].name); }),
-    count: d3.range(n).sort(function(a, b) { return nodes[b].count - nodes[a].count; }),
-    group: d3.range(n).sort(function(a, b) { return nodes[b].group - nodes[a].group; })
-  };
-
-  // The default sort order.
-  params.x_scale[0]['func'].domain(orders.name);
-
-  vars.svg.append("rect")
-      .attr("class", "background")
-      .attr("width", vars.width)
-      .attr("height", vars.height);
-
-  var row = vars.svg.selectAll(".row")
-      .data(matrix)
-    .enter().append("g")
-      .attr("class", "row")
-      .attr("transform", function(d, i) { return "translate(0," + params.x_scale[0]['func'](i) + ")"; })
-      .each(row);
-
-  row.append("line")
-      .attr("x2", vars.width);
-
-  row.append("text")
-      .attr("x", -6)
-      .attr("y", params.x_scale[0]['func'].rangeBand() / 2)
-      .attr("dy", ".32em")
-      .attr("text-anchor", "end")
-      .text(function(d, i) { return nodes[i].name; });
-
-  var column = vars.svg.selectAll(".column")
-      .data(matrix)
-    .enter().append("g")
-      .attr("class", "column")
-      .attr("transform", function(d, i) { return "translate(" + params.x_scale[0]['func'](i) + ")rotate(-90)"; });
-
-  column.append("line")
-      .attr("x1", -vars.width);
-
-  column.append("text")
-      .attr("x", 6)
-      .attr("y", params.x_scale[0]['func'].rangeBand() / 2)
-      .attr("dy", ".32em")
-      .attr("text-anchor", "start")
-      .text(function(d, i) { return nodes[i].name; });
-
-  function row(row) {
-    var cell = d3.select(this).selectAll(".cell")
-        .data(row.filter(function(d) { return d.z; }))
-      .enter().append("rect")
-        .attr("class", "cell")
-        .attr("x", function(d) { return params.x_scale[0]['func'](d.x); })
-        .attr("width", params.x_scale[0]['func'].rangeBand())
-        .attr("height", params.x_scale[0]['func'].rangeBand())
-        .style("fill-opacity", function(d) { return z(d.z); })
-        .style("fill", function(d) { return nodes[d.x].group == nodes[d.y].group ? c(nodes[d.x].group) : null; })
-
-  }
 
   return params;
 
@@ -4858,101 +4998,7 @@ var z = d3.scale.linear().domain([0, 4]).clamp(true),
 
       case "none":
 
-        var none_params = function(scope) {
-
-          var params = {};
-          params.accessor_data = function(d) { return d; };
-
-          params.x_scale = [{
-            func: d3.scale.identity()
-          }];
-
-          params.y_scale = [{
-            func: d3.scale.identity(),
-          }];
-
-          params.items = [{
-            marks: [{
-                type: "circle",
-                radius: 5
-              }, {
-                type: "text",
-                rotate: "30",
-                translate: null
-              }]
-          }];
-
-          return params;
-
-        };
-
-        vars = vistk.utils.merge(vars, none_params(vars));
-
-        // LOAD USER PARAMS
-        vars.items = vistk.utils.merge(vars.items, vars.user_vars.items);
-
-        // In case we don't have (x, y) coordinates for nodes'
-        vars.force = d3.layout.force()
-            .size([vars.width, vars.height])
-            .charge(-50)
-            .linkDistance(10)
-            .on("tick", tick)
-            .on("start", function(d) {
-              // TODO: register the clearAnimation here
-            })
-            .on("end", function(d) {
-              // TODO: un-register the clearAnimation here
-            })
-
-        vars.var_x = 'x';
-        vars.var_y = 'y';
-
-        vars.force.nodes(vars.new_data).start();
-
-        // In case we change visualization before the nodes are settled
-        vars.evt.register("clearAnimations", function(d) {
-          vars.force.nodes(vars.new_data).stop();
-        });
-
-        var index_item = 0;
-        var accessor_data = function(d) { return d; };
-
-        // PRE-UPDATE
-        var gItems = vars.svg.selectAll(".mark__group")
-                        .data(vars.new_data, function(d, i) {
-                          d._index_item = index_item;
-                          return accessor_data(d)[vars.var_id] + "_" + index_item;
-                        });
-
-        // ENTER
-        var gItems_enter = gItems.enter()
-                        .append("g")
-                        .each(utils.items_group)
-                        .attr("transform", function(d, i) {
-                          return "translate(" + vars.margin.left + ", " + vars.height/2 + ")";
-                        });
-
-       // APPEND AND UPDATE ITEMS MARK
-        vars.items[0].marks.forEach(function(params) {
-          gItems_enter.call(utils.draw_mark, params);
-          gItems.call(utils.draw_mark, params);
-        });
-
-        // EXIT
-        var gItems_exit = gItems.exit().remove()  ;
-
-        // POST-UPDATE
-
-        function tick(duration) {
-
-          vars.svg.selectAll(".mark__group")
-                          .attr("transform", function(d, i) {
-                            return "translate(" + d.x + ", " + d.y + ")";
-                          });
-
-        }
-
-      break;
+        break;
 
       default:
 
@@ -4997,12 +5043,10 @@ var z = d3.scale.linear().domain([0, 4]).clamp(true),
     }
 
 
-      // FUNCTIONS TO CREATE UI ELEMENTS
-      // Those functions are companion to the charts, not required
-
+      // Creates widgets to tweat the chart's parameters
       if(vars.ui.default) {
 
-        // BUILDING THE UI elements
+        // Building the UI elements
         d3.select(vars.container).selectAll(".break").data([vars.var_id])
           .enter()
             .append("p")
@@ -5303,8 +5347,6 @@ var z = d3.scale.linear().domain([0, 4]).clamp(true),
               })
              .html("Clear highlight");
 
-
-
       d3.select(vars.container).selectAll(".toggleLanguage").data(["toggleLanguage"]).enter().append("button")
                .attr("type", "button")
                .attr("class", "toggleLanguage")
@@ -5503,8 +5545,7 @@ var z = d3.scale.linear().domain([0, 4]).clamp(true),
 
   });
 
-
-    vars.evt.call('finish', null);
+  vars.evt.call('finish', null);
 }
 
 

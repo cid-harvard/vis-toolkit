@@ -6,6 +6,7 @@
 <body>
 <div id="viz_scatterplot"></div>
 <div id="viz_table"></div>
+<div id="viz_scatterplot_animated"></div>
 
 <script>
 
@@ -74,8 +75,46 @@ d3.csv("../../vis-toolkit-datasets/data/anscombe.csv", function(graph) {
 
     d3.select("#viz_scatterplot").call(scatterplot);
 
+  });
 
-  })
+  var current_group = 0;
+
+  scatterplot_animated = vistk.viz()
+    .params({
+      dev: true,
+      type: 'scatterplot',
+      width: width/4,
+      height: height/4,
+      margin: {top: 10, right: 10, bottom: 30, left: 30},
+      container: '#viz_scatterplot_animated',
+      data: data.filter(function(e) { return e["Group"] == groups[current_group % groups.length]; }),
+      var_x: 'x',
+      var_y: 'y',
+      items: [{
+        attr: "name",
+        marks: [{
+          type: 'circle'
+        }]
+      }],
+      title: "Group " + groups[current_group % groups.length]
+    });
+
+
+  d3.select("#viz_scatterplot_animated").call(scatterplot_animated);
+
+  setTimeout(function() {
+
+    current_group++;
+
+    scatterplot_animated.params().refresh = true;
+    scatterplot_animated.params().init = true;
+
+    scatterplot_animated.params().data = data.filter(function(e) { return e["Group"] == groups[current_group % groups.length]; });
+
+    scatterplot_animated.params().title = "Group " + groups[current_group % groups.length];
+    d3.select("#viz_scatterplot_animated").call(scatterplot_animated);
+
+  }, 1000)
 
 })
 
