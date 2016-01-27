@@ -24,7 +24,8 @@ vars.default_params["linechart"] = function(scope) {
   params.items = [{
     marks: [{
       type: "circle",
-     // fill: function(d) { return vars.color(params.accessor_items(d)[vars.var_color]); }
+      fill: function(d) {
+        return vars.color(params.accessor_items(d)[vars.var_color]); }
     }, {
       var_mark: '__highlighted',
       type: d3.scale.ordinal().domain([true, false]).range(['text', 'none']),

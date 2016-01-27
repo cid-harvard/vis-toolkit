@@ -468,7 +468,7 @@
           items_mark_tick.enter().append('line')
               .classed('items__mark__tick', true)
               .classed("items_" + mark_id, true)
-              .style("stroke", params_stroke) //params.stroke(d[vars.var_color]))
+              .style("stroke", params_stroke)
               .style("stroke-width", params_stroke_width)
               .style("stroke-opacity", params_stroke_opacity)
               .attr("y2", function(d) { return -20; })
@@ -483,8 +483,6 @@
               .classed("selected", function(d, i) { return d.__selected; })
               .transition().duration(vars.duration)
               .attr("transform", "translate(" +  params_translate + ")rotate(" + params_rotate + ")scale(" + params_scale + ")")  ;
-
-
 
           items_mark_tick.exit().remove();
 
@@ -743,7 +741,7 @@
               .classed("highlighted", function(e, j) { return e.__highlighted; })
               .classed("selected", function(e, j) { return e.__selected; })
               .transition().duration(vars.duration)
-              .style("stroke", params_stroke)
+           //   .style("stroke", params_stroke)
               .attr('d', function(e) {
                 return params["func"](d3.values(this_accessor_values(e)));
               });
@@ -877,8 +875,10 @@
                 }
               })
               .style("stroke", params_stroke)
+              .style("fill", params_fill)
               .style("stroke-width", params_stroke_width)
               .style("stroke-opacity", params_stroke_opacity);
+
 
               if(typeof params.fill !== "undefined") {
 
@@ -1806,7 +1806,11 @@
 
     if(typeof params[v] !== "undefined") {
       if(typeof params[v] === "function") {
-        result = params[v](d, i, vars);
+        //if(v === 'stroke' || v === 'stroke') {
+        //  result = params[v](d[vars.var_color], i, vars);
+        //} else {
+          result = params[v](d, i, vars);
+        //}
       } else if(typeof params[v] === "string") {
         result = params[v];
       } else if(typeof params[v] === "number") {
