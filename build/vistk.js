@@ -5707,6 +5707,10 @@ vistk.utils.min = function(data) {
   return d3.min(data, function(d) { return d[var_time] });
 }
 
+vistk.utils.extent = function(data, var_data) {
+  return d3.extent(data, function(d) { return d[var_data] });
+}
+
 vistk.utils.time = {};
 
 vistk.utils.time.current = function(data) {
