@@ -6,7 +6,7 @@ var w = typeof window === "undefined" ? this : window;
 var vistk = w.vistk || {};
 w.vistk = vistk;
 
-vistk.version = "0.0.29";
+vistk.version = "{{ VERSION }}";
 vistk.utils = {};
 
 if(typeof module === "object" && module.exports) {
@@ -5705,6 +5705,10 @@ vistk.utils.max = function(data) {
 vistk.utils.min = function(data) {
   var var_time = this.var_time;
   return d3.min(data, function(d) { return d[var_time] });
+}
+
+vistk.utils.extent = function(data, var_data) {
+  return d3.extent(data, function(d) { return d[var_data] });
 }
 
 vistk.utils.time = {};
