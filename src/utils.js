@@ -484,6 +484,8 @@
               .transition().duration(vars.duration)
               .attr("transform", "translate(" +  params_translate + ")rotate(" + params_rotate + ")scale(" + params_scale + ")")  ;
 
+
+
           items_mark_tick.exit().remove();
 
         break;
@@ -495,7 +497,6 @@
           items_mark_shape.enter().insert("path")
               .classed('items__mark__shape', true)
               .classed("items_" + mark_id, true)
-              .style("fill", params_fill)
               .attr("transform", function(d) {
                 return "translate("+ -d.x +", "+ -d.y +")";
               })
@@ -504,10 +505,36 @@
               .classed("highlighted", function(d, i) { return d.__highlighted; })
               .classed("selected", function(d, i) { return d.__selected; })
               .attr("d", vars.path)
-              .style("fill", params_fill)
               .attr("transform", function(d) {
                 return "translate("+ -d.x +", "+ -d.y +")";
-              })
+              });
+
+              if(typeof params.fill !== "undefined") {
+
+                if(typeof params.fill === "function") {
+
+                  items_mark_shape.style("fill", params.fill(d[vars.var_color]));
+
+
+                } else {
+
+                  items_mark_shape.style("fill", function(d) {
+                    return params.fill(vars.accessor_items(d)[vars.var_color]);
+                  });
+
+                }
+
+              } else if(vars.var_color !== null) {
+
+                items_mark_shape.style("fill", function(d) {
+                  return vars.color(vars.accessor_items(d)[vars.var_color]);
+                });
+
+                items_mark_shape.style("fill", function(d) {
+                  return vars.color(vars.accessor_items(d)[vars.var_color]);
+                });
+
+              }
 
             items_mark_shape.exit().remove();
 
@@ -1620,36 +1647,6 @@
 
   utils.filters = {};
 
-  utils.init_item = function(d) {
-    d.__aggregated = false;
-    d.__selected = false;
-    d.__selected__adjacent = false;
-    d.__highlighted = false;
-    d.__highlighted__adjacent = false;
-    d.__missing = false;
-    d.__redraw = false;
-  }
-
-  utils.init_params = function(v, default_value, params, d, i, vars) {
-
-    var result = default_value;
-
-    if(typeof params[v] !== "undefined") {
-      if(typeof params[v] === "function") {
-        result = params[v](d, i, vars);
-      } else if(typeof params[v] === "string") {
-        result = params[v];
-      } else if(typeof params[v] === "number") {
-        result = params[v];
-      } else {
-        result = params[v];
-      }
-    }
-
-    return result;
-
-  }
-
   utils.filters.redraw_only = function(d) { return d.__redraw; }
 
   utils.find_adjacent_links = function(d, links) {
@@ -1792,7 +1789,37 @@
       return output;
   };
 
-utils.init_params_values = function(var_v, default_value, params, d, i, vars) {
+
+  utils.init_item = function(d) {
+    d.__aggregated = false;
+    d.__selected = false;
+    d.__selected__adjacent = false;
+    d.__highlighted = false;
+    d.__highlighted__adjacent = false;
+    d.__missing = false;
+    d.__redraw = false;
+  }
+
+  utils.init_params = function(v, default_value, params, d, i, vars) {
+
+    var result = default_value;
+
+    if(typeof params[v] !== "undefined") {
+      if(typeof params[v] === "function") {
+        result = params[v](d, i, vars);
+      } else if(typeof params[v] === "string") {
+        result = params[v];
+      } else if(typeof params[v] === "number") {
+        result = params[v];
+      } else {
+        result = params[v];
+      }
+    }
+
+    return result;
+  }
+
+  utils.init_params_values = function(var_v, default_value, params, d, i, vars) {
 
     var result = default_value;
 
@@ -1809,7 +1836,6 @@ utils.init_params_values = function(var_v, default_value, params, d, i, vars) {
     }
 
     return result;
-
   }
 
   // Turns parameters into actual values
