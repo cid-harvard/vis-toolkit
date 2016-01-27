@@ -20,7 +20,21 @@ Simply add the `vistk` JavaScript and CSS files as below:
 * Eventually some `topojson.js`, `queue.js` dependencies for the [geo-map](http://cid-harvard.github.io/vis-toolkit/examples/geomap.html) as well as world shape files 
 * Metadata (e.g. [product space] nodes and links) have to be loaded externally
 
-## Examples
+#### JavaScript
 
-* Look at the list of examples here
+The code is organized as follows:
+
+```
+├── src/js
+│   ├── build
+│   ├── css
+│   ├── data
+│   ├── exampl
+│   ├── img
+│   ├── js
+│   ├── script
+│   ├── shapef
+│   ├── src
+│   └── test
+```
 
