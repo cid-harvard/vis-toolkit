@@ -1,0 +1,25 @@
+<!doctype html>
+<meta charset="utf-8">
+<script src="../js/d3.js"></script>
+<script src="../build/vistk.js"></script>
+<link href="../css/vistk.css" rel="stylesheet">
+<body>
+<div id="viz"></div>
+<script>
+
+var data = [{__id: 'A'}, {__id: 'B'}, {__id: 'C'}];
+
+var grid = vistk.viz().params({
+  type: "grid",
+  width: 800,
+  height: 600,
+  margin: {top: 30, right: 30, bottom: 30, left: 30},
+  container: "#viz",
+  data: data,
+
+});
+
+d3.select("#viz").call(grid);
+
+</script>
+</body>
