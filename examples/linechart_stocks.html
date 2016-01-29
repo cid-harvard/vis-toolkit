@@ -18,7 +18,7 @@ d3.csv("../../vis-toolkit-datasets/data/stocks.csv", function(error, data) {
   // MSFT,Apr 2000,28.37
 
   // PRE-PROCESSING
-  data.forEach(function(d) {
+  data.forEach(function(d, i) {
     d.price = +d.price;
   })
 
@@ -31,7 +31,7 @@ d3.csv("../../vis-toolkit-datasets/data/stocks.csv", function(error, data) {
     data: data,
     var_id: "symbol",
     var_group: "symbol",
-    var_color: "symbol", // TODO: color by final ranking value..
+    var_color: "symbol",
     var_text: "symbol",
     var_y: 'price',
     var_x: 'date',
@@ -39,7 +39,7 @@ d3.csv("../../vis-toolkit-datasets/data/stocks.csv", function(error, data) {
       parse: d3.time.format("%b %Y").parse,
       var_time: 'date',
       current_time: 'Jan 2000',
-      filter: ['Jan 2000', 'Feb 2000']
+      //filter: ['Jan 2000', 'Feb 2000']
     },
     selection: ["MSFT"],
     highlight: "MSFT",
