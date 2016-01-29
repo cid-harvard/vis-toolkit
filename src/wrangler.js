@@ -131,7 +131,11 @@
       }
 
       // Find unique values for various parameters
-      vars.time.interval = d3.extent(vars.new_data, function(d) { return d[vars.time.var_time]; });
+      vars.time.interval = d3.extent(vars.new_data, function(d) {
+        return vars.time.parse(d[vars.time.var_time]);
+      });
+
+      // Note: none-parsed time values
       vars.time.points = vistk.utils.find_unique_values(vars.new_data, vars.time.var_time);
 
       // In case no temporal values, change the accessor
