@@ -7,26 +7,41 @@
 <div id="viz"></div>
 <script>
 
-var data = [{id: 'A', value: 10}, {id: 'B', value: 20}];
+var data = [{id: 'A', value: 1}, {id: 'B', value: 1}];
 
 var visualization = vistk.viz()
     .params({
       type: 'piechart',
       width: 600,
-      height: 200,
-      var_id: 'id',
-      data: data,
+      height: 400,
       margin: {top: 10, right: 10, bottom: 30, left: 30},
+      data: data,
+      var_id: 'id',
       container: '#viz',
-      var_r: 'value',
+      var_color: 'id',
       var_x: function(vars) { return vars.width/2; },
       var_y: function(vars) { return vars.height/2; },
-      var_share: "value",
-      var_radius: "value",
-      var_x: function(vars) { return vars.width/2; },
-      var_y: function(vars) { return vars.height/2; },
+      var_share: 'value',
     });
 
 d3.select("#viz").call(visualization);
 
+function update(c) {
+
+  if(c === 'A') {
+    data[0].value++;
+  } else {
+    data[1].value++;
+  }
+
+  visualization.params({data: data});
+  visualization.params().init = true;
+  visualization.params().refresh = true;
+  d3.select("#viz").call(visualization);
+
+}
+
 </script>
+
+<input type='button' value='A' onclick='update("A")'>
+<input type='button' value='B' onclick='update("B")'>
