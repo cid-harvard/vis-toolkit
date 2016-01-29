@@ -3,8 +3,8 @@ var test = require('tape');
 
 jsdom.env({
   html:'<html><body><div id="viz"></div></body></html>',
-  features: { QuerySelector:true }, //you need query selector for D3 to work
   scripts: ["js/d3.js", "build/vistk.js"],
+  features: { QuerySelector:true },
   done: function (err, window) {
 
     var d3 = window.d3;
@@ -31,6 +31,14 @@ jsdom.env({
 
       t.plan(1);
       t.equal(d3.select("#viz").selectAll('path')[0].length, 3);
+
+    });
+
+    test('position should be in the middle of the SVG', function (t) {
+
+      t.plan(1);
+      var p = d3.transform(d3.select("#viz").select('.mark__group').attr("transform")).translate;
+      t.equal(p[0].length, visualization.params().width/2);
 
     });
 
