@@ -2,13 +2,19 @@ vars.default_params['piechart'] = function(scope) {
 
   var params = {};
 
-  if(vars.refresh) {
+  if(vars.init) {
 
-    scope.pie = d3.layout.pie().value(function(d) { return d[scope.var_share]; });
+    scope.pie = d3.layout.pie().value(function(d) {
+      return d[scope.var_share];
+    });
+
     scope.new_data = scope.pie(scope.new_data);
 
     scope.new_data.forEach(function(d) {
       d.values = d.data.values;
+      d[scope.var_id] = d.data[scope.var_id];
+      d[scope.var_x] = d.data[scope.var_x];
+      d[scope.var_y] = d.data[scope.var_y];
     });
 
     scope.new_data.forEach(function(d) { d.__redraw = true; });

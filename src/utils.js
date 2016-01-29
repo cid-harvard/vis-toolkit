@@ -543,7 +543,7 @@
           var arc = d3.svg.arc().outerRadius(function(d) {
 
             if(typeof vars.var_r === "undefined") {
-              return vars.radius_max*20;
+              return vars.width / 6;
             } else {
 
               var r_scale = d3.scale.linear()
