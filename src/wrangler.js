@@ -266,10 +266,6 @@
             return d[vars.var_r];
           });
 
-          aggregation.piescatter = [];
-          aggregation.piescatter[0] = {};
-          aggregation.piescatter[1] = {};
-
           aggregation.values = [];
 
           // Assuming all the time values are present in all items
@@ -315,28 +311,6 @@
           utils.init_item(aggregation);
           aggregation.__aggregated = true;
           aggregation.__redraw = true;
-
-          if(typeof vars.share_cutoff != "undefined") {
-
-            aggregation.piescatter[0][vars.var_share] = d3.sum(leaves, function(d) {
-
-              if(vars.share_cutoff(d)) {
-                return 1;
-              } else {
-                return 0;
-              }
-            });
-
-            aggregation.piescatter[1][vars.var_share] = d3.sum(leaves, function(d) {
-
-              if(!vars.share_cutoff(d)) {
-                return 1;
-              } else {
-                return 0;
-              }
-            });
-
-          }
 
           vars.columns.forEach(function(c) {
 
