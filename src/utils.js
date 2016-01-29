@@ -847,6 +847,19 @@
 
         break;
 
+        case "piechart":
+
+        // WIP
+        // Temporary placeholder for pies
+        d3.select(that).append('circle').attr('r', 10)
+
+        // Create the new context
+        // Provide data model
+        // Call the chart drawing function:
+        // d3.select(that).call(utils.draw_chart, vars, [d]);
+
+        break;
+
         case "circle":
         default:
 
