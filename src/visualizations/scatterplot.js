@@ -32,7 +32,9 @@ vars.default_params['scatterplot'] = function(scope) {
                     .domain(d3.extent(vars.new_data, function(d) {
                       return scope.accessor_data(d)[scope.var_r];
                     })),
-        fill: function(d) { return vars.color(vars.accessor_items(d)[scope.var_color]); }
+        fill: function(d) {
+          return vars.color(vars.accessor_data(d)[scope.var_color]);
+        }
       }, {
       var_mark: '__highlighted',
       type: d3.scale.ordinal().domain([true, false]).range(['text', 'none'])

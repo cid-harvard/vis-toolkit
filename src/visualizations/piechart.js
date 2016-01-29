@@ -35,7 +35,7 @@ vars.default_params['piechart'] = function(scope) {
     marks: [{
       type: 'arc',
       fill: function(d) {
-        return scope.color(scope.accessor_items(d)[scope.var_color]);
+        return scope.color(scope.accessor_data(d)[scope.var_color]);
       }
     }]
   }];
