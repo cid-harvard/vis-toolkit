@@ -50,12 +50,25 @@ jsdom.env({
 
     d3.select("#viz").call(visualization);
 
+    test('we have 3 more transactions (aggregated values)', function (t) {
+
+      t.plan(1);
+      t.equal(visualization.params().new_data.length, data.length + 3);
+
+    });
+
     test('we should have 3 pie charts', function (t) {
 
       t.plan(1);
       t.equal(d3.select("#viz").selectAll('.piechart')[0].length, 3);
 
     });
+
+    // Position of pie charts (e.g. position of aggregated points)
+    // Number of wedges for each pie chart
+    // Time changes
+    // Filter changes
+    // Un-aggregate should remove the pie charts
 
   }
 });
