@@ -61,8 +61,6 @@
       return d;
     });
 
-    console.log("VNEW", vars.new_data)
-
     vars.projection = d3.geo.equirectangular()
                     .scale(100);
 
