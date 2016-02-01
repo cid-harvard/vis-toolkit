@@ -53,9 +53,10 @@ d3.csv("../../vis-toolkit-datasets/data/atlas_eci_rankings_2004_2014.csv", funct
       y_text: "ECI Rank",
       var_y: "rank_eci",
       var_x: 'year',
+      x_format: function(d) { return d; },
       y_invert: true,
       time: {
-        parse: d3.time.format("%Y").parse,
+        parse: function(d) { return d; },
         var_time: 'year',
         current_time: '2014',
         filter_interval: [2004, 2014]

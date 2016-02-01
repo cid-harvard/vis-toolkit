@@ -35,11 +35,13 @@ d3.csv("../../vis-toolkit-datasets/data/stocks.csv", function(error, data) {
     var_text: "symbol",
     var_y: 'price',
     var_x: 'date',
+    x_tick: 10,
+    x_tickSize: 100,
+    x_format: function(d) { return d; },
     time: {
       parse: d3.time.format("%b %Y").parse,
       var_time: 'date',
-      current_time: 'Jan 2000',
-      //filter: ['Jan 2000', 'Feb 2000']
+      current_time: 'Jan 2000'
     },
     selection: ["MSFT"],
     highlight: "MSFT",
