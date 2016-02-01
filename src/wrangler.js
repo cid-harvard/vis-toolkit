@@ -65,6 +65,11 @@
       vars.time.current_time = vars.time.current_time(vars.data);
     }
 
+    // In case the current_time is set dynamically
+    if(typeof vars.time.parse === "undefined") {
+      vars.time.parse = function(d) { return d; }
+    }
+
     // Calculate vars.new_data which should contain two things
     // 1/ The list of all items (e.g. countries, products)
     // 2/ The metadata for each items
