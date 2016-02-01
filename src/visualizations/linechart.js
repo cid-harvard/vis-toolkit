@@ -3,7 +3,10 @@ vars.default_params["linechart"] = function(scope) {
   var params = {};
 
   params.accessor_values = function(d) { return d.values; };
-  params.accessor_data = function(d) { return d; };
+
+  params.accessor_data = function(d) {
+    return d.values[vars.time.current_time];
+  };
 
   params.x_scale = [{
     func: d3.scale.linear()
