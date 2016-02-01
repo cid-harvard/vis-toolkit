@@ -64,14 +64,14 @@ d3.json("../../vis-toolkit-datasets/data/partners_usa_2012_csay.json", function(
     return d * (color_domain[1] - color_domain[0])/5;
   });
 
-  var width = 400
+  var width = 500
   var format = d3.format(".1f");
 
   var legend = vistk.viz()
         .params({
           dev: true,
-          height: 100,
-          width: 600,
+          height: 60,
+          width: 700,
           margin: {top: 0, right: 100, bottom: 0, left: 50},
           type: 'ordinal_horizontal',
           data: colors20c,
