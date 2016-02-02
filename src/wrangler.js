@@ -292,7 +292,11 @@
             d[vars.var_x] = leaves[0].values[time][vars.var_x];
             d[vars.var_y] = leaves[0].values[time][vars.var_y];
             d[vars.var_r] = leaves[0].values[time][vars.var_r];
-            d[vars.var_id] = leaves[0].values[time][vars.var_id];
+            d[vars.var_id] = 'agg_' + leaves[0].values[time][vars.var_id];
+
+            d[vars.var_color] = leaves[0].values[time][vars.var_color];
+            d[vars.var_size] = leaves[0].values[time][vars.var_size];
+            d[vars.var_text] = leaves[0].values[time][vars.var_text];
 
             // Time var
             d[vars.time.var_time] = leaves[0].values[time][vars.time.var_time];
@@ -318,6 +322,8 @@
           });
 
           utils.init_item(aggregation);
+
+          // Set internal attributes specific to aggregate + force redraw
           aggregation.__aggregated = true;
           aggregation.__redraw = true;
 
