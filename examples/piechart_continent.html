@@ -1,0 +1,59 @@
+<!doctype html>
+<meta charset="utf-8">
+<script src="../js/d3.js"></script>
+<script src="../build/vistk.js"></script>
+<link href="../css/vistk.css" rel="stylesheet">
+<body>
+<div id="viz"></div>
+<script>
+
+d3.json("../../vis-toolkit-datasets/data/diversification_ubiquity_hs4_1995_2012.json", function(error, countries) {
+
+ var flat_years = vistk.utils.flatten_years(countries);
+
+  visualization = vistk.viz()
+    .params({
+      type: 'piechart',
+      width: 600,
+      heigh: 200,
+      margin: {top: 10, right: 10, bottom: 30, left: 30},
+      container: '#viz',
+      data: flat_years,
+      var_id: 'name',
+      var_group: 'continent',
+      var_color: 'continent',
+      var_r: 'nb_products',
+      var_x: function(vars) { return vars.width/2; },
+      var_y: function(vars) { return vars.height/2; },
+      var_share: "nb_products",
+      var_radius: "nb_products",
+      var_text: "name",
+      items: [{
+        marks: [{
+          var_mark: '__aggregated',
+          type: d3.scale.ordinal().domain([true, false]).range(["arc", "none"]),
+          var_share: 'nb_products',
+          fill: function(d, i, vars) {
+            return vars.color(vars.accessor_data(d)[vars.var_color]);
+          }
+        }]
+      }],
+      time: {
+        var_time: "year",
+        current_time: 1995,
+        parse: function(d) { return d; }
+      },
+      set: {
+        __aggregated: true
+      },
+      ui: {
+        default: true,
+        options: ["country", "continent"]
+      }
+    });
+
+  d3.select("#viz").call(visualization);
+
+});
+
+</script>
