@@ -11,7 +11,11 @@ d3.json("../../vis-toolkit-datasets/data/diversification_ubiquity_hs4_1995_2012.
 
 // [{"name": "Angola", "name_2char": "ao", "country_id": 4, "longitude": 13.242, "years": [{"avg_products": 61, "nb_products": 5, "year": 1995}
 
-  flat_years = vistk.utils.flatten_years(countries);
+  var flat_years = vistk.utils.flatten_years(countries);
+
+  flat_years.forEach(function(d) {
+    d.cutoff = d.nb_products > 5 ? 1: 0;
+  })
 
   visualization = vistk.viz()
       .params({

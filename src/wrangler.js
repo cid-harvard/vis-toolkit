@@ -292,7 +292,6 @@
             d[vars.var_x] = leaves[0].values[time][vars.var_x];
             d[vars.var_y] = leaves[0].values[time][vars.var_y];
             d[vars.var_r] = leaves[0].values[time][vars.var_r];
-            d[vars.var_id] = 'agg_' + leaves[0].values[time][vars.var_id];
 
             d[vars.var_color] = leaves[0].values[time][vars.var_color];
             d[vars.var_size] = leaves[0].values[time][vars.var_size];
@@ -300,6 +299,9 @@
 
             // Time var
             d[vars.time.var_time] = leaves[0].values[time][vars.time.var_time];
+
+            // Should stay at the bottom to make sure it's not overriden
+            d[vars.var_id] = 'agg_' + leaves[0].values[time][vars.var_id];
 
             aggregation.values[time] = d;
 

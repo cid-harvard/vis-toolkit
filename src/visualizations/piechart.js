@@ -2,6 +2,9 @@ vars.default_params['piechart'] = function(scope) {
 
   var params = {};
 
+  scope.radius_min = 20;
+  scope.radius_max = 100;
+
   if(vars.init) {
 
     scope.pie = d3.layout.pie().value(function(d) {
@@ -17,6 +20,7 @@ vars.default_params['piechart'] = function(scope) {
       d[scope.var_y] = d.data[scope.var_y];
       d[scope.var_group] = d.data[scope.var_group];
       d[scope.var_share] = d.data[scope.var_share];
+      d.__aggregated = d.data.__aggregated;
     });
 
     scope.new_data.forEach(function(d) { d.__redraw = true; });
