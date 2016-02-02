@@ -548,7 +548,11 @@
 
               var r_scale = d3.scale.linear()
                 .range([vars.radius_min, vars.radius_max*20])
-                .domain(d3.extent(vars.new_data, function(d) { return vars.accessor_data(d)[vars.var_r]; }))
+                .domain(d3.extent(vars.new_data, function(d) {
+                  return vars.accessor_data(d)[vars.var_r];
+                }))
+
+
 
               return r_scale(vars.accessor_data(d)[vars.var_r]);
             }
@@ -851,12 +855,41 @@
 
         // WIP
         // Temporary placeholder for pies
-        d3.select(that).append('circle').attr('r', 10)
+        //d3.select(that).append('circle').attr('r', 10)
 
-        // Create the new context
-        // Provide data model
-        // Call the chart drawing function:
-        // d3.select(that).call(utils.draw_chart, vars, [d]);
+        vars.type = 'piechart';
+        var scope = vars.default_params['piechart'](vars);
+
+        var this_data = vars.new_data.filter(function(e) {
+          return e[vars.var_group] === d[vars.var_group] && e.data.__aggregated !== true;
+        })
+
+        console.log("THIS DATA", this_data)
+
+        this_data.forEach(function(d) {
+          d.value = 1;
+          d.values[vars.time.curren_time] = 1;
+        })
+
+        vars2 = vistk.utils.merge(vars, scope);
+        // vars2.var_x = function() { return 0; };
+        // vars2.var_y = function() { return 0; };
+//
+        vars2.x_scale = [{
+          func: d3.scale.linear()
+                  .range([scope.width/2, scope.width/2])
+        }];
+
+        vars2.y_scale = [{
+          func: d3.scale.linear()
+                  .range([scope.height/2, scope.height/2])
+        }];
+
+        vars2.var_r = undefined;
+
+
+        d3.select(that).call(utils.draw_chart, vars2, this_data);
+
 
         break;
 
