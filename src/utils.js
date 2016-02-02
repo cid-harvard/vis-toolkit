@@ -73,6 +73,8 @@
       console.log("[utils.draw_mark]", params.type)
     }
 
+
+
     selection.each(function(d, i) {
 
       // Skip the drawing if __redraw flag is false
@@ -547,12 +549,10 @@
             } else {
 
               var r_scale = d3.scale.linear()
-                .range([vars.radius_min, vars.radius_max*20])
+                .range([vars.radius_min, vars.radius_max])
                 .domain(d3.extent(vars.new_data, function(d) {
                   return vars.accessor_data(d)[vars.var_r];
                 }))
-
-
 
               return r_scale(vars.accessor_data(d)[vars.var_r]);
             }
@@ -853,43 +853,60 @@
 
         case "piechart":
 
-        // WIP
         // Temporary placeholder for pies
-        //d3.select(that).append('circle').attr('r', 10)
+        // d3.select(that).append('circle').attr('r', 10)
 
+        // Create a custom configuration for pie charts
         vars.type = 'piechart';
+
         var scope = vars.default_params['piechart'](vars);
 
+        // Filter dataset to keep non-aggregated data
         var this_data = vars.new_data.filter(function(e) {
           return e[vars.var_group] === d[vars.var_group] && e.data.__aggregated !== true;
         })
 
-        console.log("THIS DATA", this_data)
+        // Re-generate the pie layout
+        scope.pie = d3.layout.pie().value(function(d) {
+          return d[vars.var_share];
+        });
+
+        this_data = scope.pie(this_data);
 
         this_data.forEach(function(d) {
-          d.value = 1;
-          d.values[vars.time.curren_time] = 1;
-        })
+          d.values = d.data.values;
+          d[vars.var_id] = d.data[vars.var_id];
+          d[vars.var_x] = d.data[vars.var_x];
+          d[vars.var_y] = d.data[vars.var_y];
+          d[vars.var_group] = d.data[vars.var_group];
+          d[vars.var_share] = d.data[vars.var_share];
+          d[vars.var_r] = d.data[vars.var_r];
+        });
+
+        this_data.forEach(function(d) { d.__redraw = true; });
 
         vars2 = vistk.utils.merge(vars, scope);
-        // vars2.var_x = function() { return 0; };
-        // vars2.var_y = function() { return 0; };
-//
+
         vars2.x_scale = [{
           func: d3.scale.linear()
-                  .range([scope.width/2, scope.width/2])
+                  .range([0, 0])
         }];
 
         vars2.y_scale = [{
           func: d3.scale.linear()
-                  .range([scope.height/2, scope.height/2])
+                  .range([0, 0])
         }];
 
-        vars2.var_r = undefined;
+        vars2.r_scale = d3.scale.linear()
+                    .range([0, vars2.width/6])
+                    .domain([0, d3.max(this_data, function(d) {
+                      return vars2.accessor_data(d)[vars2.var_share];
+                    })]);
 
+        vars2.radius_min = 50;
+        vars2.radius_max = 50;
 
         d3.select(that).call(utils.draw_chart, vars2, this_data);
-
 
         break;
 
@@ -915,7 +932,9 @@
 
                   var r_scale = d3.scale.sqrt()
                     .range([vars.radius_min, vars.radius_max])
-                    .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_r]; }))
+                    .domain(d3.extent(vars.new_data, function(d) {
+                      return d[vars.var_r];
+                    }))
 
                   return r_scale(d[vars.var_r]);
                 }
@@ -1208,7 +1227,9 @@
                 if(vars.init) {
 
                   gItems_enter
-                      .filter(function(d, i) { return params.filter(d, i, vars); })
+                      .filter(function(d, i) {
+                        return params.filter(d, i, vars);
+                      })
                       .filter(utils.filters.redraw_only)
                       .call(utils.draw_mark, params, vars);
 
