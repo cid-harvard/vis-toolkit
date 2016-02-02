@@ -15,6 +15,8 @@ vars.default_params['piechart'] = function(scope) {
       d[scope.var_id] = d.data[scope.var_id];
       d[scope.var_x] = d.data[scope.var_x];
       d[scope.var_y] = d.data[scope.var_y];
+      d[scope.var_group] = d.data[scope.var_group];
+      d[scope.var_share] = d.data[scope.var_share];
     });
 
     scope.new_data.forEach(function(d) { d.__redraw = true; });
