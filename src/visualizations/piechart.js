@@ -5,14 +5,32 @@ vars.default_params['piechart'] = function(scope) {
   scope.radius_min = 20;
   scope.radius_max = 100;
 
+
+
   if(vars.init) {
 
     scope.pie = d3.layout.pie().value(function(d) {
       return d[scope.var_share];
     })
-    .sort(null); // Disable sorting for pie charts
 
-    scope.new_data = scope.pie(scope.new_data);
+    if(typeof scope.var_sort === 'undefined') {
+      scope.pie.sort(null);
+    } else {
+      scope.pie.sort(function(a,b) { return a[scope.var_sort] - b[scope.var_sort]; })
+    }
+
+
+
+    scope.new_data = scope.pie(scope.new_data.filter(function(d) {
+      return true;
+      //if(typeof visualization.params().set.__aggregated !== 'undefined' && visualization.params().set.__aggregated) {
+      //  console.log("HERE", d.__aggregated)
+      //  return d.__aggregated;
+      //} else {
+      //  return true;
+      //}
+
+    }));
 
     scope.new_data.forEach(function(d) {
       d.values = d.data.values;
@@ -24,7 +42,9 @@ vars.default_params['piechart'] = function(scope) {
       d.__aggregated = d.data.__aggregated;
     });
 
-    scope.new_data.forEach(function(d) { d.__redraw = true; });
+    scope.new_data.forEach(function(d) {
+      d.__redraw = true;
+    });
 
   }
 
