@@ -7,7 +7,12 @@
 <div id="viz"></div>
 <script>
 
-var data = [{id: 'A', value: 1}, {id: 'B', value: 1}];
+var data = [{id: 0, group: 'A', value: 1},
+            {id: 1, group: 'B', value: 1},
+            {id: 1, group: 'A', value: 1},
+            {id: 2, group: 'A', value: 1},
+            {id: 3, group: 'A', value: 1},
+            {id: 4, group: 'B', value: 1}];
 
 var visualization = vistk.viz()
     .params({
@@ -19,19 +24,30 @@ var visualization = vistk.viz()
       var_id: 'id',
       container: '#viz',
       var_color: 'id',
-      var_x: function(vars) { return vars.width/2; },
-      var_y: function(vars) { return vars.height/2; },
+      var_group: 'group',
+      var_x: function(d, i, vars) { return vars.width/2; },
+      var_y: function(d, i, vars) { return vars.height/2; },
       var_share: 'value',
+      duration: 0,
+      items: [{
+        marks: [{
+          var_mark: '__aggregated',
+          type: d3.scale.ordinal().domain([true, false]).range(["none", "arc"]),
+          fill: function(d, i, vars) {
+            return vars.color(vars.accessor_data(d)[vars.var_color]);
+          }
+        }]
+      }]
     });
 
 d3.select("#viz").call(visualization);
 
-function update(c) {
+function update(c, sign) {
 
   if(c === 'A') {
-    data[0].value++;
+    data[0].value += sign;
   } else {
-    data[1].value++;
+    data[1].value += sign;
   }
 
   visualization.params({data: data});
@@ -43,5 +59,7 @@ function update(c) {
 
 </script>
 
-<input type='button' value='A' onclick='update("A")'>
-<input type='button' value='B' onclick='update("B")'>
+<input type='button' value='+A' onclick='update("A", 1)'>
+<input type='button' value='-A' onclick='update("A", -1)'>
+<input type='button' value='+B' onclick='update("B", 1)'>
+<input type='button' value='-B' onclick='update("B", -1)'>

@@ -263,6 +263,10 @@
             return d[vars.var_r];
           });
 
+          aggregation[vars.var_share] = d3.sum(leaves, function(d) {
+            return d[vars.var_share];
+          });
+
           aggregation.values = [];
 
           // Assuming all the time values are present in all items

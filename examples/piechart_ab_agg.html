@@ -28,10 +28,11 @@ var visualization = vistk.viz()
       var_x: function(d, i, vars) { return vars.width/2; },
       var_y: function(d, i, vars) { return vars.height/2; },
       var_share: 'value',
+      duration: 0,
       items: [{
         marks: [{
           var_mark: '__aggregated',
-          type: d3.scale.ordinal().domain([true, false]).range(["none", "arc"]),
+          type: d3.scale.ordinal().domain([true, false]).range(['arc', 'none']),
           fill: function(d, i, vars) {
             return vars.color(vars.accessor_data(d)[vars.var_color]);
           }
