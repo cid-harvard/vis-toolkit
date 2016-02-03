@@ -741,7 +741,6 @@
               .classed("highlighted", function(e, j) { return e.__highlighted; })
               .classed("selected", function(e, j) { return e.__selected; })
               .transition().duration(vars.duration)
-           //   .style("stroke", params_stroke)
               .attr('d', function(e) {
                 return params["func"](d3.values(this_accessor_values(e)));
               });
@@ -1189,6 +1188,7 @@
               if(typeof item.enter !== "undefined") {
                 gItems_enter.call(item.enter, vars);
               } else {
+
                 gItems_enter.attr("transform", function(d, i) {
                   return "translate(" + vars.x_scale[0]["func"](accessor_data(d)[vars.var_x])
                     + ", " + vars.y_scale[0]["func"](accessor_data(d)[vars.var_y]) + ")";

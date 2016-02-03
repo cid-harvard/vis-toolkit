@@ -1,0 +1,67 @@
+<!doctype html>
+<meta charset="utf-8">
+<script src="../js/d3.js"></script>
+<script src="../build/vistk.js"></script>
+<link href="../css/vistk.css" rel="stylesheet">
+<body>
+<div id="viz"></div>
+<script>
+
+var data = [{id: 0, group: 'A', value: 1},
+            {id: 1, group: 'B', value: 1},
+            {id: 1, group: 'A', value: 1},
+            {id: 2, group: 'A', value: 1},
+            {id: 3, group: 'A', value: 1},
+            {id: 4, group: 'B', value: 1}];
+
+var visualization = vistk.viz()
+    .params({
+      type: 'piechart',
+      width: 600,
+      height: 400,
+      margin: {top: 10, right: 10, bottom: 30, left: 30},
+      data: data,
+      var_id: 'id',
+      container: '#viz',
+      var_color: 'id',
+      var_group: 'group',
+      var_x: function(d, i, vars) { return vars.width/2; },
+      var_y: function(d, i, vars) { return vars.height/2; },
+      var_share: 'value',
+      items: [{
+        marks: [{
+          var_mark: '__aggregated',
+          type: d3.scale.ordinal().domain([true, false]).range(["none", "arc"]),
+          fill: function(d, i, vars) {
+            return vars.color(vars.accessor_data(d)[vars.var_color]);
+          }
+        }]
+      }],
+      set: {
+        __aggregated: true
+      },
+    });
+
+d3.select("#viz").call(visualization);
+
+function update(c, sign) {
+
+  if(c === 'A') {
+    data[0].value += sign;
+  } else {
+    data[1].value += sign;
+  }
+
+  visualization.params({data: data});
+  visualization.params().init = true;
+  visualization.params().refresh = true;
+  d3.select("#viz").call(visualization);
+
+}
+
+</script>
+
+<input type='button' value='+A' onclick='update("A", 1)'>
+<input type='button' value='-A' onclick='update("A", -1)'>
+<input type='button' value='+B' onclick='update("B", 1)'>
+<input type='button' value='-B' onclick='update("B", -1)'>

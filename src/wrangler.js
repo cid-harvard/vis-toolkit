@@ -191,6 +191,7 @@
         v[vars.var_size] = d[vars.var_size];
         v[vars.var_text] = d[vars.var_text];
         v[vars.var_r] = d[vars.var_r];
+        v[vars.var_share] = d[vars.var_share];
         v[vars.var_id] = d[vars.var_id];
 
         // TODO: make sure there is no existing value for this time
@@ -280,6 +281,7 @@
             d[vars.var_y] = leaves[0].values[time][vars.var_y];
             d[vars.var_r] = leaves[0].values[time][vars.var_r];
 
+            d[vars.var_share] = leaves[0].values[time][vars.var_share];
             d[vars.var_color] = leaves[0].values[time][vars.var_color];
             d[vars.var_size] = leaves[0].values[time][vars.var_size];
             d[vars.var_text] = leaves[0].values[time][vars.var_text];
