@@ -9,7 +9,8 @@ vars.default_params['piechart'] = function(scope) {
 
     scope.pie = d3.layout.pie().value(function(d) {
       return d[scope.var_share];
-    });
+    })
+    .sort(null); // Disable sorting for pie charts
 
     scope.new_data = scope.pie(scope.new_data);
 
