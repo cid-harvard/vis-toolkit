@@ -73,8 +73,6 @@
       console.log("[utils.draw_mark]", params.type)
     }
 
-
-
     selection.each(function(d, i) {
 
       // Skip the drawing if __redraw flag is false
@@ -477,7 +475,7 @@
               .attr("transform", "translate(" +  params_translate + ")rotate(" + params_rotate + ")scale(" + params_scale + ")");
 
           if(typeof params.class !== "undefined") {
-            items_mark_tick.classed(params.class(vars.accessor_items(d)), true);
+            items_mark_tick.classed(params.classed(vars.accessor_items(d)), true);
           }
 
           items_mark_tick
@@ -642,8 +640,6 @@
           mark
               .classed("highlighted", function(d, i) { return d.__highlighted; })
               .classed("selected", function(d, i) { return d.__selected; })
-              //.attr("x1", function(d) { return -t[0] + vars.margin.left; })
-              //.attr("x2", function(d) { return vars.x_scale[0]["func"].range()[1] -100 + params_offset_right; })
               .attr("x1", function(d) { return -t[0]; })
               .attr("x2", function(d) { return vars.x_scale[0]["func"].range()[1] -t[0] - params_offset_right; })
               .attr("y1", function(d) { return params_offset_y; })
