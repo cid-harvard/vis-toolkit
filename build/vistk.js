@@ -96,6 +96,8 @@ vistk.viz = function() {
       console.log("[utils.draw_mark]", params.type)
     }
 
+
+
     selection.each(function(d, i) {
 
       // Skip the drawing if __redraw flag is false
@@ -566,12 +568,14 @@ vistk.viz = function() {
           var arc = d3.svg.arc().outerRadius(function(d) {
 
             if(typeof vars.var_r === "undefined") {
-              return vars.radius_max*20;
+              return vars.width / 6;
             } else {
 
               var r_scale = d3.scale.linear()
-                .range([vars.radius_min, vars.radius_max*20])
-                .domain(d3.extent(vars.new_data, function(d) { return vars.accessor_data(d)[vars.var_r]; }))
+                .range([vars.radius_min, vars.radius_max])
+                .domain(d3.extent(vars.new_data, function(d) {
+                  return vars.accessor_data(d)[vars.var_r];
+                }))
 
               return r_scale(vars.accessor_data(d)[vars.var_r]);
             }
@@ -870,6 +874,65 @@ vistk.viz = function() {
 
         break;
 
+        case "piechart":
+
+        // Temporary placeholder for pies
+        // d3.select(that).append('circle').attr('r', 10)
+
+        // Create a custom configuration for pie charts
+        vars.type = 'piechart';
+
+        var scope = vars.default_params['piechart'](vars);
+
+        // Filter dataset to keep non-aggregated data
+        var this_data = vars.new_data.filter(function(e) {
+          return e[vars.var_group] === d[vars.var_group] && e.data.__aggregated !== true;
+        })
+
+        // Re-generate the pie layout
+        scope.pie = d3.layout.pie().value(function(d) {
+          return d[vars.var_share];
+        });
+
+        this_data = scope.pie(this_data);
+
+        this_data.forEach(function(d) {
+          d.values = d.data.values;
+          d[vars.var_id] = d.data[vars.var_id];
+          d[vars.var_x] = d.data[vars.var_x];
+          d[vars.var_y] = d.data[vars.var_y];
+          d[vars.var_group] = d.data[vars.var_group];
+          d[vars.var_share] = d.data[vars.var_share];
+          d[vars.var_r] = d.data[vars.var_r];
+        });
+
+        this_data.forEach(function(d) { d.__redraw = true; });
+
+        vars2 = vistk.utils.merge(vars, scope);
+
+        vars2.x_scale = [{
+          func: d3.scale.linear()
+                  .range([0, 0])
+        }];
+
+        vars2.y_scale = [{
+          func: d3.scale.linear()
+                  .range([0, 0])
+        }];
+
+        vars2.r_scale = d3.scale.linear()
+                    .range([0, vars2.width/6])
+                    .domain([0, d3.max(this_data, function(d) {
+                      return vars2.accessor_data(d)[vars2.var_share];
+                    })]);
+
+        vars2.radius_min = 50;
+        vars2.radius_max = 50;
+
+        d3.select(that).call(utils.draw_chart, vars2, this_data);
+
+        break;
+
         case "circle":
         default:
 
@@ -892,7 +955,9 @@ vistk.viz = function() {
 
                   var r_scale = d3.scale.sqrt()
                     .range([vars.radius_min, vars.radius_max])
-                    .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_r]; }))
+                    .domain(d3.extent(vars.new_data, function(d) {
+                      return d[vars.var_r];
+                    }))
 
                   return r_scale(d[vars.var_r]);
                 }
@@ -1185,7 +1250,9 @@ vistk.viz = function() {
                 if(vars.init) {
 
                   gItems_enter
-                      .filter(function(d, i) { return params.filter(d, i, vars); })
+                      .filter(function(d, i) {
+                        return params.filter(d, i, vars);
+                      })
                       .filter(utils.filters.redraw_only)
                       .call(utils.draw_mark, params, vars);
 
@@ -2349,18 +2416,7 @@ vistk.viz = function() {
       }
    }
 
-
-    // 1 - Init and define default values [INIT]
-    // 2 - Duplicates the dataset [INIT]
-    // 3 - Mutate all_data with static metadata [INIT]
-    // Filter by time values
-    // Filter by attribute/ Selection
-    // Find unique values from dataset
-    // Remove missing data
-    // Aggregates the data [REFRESH]
-    // Sorts the data
-
-    // 1 - Init and define default parameters
+    // Init and define default parameters
     vars.items_data = [];
 
     // Duplicates the whole dataset
@@ -2372,7 +2428,6 @@ vistk.viz = function() {
     // Each item needs coordinates
     // 1/ In case we use functions for X/Y variables
     // 2/ Adds default attributes __var_x and __var_y if no coordinate exist
-
 
     if(typeof vars.var_x !== "string" && typeof vars.var_x === "function") {
 
@@ -2414,6 +2469,11 @@ vistk.viz = function() {
     // In case the current_time is set dynamically
     if(typeof vars.time.current_time === "function") {
       vars.time.current_time = vars.time.current_time(vars.data);
+    }
+
+    // In case the current_time is set dynamically
+    if(typeof vars.time.parse === "undefined") {
+      vars.time.parse = function(d) { return d; }
     }
 
     // Calculate vars.new_data which should contain two things
@@ -2482,7 +2542,11 @@ vistk.viz = function() {
       }
 
       // Find unique values for various parameters
-      vars.time.interval = d3.extent(vars.new_data, function(d) { return d[vars.time.var_time]; });
+      vars.time.interval = d3.extent(vars.new_data, function(d) {
+        return vars.time.parse(d[vars.time.var_time]);
+      });
+
+      // Note: none-parsed time values
       vars.time.points = vistk.utils.find_unique_values(vars.new_data, vars.time.var_time);
 
       // In case no temporal values, change the accessor
@@ -2538,7 +2602,6 @@ vistk.viz = function() {
         }
 
         var v = {};
-        v[vars.var_id] = d[vars.var_id];
         v[vars.time.var_time] = d[vars.time.var_time];
         v[vars.var_y] = d[vars.var_y];
         v[vars.var_x] = d[vars.var_x];
@@ -2546,6 +2609,7 @@ vistk.viz = function() {
         v[vars.var_size] = d[vars.var_size];
         v[vars.var_text] = d[vars.var_text];
         v[vars.var_r] = d[vars.var_r];
+        v[vars.var_id] = d[vars.var_id];
 
         // TODO: make sure there is no existing value for this time
         unique_data[index].values[d[vars.time.var_time]] = v;
@@ -2578,7 +2642,7 @@ vistk.viz = function() {
         console.log("[vars.aggregate]", vars.aggregate);
       }
 
-      // Do the nesting
+      // Do the nesting by var_group
       // Should make sure it works for a generc dataset
       // Also for time or none-time attributes
       nested_data = d3.nest()
@@ -2590,10 +2654,9 @@ vistk.viz = function() {
           // Generates a new dataset with aggregated data
           var aggregation = {};
 
-          aggregation[vars.var_id] = leaves[0][vars.var_group];
-
+          // Name and id values are
+          aggregation[vars.var_id] = 'agg_' + leaves[0][vars.var_group];
           aggregation[vars.var_text] = leaves[0][vars.var_group];
-
           aggregation[vars.var_group] = leaves[0][vars.var_group];
 
           // Quick fix in case var_x is an ordinal scale
@@ -2617,10 +2680,6 @@ vistk.viz = function() {
             return d[vars.var_r];
           });
 
-          aggregation.piescatter = [];
-          aggregation.piescatter[0] = {};
-          aggregation.piescatter[1] = {};
-
           aggregation.values = [];
 
           // Assuming all the time values are present in all items
@@ -2638,10 +2697,16 @@ vistk.viz = function() {
             d[vars.var_x] = leaves[0].values[time][vars.var_x];
             d[vars.var_y] = leaves[0].values[time][vars.var_y];
             d[vars.var_r] = leaves[0].values[time][vars.var_r];
-            d[vars.var_id] = leaves[0].values[time][vars.var_id];
+
+            d[vars.var_color] = leaves[0].values[time][vars.var_color];
+            d[vars.var_size] = leaves[0].values[time][vars.var_size];
+            d[vars.var_text] = leaves[0].values[time][vars.var_text];
 
             // Time var
             d[vars.time.var_time] = leaves[0].values[time][vars.time.var_time];
+
+            // Should stay at the bottom to make sure it's not overriden
+            d[vars.var_id] = 'agg_' + leaves[0].values[time][vars.var_id];
 
             aggregation.values[time] = d;
 
@@ -2664,30 +2729,10 @@ vistk.viz = function() {
           });
 
           utils.init_item(aggregation);
+
+          // Set internal attributes specific to aggregate + force redraw
           aggregation.__aggregated = true;
           aggregation.__redraw = true;
-
-          if(typeof vars.share_cutoff != "undefined") {
-
-            aggregation.piescatter[0][vars.var_share] = d3.sum(leaves, function(d) {
-
-              if(vars.share_cutoff(d)) {
-                return 1;
-              } else {
-                return 0;
-              }
-            });
-
-            aggregation.piescatter[1][vars.var_share] = d3.sum(leaves, function(d) {
-
-              if(!vars.share_cutoff(d)) {
-                return 1;
-              } else {
-                return 0;
-              }
-            });
-
-          }
 
           vars.columns.forEach(function(c) {
 
@@ -3208,8 +3253,6 @@ vars.default_params['dotplot'] = function(scope) {
       return d;
     });
 
-    console.log("VNEW", vars.new_data)
-
     vars.projection = d3.geo.equirectangular()
                     .scale(100);
 
@@ -3313,9 +3356,6 @@ vars.default_params["grid"] = function(scope) {
   params.items = [{
     marks: [{
       type: "rect",
-    }, {
-      type: "text",
-      rotate: "-30"
     }]
   }];
 
@@ -3334,7 +3374,10 @@ vars.default_params["linechart"] = function(scope) {
   var params = {};
 
   params.accessor_values = function(d) { return d.values; };
-  params.accessor_items = function(d) { return d; };
+
+  params.accessor_data = function(d) {
+    return d.values[vars.time.current_time];
+  };
 
   params.x_scale = [{
     func: d3.scale.linear()
@@ -3354,9 +3397,10 @@ vars.default_params["linechart"] = function(scope) {
 
   params.items = [{
     marks: [{
-      type: "circle",
+      type: 'circle',
       fill: function(d) {
-        return vars.color(params.accessor_items(d)[vars.var_color]); }
+        return vars.color(params.accessor_data(d)[vars.var_color]);
+      }
     }, {
       var_mark: '__highlighted',
       type: d3.scale.ordinal().domain([true, false]).range(['text', 'none']),
@@ -3379,18 +3423,20 @@ vars.default_params["linechart"] = function(scope) {
     }
   }];
 
-
   params.connect = [{
     marks: [{
-      type: "path",
+      type: 'path',
       stroke: function(d) {
-        return vars.color(params.accessor_items(d)[vars.var_color]);
+        return vars.color(params.accessor_data(d)[vars.var_color]);
       },
       func: d3.svg.line()
            .interpolate(vars.interpolate)
-           .x(function(d) { return params.x_scale[0]["func"](d[vars.var_x]); })
-           .y(function(d) { return params.y_scale[0]["func"](d[vars.var_y]); }),
-      fill: "none"
+           .x(function(d) {
+             return params.x_scale[0]['func'](vars.time.parse(d[vars.var_x]));
+           })
+           .y(function(d) {
+             return params.y_scale[0]['func'](d[vars.var_y]);
+           })
     }]
   }];
 
@@ -3682,13 +3728,25 @@ vars.default_params['piechart'] = function(scope) {
 
   var params = {};
 
-  if(vars.refresh) {
+  scope.radius_min = 20;
+  scope.radius_max = 100;
 
-    scope.pie = d3.layout.pie().value(function(d) { return d[scope.var_share]; });
+  if(vars.init) {
+
+    scope.pie = d3.layout.pie().value(function(d) {
+      return d[scope.var_share];
+    });
+
     scope.new_data = scope.pie(scope.new_data);
 
     scope.new_data.forEach(function(d) {
       d.values = d.data.values;
+      d[scope.var_id] = d.data[scope.var_id];
+      d[scope.var_x] = d.data[scope.var_x];
+      d[scope.var_y] = d.data[scope.var_y];
+      d[scope.var_group] = d.data[scope.var_group];
+      d[scope.var_share] = d.data[scope.var_share];
+      d.__aggregated = d.data.__aggregated;
     });
 
     scope.new_data.forEach(function(d) { d.__redraw = true; });
@@ -3715,7 +3773,7 @@ vars.default_params['piechart'] = function(scope) {
     marks: [{
       type: 'arc',
       fill: function(d) {
-        return scope.color(scope.accessor_items(d)[scope.var_color]);
+        return scope.color(scope.accessor_data(d)[scope.var_color]);
       }
     }]
   }];
@@ -4199,7 +4257,9 @@ vars.default_params['scatterplot'] = function(scope) {
                     .domain(d3.extent(vars.new_data, function(d) {
                       return scope.accessor_data(d)[scope.var_r];
                     })),
-        fill: function(d) { return vars.color(vars.accessor_items(d)[scope.var_color]); }
+        fill: function(d) {
+          return vars.color(vars.accessor_data(d)[scope.var_color]);
+        }
       }, {
       var_mark: '__highlighted',
       type: d3.scale.ordinal().domain([true, false]).range(['text', 'none'])

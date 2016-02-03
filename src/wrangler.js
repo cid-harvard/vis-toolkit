@@ -1,15 +1,4 @@
-
-    // 1 - Init and define default values [INIT]
-    // 2 - Duplicates the dataset [INIT]
-    // 3 - Mutate all_data with static metadata [INIT]
-    // Filter by time values
-    // Filter by attribute/ Selection
-    // Find unique values from dataset
-    // Remove missing data
-    // Aggregates the data [REFRESH]
-    // Sorts the data
-
-    // 1 - Init and define default parameters
+    // Init and define default parameters
     vars.items_data = [];
 
     // Duplicates the whole dataset
@@ -21,7 +10,6 @@
     // Each item needs coordinates
     // 1/ In case we use functions for X/Y variables
     // 2/ Adds default attributes __var_x and __var_y if no coordinate exist
-
 
     if(typeof vars.var_x !== "string" && typeof vars.var_x === "function") {
 
@@ -196,7 +184,6 @@
         }
 
         var v = {};
-        v[vars.var_id] = d[vars.var_id];
         v[vars.time.var_time] = d[vars.time.var_time];
         v[vars.var_y] = d[vars.var_y];
         v[vars.var_x] = d[vars.var_x];
@@ -204,6 +191,7 @@
         v[vars.var_size] = d[vars.var_size];
         v[vars.var_text] = d[vars.var_text];
         v[vars.var_r] = d[vars.var_r];
+        v[vars.var_id] = d[vars.var_id];
 
         // TODO: make sure there is no existing value for this time
         unique_data[index].values[d[vars.time.var_time]] = v;
@@ -236,7 +224,7 @@
         console.log("[vars.aggregate]", vars.aggregate);
       }
 
-      // Do the nesting
+      // Do the nesting by var_group
       // Should make sure it works for a generc dataset
       // Also for time or none-time attributes
       nested_data = d3.nest()
@@ -248,10 +236,9 @@
           // Generates a new dataset with aggregated data
           var aggregation = {};
 
-          aggregation[vars.var_id] = leaves[0][vars.var_group];
-
+          // Name and id values are
+          aggregation[vars.var_id] = 'agg_' + leaves[0][vars.var_group];
           aggregation[vars.var_text] = leaves[0][vars.var_group];
-
           aggregation[vars.var_group] = leaves[0][vars.var_group];
 
           // Quick fix in case var_x is an ordinal scale
