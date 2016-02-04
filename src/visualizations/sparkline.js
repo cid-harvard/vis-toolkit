@@ -1,4 +1,4 @@
-vars.default_params["sparkline"] = function(scope) {
+vars.default_params['sparkline'] = function(scope) {
 
   var params = {};
 
@@ -11,35 +11,37 @@ vars.default_params["sparkline"] = function(scope) {
   params.y_scale = [{
     func: d3.scale.linear()
             .range([scope.margin.top, scope.height - scope.margin.top - scope.margin.bottom])
-            .domain(d3.extent(Array.prototype.concat.apply([], vars.new_data.map(function(d) {
+            .domain(d3.extent(Array.prototype.concat.apply([], scope.new_data.map(function(d) {
               return d3.values(d.values);
             })), function(d) {
-              return d[vars.var_y];
+              return d[scope.var_y];
             }))
   }];
 
   params.items = [{
     marks: [{
-      type: "circle",
-      rotate: "0",
+      type: 'circle',
     }, {
-      type: "text",
-      rotate: "0",
+      type: 'text',
+      rotate: '0',
       translate: [-20, 0],
-      text_anchor: "end"
+      text_anchor: 'end'
     }]
   }];
 
   params.connect = [{
     attr: scope.time.var_time,
     marks: [{
-      type: "path",
-      rotate: "0",
-      stroke: function(d) { return "black"; },
+      type: 'path',
+      stroke: function(d) { return 'black'; },
       func: d3.svg.line()
-           .interpolate(scope.interpolate)
-           .x(function(d) { return params.x_scale[0]["func"](d[scope.var_x]); })
-           .y(function(d) { return params.y_scale[0]["func"](d[scope.var_y]); }),
+            .interpolate(scope.interpolate)
+            .x(function(d) {
+              return params.x_scale[0]['func'](scope.time.parse(d[scope.var_x]));
+            })
+            .y(function(d) {
+              return params.y_scale[0]["func"](d[scope.var_y]);
+            }),
       fill: 'none'
     }]
   }];

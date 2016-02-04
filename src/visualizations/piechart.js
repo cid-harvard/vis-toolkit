@@ -21,7 +21,7 @@ vars.default_params['piechart'] = function(scope) {
 
     scope.new_data = scope.pie(scope.new_data.filter(function(d) {
       return true;
-      // WIP to ,ake sure we don't
+      // WIP to make sure we don't generate pie charts using aggregated values
       //if(typeof visualization.params().set.__aggregated !== 'undefined' && visualization.params().set.__aggregated) {
       //  return d.__aggregated;
       //} else {
