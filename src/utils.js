@@ -851,6 +851,10 @@
         // Temporary placeholder for pies
         // d3.select(that).append('circle').attr('r', 10)
 
+        if(typeof params.class !== "undefined") {
+          d3.select(that).classed(params.class, true);
+        }
+
         // Create a custom configuration for pie charts
         vars.type = 'piechart';
 

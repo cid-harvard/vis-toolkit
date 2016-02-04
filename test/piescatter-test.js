@@ -10,15 +10,15 @@ jsdom.env({
     var d3 = window.d3;
     var vistk = window.vistk;
 
-    var data = [{id: 'AA', x: 10, y: 20, group: 'A'},
-                {id: 'AB', x: 12, y: 22, group: 'A'},
-                {id: 'AC', x: 15, y: 22, group: 'A'},
-                {id: 'BA', x: 22, y: 51, group: 'B'},
-                {id: 'BB', x: 22, y: 55, group: 'B'},
-                {id: 'BC', x: 24, y: 51, group: 'B'},
-                {id: 'CA', x: 20, y: 20, group: 'C'},
-                {id: 'CB', x: 22, y: 20, group: 'C'},
-                {id: 'CC', x: 20, y: 25, group: 'C'}
+    var data = [{id: 'AA', x: 10, y: 20, group: 'A', value: 10},
+                {id: 'AB', x: 12, y: 22, group: 'A', value: 10},
+                {id: 'AC', x: 15, y: 22, group: 'A', value: 10},
+                {id: 'BA', x: 22, y: 51, group: 'B', value: 10},
+                {id: 'BB', x: 22, y: 55, group: 'B', value: 10},
+                {id: 'BC', x: 24, y: 51, group: 'B', value: 10},
+                {id: 'CA', x: 20, y: 20, group: 'C', value: 10},
+                {id: 'CB', x: 22, y: 20, group: 'C', value: 10},
+                {id: 'CC', x: 20, y: 25, group: 'C', value: 10}
                ];
 
     var  visualization = vistk.viz()
@@ -34,17 +34,23 @@ jsdom.env({
           var_x: 'x',
           var_y: 'y',
           var_r: 'x',
+          var_share: 'value',
           items: [{
             marks: [{
               var_mark: '__aggregated',
               type: d3.scale.ordinal().domain([true, false]).range(["piechart", "none"]),
+              var_share: 'value',
+              class: 'piechart'
             }, {
               type: d3.scale.ordinal().domain([true, false]).range(["text", "none"]),
-              rotate: "-30"
             }]
           }],
           set: {
             __aggregated: true
+          },
+          ui: {
+            default: true,
+            options: ['community_name', 'product']
           }
         });
 
