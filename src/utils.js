@@ -81,7 +81,7 @@
       }
 
       // Default id for marks
-      var mark_id = params._mark_id + "_" + i;
+      var mark_id = params._mark_id;
 
       // params_type is the list of marks to be drawn
       // it is either static (string) or can be computer
@@ -862,7 +862,7 @@
 
         // Filter dataset to keep non-aggregated data
         var this_data = vars.new_data.filter(function(e) {
-          return e[vars.var_group] === d[vars.var_group] && e.data.__aggregated !== true;
+          return e[vars.var_group] === d[vars.var_group] && typeof e.data !== 'undefined' &&  e.data.__aggregated !== true;
         })
 
         // Re-generate the pie layout
@@ -920,7 +920,7 @@
               .attr("cx", params_translate[0])
               .attr("cy", params_translate[1])
               .attr("r", function(d) {
-
+                console.log("ENTER", mark_id)
                 if(typeof vars.var_r === "undefined") {
                   if(typeof params.radius !== "undefined") {
                     return params.radius;
@@ -1261,8 +1261,7 @@
 
                 var items = vars.svg.selectAll(mark_type + "." + mark_id)
                     .data(vars.new_data, function(d, i) {
-                      d.__mark_id = mark_id + '_' + i;
-                      return d.__mark_id;
+                      return d.__index;
                     });
 
                 // Z-index?

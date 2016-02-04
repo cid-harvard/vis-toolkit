@@ -63,12 +63,11 @@
     // 2/ The metadata for each items
     if(vars.init || vars.refresh) {
 
+      // Duplicate data to prevent mutation
+      vars.new_data = JSON.parse(JSON.stringify(vars.all_data));
+
       // Creates default ids `__id` and `__value` for dataset without any id
       if(typeof vars.var_id === 'undefined') {
-
-        if(vars.new_data === null) {
-          vars.new_data = vars.all_data;
-        }
 
         vars.new_data = vars.new_data.map(function(d, i) {
 
@@ -89,11 +88,6 @@
         if(typeof vars.var_text === 'undefined') {
           vars.var_text = '__id';
         }
-
-      } else {
-
-        // Duplicate data to prevent mutation
-        vars.new_data = JSON.parse(JSON.stringify(vars.all_data));
 
       }
 
@@ -148,6 +142,7 @@
 
         var index = -1;
 
+        // Creates items by grouping data
         if(typeof lookup_index[d[vars.var_id]] === 'undefined') {
 
           index = lookup_size;
@@ -295,6 +290,8 @@
 
             // Should stay at the bottom to make sure it's not overriden
             d[vars.var_id] = 'agg_' + leaves[0].values[time][vars.var_id];
+
+            d.__index = 'agg_' + leaves[0].values[time].__index;
 
             aggregation.values[time] = d;
 
