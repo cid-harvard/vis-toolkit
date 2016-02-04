@@ -71,7 +71,29 @@ jsdom.env({
     });
 
     // Position of pie charts (e.g. position of aggregated points)
-    // Number of wedges for each pie chart
+    test('we should have 3 pie charts', function (t) {
+
+      t.plan(1);
+
+      var pie1_coords = [662.6666666666667, 343.3333333333333];
+      var pie2_coords = [735.6666666666666, 36.66666666666665];
+      var pie3_coords = [358.5, 346.6666666666667];
+
+      var pie1_node = d3.select(d3.select("#viz").selectAll('.piechart')[0][0]);
+      var pie1 = d3.transform(pie1_node.attr('transform'));
+
+      var pie2_node = d3.select(d3.select("#viz").selectAll('.piechart')[0][1]);
+      var pie3 = d3.transform(pie2_node.attr('transform'));
+
+      var pie3_node = d3.select(d3.select("#viz").selectAll('.piechart')[0][2]);
+      var pie3 = d3.transform(pie3_node.attr('transform'));
+
+      t.equal(pie1.translate, pie1_coords);
+      t.equal(pie2.translate, pie2_coords);
+      t.equal(pie3.translate, pie3_coords);
+
+    });
+
     // Time changes
     // Filter changes
     // Un-aggregate should remove the pie charts
