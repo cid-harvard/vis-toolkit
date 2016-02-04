@@ -509,6 +509,7 @@
 
               if(typeof params.fill !== "undefined") {
 
+
                 if(typeof params.fill === "function") {
 
                   items_mark_shape.style("fill", params.fill(d[vars.var_color]));
@@ -743,7 +744,9 @@
               .transition().duration(vars.duration)
               .attr('d', function(e) {
                 return params["func"](d3.values(this_accessor_values(e)));
-              });
+              })
+              .style("fill", params_fill)
+              .style("stroke", params_stroke);
 
         break;
 

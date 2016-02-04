@@ -58,6 +58,9 @@ vars.default_params["linechart"] = function(scope) {
       stroke: function(d) {
         return vars.color(params.accessor_data(d)[vars.var_color]);
       },
+      fill: function(d) {
+        return 'none';
+      },
       func: d3.svg.line()
            .interpolate(vars.interpolate)
            .x(function(d) {
