@@ -5,8 +5,6 @@ vars.default_params['piechart'] = function(scope) {
   scope.radius_min = 20;
   scope.radius_max = 100;
 
-
-
   if(vars.init) {
 
     scope.pie = d3.layout.pie().value(function(d) {
@@ -16,15 +14,15 @@ vars.default_params['piechart'] = function(scope) {
     if(typeof scope.var_sort === 'undefined') {
       scope.pie.sort(null);
     } else {
-      scope.pie.sort(function(a,b) { return a[scope.var_sort] - b[scope.var_sort]; })
+      scope.pie.sort(function(a,b) {
+        return a[scope.var_sort] - b[scope.var_sort];
+      });
     }
-
-
 
     scope.new_data = scope.pie(scope.new_data.filter(function(d) {
       return true;
+      // WIP to ,ake sure we don't
       //if(typeof visualization.params().set.__aggregated !== 'undefined' && visualization.params().set.__aggregated) {
-      //  console.log("HERE", d.__aggregated)
       //  return d.__aggregated;
       //} else {
       //  return true;
@@ -32,6 +30,7 @@ vars.default_params['piechart'] = function(scope) {
 
     }));
 
+    // Make sure the .data are available for the items
     scope.new_data.forEach(function(d) {
       d.values = d.data.values;
       d[scope.var_id] = d.data[scope.var_id];
@@ -40,19 +39,20 @@ vars.default_params['piechart'] = function(scope) {
       d[scope.var_group] = d.data[scope.var_group];
       d[scope.var_share] = d.data[scope.var_share];
       d.__aggregated = d.data.__aggregated;
-    });
 
-    scope.new_data.forEach(function(d) {
+    // Force redrawing items
       d.__redraw = true;
     });
 
   }
 
+  // Identity scale
   params.x_scale = [{
     func: d3.scale.linear()
             .range([scope.width/2, scope.width/2])
   }];
 
+  // Identity scale
   params.y_scale = [{
     func: d3.scale.linear()
             .range([scope.height/2, scope.height/2])
