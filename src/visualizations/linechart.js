@@ -71,7 +71,7 @@ vars.default_params["linechart"] = function(scope) {
 
   params.x_ticks = vars.time.points.length;
   params.x_tickValues = null;
-  params.x_axis_orient = "top";
+  params.x_axis_orient = 'top';
   params.x_axis_show = true;
   params.x_grid_show = true;
   params.x_text = false;

@@ -121,6 +121,9 @@
       depth_rect: 2
     },
 
+    // STACKED
+    offset: null,
+
     radius: 5,
     radius_min: 2,
     radius_max: 10,
