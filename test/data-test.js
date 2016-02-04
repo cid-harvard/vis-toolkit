@@ -66,5 +66,25 @@ jsdom.env({
 
     });
 
+    test('changing the whole dataset should be handled', function (t) {
+
+        t.plan(2);
+        var data1 = ['A', 'B', 'C'];
+        var data2 = ['D', 'E', 'F'];
+
+        var visualization = vistk.viz().params({data: data1});
+        d3.select("#viz").call(visualization);
+
+        // Default ids
+        t.equal(visualization.params().new_data[0].__id, 0);
+
+        visualization.params({data: data2});
+        d3.select("#viz").call(visualization);
+
+        // New default ids
+        t.equal(visualization.params().new_data[0].__id, data1.length);
+
+    });
+
   }
 });

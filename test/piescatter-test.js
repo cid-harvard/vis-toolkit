@@ -70,8 +70,7 @@ jsdom.env({
 
     });
 
-    // Position of pie charts (e.g. position of aggregated points)
-    test('we should have 3 pie charts', function (t) {
+    test('pie charts should have a specific position', function (t) {
 
       t.plan(1);
 
@@ -91,6 +90,17 @@ jsdom.env({
       t.equal(pie1.translate, pie1_coords);
       t.equal(pie2.translate, pie2_coords);
       t.equal(pie3.translate, pie3_coords);
+
+    });
+
+    // Position of pie charts (e.g. position of aggregated points)
+    test('we should have 3 wedges in each pie charts', function (t) {
+
+      // Number of wedges for each pie chart
+      t.plan(3);
+      t.equal(d3.select(d3.select("#viz").selectAll('.piechart')[0][0]).selectAll('path')[0].length, 3);
+      t.equal(d3.select(d3.select("#viz").selectAll('.piechart')[0][1]).selectAll('path')[0].length, 3);
+      t.equal(d3.select(d3.select("#viz").selectAll('.piechart')[0][2]).selectAll('path')[0].length, 3);
 
     });
 

@@ -95,27 +95,51 @@ jsdom.env({
 
     });
 
+    var data = [{__id: 'A'}, {__id: 'B'}, {__id: 'C'}];
+
+    var visualization = vistk.viz()
+        .params({
+          dev: true,
+          data: data,
+          width: 800,
+          height: 500,
+          type: 'dotplot',
+          var_x: '__id',
+          var_y: function() { return this.height/2; },
+          var_text: '__value'
+        });
+
+
+    d3.select("#viz").call(visualization);
+
+    test('check if circle marks are created', function (t) {
+
+        t.plan(1);
+        t.equal(d3.select("#viz").selectAll('circle')[0].length, data.length);
+
+    });
+
+    // Expected SVG (without axis and background label)
+    // <svg width="800" height="500" style="overflow: hidden; z-index: 0;">
+    //     <g transform="translate(0,0)rotate(0)" style="visibility: visible;">
+    //         <g class="mark__group_0 mark__group" transform="translate(800, 250)">
+    //             <circle class="items_0_0 items__mark__circle" cx="0" cy="0" r="5" transform="translate(0,0)rotate(0)"></circle>
+    //             <text class="items__mark__text items_0_1" x="0" y="0" dy=".35em" transform="translate(0,0)rotate(-90)" style="text-anchor: start;"></text>
+    //         </g>
+    //         <g class="mark__group_0 mark__group" transform="translate(400, 250)">
+    //             <circle class="items_0_0 items__mark__circle" cx="0" cy="0" r="5" transform="translate(0,0)rotate(0)"></circle>
+    //             <text class="items__mark__text items_0_1" x="0" y="0" dy=".35em" transform="translate(0,0)rotate(-90)" style="text-anchor: start;"></text>
+    //             </g>
+    //         <g class="mark__group_0 mark__group" transform="translate(0, 250)">
+    //             <circle class="items_0_0 items__mark__circle" cx="0" cy="0" r="5" transform="translate(0,0)rotate(0)"></circle>
+    //             <text class="items__mark__text items_0_1" x="0" y="0" dy=".35em" transform="translate(0,0)rotate(-90)" style="text-anchor: start;"></text>
+    //         </g>
+    //     </g>
+    // </svg>
     test('check if marks are created properly', function (t) {
 
         t.plan(1);
-        var data = ['A', 'B', 'C'];
-
-        var visualization = vistk.viz()
-            .params({
-              type: 'ordinal_horizontal',
-              data: data,
-              var_x: '__id',
-              var_y: '__id',
-              items: [{
-                marks: [{
-                  type: "text",
-                 }]
-              }]
-            });
-
-        d3.select("#viz").call(visualization);
-
-        t.equal(d3.select("#viz").selectAll('text')[0].length, data.length);
+        t.equal(d3.select("#viz").selectAll('circle')[0].length, data.length);
 
     });
 
