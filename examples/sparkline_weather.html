@@ -8,9 +8,8 @@
 <div id="viz"></div>
 <script>
 
-d3.jsonp('http://api.wunderground.com/api/9826b4cafb59f38d/history_20140912/q/UK/Edinburgh.json?callback={callback}', function (data) {
+d3.jsonp('http://api.wunderground.com/api/9826b4cafb59f38d/history_20140912/q/UK/Edinburgh.json?callback={}', function (data) { // ?callback={callback}
 
-  //
   // date: Object
   // hour: "00"
   // mday: "12"
@@ -18,18 +17,19 @@ d3.jsonp('http://api.wunderground.com/api/9826b4cafb59f38d/history_20140912/q/UK
   // mon: "09"
   // pretty: "12:20 AM BST on September 12, 2014"
   // tzname: "Europe/London"
-  year: "2014"
+  // year: "2014"
 
   // Data pre-processing
   data.history.observations.forEach(function(d, i) {
 
     d.city = "Edinburgh";
     d.tempi = +d.tempi;
-    d.time = i;
+    //d.time = d.mon + ' ' + d.mday + ' ' + d.hour + ' ' + d.min;
 
   });
 
 console.log("ddd", data.history.observations)
+
   visualization = vistk.viz()
     .params({
       type: "linechart",
