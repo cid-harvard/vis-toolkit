@@ -42,7 +42,7 @@ d3.csv("../../vis-toolkit-datasets/data/atlas_eci_rankings_2004_2014.csv", funct
           } else {
             text_change = ' = ' + change + '';
           }
-          return text_change + ' ' + d['name']; // + ' ' + d.values['2014']['rank_eci'];
+          return text_change + ' ' + d['name'];
         },
         stroke: function(d) {
           var scale = d3.scale.linear()
@@ -52,10 +52,7 @@ d3.csv("../../vis-toolkit-datasets/data/atlas_eci_rankings_2004_2014.csv", funct
           var change_bin = change > 0 ? 1 : change < 0 ? -1: 0;
           return scale(change_bin);
         },
-        translate: [5, 0],
-     // }, {
-     //   type: "triangle",
-     //   rotate: 0,
+        translate: [5, 0]
       }]
     }, {
       attr: "left_label",
@@ -69,7 +66,6 @@ d3.csv("../../vis-toolkit-datasets/data/atlas_eci_rankings_2004_2014.csv", funct
         text_anchor: "end",
         translate: [-20, 0],
         text: function(d) {
-          // return d['name'] + '  ' + d.values['2004']['rank_eci'];
           return d.values['2004']['rank_eci'];
         },
         stroke: function(d) {
@@ -103,7 +99,7 @@ d3.csv("../../vis-toolkit-datasets/data/atlas_eci_rankings_2004_2014.csv", funct
       }]
     }],
     time: {
-      parse: d3.time.format("%Y").parse,
+      parse: function(d) { return d; },
       var_time: 'year',
       current_time: '2014',
       filter: ['2004', '2014']
