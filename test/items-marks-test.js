@@ -27,7 +27,7 @@ jsdom.env({
           items: [{
             marks: [{
               var_mark: '__value',
-              type: function(d) { return d; }
+              type: function(d) { return d; },
             }]
           }]
         });
@@ -44,7 +44,7 @@ jsdom.env({
     });
 
     // fill
-    test('default circles have no JS fill', function (t) {
+    test('default marks have no JS fill', function (t) {
 
       t.plan(data.length);
       data.forEach(function(mark) {
@@ -53,7 +53,7 @@ jsdom.env({
 
     });
 
-    test('default circles have no CSS fill', function (t) {
+    test('default marks have no CSS fill', function (t) {
 
       t.plan(data.length);
       data.forEach(function(mark) {
@@ -67,6 +67,32 @@ jsdom.env({
 
     });
 
+    var fill_color = 'red';
+
+    visualization.params({
+        items: [{
+          marks: [{
+            var_mark: '__value',
+            type: function(d) { return d; },
+            fill: function() { return fill_color; }
+          }]
+        }]
+      });
+
+    d3.select("#viz").call(visualization);
+
+   // fill_color fill problematically
+    test('marks have a ' + fill_color + ' JS color fill', function (t) {
+
+      t.plan(data.length);
+      data.forEach(function(mark) {
+        t.equal(d3.selectAll('.items__mark__' + mark)[0][0].style.fill, fill_color, mark);
+      })
+
+    });
+
+
+    // OTHER MARKS ATTRIBUTES
     // height
     // width
     // rotate
