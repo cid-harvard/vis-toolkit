@@ -27,7 +27,7 @@ jsdom.env({
           items: [{
             marks: [{
               var_mark: '__value',
-              type: function(d) { return d; },
+              type: function(d) { return d; }
             }]
           }]
         });
@@ -39,7 +39,7 @@ jsdom.env({
       t.plan(data.length);
       data.forEach(function(mark) {
         t.equal(d3.select("#viz").selectAll('.items__mark__' + mark)[0].length, 1, mark);
-      })
+      });
 
     });
 
@@ -49,7 +49,7 @@ jsdom.env({
       t.plan(data.length);
       data.forEach(function(mark) {
         t.equal(d3.selectAll('.items__mark__' + mark)[0][0].style.fill, "", mark);
-      })
+      });
 
     });
 
@@ -63,11 +63,11 @@ jsdom.env({
         var mark_el_style_css = mark_el_style.fill;
 
         t.equal(mark_el_style_css, "", mark);
-      })
+      });
 
     });
 
-    var fill_color = 'red';
+    var fill_color = 'blue';
 
     visualization.params({
         items: [{
@@ -79,18 +79,49 @@ jsdom.env({
         }]
       });
 
+    visualization.params().refresh = true;
+    visualization.params().init = true;
+
     d3.select("#viz").call(visualization);
 
    // fill_color fill problematically
-    test('marks have a ' + fill_color + ' JS color fill', function (t) {
+    test('marks have a ' + fill_color + ' JS color fill (function)', function (t) {
 
       t.plan(data.length);
+
       data.forEach(function(mark) {
         t.equal(d3.selectAll('.items__mark__' + mark)[0][0].style.fill, fill_color, mark);
-      })
+      });
 
     });
 
+    var fill_color = 'green';
+
+    visualization.params({
+        items: [{
+          marks: [{
+            var_mark: '__value',
+            type: function(d) { return d; },
+            fill: fill_color
+          }]
+        }]
+      });
+
+    visualization.params().refresh = true;
+    visualization.params().init = true;
+
+    d3.select("#viz").call(visualization);
+
+   // fill_color fill problematically
+    test('marks have a ' + fill_color + ' JS color fill (string)', function (t) {
+
+      t.plan(data.length);
+
+      data.forEach(function(mark) {
+        t.equal(d3.selectAll('.items__mark__' + mark)[0][0].style.fill, fill_color, mark);
+      });
+
+    });
 
     // OTHER MARKS ATTRIBUTES
     // height
