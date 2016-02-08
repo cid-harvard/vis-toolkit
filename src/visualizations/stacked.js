@@ -79,7 +79,10 @@ vars.default_params['stacked'] = function(scope) {
               })
               .y0(function(d) { return params.y_scale[0]['func'](d.y0); })
               .y1(function(d) { return params.y_scale[0]['func'](d.y0 + d.y); })
-    }]
+    }],
+    enter: function(data, vars) {
+      this.style("fill", 'white').style("opacity", 0).transition().duration(2000).style("opacity", 1)
+    }
   }];
 
   params.x_axis_show = true;

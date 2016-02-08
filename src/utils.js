@@ -1145,7 +1145,9 @@
 
               // IN CASE OF CUSTOM ENTER FOR ITEMS
               if(typeof item.enter !== "undefined") {
+
                 gItems_enter.call(item.enter, vars);
+
               } else {
 
                 gItems_enter.attr("transform", function(d, i) {
@@ -1344,6 +1346,8 @@
                         .insert("g", ":first-child")
                         .attr("class", "connect__group");
 
+
+
         connect.marks.forEach(function(params, index_mark) {
 
           if(typeof params.filter === "undefined") {
@@ -1369,9 +1373,18 @@
 
         });
 
+
         if(vars.init) {
           // Bind events to groups after marks have been created
           gConnect.each(utils.connect_group);
+        }
+
+
+        // IN CASE OF CUSTOM ENTER FOR ITEMS
+        if(typeof connect.enter !== "undefined") {
+
+          gConnect_enter.call(connect.enter, vars);
+
         }
 
         // EXIT
