@@ -67,7 +67,7 @@
       vars.new_data = JSON.parse(JSON.stringify(vars.all_data));
 
       // Creates default ids `__id` and `__value` for dataset without any id
-      if(typeof vars.var_id === 'undefined') {
+      if(typeof vars.var_id === 'undefined' || typeof vars.all_data[0][vars.var_id] === 'undefined') {
 
         vars.new_data = vars.new_data.map(function(d, i) {
 
@@ -155,9 +155,11 @@
           if(vars.filter.indexOf(d[vars.var_group]) > -1) {
             d.__filtered = true;
           }
+
           if(vars.highlight.indexOf(d[vars.var_id]) > -1) {
             d.__highlighted = true;
           }
+
           if(vars.selection.indexOf(d[vars.var_id]) > -1) {
             d.__selected = true;
           }
@@ -166,7 +168,7 @@
 
           d.__index = index;
 
-          // Dup for metadata
+          // Duplicate for metadata
           var dup = JSON.parse(JSON.stringify(d));
           dup.values = [];
 
@@ -189,8 +191,10 @@
         v[vars.var_share] = d[vars.var_share];
         v[vars.var_id] = d[vars.var_id];
 
-        // TODO: make sure there is no existing value for this time
-        unique_data[index].values[d[vars.time.var_time]] = v;
+        // If no time values then we should already all the data we need
+       // if(vars.time.var_time !== null) {
+          unique_data[index].values[d[vars.time.var_time]] = v;
+       // }
 
       });
 
