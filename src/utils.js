@@ -155,7 +155,31 @@
       var params_width = utils.init_params("width", 10, params, d, i, vars);
       var params_rotate = utils.init_params("rotate", 0, params, d, i, vars);
       var params_scale = utils.init_params("scale", 1, params, d, i, vars);
-      var params_fill = utils.init_params("fill", null, params, d, i, vars);
+
+      // var params_fill = utils.init_params("fill", null, params, d, i, vars);
+      params_fill = null;
+
+      if(typeof params.fill !== "undefined") {
+
+        if(typeof params.fill === "function") {
+
+          params_fill = params.fill(d, i, vars);
+
+        } else if(typeof params.fill === "string") {
+
+          params_fill = params.fill;
+
+        } else if(typeof params.fill === "object") {
+
+          params_fill = params.fill(vars.accessor_items(d)[vars.var_color]);
+
+        }
+
+      } else if(vars.var_color !== null) {
+
+        params_fill = vars.color(vars.accessor_items(d)[vars.var_color]);
+
+      }
 
       var params_stroke = utils.init_params("stroke", null, params, d, i, vars);
       var params_stroke_width = utils.init_params("stroke_width", null, params, d, i, vars);
@@ -176,6 +200,7 @@
 
       switch(params_type) {
 
+        // Note: removed .style("fill", params_fill)
         case "text":
 
           if(typeof params.text_anchor === "undefined") {
@@ -188,7 +213,6 @@
               .classed("items__mark__text", true)
               .classed("items_" + mark_id, true)
               .style("text-anchor", params.text_anchor)
-              .style("fill", params_fill)
               .attr("x", params_x)
               .attr("y", params_y)
               .attr("dy", ".35em")
@@ -213,7 +237,6 @@
               .classed("highlighted", function(d, i) { return d.__highlighted; })
               .classed("selected", function(d, i) { return d.__selected; })
               .transition().duration(vars.duration)
-              .style("fill", params_fill)
               .style("stroke", params_stroke)
               .attr("transform", "translate(" + ([params_translate[0] + params_offset_x, params_translate[1] + params_offset_y]) + ")rotate(" +  params_rotate + ")")
               .text(params_text);
@@ -377,15 +400,16 @@
         var items_mark_rect = d3.select(that).selectAll(".items__mark__rect.items_" + mark_id).data([d]);
 
         items_mark_rect.enter().append("rect")
-                  .classed("items__mark__rect", true)
-                  .classed("items_" + mark_id, true)
-                  .attr("x", params.x || 0)
-                  .attr("y", params.y || 0)
-                  .attr("height", params_height)
-                  .attr("width", params_width)
-                  .attr("transform", "translate(" +  params_translate + ")rotate(" + params_rotate + ")scale(" + params_scale + ")")
-                  .style("stroke", params_stroke)
-                  .style("stroke-width", params_stroke_width);
+            .classed("items__mark__rect", true)
+            .classed("items_" + mark_id, true)
+            .attr("x", params.x || 0)
+            .attr("y", params.y || 0)
+            .attr("height", params_height)
+            .attr("width", params_width)
+            .attr("transform", "translate(" +  params_translate + ")rotate(" + params_rotate + ")scale(" + params_scale + ")")
+            .style('fill', params_fill)
+            .style("stroke", params_stroke)
+            .style("stroke-width", params_stroke_width);
 
         items_mark_rect
             .classed("highlighted", function(d, i) { return d.__highlighted; })
@@ -396,42 +420,9 @@
             .attr("height", params_height)
             .attr("width", params_width)
             .attr("transform", "translate(" +  params_translate + ")rotate(" + params_rotate + ")scale(" + params_scale + ")")
+            .style('fill', params_fill)
             .style("stroke", params_stroke)
             .style("stroke-width", params_stroke_width);
-
-          if(typeof params.fill !== "undefined") {
-
-            if(typeof params.fill === "function") {
-
-              items_mark_rect.style("fill", params.fill(d, i, vars));
-
-            } else if(typeof params.fill === "function") {
-
-              items_mark_rect.style("fill", params.fill);
-
-            } else if(typeof params.fill === "string") {
-
-              items_mark_rect.style("fill", params.fill);
-
-            } else {
-
-              items_mark_rect.style("fill", function(d) {
-                return params.fill(vars.accessor_items(d)[vars.var_color]);
-              });
-
-            }
-
-          } else if(vars.var_color !== null) {
-
-            items_mark_rect.style("fill", function(d) {
-              return vars.color(vars.accessor_items(d)[vars.var_color]);
-            });
-
-            items_mark_rect.style("fill", function(d) {
-              return vars.color(vars.accessor_items(d)[vars.var_color]);
-            });
-
-          }
 
         items_mark_rect.exit().remove();
 
@@ -449,10 +440,7 @@
             .attr("x", -vars.mark.width/2)
             .attr("y", -vars.mark.height/2)
             .attr("transform", "rotate(" + (params_rotate + 45) + ")")
-
-            if(params_fill !== null) {
-              items_mark_diamond_enter.style("fill", params_fill)
-            }
+            .style("fill", params_fill);
 
         if(typeof params.class !== "undefined") {
           items_mark_diamond_enter.classed(params.class(vars.accessor_items(d)), true);
@@ -462,7 +450,7 @@
             .classed("highlighted", function(d, i) { return d.__highlighted; })
             .classed("selected", function(d, i) { return d.__selected; })
             .transition().duration(vars.duration)
-         //   .style("fill", params_fill)
+            .style("fill", params_fill);
          //   .style("stroke", params_stroke);
 
         items_mark_diamond.exit().remove();
@@ -506,6 +494,7 @@
               .attr("transform", function(d) {
                 return "translate("+ -d.x +", "+ -d.y +")";
               })
+              .style("fill", params_fill);
 
           items_mark_shape
               .classed("highlighted", function(d, i) { return d.__highlighted; })
@@ -513,38 +502,8 @@
               .attr("d", vars.path)
               .attr("transform", function(d) {
                 return "translate("+ -d.x +", "+ -d.y +")";
-              });
-
-              if(typeof params.fill !== "undefined") {
-
-
-                if(typeof params.fill === "function") {
-
-                  items_mark_shape.style("fill", params.fill(d[vars.var_color]));
-
-                } else if(typeof params.fill === "string") {
-
-                  items_mark_shape.style("fill", params.fill);
-
-                } else {
-
-                  items_mark_shape.style("fill", function(d) {
-                    return params.fill(vars.accessor_items(d)[vars.var_color]);
-                  });
-
-                }
-
-              } else if(vars.var_color !== null) {
-
-                items_mark_shape.style("fill", function(d) {
-                  return vars.color(vars.accessor_items(d)[vars.var_color]);
-                });
-
-                items_mark_shape.style("fill", function(d) {
-                  return vars.color(vars.accessor_items(d)[vars.var_color]);
-                });
-
-              }
+              })
+              .style("fill", params_fill);
 
             items_mark_shape.exit().remove();
 
@@ -961,38 +920,9 @@
               })
               .style("stroke", params_stroke)
               .style("fill", params_fill)
+
               .style("stroke-width", params_stroke_width)
               .style("stroke-opacity", params_stroke_opacity);
-
-              if(typeof params.fill !== "undefined") {
-
-                if(typeof params.fill === "function") {
-
-                  mark.style("fill", params.fill(d, i, vars));
-
-                } else if(typeof params.fill === "string") {
-
-                  mark.style("fill", params.fill);
-
-                } else {
-
-                  mark_enter.style("fill", function(d) {
-                    return params.fill(vars.accessor_items(d)[vars.var_color]);
-                  });
-
-                }
-
-              } else if(vars.var_color !== null) {
-
-                mark_enter.style("fill", function(d) {
-                  return vars.color(vars.accessor_items(d)[vars.var_color]);
-                });
-
-                mark.style("fill", function(d) {
-                  return vars.color(vars.accessor_items(d)[vars.var_color]);
-                });
-
-              }
 
           if(typeof params.opacity !== "undefined") {
 
@@ -1025,7 +955,8 @@
               .classed("highlighted__adjacent", function(d, i) { return d.__highlighted__adjacent; })
               .classed("selected", function(d, i) { return d.__selected; })
               .classed("selected__adjacent", function(d, i) { return d.__selected__adjacent; })
-              .attr("transform", "translate(" +  params_translate + ")rotate(" +  params_rotate + ")");
+              .attr("transform", "translate(" +  params_translate + ")rotate(" +  params_rotate + ")")
+              .style("fill", params_fill);
 
           mark.exit().remove();
 
