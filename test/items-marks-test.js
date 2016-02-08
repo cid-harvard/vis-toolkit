@@ -3,33 +3,39 @@ var test = require('tape');
 
 jsdom.env({
   html:'<html><body><div id="viz"></div></body></html>',
-  features: { QuerySelector:true }, //you need query selector for D3 to work
+  features: { QuerySelector:true },
   scripts: ["js/d3.js", "build/vistk.js"],
   done: function (err, window) {
 
     var d3 = window.d3;
     var vistk = window.vistk;
 
-    var data = [{__id: 'A'}, {__id: 'B'}, {__id: 'C'}];
+    var data = ["rect", "circle", "triangle", "tick", "star", "diamond", "polygon", "marker"];
 
     var visualization = vistk.viz()
         .params({
-          dev: true,
+          height: 200,
+          width: 500,
+          margin: {top: 30, right: 100, bottom: 30, left: 10},
+          type: 'ordinal_horizontal',
           data: data,
-          width: 800,
-          height: 500,
-          type: 'dotplot',
+          container: '#viz',
           var_x: '__id',
-          var_y: function() { return this.height/2; },
-          var_text: '__value'
+          var_y: '__id',
+          items: [{
+            marks: [{
+              var_mark: '__value',
+              type: function(d) { return d; }
+            }]
+          }]
         });
 
     d3.select("#viz").call(visualization);
 
-    test('we should have 3 marks which are circles', function (t) {
+    test('we should have ' + data.length + ' marks drawn', function (t) {
 
       t.plan(1);
-      t.equal(d3.select("#viz").selectAll('.items__mark__circle')[0].length, 3);
+      t.equal(d3.select("#viz").selectAll('.items__mark__circle')[0].length, data.length);
 
     });
 
