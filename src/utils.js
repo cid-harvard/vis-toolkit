@@ -405,6 +405,14 @@
 
               items_mark_rect.style("fill", params.fill(d, i, vars));
 
+            } else if(typeof params.fill === "function") {
+
+              items_mark_rect.style("fill", params.fill);
+
+            } else if(typeof params.fill === "string") {
+
+              items_mark_rect.style("fill", params.fill);
+
             } else {
 
               items_mark_rect.style("fill", function(d) {
@@ -514,6 +522,9 @@
 
                   items_mark_shape.style("fill", params.fill(d[vars.var_color]));
 
+                } else if(typeof params.fill === "string") {
+
+                  items_mark_shape.style("fill", params.fill);
 
                 } else {
 
@@ -819,6 +830,9 @@
               .classed('items__mark__marker', true)
               .attr("fill", "#ED4036")
               .attr("stroke-width", 0)
+              .attr("transform", function(d, i) {
+                return "translate(-10, -40)";
+              })
               .attr('d', "M10,0L0,10l10,25.4L20,10L10,0z M10,14.6c-2.1,0-3.8-1.7-3.8-3.8c0-2.1,1.7-3.8,3.8-3.8 c2.1,0,3.8,1.7,3.8,3.8C13.8,12.9,12.1,14.6,10,14.6z");
 
           // IN CASE OF CUSTOM ENTER FOR ITEMS
@@ -950,12 +964,15 @@
               .style("stroke-width", params_stroke_width)
               .style("stroke-opacity", params_stroke_opacity);
 
-
               if(typeof params.fill !== "undefined") {
 
                 if(typeof params.fill === "function") {
 
                   mark.style("fill", params.fill(d, i, vars));
+
+                } else if(typeof params.fill === "string") {
+
+                  mark.style("fill", params.fill);
 
                 } else {
 
