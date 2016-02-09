@@ -150,7 +150,7 @@
 
           lookup_index[d[vars.var_id]] = index;
 
-          utils.init_item(d);
+          vistk.utils.init_item(d);
 
           if(vars.filter.indexOf(d[vars.var_group]) > -1) {
             d.__filtered = true;
@@ -229,119 +229,7 @@
       // Do the nesting by var_group
       // Should make sure it works for a generc dataset
       // Also for time or none-time attributes
-      nested_data = d3.nest()
-        .key(function(d) {
-          return d[vars.var_group];
-        })
-        .rollup(function(leaves) {
-
-          // Generates a new dataset with aggregated data
-          var aggregation = {};
-
-          // Name and id values are
-          aggregation[vars.var_id] = 'agg_' + leaves[0][vars.var_group];
-          aggregation[vars.var_text] = leaves[0][vars.var_group];
-          aggregation[vars.var_group] = leaves[0][vars.var_group];
-
-          // Quick fix in case var_x is an ordinal scale
-          if(vars.var_x !== vars.var_id && vars.var_x !== vars.time.var_time && vars.var_x !== vars.var_group) {
-            aggregation[vars.var_x] = d3.mean(leaves, function(d) {
-              return d[vars.var_x];
-            });
-          } else {
-            aggregation[vars.var_x] = leaves[0][vars.var_x];
-          }
-
-          if(vars.var_y !== vars.var_id && vars.var_y !== vars.time.var_time) {
-            aggregation[vars.var_y] = d3.mean(leaves, function(d) {
-              return d[vars.var_y];
-            });
-          } else {
-            aggregation[vars.var_y] = leaves[0][vars.var_y];
-          }
-
-          aggregation[vars.var_r] = d3.sum(leaves, function(d) {
-            return d[vars.var_r];
-          });
-
-          aggregation[vars.var_share] = d3.sum(leaves, function(d) {
-            return d[vars.var_share];
-          });
-
-          aggregation.values = [];
-
-          // Assuming all the time values are present in all items
-          vars.time.points.forEach(function(time, i) {
-
-            var d = {};
-
-           // if(vars.var_x === vars.time.var_time) {
-           //   d[vars.var_x] = leaves[0].values[i][vars.var_x];
-           // } else {
-           //   d[vars.var_x] = 0;
-           // }
-
-            // Init values
-            d[vars.var_x] = leaves[0].values[time][vars.var_x];
-            d[vars.var_y] = leaves[0].values[time][vars.var_y];
-            d[vars.var_r] = leaves[0].values[time][vars.var_r];
-
-            d[vars.var_share] = leaves[0].values[time][vars.var_share];
-            d[vars.var_color] = leaves[0].values[time][vars.var_color];
-            d[vars.var_size] = leaves[0].values[time][vars.var_size];
-            d[vars.var_text] = leaves[0].values[time][vars.var_text];
-
-            // Time var
-            d[vars.time.var_time] = leaves[0].values[time][vars.time.var_time];
-
-            // Should stay at the bottom to make sure it's not overriden
-            d[vars.var_id] = 'agg_' + leaves[0].values[time][vars.var_id];
-
-            d.__index = 'agg_' + leaves[0].values[time].__index;
-
-            aggregation.values[time] = d;
-
-            //return d;
-          });
-
-          // Assuming we only aggregate var_x, var_y, var_r
-          leaves.forEach(function(d, i) {
-
-            vars.time.points.forEach(function(time, i) {
-
-              if(vars.var_x !== vars.time.var_time) {
-                aggregation.values[time][vars.var_x] += d.values[time][vars.var_x];
-              }
-
-              if(vars.var_y !== vars.time.var_time) {
-                aggregation.values[time][vars.var_y] += d.values[time][vars.var_y];
-              }
-
-              aggregation.values[time][vars.var_r] += d.values[time][vars.var_r];
-
-            });
-          });
-
-          utils.init_item(aggregation);
-
-          // Set internal attributes specific to aggregate + force redraw
-          aggregation.__aggregated = true;
-          aggregation.__redraw = true;
-
-          vars.columns.forEach(function(c) {
-
-            if(c === vars.var_text || c === vars.var_group) {
-              return;
-            }
-
-            aggregation[c] = d3.mean(leaves, function(d) {
-              return d[c];
-            });
-          });
-
-          return aggregation;
-        })
-        .entries(vars.new_data);
+      var nested_data = vistk.utils.aggregate(vars.new_data, vars, vars.var_group);
 
       // Transform key/value into values tab only
       if(typeof vars.set['__aggregated'] !== 'undefined' && vars.set['__aggregated']) {
