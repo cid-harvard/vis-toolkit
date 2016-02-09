@@ -5,7 +5,7 @@ vars.default_params['piechart'] = function(scope) {
   scope.radius_min = 20;
   scope.radius_max = 100;
 
-  if(vars.init) {
+  if(vars.init || vars.refresh) {
 
     scope.pie = d3.layout.pie().value(function(d) {
       return d[scope.var_share];

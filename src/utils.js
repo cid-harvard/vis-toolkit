@@ -831,6 +831,8 @@
           d3.select(that).classed(params.class, true);
         }
 
+        // Duplicate configuration??
+
         // Create a custom configuration for pie charts
         vars.type = 'piechart';
 
@@ -866,15 +868,9 @@
         var vars2 = vistk.utils.merge(vars, scope);
 
         // Identify scale for the wedges (while previously was X/Y)
-        vars2.x_scale = [{
-          func: d3.scale.linear()
-                  .range([0, 0])
-        }];
+        vars2.x_scale = vistk.utils.scale.none();
+        vars2.y_scale = vistk.utils.scale.none();
 
-        vars2.y_scale = [{
-          func: d3.scale.linear()
-                  .range([0, 0])
-        }];
 
         vars2.r_scale = d3.scale.linear()
                     .range([0, vars2.width/6])

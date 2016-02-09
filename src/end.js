@@ -133,3 +133,23 @@ vistk.utils.scale.linear = function(vars) {
 
 };
 
+vistk.utils.scale.none = function(vars) {
+
+  return [{
+    func: d3.scale.linear()
+            .range([0, 0])
+  }];
+
+};
+
+vistk.utils.scale.x = {};
+
+vistk.utils.scale.x.center = function(vars) {
+
+  return [{
+    func: d3.scale.linear()
+            .range([0, 0])
+  }];
+
+};
+
