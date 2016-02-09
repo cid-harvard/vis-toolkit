@@ -109,7 +109,6 @@ jsdom.env({
           var_text: '__value'
         });
 
-
     d3.select("#viz").call(visualization);
 
     test('check if circle marks are created', function (t) {

@@ -83,7 +83,13 @@ jsdom.env({
     // Time interval
     // Time points
     // Time parsing
-    // ..
+    // Time filter
+    // Time expension (more time points)
+    // Time reduction (less time points)
+    // Change var_time
+    // current_time is a function
+    // Accessor data is updated if time value exist
+    //
 
   }
 });

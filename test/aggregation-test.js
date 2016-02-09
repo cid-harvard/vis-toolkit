@@ -13,7 +13,7 @@ jsdom.env({
 
   test('if the dataset not aggregated', function (t) {
 
-    t.plan(5);
+    t.plan(7);
     var data = [{id: 0, group: 'A', value: 1},
                 {id: 1, group: 'B', value: 1},
                 {id: 2, group: 'A', value: 1},
@@ -56,13 +56,18 @@ jsdom.env({
       }
     });
 
+    v.params().refresh = true;
+    v.params().init = true;
     d3.select("#viz").call(v);
 
     // Number of aggregated items (number of different groups)
     t.equal(v.params().new_data.length, 2);
 
     // Aggregated values of items
+    t.equal(v.params().new_data[0].group, 'A');
     t.equal(v.params().new_data[0].value, 4);
+
+    t.equal(v.params().new_data[0].group, 'B');
     t.equal(v.params().new_data[1].value, 2);
 
     v.params({
