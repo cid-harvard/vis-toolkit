@@ -841,6 +841,15 @@
           return e[vars.var_group] === d[vars.var_group] && typeof e.data !== 'undefined' &&  e.data.__aggregated !== true;
         });
 
+        // vars.var_group = params.var_group;
+
+        if(typeof params.var_group !== 'undefined') {
+          vars.var_group = params.var_group;
+          this_data = vistk.utils.aggregate(this_data, vars, params.var_group);
+          this_data = this_data.map(function(d) { return d.values; });
+
+        }
+
         // Re-generate the pie layout
         scope.pie = d3.layout.pie().value(function(d) {
           return d[vars.var_share];
@@ -872,6 +881,7 @@
         vars2.r_scale = d3.scale.linear()
                     .range([0, vars2.width/6])
                     .domain([0, d3.max(this_data, function(d) {
+                      console.log(d, vars2.var_share)
                       return vars2.accessor_data(d)[vars2.var_share];
                     })]);
 
