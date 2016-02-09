@@ -73,25 +73,10 @@ d3.json("../../vis-toolkit-datasets/data/cpi-data.json", function(error, data) {
         }
       }]
     }, {
-      attr: "middle_label",
-      accessor_data: function(d) {
-        return d.values.filter(function(e) {
-          return e.year == 2013;
-        })[0];
-      },
-      marks: [{
-        type: "text",
-        text_anchor: "end",
-        translate: [-20, 0],
-        text: function(d) {
-          return d.values['2013']['score'];
-        }
-      }]
-    }, {
       attr: "right_label",
       accessor_data: function(d) {
         return d.values.filter(function(e) {
-          return e.year == 2014;
+          return e.year == 2015;
         })[0];
       },
       marks: [{
@@ -99,7 +84,7 @@ d3.json("../../vis-toolkit-datasets/data/cpi-data.json", function(error, data) {
         text_anchor: "end",
         translate: [-20, 0],
         text: function(d) {
-          return d.values['2001']['score'];
+          return d.values['2015']['score'] + ' ' + d.country;
         }
       }]
     }],
@@ -127,7 +112,7 @@ d3.json("../../vis-toolkit-datasets/data/cpi-data.json", function(error, data) {
       parse: function(d) { return d; },
       var_time: 'year',
       current_time: '2015',
-      filter: [2012]
+  //tex    filter: [2012]
     },
     ui: {
       default: true
