@@ -34,38 +34,6 @@ jsdom.env({
 
     });
 
-    test('if the dataset is temporal, then 1 item is created', function (t) {
-
-        t.plan(1);
-        var data = [{id: 1, time: 0}, {id: 1, time: 1}];
-        var visualization = vistk.viz().params({
-            data: data,
-            var_id: 'id',
-        });
-        d3.select("#viz").call(visualization);
-
-        t.equal(visualization.params().new_data.length, 1);
-
-    });
-
-    test('if the dataset is temporal, then item has 2 time values', function (t) {
-
-        t.plan(1);
-        var data = [{id: 1, time: 0, value: 0}, {id: 1, time: 1, value: 1}];
-        var visualization = vistk.viz().params({
-            data: data,
-            var_id: 'id',
-            time: {
-              var_time: 'time',
-              current_time: 0
-            },
-        });
-        d3.select("#viz").call(visualization);
-
-        t.equal(visualization.params().new_data[0].values.length, 2);
-
-    });
-
     test('changing the whole dataset should be handled', function (t) {
 
         t.plan(2);
