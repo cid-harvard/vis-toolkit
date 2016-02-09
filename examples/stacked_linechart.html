@@ -93,7 +93,13 @@ d3.json("../../vis-toolkit-datasets/data/diversification_ubiquity_hs4_1995_2012.
                   parse: function(d) { return d3.time.format("%Y").parse(d+""); },
                   var_time: 'year',
                   current_time: '1995'
-                }
+                },
+                connect: [{
+                  enter: function(data, vars) {
+                    this.style("fill", 'white').style("opacity", 0).transition().duration(2000).style("opacity", 1)
+                  }
+                }]
+
               });
 
               visualization.params().refresh = true;
