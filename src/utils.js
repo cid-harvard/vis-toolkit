@@ -831,8 +831,6 @@
           d3.select(that).classed(params.class, true);
         }
 
-        // Duplicate configuration??
-
         // Create a custom configuration for pie charts
         vars.type = 'piechart';
 
@@ -870,7 +868,6 @@
         // Identify scale for the wedges (while previously was X/Y)
         vars2.x_scale = vistk.utils.scale.none();
         vars2.y_scale = vistk.utils.scale.none();
-
 
         vars2.r_scale = d3.scale.linear()
                     .range([0, vars2.width/6])
@@ -1248,12 +1245,7 @@
                   });
                 }
 
-                // TODO: Drawing HTML TYPE MARKS
-
-                // TODO: Drawing CANVAS TYPE MARKS
-
               }
-
 
             });
 
@@ -1369,12 +1361,10 @@
 
         });
 
-
         if(vars.init) {
           // Bind events to groups after marks have been created
           gConnect.each(utils.connect_group);
         }
-
 
         // IN CASE OF CUSTOM ENTER FOR ITEMS
         if(typeof connect.enter !== "undefined") {
@@ -1390,7 +1380,6 @@
         if(vars.init && vars.type === "productspace") {
           connect_data.forEach(function(d) { d.__redraw = false; });
         }
-
 
       });
 

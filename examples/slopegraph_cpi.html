@@ -13,8 +13,6 @@ See original <a href="http://www.transparency.org/cpi2015">geo-map visualization
 
 d3.json("../../vis-toolkit-datasets/data/cpi-data.json", function(error, data) {
 
-  console.log("DARA", data)
-
   dataset = [];
   data.forEach(function(d, i) {
 
@@ -42,8 +40,7 @@ d3.json("../../vis-toolkit-datasets/data/cpi-data.json", function(error, data) {
     c2015.score = d['2015_score'];
     dataset.push(c2015);
 
-
-  })
+  });
 
   visualization = vistk.viz().params({
     type: "slopegraph",
@@ -61,37 +58,25 @@ d3.json("../../vis-toolkit-datasets/data/cpi-data.json", function(error, data) {
     y_invert: false,
     var_x: "year",
     items: [{
-      attr: "right_label",
-      marks: [{
-        type: "text",
-        text_anchor: "start",
-        //text: function(d, i, vars) {
-        //  var change = d.values['2004']['rank_eci'] - d.values['2014']['rank_eci'];
-        //  var text_change = "";
-        //  if(change > 0) {
-        //    text_change = ' ▴ +' + change + '';
-        //  } else if(change < 0) {
-        //    text_change = ' ▾ ' + change + '';
-        //  } else {
-        //    text_change = ' = ' + change + '';
-        //  }
-        //  return text_change + ' ' + d['name'];
-        //},
-        //stroke: function(d) {
-        //  var scale = d3.scale.linear()
-        //    .domain([-1, 0, 1])
-        //    .range(["red", "black", "#006400"]);
-        //  var change = d.values['2004']['rank_eci'] - d.values['2014']['rank_eci'];
-        //  var change_bin = change > 0 ? 1 : change < 0 ? -1: 0;
-        //  return scale(change_bin);
-        //},
-        translate: [5, 0]
-      }]
-    }, {
       attr: "left_label",
       accessor_data: function(d) {
         return d.values.filter(function(e) {
-          return e.year == 2004;
+          return e.year == 2012;
+        })[0];
+      },
+      marks: [{
+        type: "text",
+        text_anchor: "start",
+        translate: [5, 0],
+        text: function(d) {
+          return d.values['2012']['score'];
+        }
+      }]
+    }, {
+      attr: "middle_label",
+      accessor_data: function(d) {
+        return d.values.filter(function(e) {
+          return e.year == 2013;
         })[0];
       },
       marks: [{
@@ -99,15 +84,22 @@ d3.json("../../vis-toolkit-datasets/data/cpi-data.json", function(error, data) {
         text_anchor: "end",
         translate: [-20, 0],
         text: function(d) {
-          return d.values['2004']['rank_eci'];
-        },
-        stroke: function(d) {
-          var scale = d3.scale.linear()
-            .domain([-1, 0, 1])
-            .range(["red", "black", "#006400"]);
-          var change = d.values['2004']['rank_eci'] - d.values['2014']['rank_eci'];
-          var change_bin = change > 0 ? 1 : change < 0 ? -1: 0;
-          return scale(change_bin);
+          return d.values['2013']['score'];
+        }
+      }]
+    }, {
+      attr: "right_label",
+      accessor_data: function(d) {
+        return d.values.filter(function(e) {
+          return e.year == 2014;
+        })[0];
+      },
+      marks: [{
+        type: "text",
+        text_anchor: "end",
+        translate: [-20, 0],
+        text: function(d) {
+          return d.values['2001']['score'];
         }
       }]
     }],
@@ -135,7 +127,7 @@ d3.json("../../vis-toolkit-datasets/data/cpi-data.json", function(error, data) {
       parse: function(d) { return d; },
       var_time: 'year',
       current_time: '2015',
-      filter: [2012, 2015]
+      filter: [2012]
     },
     ui: {
       default: true
