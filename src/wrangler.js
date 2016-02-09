@@ -191,6 +191,8 @@
         v[vars.var_share] = d[vars.var_share];
         v[vars.var_id] = d[vars.var_id];
 
+        delete v['undefined'];
+
         // If no time values then we should already all the data we need
        // if(vars.time.var_time !== null) {
           unique_data[index].values[d[vars.time.var_time]] = v;
@@ -311,7 +313,10 @@
                 aggregation.values[time][vars.var_x] += d.values[time][vars.var_x];
               }
 
-              aggregation.values[time][vars.var_y] += d.values[time][vars.var_y];
+              if(vars.var_y !== vars.time.var_time) {
+                aggregation.values[time][vars.var_y] += d.values[time][vars.var_y];
+              }
+
               aggregation.values[time][vars.var_r] += d.values[time][vars.var_r];
 
             });
