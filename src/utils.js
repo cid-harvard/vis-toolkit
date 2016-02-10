@@ -823,76 +823,75 @@
         break;
 
         case "piechart":
-        console.log("HERER")
 
-        // Temporary placeholder for pies
-        d3.select(that).append('circle').attr('r', 10)
+          // Temporary placeholder for pies
+          // d3.select(that).append('circle').attr('r', 10)
 
-        if(typeof params.class !== 'undefined') {
-          d3.select(that).classed(params.class, true);
-        }
-
-        // Create a custom configuration for pie charts
-        vars.type = 'piechart';
-
-        var scope = vars.default_params['piechart'](vars);
-
-        // Filter dataset to keep non-aggregated data for the current group
-        var this_data = vars.new_data.filter(function(e) {
-          return e[vars.var_group] === d[vars.var_group] && typeof e.data !== 'undefined' &&  e.data.__aggregated !== true;
-        });
-
-        this_data = vistk.utils.aggregate(this_data, vars, 'cutoff', 'sum');
-        this_data = this_data.map(function(d) { return d.values; });
-
-        // Re-generate the pie layout
-        scope.pie = d3.layout.pie().value(function(d) {
-          return d[vars.var_share];
-        });
-
-        // Generate new pie chart data for the current subset
-        this_data = scope.pie(this_data);
-
-        // Update item data with pie chart data
-        this_data.forEach(function(d) {
-          d.values = d.data.values;
-          d[vars.var_id] = d.data[vars.var_id];
-          d[vars.var_x] = d.data[vars.var_x];
-          d[vars.var_y] = d.data[vars.var_y];
-          d[vars.var_group] = d.data[vars.var_group];
-          d[vars.var_share] = d.data[vars.var_share];
-          d[vars.var_r] = d.data[vars.var_r];
-        });
-
-        this_data.forEach(function(d) { d.__redraw = true; });
-
-        // Generate a new configuration for the pie chart
-        var vars2 = vistk.utils.merge(vars, scope);
-
-        // Identify scale for the wedges (while previously was X/Y)
-        vars2.x_scale = vistk.utils.scale.none();
-        vars2.y_scale = vistk.utils.scale.none();
-
-        vars2.r_scale = d3.scale.linear()
-                    .range([0, vars2.width/6])
-                    .domain([0, d3.max(this_data, function(d) {
-                      console.log(d, vars2.var_share)
-                      return vars2.accessor_data(d)[vars2.var_share];
-                    })]);
-
-        vars2.items[0].marks[0].var_fill = "cutoff";
-        vars2.items[0].marks[0].fill = function(vars, d, i) {
-          if(d === 0) {
-            return 'white';
-          } else {
-            return vars2.color('continent')
+          if(typeof params.class !== 'undefined') {
+            d3.select(that).classed(params.class, true);
           }
-        }
 
-        vars2.radius_min = 50;
-        vars2.radius_max = 50;
+          // Create a custom configuration for pie charts
+          vars.type = 'piechart';
 
-        d3.select(that).call(utils.draw_chart, vars2, this_data);
+          var scope = vars.default_params['piechart'](vars);
+
+          // Filter dataset to keep non-aggregated data for the current group
+          var this_data = vars.new_data.filter(function(e) {
+            return e[vars.var_group] === d[vars.var_group] && typeof e.data !== 'undefined' &&  e.data.__aggregated !== true;
+          });
+
+          this_data = vistk.utils.aggregate(this_data, vars, 'cutoff', 'sum');
+          this_data = this_data.map(function(d) { return d.values; });
+
+          // Re-generate the pie layout
+          scope.pie = d3.layout.pie().value(function(d) {
+            return d[vars.var_share];
+          });
+
+          // Generate new pie chart data for the current subset
+          this_data = scope.pie(this_data);
+
+          // Update item data with pie chart data
+          this_data.forEach(function(d) {
+            d.values = d.data.values;
+            d[vars.var_id] = d.data[vars.var_id];
+            d[vars.var_x] = d.data[vars.var_x];
+            d[vars.var_y] = d.data[vars.var_y];
+            d[vars.var_group] = d.data[vars.var_group];
+            d[vars.var_share] = d.data[vars.var_share];
+            d[vars.var_r] = d.data[vars.var_r];
+          });
+
+          this_data.forEach(function(d) { d.__redraw = true; });
+
+          // Generate a new configuration for the pie chart
+          var vars2 = vistk.utils.merge(vars, scope);
+
+          // Identify scale for the wedges (while previously was X/Y)
+          vars2.x_scale = vistk.utils.scale.none();
+          vars2.y_scale = vistk.utils.scale.none();
+
+          vars2.r_scale = d3.scale.linear()
+                      .range([0, vars2.width/6])
+                      .domain([0, d3.max(this_data, function(d) {
+                        return vars2.accessor_data(d)[vars2.var_share];
+                      })]);
+
+          vars2.items[0].marks[0].var_fill = "cutoff";
+          vars2.items[0].marks[0].fill = function(vars, d, i) {
+            if(d === 0) {
+              return 'white';
+            } else {
+              return vars2.color(vars.data[vars2.var_group])
+            }
+          }
+
+          vars2.radius_min = 50;
+          vars2.radius_max = 50;
+          vars2[vars2.var_id] = 'name';
+
+          d3.select(that).call(utils.draw_chart, vars2, this_data);
 
         break;
 
@@ -1135,8 +1134,12 @@
               // Join is based on the curren_time value
               var gItems = vars_svg.selectAll(".mark__group" +  "_" + index_item)
                               .data(vars.new_data.filter(function(d) {
+
                                   return typeof accessor_data(d) !== 'undefined' && typeof accessor_data(d)[vars.var_id] !== 'undefined';
                                 }), function(d, i) {
+
+                                console.log("DAATATAT FILTER", d)
+
                                 return accessor_data(d)[vars.var_id] + "_" + index_item + d.depth;
                               });
 

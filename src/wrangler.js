@@ -184,6 +184,7 @@
         v[vars.time.var_time] = d[vars.time.var_time];
         v[vars.var_y] = d[vars.var_y];
         v[vars.var_x] = d[vars.var_x];
+        v[vars.var_group] = d[vars.var_group];
         v[vars.var_color] = d[vars.var_color];
         v[vars.var_size] = d[vars.var_size];
         v[vars.var_text] = d[vars.var_text];

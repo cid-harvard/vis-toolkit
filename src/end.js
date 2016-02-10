@@ -177,7 +177,6 @@ vistk.utils.aggregate = function(data, vars, var_agg, type_agg) {
             return d.values[vars.time.current_time][var_agg];
           }
 
-
         })
         .rollup(function(leaves) {
 
@@ -187,7 +186,7 @@ vistk.utils.aggregate = function(data, vars, var_agg, type_agg) {
           if(vars.time.current_time === null) {
             aggregation[vars.var_id] = 'agg_' + leaves[0][var_agg];
           } else {
-            aggregation[vars.var_id] = 'agg_' + leaves[0].values[vars.time.current_time][var_agg];
+            aggregation[vars.var_id] = 'agg_' + leaves[0].values[vars.time.current_time][var_agg] + Math.random();
           }
 
           // Name and id values are
@@ -227,6 +226,8 @@ vistk.utils.aggregate = function(data, vars, var_agg, type_agg) {
           aggregation[vars.var_share] = d3.sum(leaves, function(d) {
             return d[vars.var_share];
           });
+
+          aggregation[vars.var_color] = leaves[0][vars.var_color];
 
           // Init temporal values
           aggregation.values = [];
@@ -281,6 +282,7 @@ vistk.utils.aggregate = function(data, vars, var_agg, type_agg) {
               aggregation.values[time][vars.var_r] += d.values[time][vars.var_r];
 
             });
+
           });
 
           vistk.utils.init_item(aggregation);
