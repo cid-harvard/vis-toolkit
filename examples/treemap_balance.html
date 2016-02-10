@@ -53,7 +53,7 @@ d3.json("../../vis-toolkit-datasets/data/exports_quinn_2012.json", function(erro
 
   var visualization_exports = vistk.viz()
     .params({
-      dev: true,
+      dev: false,
       type: "treemap",
       container: "#viz_exports",
       width: width,
@@ -79,7 +79,7 @@ d3.json("../../vis-toolkit-datasets/data/exports_quinn_2012.json", function(erro
 
   var visualization_imports = vistk.viz()
     .params({
-      dev: true,
+      dev: false,
       type: "treemap",
       container: "#viz_imports",
       width: width * coef_diff,
@@ -100,6 +100,16 @@ d3.json("../../vis-toolkit-datasets/data/exports_quinn_2012.json", function(erro
       },
       focus: 1121
     });
+
+
+  // Coordinating top treemap with bottom one
+  visualization_exports.params().evt.register('highlightOn', function(d) {
+    visualization_imports.params().evt.call('highlightOn', d);
+  });
+
+  visualization_exports.params().evt.register('highlightOut', function(d) {
+    visualization_imports.params().evt.call('highlightOut', d);
+  });
 
   d3.select("#viz_imports").call(visualization_imports);
 
