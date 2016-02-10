@@ -235,7 +235,7 @@
       if(typeof vars.set['__aggregated'] !== 'undefined' && vars.set['__aggregated']) {
 
         // Note: agg_data have a key/values format
-        vars.agg_data = vars.new_data.concat(agg_data.map(function(d) {
+        vars.new_data = vars.new_data.concat(agg_data.map(function(d) {
           return d.values;
         }));
 

@@ -163,6 +163,7 @@ vistk.utils.init_item = function(d) {
   d.__redraw = false;
 };
 
+// Creates
 vistk.utils.aggregate = function(data, vars, var_agg, type_agg) {
 
   var type_agg = type_agg || 'sum';
@@ -170,16 +171,16 @@ vistk.utils.aggregate = function(data, vars, var_agg, type_agg) {
   return d3.nest()
         .key(function(d) {
 
-          return d[var_agg];
+          return vars.accessor_items(d)[var_agg];
 
         })
-        .rollup(function(leaves) {
+        .rollup(function(leaves, i) {
 
           // Generates a new dataset with aggregated data
           var aggregation = {};
-
+          console.log("CUTOFF", vars.accessor_items(leaves[0])[type_agg], leaves, i);
           // Name and id values are
-          aggregation[vars.var_id] = 'agg_' + leaves[0][vars.var_group];
+          aggregation[vars.var_id] = 'agg_' + vars.accessor_items(leaves[0])[type_agg];
           aggregation[vars.var_text] = leaves[0][vars.var_group];
           aggregation[vars.var_group] = leaves[0][vars.var_group];
 

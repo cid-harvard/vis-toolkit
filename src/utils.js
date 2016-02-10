@@ -825,7 +825,7 @@
         case "piechart":
 
         // Temporary placeholder for pies
-        // d3.select(that).append('circle').attr('r', 10)
+        d3.select(that).append('circle').attr('r', 10)
 
         if(typeof params.class !== 'undefined') {
           d3.select(that).classed(params.class, true);
@@ -841,22 +841,24 @@
           return e[vars.var_group] === d[vars.var_group] && typeof e.data !== 'undefined' &&  e.data.__aggregated !== true;
         });
 
+        console.log("THIS DATA 0", this_data)
+
         // vars.var_group = params.var_group;
 
-        if(typeof params.var_group !== 'undefined') {
-          vars.var_group = params.var_group;
-          this_data = vistk.utils.aggregate(this_data, vars, params.var_group);
-          this_data = this_data.map(function(d) { return d.values; });
-
-        }
+        this_data = vistk.utils.aggregate(this_data, vars, 'cutoff', 'sum');
+        this_data = this_data.map(function(d) { return d.values; });
 
         // Re-generate the pie layout
         scope.pie = d3.layout.pie().value(function(d) {
           return d[vars.var_share];
         });
 
+        console.log("THIS DATA 1", this_data)
+
         // Generate new pie chart data for the current subset
         this_data = scope.pie(this_data);
+
+        console.log("THIS DATA 2", this_data)
 
         // Update item data with pie chart data
         this_data.forEach(function(d) {
@@ -870,6 +872,8 @@
         });
 
         this_data.forEach(function(d) { d.__redraw = true; });
+
+        console.log("THIS DATA 3", this_data)
 
         // Generate a new configuration for the pie chart
         var vars2 = vistk.utils.merge(vars, scope);
