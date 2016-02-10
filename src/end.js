@@ -171,16 +171,27 @@ vistk.utils.aggregate = function(data, vars, var_agg, type_agg) {
   return d3.nest()
         .key(function(d) {
 
-          return vars.accessor_items(d)[var_agg];
+          if(vars.time.current_time === null) {
+            return d[var_agg];
+          } else {
+            return d.values[vars.time.current_time][var_agg];
+          }
+
 
         })
-        .rollup(function(leaves, i) {
+        .rollup(function(leaves) {
 
           // Generates a new dataset with aggregated data
           var aggregation = {};
-          console.log("CUTOFF", vars.accessor_items(leaves[0])[type_agg], leaves, i);
+
+          if(vars.time.current_time === null) {
+            aggregation[vars.var_id] = 'agg_' + leaves[0][var_agg];
+          } else {
+            aggregation[vars.var_id] = 'agg_' + leaves[0].values[vars.time.current_time][var_agg];
+          }
+
           // Name and id values are
-          aggregation[vars.var_id] = 'agg_' + vars.accessor_items(leaves[0])[type_agg];
+
           aggregation[vars.var_text] = leaves[0][vars.var_group];
           aggregation[vars.var_group] = leaves[0][vars.var_group];
 
