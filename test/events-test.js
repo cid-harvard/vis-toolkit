@@ -62,14 +62,18 @@ jsdom.env({
 
     });
 
-    // highlightOn
-    // highlightOut
+    // Test register for all events
+    // 'init', 'start', 'finish', 'end', 'highlightOn', 'highlightOut',
+    // 'selection', 'resize', 'clearAnimations', 'timeUpdate'
 
     // Groups / marks classes related to events
     // mouseover → highlightOn → highlighted
 
     // mouseleave → highlightOut → highlighted
     // highlightOn → highlighted → h̶i̶g̶h̶l̶i̶g̶h̶t̶e̶d̶
+
+    // Create coordinated views
+    // Events on one visualization also impact another visualization
 
   }
 });

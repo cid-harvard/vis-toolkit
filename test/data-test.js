@@ -54,5 +54,24 @@ jsdom.env({
 
     });
 
+
+    test('re-sorting dataset ↗ ↘', function (t) {
+
+        t.plan(1);
+        var data = [1, 2, 3, 4];
+
+        var visualization = vistk.viz().params({
+            data: data,
+            var_sort: '__id',
+            var_sort_asc: false,
+        });
+
+        d3.select("#viz").call(visualization);
+
+        // First value is now the last data value
+        t.equal(visualization.params().new_data[0].__id, data[data.length]);
+
+    });
+
   }
 });
