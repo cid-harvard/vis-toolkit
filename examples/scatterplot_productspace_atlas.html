@@ -247,6 +247,10 @@ d3.json("../../vis-toolkit-datasets/data/network_sitc.json", function(graph) {
           .attr("x", 10)
           .text(visualization.params().time.current_time);
 
+      visualization.params().evt.register('timeUpdate', function() {
+        label.text(visualization.params().time.current_time);
+      });
+
       // Cars 8703
       // Aircraft 8802
       // Men's or boys' shirts, knitted or crocheted 6105
