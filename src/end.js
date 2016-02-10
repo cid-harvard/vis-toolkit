@@ -163,11 +163,15 @@ vistk.utils.init_item = function(d) {
   d.__redraw = false;
 };
 
-vistk.utils.aggregate = function(data, vars, var_agg) {
+vistk.utils.aggregate = function(data, vars, var_agg, type_agg) {
+
+  var type_agg = type_agg || 'sum';
 
   return d3.nest()
         .key(function(d) {
-          return d[vars.var_group];
+
+          return d[var_agg];
+
         })
         .rollup(function(leaves) {
 
@@ -181,19 +185,27 @@ vistk.utils.aggregate = function(data, vars, var_agg) {
 
           // Quick fix in case var_x is an ordinal scale
           if(vars.var_x !== vars.var_id && vars.var_x !== vars.time.var_time && vars.var_x !== vars.var_group) {
+
             aggregation[vars.var_x] = d3.mean(leaves, function(d) {
               return d[vars.var_x];
             });
+
           } else {
+
             aggregation[vars.var_x] = leaves[0][vars.var_x];
+
           }
 
           if(vars.var_y !== vars.var_id && vars.var_y !== vars.time.var_time) {
+
             aggregation[vars.var_y] = d3.mean(leaves, function(d) {
               return d[vars.var_y];
             });
+
           } else {
+
             aggregation[vars.var_y] = leaves[0][vars.var_y];
+
           }
 
           aggregation[vars.var_r] = d3.sum(leaves, function(d) {
@@ -204,6 +216,7 @@ vistk.utils.aggregate = function(data, vars, var_agg) {
             return d[vars.var_share];
           });
 
+          // Init temporal values
           aggregation.values = [];
 
           // Assuming all the time values are present in all items
@@ -266,6 +279,7 @@ vistk.utils.aggregate = function(data, vars, var_agg) {
 
           vars.columns.forEach(function(c) {
 
+            // Do no aggreagete ordinal values
             if(c === vars.var_text || c === vars.var_group) {
               return;
             }
@@ -273,10 +287,11 @@ vistk.utils.aggregate = function(data, vars, var_agg) {
             aggregation[c] = d3.mean(leaves, function(d) {
               return d[c];
             });
+
           });
 
           return aggregation;
         })
-        .entries(vars.new_data);
+        .entries(data);
 
 }

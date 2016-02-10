@@ -229,7 +229,7 @@
       // Do the nesting by var_group
       // Should make sure it works for a generc dataset
       // Also for time or none-time attributes
-      var nested_data = vistk.utils.aggregate(vars.new_data, vars, vars.var_group);
+      var nested_data = vistk.utils.aggregate(vars.new_data, vars, vars.var_group, 'sum');
 
       // Transform key/value into values tab only
       if(typeof vars.set['__aggregated'] !== 'undefined' && vars.set['__aggregated']) {
