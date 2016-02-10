@@ -157,7 +157,7 @@
       var params_scale = utils.init_params("scale", 1, params, d, i, vars);
 
       // var params_fill = utils.init_params("fill", null, params, d, i, vars);
-      params_fill = null;
+      var params_fill = null;
 
       if(typeof params.fill !== "undefined") {
 
@@ -180,6 +180,8 @@
         params_fill = vars.color(vars.accessor_items(d)[vars.var_color]);
 
       }
+
+      var params_fill_opacity = utils.init_params("fill_opacity", null, params, d, i, vars);
 
       var params_stroke = utils.init_params("stroke", null, params, d, i, vars);
       var params_stroke_width = utils.init_params("stroke_width", null, params, d, i, vars);
@@ -533,6 +535,7 @@
           mark.enter().append("path")
               .classed("items_" + mark_id, true)
               .classed("items__mark__arc", true)
+              .attr("fill-opacity", params_fill_opacity)
               .attr("fill", params_fill);
               //.style("fill-opacity", function(d, i) {
               //  if(d.i == 0)
@@ -881,9 +884,17 @@
           vars2.items[0].marks[0].var_fill = "cutoff";
           vars2.items[0].marks[0].fill = function(vars, d, i) {
             if(d === 0) {
-              return 'white';
+              return vars2.color(vars.data[vars2.var_group]);
             } else {
-              return vars2.color(vars.data[vars2.var_group])
+              return vars2.color(vars.data[vars2.var_group]);
+            }
+          }
+
+          vars2.items[0].marks[0].fill_opacity = function(vars, d, i) {
+            if(d === 0) {
+              return .2;
+            } else {
+              return 1;
             }
           }
 

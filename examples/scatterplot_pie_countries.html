@@ -33,6 +33,8 @@ d3.json("../../vis-toolkit-datasets/data/diversification_ubiquity_hs4_1995_2012.
         var_r: 'nb_products',
         var_share: 'nb_products',
         var_text: 'name_2char',
+        radius_min: 50,
+        radius_max: 50,
         time: {
           var_time: "year",
           current_time: "1995",
@@ -42,12 +44,16 @@ d3.json("../../vis-toolkit-datasets/data/diversification_ubiquity_hs4_1995_2012.
           marks: [{
             var_mark: '__aggregated',
             type: d3.scale.ordinal().domain([true, false]).range(["piechart", "none"]),
-            //var_group: 'cutoff',
             var_share: 'nb_products',
             class: 'piechart'
           }, {
             var_mark: '__aggregated',
             type: d3.scale.ordinal().domain([true, false]).range(["text", "none"])
+         //}, {
+         //  var_mark: '__aggregated',
+         //  type: d3.scale.ordinal().domain([true, false]).range(["circle", "none"]),
+         //  fill: "none",
+         //  radius: 50
           }]
         }],
         set: {
