@@ -226,21 +226,23 @@
         console.log("[vars.aggregate]", vars.aggregate);
       }
 
-      // Do the nesting by var_group
+      // Do the nesting by var_agg (usually vars.var_group)
       // Should make sure it works for a generc dataset
       // Also for time or none-time attributes
-      var nested_data = vistk.utils.aggregate(vars.new_data, vars, vars.var_group, 'sum');
+      var agg_data = vistk.utils.aggregate(vars.new_data, vars, vars.var_group, 'sum');
 
-      // Transform key/value into values tab only
+      // Do we concatenate aggregated values to items, or just keep aggregated values?
       if(typeof vars.set['__aggregated'] !== 'undefined' && vars.set['__aggregated']) {
 
-        vars.new_data = vars.new_data.concat(nested_data.map(function(d) {
+        // Note: agg_data have a key/values format
+        vars.agg_data = vars.new_data.concat(agg_data.map(function(d) {
           return d.values;
         }));
 
       } else {
 
-        vars.new_data = nested_data.map(function(d) { return d.values; });
+        // Note: agg_data have a key/values format
+        vars.new_data = agg_data.map(function(d) { return d.values; });
 
       }
 
@@ -253,17 +255,17 @@
          console.log("[updating sort]", vars.var_sort, vars.var_sort_asc, vars.user_vars)
       }
 
+      var sort_function = d3.descending;
+
       if(typeof vars.var_sort_asc !== "undefined" && !vars.var_sort_asc) {
-        vars.new_data = vars.new_data.sort(function(a, b) {
-          if(typeof vars.accessor_data(a) !== 'undefined' && typeof vars.accessor_data(b) !== 'undefined')
-            return d3.ascending(vars.accessor_data(a)[vars.var_sort], vars.accessor_data(b)[vars.var_sort]);
-        });
-      } else {
-        vars.new_data = vars.new_data.sort(function(a, b) {
-          if(typeof vars.accessor_data(a) !== 'undefined' && typeof vars.accessor_data(b) !== 'undefined')
-            return d3.descending(vars.accessor_data(a)[vars.var_sort], vars.accessor_data(b)[vars.var_sort]);
-        });
+        sort_function = d3.ascending;
       }
+
+      vars.new_data = vars.new_data.sort(function(a, b) {
+        if(typeof vars.accessor_data(a) !== 'undefined' && typeof vars.accessor_data(b) !== 'undefined')
+          return sort_function(vars.accessor_data(a)[vars.var_sort], vars.accessor_data(b)[vars.var_sort]);
+      });
+
     }
 
     vars.new_data = vars.new_data.filter(function(d) {
