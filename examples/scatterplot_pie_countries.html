@@ -14,7 +14,7 @@ d3.json("../../vis-toolkit-datasets/data/diversification_ubiquity_hs4_1995_2012.
   var flat_years = vistk.utils.flatten_years(countries);
 
   flat_years.forEach(function(d) {
-    d.cutoff = d.nb_products > 50 ? 1: 0;
+    d.cutoff = d.nb_products > 200 ? 1: 0;
   })
 
   visualization = vistk.viz()
@@ -27,6 +27,7 @@ d3.json("../../vis-toolkit-datasets/data/diversification_ubiquity_hs4_1995_2012.
         var_id: 'name',
         var_group: 'continent',
         var_color: 'cutoff',
+        color: d3.scale.ordinal().domain(["Africa", "Americas", "Asia", "Europe", "Oceania"]).range(["#99237d", "#c72439", "#6bc145", "#88c7ed", "#dd9f98"]),
         var_x: 'nb_products',
         var_y: 'avg_products',
         var_r: 'nb_products',
@@ -44,6 +45,9 @@ d3.json("../../vis-toolkit-datasets/data/diversification_ubiquity_hs4_1995_2012.
             //var_group: 'cutoff',
             var_share: 'nb_products',
             class: 'piechart'
+          }, {
+            var_mark: '__aggregated',
+            type: d3.scale.ordinal().domain([true, false]).range(["text", "none"])
           }]
         }],
         set: {

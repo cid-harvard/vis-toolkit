@@ -7,15 +7,15 @@
 <div id="viz"></div>
 <script>
 
-var data = [{id: 'AA', x: 10, y: 20, group: 'A', value: 10},
-            {id: 'AB', x: 12, y: 22, group: 'A', value: 10},
-            {id: 'AC', x: 15, y: 22, group: 'A', value: 10},
-            {id: 'BA', x: 22, y: 51, group: 'B', value: 10},
-            {id: 'BB', x: 22, y: 55, group: 'B', value: 10},
-            {id: 'BC', x: 24, y: 51, group: 'B', value: 10},
-            {id: 'CA', x: 20, y: 20, group: 'C', value: 10},
-            {id: 'CB', x: 22, y: 20, group: 'C', value: 10},
-            {id: 'CC', x: 20, y: 25, group: 'C', value: 10}
+var data = [{id: 'AA', x: 10, y: 20, group: 'A', value: 10, cutoff: 1},
+            {id: 'AB', x: 12, y: 22, group: 'A', value: 10, cutoff: 0},
+            {id: 'AC', x: 15, y: 22, group: 'A', value: 10, cutoff: 1},
+            {id: 'BA', x: 22, y: 51, group: 'B', value: 10, cutoff: 0},
+            {id: 'BB', x: 22, y: 55, group: 'B', value: 10, cutoff: 1},
+            {id: 'BC', x: 24, y: 51, group: 'B', value: 10, cutoff: 0},
+            {id: 'CA', x: 20, y: 20, group: 'C', value: 10, cutoff: 1},
+            {id: 'CB', x: 22, y: 20, group: 'C', value: 10, cutoff: 0},
+            {id: 'CC', x: 20, y: 25, group: 'C', value: 10, cutoff: 1}
            ];
 
 var  visualization = vistk.viz()
