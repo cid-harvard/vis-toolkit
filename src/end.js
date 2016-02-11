@@ -133,3 +133,179 @@ vistk.utils.scale.linear = function(vars) {
 
 };
 
+vistk.utils.scale.none = function(vars) {
+
+  return [{
+    func: d3.scale.linear()
+            .range([0, 0])
+  }];
+
+};
+
+vistk.utils.scale.x = {};
+
+vistk.utils.scale.x.center = function(vars) {
+
+  return [{
+    func: d3.scale.linear()
+            .range([0, 0])
+  }];
+
+};
+
+vistk.utils.init_item = function(d) {
+  d.__aggregated = false;
+  d.__selected = false;
+  d.__selected__adjacent = false;
+  d.__highlighted = false;
+  d.__highlighted__adjacent = false;
+  d.__missing = false;
+  d.__redraw = false;
+};
+
+// Creates
+vistk.utils.aggregate = function(data, vars, var_agg, type_agg) {
+
+  var type_agg = type_agg || 'sum';
+
+  return d3.nest()
+        .key(function(d) {
+
+          if(vars.time.current_time === null) {
+            return d[var_agg];
+          } else {
+            return d.values[vars.time.current_time][var_agg];
+          }
+
+        })
+        .rollup(function(leaves) {
+
+          // Generates a new dataset with aggregated data
+          var aggregation = {};
+
+          if(vars.time.current_time === null) {
+            aggregation[vars.var_id] = 'agg_' + leaves[0][var_agg];
+          } else {
+            aggregation[vars.var_id] = 'agg_' + leaves[0].values[vars.time.current_time][var_agg] + Math.random();
+          }
+
+          // Name and id values are
+
+          aggregation[vars.var_text] = leaves[0][vars.var_group];
+          aggregation[vars.var_group] = leaves[0][vars.var_group];
+
+          // Quick fix in case var_x is an ordinal scale
+          if(vars.var_x !== vars.var_id && vars.var_x !== vars.time.var_time && vars.var_x !== vars.var_group) {
+
+            aggregation[vars.var_x] = d3.mean(leaves, function(d) {
+              return d[vars.var_x];
+            });
+
+          } else {
+
+            aggregation[vars.var_x] = leaves[0][vars.var_x];
+
+          }
+
+          if(vars.var_y !== vars.var_id && vars.var_y !== vars.time.var_time) {
+
+            aggregation[vars.var_y] = d3.mean(leaves, function(d) {
+              return d[vars.var_y];
+            });
+
+          } else {
+
+            aggregation[vars.var_y] = leaves[0][vars.var_y];
+
+          }
+
+          aggregation[vars.var_r] = d3.sum(leaves, function(d) {
+            return d[vars.var_r];
+          });
+
+          aggregation[vars.var_share] = d3.sum(leaves, function(d) {
+            return d[vars.var_share];
+          });
+
+          aggregation[vars.var_color] = leaves[0][vars.var_color];
+
+          // Init temporal values
+          aggregation.values = [];
+
+          // Assuming all the time values are present in all items
+          vars.time.points.forEach(function(time, i) {
+
+            var d = {};
+
+           // if(vars.var_x === vars.time.var_time) {
+           //   d[vars.var_x] = leaves[0].values[i][vars.var_x];
+           // } else {
+           //   d[vars.var_x] = 0;
+           // }
+
+            // Init values
+            d[vars.var_x] = leaves[0].values[time][vars.var_x];
+            d[vars.var_y] = leaves[0].values[time][vars.var_y];
+            d[vars.var_r] = leaves[0].values[time][vars.var_r];
+
+            d[vars.var_share] = leaves[0].values[time][vars.var_share];
+            d[vars.var_color] = leaves[0].values[time][vars.var_color];
+            d[vars.var_size] = leaves[0].values[time][vars.var_size];
+            d[vars.var_text] = leaves[0].values[time][vars.var_text];
+
+            // Time var
+            d[vars.time.var_time] = leaves[0].values[time][vars.time.var_time];
+
+            // Should stay at the bottom to make sure it's not overriden
+            d[vars.var_id] = 'agg_' + leaves[0].values[time][vars.var_id];
+
+            d.__index = 'agg_' + leaves[0].values[time].__index;
+
+            aggregation.values[time] = d;
+
+            //return d;
+          });
+
+          // Assuming we only aggregate var_x, var_y, var_r
+          leaves.forEach(function(d, i) {
+
+            vars.time.points.forEach(function(time, i) {
+
+              if(vars.var_x !== vars.time.var_time) {
+                aggregation.values[time][vars.var_x] += d.values[time][vars.var_x];
+              }
+
+              if(vars.var_y !== vars.time.var_time) {
+                aggregation.values[time][vars.var_y] += d.values[time][vars.var_y];
+              }
+
+              aggregation.values[time][vars.var_r] += d.values[time][vars.var_r];
+
+            });
+
+          });
+
+          vistk.utils.init_item(aggregation);
+
+          // Set internal attributes specific to aggregate + force redraw
+          aggregation.__aggregated = true;
+          aggregation.__redraw = true;
+
+          vars.columns.forEach(function(c) {
+
+            // Do no aggreagete ordinal values
+            if(c === vars.var_text || c === vars.var_group) {
+              return;
+            }
+
+            aggregation[c] = d3.mean(leaves, function(d) {
+              return d[c];
+            });
+
+          });
+
+          return aggregation;
+        })
+        .entries(data);
+
+}

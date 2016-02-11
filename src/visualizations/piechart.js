@@ -2,24 +2,57 @@ vars.default_params['piechart'] = function(scope) {
 
   var params = {};
 
-  if(vars.refresh) {
+  scope.radius_min = 20;
+  scope.radius_max = 100;
 
-    scope.pie = d3.layout.pie().value(function(d) { return d[scope.var_share]; });
-    scope.new_data = scope.pie(scope.new_data);
+  if(vars.init || vars.refresh) {
 
+    scope.pie = d3.layout.pie().value(function(d) {
+      return d[scope.var_share];
+    })
+
+    if(typeof scope.var_sort === 'undefined') {
+      scope.pie.sort(null);
+    } else {
+      scope.pie.sort(function(a,b) {
+        return a[scope.var_sort] - b[scope.var_sort];
+      });
+    }
+
+    scope.new_data = scope.pie(scope.new_data.filter(function(d) {
+      return true;
+      // WIP to make sure we don't generate pie charts using aggregated values
+      //if(typeof visualization.params().set.__aggregated !== 'undefined' && visualization.params().set.__aggregated) {
+      //  return d.__aggregated;
+      //} else {
+      //  return true;
+      //}
+
+    }));
+
+    // Make sure the .data are available for the items
     scope.new_data.forEach(function(d) {
       d.values = d.data.values;
-    });
+      d[scope.var_id] = d.data[scope.var_id];
+      d[scope.var_x] = d.data[scope.var_x];
+      d[scope.var_y] = d.data[scope.var_y];
+      d[scope.var_group] = d.data[scope.var_group];
+      d[scope.var_share] = d.data[scope.var_share];
+      d.__aggregated = d.data.__aggregated;
 
-    scope.new_data.forEach(function(d) { d.__redraw = true; });
+    // Force redrawing items
+      d.__redraw = true;
+    });
 
   }
 
+  // Identity scale
   params.x_scale = [{
     func: d3.scale.linear()
             .range([scope.width/2, scope.width/2])
   }];
 
+  // Identity scale
   params.y_scale = [{
     func: d3.scale.linear()
             .range([scope.height/2, scope.height/2])
@@ -35,7 +68,7 @@ vars.default_params['piechart'] = function(scope) {
     marks: [{
       type: 'arc',
       fill: function(d) {
-        return scope.color(scope.accessor_items(d)[scope.var_color]);
+        return scope.color(scope.accessor_data(d)[scope.var_color]);
       }
     }]
   }];

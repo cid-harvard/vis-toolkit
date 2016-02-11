@@ -56,9 +56,10 @@
 * **Example:** Most examples are issued from the examples located in <a href='src/visualizations/'>src/visualizations/</a>.
 
 Most of the parameters are of type:
-* `String` 
-* `Object`
-* `function`
+
+* `string` : usually the actual value to use
+* `object` : a set of key/values with parameters retrieve the value
+* `function` : a function to run to get the actual value
 
 ## General
 
@@ -74,7 +75,7 @@ The following set of parameters that impact a whole chart, and will propagate to
 &nbsp;
 This is by far the most important parameter as it will automatically pre-generate a set of parameters (marks, layout, etc.)
 
-* **Example:** `barchart`, `sparkline`, `dotplot`, `barchart`, `linechart`, `scatterplot`, etc.
+* **Example:** `barchart`, `sparkline`, `dotplot`, `barchart`, `linechart`, `scatterplot`. See `vars.list.mark`
 
 * **Note:** The full list of templates is available in <a href='src/visualizations/'>src/visualizations/</a>. To create your own template just add it in this folder and refer to it in the `Gruntfile.js`.
 &nbsp;
@@ -86,31 +87,31 @@ A template file usually describes the graphical marks to be used as well as the 
 
 > Defines the margins for the chart within the SVG.
 
-* **Type:** `Object`
+* **Type:** `object`
 
 * **Default:** `{}` or no margin e.g. `{top: 0, right: 0, bottom: 0, left: 0}`
 
 * **Example:** `{top: 10, right: 10, bottom: 30, left: 30}`
 
-* **Note:** Follows the [D3 margin convention](http://bl.ocks.org/mbostock/3019563) for the sake of consistency with D3 examples.
+* **Note:** Follows the [D3 margin convention](http://bl.ocks.org/mbostock/3019563) for the sake of consistency with other D3 examples.
 
 ### `container`
 
 > The selector for the DOM element being used to append the visualization to.
 
-* **Type:** `String`
+* **Type:** `string`
 
 * **Default:** `#viz`
 
 * **Example:** `#viz_barchart`
 
-* **Note:** ..
+* **Note:** The same container can be used by multiple charts.
 
 ### `title`
 
 > The title to use for the visualization (in case it features a space for the title)
 
-* **Type:** `String`
+* **Type:** `string`
 
 * **Default:** &empty;
 
@@ -134,17 +135,17 @@ A custom function can be passed  `var_color: 'rank'` and `color: d3.scale.linear
 
 > Color scale function used when drawing marks
 
-* **Type:** `Function`
+* **Type:** `function`
 
 * **Default:** `d3.scale.category20c()`.
 
-* **Example:** Custom color scales can be created such as `d3.scale.ordinal().domain(["Africa", "Americas", "Asia", "Europe", "Oceania"]).range(["#99237d", "#c72439", "#6bc145", "#88c7ed", "#dd9f98"])`
+* **Example:** Custom color scales can be created such as `d3.scale.ordinal().domain(["Africa", "Americas", "Asia", "Europe", "Oceania"]).range(["#99237d", "#c72439", "#6bc145", "#88c7ed", "#dd9f98"])`.
 
 ### `var_text`
 
 > Sets the variable to draw text
 
-* Type:** `String`
+* Type:** `string`
 
 * **Default:** &empty;
 
@@ -185,7 +186,6 @@ The translate operates directly on the child node of the root `<svg>` node.
 * **Example:**
 
 * **Note:** Same as for `translate` above.
-
 
 ## Data
 
@@ -352,7 +352,7 @@ The main way to represent data is to use **items**, which are the direct represe
 
 ### `items.marks`
 
-> Creates a new `<SVG>`  group that will contain marks.
+> Creates a new `<SVG>` group that will contain the marks later on.
 
 * **Type:** `Array`
 
@@ -365,7 +365,6 @@ The main way to represent data is to use **items**, which are the direct represe
 * Data for the item
 * Index among all data
 * Vars for all the variables and 
-
 
 
 ### `items.marks.type`

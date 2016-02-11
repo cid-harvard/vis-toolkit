@@ -32,12 +32,15 @@ var visualization = vistk.viz()
       items: [{
         marks: [{
           var_mark: '__aggregated',
-          type: d3.scale.ordinal().domain([true, false]).range(["none", "arc"]),
+          type: d3.scale.ordinal().domain([true, false]).range(['arc', 'none']),
           fill: function(d, i, vars) {
             return vars.color(vars.accessor_data(d)[vars.var_color]);
           }
         }]
-      }]
+      }],
+      set: {
+        __aggregated: true
+      },
     });
 
 d3.select("#viz").call(visualization);

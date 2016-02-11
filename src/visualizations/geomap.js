@@ -1,4 +1,4 @@
- vars.default_params["geomap"] = function(scope) {
+ vars.default_params['geomap'] = function(scope) {
 
   var params = {};
 
@@ -25,17 +25,15 @@
         return d.id == n.id;
       })[0][vars.var_names];
 
-
       // TODO: should merge on a more reliable join (e.g. 2-char)
       d.data = vars.new_data.filter(function(n) {
         return d[vars.var_names] === n[vars.var_names];
       })[0];
 
-
       // Two reasons why it is not defined
       // 1/ No data
       // 2/ Current country
-      if(typeof d.data == "undefined") {
+      if(typeof d.data === 'undefined') {
 
         var data = {}
         data[vars.var_id] = d;
@@ -61,8 +59,6 @@
       return d;
     });
 
-    console.log("VNEW", vars.new_data)
-
     vars.projection = d3.geo.equirectangular()
                     .scale(100);
 
@@ -71,10 +67,9 @@
         .projection(vars.projection);
 
     // Pr-process the shapes and calculate their BBox here and assign to x
-
     vars.new_data.forEach(function(d) {
       var a = vars.svg.append("path").attr("id", "geomap__pre-render").attr("d", vars.path(d))
-      d.x = 200;// a.node().getBBox().x;
+      d.x = 200; //a.node().getBBox().x;
       d.y = 50; //a.node().getBBox().y;
       a.remove();
     })
@@ -83,25 +78,29 @@
 
   params.x_scale = [{
     func: d3.scale.linear()
-            .domain(d3.extent(vars.new_data, function(d) { return d[params.var_x]; }))
+            .domain(d3.extent(vars.new_data, function(d) {
+              return d[params.var_x];
+            }))
             .range([scope.margin.left, scope.width - scope.margin.left - scope.margin.right])
   }];
 
   params.y_scale = [{
     func: d3.scale.linear()
-            .domain(d3.extent(vars.new_data, function(d) { return d[params.var_y]; }))
+            .domain(d3.extent(vars.new_data, function(d) {
+              return d[params.var_y];
+            }))
             .range([scope.margin.top, scope.height - scope.margin.top - scope.margin.bottom])
   }];
 
   params.items = [{
     marks: [{
-      type: "shape",
+      type: 'shape',
       fill: d3.scale.linear()
               .domain([
                 d3.min(vars.new_data, function(d) { return d[scope.var_color]; }),
                 d3.max(vars.new_data, function(d) { return d[scope.var_color]; })
               ])
-              .range(["red", "green"])
+              .range(['red', 'green'])
     }]
   }];
 

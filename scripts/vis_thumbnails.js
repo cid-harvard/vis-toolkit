@@ -1,20 +1,17 @@
 
-var URLS_GALLERY = ['dotplot', 'sparkline', 'treemap', 'barchart', 'scatterplot_productspace', 
+var URLS_GALLERY = ['dotplot', 'sparkline',
+'treemap', 'treemap_countries',
+'barchart',
+'scatterplot_productspace',
 'scatterplot', 'linechart', 'stacked', 'grid_occu', 'piechart', 'slopegraph', 'default', 'example_marks'];
 var URLS_COLOMBIA = ['dotplot', 'sparkline'];
 
-/*
-
-  sortby realgdp
-  sortby dept_name value_added
-
-*/
 
 var STATIC_URL = 'http://cid-harvard.github.io/vis-toolkit/examples/';
-var THUMBS_DIR = '../thumbs/'
-var SCREENSHOT_WIDTH = 800; 
-var SCREENSHOT_HEIGHT = 600; 
-var LOAD_WAIT_TIME = 2000; 
+var THUMBS_DIR = './thumbs/'
+var SCREENSHOT_WIDTH = 900;
+var SCREENSHOT_HEIGHT = 600;
+var LOAD_WAIT_TIME = 2000;
 
 var fs = require('fs');
 var system = require('system');
@@ -25,33 +22,33 @@ var aggregate = true;
 
 var getPageTitle = function(page){
     var documentTitle = page.evaluate(function(){
-        return document.title; 
+        return document.title;
     })
     console.log("getting title:", documentTitle)
-    return documentTitle; 
+    return documentTitle;
 }
 
 var getPageHeight = function(page){
-    var documentHeight = page.evaluate(function() { 
-        return document.body.offsetHeight; 
+    var documentHeight = page.evaluate(function() {
+        return document.body.offsetHeight;
     })
     console.log("getting height:", documentHeight)
-    return documentHeight; 
+    return documentHeight;
 }
 
 var renderPage = function(page, element) {
 
-    var pageHeight = getPageHeight(page); 
+    var pageHeight = getPageHeight(page);
 
     page.clipRect = {
         top: 0,
-        left: 0, 
-        width: SCREENSHOT_WIDTH, 
+        left: 0,
+        width: SCREENSHOT_WIDTH,
         height: pageHeight
     };
 
     page.render(THUMBS_DIR + element + ".png");
-    
+
     console.log("rendered:", element + ".png")
 }
 
@@ -80,19 +77,35 @@ var takeScreenshot = function(element){
       query_string = '?aggregate=continent';
     }
 
-    page.open(STATIC_URL + element); 
+    page.open(STATIC_URL + element, function(status) {
 
-    console.log("waiting for page to load...")
+      if (status !== 'success') {
 
-    page.onLoadFinished = function() {
-      setTimeout(function(){
-          console.log("that's long enough")
-          renderPage(page, element)
-          exitIfLast(index,URLS)
-          index++; 
-          takeScreenshot(URLS[index]);
-      }, LOAD_WAIT_TIME)
-    }
+        console.log('Unable to load the address! ' + inputFileName);
+
+      } else {
+
+         window.setTimeout(function () {
+
+          var p = page.evaluate(function() {
+
+            d3.selectAll('label, select, button, span').style('visibility', 'hidden');
+
+          });
+
+          setTimeout(function(){
+              console.log("that's long enough")
+              renderPage(page, element)
+              exitIfLast(index,URLS)
+              index++;
+              takeScreenshot(URLS[index]);
+          }, 1500)
+
+        }, 500);
+
+      }
+
+    });
 
 }
 
@@ -138,11 +151,11 @@ var createGallery = function() {
 
     console.log("The file was saved!");
 
-  }); 
+  });
 
 }
 
-var index = 0; 
+var index = 0;
 var URLS = URLS_GALLERY;
 
 if (args.length === 1) {

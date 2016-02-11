@@ -1,0 +1,44 @@
+<!doctype html>
+<meta charset="utf-8">
+<script src="../js/d3.js"></script>
+<script src="../build/vistk.js"></script>
+<link href="../css/vistk.css" rel="stylesheet">
+<body>
+<div id="viz"></div>
+<body>
+<script src="../js/d3.js"></script>
+<script>
+
+function generateData(lineNumber, points){
+  return Array.prototype.concat.apply([], d3.range(lineNumber).map(function(item){
+    return d3.range(points).map(function(d, index){
+      return {item: item, time:index, y:Math.random()*100 };
+    });
+  }));
+}
+
+var visualization = vistk.viz().params({
+  type: "linechart",
+  container: "#viz",
+  height: 600,
+  width: 900,
+  margin: {top: 30, right: 100, bottom: 30, left: 10},
+  data: generateData(20, 100),
+  var_id: 'item',
+  var_y: 'y',
+  var_x: 'time',
+  y_invert: true,
+  var_color: 'item',
+  var_text: 'item',
+  time: {
+    var_time: 'time',
+    current_time: 0
+  },
+  ui: {
+    default: true
+  }
+});
+
+d3.select("#viz").call(visualization);
+
+</script>

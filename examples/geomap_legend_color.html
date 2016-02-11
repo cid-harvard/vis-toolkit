@@ -1,0 +1,117 @@
+<!doctype html>
+<meta charset="utf-8">
+<script src="../js/d3.js"></script>
+<script src="../build/vistk.js"></script>
+<link href="../css/vistk.css" rel="stylesheet">
+<script src="../js/queue.v1.min.js"></script>
+<script src="../js/topojson.js"></script>
+<body>
+<div id="viz"></div>
+<div id="viz_legend"></div>
+<script>
+
+d3.json("../../vis-toolkit-datasets/data/partners_usa_2012_csay.json", function(error, partners) {
+
+  queue()
+      .defer(d3.json, "../shapefiles/world/world-110m.json")
+      .defer(d3.tsv, "../../vis-toolkit-datasets/data/world-country-names.tsv")
+      .await(ready);
+
+  function ready(error, world, names) {
+
+    var color_domain = vistk.utils.extent(partners.data, 'share');
+
+    var color_scale = d3.scale.linear().domain(color_domain).range(['red', 'green']);
+
+    var visualization = vistk.viz()
+      .params({
+        dev: true,
+        type: 'geomap',
+        width: 700,
+        height: 400,
+        margin: {top: 10, right: 10, bottom: 30, left: 30},
+        topology: world,
+        names: names,
+        container: '#viz',
+        data: partners.data,
+        var_id: 'name',
+        var_group: 'continent',
+        var_x: 'x',
+        var_y: 'y',
+        var_color: 'share',
+        items: [{
+          marks: [{
+            type: "shape",
+            fill: function(d) {
+              if(typeof d === 'undefined') {
+                return 'lightgray';
+              } else {
+                return color_scale(d);
+              }
+            }
+          }],
+        }],
+        time: {
+          var_time: 'year',
+          current_time: 2012,
+          parse: function(d) { return d; }
+        }
+      })
+
+    d3.select("#viz").call(visualization);
+
+  var colors20c = d3.range(5).map(function(d, i) {
+    return d * (color_domain[1] - color_domain[0])/5;
+  });
+
+  var width = 500
+  var format = d3.format(".1f");
+
+  var legend = vistk.viz()
+        .params({
+          dev: true,
+          height: 60,
+          width: 700,
+          margin: {top: 0, right: 100, bottom: 0, left: 50},
+          type: 'ordinal_horizontal',
+          data: colors20c,
+          container: '#viz_legend',
+          var_text: '__value',
+          var_color: '__value',
+          var_group: '__value',
+          var_x: '__id',
+          var_y: '__id',
+          x_ticks: 10,
+          items: [{
+            marks: [{
+              type: "rect",
+              rotate: "0",
+              width: width/colors20c.length,
+              height: 20,
+              fill: function(d) {
+                if(typeof d === 'undefined') {
+                  return 'lightgray';
+                } else {
+                  console.log("DDD", d)
+                  return color_scale(d.__value);
+                }
+              }
+            }, {
+              type: "text",
+              translate: [width/colors20c.length/2, 25],
+              text_anchor: 'middle',
+              text: function(d, i) {
+                return format(d['__value'])
+              }
+            }]
+          }]
+        });
+
+    d3.select("#viz").call(legend);
+
+  }
+
+});
+
+</script>
+</body>

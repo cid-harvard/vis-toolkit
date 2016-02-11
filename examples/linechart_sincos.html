@@ -1,0 +1,63 @@
+<!doctype html>
+<meta charset="utf-8">
+<script src="../js/d3.js"></script>
+<script src="../build/vistk.js"></script>
+<link href="../css/vistk.css" rel="stylesheet">
+<body>
+<div id="viz"></div>
+<body>
+<script src="../js/d3.js"></script>
+<script>
+
+  // Data generator inspired by http://bl.ocks.org/bobmonteverde/2070123
+  function generateData(max) {
+    var sin = [],
+        sin2 = [],
+        cos = [],
+        cos2 = [],
+        r1 = Math.random(),
+        r2 = Math.random(),
+        r3 = Math.random(),
+        r4 = Math.random();
+
+    var data = [];
+
+    for (var i = 0; i < max; i+=4) {
+      data.push({type: 'sin', index: i, time: i/4, a: r1 * Math.sin( r2 +  i / (10 * (r4 + .5) ))});
+      data.push({type: 'cos', index: i+1, time: i/4, a: r2 * Math.cos( r3 + i / (10 * (r3 + .5) ))});
+      data.push({type: 'sin2', index: i+2, time: i/4, a: r3 * Math.sin( r1 + i / (10 * (r2 + .5) ))});
+      data.push({type: 'cos2', index: i+3, time: i/4, a: r4 * Math.cos( r4 + i / (10 * (r1 + .5) ))});
+    }
+
+    return data;
+  }
+
+  var visualization = vistk.viz().params({
+      type: "linechart",
+      container: "#viz",
+      height: 600,
+      width: 900,
+      margin: {top: 30, right: 100, bottom: 30, left: 10},
+      data: generateData(400),
+      var_id: 'type',
+      var_group: "type",
+      var_color: "type",
+      var_text: "type",
+      var_y: "a",
+      var_x: 'time',
+      y_invert: true,
+      time: {
+        var_time: 'time',
+        current_time: 0
+      },
+      selection: ["Japan", "Switzerland", "Germany"],
+      highlight: ["France"],
+      ui: {
+        default: true,
+        options: ["country", "continent"]
+      }
+    });
+
+    d3.select("#viz").call(visualization);
+
+</script>

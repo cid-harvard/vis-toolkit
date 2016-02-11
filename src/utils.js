@@ -70,7 +70,7 @@
   utils.draw_mark = function(selection, params, vars) {
 
     if(vars.dev) {
-      console.log("[utils.draw_mark]", params.type)
+      console.log("[utils.draw_mark]", params.type);
     }
 
     selection.each(function(d, i) {
@@ -81,7 +81,7 @@
       }
 
       // Default id for marks
-      var mark_id = params._mark_id + "_" + i;
+      var mark_id = params._mark_id;
 
       // params_type is the list of marks to be drawn
       // it is either static (string) or can be computer
@@ -155,7 +155,33 @@
       var params_width = utils.init_params("width", 10, params, d, i, vars);
       var params_rotate = utils.init_params("rotate", 0, params, d, i, vars);
       var params_scale = utils.init_params("scale", 1, params, d, i, vars);
-      var params_fill = utils.init_params("fill", null, params, d, i, vars);
+
+      // var params_fill = utils.init_params("fill", null, params, d, i, vars);
+      var params_fill = null;
+
+      if(typeof params.fill !== "undefined") {
+
+        if(typeof params.fill === "function") {
+
+          params_fill = params.fill(d, i, vars);
+
+        } else if(typeof params.fill === "string") {
+
+          params_fill = params.fill;
+
+        } else if(typeof params.fill === "object") {
+
+          params_fill = params.fill(vars.accessor_items(d)[vars.var_color]);
+
+        }
+
+      } else if(vars.var_color !== null) {
+
+        params_fill = vars.color(vars.accessor_items(d)[vars.var_color]);
+
+      }
+
+      var params_fill_opacity = utils.init_params("fill_opacity", null, params, d, i, vars);
 
       var params_stroke = utils.init_params("stroke", null, params, d, i, vars);
       var params_stroke_width = utils.init_params("stroke_width", null, params, d, i, vars);
@@ -176,6 +202,7 @@
 
       switch(params_type) {
 
+        // Note: removed .style("fill", params_fill)
         case "text":
 
           if(typeof params.text_anchor === "undefined") {
@@ -188,7 +215,6 @@
               .classed("items__mark__text", true)
               .classed("items_" + mark_id, true)
               .style("text-anchor", params.text_anchor)
-              .style("fill", params_fill)
               .attr("x", params_x)
               .attr("y", params_y)
               .attr("dy", ".35em")
@@ -213,7 +239,6 @@
               .classed("highlighted", function(d, i) { return d.__highlighted; })
               .classed("selected", function(d, i) { return d.__selected; })
               .transition().duration(vars.duration)
-              .style("fill", params_fill)
               .style("stroke", params_stroke)
               .attr("transform", "translate(" + ([params_translate[0] + params_offset_x, params_translate[1] + params_offset_y]) + ")rotate(" +  params_rotate + ")")
               .text(params_text);
@@ -377,15 +402,16 @@
         var items_mark_rect = d3.select(that).selectAll(".items__mark__rect.items_" + mark_id).data([d]);
 
         items_mark_rect.enter().append("rect")
-                  .classed("items__mark__rect", true)
-                  .classed("items_" + mark_id, true)
-                  .attr("x", params.x || 0)
-                  .attr("y", params.y || 0)
-                  .attr("height", params_height)
-                  .attr("width", params_width)
-                  .attr("transform", "translate(" +  params_translate + ")rotate(" + params_rotate + ")scale(" + params_scale + ")")
-                  .style("stroke", params_stroke)
-                  .style("stroke-width", params_stroke_width);
+            .classed("items__mark__rect", true)
+            .classed("items_" + mark_id, true)
+            .attr("x", params.x || 0)
+            .attr("y", params.y || 0)
+            .attr("height", params_height)
+            .attr("width", params_width)
+            .attr("transform", "translate(" +  params_translate + ")rotate(" + params_rotate + ")scale(" + params_scale + ")")
+            .style('fill', params_fill)
+            .style("stroke", params_stroke)
+            .style("stroke-width", params_stroke_width);
 
         items_mark_rect
             .classed("highlighted", function(d, i) { return d.__highlighted; })
@@ -396,34 +422,9 @@
             .attr("height", params_height)
             .attr("width", params_width)
             .attr("transform", "translate(" +  params_translate + ")rotate(" + params_rotate + ")scale(" + params_scale + ")")
+            .style('fill', params_fill)
             .style("stroke", params_stroke)
             .style("stroke-width", params_stroke_width);
-
-          if(typeof params.fill !== "undefined") {
-
-            if(typeof params.fill === "function") {
-
-              items_mark_rect.style("fill", params.fill(d, i, vars));
-
-            } else {
-
-              items_mark_rect.style("fill", function(d) {
-                return params.fill(vars.accessor_items(d)[vars.var_color]);
-              });
-
-            }
-
-          } else if(vars.var_color !== null) {
-
-            items_mark_rect.style("fill", function(d) {
-              return vars.color(vars.accessor_items(d)[vars.var_color]);
-            });
-
-            items_mark_rect.style("fill", function(d) {
-              return vars.color(vars.accessor_items(d)[vars.var_color]);
-            });
-
-          }
 
         items_mark_rect.exit().remove();
 
@@ -441,10 +442,7 @@
             .attr("x", -vars.mark.width/2)
             .attr("y", -vars.mark.height/2)
             .attr("transform", "rotate(" + (params_rotate + 45) + ")")
-
-            if(params_fill !== null) {
-              items_mark_diamond_enter.style("fill", params_fill)
-            }
+            .style("fill", params_fill);
 
         if(typeof params.class !== "undefined") {
           items_mark_diamond_enter.classed(params.class(vars.accessor_items(d)), true);
@@ -454,7 +452,7 @@
             .classed("highlighted", function(d, i) { return d.__highlighted; })
             .classed("selected", function(d, i) { return d.__selected; })
             .transition().duration(vars.duration)
-         //   .style("fill", params_fill)
+            .style("fill", params_fill);
          //   .style("stroke", params_stroke);
 
         items_mark_diamond.exit().remove();
@@ -475,7 +473,7 @@
               .attr("transform", "translate(" +  params_translate + ")rotate(" + params_rotate + ")scale(" + params_scale + ")");
 
           if(typeof params.class !== "undefined") {
-            items_mark_tick.classed(params.class(vars.accessor_items(d)), true);
+            items_mark_tick.classed(params.classed(vars.accessor_items(d)), true);
           }
 
           items_mark_tick
@@ -498,6 +496,7 @@
               .attr("transform", function(d) {
                 return "translate("+ -d.x +", "+ -d.y +")";
               })
+              .style("fill", params_fill);
 
           items_mark_shape
               .classed("highlighted", function(d, i) { return d.__highlighted; })
@@ -505,50 +504,26 @@
               .attr("d", vars.path)
               .attr("transform", function(d) {
                 return "translate("+ -d.x +", "+ -d.y +")";
-              });
+              })
+              .style("fill", params_fill);
 
-              if(typeof params.fill !== "undefined") {
+          items_mark_shape.exit().remove();
 
-                if(typeof params.fill === "function") {
-
-                  items_mark_shape.style("fill", params.fill(d[vars.var_color]));
-
-
-                } else {
-
-                  items_mark_shape.style("fill", function(d) {
-                    return params.fill(vars.accessor_items(d)[vars.var_color]);
-                  });
-
-                }
-
-              } else if(vars.var_color !== null) {
-
-                items_mark_shape.style("fill", function(d) {
-                  return vars.color(vars.accessor_items(d)[vars.var_color]);
-                });
-
-                items_mark_shape.style("fill", function(d) {
-                  return vars.color(vars.accessor_items(d)[vars.var_color]);
-                });
-
-              }
-
-            items_mark_shape.exit().remove();
-
-          break;
+        break;
 
         case "arc":
 
           var arc = d3.svg.arc().outerRadius(function(d) {
 
             if(typeof vars.var_r === "undefined") {
-              return vars.radius_max*20;
+              return vars.width / 6;
             } else {
 
               var r_scale = d3.scale.linear()
-                .range([vars.radius_min, vars.radius_max*20])
-                .domain(d3.extent(vars.new_data, function(d) { return vars.accessor_data(d)[vars.var_r]; }))
+                .range([vars.radius_min, vars.radius_max])
+                .domain(d3.extent(vars.new_data, function(d) {
+                  return vars.accessor_data(d)[vars.var_r];
+                }))
 
               return r_scale(vars.accessor_data(d)[vars.var_r]);
             }
@@ -560,13 +535,8 @@
           mark.enter().append("path")
               .classed("items_" + mark_id, true)
               .classed("items__mark__arc", true)
-              .attr("fill", params_fill);
-              //.style("fill-opacity", function(d, i) {
-              //  if(d.i == 0)
-              //    return .2;
-              //  else
-              //    return 1;
-              //});
+              .style("fill-opacity", params_fill_opacity)
+              .style("fill", params_fill);
 
           mark
               .classed("highlighted", function(d, i) { return d.__highlighted; })
@@ -612,7 +582,7 @@
               .classed("highlighted", function(d, i) { return d.__highlighted; })
               .classed("highlighted__adjacent", function(d, i) { return d.__highlighted__adjacent; })
               .classed("selected", function(d, i) { return d.__selected; })
-              .classed("selected__adjacent", function(d, i) { return d.__selected__adjacent; })
+              .classed("selected__adjacent", function(d, i) { return d.__selected__adjacent; });
 
           break;
 
@@ -638,12 +608,10 @@
           mark
               .classed("highlighted", function(d, i) { return d.__highlighted; })
               .classed("selected", function(d, i) { return d.__selected; })
-              //.attr("x1", function(d) { return -t[0] + vars.margin.left; })
-              //.attr("x2", function(d) { return vars.x_scale[0]["func"].range()[1] -100 + params_offset_right; })
               .attr("x1", function(d) { return -t[0]; })
               .attr("x2", function(d) { return vars.x_scale[0]["func"].range()[1] -t[0] - params_offset_right; })
               .attr("y1", function(d) { return params_offset_y; })
-              .attr("y2", function(d) { return params_offset_y; })
+              .attr("y2", function(d) { return params_offset_y; });
 
           break;
 
@@ -656,7 +624,7 @@
           mark.enter().append('line')
               .classed('mark__line_horizontal', true)
               .classed("items_" + mark_id, true)
-              .on("mouseover",function(d) { // FIX to prevent hovers
+              .on("mouseover",function(d) { // prevents hovers
                 d3.event.stopPropagation();
               })
               .on("mouseleave", function(d) {
@@ -741,10 +709,11 @@
               .classed("highlighted", function(e, j) { return e.__highlighted; })
               .classed("selected", function(e, j) { return e.__selected; })
               .transition().duration(vars.duration)
-           //   .style("stroke", params_stroke)
               .attr('d', function(e) {
                 return params["func"](d3.values(this_accessor_values(e)));
-              });
+              })
+              .style("fill", params_fill)
+              .style("stroke", params_stroke);
 
         break;
 
@@ -817,6 +786,9 @@
               .classed('items__mark__marker', true)
               .attr("fill", "#ED4036")
               .attr("stroke-width", 0)
+              .attr("transform", function(d, i) {
+                return "translate(-10, -40)";
+              })
               .attr('d', "M10,0L0,10l10,25.4L20,10L10,0z M10,14.6c-2.1,0-3.8-1.7-3.8-3.8c0-2.1,1.7-3.8,3.8-3.8 c2.1,0,3.8,1.7,3.8,3.8C13.8,12.9,12.1,14.6,10,14.6z");
 
           // IN CASE OF CUSTOM ENTER FOR ITEMS
@@ -847,6 +819,91 @@
 
         break;
 
+        case "piechart":
+
+          // Temporary placeholder for pies
+          // d3.select(that).append('circle').attr('r', 10)
+
+          // Temporary removing events to prevent redraw
+          utils.empty_array(params, 'highlightOn');
+          utils.empty_array(params, 'highlightOut');
+
+          if(typeof params.class !== 'undefined') {
+            d3.select(that).classed(params.class, true);
+          }
+
+          // Create a custom configuration for pie charts
+          vars.type = 'piechart';
+
+          var scope = vars.default_params['piechart'](vars);
+
+          // Filter dataset to keep non-aggregated data for the current group
+          var this_data = vars.new_data.filter(function(e) {
+            return e[vars.var_group] === d[vars.var_group] && typeof e.data !== 'undefined' &&  e.data.__aggregated !== true;
+          });
+
+          this_data = vistk.utils.aggregate(this_data, vars, 'cutoff', 'sum');
+          this_data = this_data.map(function(d) { return d.values; });
+
+          // Re-generate the pie layout
+          scope.pie = d3.layout.pie().value(function(d) {
+            return d[vars.var_share];
+          });
+
+          // Generate new pie chart data for the current subset
+          this_data = scope.pie(this_data);
+
+          // Update item data with pie chart data
+          this_data.forEach(function(d) {
+            d.values = d.data.values;
+            d[vars.var_id] = d.data[vars.var_id];
+            d[vars.var_x] = d.data[vars.var_x];
+            d[vars.var_y] = d.data[vars.var_y];
+            d[vars.var_group] = d.data[vars.var_group];
+            d[vars.var_share] = d.data[vars.var_share];
+            d[vars.var_r] = d.data[vars.var_r];
+          });
+
+          this_data.forEach(function(d) { d.__redraw = true; });
+
+          // Generate a new configuration for the pie chart
+          var vars2 = vistk.utils.merge(vars, scope);
+
+          // Identify scale for the wedges (while previously was X/Y)
+          vars2.x_scale = vistk.utils.scale.none();
+          vars2.y_scale = vistk.utils.scale.none();
+
+          vars2.r_scale = d3.scale.linear()
+                      .range([0, vars2.width/6])
+                      .domain([0, d3.max(this_data, function(d) {
+                        return vars2.accessor_data(d)[vars2.var_share];
+                      })]);
+
+          vars2.items[0].marks[0].var_fill = "cutoff";
+          vars2.items[0].marks[0].fill = function(vars, d, i) {
+            if(d === 0) {
+              return vars2.color(vars.data[vars2.var_group]);
+            } else {
+              return vars2.color(vars.data[vars2.var_group]);
+            }
+          }
+
+          vars2.items[0].marks[0].fill_opacity = function(vars, d, i) {
+            if(d === 0) {
+              return .2;
+            } else {
+              return 1;
+            }
+          }
+
+          vars2.radius_min = 50;
+          vars2.radius_max = 50;
+          vars2[vars2.var_id] = 'name';
+
+          d3.select(that).call(utils.draw_chart, vars2, this_data);
+
+        break;
+
         case "circle":
         default:
 
@@ -867,9 +924,16 @@
                   }
                 } else {
 
-                  var r_scale = d3.scale.sqrt()
-                    .range([vars.radius_min, vars.radius_max])
-                    .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_r]; }))
+                  if(typeof params.radius !== "undefined") {
+                    return params.radius;
+                  } else {
+
+                    var r_scale = d3.scale.sqrt()
+                      .range([vars.radius_min, vars.radius_max])
+                      .domain(d3.extent(vars.new_data, function(d) {
+                        return d[vars.var_r];
+                      }))
+                  }
 
                   return r_scale(d[vars.var_r]);
                 }
@@ -878,33 +942,6 @@
               .style("fill", params_fill)
               .style("stroke-width", params_stroke_width)
               .style("stroke-opacity", params_stroke_opacity);
-
-
-              if(typeof params.fill !== "undefined") {
-
-                if(typeof params.fill === "function") {
-
-                  mark.style("fill", params.fill(d, i, vars));
-
-                } else {
-
-                  mark_enter.style("fill", function(d) {
-                    return params.fill(vars.accessor_items(d)[vars.var_color]);
-                  });
-
-                }
-
-              } else if(vars.var_color !== null) {
-
-                mark_enter.style("fill", function(d) {
-                  return vars.color(vars.accessor_items(d)[vars.var_color]);
-                });
-
-                mark.style("fill", function(d) {
-                  return vars.color(vars.accessor_items(d)[vars.var_color]);
-                });
-
-              }
 
           if(typeof params.opacity !== "undefined") {
 
@@ -937,7 +974,8 @@
               .classed("highlighted__adjacent", function(d, i) { return d.__highlighted__adjacent; })
               .classed("selected", function(d, i) { return d.__selected; })
               .classed("selected__adjacent", function(d, i) { return d.__selected__adjacent; })
-              .attr("transform", "translate(" +  params_translate + ")rotate(" +  params_rotate + ")");
+              .attr("transform", "translate(" +  params_translate + ")rotate(" +  params_rotate + ")")
+              .style("fill", params_fill);
 
           mark.exit().remove();
 
@@ -1115,19 +1153,23 @@
                               });
 
               // ENTER ITEMS
+
               var gItems_enter = gItems.enter()
                               .insert("g", ":first-child")
                               .attr('class', function(d) {
                                 return "mark__group" +  "_" + index_item;
-                              })
+                              });
 
               // ITEMS EXIT
               var gItems_exit = gItems.exit();
 
               // IN CASE OF CUSTOM ENTER FOR ITEMS
               if(typeof item.enter !== "undefined") {
+
                 gItems_enter.call(item.enter, vars);
+
               } else {
+
                 gItems_enter.attr("transform", function(d, i) {
                   return "translate(" + vars.x_scale[0]["func"](accessor_data(d)[vars.var_x])
                     + ", " + vars.y_scale[0]["func"](accessor_data(d)[vars.var_y]) + ")";
@@ -1162,7 +1204,9 @@
                 if(vars.init) {
 
                   gItems_enter
-                      .filter(function(d, i) { return params.filter(d, i, vars); })
+                      .filter(function(d, i) {
+                        return params.filter(d, i, vars);
+                      })
                       .filter(utils.filters.redraw_only)
                       .call(utils.draw_mark, params, vars);
 
@@ -1194,8 +1238,7 @@
 
                 var items = vars.svg.selectAll(mark_type + "." + mark_id)
                     .data(vars.new_data, function(d, i) {
-                      d.__mark_id = mark_id + '_' + i;
-                      return d.__mark_id;
+                      return d.__index;
                     });
 
                 // Z-index?
@@ -1229,12 +1272,7 @@
                   });
                 }
 
-                // TODO: Drawing HTML TYPE MARKS
-
-                // TODO: Drawing CANVAS TYPE MARKS
-
               }
-
 
             });
 
@@ -1257,10 +1295,13 @@
 
             // IN CASE OF CUSTOM EXIT FOR ITEMS
             if(typeof item.exit !== "undefined") {
-              gItems_exit.call(item.exit, vars)
+
+              gItems_exit.call(item.exit, vars);
+
             } else {
 
               gItems_exit.remove();
+
             }
 
             // Make sure we won't re-draw all nodes next time
@@ -1323,6 +1364,8 @@
                         .insert("g", ":first-child")
                         .attr("class", "connect__group");
 
+
+
         connect.marks.forEach(function(params, index_mark) {
 
           if(typeof params.filter === "undefined") {
@@ -1353,6 +1396,13 @@
           gConnect.each(utils.connect_group);
         }
 
+        // IN CASE OF CUSTOM ENTER FOR ITEMS
+        if(typeof connect.enter !== "undefined") {
+
+          gConnect_enter.call(connect.enter, vars);
+
+        }
+
         // EXIT
         var gConnect_exit = gConnect.exit().remove();
 
@@ -1360,7 +1410,6 @@
         if(vars.init && vars.type === "productspace") {
           connect_data.forEach(function(d) { d.__redraw = false; });
         }
-
 
       });
 
@@ -1371,6 +1420,7 @@
 
     }
 
+    // If no data then skip axis display
     if(!utils.check_data_display()) {
       return;
     }
@@ -1790,16 +1840,6 @@
   };
 
 
-  utils.init_item = function(d) {
-    d.__aggregated = false;
-    d.__selected = false;
-    d.__selected__adjacent = false;
-    d.__highlighted = false;
-    d.__highlighted__adjacent = false;
-    d.__missing = false;
-    d.__redraw = false;
-  }
-
   utils.init_params = function(v, default_value, params, d, i, vars) {
 
     var result = default_value;
@@ -1907,12 +1947,6 @@
 
     params_values.rotate = utils.init_params_values(vars.var_rotate, 0, params, d, i, vars);
 
-/*
-    // Specific to marks / charts
-    mark_params.fill = utils.init_params("fill", vars.color(vars.accessor_items(d)[vars.var_color]), params, d, i, vars);
-    mark_params.stroke = utils.init_params("stroke", 0, params, d, i, vars);
-    mark_params.text_anchor = utils.init_params("text_anchor", "end", params, d, i, vars);
-*/
     return params_values;
   }
 
@@ -1941,6 +1975,10 @@
     if(index > -1) {
       vars[arr].splice(index, 1);
     }
+  }
+
+  utils.empty_array = function(arr, attr) {
+    arr[attr] = [];
   }
 
   utils.duplicate_data = function() {

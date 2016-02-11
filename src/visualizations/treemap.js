@@ -1,16 +1,16 @@
-vars.default_params["treemap"] = function(scope) {
+vars.default_params['treemap'] = function(scope) {
 
   var params = {};
 
   if(vars.init) {
 
     // If no group is set, then each item is its own group
-    if(typeof vars.var_group === "undefined" || vars.var_group === null) {
+    if(typeof vars.var_group === 'undefined' || vars.var_group === null) {
       vars.var_group = vars.var_id;
     }
 
     if(vars.var_group === vars.var_id) {
-      vars.var_group = "_index_item";
+      vars.var_group = '_index_item';
     }
 
   }
@@ -26,7 +26,7 @@ vars.default_params["treemap"] = function(scope) {
         .size([scope.width - scope.margin.left - scope.margin.right, scope.height - scope.margin.top - scope.margin.bottom])
         .mode(scope.treemap_mode)
         .value(function(d) {
-          if(typeof scope.accessor_data(d)[vars.var_size] === "function") {
+          if(typeof scope.accessor_data(d)[vars.var_size] === 'function') {
             return scope.accessor_data(d)[vars.var_size](d);
           } else {
             return scope.accessor_data(d)[vars.var_size];
@@ -53,10 +53,10 @@ vars.default_params["treemap"] = function(scope) {
 
   params.items = [{
     marks: [{
-      type: "divtext",
+      type: 'divtext',
       filter: function(d, i) { return d.depth == vars.treemap.depth_text && d.dx > vars.treemap.dx && d.d_y >  vars.treemap.d_y; }
     }, {
-      type: "rect",
+      type: 'rect',
       filter: function(d, i) { return d.depth == vars.treemap.depth_rect; },
       x: 0,
       y: 0,

@@ -11,19 +11,13 @@
 
 d3.csv("../../vis-toolkit-datasets/data/stocks.csv", function(error, data) {
 
-  // symbol,date,price
-  // MSFT,Jan 2000,39.81
-  // MSFT,Feb 2000,36.35
-  // MSFT,Mar 2000,43.22
-  // MSFT,Apr 2000,28.37
-
   // PRE-PROCESSING
   data.forEach(function(d, i) {
     d.price = +d.price;
   })
 
   visualization = vistk.viz().params({
-    type: "linechart",
+    type: "stacked",
     container: "#viz",
     height: 600,
     width: 900,
@@ -38,7 +32,6 @@ d3.csv("../../vis-toolkit-datasets/data/stocks.csv", function(error, data) {
     x_tick: 10,
     x_tickSize: 100,
     x_format: function(d) { return d; },
-    x_axis_orient: 'bottom',
     time: {
       parse: d3.time.format("%b %Y").parse,
       var_time: 'date',

@@ -1,0 +1,53 @@
+<!doctype html>
+<meta charset="utf-8">
+<script src="../js/d3.js" charset="utf-8"></script>
+<script src="../build/vistk.js"></script>
+<link href="../css/vistk.css" rel="stylesheet">
+<body>
+<div id="viz"></div>
+<script>
+
+var scale20c = d3.scale.category20c();
+
+var colors20c = d3.range(5).map(function(d, i) {
+  return scale20c(i);
+});
+
+// http://d3-legend.susielu.com/#color-quant
+
+var width = 500;
+
+var visualization = vistk.viz()
+      .params({
+        dev: true,
+        height: 200,
+        width: 500,
+        margin: {top: 0, right: 0, bottom: 0, left: 0},
+        type: 'ordinal_horizontal',
+        data: colors20c,
+        container: '#viz',
+        var_text: '__value',
+        var_color: '__value',
+        var_group: '__value',
+        var_x: '__id',
+        var_y: '__id',
+        x_ticks: 10,
+        items: [{
+          marks: [{
+            type: "rect",
+            rotate: "0",
+            width: width/colors20c.length,
+            height: 20,
+            var_fill: "__value"
+          }, {
+            type: "text",
+            translate: [width/colors20c.length/2, 25],
+            text_anchor: 'middle'
+          }]
+        }]
+      });
+
+d3.select("#viz").call(visualization);
+
+
+</script>

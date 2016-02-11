@@ -3,7 +3,10 @@ vars.default_params["linechart"] = function(scope) {
   var params = {};
 
   params.accessor_values = function(d) { return d.values; };
-  params.accessor_items = function(d) { return d; };
+
+  params.accessor_data = function(d) {
+    return d.values[vars.time.current_time];
+  };
 
   params.x_scale = [{
     func: d3.scale.linear()
@@ -23,9 +26,10 @@ vars.default_params["linechart"] = function(scope) {
 
   params.items = [{
     marks: [{
-      type: "circle",
+      type: 'circle',
       fill: function(d) {
-        return vars.color(params.accessor_items(d)[vars.var_color]); }
+        return vars.color(params.accessor_data(d)[vars.var_color]);
+      }
     }, {
       var_mark: '__highlighted',
       type: d3.scale.ordinal().domain([true, false]).range(['text', 'none']),
@@ -48,24 +52,29 @@ vars.default_params["linechart"] = function(scope) {
     }
   }];
 
-
   params.connect = [{
     marks: [{
-      type: "path",
+      type: 'path',
       stroke: function(d) {
-        return vars.color(params.accessor_items(d)[vars.var_color]);
+        return vars.color(params.accessor_data(d)[vars.var_color]);
+      },
+      fill: function(d) {
+        return 'none';
       },
       func: d3.svg.line()
            .interpolate(vars.interpolate)
-           .x(function(d) { return params.x_scale[0]["func"](d[vars.var_x]); })
-           .y(function(d) { return params.y_scale[0]["func"](d[vars.var_y]); }),
-      fill: "none"
+           .x(function(d) {
+             return params.x_scale[0]['func'](vars.time.parse(d[vars.var_x]));
+           })
+           .y(function(d) {
+             return params.y_scale[0]['func'](d[vars.var_y]);
+           })
     }]
   }];
 
   params.x_ticks = vars.time.points.length;
   params.x_tickValues = null;
-  params.x_axis_orient = "top";
+  params.x_axis_orient = 'top';
   params.x_axis_show = true;
   params.x_grid_show = true;
   params.x_text = false;

@@ -1,0 +1,125 @@
+<!doctype html>
+<meta charset="utf-8">
+<script src="../js/d3.js"></script>
+<script src="../build/vistk.js"></script>
+<link href="../css/vistk.css" rel="stylesheet">
+<body>
+<div id="viz"></div>
+
+See original <a href="http://www.transparency.org/cpi2015">geo-map visualization</a>.
+<body>
+<script src="../js/d3.js"></script>
+<script>
+
+d3.json("../../vis-toolkit-datasets/data/cpi-data.json", function(error, data) {
+
+  dataset = [];
+  data.forEach(function(d, i) {
+
+    var c2012 = {};
+    c2012.country = d['Country'];
+    c2012.year = 2012;
+    c2012.score = d['2012_score'];
+    dataset.push(c2012);
+
+    var c2013 = {};
+    c2013.country = d['Country'];
+    c2013.year = 2013;
+    c2013.score = d['2013_score'];
+    dataset.push(c2013);
+
+    var c2014 = {};
+    c2014.country = d['Country'];
+    c2014.year = 2013;
+    c2014.score = d['2014_score'];
+    dataset.push(c2014);
+
+    var c2015 = {};
+    c2015.country = d['Country'];
+    c2015.year = 2015;
+    c2015.score = d['2015_score'];
+    dataset.push(c2015);
+
+  });
+
+  visualization = vistk.viz().params({
+    type: "slopegraph",
+    container: "#viz",
+    height: 1500,
+    width: 400,
+    margin: {top: 30, right: 120, bottom: 30, left: 100},
+    data: dataset,
+    var_id: "country",
+    var_color: 'score',
+    color: d3.scale.linear().domain([0, 10]).range(["blue", "red"]),
+    var_text: "country",
+    y_text: "ECI Rank",
+    var_y: "score",
+    y_invert: false,
+    var_x: "year",
+    items: [{
+      attr: "left_label",
+      accessor_data: function(d) {
+        return d.values.filter(function(e) {
+          return e.year == 2012;
+        })[0];
+      },
+      marks: [{
+        type: "text",
+        text_anchor: "start",
+        translate: [5, 0],
+        text: function(d) {
+          return d.values['2012']['score'];
+        }
+      }]
+    }, {
+      attr: "right_label",
+      accessor_data: function(d) {
+        return d.values.filter(function(e) {
+          return e.year == 2015;
+        })[0];
+      },
+      marks: [{
+        type: "text",
+        text_anchor: "end",
+        translate: [-20, 0],
+        text: function(d) {
+          return d.values['2015']['score'] + ' ' + d.country;
+        }
+      }]
+    }],
+    connect: [{
+      marks: [{
+        type: "path",
+        rotate: "0",
+        // fill: function(d) {
+        //   var scale = d3.scale.linear()
+        //     .domain([-1, 0, 1])
+        //     .range(["red", "black", "green"]);
+        //   var change = d.values['2004']['rank_eci'] - d.values['2014']['rank_eci'];
+        //   var change_bin = change > 0 ? 1 : change < 0 ? -1: 0;
+        //   return scale(change_bin);
+        // },
+        func: function(d, i, vars) {
+          return d3.svg.line()
+             .interpolate(vars.interpolate)
+             .x(function(d) { return vars.x_scale[0]["func"](d[vars.var_x]); })
+             .y(function(d) { return vars.y_scale[0]["func"](d[vars.var_y]); })
+           }
+      }]
+    }],
+    time: {
+      parse: function(d) { return d; },
+      var_time: 'year',
+      current_time: '2015',
+  //tex    filter: [2012]
+    },
+    ui: {
+      default: true
+    },
+  });
+
+  d3.select("#viz").call(visualization);
+
+});
+</script>

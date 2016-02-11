@@ -40,7 +40,7 @@
       d.date = parseDate(d.Date);
       d.close = +d.Close;
     });
-    
+
     x.domain(d3.extent(data, function(d) { return d.date; }));
     y.domain(d3.extent(data, function(d) { return d.close; }));
 
@@ -58,59 +58,61 @@
        .attr('class', 'sparkcircle')
        .attr('cx', x(data[0].date))
        .attr('cy', y(data[0].close))
-       .attr('r', 1.5);  
+       .attr('r', 1.5);
   }
 
-  d3.csv('../data/goog.csv', function(error, data) {
+  d3.csv('../../vis-toolkit-datasets/data/goog.csv', function(error, data) {
     sparkline('#viz_2', data);
   });
 
-  d3.csv('../data/goog.csv', function(error, data) {
+  d3.csv('../../vis-toolkit-datasets/data/goog.csv', function(error, data) {
 
   // Data pre-processing
     data.forEach(function(d, i) {
       d.close = +d.Close;
-      d.date = +d3.time.format("%b %d, %Y").parse(d.Date);
+      //d.date = +d3.time.format("%b %d, %Y").parse(d.Date);
       d.company = "GOOG";
       d.i = i;
     });
 
-  visualization = vistk.viz()
-    .params({
-      type: "sparkline",
-      dev: true,
-      container: "#viz",
-      width: 100,
-      height: 25,
-      margin: {top:0, bottom: 0, left: 0, right: 0},
-      data: data,
-      var_y: "close",
-      var_x: "date",
-      var_id: 'company',
-      ui: {
-        default: true
-      },
-      time: {
-        var_time: "date",
-        parse: d3.time.format("%b %d, %Y"),
-        current_time: vistk.utils.max
-      },
-      items: [{
-        attr: "name",
-        marks: [{
-          type: "circle",
-          r: 10,
-          height: 10,
-          fill: function() { return "red"; }
-        }, {
-          type: "text",
-          rotate: "-50"
+    console.log(data)
+
+    visualization = vistk.viz()
+      .params({
+        type: "sparkline",
+        dev: true,
+        container: "#viz",
+        width: 100,
+        height: 25,
+        margin: {top:0, bottom: 0, left: 0, right: 0},
+        data: data,
+        var_y: 'close',
+        var_x: 'Date',
+        var_id: 'company',
+        ui: {
+          default: true
+        },
+        time: {
+          var_time: "Date",
+          parse: d3.time.format("%b %d, %Y").parse,
+          current_time: vistk.utils.max
+        },
+        items: [{
+          attr: "name",
+          marks: [{
+            type: "circle",
+            r: 10,
+            height: 10,
+            fill: function() { return 'red'; }
+          }, {
+            type: "text",
+            rotate: "-50"
+          }]
         }]
-      }]
-    });
+      });
 
-  d3.select(visualization.container()).call(visualization);
+    d3.select(visualization.container()).call(visualization);
 
-});
+  });
 
 </script>

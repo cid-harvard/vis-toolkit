@@ -1,0 +1,30 @@
+<!doctype html>
+<meta charset="utf-8">
+<script src="../js/d3.js"></script>
+<script src="../build/vistk.js"></script>
+<link href="../css/vistk.css" rel="stylesheet">
+<body>
+<div id="viz"></div>
+<script>
+
+var data = [{id: 'A', value: 11}, {id: 'B', value: 10}, {id: 'C', value: 9}];
+
+var visualization = vistk.viz()
+    .params({
+      type: 'piechart',
+      width: 600,
+      height: 400,
+      margin: {top: 10, right: 10, bottom: 30, left: 30},
+      data: data,
+      var_id: 'id',
+      container: '#viz',
+      var_group: 'value',
+      var_color: 'value',
+      var_x: function(vars) { return vars.width/2; },
+      var_y: function(vars) { return vars.height/2; },
+      var_share: 'value',
+    });
+
+d3.select("#viz").call(visualization);
+
+</script>

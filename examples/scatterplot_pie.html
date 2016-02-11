@@ -7,58 +7,51 @@
 <div id="viz"></div>
 <script>
 
-d3.json("../../vis-toolkit-datasets/data/diversification_ubiquity_hs4_1995_2012.json", function(error, countries) {
+var data = [{id: 'AA', x: 10, y: 20, group: 'A', value: 10, cutoff: 1},
+            {id: 'AB', x: 12, y: 22, group: 'A', value: 10, cutoff: 0},
+            {id: 'AC', x: 15, y: 22, group: 'A', value: 10, cutoff: 1},
+            {id: 'BA', x: 22, y: 51, group: 'B', value: 10, cutoff: 0},
+            {id: 'BB', x: 22, y: 55, group: 'B', value: 10, cutoff: 1},
+            {id: 'BC', x: 24, y: 51, group: 'B', value: 10, cutoff: 0},
+            {id: 'CA', x: 20, y: 20, group: 'C', value: 10, cutoff: 1},
+            {id: 'CB', x: 22, y: 20, group: 'C', value: 10, cutoff: 0},
+            {id: 'CC', x: 20, y: 25, group: 'C', value: 10, cutoff: 1}
+           ];
 
-// [{"name": "Angola", "name_2char": "ao", "country_id": 4, "longitude": 13.242, "years": [{"avg_products": 61, "nb_products": 5, "year": 1995}
-
-  var flat_years = vistk.utils.flatten_years(countries);
-
-  visualization = vistk.viz()
+var  visualization = vistk.viz()
     .params({
       dev: true,
       type: 'scatterplot',
       margin: {top: 10, right: 10, bottom: 30, left: 30},
       container: '#viz',
-      data: flat_years,
-      var_id: 'name',
-      var_group: 'continent',
-      var_color: 'continent',
-      var_x: 'nb_products',
-      var_y: 'avg_products',
-      var_r: 'nb_products',
-      var_share: "avg_products",
-      share_cutoff: function(d) { return d.avg_products > 30; },
-      var_text: 'name_2char',
-      time: {
-        var_time: "year",
-        current_time: "1995",
-        parse: function(d) { return d; }
-      },
-      x_scale: [{
-        domain: [0, 700]
-      }],
+      data: data,
+      var_id: 'id',
+      var_group: 'group',
+      var_color: 'cutoff',
+      var_x: 'x',
+      var_y: 'y',
+      var_r: 'x',
+      var_share: 'value',
       items: [{
         marks: [{
           var_mark: '__aggregated',
-          type: d3.scale.ordinal().domain([true, false]).range(["circle", "none"]),
+          type: d3.scale.ordinal().domain([true, false]).range(["piechart", "none"]),
+          var_share: 'value',
+          class: 'piechart'
         }, {
           type: d3.scale.ordinal().domain([true, false]).range(["text", "none"]),
           rotate: "-30"
         }]
       }],
-      ui: {
-        default: true,
-        options: ["country", "continent"]
-      },
-      selection: ["France"],
-      highlight: ["France", "Germany"],
-      title: "World Countries",
       set: {
         __aggregated: true
+      },
+      ui: {
+        default: true,
+        options: ['community_name', 'product']
       }
     });
 
-  d3.select("#viz").call(visualization);
+d3.select("#viz").call(visualization);
 
-});
 </script>

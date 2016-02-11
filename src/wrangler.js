@@ -1,15 +1,4 @@
-
-    // 1 - Init and define default values [INIT]
-    // 2 - Duplicates the dataset [INIT]
-    // 3 - Mutate all_data with static metadata [INIT]
-    // Filter by time values
-    // Filter by attribute/ Selection
-    // Find unique values from dataset
-    // Remove missing data
-    // Aggregates the data [REFRESH]
-    // Sorts the data
-
-    // 1 - Init and define default parameters
+    // Init and define default parameters
     vars.items_data = [];
 
     // Duplicates the whole dataset
@@ -21,7 +10,6 @@
     // Each item needs coordinates
     // 1/ In case we use functions for X/Y variables
     // 2/ Adds default attributes __var_x and __var_y if no coordinate exist
-
 
     if(typeof vars.var_x !== "string" && typeof vars.var_x === "function") {
 
@@ -65,17 +53,21 @@
       vars.time.current_time = vars.time.current_time(vars.data);
     }
 
+    // In case the current_time is set dynamically
+    if(typeof vars.time.parse === "undefined") {
+      vars.time.parse = function(d) { return d; }
+    }
+
     // Calculate vars.new_data which should contain two things
     // 1/ The list of all items (e.g. countries, products)
     // 2/ The metadata for each items
     if(vars.init || vars.refresh) {
 
-      // Creates default ids `__id` and `__value` for dataset without any id
-      if(typeof vars.var_id === 'undefined') {
+      // Duplicate data to prevent mutation
+      vars.new_data = JSON.parse(JSON.stringify(vars.all_data));
 
-        if(vars.new_data === null) {
-          vars.new_data = vars.all_data;
-        }
+      // Creates default ids `__id` and `__value` for dataset without any id
+      if(typeof vars.var_id === 'undefined' || typeof vars.all_data[0][vars.var_id] === 'undefined') {
 
         vars.new_data = vars.new_data.map(function(d, i) {
 
@@ -96,11 +88,6 @@
         if(typeof vars.var_text === 'undefined') {
           vars.var_text = '__id';
         }
-
-      } else {
-
-        // Duplicate data to prevent mutation
-        vars.new_data = JSON.parse(JSON.stringify(vars.all_data));
 
       }
 
@@ -131,7 +118,11 @@
       }
 
       // Find unique values for various parameters
-      vars.time.interval = d3.extent(vars.new_data, function(d) { return d[vars.time.var_time]; });
+      vars.time.interval = d3.extent(vars.new_data, function(d) {
+        return vars.time.parse(d[vars.time.var_time]);
+      });
+
+      // Note: none-parsed time values
       vars.time.points = vistk.utils.find_unique_values(vars.new_data, vars.time.var_time);
 
       // In case no temporal values, change the accessor
@@ -151,6 +142,7 @@
 
         var index = -1;
 
+        // Creates items by grouping data
         if(typeof lookup_index[d[vars.var_id]] === 'undefined') {
 
           index = lookup_size;
@@ -158,14 +150,16 @@
 
           lookup_index[d[vars.var_id]] = index;
 
-          utils.init_item(d);
+          vistk.utils.init_item(d);
 
           if(vars.filter.indexOf(d[vars.var_group]) > -1) {
             d.__filtered = true;
           }
+
           if(vars.highlight.indexOf(d[vars.var_id]) > -1) {
             d.__highlighted = true;
           }
+
           if(vars.selection.indexOf(d[vars.var_id]) > -1) {
             d.__selected = true;
           }
@@ -174,7 +168,7 @@
 
           d.__index = index;
 
-          // Dup for metadata
+          // Duplicate for metadata
           var dup = JSON.parse(JSON.stringify(d));
           dup.values = [];
 
@@ -187,17 +181,23 @@
         }
 
         var v = {};
-        v[vars.var_id] = d[vars.var_id];
         v[vars.time.var_time] = d[vars.time.var_time];
         v[vars.var_y] = d[vars.var_y];
         v[vars.var_x] = d[vars.var_x];
+        v[vars.var_group] = d[vars.var_group];
         v[vars.var_color] = d[vars.var_color];
         v[vars.var_size] = d[vars.var_size];
         v[vars.var_text] = d[vars.var_text];
         v[vars.var_r] = d[vars.var_r];
+        v[vars.var_share] = d[vars.var_share];
+        v[vars.var_id] = d[vars.var_id];
 
-        // TODO: make sure there is no existing value for this time
-        unique_data[index].values[d[vars.time.var_time]] = v;
+        delete v['undefined'];
+
+        // If no time values then we should already all the data we need
+       // if(vars.time.var_time !== null) {
+          unique_data[index].values[d[vars.time.var_time]] = v;
+       // }
 
       });
 
@@ -227,142 +227,23 @@
         console.log("[vars.aggregate]", vars.aggregate);
       }
 
-      // Do the nesting
+      // Do the nesting by var_agg (usually vars.var_group)
       // Should make sure it works for a generc dataset
       // Also for time or none-time attributes
-      nested_data = d3.nest()
-        .key(function(d) {
-          return d[vars.var_group];
-        })
-        .rollup(function(leaves) {
+      var agg_data = vistk.utils.aggregate(vars.new_data, vars, vars.var_group, 'sum');
 
-          // Generates a new dataset with aggregated data
-          var aggregation = {};
-
-          aggregation[vars.var_id] = leaves[0][vars.var_group];
-
-          aggregation[vars.var_text] = leaves[0][vars.var_group];
-
-          aggregation[vars.var_group] = leaves[0][vars.var_group];
-
-          // Quick fix in case var_x is an ordinal scale
-          if(vars.var_x !== vars.var_id && vars.var_x !== vars.time.var_time && vars.var_x !== vars.var_group) {
-            aggregation[vars.var_x] = d3.mean(leaves, function(d) {
-              return d[vars.var_x];
-            });
-          } else {
-            aggregation[vars.var_x] = leaves[0][vars.var_x];
-          }
-
-          if(vars.var_y !== vars.var_id && vars.var_y !== vars.time.var_time) {
-            aggregation[vars.var_y] = d3.mean(leaves, function(d) {
-              return d[vars.var_y];
-            });
-          } else {
-            aggregation[vars.var_y] = leaves[0][vars.var_y];
-          }
-
-          aggregation[vars.var_r] = d3.sum(leaves, function(d) {
-            return d[vars.var_r];
-          });
-
-          aggregation.piescatter = [];
-          aggregation.piescatter[0] = {};
-          aggregation.piescatter[1] = {};
-
-          aggregation.values = [];
-
-          // Assuming all the time values are present in all items
-          vars.time.points.forEach(function(time, i) {
-
-            var d = {};
-
-           // if(vars.var_x === vars.time.var_time) {
-           //   d[vars.var_x] = leaves[0].values[i][vars.var_x];
-           // } else {
-           //   d[vars.var_x] = 0;
-           // }
-
-            // Init values
-            d[vars.var_x] = leaves[0].values[time][vars.var_x];
-            d[vars.var_y] = leaves[0].values[time][vars.var_y];
-            d[vars.var_r] = leaves[0].values[time][vars.var_r];
-            d[vars.var_id] = leaves[0].values[time][vars.var_id];
-
-            // Time var
-            d[vars.time.var_time] = leaves[0].values[time][vars.time.var_time];
-
-            aggregation.values[time] = d;
-
-            //return d;
-          });
-
-          // Assuming we only aggregate var_x, var_y, var_r
-          leaves.forEach(function(d, i) {
-
-            vars.time.points.forEach(function(time, i) {
-
-              if(vars.var_x !== vars.time.var_time) {
-                aggregation.values[time][vars.var_x] += d.values[time][vars.var_x];
-              }
-
-              aggregation.values[time][vars.var_y] += d.values[time][vars.var_y];
-              aggregation.values[time][vars.var_r] += d.values[time][vars.var_r];
-
-            });
-          });
-
-          utils.init_item(aggregation);
-          aggregation.__aggregated = true;
-          aggregation.__redraw = true;
-
-          if(typeof vars.share_cutoff != "undefined") {
-
-            aggregation.piescatter[0][vars.var_share] = d3.sum(leaves, function(d) {
-
-              if(vars.share_cutoff(d)) {
-                return 1;
-              } else {
-                return 0;
-              }
-            });
-
-            aggregation.piescatter[1][vars.var_share] = d3.sum(leaves, function(d) {
-
-              if(!vars.share_cutoff(d)) {
-                return 1;
-              } else {
-                return 0;
-              }
-            });
-
-          }
-
-          vars.columns.forEach(function(c) {
-
-            if(c === vars.var_text || c === vars.var_group) {
-              return;
-            }
-
-            aggregation[c] = d3.mean(leaves, function(d) {
-              return d[c];
-            });
-          });
-
-          return aggregation;
-        })
-        .entries(vars.new_data);
-
-      // Transform key/value into values tab only
+      // Do we concatenate aggregated values to items, or just keep aggregated values?
       if(typeof vars.set['__aggregated'] !== 'undefined' && vars.set['__aggregated']) {
 
-        vars.new_data = vars.new_data.concat(nested_data.map(function(d) {
+        // Note: agg_data have a key/values format
+        vars.new_data = vars.new_data.concat(agg_data.map(function(d) {
           return d.values;
         }));
 
       } else {
 
-        vars.new_data = nested_data.map(function(d) { return d.values; });
+        // Note: agg_data have a key/values format
+        vars.new_data = agg_data.map(function(d) { return d.values; });
 
       }
 
@@ -375,17 +256,17 @@
          console.log("[updating sort]", vars.var_sort, vars.var_sort_asc, vars.user_vars)
       }
 
+      var sort_function = d3.descending;
+
       if(typeof vars.var_sort_asc !== "undefined" && !vars.var_sort_asc) {
-        vars.new_data = vars.new_data.sort(function(a, b) {
-          if(typeof vars.accessor_data(a) !== 'undefined' && typeof vars.accessor_data(b) !== 'undefined')
-            return d3.ascending(vars.accessor_data(a)[vars.var_sort], vars.accessor_data(b)[vars.var_sort]);
-        });
-      } else {
-        vars.new_data = vars.new_data.sort(function(a, b) {
-          if(typeof vars.accessor_data(a) !== 'undefined' && typeof vars.accessor_data(b) !== 'undefined')
-            return d3.descending(vars.accessor_data(a)[vars.var_sort], vars.accessor_data(b)[vars.var_sort]);
-        });
+        sort_function = d3.ascending;
       }
+
+      vars.new_data = vars.new_data.sort(function(a, b) {
+        if(typeof vars.accessor_data(a) !== 'undefined' && typeof vars.accessor_data(b) !== 'undefined')
+          return sort_function(vars.accessor_data(a)[vars.var_sort], vars.accessor_data(b)[vars.var_sort]);
+      });
+
     }
 
     vars.new_data = vars.new_data.filter(function(d) {

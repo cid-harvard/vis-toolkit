@@ -1,10 +1,9 @@
-vars.default_params["stacked"] = function(scope) {
+vars.default_params['stacked'] = function(scope) {
 
   var params = {};
 
   params.accessor_values = function(d) { return d.values; };
   params.accessor_items = function(d) { return d; };
-
 
   // Chart specific metadata: stacked
   if(vars.refresh) {
@@ -40,7 +39,8 @@ vars.default_params["stacked"] = function(scope) {
     vars.stack = d3.layout.stack()
         .values(function(d) { return d3.values(d.values); })
         .x(function(d) { return d[vars.time.var_time]; })
-        .y(function(d) { return d[vars.var_y]; });
+        .y(function(d) { return d[vars.var_y]; })
+        .offset(vars.stack_offset);
 
      vars.new_data = vars.stack(vars.new_data);
   }
@@ -51,6 +51,7 @@ vars.default_params["stacked"] = function(scope) {
             .domain(vars.time.interval)
   }];
 
+  // Linear scale that applies over all time points
   params.y_scale = [{
     func: d3.scale.linear()
             .range([scope.height - scope.margin.top - scope.margin.bottom, scope.margin.top])
@@ -64,16 +65,20 @@ vars.default_params["stacked"] = function(scope) {
   params.connect = [{
     attr: vars.time.var_time,
     marks: [{
-      type: "path",
-      fill: function(d) { return vars.color(params.accessor_items(d)[vars.var_color]); },
+      type: 'path',
+      fill: function(d) {
+        return vars.color(params.accessor_items(d)[vars.var_color]);
+      },
       stroke: function(d) {
-        return "black";
+        return 'black';
       },
       func: d3.svg.area()
               .interpolate('cardinal')
-              .x(function(d) { return params.x_scale[0]["func"](d[vars.time.var_time]); })
-              .y0(function(d) { return params.y_scale[0]["func"](d.y0); })
-              .y1(function(d) { return params.y_scale[0]["func"](d.y0 + d.y); })
+              .x(function(d) {
+                return params.x_scale[0]['func'](vars.time.parse(d[vars.var_x]));
+              })
+              .y0(function(d) { return params.y_scale[0]['func'](d.y0); })
+              .y1(function(d) { return params.y_scale[0]['func'](d.y0 + d.y); })
     }]
   }];
 
@@ -81,7 +86,7 @@ vars.default_params["stacked"] = function(scope) {
   params.x_axis_translate = [0, scope.height - scope.margin.bottom - scope.margin.top];
   params.x_grid_show = true;
   params.x_ticks = vars.time.points.length;
-  params.x_format = d3.time.format("%Y");
+  params.x_format = d3.time.format('%Y');
   params.x_text = false;
 
   params.y_axis_show = true;

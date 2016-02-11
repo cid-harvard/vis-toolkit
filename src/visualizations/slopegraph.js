@@ -1,4 +1,4 @@
-vars.default_params["slopegraph"] = function(scope) {
+vars.default_params['slopegraph'] = function(scope) {
 
   var params = {};
 
@@ -15,48 +15,42 @@ vars.default_params["slopegraph"] = function(scope) {
     func: d3.scale.linear()
             .range([scope.height - scope.margin.top - scope.margin.bottom, scope.margin.top])
             .domain(d3.extent(vars.new_data, function(d) {
-              return scope.accessor_data(d)[vars.var_y];
+              return scope.accessor_data(d)[scope.var_y];
             }))
   }];
 
   params.items = [{
-    attr: "right_label",
+    attr: 'right_label',
     marks: [{
-      type: "text",
-      text_anchor: "start"
+      type: 'text',
+      text_anchor: 'start'
     }]
   }, {
-    attr: "left_label",
-    accessor_data: function(d) {
-      return d.values.filter(function(e) {
-        return e.year == "2003";
-      })[0];
-    },
+    attr: 'left_label',
     marks: [{
-      type: "text",
-      text_anchor: "end",
+      type: 'text',
+      text_anchor: 'end',
       translate: [- 20, 0]
       // translate: [-(scope.width-scope.margin.left-scope.margin.right-scope.margin.left+20), 0]
     }]
   }];
 
   params.connect = [{
-    attr: vars.time.var_time,
+    attr: scope.time.var_time,
     marks: [{
-      type: "path",
-      rotate: "0",
-      fill: 'red',
-      stroke: function(d) { return "black"; },
+      type: 'path',
+      fill: 'none',
+      stroke: function(d) { return 'black'; },
       func: d3.svg.line()
-           .interpolate(vars.interpolate)
-           .x(function(d) { return vars.x_scale[0]["func"](d[vars.var_x]); })
-           .y(function(d) { return vars.y_scale[0]["func"](d[vars.var_y]); }),
+           .interpolate(scope.interpolate)
+           .x(function(d) { return vars.x_scale[0]["func"](d[scope.var_x]); })
+           .y(function(d) { return vars.y_scale[0]["func"](d[scope.var_y]); }),
     }]
   }];
 
-  params.x_ticks = vars.time.points.length;
-  params.x_tickValues = vars.time.interval;
-  params.x_axis_orient = "top";
+  params.x_ticks = scope.time.points.length;
+  params.x_tickValues = scope.time.interval;
+  params.x_axis_orient = 'top';
   params.x_axis_show = true;
   params.x_grid_show = false;
   params.x_text = false;

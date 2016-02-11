@@ -58,10 +58,10 @@ d3.csv("../../vis-toolkit-datasets/data/new_rankings2.csv", function(error, data
       y_invert: true,
       var_x: "year",
       time: {
-        parse: d3.time.format("%Y").parse,
+        parse: function(d) { return d; },
         var_time: 'year',
         current_time: '2013',
-        filter: ['2003', '2013']
+      //  filter: ['2003', '2013']
       },
       selection: ["Japan", "Switzerland", "Germany"],
       highlight: "France",

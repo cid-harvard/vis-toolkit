@@ -1,0 +1,71 @@
+<!doctype html>
+<meta charset="utf-8">
+<script src="../js/d3.js"></script>
+<script src="../build/vistk.js"></script>
+<link href="../css/vistk.css" rel="stylesheet">
+<body>
+<div id="viz"></div>
+<script>
+
+d3.json("../../vis-toolkit-datasets/data/diversification_ubiquity_hs4_1995_2012.json", function(error, countries) {
+
+// [{"name": "Angola", "name_2char": "ao", "country_id": 4, "longitude": 13.242, "years": [{"avg_products": 61, "nb_products": 5, "year": 1995}
+
+  var flat_years = vistk.utils.flatten_years(countries);
+
+  flat_years.forEach(function(d) {
+    d.cutoff = d.nb_products > 200 ? 1: 0;
+  })
+
+  visualization = vistk.viz()
+      .params({
+        dev: true,
+        type: 'scatterplot',
+        margin: {top: 10, right: 10, bottom: 30, left: 30},
+        container: '#viz',
+        data: flat_years,
+        var_id: 'name',
+        var_group: 'continent',
+        var_color: 'cutoff',
+        color: d3.scale.ordinal().domain(["Africa", "Americas", "Asia", "Europe", "Oceania"]).range(["#99237d", "#c72439", "#6bc145", "#88c7ed", "#dd9f98"]),
+        var_x: 'nb_products',
+        var_y: 'avg_products',
+        var_r: 'nb_products',
+        var_share: 'nb_products',
+        var_text: 'name_2char',
+        radius_min: 50,
+        radius_max: 50,
+        time: {
+          var_time: "year",
+          current_time: "1995",
+          parse: function(d) { return d; }
+        },
+        items: [{
+          marks: [{
+            var_mark: '__aggregated',
+            type: d3.scale.ordinal().domain([true, false]).range(["piechart", "none"]),
+            var_share: 'nb_products',
+            class: 'piechart'
+          }, {
+            var_mark: '__aggregated',
+            type: d3.scale.ordinal().domain([true, false]).range(["circle", "none"]),
+            fill: "white",
+            radius: 50
+          }, {
+            var_mark: '__aggregated',
+            type: d3.scale.ordinal().domain([true, false]).range(["text", "none"])
+          }]
+        }],
+        set: {
+          __aggregated: true
+        },
+        ui: {
+          default: true
+        }
+      });
+
+  d3.select("#viz").call(visualization);
+
+});
+
+</script>

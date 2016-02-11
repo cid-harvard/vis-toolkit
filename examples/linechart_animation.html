@@ -56,6 +56,7 @@ d3.csv("../../vis-toolkit-datasets/data/new_rankings2.csv", function(error, data
       y_text: "ECI Rank",
       var_y: "rank",
       var_x: 'year',
+      y_invert: true,
       items: [{
         attr: "name",
         marks: [{
@@ -86,7 +87,9 @@ d3.csv("../../vis-toolkit-datasets/data/new_rankings2.csv", function(error, data
               })
               // TODO: delay by final position
         },
-        time: {current_time: vistk.utils.max}
+        time: {
+          current_time: vistk.utils.max
+        }
       }],
       connect: [{
         time: {
