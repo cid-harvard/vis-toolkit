@@ -507,9 +507,9 @@
               })
               .style("fill", params_fill);
 
-            items_mark_shape.exit().remove();
+          items_mark_shape.exit().remove();
 
-          break;
+        break;
 
         case "arc":
 
@@ -535,14 +535,8 @@
           mark.enter().append("path")
               .classed("items_" + mark_id, true)
               .classed("items__mark__arc", true)
-              .attr("fill-opacity", params_fill_opacity)
-              .attr("fill", params_fill);
-              //.style("fill-opacity", function(d, i) {
-              //  if(d.i == 0)
-              //    return .2;
-              //  else
-              //    return 1;
-              //});
+              .style("fill-opacity", params_fill_opacity)
+              .style("fill", params_fill);
 
           mark
               .classed("highlighted", function(d, i) { return d.__highlighted; })
@@ -588,7 +582,7 @@
               .classed("highlighted", function(d, i) { return d.__highlighted; })
               .classed("highlighted__adjacent", function(d, i) { return d.__highlighted__adjacent; })
               .classed("selected", function(d, i) { return d.__selected; })
-              .classed("selected__adjacent", function(d, i) { return d.__selected__adjacent; })
+              .classed("selected__adjacent", function(d, i) { return d.__selected__adjacent; });
 
           break;
 
@@ -617,7 +611,7 @@
               .attr("x1", function(d) { return -t[0]; })
               .attr("x2", function(d) { return vars.x_scale[0]["func"].range()[1] -t[0] - params_offset_right; })
               .attr("y1", function(d) { return params_offset_y; })
-              .attr("y2", function(d) { return params_offset_y; })
+              .attr("y2", function(d) { return params_offset_y; });
 
           break;
 
@@ -630,7 +624,7 @@
           mark.enter().append('line')
               .classed('mark__line_horizontal', true)
               .classed("items_" + mark_id, true)
-              .on("mouseover",function(d) { // FIX to prevent hovers
+              .on("mouseover",function(d) { // prevents hovers
                 d3.event.stopPropagation();
               })
               .on("mouseleave", function(d) {
@@ -937,7 +931,6 @@
               })
               .style("stroke", params_stroke)
               .style("fill", params_fill)
-
               .style("stroke-width", params_stroke_width)
               .style("stroke-opacity", params_stroke_opacity);
 
@@ -1145,12 +1138,8 @@
               // Join is based on the curren_time value
               var gItems = vars_svg.selectAll(".mark__group" +  "_" + index_item)
                               .data(vars.new_data.filter(function(d) {
-
                                   return typeof accessor_data(d) !== 'undefined' && typeof accessor_data(d)[vars.var_id] !== 'undefined';
                                 }), function(d, i) {
-
-                                console.log("DAATATAT FILTER", d)
-
                                 return accessor_data(d)[vars.var_id] + "_" + index_item + d.depth;
                               });
 
@@ -1418,6 +1407,7 @@
 
     }
 
+    // If no data then skip axis display
     if(!utils.check_data_display()) {
       return;
     }
@@ -1944,12 +1934,6 @@
 
     params_values.rotate = utils.init_params_values(vars.var_rotate, 0, params, d, i, vars);
 
-/*
-    // Specific to marks / charts
-    mark_params.fill = utils.init_params("fill", vars.color(vars.accessor_items(d)[vars.var_color]), params, d, i, vars);
-    mark_params.stroke = utils.init_params("stroke", 0, params, d, i, vars);
-    mark_params.text_anchor = utils.init_params("text_anchor", "end", params, d, i, vars);
-*/
     return params_values;
   }
 
