@@ -70,7 +70,7 @@
   utils.draw_mark = function(selection, params, vars) {
 
     if(vars.dev) {
-      console.log("[utils.draw_mark]", params.type)
+      console.log("[utils.draw_mark]", params.type);
     }
 
     selection.each(function(d, i) {
@@ -824,6 +824,10 @@
           // Temporary placeholder for pies
           // d3.select(that).append('circle').attr('r', 10)
 
+          // Temporary removing events to prevent redraw
+          utils.empty_array(params, 'highlightOn');
+          utils.empty_array(params, 'highlightOut');
+
           if(typeof params.class !== 'undefined') {
             d3.select(that).classed(params.class, true);
           }
@@ -920,11 +924,16 @@
                   }
                 } else {
 
-                  var r_scale = d3.scale.sqrt()
-                    .range([vars.radius_min, vars.radius_max])
-                    .domain(d3.extent(vars.new_data, function(d) {
-                      return d[vars.var_r];
-                    }))
+                  if(typeof params.radius !== "undefined") {
+                    return params.radius;
+                  } else {
+
+                    var r_scale = d3.scale.sqrt()
+                      .range([vars.radius_min, vars.radius_max])
+                      .domain(d3.extent(vars.new_data, function(d) {
+                        return d[vars.var_r];
+                      }))
+                  }
 
                   return r_scale(d[vars.var_r]);
                 }
@@ -1144,11 +1153,12 @@
                               });
 
               // ENTER ITEMS
+
               var gItems_enter = gItems.enter()
                               .insert("g", ":first-child")
                               .attr('class', function(d) {
                                 return "mark__group" +  "_" + index_item;
-                              })
+                              });
 
               // ITEMS EXIT
               var gItems_exit = gItems.exit();
@@ -1285,10 +1295,13 @@
 
             // IN CASE OF CUSTOM EXIT FOR ITEMS
             if(typeof item.exit !== "undefined") {
-              gItems_exit.call(item.exit, vars)
+
+              gItems_exit.call(item.exit, vars);
+
             } else {
 
               gItems_exit.remove();
+
             }
 
             // Make sure we won't re-draw all nodes next time
@@ -1962,6 +1975,10 @@
     if(index > -1) {
       vars[arr].splice(index, 1);
     }
+  }
+
+  utils.empty_array = function(arr, attr) {
+    arr[attr] = [];
   }
 
   utils.duplicate_data = function() {
