@@ -61,7 +61,7 @@
     }
   });
 
-  // Default events
+  // Events for page resize
   // d3.select(window).on('resize', function(d) {
   //   vars.evt.call("resize", d);
   // });
@@ -77,11 +77,12 @@
   });
 
   vars.evt.register("highlightOut", function(d) {
+
     utils.pop_array('highlight', d);
     d.__highlighted = false;
     d.__redraw = true;
 
-    // Temporary settings to prevent chart redraw tooltips .tooltip
+    // Temporary settings to prevent chart redrawing tooltips .tooltip
     d3.select(vars.container).selectAll(".items__mark__text.tooltip").remove();
     d3.select(vars.container).selectAll(".items__mark__div.tooltip").remove();
 
