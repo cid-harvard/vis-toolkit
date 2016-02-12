@@ -530,11 +530,11 @@
 
           }).innerRadius(0);
 
-          var mark = d3.select(that).selectAll(".items__mark__arc").data([d]);
+          var mark = d3.select(that).selectAll(".items__mark__arc.items_" + mark_id).data([d]);
 
           mark.enter().append("path")
-              .classed("items_" + mark_id, true)
               .classed("items__mark__arc", true)
+              .classed("items_" + mark_id, true)
               .style("fill-opacity", params_fill_opacity)
               .style("fill", params_fill);
 
@@ -833,7 +833,7 @@
           }
 
           // Create a custom configuration for pie charts
-          vars.type = 'piechart';
+          //vars.type = 'piechart';
 
           var scope = vars.default_params['piechart'](vars);
 
@@ -870,6 +870,7 @@
 
           // Generate a new configuration for the pie chart
           var vars2 = vistk.utils.merge(vars, scope);
+          vars2.type = 'piechart';
 
           // Identify scale for the wedges (while previously was X/Y)
           vars2.x_scale = vistk.utils.scale.none();
@@ -901,6 +902,8 @@
 
           vars2.radius_min = vars.r_scale(d[vars.var_r]);
           vars2.radius_max = vars.r_scale(d[vars.var_r]);
+
+          vars2.z_index = 1;
 
           d3.select(that).call(utils.draw_chart, vars2, this_data);
 
@@ -1149,12 +1152,24 @@
                               });
 
               // ENTER ITEMS
+              var gItems_enter = null;
 
-              var gItems_enter = gItems.enter()
-                              .insert("g", ":first-child")
-                              .attr('class', function(d) {
-                                return "mark__group" +  "_" + index_item;
-                              });
+              if(typeof vars.z_index !== 'undefined' && vars.z_index === 1) {
+
+                gItems_enter = gItems.enter()
+                                .append("g")
+                                .attr('class', function(d) {
+                                  return "mark__group" +  "_" + index_item;
+                                });
+
+              } else {
+
+                gItems_enter = gItems.enter()
+                                .insert("g", ":first-child")
+                                .attr('class', function(d) {
+                                  return "mark__group" +  "_" + index_item;
+                                });
+              }
 
               // ITEMS EXIT
               var gItems_exit = gItems.exit();
@@ -1302,7 +1317,7 @@
 
             // Make sure we won't re-draw all nodes next time
       //      if(vars.type == "productspace" || vars.type == "treemap" || vars.type == "scatterplot" || vars.type == "geomap") {
-            if(vars.init && vars.type !== 'linechart' && vars.type !== 'slopegraph' && vars.type !== 'slopegraph_ordinal') {
+            if(vars.init && vars.type !== 'linechart' && vars.type !== 'slopegraph' && vars.type !== 'slopegraph_ordinal' && vars.type !== 'slopegraph_ordinal') {
               vars.new_data.forEach(function(d) {
                 if(!d.__selected) { d.__redraw = false; }
               });
@@ -1359,8 +1374,6 @@
         var gConnect_enter = gConnect.enter()
                         .insert("g", ":first-child")
                         .attr("class", "connect__group");
-
-
 
         connect.marks.forEach(function(params, index_mark) {
 

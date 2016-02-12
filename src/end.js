@@ -133,7 +133,7 @@ vistk.utils.scale.linear = function(vars) {
 
 };
 
-vistk.utils.scale.none = function(vars) {
+vistk.utils.scale.none = function() {
 
   return [{
     func: d3.scale.linear()
@@ -144,7 +144,7 @@ vistk.utils.scale.none = function(vars) {
 
 vistk.utils.scale.x = {};
 
-vistk.utils.scale.x.center = function(vars) {
+vistk.utils.scale.x.center = function() {
 
   return [{
     func: d3.scale.linear()
