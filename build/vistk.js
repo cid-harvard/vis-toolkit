@@ -553,11 +553,11 @@ vistk.viz = function() {
 
           }).innerRadius(0);
 
-          var mark = d3.select(that).selectAll(".items__mark__arc").data([d]);
+          var mark = d3.select(that).selectAll(".items__mark__arc.items_" + mark_id).data([d]);
 
           mark.enter().append("path")
-              .classed("items_" + mark_id, true)
               .classed("items__mark__arc", true)
+              .classed("items_" + mark_id, true)
               .style("fill-opacity", params_fill_opacity)
               .style("fill", params_fill);
 
@@ -844,20 +844,11 @@ vistk.viz = function() {
 
         case "piechart":
 
-          // Temporary placeholder for pies
-          // d3.select(that).append('circle').attr('r', 10)
-
-          // Temporary removing events to prevent redraw
-          utils.empty_array(params, 'highlightOn');
-          utils.empty_array(params, 'highlightOut');
-
           if(typeof params.class !== 'undefined') {
             d3.select(that).classed(params.class, true);
           }
 
           // Create a custom configuration for pie charts
-          vars.type = 'piechart';
-
           var scope = vars.default_params['piechart'](vars);
 
           // Filter dataset to keep non-aggregated data for the current group
@@ -866,6 +857,8 @@ vistk.viz = function() {
           });
 
           this_data = vistk.utils.aggregate(this_data, vars, 'cutoff', 'sum');
+
+          // Aggregation returns key / values data, only keep values
           this_data = this_data.map(function(d) { return d.values; });
 
           // Re-generate the pie layout
@@ -891,6 +884,7 @@ vistk.viz = function() {
 
           // Generate a new configuration for the pie chart
           var vars2 = vistk.utils.merge(vars, scope);
+          vars.type = 'piescatter';
 
           // Identify scale for the wedges (while previously was X/Y)
           vars2.x_scale = vistk.utils.scale.none();
@@ -903,6 +897,7 @@ vistk.viz = function() {
                       })]);
 
           vars2.items[0].marks[0].var_fill = "cutoff";
+
           vars2.items[0].marks[0].fill = function(vars, d, i) {
             if(d === 0) {
               return vars2.color(vars.data[vars2.var_group]);
@@ -919,9 +914,10 @@ vistk.viz = function() {
             }
           }
 
-          vars2.radius_min = 50;
-          vars2.radius_max = 50;
-          vars2[vars2.var_id] = 'name';
+          vars2.radius_min = vars.r_scale(d[vars.var_r]);
+          vars2.radius_max = vars.r_scale(d[vars.var_r]);
+
+          vars2.z_index = 1;
 
           d3.select(that).call(utils.draw_chart, vars2, this_data);
 
@@ -949,16 +945,10 @@ vistk.viz = function() {
 
                   if(typeof params.radius !== "undefined") {
                     return params.radius;
-                  } else {
-
-                    var r_scale = d3.scale.sqrt()
-                      .range([vars.radius_min, vars.radius_max])
-                      .domain(d3.extent(vars.new_data, function(d) {
-                        return d[vars.var_r];
-                      }))
                   }
 
-                  return r_scale(d[vars.var_r]);
+                  return vars.r_scale(d[vars.var_r]);
+
                 }
               })
               .style("stroke", params_stroke)
@@ -1176,12 +1166,24 @@ vistk.viz = function() {
                               });
 
               // ENTER ITEMS
+              var gItems_enter = null;
 
-              var gItems_enter = gItems.enter()
-                              .insert("g", ":first-child")
-                              .attr('class', function(d) {
-                                return "mark__group" +  "_" + index_item;
-                              });
+              if(typeof vars.z_index !== 'undefined' && vars.z_index === 1) {
+
+                gItems_enter = gItems.enter()
+                                .append("g")
+                                .attr('class', function(d) {
+                                  return "mark__group" +  "_" + index_item;
+                                });
+
+              } else {
+
+                gItems_enter = gItems.enter()
+                                .insert("g", ":first-child")
+                                .attr('class', function(d) {
+                                  return "mark__group" +  "_" + index_item;
+                                });
+              }
 
               // ITEMS EXIT
               var gItems_exit = gItems.exit();
@@ -1329,7 +1331,7 @@ vistk.viz = function() {
 
             // Make sure we won't re-draw all nodes next time
       //      if(vars.type == "productspace" || vars.type == "treemap" || vars.type == "scatterplot" || vars.type == "geomap") {
-            if(vars.init && vars.type !== 'linechart' && vars.type !== 'slopegraph' && vars.type !== 'slopegraph_ordinal') {
+            if(vars.init && vars.type !== 'linechart' && vars.type !== 'slopegraph' && vars.type !== 'slopegraph_ordinal' && vars.type !== 'slopegraph_ordinal') {
               vars.new_data.forEach(function(d) {
                 if(!d.__selected) { d.__redraw = false; }
               });
@@ -1386,8 +1388,6 @@ vistk.viz = function() {
         var gConnect_enter = gConnect.enter()
                         .insert("g", ":first-child")
                         .attr("class", "connect__group");
-
-
 
         connect.marks.forEach(function(params, index_mark) {
 
@@ -2011,29 +2011,39 @@ vistk.viz = function() {
   // Default parameters for all charts
   var default_vars = {
 
+    //
     this_chart: null,
 
+    // Processed dataset used for the visualization
     new_data: null,
 
     dev : false,
     id : "id",
     id_var : "id",
     var_group: null,
-    data: [],
-    links: [],
-    var_node_id: 'id', // ID to join the nodes/link data
 
+    data: [],
+
+    nodes: [],
+    links: [],
+
+    // ids to join the nodes/link data (product space)
+    var_node_id: 'id',
+
+    // Displayed on top of the chart
     title: "",
 
-    // Default dimensions
+    // Default dimensions, margins and orientation
+    width: 800,
+    height: 400,
     margin: {top: 0, right: 0, bottom: 0, left: 0},
     rotate: 0,
 
-    // Default Variables mapping
+    // Default mapping variables
     var_color: null,
     var_sort_asc: false,
 
-    // Interaction
+    // Interaction states
     highlight: [],
     selection: [],
     filter: [],
@@ -2087,12 +2097,13 @@ vistk.viz = function() {
     y_domain: null,
     y_range: null,
 
+    //
     r_scale: null,
-    r_cutoff: function(d) { return d > 30; },
 
-    // Automatically generate UI elements
+    // Automatically generate UI elements (e.g. time slider, filters)
     ui: true,
 
+    // Locale related options
     lang: 'en_US', // 'es_ES, fr_FR'
     locales: {}, // Translations for various lang
 
@@ -2110,8 +2121,6 @@ vistk.viz = function() {
     root_svg: null, // Contains the group children to the svg element
     ratio: 0.5, // Visualization aspect ratio
 
-    width: 800,
-    height: 400,
     // Animation and interpolation
     duration: 1000,
     interpolate: "monotone",
@@ -2154,10 +2163,12 @@ vistk.viz = function() {
       return d.values[vars.time.current_time];
     },
 
+    // Flags to redraw the whole interface
     refresh: true,
     init: true,
     redraw_all: false,
 
+    // Copy of the user parameters
     _user_vars: {},
 
     list: {type: ["sparkline", "dotplot", "barchart", "linechart", "scatterplot", "grid",
@@ -2167,12 +2178,13 @@ vistk.viz = function() {
       mark: ['rect', 'circle', 'star', 'shape']
     },
 
+    // Init by the src/marks/*.js and src/templates/*.js includes
     default_params: {},
     default_marks: {},
 
     // Order we use to draw the various marks
     z_index: [
- //     {selector: '.mark__group', attribute: '__aggregated', type: 'productspace', weight: 1},
+    // {selector: '.mark__group', attribute: '__aggregated', type: 'productspace', weight: 1},
       {selector: '.connect__group', type: 'productspace', weight: 1, event: 'highlightOut'},
       {selector: '.mark__group', type: 'productspace', weight: 1, event: 'highlightOut'},
       {selector: '.connect__group', attribute: '__highlighted', type: 'productspace', weight: 1, event: 'highlightOn'},
@@ -2181,6 +2193,7 @@ vistk.viz = function() {
       {selector: '.mark__group', attribute: '__highlighted', type: 'scatterplot', weight: 1, event: 'highlightOn'},
     ],
 
+    // Used for aggregation
     set: [],
 
     scale: 1,
@@ -2188,8 +2201,8 @@ vistk.viz = function() {
     translate_y: 0,
     translate: [0, 0],
 
+    // WIP for option not to use groups for elements
     flat_scene: false
-
   };
 
   vars = vistk.utils.merge(vars, default_vars);
@@ -2257,7 +2270,7 @@ vistk.viz = function() {
     }
   });
 
-  // Default events
+  // Events for page resize
   // d3.select(window).on('resize', function(d) {
   //   vars.evt.call("resize", d);
   // });
@@ -2273,11 +2286,12 @@ vistk.viz = function() {
   });
 
   vars.evt.register("highlightOut", function(d) {
+
     utils.pop_array('highlight', d);
     d.__highlighted = false;
     d.__redraw = true;
 
-    // Temporary settings to prevent chart redraw tooltips .tooltip
+    // Temporary settings to prevent chart redrawing tooltips .tooltip
     d3.select(vars.container).selectAll(".items__mark__text.tooltip").remove();
     d3.select(vars.container).selectAll(".items__mark__div.tooltip").remove();
 
@@ -4145,7 +4159,7 @@ vars.default_params['scatterplot'] = function(scope) {
             })).nice()
   }];
 
-  params.r_scale = d3.scale.linear()
+  params.r_scale = d3.scale.sqrt()
               .range([scope.radius_min, scope.radius_max])
               .domain(d3.extent(vars.new_data, function(d) {
                 return scope.accessor_data(d)[scope.var_r];
@@ -4963,7 +4977,8 @@ vars.default_params['treemap'] = function(scope) {
 
         break;
 
-      default:
+      }
+
 
         if(typeof vars.default_params[vars.type] === "undefined") {
            console.log("No params for chart " + vars.type);
@@ -5000,10 +5015,6 @@ vars.default_params['treemap'] = function(scope) {
         }
 
         vars.svg.call(utils.draw_chart, vars, vars.new_data);
-
-      break;
-
-    }
 
 
       // Creates widgets to tweat the chart's parameters
@@ -5538,6 +5549,11 @@ vars.default_params['treemap'] = function(scope) {
 
   setTimeout(function() {
 
+    // Disable highlights for pie scatters
+    if(vars.type === 'piescatter') {
+      return;
+    }
+
     vars.evt.register("highlightOn", function(d) {
 
       // POST-RENDERING STUFF
@@ -5737,7 +5753,7 @@ vistk.utils.scale.linear = function(vars) {
 
 };
 
-vistk.utils.scale.none = function(vars) {
+vistk.utils.scale.none = function() {
 
   return [{
     func: d3.scale.linear()
@@ -5748,7 +5764,7 @@ vistk.utils.scale.none = function(vars) {
 
 vistk.utils.scale.x = {};
 
-vistk.utils.scale.x.center = function(vars) {
+vistk.utils.scale.x.center = function() {
 
   return [{
     func: d3.scale.linear()
