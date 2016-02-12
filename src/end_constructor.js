@@ -1,6 +1,11 @@
 
   setTimeout(function() {
 
+    // Disable highlights for pie scatters
+    if(vars.type === 'piescatter') {
+      return;
+    }
+
     vars.evt.register("highlightOn", function(d) {
 
       // POST-RENDERING STUFF

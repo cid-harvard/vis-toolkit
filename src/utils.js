@@ -821,20 +821,11 @@
 
         case "piechart":
 
-          // Temporary placeholder for pies
-          // d3.select(that).append('circle').attr('r', 10)
-
-          // Temporary removing events to prevent redraw
-          // utils.empty_array(params, 'highlightOn');
-          // utils.empty_array(params, 'highlightOut');
-
           if(typeof params.class !== 'undefined') {
             d3.select(that).classed(params.class, true);
           }
 
           // Create a custom configuration for pie charts
-          //vars.type = 'piechart';
-
           var scope = vars.default_params['piechart'](vars);
 
           // Filter dataset to keep non-aggregated data for the current group
@@ -870,7 +861,7 @@
 
           // Generate a new configuration for the pie chart
           var vars2 = vistk.utils.merge(vars, scope);
-          vars2.type = 'piechart';
+          vars.type = 'piescatter';
 
           // Identify scale for the wedges (while previously was X/Y)
           vars2.x_scale = vistk.utils.scale.none();
