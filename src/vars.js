@@ -1,29 +1,39 @@
   // Default parameters for all charts
   var default_vars = {
 
+    //
     this_chart: null,
 
+    // Processed dataset used for the visualization
     new_data: null,
 
     dev : false,
     id : "id",
     id_var : "id",
     var_group: null,
-    data: [],
-    links: [],
-    var_node_id: 'id', // ID to join the nodes/link data
 
+    data: [],
+
+    nodes: [],
+    links: [],
+
+    // ids to join the nodes/link data (product space)
+    var_node_id: 'id',
+
+    // Displayed on top of the chart
     title: "",
 
-    // Default dimensions
+    // Default dimensions, margins and orientation
+    width: 800,
+    height: 400,
     margin: {top: 0, right: 0, bottom: 0, left: 0},
     rotate: 0,
 
-    // Default Variables mapping
+    // Default mapping variables
     var_color: null,
     var_sort_asc: false,
 
-    // Interaction
+    // Interaction states
     highlight: [],
     selection: [],
     filter: [],
@@ -77,12 +87,13 @@
     y_domain: null,
     y_range: null,
 
+    //
     r_scale: null,
-    r_cutoff: function(d) { return d > 30; },
 
-    // Automatically generate UI elements
+    // Automatically generate UI elements (e.g. time slider, filters)
     ui: true,
 
+    // Locale related options
     lang: 'en_US', // 'es_ES, fr_FR'
     locales: {}, // Translations for various lang
 
@@ -100,8 +111,6 @@
     root_svg: null, // Contains the group children to the svg element
     ratio: 0.5, // Visualization aspect ratio
 
-    width: 800,
-    height: 400,
     // Animation and interpolation
     duration: 1000,
     interpolate: "monotone",
@@ -144,10 +153,12 @@
       return d.values[vars.time.current_time];
     },
 
+    // Flags to redraw the whole interface
     refresh: true,
     init: true,
     redraw_all: false,
 
+    // Copy of the user parameters
     _user_vars: {},
 
     list: {type: ["sparkline", "dotplot", "barchart", "linechart", "scatterplot", "grid",
@@ -157,12 +168,13 @@
       mark: ['rect', 'circle', 'star', 'shape']
     },
 
+    // Init by the src/marks/*.js and src/templates/*.js includes
     default_params: {},
     default_marks: {},
 
     // Order we use to draw the various marks
     z_index: [
- //     {selector: '.mark__group', attribute: '__aggregated', type: 'productspace', weight: 1},
+    // {selector: '.mark__group', attribute: '__aggregated', type: 'productspace', weight: 1},
       {selector: '.connect__group', type: 'productspace', weight: 1, event: 'highlightOut'},
       {selector: '.mark__group', type: 'productspace', weight: 1, event: 'highlightOut'},
       {selector: '.connect__group', attribute: '__highlighted', type: 'productspace', weight: 1, event: 'highlightOn'},
@@ -171,6 +183,7 @@
       {selector: '.mark__group', attribute: '__highlighted', type: 'scatterplot', weight: 1, event: 'highlightOn'},
     ],
 
+    // Used for aggregation
     set: [],
 
     scale: 1,
@@ -178,8 +191,8 @@
     translate_y: 0,
     translate: [0, 0],
 
+    // WIP for option not to use groups for elements
     flat_scene: false
-
   };
 
   vars = vistk.utils.merge(vars, default_vars);
