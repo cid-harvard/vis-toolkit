@@ -843,6 +843,8 @@
           });
 
           this_data = vistk.utils.aggregate(this_data, vars, 'cutoff', 'sum');
+
+          // Aggregation returns key / values data, only keep values
           this_data = this_data.map(function(d) { return d.values; });
 
           // Re-generate the pie layout
@@ -880,6 +882,7 @@
                       })]);
 
           vars2.items[0].marks[0].var_fill = "cutoff";
+
           vars2.items[0].marks[0].fill = function(vars, d, i) {
             if(d === 0) {
               return vars2.color(vars.data[vars2.var_group]);
@@ -896,9 +899,8 @@
             }
           }
 
-          vars2.radius_min = 50;
-          vars2.radius_max = 50;
-          vars2[vars2.var_id] = 'name';
+          vars2.radius_min = vars.r_scale(d[vars.var_r]);
+          vars2.radius_max = vars.r_scale(d[vars.var_r]);
 
           d3.select(that).call(utils.draw_chart, vars2, this_data);
 
