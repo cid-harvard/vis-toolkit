@@ -18,7 +18,7 @@ vars.default_params['scatterplot'] = function(scope) {
             })).nice()
   }];
 
-  params.r_scale = d3.scale.linear()
+  params.r_scale = d3.scale.sqrt()
               .range([scope.radius_min, scope.radius_max])
               .domain(d3.extent(vars.new_data, function(d) {
                 return scope.accessor_data(d)[scope.var_r];

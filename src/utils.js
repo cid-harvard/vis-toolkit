@@ -825,8 +825,8 @@
           // d3.select(that).append('circle').attr('r', 10)
 
           // Temporary removing events to prevent redraw
-          utils.empty_array(params, 'highlightOn');
-          utils.empty_array(params, 'highlightOut');
+          // utils.empty_array(params, 'highlightOn');
+          // utils.empty_array(params, 'highlightOut');
 
           if(typeof params.class !== 'undefined') {
             d3.select(that).classed(params.class, true);
@@ -928,16 +928,10 @@
 
                   if(typeof params.radius !== "undefined") {
                     return params.radius;
-                  } else {
-
-                    var r_scale = d3.scale.sqrt()
-                      .range([vars.radius_min, vars.radius_max])
-                      .domain(d3.extent(vars.new_data, function(d) {
-                        return d[vars.var_r];
-                      }))
                   }
 
-                  return r_scale(d[vars.var_r]);
+                  return vars.r_scale(d[vars.var_r]);
+
                 }
               })
               .style("stroke", params_stroke)
