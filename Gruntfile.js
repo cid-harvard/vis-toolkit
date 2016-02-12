@@ -36,7 +36,7 @@ module.exports = function(grunt) {
               'src/visualizations/*.js',
               'src/start_selection.js', 'src/templates/table.js',
               'src/templates/boxplot.js', 'src/templates/none.js',
-              'src/templates/default.js', 'src/ui.js', 'src/getterssetters.js',
+              'src/end_selection.js', 'src/ui.js', 'src/getterssetters.js',
               'src/end_constructor.js', 'src/end.js'],
         dest: 'build/vistk.js',
       },
