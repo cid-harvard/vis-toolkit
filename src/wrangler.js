@@ -67,7 +67,7 @@
       vars.new_data = JSON.parse(JSON.stringify(vars.all_data));
 
       // Creates default ids `__id` and `__value` for dataset without any id
-      if(typeof vars.var_id === 'undefined' || typeof vars.all_data[0][vars.var_id] === 'undefined') {
+      if(typeof vars.var_id === 'undefined' || (vars.all_data.length > 0 && typeof vars.all_data[0][vars.var_id] === 'undefined')) {
 
         vars.new_data = vars.new_data.map(function(d, i) {
 
