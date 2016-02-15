@@ -8,26 +8,34 @@ vars.default_params['caterplot'] = function(scope) {
   params.x_scale = [{
     func: d3.scale.ordinal()
             .rangeBands([scope.margin.left, scope.width - scope.margin.left - scope.margin.right])
-            .domain(d3.set(vars.new_data.map(function(d) { return d[vars.var_x]; })).values())
+            .domain(d3.set(vars.new_data.map(function(d) {
+              return d[scope.var_x];
+            })).values())
   }];
 
   params.y_scale = [{
     func: d3.scale.linear()
             .range([scope.height - scope.margin.top - scope.margin.bottom, scope.margin.top])
-            .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_y]; })).nice()
+            .domain(d3.extent(vars.new_data, function(d) {
+              return d[scope.var_y];
+            })).nice()
   }];
 
   params.r_scale = d3.scale.linear()
-              .range([vars.radius_min, vars.radius_max])
-              .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_r]; }));
+              .range([scope.radius_min, scope.radius_max])
+              .domain(d3.extent(vars.new_data, function(d) {
+                return d[scope.var_r];
+              }));
 
   params.items = [{
     marks: [{
     type: 'circle',
     r_scale: d3.scale.linear()
-                .range([vars.radius_min, vars.radius_max])
-                .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_r]; })),
-    fill: function(d) { return vars.color(vars.accessor_items(d)[vars.var_color]); },
+                .range([scope.radius_min, scope.radius_max])
+                .domain(d3.extent(vars.new_data, function(d) { return d[scope.var_r]; })),
+    fill: function(d) {
+      return scope.color(scope.accessor_items(d)[scope.var_color]);
+    },
    // translate: function() {
    //   return [vars.x_scale[0]['func'].rangeBand() / 4, 0]
    // },
