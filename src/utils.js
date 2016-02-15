@@ -1114,6 +1114,17 @@
       vars.y_scale[0]["func"].range([vars.y_scale[0]["func"].range()[1], vars.y_scale[0]["func"].range()[0]]);
     }
 
+
+    // If custom domain for X-scale and has min/max values
+    if(vars.x_domain !== null && vars.x_domain.length === 2) {
+      vars.x_scale[0]['func'].domain(vars.x_domain);
+    }
+
+    // If custom domain for Y-scale and has min/max values
+    if(vars.y_domain !== null && vars.y_domain.length === 2) {
+      vars.y_scale[0]['func'].domain(vars.y_domain);
+    }
+
     // In case items are programmatically generated
     if(typeof vars.items == "function") {
       vars.items = vars.items(vars);

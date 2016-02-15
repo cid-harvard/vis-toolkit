@@ -11,11 +11,6 @@ vars.default_params['dotplot'] = function(scope) {
             .nice()
   }];
 
-  // If custom domain for X-scale
-  if(scope.x_domain !== null && scope.x_domain.length === 2) {
-    params.x_scale[0]['func'].domain(scope.x_domain);
-  }
-
   params.y_scale = [{
     func: d3.scale.linear()
             .range([scope.height/2, scope.height/2])
