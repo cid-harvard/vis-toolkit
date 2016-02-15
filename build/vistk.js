@@ -6,7 +6,7 @@ var w = typeof window === "undefined" ? this : window;
 var vistk = w.vistk || {};
 w.vistk = vistk;
 
-vistk.version = "0.0.30";
+vistk.version = "{{ VERSION }}";
 vistk.utils = {};
 
 if(typeof module === "object" && module.exports) {
@@ -1567,9 +1567,10 @@ vistk.viz = function() {
               return "end";
             }
           } else {
-            return "middle";
+            return vars.x_textAnchor;
           }
         })
+        .attr("transform", "rotate(" + vars.x_tickRotate +")");
 
   }
 
@@ -2068,6 +2069,7 @@ vistk.viz = function() {
     x_tickSize: 10,
     x_tickPadding: 0,
     x_tickValues: null,
+    x_tickRotate: 0,
     x_axis_show: false,
     x_axis_orient: "bottom",
     x_grid_show: false,
@@ -2899,6 +2901,8 @@ vars.default_params["barchart"] = function(scope) {
   params.x_axis_show = true;
   params.x_axis_translate = [0, scope.height - scope.margin.bottom - scope.margin.top];
   params.x_grid_show = false;
+  params.x_tickRotate = 45;
+  vars.x_textAnchor = "start";
 
   // params.y_axis_show = true;
   params.y_axis_translate = [scope.margin.left, -10];

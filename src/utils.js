@@ -1544,9 +1544,10 @@
               return "end";
             }
           } else {
-            return "middle";
+            return vars.x_textAnchor;
           }
         })
+        .attr("transform", "rotate(" + vars.x_tickRotate +")");
 
   }
 

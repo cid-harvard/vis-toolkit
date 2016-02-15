@@ -46,6 +46,8 @@ vars.default_params["barchart"] = function(scope) {
   params.x_axis_show = true;
   params.x_axis_translate = [0, scope.height - scope.margin.bottom - scope.margin.top];
   params.x_grid_show = false;
+  params.x_tickRotate = 45;
+  vars.x_textAnchor = "start";
 
   // params.y_axis_show = true;
   params.y_axis_translate = [scope.margin.left, -10];
