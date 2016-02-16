@@ -29,14 +29,24 @@ d3.csv("../../vis-toolkit-datasets/data/atlas_growth_projections_2024.csv", func
   queue()
       .defer(d3.json, "../shapefiles/world/world-110m.json")
       .defer(d3.tsv, "../../vis-toolkit-datasets/data/world-country-names.tsv")
+      .defer(d3.csv, "../../vis-toolkit-datasets/data/Country_List_ISO_3166_Codes_Latitude_Longitude.csv")
       .await(ready);
 
-  function ready(error, world, names) {
+  function ready(error, world, names, latlon) {
 
     var color_scale = d3.scale.linear()
               .domain([1, 5])
               //.domain([d3.min(vars.new_data, function(d) { return d[vars.var_color]; }), d3.max(vars.new_data, function(d) { return d[vars.var_color]; })])
               .range(["#e5f5f9", "#2ca25f"])
+
+    data.forEach(function(d) {
+      latlon.forEach(function(e) {
+        if(d.iso === e.Alpha3code) {
+          d.latitude = +e.Latitude;
+          d.longitude = +e.Longitude;
+        }
+      })
+    })
 
     var selection = ['India'];
 
@@ -61,7 +71,7 @@ d3.csv("../../vis-toolkit-datasets/data/atlas_growth_projections_2024.csv", func
           marks: [{
             type: "shape",
             fill: function(d, i, vars) {
-              if(typeof d === 'undefined') {
+              if(typeof d[vars.var_color] === 'undefined') {
                 return 'white';
               } else {
                 return color_scale(d[vars.var_color]);
@@ -74,7 +84,10 @@ d3.csv("../../vis-toolkit-datasets/data/atlas_growth_projections_2024.csv", func
             },
             fill: function(d) {
               return 'red';
-              }
+            },
+            translate: function(d) {
+              return [d.data.latitude*4, d.data.longitude];
+            }
           }],
           evt:[{
             type: "highlightOn",
