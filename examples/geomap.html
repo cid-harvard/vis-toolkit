@@ -66,10 +66,15 @@ d3.json("../../vis-toolkit-datasets/data/partners_usa_2012_csay.json", function(
           attr: "name",
           marks: [{
             type: "shape",
-            fill: d3.scale.linear()
-              .domain([0, 1])
-              //.domain([d3.min(vars.new_data, function(d) { return d[vars.var_color]; }), d3.max(vars.new_data, function(d) { return d[vars.var_color]; })])
-              .range(["red", "green"]),
+            fill: function(d, i, vars) {
+
+              var color = d3.scale.linear()
+              .domain([d3.min(vars.new_data, function(d) { return d[vars.var_color]; }), d3.max(vars.new_data, function(d) { return d[vars.var_color]; })])
+              .range(["red", "green"]);
+
+              return color(d['share'])
+
+            },
             rotate: "0",
             radius: 5
           }]

@@ -59,11 +59,12 @@ d3.csv("../../vis-toolkit-datasets/data/atlas_growth_projections_2024.csv", func
         items: [{
           marks: [{
             type: "shape",
-            fill: function(d) {
-              if(typeof d === 'undefined') {
+            fill: function(d, i, vars) {
+
+              if(typeof d['value'] === 'undefined') {
                 return 'white';
               } else {
-                return color_scale(d);
+                return color_scale(d['value']);
               }
             }
           }],
