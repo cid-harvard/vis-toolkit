@@ -1,0 +1,114 @@
+<!doctype html>
+<meta charset="utf-8">
+<script src="../js/d3.js"></script>
+<script src="../build/vistk.js"></script>
+<link href="../css/vistk.css" rel="stylesheet">
+<script src="../js/queue.v1.min.js"></script>
+<script src="../js/cartogram.js"></script>
+<script src="../js/topojson.js"></script>
+<body>
+<div id="viz"></div>
+<script>
+
+d3.json("../../vis-toolkit-datasets/data/partners_usa_2012_csay.json", function(error, partners) {
+
+  queue()
+      .defer(d3.json, "../shapefiles/world/world-110m.json")
+      .defer(d3.tsv, "../../vis-toolkit-datasets/data/world-country-names.tsv")
+      .await(ready);
+
+
+  function ready(error, world, names) {
+
+    console.log('data', partners.data)
+// DATA
+// abbrv: "ABW"
+// continent: "Americas"
+// id: 1
+// item_id: 1
+// name: "Aruba"
+// region_id: 21
+// share: 0.0014298914240586961
+// value: 229834515
+// year: 1995
+
+// NAMES
+// id: "24"
+// name: "Angola"
+
+// WORLD / COUNTRIES
+// arcs: Array[1]
+// id: 4
+// type: "Polygon"
+
+// Since we need to connect topologies to data, we go throught countries
+
+      console.log('names', names)
+      console.log('topology', world)
+
+    visualization = vistk.viz()
+      .params({
+        dev: true,
+        type: "geomap",
+        container: "#viz",
+        height: 500,
+        width: 600,
+        data: partners.data,
+        topology: world,
+        names: names,
+        var_id: "name",
+        var_x: "x",
+        var_y: "y",
+        var_group: "continent",
+        var_color: "share",
+        vars_text: "name",
+        items: [{
+          attr: "name",
+          marks: [{
+            type: "shape",
+            fill: function(d, i, vars) {
+
+              var color = d3.scale.linear()
+              .domain([d3.min(vars.new_data, function(d) { return d[vars.var_color]; }), d3.max(vars.new_data, function(d) { return d[vars.var_color]; })])
+              .range(["red", "green"]);
+
+              return color(d['share'])
+
+            },
+            rotate: "0",
+            radius: 5
+          }]
+        }],
+        time: {
+          var_time: "year",
+          current_time: 2012
+        },
+        ui: {
+          default: true
+        },
+        selection: ["United States"],
+      });
+
+
+    visualization.params().evt.register("finish", function() {
+
+      carto = d3.cartogram()
+        .projection(visualization.params().projection)
+        .properties(function(d) {
+          return dataById[d.id];
+        })
+        .value(function(d) {
+          return +d.properties[field];
+        });
+
+    });
+
+    d3.select("#viz").call(visualization);
+
+
+  }
+
+});
+
+</script>
+</body>
