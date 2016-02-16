@@ -924,6 +924,12 @@
                     return params.radius;
                   }
 
+                  vars.r_scale = d3.scale.linear()
+                      .range([vars.radius_min, vars.radius_max])
+                      .domain(d3.extent(vars.new_data, function(d) {
+                        return vars.accessor_data(d)[vars.var_r];
+                      }));
+
                   return vars.r_scale(d[vars.var_r]);
 
                 }
