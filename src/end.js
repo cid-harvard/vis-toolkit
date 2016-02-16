@@ -66,8 +66,15 @@ vistk.utils.min = function(data) {
   return d3.min(data, function(d) { return d[var_time] });
 }
 
-vistk.utils.extent = function(data, var_data) {
-  return d3.extent(data, function(d) { return d[var_data] });
+vistk.utils.extent = function(data, var_data, time) {
+  if(typeof time === 'undefined') {
+    return d3.extent(data, function(d) { return d[var_data]; });
+  } else {
+    return d3.extent(data, function(d) {
+      return d.values[time][var_data];
+    });
+  }
+
 }
 
 vistk.utils.time = {};
