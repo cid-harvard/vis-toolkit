@@ -91,6 +91,8 @@
     r_scale: null,
     r_domain: null,
 
+    var_cutoff: 'cutoff',
+
     // Automatically generate UI elements (e.g. time slider, filters)
     ui: true,
 

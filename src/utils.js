@@ -832,7 +832,7 @@
             return e[vars.var_group] === d[vars.var_group] && typeof e.data !== 'undefined' &&  e.data.__aggregated !== true;
           });
 
-          this_data = vistk.utils.aggregate(this_data, vars, 'cutoff', 'sum');
+          this_data = vistk.utils.aggregate(this_data, vars, vars.var_cutoff, 'sum');
 
           // Aggregation returns key / values data, only keep values
           this_data = this_data.map(function(d) { return d.values; });
@@ -872,7 +872,7 @@
                         return vars2.accessor_data(d)[vars2.var_share];
                       })]);
 
-          vars2.items[0].marks[0].var_fill = "cutoff";
+          vars2.items[0].marks[0].var_fill = vars.var_cutoff;
 
           vars2.items[0].marks[0].fill = function(vars, d, i) {
             if(d === 0) {
