@@ -303,7 +303,7 @@
 
         case "divtext":
 
-          var items_mark_divtext = d3.select(that).selectAll(".items__mark__divtext").data([d]);
+          var items_mark_divtext = d3.select(that).selectAll(".items__mark__divtext.items_" + mark_id).data([d]);
 
           var items_mark_divtext_enter = items_mark_divtext.enter().insert("foreignObject")
                 .style("pointer-events", "none")
