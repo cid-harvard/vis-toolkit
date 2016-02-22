@@ -88,8 +88,8 @@
     y_domain: null,
     y_range: null,
 
-    //
     r_scale: null,
+    r_domain: null,
 
     // Automatically generate UI elements (e.g. time slider, filters)
     ui: true,
