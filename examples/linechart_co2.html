@@ -1,0 +1,81 @@
+<!doctype html>
+<meta charset="utf-8">
+<script src="../js/d3.js"></script>
+<script src="../build/vistk.js"></script>
+<link href="../css/vistk.css" rel="stylesheet">
+<body>
+<div id="viz"></div>
+<body>
+<script src="../js/d3.js"></script>
+<script>
+
+d3.csv("../../vis-toolkit-datasets/data/co2_emissions.csv", function(error, data) {
+
+  console.log("HEEE", data)
+
+  d3.json("../../vis-toolkit-datasets/data/countries.json", function(error, countries) {
+
+    var res = [];
+
+    function find_country(var_filter, value) {
+
+      var metadata = countries.filter(function(d) {
+        return d['name'][var_filter] == value;
+      })
+
+      if(metadata.length == 0) {
+        return "ERROR";
+      } else {
+        return metadata[0]['region'];
+      }
+
+    }
+
+    data.forEach(function(d) {
+
+      // Create ids for countries
+      for(var k in d) {
+
+        if(k != "Country") {
+          res.push({name: d.Country, year: k, rank: +d[k], continent: find_country('common', d.Country)})
+        }
+
+      }
+    });
+
+    visualization = vistk.viz().params({
+      type: "linechart",
+      container: "#viz",
+      height: 600,
+      width: 900,
+      margin: {top: 30, right: 100, bottom: 30, left: 10},
+      data: res,
+      var_id: "name",
+      var_group: "continent",
+      var_color: "continent",
+      color: d3.scale.ordinal().domain(["Africa", "Americas", "Asia", "Europe", "Oceania"]).range(["#99237d", "#c72439", "#6bc145", "#88c7ed", "#dd9f98"]),
+      var_text: "name",
+      y_text: "ECI Rank",
+      var_y: "rank",
+      var_x: 'year',
+      y_invert: true,
+      time: {
+      //  parse: d3.time.format("%Y").parse,
+        var_time: 'year',
+        current_time: vistk.utils.max
+      },
+      selection: ["Japan", "Switzerland", "Germany"],
+      highlight: ["France"],
+      ui: {
+        default: true,
+        options: ["country", "continent"]
+      }
+    });
+
+    d3.select("#viz").call(visualization);
+
+  });
+
+});
+
+</script>
