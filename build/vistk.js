@@ -855,7 +855,7 @@ vistk.viz = function() {
             return e[vars.var_group] === d[vars.var_group] && typeof e.data !== 'undefined' &&  e.data.__aggregated !== true;
           });
 
-          this_data = vistk.utils.aggregate(this_data, vars, 'cutoff', 'sum');
+          this_data = vistk.utils.aggregate(this_data, vars, vars.var_cutoff, 'sum');
 
           // Aggregation returns key / values data, only keep values
           this_data = this_data.map(function(d) { return d.values; });
@@ -895,7 +895,7 @@ vistk.viz = function() {
                         return vars2.accessor_data(d)[vars2.var_share];
                       })]);
 
-          vars2.items[0].marks[0].var_fill = "cutoff";
+          vars2.items[0].marks[0].var_fill = vars.var_cutoff;
 
           vars2.items[0].marks[0].fill = function(vars, d, i) {
             if(d === 0) {
@@ -946,11 +946,14 @@ vistk.viz = function() {
                     return params.radius;
                   }
 
-                  vars.r_scale = d3.scale.linear()
-                      .range([vars.radius_min, vars.radius_max])
-                      .domain(d3.extent(vars.new_data, function(d) {
+                  // If custom domain for R-scale and has min/max values
+                  if(vars.r_domain !== null && vars.r_domain.length === 2) {
+                    vars.r_scale.domain(vars.r_domain);
+                  } else {
+                    vars.r_scale.domain(d3.extent(vars.new_data, function(d) {
                         return vars.accessor_data(d)[vars.var_r];
                       }));
+                  }
 
                   return vars.r_scale(d[vars.var_r]);
 
@@ -1151,6 +1154,11 @@ vistk.viz = function() {
     // If custom domain for Y-scale and has min/max values
     if(vars.y_domain !== null && vars.y_domain.length === 2) {
       vars.y_scale[0]['func'].domain(vars.y_domain);
+    }
+
+    // If custom domain for R-scale and has min/max values
+    if(vars.r_domain !== null && vars.r_domain.length === 2) {
+      vars.r_scale.domain(vars.r_domain);
     }
 
     // In case items are programmatically generated
@@ -2115,8 +2123,10 @@ vistk.viz = function() {
     y_domain: null,
     y_range: null,
 
-    //
     r_scale: null,
+    r_domain: null,
+
+    var_cutoff: 'cutoff',
 
     // Automatically generate UI elements (e.g. time slider, filters)
     ui: true,
@@ -4191,11 +4201,7 @@ vars.default_params['scatterplot'] = function(scope) {
   params.items = [{
     marks: [{
         type: 'circle',
-        r_scale: d3.scale.linear()
-                    .range([scope.radius_min, scope.radius_max])
-                    .domain(d3.extent(vars.new_data, function(d) {
-                      return scope.accessor_data(d)[scope.var_r];
-                    })),
+        r_scale: params.r_scale,
         fill: function(d) {
           return vars.color(vars.accessor_data(d)[scope.var_color]);
         }
