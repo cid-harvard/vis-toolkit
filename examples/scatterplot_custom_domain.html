@@ -46,6 +46,7 @@ d3.json("../../vis-toolkit-datasets/data/exports_quinn_2012.json", function(erro
       var_y: 'distance',
       x_domain: [vistk.utils.extent(exports, 'cog')[0]/2, vistk.utils.extent(exports, 'cog')[1]/2],
       y_domain: [vistk.utils.extent(exports, 'distance')[0] + 0.02, vistk.utils.extent(exports, 'distance')[1]-0.02],
+      r_domain: vistk.utils.extent(exports, 'distance'),
       var_share: 'nb_products',
       var_r: 'distance',
       var_text: 'name',
