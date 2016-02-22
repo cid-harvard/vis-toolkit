@@ -81,7 +81,7 @@
       }
 
       // Default id for marks
-      var mark_id = params._mark_id;
+      var mark_id = params._mark_id + "_" + d.__index;
 
       // params_type is the list of marks to be drawn
       // it is either static (string) or can be computer
@@ -378,7 +378,6 @@
           items_mark_divtext.exit().remove();
 
         break;
-
 
         case "image":
 
@@ -1156,7 +1155,7 @@
                               .data(vars.new_data.filter(function(d) {
                                   return typeof accessor_data(d) !== 'undefined' && typeof accessor_data(d)[vars.var_id] !== 'undefined';
                                 }), function(d, i) {
-                                return accessor_data(d)[vars.var_id] + "_" + index_item + d.depth;
+                                return accessor_data(d)[vars.var_id] + "_" + index_item + d.depth + d.__index;
                               });
 
               // ENTER ITEMS
