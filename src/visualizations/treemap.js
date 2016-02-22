@@ -36,8 +36,9 @@ vars.default_params['treemap'] = function(scope) {
     vars.new_data = vars.layout.treemap.nodes(vars.root);
 
     // Since we generated new data, need to redraw
-    vars.new_data.forEach(function(d) {
+    vars.new_data.forEach(function(d, i) {
       d.__redraw = true;
+      d.__index = i;
     });
 
   }

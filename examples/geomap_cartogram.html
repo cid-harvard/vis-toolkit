@@ -4,6 +4,7 @@
 <script src="../build/vistk.js"></script>
 <link href="../css/vistk.css" rel="stylesheet">
 <script src="../js/queue.v1.min.js"></script>
+<script src="../js/cartogram.js"></script>
 <script src="../js/topojson.js"></script>
 <body>
 <div id="viz"></div>
@@ -44,7 +45,6 @@ d3.json("../../vis-toolkit-datasets/data/partners_usa_2012_csay.json", function(
 
       console.log('names', names)
       console.log('topology', world)
-
 
     visualization = vistk.viz()
       .params({
@@ -89,7 +89,22 @@ d3.json("../../vis-toolkit-datasets/data/partners_usa_2012_csay.json", function(
         selection: ["United States"],
       });
 
+
+    visualization.params().evt.register("finish", function() {
+
+      carto = d3.cartogram()
+        .projection(visualization.params().projection)
+        .properties(function(d) {
+          return dataById[d.id];
+        })
+        .value(function(d) {
+          return +d.properties[field];
+        });
+
+    });
+
     d3.select("#viz").call(visualization);
+
 
   }
 

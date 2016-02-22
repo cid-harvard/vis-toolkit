@@ -58,6 +58,7 @@
     x_tickSize: 10,
     x_tickPadding: 0,
     x_tickValues: null,
+    x_tickRotate: 0,
     x_axis_show: false,
     x_axis_orient: "bottom",
     x_grid_show: false,
@@ -87,8 +88,10 @@
     y_domain: null,
     y_range: null,
 
-    //
     r_scale: null,
+    r_domain: null,
+
+    var_cutoff: 'cutoff',
 
     // Automatically generate UI elements (e.g. time slider, filters)
     ui: true,

@@ -1,0 +1,103 @@
+<!doctype html>
+<meta charset="utf-8">
+<script src="../js/d3.js"></script>
+<script src="../build/vistk.js"></script>
+<link href="../css/vistk.css" rel="stylesheet">
+<body>
+
+<style>
+#textfilter {
+  height:50px;
+  width: 860px;
+  font-size:30px;
+  margin: 20px;
+}
+
+.tooltip {
+  background: #333;
+  background: rgba(0,0,0,.8);
+  border-radius: 5px;
+  color: #fff;
+  padding: 5px 15px;
+  z-index: 98;
+  width: 220px;
+}
+
+</style>
+
+<input type="text" id="textfilter" onkeyup="filter_treemap(this.value)" autofocus/>
+<div id="viz" style="position: relative"></div>
+<script>
+
+var filter = "";
+
+d3.json("../../vis-toolkit-datasets/data/exports_quinn_2012.json", function(error, exports) {
+
+ visualization = vistk.viz()
+    .params({
+      type: 'scatterplot',
+      container: '#viz',
+      data: exports,
+      var_id: 'product_id',
+      var_group: 'community_name',
+      var_color: 'community_name',
+      color: d3.scale.ordinal().domain([0, 9]).range(["#3182bd", "#6baed6", "#9ecae1", "#c6dbef", "#e6550d", "#fd8d3c", "#fdae6b", "#fdd0a2", "#31a354", "#74c476", "#a1d99b", "#c7e9c0", "#756bb1", "#9e9ac8", "#bcbddc", "#dadaeb", "#636363", "#969696", "#bdbdbd", "#d9d9d9"]),
+      var_x: 'cog',
+      var_y: 'distance',
+      x_domain: [vistk.utils.extent(exports, 'cog')[0]/2, vistk.utils.extent(exports, 'cog')[1]/2],
+      y_domain: [vistk.utils.extent(exports, 'distance')[0] + 0.02, vistk.utils.extent(exports, 'distance')[1]-0.02],
+      r_domain: vistk.utils.extent(exports, 'distance'),
+      var_share: 'nb_products',
+      var_r: 'distance',
+      var_text: 'name',
+      share_cutoff: function(d) { return d.rca < 1; },
+      items: [{
+        marks: [{
+          type: "circle",
+          fill: function(d, i, vars) {
+            if(filter.length === 0) { return vars.color(d['parent_code']); }
+            if(d["name"].toLocaleLowerCase().indexOf(filter) > -1) {
+              d.__redraw = true;
+              return vars.color(d['parent_code']);
+            } else {
+              return "#fff";
+            }
+          },
+        }, {
+          var_mark: '__selected',
+          type: d3.scale.ordinal().domain([true, false]).range(["text", "none"]),
+          rotate: "0"
+        }, {
+          var_mark: '__highlighted',
+          type: d3.scale.ordinal().domain([true, false]).range(["text", "none"]),
+          rotate: "0"
+        }]
+      }],
+      time: {
+        var_time: 'year',
+        current_time: 2012
+      },
+      ui: {
+        default: true,
+        options: ['community_name', 'product']
+      }
+    });
+
+  d3.select("#viz").call(visualization);
+
+});
+
+function filter_treemap(str) {
+
+  // Filter data
+  filter = str;
+
+  // Update params
+  visualization.params().refresh = true;
+
+  // Update visualization
+  d3.select("#viz").call(visualization);
+
+}
+</script>
+</body>

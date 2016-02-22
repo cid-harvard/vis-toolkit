@@ -27,11 +27,7 @@ vars.default_params['scatterplot'] = function(scope) {
   params.items = [{
     marks: [{
         type: 'circle',
-        r_scale: d3.scale.linear()
-                    .range([scope.radius_min, scope.radius_max])
-                    .domain(d3.extent(vars.new_data, function(d) {
-                      return scope.accessor_data(d)[scope.var_r];
-                    })),
+        r_scale: params.r_scale,
         fill: function(d) {
           return vars.color(vars.accessor_data(d)[scope.var_color]);
         }

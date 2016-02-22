@@ -81,7 +81,7 @@
       }
 
       // Default id for marks
-      var mark_id = params._mark_id;
+      var mark_id = params._mark_id + "_" + d.__index;
 
       // params_type is the list of marks to be drawn
       // it is either static (string) or can be computer
@@ -303,7 +303,7 @@
 
         case "divtext":
 
-          var items_mark_divtext = d3.select(that).selectAll(".items__mark__divtext").data([d]);
+          var items_mark_divtext = d3.select(that).selectAll(".items__mark__divtext.items_" + mark_id).data([d]);
 
           var items_mark_divtext_enter = items_mark_divtext.enter().insert("foreignObject")
                 .style("pointer-events", "none")
@@ -378,7 +378,6 @@
           items_mark_divtext.exit().remove();
 
         break;
-
 
         case "image":
 
@@ -833,7 +832,7 @@
             return e[vars.var_group] === d[vars.var_group] && typeof e.data !== 'undefined' &&  e.data.__aggregated !== true;
           });
 
-          this_data = vistk.utils.aggregate(this_data, vars, 'cutoff', 'sum');
+          this_data = vistk.utils.aggregate(this_data, vars, vars.var_cutoff, 'sum');
 
           // Aggregation returns key / values data, only keep values
           this_data = this_data.map(function(d) { return d.values; });
@@ -873,7 +872,7 @@
                         return vars2.accessor_data(d)[vars2.var_share];
                       })]);
 
-          vars2.items[0].marks[0].var_fill = "cutoff";
+          vars2.items[0].marks[0].var_fill = vars.var_cutoff;
 
           vars2.items[0].marks[0].fill = function(vars, d, i) {
             if(d === 0) {
@@ -922,6 +921,15 @@
 
                   if(typeof params.radius !== "undefined") {
                     return params.radius;
+                  }
+
+                  // If custom domain for R-scale and has min/max values
+                  if(vars.r_domain !== null && vars.r_domain.length === 2) {
+                    vars.r_scale.domain(vars.r_domain);
+                  } else {
+                    vars.r_scale.domain(d3.extent(vars.new_data, function(d) {
+                        return vars.accessor_data(d)[vars.var_r];
+                      }));
                   }
 
                   return vars.r_scale(d[vars.var_r]);
@@ -1114,6 +1122,22 @@
       vars.y_scale[0]["func"].range([vars.y_scale[0]["func"].range()[1], vars.y_scale[0]["func"].range()[0]]);
     }
 
+
+    // If custom domain for X-scale and has min/max values
+    if(vars.x_domain !== null && vars.x_domain.length === 2) {
+      vars.x_scale[0]['func'].domain(vars.x_domain);
+    }
+
+    // If custom domain for Y-scale and has min/max values
+    if(vars.y_domain !== null && vars.y_domain.length === 2) {
+      vars.y_scale[0]['func'].domain(vars.y_domain);
+    }
+
+    // If custom domain for R-scale and has min/max values
+    if(vars.r_domain !== null && vars.r_domain.length === 2) {
+      vars.r_scale.domain(vars.r_domain);
+    }
+
     // In case items are programmatically generated
     if(typeof vars.items == "function") {
       vars.items = vars.items(vars);
@@ -1139,7 +1163,7 @@
                               .data(vars.new_data.filter(function(d) {
                                   return typeof accessor_data(d) !== 'undefined' && typeof accessor_data(d)[vars.var_id] !== 'undefined';
                                 }), function(d, i) {
-                                return accessor_data(d)[vars.var_id] + "_" + index_item + d.depth;
+                                return accessor_data(d)[vars.var_id] + "_" + index_item + d.depth + d.__index;
                               });
 
               // ENTER ITEMS
@@ -1544,9 +1568,10 @@
               return "end";
             }
           } else {
-            return "middle";
+            return vars.x_textAnchor;
           }
         })
+        .attr("transform", "rotate(" + vars.x_tickRotate +")");
 
   }
 

@@ -66,8 +66,15 @@ vistk.utils.min = function(data) {
   return d3.min(data, function(d) { return d[var_time] });
 }
 
-vistk.utils.extent = function(data, var_data) {
-  return d3.extent(data, function(d) { return d[var_data] });
+vistk.utils.extent = function(data, var_data, time) {
+  if(typeof time === 'undefined') {
+    return d3.extent(data, function(d) { return d[var_data]; });
+  } else {
+    return d3.extent(data, function(d) {
+      return d.values[time][var_data];
+    });
+  }
+
 }
 
 vistk.utils.time = {};
@@ -309,3 +316,7 @@ vistk.utils.aggregate = function(data, vars, var_agg, type_agg) {
         .entries(data);
 
 }
+
+vistk.utils.colors = {};
+
+vistk.utils.colors.products_hs4 = d3.scale.ordinal().domain([0, 9]).range(["#3182bd", "#6baed6", "#9ecae1", "#c6dbef", "#e6550d", "#fd8d3c", "#fdae6b", "#fdd0a2", "#31a354", "#74c476", "#a1d99b", "#c7e9c0", "#756bb1", "#9e9ac8", "#bcbddc", "#dadaeb", "#636363", "#969696", "#bdbdbd", "#d9d9d9"])
