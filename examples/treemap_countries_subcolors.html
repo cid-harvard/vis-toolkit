@@ -1,0 +1,93 @@
+<!doctype html>
+<meta charset="utf-8">
+<script src="../js/d3.js"></script>
+<script src="../build/vistk.js"></script>
+<link href="../css/vistk.css" rel="stylesheet">
+<body>
+<div id="viz"></div>
+<script>
+
+d3.json("../../vis-toolkit-datasets/data/diversification_ubiquity_hs4_1995_2012.json", function(error, countries) {
+
+  var flat_years = vistk.utils.flatten_years(countries);
+
+  flat_years.filter(function(d) {
+    return d.year === 1995;
+  })
+
+  visualization = vistk.viz()
+    .params({
+      dev: true,
+      type: "treemap",
+      container: "#viz",
+      height: 600,
+      width: 900,
+      data: flat_years,
+      var_id: "name_2char",
+      var_sort: "nb_products",
+      var_group: "continent",
+      var_color: "continent",
+      title: "Countries",
+      var_size: "nb_products",
+      var_text: "continent",
+      var_subcolor: 'nb_product',
+      padding: 0,
+      treemap: {
+        padding: 2,
+        d_x: 30,
+        d_y: 30,
+        depth_text: 1,
+        depth_rect: 2
+      },
+      time: {
+        var_time: "year",
+        current_time: 1995,
+        parse: function(d) { return d; }
+      },
+      items: [{
+        marks: [{
+          type: "rect",
+          filter: function(d, i) { return d.depth == 2; },
+          x: 0,
+          y: 0,
+          width: function(d) { return d.dx; },
+          height: function(d) { return d.dy; },
+          fill: function(d, i, vars) {
+
+            vars.var_subcolor = vars.var_size;
+
+            // Calculate group
+            var group_data = vars.new_data.filter(function(e) {
+              return e[vars.var_group] === d[vars.var_group] && d.depth === 2;
+            })
+
+            var group_domain = vistk.utils.extent(group_data, vars.var_subcolor);
+
+            // Calculate scale
+            var subcolor_scale = d3.scale.linear()
+              .domain(group_domain)
+              .range([0, 100]);
+
+            return d3.hsl(vars.color(d[vars.var_color])).darker(subcolor_scale(d[vars.var_subcolor]))
+
+          }
+        }, {
+          type: "divtext",
+          filter: function(d, i, vars) { return d.depth == 1 && d.dx > 30 && d.dy > 30; }
+        }]
+      }],
+      ui: {
+        default: true,
+        options: ["country", "continent"]
+      },
+      selection: ["France"],
+      highlight: ["France", "Germany"],
+    //  filter: ['Europe', 'America']
+    });
+
+  d3.select(visualization.container()).call(visualization);
+
+});
+
+</script>
+</body>
