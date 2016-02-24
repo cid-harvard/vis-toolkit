@@ -27,7 +27,7 @@ d3.json("../../vis-toolkit-datasets/data/exports_2012.json", function(error, exp
     share_cutoff: function(d) { return d.rca < 1; },
     time: {
       var_time: "year",
-      parse: d3.time.format("%Y").parse,
+      parse: function(d) { return d; },
       interval: [],
       current_time: "2000"
     },
