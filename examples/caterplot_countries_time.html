@@ -15,24 +15,30 @@ circle {
 <div id="viz"></div>
 <script>
 
-d3.json("../../vis-toolkit-datasets/data/diversification_ubiquity_hs4_1995_2012.json", function(error, countries) {
+//d3.json("../../vis-toolkit-datasets/data/diversification_ubiquity_hs4_1995_2012.json", function(error, countries) {
 
-  var flat_years = vistk.utils.flatten_years(countries);
+d3.json("../../vis-toolkit-datasets/data/partners_usa_2012_csay.json", function(error, countries) {
+
+//  var flat_years = vistk.utils.flatten_years(countries);
 
   visualization = vistk.viz()
     .params({
       type: 'caterplot',
       margin: {top: 10, right: 100, bottom: 30, left: 30},
       container: '#viz',
-      data: flat_years,
+//      data: flat_years,
+      data: countries.data,
       var_id: 'name',
       var_group: 'continent',
       var_color: 'continent',
       color: vistk.utils.colors.world_regions,
       var_x: 'year',
-      var_y: 'nb_products',
-      var_share: 'nb_products',
-      var_r: 'avg_products',
+//     var_y: 'nb_products',
+//     var_share: 'nb_products',
+//     var_r: 'avg_products',
+      var_y: 'value',
+      var_share: 'value',
+      var_r: 'value',
       var_text: 'name',
       time: {
         var_time: "year",
