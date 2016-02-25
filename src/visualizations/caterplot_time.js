@@ -5,6 +5,10 @@ vars.default_params['caterplot'] = function(scope) {
   params.accessor_values = function(d) { return d.values; };
   params.accessor_items = function(d) { return d; };
 
+  params.accessor_data = function(d) {
+    return d.values[vars.time.current_time];
+  };
+
   params.x_scale = [{
     func: d3.scale.ordinal()
             .rangeBands([scope.margin.left, scope.width - scope.margin.left - scope.margin.right])
@@ -36,7 +40,7 @@ vars.default_params['caterplot'] = function(scope) {
 
   params.items = [];
 
-  scope.time.points.forEach(function(time) {
+  scope.time.points.forEach(function(time, i) {
 
     var item = {
       marks: [{
@@ -47,15 +51,6 @@ vars.default_params['caterplot'] = function(scope) {
         fill: function(d) {
           return scope.color(scope.accessor_items(d)[scope.var_color]);
         }
-      }, {
-        var_mark: '__highlighted',
-        type: d3.scale.ordinal().domain([true, false]).range(['text', 'none'])
-      }, {
-        var_mark: '__selected',
-        type: d3.scale.ordinal().domain([true, false]).range(['text', 'none']),
-        translate: function(d) {
-          return [10, -20];
-        }
       }],
       accessor_data: function(d) {
         return d.values.filter(function(e) {
@@ -64,11 +59,46 @@ vars.default_params['caterplot'] = function(scope) {
       }
     };
 
+    if(i === scope.time.points.length - 1) {
+      aaaaaaa = item.marks;
+      item.marks.push({
+        var_mark: '__highlighted',
+        type: d3.scale.ordinal().domain([true, false]).range(['text', 'none']),
+        translate: [20, 0]
+      });
+
+      item.marks.push({
+        var_mark: '__selected',
+        type: d3.scale.ordinal().domain([true, false]).range(['text', 'none']),
+        translate: [20, 0]
+      });
+
+    }
+
     params.items.push(item);
 
   });
 
-  params.connect = [];
+  params.connect = [{
+    marks: [{
+      var_mark: '__highlighted',
+      type: d3.scale.ordinal().domain([true, false]).range(['path', 'none']),
+      stroke: function(d) {
+        return vars.color(params.accessor_data(d)[vars.var_color]);
+      },
+      fill: function(d) {
+        return 'none';
+      },
+      func: d3.svg.line()
+           .interpolate(vars.interpolate)
+           .x(function(d) {
+             return params.x_scale[0]['func'](vars.time.parse(d[vars.var_x]));
+           })
+           .y(function(d) {
+             return params.y_scale[0]['func'](d[vars.var_y]);
+           })
+    }]
+  }];
 
   params.x_axis_show = true;
   params.x_axis_translate = [0, scope.height - scope.margin.bottom - scope.margin.top];
