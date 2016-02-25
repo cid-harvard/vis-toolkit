@@ -1,0 +1,51 @@
+<!doctype html>
+<meta charset="utf-8">
+<script src="../js/d3.js"></script>
+<script src="../build/vistk.js"></script>
+<link href="../css/vistk.css" rel="stylesheet">
+<style>
+
+circle {
+  fill-opacity: .5;
+  stroke-opacity: 5;
+}
+
+</style>
+<body>
+<div id="viz"></div>
+<script>
+
+d3.json("../../vis-toolkit-datasets/data/diversification_ubiquity_hs4_1995_2012.json", function(error, countries) {
+
+  var flat_years = vistk.utils.flatten_years(countries);
+
+  visualization = vistk.viz()
+    .params({
+      type: 'caterplot',
+      margin: {top: 10, right: 100, bottom: 30, left: 30},
+      container: '#viz',
+      data: flat_years,
+      var_id: 'name',
+      var_group: 'continent',
+      var_color: 'continent',
+      color: vistk.utils.colors.world_regions,
+      var_x: 'year',
+      var_y: 'nb_products',
+      var_share: 'nb_products',
+      var_r: 'avg_products',
+      var_text: 'name',
+      time: {
+        var_time: "year",
+        current_time: "1995",
+        parse: function(d) { return d; }
+      },
+      ui: {
+        default: true,
+        options: ['country', 'continent']
+      }
+    });
+
+  d3.select('#viz').call(visualization);
+
+});
+</script>
