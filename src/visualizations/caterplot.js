@@ -36,10 +36,10 @@ vars.default_params['caterplot'] = function(scope) {
     fill: function(d) {
       return scope.color(scope.accessor_items(d)[scope.var_color]);
     },
-   // translate: function() {
-   //   return [vars.x_scale[0]['func'].rangeBand() / 4, 0]
-   // },
-     }, {
+    translate: function() {
+      return [vars.x_scale[0]['func'].rangeBand() / 4, 0]
+    }
+    }, {
       var_mark: '__highlighted',
       type: d3.scale.ordinal().domain([true, false]).range(['text', 'none'])
     }, {

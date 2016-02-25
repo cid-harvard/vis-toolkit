@@ -6,8 +6,8 @@
 <style>
 
 circle {
-  fill-opacity: .1;
-  stroke-opacity: 1;
+  fill-opacity: .5;
+  stroke-opacity: 5;
 }
 
 </style>
@@ -32,10 +32,11 @@ d3.json("../../vis-toolkit-datasets/data/diversification_ubiquity_hs4_1995_2012.
       var_id: 'name',
       var_group: 'continent',
       var_color: 'continent',
+      color: vistk.utils.colors.world_regions,
       var_x: 'continent',
       var_y: 'nb_products',
       var_share: 'nb_products',
-      var_r: 'nb_products',
+      var_r: 'avg_products',
       var_text: 'name',
       time: {
         var_time: "year",

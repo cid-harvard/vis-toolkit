@@ -1166,7 +1166,7 @@
                               .data(vars.new_data.filter(function(d) {
                                   return typeof accessor_data(d) !== 'undefined' && typeof accessor_data(d)[vars.var_id] !== 'undefined';
                                 }), function(d, i) {
-                                return accessor_data(d)[vars.var_id] + "_" + index_item + d.depth + d.__index;
+                                  return accessor_data(d)[vars.var_id] + "_" + index_item + d.depth + d.__index;
                               });
 
               // ENTER ITEMS
@@ -1506,7 +1506,7 @@
       vars_svg.selectAll(".y.grid").transition()
           .duration(vars.duration)
           .call(utils.make_y_axis()
-          .tickSize(-vars.x_scale[0]["func"].range()[1] + vars.margin.right + vars.y_tickSize, 0, 0)
+          .tickSize(-vars.width + vars.margin.right + vars.margin.left, 0, 0)
           .tickFormat(""));
 
     }
