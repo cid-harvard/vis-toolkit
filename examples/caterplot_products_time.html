@@ -1,0 +1,50 @@
+<!doctype html>
+<meta charset="utf-8">
+<script src="../js/d3.js"></script>
+<script src="../build/vistk.js"></script>
+<link href="../css/vistk.css" rel="stylesheet">
+<style>
+
+circle {
+  fill-opacity: .5;
+  stroke-opacity: 5;
+}
+
+</style>
+<body>
+<div id="viz"></div>
+<script>
+
+d3.json("../../vis-toolkit-datasets/data/usa_exports_1960_2013.json", function(error, exports) {
+  console.log(exports)
+  visualization = vistk.viz()
+    .params({
+      type: 'caterplot',
+      margin: {top: 10, right: 100, bottom: 30, left: 30},
+      container: '#viz',
+      data: exports.data,
+      var_id: 'abbrv',
+      var_group: 'community_name',
+      var_color: 'community_name',
+      color: vistk.utils.colors.products_hs4,
+      var_x: 'year',
+      var_y: 'value',
+      var_share: 'value',
+      var_r: 'rca',
+      var_text: 'name',
+      time: {
+        var_time: "year",
+        current_time: "2010",
+        parse: function(d) { return d; },
+        filter: d3.range(2013-1995).map(function(d) { return 1995 + d; })
+      },
+      ui: {
+        default: true,
+        options: ['country', 'continent']
+      }
+    });
+
+  d3.select('#viz').call(visualization);
+
+});
+</script>
