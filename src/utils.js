@@ -697,8 +697,9 @@
               .classed("items_" + mark_id, true)
               .style("fill", params_fill)
               .style("stroke", params_stroke)
+              .style("stroke-width", params_stroke_width)
               .attr('d', function(e) {
-                return params["func"](d3.values(this_accessor_values(e)));
+                return params["func"](d3.values(this_accessor_values(e)), i, vars);
               })
               .attr("transform", function(d) {
                 return "translate(" +  params_translate + ")rotate(" +  params_rotate + ")";
@@ -709,10 +710,11 @@
               .classed("selected", function(e, j) { return e.__selected; })
               .transition().duration(vars.duration)
               .attr('d', function(e) {
-                return params["func"](d3.values(this_accessor_values(e)));
+                return params["func"](d3.values(this_accessor_values(e)), i, vars);
               })
               .style("fill", params_fill)
-              .style("stroke", params_stroke);
+              .style("stroke", params_stroke)
+              .style("stroke-width", params_stroke_width);
 
         break;
 
@@ -1236,7 +1238,7 @@
                       .filter(function(d, i) {
                         return params.filter(d, i, vars);
                       })
-                      .filter(utils.filters.redraw_only)
+                  //    .filter(utils.filters.redraw_only)
                       .call(utils.draw_mark, params, vars);
 
                   // Bind events to groups after marks have been created
@@ -1246,7 +1248,7 @@
 
                 gItems
                     .filter(params.filter)
-                    .filter(utils.filters.redraw_only)
+              //      .filter(utils.filters.redraw_only)
                     .call(utils.draw_mark, params, vars);
 
                 // CUSTOM SELECTION EVENT
@@ -1337,7 +1339,7 @@
       //      if(vars.type == "productspace" || vars.type == "treemap" || vars.type == "scatterplot" || vars.type == "geomap") {
             if(vars.init && vars.type !== 'linechart' && vars.type !== 'slopegraph' && vars.type !== 'slopegraph_ordinal' && vars.type !== 'slopegraph_ordinal') {
               vars.new_data.forEach(function(d) {
-                if(!d.__selected) { d.__redraw = false; }
+               // if(!d.__selected) { d.__redraw = false; }
               });
             }
 
