@@ -1,0 +1,81 @@
+<!doctype html>
+<meta charset="utf-8">
+<script src="../js/d3.js"></script>
+<script src="../build/vistk.js"></script>
+<link href="../css/vistk.css" rel="stylesheet">
+<body>
+<div id="viz"></div>
+<script>
+
+d3.json("../../vis-toolkit-datasets/data/diversification_ubiquity_hs4_1995_2012.json", function(error, countries) {
+
+// [{"name": "Angola", "name_2char": "ao", "country_id": 4, "longitude": 13.242, "years": [{"avg_products": 61, "nb_products": 5, "year": 1995}
+
+  var flat_years = vistk.utils.flatten_years(countries);
+
+  visualization = vistk.viz()
+    .params({
+      dev: true,
+      type: 'scatterplot',
+      margin: {top: 10, right: 10, bottom: 30, left: 30},
+      container: '#viz',
+      data: flat_years,
+      var_id: 'name',
+      var_group: 'continent',
+      var_color: 'continent',
+      var_x: 'nb_products',
+      var_y: 'avg_products',
+      var_text: 'name',
+      radius: 3,
+      time: {
+        var_time: "year",
+        current_time: vistk.utils.min,
+        parse: function(d) { return d; }
+      },
+      items: [{
+        attr: "name",
+        marks: [{
+          type: 'circle'
+        }, {
+          var_mark: '__highlighted',
+          type: d3.scale.ordinal().domain([false, true]).range(["none", "text"]),
+          translate: [10, 0],
+          rotate: '0'
+        }]
+      }],
+      connect: [{
+        marks: [{
+          var_mark: '__highlighted',
+          type: d3.scale.ordinal().domain([true, false]).range(['path', 'none']),
+          stroke: function(d, i, vars) {
+            return vars.color(vars.accessor_data(d)[vars.var_color]);
+          },
+          stroke_width: 2,
+          fill: function(d) {
+            return 'none';
+          },
+          func: function(d, i, vars) {
+            return d3.svg.line()
+               .interpolate(vars.interpolate)
+               .x(function(d) {
+                 return vars.x_scale[0]['func'](d[vars.var_x]);
+               })
+               .y(function(d) {
+                 return vars.y_scale[0]['func'](d[vars.var_y]);
+               })(d);
+             }
+        }]
+      }],
+      ui: {
+        default: true,
+        options: ["country", "continent"]
+      },
+      selection: ["United States"],
+      highlight: ["France", "Germany"],
+      title: "World Countries"
+    });
+
+  d3.select("#viz").call(visualization);
+
+});
+</script>
