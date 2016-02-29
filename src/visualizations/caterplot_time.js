@@ -10,14 +10,6 @@ vars.default_params['caterplot'] = function(scope) {
   };
 
   params.x_scale = [{
-    func: d3.scale.ordinal()
-            .rangeBands([scope.margin.left, scope.width - scope.margin.left - scope.margin.right])
-            .domain(d3.set(vars.new_data.map(function(d) {
-              return d[scope.var_x];
-            })).values())
-  }];
-
-  params.x_scale = [{
     func: d3.scale.linear()
             .range([scope.margin.left, scope.width - scope.margin.left - scope.margin.right])
             .domain(vars.time.interval)
@@ -60,7 +52,7 @@ vars.default_params['caterplot'] = function(scope) {
     };
 
     if(i === scope.time.points.length - 1) {
-      aaaaaaa = item.marks;
+
       item.marks.push({
         var_mark: '__highlighted',
         type: d3.scale.ordinal().domain([true, false]).range(['text', 'none']),
