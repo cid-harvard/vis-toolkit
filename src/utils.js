@@ -1238,7 +1238,7 @@
                       .filter(function(d, i) {
                         return params.filter(d, i, vars);
                       })
-                  //    .filter(utils.filters.redraw_only)
+                      .filter(utils.filters.redraw_only)
                       .call(utils.draw_mark, params, vars);
 
                   // Bind events to groups after marks have been created
@@ -1248,7 +1248,7 @@
 
                 gItems
                     .filter(params.filter)
-              //      .filter(utils.filters.redraw_only)
+                    .filter(utils.filters.redraw_only)
                     .call(utils.draw_mark, params, vars);
 
                 // CUSTOM SELECTION EVENT
@@ -1336,10 +1336,13 @@
             }
 
             // Make sure we won't re-draw all nodes next time
-      //      if(vars.type == "productspace" || vars.type == "treemap" || vars.type == "scatterplot" || vars.type == "geomap") {
-            if(vars.init && vars.type !== 'linechart' && vars.type !== 'slopegraph' && vars.type !== 'slopegraph_ordinal' && vars.type !== 'slopegraph_ordinal') {
+            // if(vars.type == "productspace" || vars.type == "treemap" || vars.type == "scatterplot" || vars.type == "geomap") {
+            if(vars.init && vars.type !== 'linechart' && vars.type !== 'slopegraph' && vars.type !== 'slopegraph_ordinal' && vars.type !== 'slopegraph_ordinal' && index_item === vars.items.length - 1) {
+
               vars.new_data.forEach(function(d) {
-               // if(!d.__selected) { d.__redraw = false; }
+                if(!d.__selected) {
+                  d.__redraw = false;
+                }
               });
             }
 

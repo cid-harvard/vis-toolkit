@@ -18,7 +18,7 @@ vars.default_params['caterplot'] = function(scope) {
   params.y_scale = [{
     func: d3.scale.linear()
             .range([scope.height - scope.margin.top - scope.margin.bottom, scope.margin.top])
-            .domain(d3.extent(vars.new_data, function(d) {
+            .domain(d3.extent(vars.all_data, function(d) {
               return d[scope.var_y];
             })).nice()
   }];
