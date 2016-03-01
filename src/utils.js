@@ -647,7 +647,7 @@
 
         case "line_coord":
 
-          var mark = d3.select(that).selectAll(".mark__line_coord").data([d]);
+          var mark = d3.select(that).selectAll(".mark__line_coord.items_" + mark_id).data([d]);
 
           var t = d3.transform(d3.select(that).attr("transform")).translate;
 
@@ -725,7 +725,7 @@
               .size(10 * 50)
               .segments(360);
 
-          var mark = d3.select(that).selectAll(".items__mark__star").data([d]);
+          var mark = d3.select(that).selectAll(".items__mark__star.items_" + mark_id).data([d]);
 
           mark.enter().append('path')
               .classed("items_" + mark_id, true)
@@ -742,7 +742,7 @@
 
         case "polygon":
 
-          var mark = d3.select(that).selectAll('.items__mark__polygon').data([d]);
+          var mark = d3.select(that).selectAll('.items__mark__polygon.items_' + mark_id).data([d]);
 
           mark.enter().append('polygon')
               .classed("items_" + mark_id, true)
@@ -761,7 +761,7 @@
 
         case "triangle":
 
-          var mark = d3.select(that).selectAll('.items__mark__triangle').data([d]);
+          var mark = d3.select(that).selectAll('.items__mark__triangle.items_' + mark_id).data([d]);
 
           mark.enter().append('polygon')
               .classed("items_" + mark_id, true)
@@ -780,7 +780,7 @@
 
         case "marker":
 
-          var mark = d3.select(that).selectAll(".items__mark__marker").data([d]);
+          var mark = d3.select(that).selectAll(".items__mark__marker.items_" + mark_id).data([d]);
 
           var mark_enter = mark.enter().append('path')
               .classed("items_" + mark_id, true)
