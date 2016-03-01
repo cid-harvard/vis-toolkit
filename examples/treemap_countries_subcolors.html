@@ -11,7 +11,7 @@ d3.json("../../vis-toolkit-datasets/data/diversification_ubiquity_hs4_1995_2012.
 
   var flat_years = vistk.utils.flatten_years(countries);
 
-  flat_years.filter(function(d) {
+  flat_years = flat_years.filter(function(d) {
     return d.year === 1995;
   })
 
@@ -63,10 +63,12 @@ d3.json("../../vis-toolkit-datasets/data/diversification_ubiquity_hs4_1995_2012.
 
             var group_domain = vistk.utils.extent(group_data, vars.var_subcolor);
 
+            console.log(group_domain)
+
             // Calculate scale
             var subcolor_scale = d3.scale.linear()
               .domain(group_domain)
-              .range([0, 100]);
+              .range([0, 50]);
 
             return d3.hsl(vars.color(d[vars.var_color])).darker(subcolor_scale(d[vars.var_subcolor]))
 
