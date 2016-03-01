@@ -93,21 +93,21 @@
       // In case a function determines the type of mark to be used
       if(typeof params.var_mark === "object") {
 
-        params.var_mark.forEach(function(var_mark) {
+        params.var_mark.forEach(function(__var_mark) {
 
           var params_type = "";
 
           if(typeof params.type === "function") {
-            params_type = params.type(d[var_mark]);
+            params_type = params.type(d[__var_mark]);
           } else {
             params_type = params.type;
           }
 
-          if(typeof params_type !== "undefined") {
+          if(typeof params_type !== "undefined" && params_type !== "none") {
             var_mark = var_mark.concat(params_type)
           }
 
-        })
+        });
 
       } else {
 

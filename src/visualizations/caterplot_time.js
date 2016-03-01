@@ -73,7 +73,7 @@ vars.default_params['caterplot'] = function(scope) {
 
   params.connect = [{
     marks: [{
-      var_mark: '__highlighted',
+      var_mark: ['__highlighted', '__selected'],
       type: d3.scale.ordinal().domain([true, false]).range(['path', 'none']),
       stroke: function(d) {
         return vars.color(params.accessor_data(d)[vars.var_color]);
