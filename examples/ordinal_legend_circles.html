@@ -1,0 +1,48 @@
+<!doctype html>
+<meta charset="utf-8">
+<script src="../js/d3.js" charset="utf-8"></script>
+<script src="../build/vistk.js"></script>
+<link href="../css/vistk.css" rel="stylesheet">
+<body>
+<div id="viz"></div>
+<script>
+
+
+var circles = d3.range(5).map(function(d, i) {
+  return i;
+});
+
+var width = 500;
+
+var visualization = vistk.viz()
+      .params({
+        dev: true,
+        height: 200,
+        width: 500,
+        margin: {top: 10, right: 10, bottom: 10, left: 10},
+        type: 'ordinal_horizontal',
+        data: circles,
+        container: '#viz',
+        var_text: '__value',
+        var_group: '__value',
+        var_x: '__id',
+        var_y: '__id',
+        var_r: '__value',
+        x_ticks: 10,
+        items: [{
+          marks: [{
+            type: "circle"
+          }, {
+            type: "text",
+            translate: function(d, i, vars) {
+              return [0, 25];
+            },
+            text_anchor: 'middle'
+          }]
+        }]
+      });
+
+d3.select("#viz").call(visualization);
+
+
+</script>

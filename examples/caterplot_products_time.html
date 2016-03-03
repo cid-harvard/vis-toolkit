@@ -6,8 +6,8 @@
 <style>
 
 circle {
-  fill-opacity: .1;
-  stroke-opacity: 1;
+  fill-opacity: .5;
+  stroke-opacity: 5;
 }
 
 </style>
@@ -15,30 +15,32 @@ circle {
 <div id="viz"></div>
 <script>
 
-d3.json("../../vis-toolkit-datasets/data/exports_2012.json", function(error, exports) {
+d3.json("../../vis-toolkit-datasets/data/usa_exports_1960_2013.json", function(error, exports) {
 
   visualization = vistk.viz()
     .params({
       type: 'caterplot',
-      margin: {top: 10, right: 10, bottom: 30, left: 30},
+      margin: {top: 10, right: 100, bottom: 30, left: 30},
       container: '#viz',
       data: exports.data,
-      var_id: 'code',
+      var_id: 'abbrv',
       var_group: 'community_name',
       var_color: 'community_name',
       color: vistk.utils.colors.products_hs4,
-      var_x: 'community_name',
+      var_x: 'year',
       var_y: 'value',
-      var_share: 'nb_products',
-      var_r: 'distance',
+      var_share: 'value',
+      var_r: 'rca',
       var_text: 'name',
       time: {
-        var_time: 'year',
-        current_time: vistk.utils.min,
+        var_time: "year",
+        current_time: "2010",
+        parse: function(d) { return d; },
+        filter: d3.range(2013-1995).map(function(d) { return 1995 + d; })
       },
       ui: {
         default: true,
-        options: ['community_name', 'product']
+        options: ['country', 'continent']
       }
     });
 

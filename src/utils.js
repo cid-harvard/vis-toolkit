@@ -93,21 +93,21 @@
       // In case a function determines the type of mark to be used
       if(typeof params.var_mark === "object") {
 
-        params.var_mark.forEach(function(var_mark) {
+        params.var_mark.forEach(function(__var_mark) {
 
           var params_type = "";
 
           if(typeof params.type === "function") {
-            params_type = params.type(d[var_mark]);
+            params_type = params.type(d[__var_mark]);
           } else {
             params_type = params.type;
           }
 
-          if(typeof params_type !== "undefined") {
+          if(typeof params_type !== "undefined" && params_type !== "none") {
             var_mark = var_mark.concat(params_type)
           }
 
-        })
+        });
 
       } else {
 
@@ -647,7 +647,7 @@
 
         case "line_coord":
 
-          var mark = d3.select(that).selectAll(".mark__line_coord").data([d]);
+          var mark = d3.select(that).selectAll(".mark__line_coord.items_" + mark_id).data([d]);
 
           var t = d3.transform(d3.select(that).attr("transform")).translate;
 
@@ -697,8 +697,9 @@
               .classed("items_" + mark_id, true)
               .style("fill", params_fill)
               .style("stroke", params_stroke)
+              .style("stroke-width", params_stroke_width)
               .attr('d', function(e) {
-                return params["func"](d3.values(this_accessor_values(e)));
+                return params["func"](d3.values(this_accessor_values(e)), i, vars);
               })
               .attr("transform", function(d) {
                 return "translate(" +  params_translate + ")rotate(" +  params_rotate + ")";
@@ -709,10 +710,11 @@
               .classed("selected", function(e, j) { return e.__selected; })
               .transition().duration(vars.duration)
               .attr('d', function(e) {
-                return params["func"](d3.values(this_accessor_values(e)));
+                return params["func"](d3.values(this_accessor_values(e)), i, vars);
               })
               .style("fill", params_fill)
-              .style("stroke", params_stroke);
+              .style("stroke", params_stroke)
+              .style("stroke-width", params_stroke_width);
 
         break;
 
@@ -723,7 +725,7 @@
               .size(10 * 50)
               .segments(360);
 
-          var mark = d3.select(that).selectAll(".items__mark__star").data([d]);
+          var mark = d3.select(that).selectAll(".items__mark__star.items_" + mark_id).data([d]);
 
           mark.enter().append('path')
               .classed("items_" + mark_id, true)
@@ -740,7 +742,7 @@
 
         case "polygon":
 
-          var mark = d3.select(that).selectAll('.items__mark__polygon').data([d]);
+          var mark = d3.select(that).selectAll('.items__mark__polygon.items_' + mark_id).data([d]);
 
           mark.enter().append('polygon')
               .classed("items_" + mark_id, true)
@@ -759,7 +761,7 @@
 
         case "triangle":
 
-          var mark = d3.select(that).selectAll('.items__mark__triangle').data([d]);
+          var mark = d3.select(that).selectAll('.items__mark__triangle.items_' + mark_id).data([d]);
 
           mark.enter().append('polygon')
               .classed("items_" + mark_id, true)
@@ -778,7 +780,7 @@
 
         case "marker":
 
-          var mark = d3.select(that).selectAll(".items__mark__marker").data([d]);
+          var mark = d3.select(that).selectAll(".items__mark__marker.items_" + mark_id).data([d]);
 
           var mark_enter = mark.enter().append('path')
               .classed("items_" + mark_id, true)
@@ -1166,7 +1168,7 @@
                               .data(vars.new_data.filter(function(d) {
                                   return typeof accessor_data(d) !== 'undefined' && typeof accessor_data(d)[vars.var_id] !== 'undefined';
                                 }), function(d, i) {
-                                return accessor_data(d)[vars.var_id] + "_" + index_item + d.depth + d.__index;
+                                  return accessor_data(d)[vars.var_id] + "_" + index_item + d.depth + d.__index;
                               });
 
               // ENTER ITEMS
@@ -1334,10 +1336,13 @@
             }
 
             // Make sure we won't re-draw all nodes next time
-      //      if(vars.type == "productspace" || vars.type == "treemap" || vars.type == "scatterplot" || vars.type == "geomap") {
-            if(vars.init && vars.type !== 'linechart' && vars.type !== 'slopegraph' && vars.type !== 'slopegraph_ordinal' && vars.type !== 'slopegraph_ordinal') {
+            // if(vars.type == "productspace" || vars.type == "treemap" || vars.type == "scatterplot" || vars.type == "geomap") {
+            if(vars.init && vars.type !== 'linechart' && vars.type !== 'slopegraph' && vars.type !== 'slopegraph_ordinal' && vars.type !== 'slopegraph_ordinal' && index_item === vars.items.length - 1) {
+
               vars.new_data.forEach(function(d) {
-                if(!d.__selected) { d.__redraw = false; }
+                if(!d.__selected) {
+                  d.__redraw = false;
+                }
               });
             }
 
@@ -1506,7 +1511,7 @@
       vars_svg.selectAll(".y.grid").transition()
           .duration(vars.duration)
           .call(utils.make_y_axis()
-          .tickSize(-vars.x_scale[0]["func"].range()[1] + vars.margin.right + vars.y_tickSize, 0, 0)
+          .tickSize(-vars.width + vars.margin.right + vars.margin.left, 0, 0)
           .tickFormat(""));
 
     }
