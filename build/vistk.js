@@ -116,21 +116,21 @@ vistk.viz = function() {
       // In case a function determines the type of mark to be used
       if(typeof params.var_mark === "object") {
 
-        params.var_mark.forEach(function(var_mark) {
+        params.var_mark.forEach(function(__var_mark) {
 
           var params_type = "";
 
           if(typeof params.type === "function") {
-            params_type = params.type(d[var_mark]);
+            params_type = params.type(d[__var_mark]);
           } else {
             params_type = params.type;
           }
 
-          if(typeof params_type !== "undefined") {
+          if(typeof params_type !== "undefined" && params_type !== "none") {
             var_mark = var_mark.concat(params_type)
           }
 
-        })
+        });
 
       } else {
 
@@ -670,7 +670,7 @@ vistk.viz = function() {
 
         case "line_coord":
 
-          var mark = d3.select(that).selectAll(".mark__line_coord").data([d]);
+          var mark = d3.select(that).selectAll(".mark__line_coord.items_" + mark_id).data([d]);
 
           var t = d3.transform(d3.select(that).attr("transform")).translate;
 
@@ -720,8 +720,9 @@ vistk.viz = function() {
               .classed("items_" + mark_id, true)
               .style("fill", params_fill)
               .style("stroke", params_stroke)
+              .style("stroke-width", params_stroke_width)
               .attr('d', function(e) {
-                return params["func"](d3.values(this_accessor_values(e)));
+                return params["func"](d3.values(this_accessor_values(e)), i, vars);
               })
               .attr("transform", function(d) {
                 return "translate(" +  params_translate + ")rotate(" +  params_rotate + ")";
@@ -732,10 +733,11 @@ vistk.viz = function() {
               .classed("selected", function(e, j) { return e.__selected; })
               .transition().duration(vars.duration)
               .attr('d', function(e) {
-                return params["func"](d3.values(this_accessor_values(e)));
+                return params["func"](d3.values(this_accessor_values(e)), i, vars);
               })
               .style("fill", params_fill)
-              .style("stroke", params_stroke);
+              .style("stroke", params_stroke)
+              .style("stroke-width", params_stroke_width);
 
         break;
 
@@ -746,7 +748,7 @@ vistk.viz = function() {
               .size(10 * 50)
               .segments(360);
 
-          var mark = d3.select(that).selectAll(".items__mark__star").data([d]);
+          var mark = d3.select(that).selectAll(".items__mark__star.items_" + mark_id).data([d]);
 
           mark.enter().append('path')
               .classed("items_" + mark_id, true)
@@ -763,7 +765,7 @@ vistk.viz = function() {
 
         case "polygon":
 
-          var mark = d3.select(that).selectAll('.items__mark__polygon').data([d]);
+          var mark = d3.select(that).selectAll('.items__mark__polygon.items_' + mark_id).data([d]);
 
           mark.enter().append('polygon')
               .classed("items_" + mark_id, true)
@@ -782,7 +784,7 @@ vistk.viz = function() {
 
         case "triangle":
 
-          var mark = d3.select(that).selectAll('.items__mark__triangle').data([d]);
+          var mark = d3.select(that).selectAll('.items__mark__triangle.items_' + mark_id).data([d]);
 
           mark.enter().append('polygon')
               .classed("items_" + mark_id, true)
@@ -801,7 +803,7 @@ vistk.viz = function() {
 
         case "marker":
 
-          var mark = d3.select(that).selectAll(".items__mark__marker").data([d]);
+          var mark = d3.select(that).selectAll(".items__mark__marker.items_" + mark_id).data([d]);
 
           var mark_enter = mark.enter().append('path')
               .classed("items_" + mark_id, true)
@@ -1189,7 +1191,7 @@ vistk.viz = function() {
                               .data(vars.new_data.filter(function(d) {
                                   return typeof accessor_data(d) !== 'undefined' && typeof accessor_data(d)[vars.var_id] !== 'undefined';
                                 }), function(d, i) {
-                                return accessor_data(d)[vars.var_id] + "_" + index_item + d.depth + d.__index;
+                                  return accessor_data(d)[vars.var_id] + "_" + index_item + d.depth + d.__index;
                               });
 
               // ENTER ITEMS
@@ -1357,10 +1359,13 @@ vistk.viz = function() {
             }
 
             // Make sure we won't re-draw all nodes next time
-      //      if(vars.type == "productspace" || vars.type == "treemap" || vars.type == "scatterplot" || vars.type == "geomap") {
-            if(vars.init && vars.type !== 'linechart' && vars.type !== 'slopegraph' && vars.type !== 'slopegraph_ordinal' && vars.type !== 'slopegraph_ordinal') {
+            // if(vars.type == "productspace" || vars.type == "treemap" || vars.type == "scatterplot" || vars.type == "geomap") {
+            if(vars.init && vars.type !== 'linechart' && vars.type !== 'slopegraph' && vars.type !== 'slopegraph_ordinal' && vars.type !== 'slopegraph_ordinal' && index_item === vars.items.length - 1) {
+
               vars.new_data.forEach(function(d) {
-                if(!d.__selected) { d.__redraw = false; }
+                if(!d.__selected) {
+                  d.__redraw = false;
+                }
               });
             }
 
@@ -1529,7 +1534,7 @@ vistk.viz = function() {
       vars_svg.selectAll(".y.grid").transition()
           .duration(vars.duration)
           .call(utils.make_y_axis()
-          .tickSize(-vars.x_scale[0]["func"].range()[1] + vars.margin.right + vars.y_tickSize, 0, 0)
+          .tickSize(-vars.width + vars.margin.right + vars.margin.left, 0, 0)
           .tickFormat(""));
 
     }
@@ -3045,10 +3050,10 @@ vars.default_params['caterplot'] = function(scope) {
     fill: function(d) {
       return scope.color(scope.accessor_items(d)[scope.var_color]);
     },
-   // translate: function() {
-   //   return [vars.x_scale[0]['func'].rangeBand() / 4, 0]
-   // },
-     }, {
+    translate: function() {
+      return [vars.x_scale[0]['func'].rangeBand() / 4, 0]
+    }
+    }, {
       var_mark: '__highlighted',
       type: d3.scale.ordinal().domain([true, false]).range(['text', 'none'])
     }, {
@@ -3061,6 +3066,114 @@ vars.default_params['caterplot'] = function(scope) {
   }];
 
   params.connect = [];
+
+  params.x_axis_show = true;
+  params.x_axis_translate = [0, scope.height - scope.margin.bottom - scope.margin.top];
+  params.x_grid_show = true;
+  params.x_ticks = 10;
+
+  params.y_axis_show = true;
+  params.y_axis_translate = [scope.margin.left, 0];
+  params.y_grid_show = true;
+  params.y_invert = false;
+
+  return params;
+
+};
+
+vars.default_params['caterplot_time'] = function(scope) {
+
+  var params = {};
+
+  params.accessor_values = function(d) { return d.values; };
+  params.accessor_items = function(d) { return d; };
+
+  params.accessor_data = function(d) {
+    return d.values[vars.time.current_time];
+  };
+
+  params.x_scale = [{
+    func: d3.scale.linear()
+            .range([scope.margin.left, scope.width - scope.margin.left - scope.margin.right])
+            .domain(vars.time.interval)
+  }];
+
+  params.y_scale = [{
+    func: d3.scale.linear()
+            .range([scope.height - scope.margin.top - scope.margin.bottom, scope.margin.top])
+            .domain(d3.extent(vars.all_data, function(d) {
+              return d[scope.var_y];
+            })).nice()
+  }];
+
+  params.r_scale = d3.scale.linear()
+              .range([scope.radius_min, scope.radius_max])
+              .domain(d3.extent(vars.new_data, function(d) {
+                return d[scope.var_r];
+              }));
+
+
+  params.items = [];
+
+  scope.time.points.forEach(function(time, i) {
+
+    var item = {
+      marks: [{
+        type: 'circle',
+        r_scale: d3.scale.linear()
+                  .range([scope.radius_min, scope.radius_max])
+                  .domain(d3.extent(vars.new_data, function(d) { return d[scope.var_r]; })),
+        fill: function(d) {
+          return scope.color(scope.accessor_items(d)[scope.var_color]);
+        }
+      }],
+      accessor_data: function(d) {
+        return d.values.filter(function(e) {
+          return e.year == time;
+        })[0];
+      }
+    };
+
+    if(i === scope.time.points.length - 1) {
+
+      item.marks.push({
+        var_mark: '__highlighted',
+        type: d3.scale.ordinal().domain([true, false]).range(['text', 'none']),
+        translate: [20, 0]
+      });
+
+      item.marks.push({
+        var_mark: '__selected',
+        type: d3.scale.ordinal().domain([true, false]).range(['text', 'none']),
+        translate: [20, 0]
+      });
+
+    }
+
+    params.items.push(item);
+
+  });
+
+  params.connect = [{
+    marks: [{
+      var_mark: ['__highlighted', '__selected'],
+      type: d3.scale.ordinal().domain([true, false]).range(['path', 'none']),
+      stroke: function(d) {
+        return vars.color(params.accessor_data(d)[vars.var_color]);
+      },
+      fill: function(d) {
+        return 'none';
+      },
+      func: d3.svg.line()
+           .interpolate(vars.interpolate)
+           .x(function(d) {
+             return params.x_scale[0]['func'](vars.time.parse(d[vars.var_x]));
+           })
+           .y(function(d) {
+             return params.y_scale[0]['func'](d[vars.var_y]);
+           })
+    }]
+  }];
 
   params.x_axis_show = true;
   params.x_axis_translate = [0, scope.height - scope.margin.bottom - scope.margin.top];
@@ -5972,4 +6085,5 @@ vistk.utils.aggregate = function(data, vars, var_agg, type_agg) {
 
 vistk.utils.colors = {};
 
-vistk.utils.colors.products_hs4 = d3.scale.ordinal().domain([0, 9]).range(["#3182bd", "#6baed6", "#9ecae1", "#c6dbef", "#e6550d", "#fd8d3c", "#fdae6b", "#fdd0a2", "#31a354", "#74c476", "#a1d99b", "#c7e9c0", "#756bb1", "#9e9ac8", "#bcbddc", "#dadaeb", "#636363", "#969696", "#bdbdbd", "#d9d9d9"])
+vistk.utils.colors.products_hs4 = d3.scale.ordinal().domain([0, 9]).range(["#3182bd", "#6baed6", "#9ecae1", "#c6dbef", "#e6550d", "#fd8d3c", "#fdae6b", "#fdd0a2", "#31a354", "#74c476", "#a1d99b", "#c7e9c0", "#756bb1", "#9e9ac8", "#bcbddc", "#dadaeb", "#636363", "#969696", "#bdbdbd", "#d9d9d9"]);
+vistk.utils.colors.world_regions = d3.scale.ordinal().domain(["Africa", "Americas", "Asia", "Europe", "Oceania"]).range(["#99237d", "#c72439", "#6bc145", "#88c7ed", "#dd9f98"]);
