@@ -1,4 +1,4 @@
-vars.default_params['caterplot'] = function(scope) {
+vars.default_params['caterplot_time'] = function(scope) {
 
   var params = {};
 
