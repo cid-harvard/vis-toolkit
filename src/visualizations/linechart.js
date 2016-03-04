@@ -8,6 +8,8 @@ vars.default_params["linechart"] = function(scope) {
     return d.values[vars.time.current_time];
   };
 
+  params.var_x = vars.time.var_time;
+
   params.x_scale = [{
     func: d3.scale.linear()
             .range([scope.margin.left, scope.width - scope.margin.left - scope.margin.right])
@@ -64,7 +66,7 @@ vars.default_params["linechart"] = function(scope) {
       func: d3.svg.line()
            .interpolate(vars.interpolate)
            .x(function(d) {
-             return params.x_scale[0]['func'](vars.time.parse(d[vars.var_x]));
+             return params.x_scale[0]['func'](vars.time.parse(d[vars.time.var_time]));
            })
            .y(function(d) {
              return params.y_scale[0]['func'](d[vars.var_y]);

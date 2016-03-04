@@ -19,7 +19,7 @@ d3.json("../../vis-toolkit-datasets/data/usa_exports_1960_2013.json", function(e
 
   visualization = vistk.viz()
     .params({
-      type: 'caterplot',
+      type: 'caterplot_time',
       margin: {top: 10, right: 100, bottom: 30, left: 30},
       container: '#viz',
       data: exports.data,
@@ -27,7 +27,6 @@ d3.json("../../vis-toolkit-datasets/data/usa_exports_1960_2013.json", function(e
       var_group: 'community_name',
       var_color: 'community_name',
       color: vistk.utils.colors.products_hs4,
-      var_x: 'year',
       var_y: 'value',
       var_share: 'value',
       var_r: 'rca',

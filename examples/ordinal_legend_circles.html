@@ -7,7 +7,6 @@
 <div id="viz"></div>
 <script>
 
-
 var circles = d3.range(5).map(function(d, i) {
   return i;
 });
@@ -28,6 +27,8 @@ var visualization = vistk.viz()
         var_x: '__id',
         var_y: '__id',
         var_r: '__value',
+        radius_min: 5,
+        radius_max: 50,
         x_ticks: 10,
         items: [{
           marks: [{
@@ -35,7 +36,7 @@ var visualization = vistk.viz()
           }, {
             type: "text",
             translate: function(d, i, vars) {
-              return [0, 25];
+              return [0, - vars.r_scale(d[vars.var_r]) - 10];
             },
             text_anchor: 'middle'
           }]
@@ -43,6 +44,5 @@ var visualization = vistk.viz()
       });
 
 d3.select("#viz").call(visualization);
-
 
 </script>

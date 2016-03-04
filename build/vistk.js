@@ -2210,7 +2210,7 @@ vistk.viz = function() {
     list: {type: ["sparkline", "dotplot", "barchart", "linechart", "scatterplot", "grid",
                   "stacked", "piechart", "slopegraph", "slopegraph_ordinal", "productspace", "treemap", "geomap",
                   "stackedbar", "ordinal_vertical", "ordinal_horizontal", "matrix", "radial",
-                  "rectmap", "caterplot", "tickplot", "barchart_vertical"],
+                  "rectmap", "caterplot", "caterplot_time", "tickplot", "barchart_vertical"],
       mark: ['rect', 'circle', 'star', 'shape']
     },
 
@@ -3092,6 +3092,8 @@ vars.default_params['caterplot_time'] = function(scope) {
     return d.values[vars.time.current_time];
   };
 
+  params.var_x = vars.time.var_time;
+
   params.x_scale = [{
     func: d3.scale.linear()
             .range([scope.margin.left, scope.width - scope.margin.left - scope.margin.right])
@@ -3112,11 +3114,10 @@ vars.default_params['caterplot_time'] = function(scope) {
                 return d[scope.var_r];
               }));
 
-
   params.items = [];
 
   scope.time.points.forEach(function(time, i) {
-
+    console.log("TIME", time)
     var item = {
       marks: [{
         type: 'circle',
@@ -3167,7 +3168,7 @@ vars.default_params['caterplot_time'] = function(scope) {
       func: d3.svg.line()
            .interpolate(vars.interpolate)
            .x(function(d) {
-             return params.x_scale[0]['func'](vars.time.parse(d[vars.var_x]));
+             return params.x_scale[0]['func'](vars.time.parse(d[vars.time.var_time]));
            })
            .y(function(d) {
              return params.y_scale[0]['func'](d[vars.var_y]);
@@ -3175,10 +3176,11 @@ vars.default_params['caterplot_time'] = function(scope) {
     }]
   }];
 
+  params.x_ticks = vars.time.points.length;
+  params.x_tickValues = null;
   params.x_axis_show = true;
-  params.x_axis_translate = [0, scope.height - scope.margin.bottom - scope.margin.top];
   params.x_grid_show = true;
-  params.x_ticks = 10;
+  params.x_text = false;
 
   params.y_axis_show = true;
   params.y_axis_translate = [scope.margin.left, 0];
@@ -3420,6 +3422,8 @@ vars.default_params["linechart"] = function(scope) {
     return d.values[vars.time.current_time];
   };
 
+  params.var_x = vars.time.var_time;
+
   params.x_scale = [{
     func: d3.scale.linear()
             .range([scope.margin.left, scope.width - scope.margin.left - scope.margin.right])
@@ -3476,7 +3480,7 @@ vars.default_params["linechart"] = function(scope) {
       func: d3.svg.line()
            .interpolate(vars.interpolate)
            .x(function(d) {
-             return params.x_scale[0]['func'](vars.time.parse(d[vars.var_x]));
+             return params.x_scale[0]['func'](vars.time.parse(d[vars.time.var_time]));
            })
            .y(function(d) {
              return params.y_scale[0]['func'](d[vars.var_y]);
