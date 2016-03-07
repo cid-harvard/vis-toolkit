@@ -167,7 +167,7 @@
     list: {type: ["sparkline", "dotplot", "barchart", "linechart", "scatterplot", "grid",
                   "stacked", "piechart", "slopegraph", "slopegraph_ordinal", "productspace", "treemap", "geomap",
                   "stackedbar", "ordinal_vertical", "ordinal_horizontal", "matrix", "radial",
-                  "rectmap", "caterplot", "caterplot_time", "tickplot", "barchart_vertical"],
+                  "rectmap", "caterplot", "caterplot_time", "barchart_vertical"],
       mark: ['rect', 'circle', 'star', 'shape']
     },
 
