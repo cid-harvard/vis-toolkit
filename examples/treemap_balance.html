@@ -34,6 +34,7 @@ d3.json("../../vis-toolkit-datasets/data/exports_quinn_2012.json", function(erro
   exports.forEach(function(d) {
     total_exports += d.export_value;
     total_imports += d.import_value;
+    d.parent_parent_code = d.code[0];
   })
 
   var coef_diff = 1;
@@ -61,8 +62,9 @@ d3.json("../../vis-toolkit-datasets/data/exports_quinn_2012.json", function(erro
       margin: {top: 10, right: 10, bottom: 30, left: 30},
       data: exports,
       var_id: "code",
-      var_group: "parent_code",
-      var_color: "parent_code",
+      var_group: "parent_parent_code",
+      var_color: "parent_parent_code",
+      color: vistk.utils.colors.products_hs4,
       title: function(d) { return "Total exports $" + format(total_exports); },
       var_size: "export_value",
       var_sort: "export_value",
@@ -87,8 +89,9 @@ d3.json("../../vis-toolkit-datasets/data/exports_quinn_2012.json", function(erro
       margin: {top: 10, right: 10, bottom: 30, left: 30},
       data: exports,
       var_id: "code",
-      var_group: "parent_code",
-      var_color: "parent_code",
+      var_group: "parent_parent_code",
+      var_color: "parent_parent_code",
+      color: vistk.utils.colors.products_hs4,
       title: function(d) { return "Total imports $" + format(total_imports); },
       var_size: "import_value",
       var_sort: "import_value",
@@ -104,11 +107,15 @@ d3.json("../../vis-toolkit-datasets/data/exports_quinn_2012.json", function(erro
 
   // Coordinating top treemap with bottom one
   visualization_exports.params().evt.register('highlightOn', function(d) {
+
     visualization_imports.params().evt.call('highlightOn', d);
+
   });
 
   visualization_exports.params().evt.register('highlightOut', function(d) {
+
     visualization_imports.params().evt.call('highlightOut', d);
+
   });
 
   d3.select("#viz_imports").call(visualization_imports);
