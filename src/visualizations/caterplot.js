@@ -5,6 +5,8 @@ vars.default_params['caterplot'] = function(scope) {
   params.accessor_values = function(d) { return d.values; };
   params.accessor_items = function(d) { return d; };
 
+  scope.var_x = scope.var_group;
+
   params.x_scale = [{
     func: d3.scale.ordinal()
             .rangeBands([scope.margin.left, scope.width - scope.margin.left - scope.margin.right])

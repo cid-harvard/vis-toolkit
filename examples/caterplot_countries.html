@@ -21,8 +21,6 @@ d3.json("../../vis-toolkit-datasets/data/diversification_ubiquity_hs4_1995_2012.
 
   var flat_years = vistk.utils.flatten_years(countries);
 
-  console.log(flat_years)
-
   visualization = vistk.viz()
     .params({
       type: 'caterplot',
@@ -33,7 +31,6 @@ d3.json("../../vis-toolkit-datasets/data/diversification_ubiquity_hs4_1995_2012.
       var_group: 'continent',
       var_color: 'continent',
       color: vistk.utils.colors.world_regions,
-      var_x: 'continent',
       var_y: 'nb_products',
       var_share: 'nb_products',
       var_r: 'avg_products',
