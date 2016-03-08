@@ -269,9 +269,9 @@
 
     }
 
+    // Making sure we re-draw highlighted items
     vars.new_data = vars.new_data.filter(function(d) {
 
-      // Making sure we re-draw highlighted items
       if(vars.highlight.indexOf(d[vars.var_id]) > -1) {
         d.__highlighted = true;
         d.__redraw = true;
@@ -283,8 +283,10 @@
       return typeof vars.accessor_data(d) !== 'undefined' && typeof vars.accessor_data(d)[vars.var_id] !== 'undefined';
     });
 
+    // If redraw_all flag is on (by default when init: true) then force redraw all items
     if(vars.redraw_all) {
       vars.new_data.forEach(function(d) { d.__redraw = true; });
     }
 
+    // Turn flag off after used during init
     vars.redraw_all = false;
