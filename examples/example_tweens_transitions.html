@@ -1,0 +1,49 @@
+<!doctype html>
+<meta charset="utf-8">
+<script src="../js/d3.js" charset="utf-8"></script>
+<script src="../build/vistk.js"></script>
+<link href="../css/vistk.css" rel="stylesheet">
+<body>
+<div id="viz"></div>
+<script>
+
+var visualization = vistk.viz()
+    .params({
+      height: 200,
+      width: 500,
+      margin: {top: 30, right: 100, bottom: 30, left: 10},
+      type: 'ordinal_horizontal',
+      data: d3.superformulaTypes,
+      container: '#viz',
+      var_x: '__id',
+      var_y: '__id',
+      items: [{
+        marks: [{
+          var_mark: '__value',
+          type: 'tween',
+          tween_type: function(d) { return d; }
+        }, {
+          type: 'text',
+          text: function(d) { return d.__value; },
+          rotate: 45,
+          translate: [0, 10]
+        }]
+      }]
+    });
+
+d3.select("#viz").call(visualization);
+
+var duration = 400;
+
+setInterval(function() {
+
+  visualization.params({data: d3.shuffle(d3.superformulaTypes)})
+  visualization.params().init = true;
+  visualization.params().refresh = true;
+  visualization.params().duration = duration;
+
+  d3.select("#viz").call(visualization);
+
+}, duration);
+
+</script>
