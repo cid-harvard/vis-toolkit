@@ -815,16 +815,16 @@
 
         case "tween":
 
-          var tween_type = "circle";
+          var tween_type = "";
 
           if(typeof params.tween_type === "undefined") {
-            params.tween_type = "circle";
+            tween_type = "circle";
+          } else if(typeof params.tween_type === "function") {
+            tween_type = params.tween_type(d[params.var_mark]);
+          } else if(d3.superformulaTypes.indexOf(params.tween_type) < 0) {
+            tween_type = "star";
           } else {
             tween_type = params.tween_type;
-          }
-
-          if(typeof params.tween_type === "function") {
-            tween_type = params.tween_type(d[params.var_mark]);
           }
 
           var path_tween = d3.superformula()
@@ -839,12 +839,17 @@
               .classed('items__mark__tween', true)
               .style("fill", params_fill)
               .style("stroke", params_stroke)
-              .style("stroke-width", params_stroke_width)
-              .attr('d', path_tween);
+              .attr("transform", function(d) {
+                return "translate("+ d.x +", "+ d.y +")";
+              })
+              .style("stroke-width", params_stroke_width);
 
           mark
               .classed("highlighted", function(d, i) { return d.__highlighted; })
-              .classed("selected", function(d, i) { return d.__selected; });
+              .classed("selected", function(d, i) { return d.__selected; })
+              .transition()
+              .duration(vars.duration)
+              .attr('d', path_tween);
 
           mark.exit().remove();
 
