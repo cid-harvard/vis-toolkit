@@ -813,6 +813,44 @@
 
         break;
 
+        case "tween":
+
+          var tween_type = "circle";
+
+          if(typeof params.tween_type === "undefined") {
+            params.tween_type = "circle";
+          } else {
+            tween_type = params.tween_type;
+          }
+
+          if(typeof params.tween_type === "function") {
+            tween_type = params.tween_type(d[params.var_mark]);
+          }
+
+          var path_tween = d3.superformula()
+              .type(tween_type)
+              .size(100)
+              .segments(360);
+
+          var mark = d3.select(that).selectAll(".items__mark__tween.items_" + mark_id).data([d]);
+
+          mark.enter().append('path')
+              .classed("items_" + mark_id, true)
+              .classed('items__mark__tween', true)
+              .style("fill", params_fill)
+              .style("stroke", params_stroke)
+              .style("stroke-width", params_stroke_width)
+              .attr('d', path_tween);
+
+          mark
+              .classed("highlighted", function(d, i) { return d.__highlighted; })
+              .classed("selected", function(d, i) { return d.__selected; });
+
+          mark.exit().remove();
+
+        break;
+
+
         case "none":
 
           // To make sure we removed __highlighted and __selected nodes
