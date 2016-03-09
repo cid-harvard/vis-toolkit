@@ -55,17 +55,26 @@ vars.default_params['treemap'] = function(scope) {
   params.items = [{
     marks: [{
       type: 'divtext',
-      filter: function(d, i) { return d.depth == vars.treemap.depth_text && d.dx > vars.treemap.dx && d.d_y >  vars.treemap.d_y; }
+      filter: function(d, i) {
+        return d.depth == vars.treemap.depth_text && d.dx > vars.treemap.dx && d.d_y >  vars.treemap.d_y;
+      }
     }, {
       type: 'rect',
-      filter: function(d, i) { return d.depth == vars.treemap.depth_rect; },
+      filter: function(d, i) {
+        return d.depth == vars.treemap.depth_rect;
+      },
       x: 0,
       y: 0,
-      width: function(d) { return d.dx; },
-      height: function(d) { return d.dy; }
+      width: function(d) {
+        return d.dx;
+      },
+      height: function(d) {
+        return d.dy;
+      }
     }]
   }];
 
+  // Mandator parameters to draw rectangles with the right coordinates
   params.var_x = 'x';
   params.var_y = 'y';
 
