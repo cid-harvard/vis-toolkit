@@ -836,6 +836,49 @@ vistk.viz = function() {
 
         break;
 
+        case "tween":
+
+          var tween_type = "";
+
+          if(typeof params.tween_type === "undefined") {
+            tween_type = "circle";
+          } else if(typeof params.tween_type === "function") {
+            tween_type = params.tween_type(d[params.var_mark]);
+          } else if(d3.superformulaTypes.indexOf(params.tween_type) < 0) {
+            tween_type = "star";
+          } else {
+            tween_type = params.tween_type;
+          }
+
+          var path_tween = d3.superformula()
+              .type(tween_type)
+              .size(100)
+              .segments(360);
+
+          var mark = d3.select(that).selectAll(".items__mark__tween.items_" + mark_id).data([d]);
+
+          mark.enter().append('path')
+              .classed("items_" + mark_id, true)
+              .classed('items__mark__tween', true)
+              .style("fill", params_fill)
+              .style("stroke", params_stroke)
+              .attr("transform", function(d) {
+                return "translate("+ d.x +", "+ d.y +")";
+              })
+              .style("stroke-width", params_stroke_width);
+
+          mark
+              .classed("highlighted", function(d, i) { return d.__highlighted; })
+              .classed("selected", function(d, i) { return d.__selected; })
+              .transition()
+              .duration(vars.duration)
+              .attr('d', path_tween);
+
+          mark.exit().remove();
+
+        break;
+
+
         case "none":
 
           // To make sure we removed __highlighted and __selected nodes
@@ -2210,7 +2253,7 @@ vistk.viz = function() {
     list: {type: ["sparkline", "dotplot", "barchart", "linechart", "scatterplot", "grid",
                   "stacked", "piechart", "slopegraph", "slopegraph_ordinal", "productspace", "treemap", "geomap",
                   "stackedbar", "ordinal_vertical", "ordinal_horizontal", "matrix", "radial",
-                  "rectmap", "caterplot", "caterplot_time", "tickplot", "barchart_vertical"],
+                  "rectmap", "caterplot", "caterplot_time", "barchart_vertical"],
       mark: ['rect', 'circle', 'star', 'shape']
     },
 
@@ -2711,9 +2754,9 @@ vistk.viz = function() {
 
     }
 
+    // Making sure we re-draw highlighted items
     vars.new_data = vars.new_data.filter(function(d) {
 
-      // Making sure we re-draw highlighted items
       if(vars.highlight.indexOf(d[vars.var_id]) > -1) {
         d.__highlighted = true;
         d.__redraw = true;
@@ -2725,10 +2768,12 @@ vistk.viz = function() {
       return typeof vars.accessor_data(d) !== 'undefined' && typeof vars.accessor_data(d)[vars.var_id] !== 'undefined';
     });
 
+    // If redraw_all flag is on (by default when init: true) then force redraw all items
     if(vars.redraw_all) {
       vars.new_data.forEach(function(d) { d.__redraw = true; });
     }
 
+    // Turn flag off after used during init
     vars.redraw_all = false;
 
 vars.locales = {
@@ -2887,7 +2932,7 @@ vars.default_marks["circle"] = function(scope) {
 
 }
 
-vars.default_params["barchart"] = function(scope) {
+vars.default_params['barchart'] = function(scope) {
 
   var params = {};
 
@@ -2914,10 +2959,10 @@ vars.default_params["barchart"] = function(scope) {
       x: function() { return -scope.mark.width/2; },
       y: function(d) { return -scope.margin.top; },
       height: function(d) {
-        return scope.height - scope.margin.bottom - scope.margin.top - params.y_scale[0]["func"](scope.accessor_data(d)[scope.var_y]);
+        return scope.height - scope.margin.bottom - scope.margin.top - params.y_scale[0]['func'](scope.accessor_data(d)[scope.var_y]);
       },
       width: function(d) {
-        return params.x_scale[0]["func"].rangeBand();
+        return params.x_scale[0]['func'].rangeBand();
       },
       fill: function(d) {
         return scope.color(scope.accessor_items(d)[scope.var_color]);
@@ -2927,7 +2972,7 @@ vars.default_params["barchart"] = function(scope) {
       text: function(d) {
         return scope.accessor_data(d)[scope.var_y];
       },
-      translate: [params.x_scale[0]['func'].rangeBand() / 4, -20],
+      translate: [params.x_scale[0]['func'].rangeBand() / 2 - 5, -20],
       text_anchor: 'middle'
     }]
   }];
@@ -2936,11 +2981,9 @@ vars.default_params["barchart"] = function(scope) {
   params.x_axis_translate = [0, scope.height - scope.margin.bottom - scope.margin.top];
   params.x_grid_show = false;
   params.x_tickRotate = 45;
-  vars.x_textAnchor = "start";
+  vars.x_textAnchor = 'start';
 
-  // params.y_axis_show = true;
   params.y_axis_translate = [scope.margin.left, -10];
-  // params.y_grid_show = true;
 
   return params;
 
@@ -2975,17 +3018,16 @@ vars.default_params['barchart_vertical'] = function(scope) {
     marks: [{
       type: "rect",
       x: function(d) {
-         return -params.x_scale[0]["func"](scope.accessor_data(d)[scope.var_x]) + scope.margin.left;
+         return -params.x_scale[0]['func'](scope.accessor_data(d)[scope.var_x]) + scope.margin.left;
       },
       y: function(d) {
         return 0;
-//        return -scope.margin.top + scope.mark.width;
       },
       height: function(d) {
         return scope.mark.width;
       },
       width: function(d) {
-        return params.x_scale[0]["func"](scope.accessor_data(d)[scope.var_x]) - scope.margin.left;
+        return params.x_scale[0]['func'](scope.accessor_data(d)[scope.var_x]) - scope.margin.left;
       },
       fill: function(d) {
         return scope.color(scope.accessor_data(d)[scope.var_color]);
@@ -3018,6 +3060,8 @@ vars.default_params['caterplot'] = function(scope) {
 
   params.accessor_values = function(d) { return d.values; };
   params.accessor_items = function(d) { return d; };
+
+  scope.var_x = scope.var_group;
 
   params.x_scale = [{
     func: d3.scale.ordinal()
@@ -3117,7 +3161,7 @@ vars.default_params['caterplot_time'] = function(scope) {
   params.items = [];
 
   scope.time.points.forEach(function(time, i) {
-    console.log("TIME", time)
+
     var item = {
       marks: [{
         type: 'circle',
@@ -3181,6 +3225,7 @@ vars.default_params['caterplot_time'] = function(scope) {
   params.x_axis_show = true;
   params.x_grid_show = true;
   params.x_text = false;
+  params.x_axis_orient = 'bottom';
 
   params.y_axis_show = true;
   params.y_axis_translate = [scope.margin.left, 0];
@@ -3412,7 +3457,7 @@ vars.default_params["grid"] = function(scope) {
 
 };
 
-vars.default_params["linechart"] = function(scope) {
+vars.default_params['linechart'] = function(scope) {
 
   var params = {};
 
@@ -4559,10 +4604,9 @@ vars.default_params['stacked'] = function(scope) {
 
         if(!is_year) {
 
-          // Set missing values to null
-          var v = {date: y, year: y};
+          v[vars.time.var_time][vars.var_time] = y;
 
-          v[vars.time.var_time] = y;
+          // Init missing years at 0
           v[vars.var_y] = 0;
           c.values.push(v);
 
@@ -4690,65 +4734,6 @@ vars.default_params["stackedbar"] = function(scope) {
 
 };
 
-vars.default_params["tickplot"] = function(scope) {
-
-  var params = {};
-
-  params.items = [];
-
-  params.x_scale = [{
-    func: d3.scale.linear()
-            .range([scope.margin.left, scope.width - scope.margin.left - scope.margin.right])
-            .domain(d3.extent(vars.new_data, function(d) {
-              return scope.accessor_data(d)[vars.var_x];
-            })).nice()
-  }];
-
-  params.y_scale = [{
-    func: d3.scale.linear()
-            .range([scope.height - scope.margin.top - scope.margin.bottom, scope.margin.top])
-            .domain(d3.extent(vars.new_data, function(d) {
-              return scope.accessor_data(d)[vars.var_y];
-            })).nice()
-  }];
-
-  scope.time.points.forEach(function(time) {
-
-    var item = {};
-    item.marks = [];
-    // Draw items with a specific filter
-    var mark = [{
-        type: "rect",
-        rotate: 90
-      }];
-
-    item.marks[0] = mark;
-
-    item.accessor_data = function(d) {
-      return d.values.filter(function(e) {
-        return e.year == time;
-      })[0];
-    };
-
-    params.items = params.items.concat(item);
-
-  });
-
-  params.x_ticks = vars.time.points.length;
-  params.x_tickValues = null;
-  params.x_axis_orient = "top";
-  params.x_axis_show = true;
-  params.x_grid_show = true;
-  params.x_text = false;
-
-  params.y_axis_show = false
-  params.y_grid_show = false;
-  params.y_invert = true;
-
-  return params;
-
-};
-
 vars.default_params['treemap'] = function(scope) {
 
   var params = {};
@@ -4806,17 +4791,26 @@ vars.default_params['treemap'] = function(scope) {
   params.items = [{
     marks: [{
       type: 'divtext',
-      filter: function(d, i) { return d.depth == vars.treemap.depth_text && d.dx > vars.treemap.dx && d.d_y >  vars.treemap.d_y; }
+      filter: function(d, i) {
+        return d.depth == vars.treemap.depth_text && d.dx > vars.treemap.dx && d.d_y >  vars.treemap.d_y;
+      }
     }, {
       type: 'rect',
-      filter: function(d, i) { return d.depth == vars.treemap.depth_rect; },
+      filter: function(d, i) {
+        return d.depth == vars.treemap.depth_rect;
+      },
       x: 0,
       y: 0,
-      width: function(d) { return d.dx; },
-      height: function(d) { return d.dy; }
+      width: function(d) {
+        return d.dx;
+      },
+      height: function(d) {
+        return d.dy;
+      }
     }]
   }];
 
+  // Mandator parameters to draw rectangles with the right coordinates
   params.var_x = 'x';
   params.var_y = 'y';
 
@@ -6048,11 +6042,11 @@ vistk.utils.aggregate = function(data, vars, var_agg, type_agg) {
 
             vars.time.points.forEach(function(time, i) {
 
-              if(vars.var_x !== vars.time.var_time) {
+              if(vars.var_x !== vars.time.var_time && vars.var_x !== vars.var_group) {
                 aggregation.values[time][vars.var_x] += d.values[time][vars.var_x];
               }
 
-              if(vars.var_y !== vars.time.var_time) {
+              if(vars.var_y !== vars.time.var_time && vars.var_y !== vars.var_group) {
                 aggregation.values[time][vars.var_y] += d.values[time][vars.var_y];
               }
 

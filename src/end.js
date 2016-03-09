@@ -278,11 +278,11 @@ vistk.utils.aggregate = function(data, vars, var_agg, type_agg) {
 
             vars.time.points.forEach(function(time, i) {
 
-              if(vars.var_x !== vars.time.var_time) {
+              if(vars.var_x !== vars.time.var_time && vars.var_x !== vars.var_group) {
                 aggregation.values[time][vars.var_x] += d.values[time][vars.var_x];
               }
 
-              if(vars.var_y !== vars.time.var_time) {
+              if(vars.var_y !== vars.time.var_time && vars.var_y !== vars.var_group) {
                 aggregation.values[time][vars.var_y] += d.values[time][vars.var_y];
               }
 

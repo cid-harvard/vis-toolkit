@@ -27,17 +27,16 @@ vars.default_params['barchart_vertical'] = function(scope) {
     marks: [{
       type: "rect",
       x: function(d) {
-         return -params.x_scale[0]["func"](scope.accessor_data(d)[scope.var_x]) + scope.margin.left;
+         return -params.x_scale[0]['func'](scope.accessor_data(d)[scope.var_x]) + scope.margin.left;
       },
       y: function(d) {
         return 0;
-//        return -scope.margin.top + scope.mark.width;
       },
       height: function(d) {
         return scope.mark.width;
       },
       width: function(d) {
-        return params.x_scale[0]["func"](scope.accessor_data(d)[scope.var_x]) - scope.margin.left;
+        return params.x_scale[0]['func'](scope.accessor_data(d)[scope.var_x]) - scope.margin.left;
       },
       fill: function(d) {
         return scope.color(scope.accessor_data(d)[scope.var_color]);

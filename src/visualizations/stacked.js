@@ -23,10 +23,9 @@ vars.default_params['stacked'] = function(scope) {
 
         if(!is_year) {
 
-          // Set missing values to null
-          var v = {date: y, year: y};
+          v[vars.time.var_time][vars.var_time] = y;
 
-          v[vars.time.var_time] = y;
+          // Init missing years at 0
           v[vars.var_y] = 0;
           c.values.push(v);
 

@@ -1,4 +1,4 @@
-vars.default_params["barchart"] = function(scope) {
+vars.default_params['barchart'] = function(scope) {
 
   var params = {};
 
@@ -25,10 +25,10 @@ vars.default_params["barchart"] = function(scope) {
       x: function() { return -scope.mark.width/2; },
       y: function(d) { return -scope.margin.top; },
       height: function(d) {
-        return scope.height - scope.margin.bottom - scope.margin.top - params.y_scale[0]["func"](scope.accessor_data(d)[scope.var_y]);
+        return scope.height - scope.margin.bottom - scope.margin.top - params.y_scale[0]['func'](scope.accessor_data(d)[scope.var_y]);
       },
       width: function(d) {
-        return params.x_scale[0]["func"].rangeBand();
+        return params.x_scale[0]['func'].rangeBand();
       },
       fill: function(d) {
         return scope.color(scope.accessor_items(d)[scope.var_color]);
@@ -38,7 +38,7 @@ vars.default_params["barchart"] = function(scope) {
       text: function(d) {
         return scope.accessor_data(d)[scope.var_y];
       },
-      translate: [params.x_scale[0]['func'].rangeBand() / 4, -20],
+      translate: [params.x_scale[0]['func'].rangeBand() / 2 - 5, -20],
       text_anchor: 'middle'
     }]
   }];
@@ -47,11 +47,9 @@ vars.default_params["barchart"] = function(scope) {
   params.x_axis_translate = [0, scope.height - scope.margin.bottom - scope.margin.top];
   params.x_grid_show = false;
   params.x_tickRotate = 45;
-  vars.x_textAnchor = "start";
+  vars.x_textAnchor = 'start';
 
-  // params.y_axis_show = true;
   params.y_axis_translate = [scope.margin.left, -10];
-  // params.y_grid_show = true;
 
   return params;
 

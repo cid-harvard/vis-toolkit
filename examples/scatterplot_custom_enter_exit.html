@@ -1,0 +1,108 @@
+<!doctype html>
+<meta charset="utf-8">
+<script src="../js/d3.js"></script>
+<script src="../build/vistk.js"></script>
+<link href="../css/vistk.css" rel="stylesheet">
+<body>
+<div id="viz"></div>
+<script>
+
+d3.json("../../vis-toolkit-datasets/data/diversification_ubiquity_hs4_1995_2012.json", function(error, countries) {
+
+// [{"name": "Angola", "name_2char": "ao", "country_id": 4, "longitude": 13.242, "years": [{"avg_products": 61, "nb_products": 5, "year": 1995}
+
+  var flat_years = vistk.utils.flatten_years(countries);
+
+  visualization = vistk.viz()
+    .params({
+    //  dev: true,
+      type: 'scatterplot',
+      margin: {top: 10, right: 10, bottom: 30, left: 30},
+      container: '#viz',
+      data: flat_years,
+      var_id: 'name',
+      var_group: 'continent',
+      var_color: 'continent',
+      var_x: 'nb_products',
+      var_y: 'avg_products',
+      var_r: 'nb_products',
+      // x_domain: vistk.utils.extent(flat_years, 'nb_products'),
+      // y_domain: vistk.utils.extent(flat_years, 'avg_products'),
+      var_share: "avg_products",
+      share_cutoff: function(d) { return d.avg_products > 30; },
+      var_text: 'name_2char',
+      time: {
+        var_time: "year",
+        current_time: "1995",
+        parse: function(d) { return d; }
+      },
+      x_scale: [{
+        domain: [0, 700]
+      }],
+      items: [{
+        attr: "name",
+        marks: [{
+          var_mark: '__aggregated',
+          type: d3.scale.ordinal().domain([true, false]).range(["none", "circle"])
+        }, {
+          var_mark: '__aggregated',
+          type: d3.scale.ordinal().domain([true, false]).range(["circle", "none"])
+        }, {
+          type: "text",
+          rotate: "-30"
+        }],
+        enter: function(data, vars) {
+
+          // Init using aggregated value
+          this.attr("transform", function(d, i) {
+
+            if(!d.__aggregated) {
+
+              var agg_element = vars.new_data.filter(function(e) {
+                return d.continent === e.name_2char;
+              })[0];
+
+              return "translate(" + vars.x_scale[0]["func"](vars.accessor_data(agg_element)[vars.var_x]) + ", " + vars.y_scale[0]["func"](vars.accessor_data(agg_element)[vars.var_y]) + ")";
+
+            } else {
+
+              return "translate(" + vars.x_scale[0]["func"](vars.accessor_data(d)[vars.var_x])
+                + ", " + vars.y_scale[0]["func"](vars.accessor_data(d)[vars.var_y]) + ")";
+
+            }
+
+          })
+        },
+        exit: function(data, vars) {
+          // From position of aggregated value
+          this.attr("transform", function(d, i) {
+
+            if(!d.__aggregated) {
+              var agg_element = vars.new_data.filter(function(e) {
+                return d.continent === e.name_2char;
+              })[0];
+
+              return "translate(" + vars.x_scale[0]["func"](vars.accessor_data(agg_element)[vars.var_x]) + ", " + vars.y_scale[0]["func"](vars.accessor_data(agg_element)[vars.var_y]) + ")";
+            } else {
+
+              return "translate(" + vars.x_scale[0]["func"](vars.accessor_data(d)[vars.var_x])
+                + ", " + vars.y_scale[0]["func"](vars.accessor_data(d)[vars.var_y]) + ")";
+
+            }
+          })
+        }
+      }],
+      ui: {
+        default: true,
+        options: ["country", "continent"]
+      },
+      selection: ["France"],
+      highlight: ["France", "Germany"],
+      title: "World Countries",
+      set: {'__aggregated': true}
+    });
+
+  d3.select("#viz").call(visualization);
+
+});
+</script>
