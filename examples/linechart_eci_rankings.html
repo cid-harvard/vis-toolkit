@@ -12,7 +12,6 @@
 <script>
 
 d3.csv("../../vis-toolkit-datasets/data/atlas_eci_rankings_2004_2014.csv", function(error, data) {
-
   d3.json("../../vis-toolkit-datasets/data/countries.json", function(error, countries) {
 
     function find_country(var_filter, value) {
@@ -48,7 +47,7 @@ d3.csv("../../vis-toolkit-datasets/data/atlas_eci_rankings_2004_2014.csv", funct
   //    color: d3.scale.ordinal().domain(["Africa", "Americas", "Asia", "Europe", "Oceania"]).range(["#99237d", "#c72439", "#6bc145", "#88c7ed", "#dd9f98"]),
   //    color: d3.scale.linear().domain([0, 200]).range(["red", "blue"]),
       var_color: "continent", // TODO: color by final ranking value..
-      color: d3.scale.ordinal().domain(["Africa", "Americas", "Asia", "Europe", "Oceania"]).range(["#99237d", "#c72439", "#6bc145", "#88c7ed", "#dd9f98"]),
+      color: vistk.utils.colors.world_regions,
       var_text: "name",
       y_text: "ECI Rank",
       var_y: "rank_eci",
@@ -72,7 +71,6 @@ d3.csv("../../vis-toolkit-datasets/data/atlas_eci_rankings_2004_2014.csv", funct
     d3.select("#viz").call(visualization);
 
   });
-
 });
 
 </script>
