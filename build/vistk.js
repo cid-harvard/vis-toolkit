@@ -6,7 +6,7 @@ var w = typeof window === "undefined" ? this : window;
 var vistk = w.vistk || {};
 w.vistk = vistk;
 
-vistk.version = "0.0.31";
+vistk.version = "0.0.32";
 vistk.utils = {};
 
 if(typeof module === "object" && module.exports) {
@@ -4162,7 +4162,7 @@ vars.default_params["productspace"] = function(scope) {
 
 };
 
-vars.default_params["radial"] = function(scope) {
+vars.default_params['radial'] = function(scope) {
 
   var params = {};
 
@@ -4173,15 +4173,15 @@ vars.default_params["radial"] = function(scope) {
 
     utils.create_hierarchy(scope);
 
-    var tree = d3.layout.tree()
+    vars.tree = d3.layout.tree()
         .size([360, scope.width / 3 - 120])
         .separation(function(a, b) { return (a.parent == b.parent ? 1 : 2) / a.depth; });
 
-    var diagonal = d3.svg.diagonal.radial()
+    vars.diagonal = d3.svg.diagonal.radial()
         .projection(function(d) { return [d.y, d.x / 180 * Math.PI]; });
 
-    vars.nodes = tree.nodes(vars.root);
-    vars.links = tree.links(vars.nodes);
+    vars.nodes = vars.tree.nodes(vars.root);
+    vars.links = vars.tree.links(vars.nodes);
 
     vars.new_data = vars.nodes;
 
@@ -4217,40 +4217,11 @@ vars.default_params["radial"] = function(scope) {
               .range([10, 30])
               .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_r]; }));
 
-/*
-  params.connect = [{
-    attr: "links",
-    type: "items",
-    marks: [{
-      type: "line",
-      rotate: "0",
-      func: null,
-    }]
-  }];
-  */
-
-  params.connect = [{
-    attr: vars.time.var_time,
-    marks: [{
-      type: "path",
-     // fill: function(d) { return vars.color(params.accessor_items(d)[vars.var_color]); },
-      stroke: function(d) {
-        return "black";
-      },
-      func: diagonal,
-      translate: [scope.width / 2, scope.height / 2]
-    }]
-  }];
-
   params.items = [{
     marks: [{
-      type: "text",
-  //    rotate: function(d) { return d.x - 90; },
-  //      translate: function(d) { return [d.y, 0]; }
-  //    filter: function(d, i) { return d.depth == 1 && d.dx > 30 && d.dy > 30; }
+      type: 'text',
     }, {
-      type: "circle",
- //     filter: function(d, i) { return d.depth == 2; },
+      type: 'circle',
       r: 10,
       x: 0,
       y: 0,
@@ -4259,6 +4230,18 @@ vars.default_params["radial"] = function(scope) {
     }]
   }];
 
+  params.connect = [{
+    attr: vars.time.var_time,
+    marks: [{
+      type: 'path',
+     // fill: function(d) { return vars.color(params.accessor_items(d)[vars.var_color]); },
+      stroke: function(d) {
+        return 'black';
+      },
+      func: vars.diagonal,
+      translate: [scope.width / 2, scope.height / 2]
+    }]
+  }];
 
   return params;
 
@@ -6085,3 +6068,12 @@ vistk.utils.colors = {};
 
 vistk.utils.colors.products_hs4 = d3.scale.ordinal().domain([0, 9]).range(["#3182bd", "#6baed6", "#9ecae1", "#c6dbef", "#e6550d", "#fd8d3c", "#fdae6b", "#fdd0a2", "#31a354", "#74c476", "#a1d99b", "#c7e9c0", "#756bb1", "#9e9ac8", "#bcbddc", "#dadaeb", "#636363", "#969696", "#bdbdbd", "#d9d9d9"]);
 vistk.utils.colors.world_regions = d3.scale.ordinal().domain(["Africa", "Americas", "Asia", "Europe", "Oceania"]).range(["#99237d", "#c72439", "#6bc145", "#88c7ed", "#dd9f98"]);
+
+vistk.utils.generator = {};
+vistk.utils.generator.random = function(nb_items, nb_time_points) {
+  return Array.prototype.concat.apply([], d3.range(nb_items).map(function(item){
+    return d3.range(nb_time_points).map(function(d, time){
+      return {item: item, time: time, y: Math.random()*100 };
+    });
+  }));
+}

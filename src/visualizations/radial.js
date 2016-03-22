@@ -1,4 +1,4 @@
-vars.default_params["radial"] = function(scope) {
+vars.default_params['radial'] = function(scope) {
 
   var params = {};
 
@@ -9,15 +9,15 @@ vars.default_params["radial"] = function(scope) {
 
     utils.create_hierarchy(scope);
 
-    var tree = d3.layout.tree()
+    vars.tree = d3.layout.tree()
         .size([360, scope.width / 3 - 120])
         .separation(function(a, b) { return (a.parent == b.parent ? 1 : 2) / a.depth; });
 
-    var diagonal = d3.svg.diagonal.radial()
+    vars.diagonal = d3.svg.diagonal.radial()
         .projection(function(d) { return [d.y, d.x / 180 * Math.PI]; });
 
-    vars.nodes = tree.nodes(vars.root);
-    vars.links = tree.links(vars.nodes);
+    vars.nodes = vars.tree.nodes(vars.root);
+    vars.links = vars.tree.links(vars.nodes);
 
     vars.new_data = vars.nodes;
 
@@ -53,40 +53,11 @@ vars.default_params["radial"] = function(scope) {
               .range([10, 30])
               .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_r]; }));
 
-/*
-  params.connect = [{
-    attr: "links",
-    type: "items",
-    marks: [{
-      type: "line",
-      rotate: "0",
-      func: null,
-    }]
-  }];
-  */
-
-  params.connect = [{
-    attr: vars.time.var_time,
-    marks: [{
-      type: "path",
-     // fill: function(d) { return vars.color(params.accessor_items(d)[vars.var_color]); },
-      stroke: function(d) {
-        return "black";
-      },
-      func: diagonal,
-      translate: [scope.width / 2, scope.height / 2]
-    }]
-  }];
-
   params.items = [{
     marks: [{
-      type: "text",
-  //    rotate: function(d) { return d.x - 90; },
-  //      translate: function(d) { return [d.y, 0]; }
-  //    filter: function(d, i) { return d.depth == 1 && d.dx > 30 && d.dy > 30; }
+      type: 'text',
     }, {
-      type: "circle",
- //     filter: function(d, i) { return d.depth == 2; },
+      type: 'circle',
       r: 10,
       x: 0,
       y: 0,
@@ -95,6 +66,18 @@ vars.default_params["radial"] = function(scope) {
     }]
   }];
 
+  params.connect = [{
+    attr: vars.time.var_time,
+    marks: [{
+      type: 'path',
+     // fill: function(d) { return vars.color(params.accessor_items(d)[vars.var_color]); },
+      stroke: function(d) {
+        return 'black';
+      },
+      func: vars.diagonal,
+      translate: [scope.width / 2, scope.height / 2]
+    }]
+  }];
 
   return params;
 

@@ -10,7 +10,6 @@
 <script>
 
 d3.csv("../../vis-toolkit-datasets/data/new_rankings2.csv", function(error, data) {
-
   d3.json("../../vis-toolkit-datasets/data/countries.json", function(error, countries) {
 
     var res = [];
@@ -51,13 +50,12 @@ d3.csv("../../vis-toolkit-datasets/data/new_rankings2.csv", function(error, data
       var_id: "name",
       var_group: "continent",
       var_color: "continent",
-      color: d3.scale.ordinal().domain(["Africa", "Americas", "Asia", "Europe", "Oceania"]).range(["#99237d", "#c72439", "#6bc145", "#88c7ed", "#dd9f98"]),
+      color: vistk.utils.colors.world_regions,
       var_text: "name",
       y_text: "ECI Rank",
       var_y: "rank",
       y_invert: true,
       time: {
-      //  parse: d3.time.format("%Y").parse,
         var_time: 'year',
         current_time: vistk.utils.max
       },
@@ -72,7 +70,6 @@ d3.csv("../../vis-toolkit-datasets/data/new_rankings2.csv", function(error, data
     d3.select("#viz").call(visualization);
 
   });
-
 });
 
 </script>
