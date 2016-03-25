@@ -15,20 +15,25 @@ d3.json("../../vis-toolkit-datasets/data/diversification_ubiquity_hs4_1995_2012.
     .params({
       dev: true,
       type: "radial",
+      margin: {top: 100, right: 10, bottom: 100, left: 10},
       container: "#viz",
-      height: 600,
-      width: 900,
+      height: 700,
+      width: 1200,
       data: flat_years,
       var_id: "name",
       var_sort: "nb_products",
       var_group: "continent",
       var_color: "continent",
-      title: "Countries",
+      title: "Number of products by countries / continent",
       var_size: "nb_products",
       var_text: "name",
+      var_r: "nb_products",
+      radius_min: 2,
+      radius_max: 100,
       time: {
         var_time: "year",
         current_time: 1995,
+        filter: [1995],
         parse: function(d) { return d; }
       },
       ui: {

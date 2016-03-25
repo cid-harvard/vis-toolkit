@@ -23,8 +23,7 @@ vars.default_params['radial'] = function(scope) {
 
     vars.new_data = vars.nodes;
 
-    console.log("NEW DAAT", vars.new_data)
-
+    // In case we want to build an array with temporal values
     vars.new_data.forEach(function(d) {
 
     //  d.values = [];
@@ -45,30 +44,42 @@ vars.default_params['radial'] = function(scope) {
 
   params.x_scale = [{
     func: d3.scale.linear()
-            .range([0, scope.width-scope.margin.left-scope.margin.right])
+            .range([scope.margin.left, scope.width-scope.margin.left-scope.margin.right])
             .domain(d3.extent(vars.new_data, function(d) { return d.x; })).nice()
   }];
 
   params.y_scale = [{
     func: d3.scale.linear()
-            .range([scope.height-scope.margin.top-scope.margin.bottom, scope.margin.top])
+            .range([scope.margin.top, scope.height-scope.margin.top-scope.margin.bottom])
             .domain(d3.extent(vars.new_data, function(d) { return d.y; })).nice(),
   }];
 
   params.r_scale = d3.scale.linear()
-              .range([10, 30])
-              .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_r]; }));
+                      .range([vars.radius_min, vars.radius_max])
+                      .domain(d3.extent(vars.new_data, function(d) {
+                        return vars.accessor_data(d)[vars.var_r];
+                      }));
 
   params.items = [{
     marks: [{
       type: 'text',
+      translate: function(d) {
+        if(d.depth === 2) {
+          return [0, 20];
+        } else {
+          return [10, -params.r_scale(d[vars.var_r]) - 10];
+        }
+      },
+      rotate: function(d) {
+        if(d.depth === 2) {
+          return 45;
+        } else {
+          return 0;
+        }
+      }
     }, {
       type: 'circle',
-      r: 10,
-      x: 0,
-      y: 0,
-      rotate: function(d) { return d.x - 90; },
-      translate: function(d) { return [d.y, 0]; }
+      r: 10
     }]
   }];
 
@@ -76,6 +87,7 @@ vars.default_params['radial'] = function(scope) {
     attr: vars.time.var_time,
     marks: [{
       type: 'path',
+      type: 'line',
      // fill: function(d) { return vars.color(params.accessor_items(d)[vars.var_color]); },
       stroke: function(d) {
         return 'black';

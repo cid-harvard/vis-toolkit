@@ -699,6 +699,7 @@
               .style("stroke", params_stroke)
               .style("stroke-width", params_stroke_width)
               .attr('d', function(e) {
+                console.log("HERERE", e)
                 return params["func"](d3.values(this_accessor_values(e)), i, vars);
               })
               .attr("transform", function(d) {
