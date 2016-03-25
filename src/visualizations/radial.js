@@ -2,8 +2,10 @@ vars.default_params['radial'] = function(scope) {
 
   var params = {};
 
-  params.var_x = 'x';
-  params.var_y = 'y';
+  params.var_x = 'x2';
+  params.var_y = 'y2';
+
+  var diameter = 360;
 
   scope.accessor_data = function(d) { return d; }
 
@@ -16,7 +18,11 @@ vars.default_params['radial'] = function(scope) {
         .separation(function(a, b) { return (a.parent == b.parent ? 1 : 2) / a.depth; });
 
     vars.diagonal = d3.svg.diagonal.radial()
-        .projection(function(d) { return [d.y, d.x / 180 * Math.PI]; });
+        .source(function(d) { return {"x": d[0].x, "y": d[0].y}; })
+        .target(function(d) { return {"x": d[1].x, "y": d[1].y}; })
+        .projection(function(d) {
+          return [d.y, d.x / 180 * Math.PI];
+        });
 
     vars.nodes = vars.tree.nodes(vars.root);
     vars.links = vars.tree.links(vars.nodes);
@@ -25,7 +31,8 @@ vars.default_params['radial'] = function(scope) {
 
     // In case we want to build an array with temporal values
     vars.new_data.forEach(function(d) {
-
+      d.x2 = 0;
+      d.y2 = 0;
     //  d.values = [];
     //  d.values[vars.time.current_time] = {};
     //  d.values[vars.time.current_time][vars.var_id] = d[vars.var_id];
@@ -79,15 +86,45 @@ vars.default_params['radial'] = function(scope) {
       }
     }, {
       type: 'circle',
-      r: 10
-    }]
+      r: 10,
+      translate: function(d) {
+        return [d.y, 0]
+      },
+      rotate: function(d) {
+        return d.x - 90;
+      }
+    }],
+    enter: function(data, vars) {
+      // attr("transform", function(d) { return "rotate(" + (d.x - 90) + ")translate(" + d.y + ")"; })
+      this.attr("transform", function(d, i) {
+        return "translate(" + diameter / 2 + "," + diameter / 2 + ")";
+      })
+    },
+    update: function(data, vars) {
+      // attr("transform", function(d) { return "rotate(" + (d.x - 90) + ")translate(" + d.y + ")"; })
+      this.attr("transform", function(d, i) {
+        return "translate(" + diameter / 2 + "," + diameter / 2 + ")";
+      })
+    }
+    //enter: function(data, vars) {
+    //  // attr("transform", function(d) { return "rotate(" + (d.x - 90) + ")translate(" + d.y + ")"; })
+    //  this.attr("transform", function(d, i) {
+    //    return "rotate(" + (d.x - 90) + ")translate(" + d.y + ", 0)";
+    //  })
+    //},
+    //update: function(data, vars) {
+    //  // attr("transform", function(d) { return "rotate(" + (d.x - 90) + ")translate(" + d.y + ")"; })
+    //  this.attr("transform", function(d, i) {
+    //    return "rotate(" + (d.x - 90) + ")translate(" + d.y + ", 0)";
+    //  })
+    //}
   }];
 
   params.connect = [{
     attr: vars.time.var_time,
     marks: [{
-      type: 'path',
-      type: 'line',
+      type: 'path_coord',
+     // type: 'line',
      // fill: function(d) { return vars.color(params.accessor_items(d)[vars.var_color]); },
       stroke: function(d) {
         return 'black';

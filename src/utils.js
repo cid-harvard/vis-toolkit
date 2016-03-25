@@ -699,7 +699,6 @@
               .style("stroke", params_stroke)
               .style("stroke-width", params_stroke_width)
               .attr('d', function(e) {
-                console.log("HERERE", e)
                 return params["func"](d3.values(this_accessor_values(e)), i, vars);
               })
               .attr("transform", function(d) {
@@ -714,6 +713,50 @@
                 return params["func"](d3.values(this_accessor_values(e)), i, vars);
               })
               .style("fill", params_fill)
+              .style("stroke", params_stroke)
+              .style("stroke-width", params_stroke_width);
+
+          break;
+
+        case "path_coord":
+
+          var this_accessor_values = function(d) { return d.values; };
+
+          if(vars.type == "radial") {
+            this_accessor_values = function(d) { return d; };
+          }
+
+          if(typeof params['func'] == 'undefined') {
+              params['func'] = d3.svg.line()
+               .interpolate('linear')
+               .x(function(d) { return vars.x_scale[0]["func"](d[vars.var_x]); })
+               .y(function(d) { return vars.y_scale[0]["func"](d[vars.var_y]); });
+          }
+
+          var mark = d3.select(that).selectAll(".connect__path_" + mark_id).data([d]);
+
+          mark.enter().append('path')
+              .classed('connect__path', true)
+              .classed('connect__path_' + mark_id, true)
+              .classed("items_" + mark_id, true)
+              .style("fill", "none")
+              .style("stroke", params_stroke)
+              .style("stroke-width", params_stroke_width)
+              .attr('d', function(e) {
+                return params["func"](d3.values(this_accessor_values(e)), i, vars);
+              })
+              .attr("transform", function(d) {
+                return "translate(" +  params_translate + ")rotate(" +  params_rotate + ")";
+              });
+
+          mark
+              .classed("highlighted", function(e, j) { return e.__highlighted; })
+              .classed("selected", function(e, j) { return e.__selected; })
+              .transition().duration(vars.duration)
+              .attr('d', function(e) {
+                return params["func"](d3.values(this_accessor_values(e)), i, vars);
+              })
+              .style("fill", "none")
               .style("stroke", params_stroke)
               .style("stroke-width", params_stroke_width);
 
