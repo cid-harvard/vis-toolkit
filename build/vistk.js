@@ -6,7 +6,7 @@ var w = typeof window === "undefined" ? this : window;
 var vistk = w.vistk || {};
 w.vistk = vistk;
 
-vistk.version = "0.0.32";
+vistk.version = "{{ VERSION }}";
 vistk.utils = {};
 
 if(typeof module === "object" && module.exports) {
@@ -4169,7 +4169,9 @@ vars.default_params['radial'] = function(scope) {
   params.var_x = 'x';
   params.var_y = 'y';
 
-  if(vars.refresh) {
+  scope.accessor_data = function(d) { return d; }
+
+  if(vars.init || vars.refresh) {
 
     utils.create_hierarchy(scope);
 
@@ -4185,19 +4187,23 @@ vars.default_params['radial'] = function(scope) {
 
     vars.new_data = vars.nodes;
 
+    console.log("NEW DAAT", vars.new_data)
+
     vars.new_data.forEach(function(d) {
 
-      d.values = [];
-      d.values[vars.time.current_time] = {};
-      d.values[vars.time.current_time][vars.var_id] = d[vars.var_id];
-      d.values[vars.time.current_time][vars.var_x] = d[vars.var_x];
-      d.values[vars.time.current_time][vars.var_y] = d[vars.var_y];
-      d.values[vars.time.current_time][vars.var_text] = d[vars.var_text];
+    //  d.values = [];
+    //  d.values[vars.time.current_time] = {};
+    //  d.values[vars.time.current_time][vars.var_id] = d[vars.var_id];
+    //  d.values[vars.time.current_time][vars.var_x] = d[vars.var_x];
+    //  d.values[vars.time.current_time][vars.var_y] = d[vars.var_y];
+    //  d.values[vars.time.current_time][vars.var_text] = d[vars.var_text];
 
       d.__redraw = true;
     });
 
-    vars.links.forEach(function(d) { d.__redraw = true; });
+    vars.links.forEach(function(d) {
+      d.__redraw = true;
+    });
 
   }
 

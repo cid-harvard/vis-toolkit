@@ -15,6 +15,14 @@ module.exports = function(grunt) {
       }
     },
 
+    bump: {
+      options: {
+        commit: false,
+        createTag: false,
+        push: false
+      }
+    },
+
     tape: {
       options: {
         pretty: true,
@@ -68,6 +76,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-string-replace');
   grunt.loadNpmTasks('grunt-tape');
+  grunt.loadNpmTasks('grunt-bump');
 
   grunt.registerTask('default', ['concat', 'string-replace']);
   grunt.registerTask('test', ['tape']);
