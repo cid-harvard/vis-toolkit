@@ -54,6 +54,7 @@ vars.default_params['radial'] = function(scope) {
   params.items = [{
     marks: [{
       type: 'text',
+      rotate_first: true,
       translate: function(d) {
         return [d.y, 0];
       },
@@ -63,6 +64,7 @@ vars.default_params['radial'] = function(scope) {
     }, {
       type: 'circle',
       r: 10,
+      rotate_first: true,
       translate: function(d) {
         return [d.y, 0];
       },

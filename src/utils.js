@@ -211,14 +211,13 @@
 
           var items_mark_text = d3.select(that).selectAll(".items__mark__text.items_" + mark_id).data([d]);
 
-          items_mark_text.enter().append("text")
+          var items_mark_text_enter = items_mark_text.enter().append("text")
               .classed("items__mark__text", true)
               .classed("items_" + mark_id, true)
               .style("text-anchor", params.text_anchor)
               .attr("x", params_x)
               .attr("y", params_y)
               .attr("dy", ".35em")
-              .attr("transform", "translate(" + ([params_translate[0] + params_offset_x, params_translate[1] + params_offset_y]) + ")rotate(" +  params_rotate + ")")
               .on("mouseover",function(d) { // FIX to prevent hovers
                 if(typeof vars.evt !== 'undefined' && vars.evt == 'none') {
                   d3.event.stopPropagation();
@@ -235,13 +234,24 @@
                 }
               });
 
+          if(typeof params.rotate_first !== 'undefined' && params.rotate_first) {
+            items_mark_text_enter.attr("transform", "rotate(" +  params_rotate + ")translate(" + ([params_translate[0] + params_offset_x, params_translate[1] + params_offset_y]) + ")");
+          } else {
+            items_mark_text_enter.attr("transform", "translate(" + ([params_translate[0] + params_offset_x, params_translate[1] + params_offset_y]) + ")rotate(" +  params_rotate + ")");
+          }
+
           items_mark_text
               .classed("highlighted", function(d, i) { return d.__highlighted; })
               .classed("selected", function(d, i) { return d.__selected; })
               .transition().duration(vars.duration)
               .style("stroke", params_stroke)
-              .attr("transform", "translate(" + ([params_translate[0] + params_offset_x, params_translate[1] + params_offset_y]) + ")rotate(" +  params_rotate + ")")
               .text(params_text);
+
+          if(typeof params.rotate_first !== 'undefined' && params.rotate_first) {
+            items_mark_text.attr("transform", "rotate(" +  params_rotate + ")translate(" + ([params_translate[0] + params_offset_x, params_translate[1] + params_offset_y]) + ")");
+          } else {
+            items_mark_text.attr("transform", "translate(" + ([params_translate[0] + params_offset_x, params_translate[1] + params_offset_y]) + ")rotate(" +  params_rotate + ")");
+          }
 
         items_mark_text.exit().remove();
 
@@ -996,8 +1006,8 @@
           var mark_enter = mark.enter().append("circle")
               .classed("items_" + mark_id, true)
               .classed("items__mark__circle", true)
-              .attr("cx", params_translate[0])
-              .attr("cy", params_translate[1])
+              //.attr("cx", params_translate[0])
+              //.attr("cy", params_translate[1])
               .attr("r", function(d) {
 
                 if(typeof vars.var_r === "undefined") {
@@ -1059,13 +1069,24 @@
             mark_enter.classed(params.class(vars.accessor_items(d)), true);
           }
 
+          if(typeof params.rotate_first !== 'undefined' && params.rotate_first) {
+            mark_enter.attr("transform", "rotate(" +  params_rotate + ")translate(" + ([params_translate[0] + params_offset_x, params_translate[1] + params_offset_y]) + ")");
+          } else {
+            mark_enter.attr("transform", "translate(" + ([params_translate[0] + params_offset_x, params_translate[1] + params_offset_y]) + ")rotate(" +  params_rotate + ")");
+          }
+
           mark
               .classed("highlighted", function(d, i) { return d.__highlighted; })
               .classed("highlighted__adjacent", function(d, i) { return d.__highlighted__adjacent; })
               .classed("selected", function(d, i) { return d.__selected; })
               .classed("selected__adjacent", function(d, i) { return d.__selected__adjacent; })
-              .attr("transform", "translate(" +  params_translate + ")rotate(" +  params_rotate + ")")
               .style("fill", params_fill);
+
+          if(typeof params.rotate_first !== 'undefined' && params.rotate_first) {
+            mark.attr("transform", "rotate(" +  params_rotate + ")translate(" + ([params_translate[0] + params_offset_x, params_translate[1] + params_offset_y]) + ")");
+          } else {
+            mark.attr("transform", "translate(" + ([params_translate[0] + params_offset_x, params_translate[1] + params_offset_y]) + ")rotate(" +  params_rotate + ")");
+          }
 
           mark.exit().remove();
 
