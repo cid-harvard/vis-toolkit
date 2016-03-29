@@ -20,9 +20,7 @@ vars.default_params['radial'] = function(scope) {
     vars.diagonal = d3.svg.diagonal.radial()
         .source(function(d) { return {"x": d[0].x, "y": d[0].y}; })
         .target(function(d) { return {"x": d[1].x, "y": d[1].y}; })
-        .projection(function(d) {
-          return [d.y, d.x / 180 * Math.PI];
-        });
+        .projection(function(d) { return [d.y, d.x / 180 * Math.PI]; });
 
     vars.nodes = vars.tree.nodes(vars.root);
     vars.links = vars.tree.links(vars.nodes);
@@ -31,15 +29,10 @@ vars.default_params['radial'] = function(scope) {
 
     // In case we want to build an array with temporal values
     vars.new_data.forEach(function(d) {
-      d.x2 = 0;
-      d.y2 = 0;
-    //  d.values = [];
-    //  d.values[vars.time.current_time] = {};
-    //  d.values[vars.time.current_time][vars.var_id] = d[vars.var_id];
-    //  d.values[vars.time.current_time][vars.var_x] = d[vars.var_x];
-    //  d.values[vars.time.current_time][vars.var_y] = d[vars.var_y];
-    //  d.values[vars.time.current_time][vars.var_text] = d[vars.var_text];
 
+      // Required for items
+      d.x2 = scope.width / 2;
+      d.y2 = scope.height / 2;
       d.__redraw = true;
     });
 
@@ -49,17 +42,8 @@ vars.default_params['radial'] = function(scope) {
 
   }
 
-  params.x_scale = [{
-    func: d3.scale.linear()
-            .range([scope.margin.left, scope.width-scope.margin.left-scope.margin.right])
-            .domain(d3.extent(vars.new_data, function(d) { return d.x; })).nice()
-  }];
-
-  params.y_scale = [{
-    func: d3.scale.linear()
-            .range([scope.margin.top, scope.height-scope.margin.top-scope.margin.bottom])
-            .domain(d3.extent(vars.new_data, function(d) { return d.y; })).nice(),
-  }];
+  params.x_scale = vistk.utils.scale.linear(scope);
+  params.y_scale = vistk.utils.scale.linear(scope);
 
   params.r_scale = d3.scale.linear()
                       .range([vars.radius_min, vars.radius_max])
@@ -71,53 +55,35 @@ vars.default_params['radial'] = function(scope) {
     marks: [{
       type: 'text',
       translate: function(d) {
-        if(d.depth === 2) {
-          return [0, 20];
-        } else {
-          return [10, -params.r_scale(d[vars.var_r]) - 10];
-        }
+        return [d.y, 0];
       },
       rotate: function(d) {
-        if(d.depth === 2) {
-          return 45;
-        } else {
-          return 0;
-        }
+        return (d.x - 90);
       }
     }, {
       type: 'circle',
       r: 10,
       translate: function(d) {
-        return [d.y, 0]
+        return [d.y, 0];
       },
       rotate: function(d) {
-        return d.x - 90;
+        return (d.x - 90);
       }
     }],
-    enter: function(data, vars) {
-      // attr("transform", function(d) { return "rotate(" + (d.x - 90) + ")translate(" + d.y + ")"; })
-      this.attr("transform", function(d, i) {
-        return "translate(" + diameter / 2 + "," + diameter / 2 + ")";
-      })
-    },
-    update: function(data, vars) {
-      // attr("transform", function(d) { return "rotate(" + (d.x - 90) + ")translate(" + d.y + ")"; })
-      this.attr("transform", function(d, i) {
-        return "translate(" + diameter / 2 + "," + diameter / 2 + ")";
-      })
-    }
-    //enter: function(data, vars) {
-    //  // attr("transform", function(d) { return "rotate(" + (d.x - 90) + ")translate(" + d.y + ")"; })
-    //  this.attr("transform", function(d, i) {
-    //    return "rotate(" + (d.x - 90) + ")translate(" + d.y + ", 0)";
-    //  })
-    //},
-    //update: function(data, vars) {
-    //  // attr("transform", function(d) { return "rotate(" + (d.x - 90) + ")translate(" + d.y + ")"; })
-    //  this.attr("transform", function(d, i) {
-    //    return "rotate(" + (d.x - 90) + ")translate(" + d.y + ", 0)";
-    //  })
-    //}
+
+   // In case we want to override the marks with groups position
+   //enter: function(data, vars) {
+   //  // attr("transform", function(d) { return "rotate(" + (d.x - 90) + ")translate(" + d.y + ")"; })
+   //  this.attr("transform", function(d, i) {
+   //    return "rotate(" + (d.x - 90) + ")translate(" + d.y + ", 0)";
+   //  })
+   //},
+   //update: function(data, vars) {
+   //  // attr("transform", function(d) { return "rotate(" + (d.x - 90) + ")translate(" + d.y + ")"; })
+   //  this.attr("transform", function(d, i) {
+   //    return "rotate(" + (d.x - 90) + ")translate(" + d.y + ", 0)";
+   //  })
+   //}
   }];
 
   params.connect = [{
