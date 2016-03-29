@@ -5,7 +5,7 @@ vars.default_params['radial'] = function(scope) {
   params.var_x = 'x2';
   params.var_y = 'y2';
 
-  var diameter = 360;
+  params.diameter = vars.diameter || 360;
 
   scope.accessor_data = function(d) { return d; }
 
@@ -14,7 +14,7 @@ vars.default_params['radial'] = function(scope) {
     utils.create_hierarchy(scope);
 
     vars.tree = d3.layout.tree()
-        .size([360, scope.width / 3 - 120])
+        .size([360, params.diameter - 120])
         .separation(function(a, b) { return (a.parent == b.parent ? 1 : 2) / a.depth; });
 
     vars.diagonal = d3.svg.diagonal.radial()
@@ -29,7 +29,6 @@ vars.default_params['radial'] = function(scope) {
 
     // In case we want to build an array with temporal values
     vars.new_data.forEach(function(d) {
-
       // Required for items
       d.x2 = scope.width / 2;
       d.y2 = scope.height / 2;
@@ -60,7 +59,8 @@ vars.default_params['radial'] = function(scope) {
       },
       rotate: function(d) {
         return (d.x - 90);
-      }
+      },
+
     }, {
       type: 'circle',
       r: 10,

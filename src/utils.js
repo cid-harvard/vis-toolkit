@@ -1862,6 +1862,13 @@
       })
   }
 
+  /**
+  * Generates a data structure with 2 levels of hierarchy (root and var_group)
+  * -root being the top-level
+  * -var_group being the second-level
+  * -items being the bottom-level
+  * @params
+  */
   utils.create_hierarchy = function(vars) {
 
    // Create the root node
