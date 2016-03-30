@@ -54,8 +54,9 @@ d3.json("../../vis-toolkit-datasets/data/diversification_ubiquity_hs4_1995_2012.
             return (d.x - 90);
           }
         }, {
-          var_mark: '__aggregated',
-          type: d3.scale.ordinal().domain([true, false]).range(["none", "circle"]),
+      //    var_mark: '__aggregated',
+      //    type: d3.scale.ordinal().domain([true, false]).range(["none", "circle"]),
+          type: 'circle',
           r: 10,
           rotate_first: true,
           translate: function(d) {
@@ -64,11 +65,11 @@ d3.json("../../vis-toolkit-datasets/data/diversification_ubiquity_hs4_1995_2012.
           rotate: function(d) {
             return (d.x - 90);
           }
-        }, {
-          var_mark: '__aggregated',
-          type: d3.scale.ordinal().domain([true, false]).range(["piechart", "none"]),
-          var_share: 'nb_products',
-          class: 'piechart'
+       // }, {
+       //   var_mark: '__aggregated',
+       //   type: d3.scale.ordinal().domain([true, false]).range(["piechart", "none"]),
+       //   var_share: 'nb_products',
+       //   class: 'piechart'
         }]
       }],
      // time: {
