@@ -218,19 +218,22 @@
               .attr("x", params_x)
               .attr("y", params_y)
               .attr("dy", ".35em")
-              .on("mouseover",function(d) { // FIX to prevent hovers
-                if(typeof vars.evt !== 'undefined' && vars.evt == 'none') {
+              .on("mouseover",function(d) { // To prevent hovers
+                if(typeof params.event !== 'undefined' && params.event === null) {
                   d3.event.stopPropagation();
+                  return;
                 }
               })
               .on("mouseleave", function(d) {
-                if(typeof vars.evt !== 'undefined' && vars.evt == 'none') {
+                if(typeof params.event !== 'undefined' && params.event === null) {
                   d3.event.stopPropagation();
+                  return;
                 }
               })
               .on("click", function(d) {
-                if(typeof vars.evt !== 'undefined' && vars.evt == 'none') {
+                if(typeof params.event !== 'undefined' && params.event === null) {
                   d3.event.stopPropagation();
+                  return;
                 }
               });
 
@@ -579,12 +582,15 @@
               // .style("stroke-dasharray", ("3, 3"))
               .on("mouseover",function(d) { // FIX to prevent hovers
                 d3.event.stopPropagation();
+                return;
               })
               .on("mouseleave", function(d) {
                 d3.event.stopPropagation();
+                return;
               })
               .on("click", function(d) {
                  d3.event.stopPropagation();
+                return;
               });
 
           mark
@@ -1350,7 +1356,10 @@
                       .call(utils.draw_mark, params, vars);
 
                   // Bind events to groups after marks have been created
-                  gItems_enter.each(utils.items_group);
+                  // If params.event is defined, removes all events for the current item
+                  if(typeof params.event === 'undefined') {
+                    gItems_enter.each(utils.items_group);
+                  }
 
                 }
 
