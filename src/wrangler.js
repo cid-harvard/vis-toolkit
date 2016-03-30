@@ -125,6 +125,10 @@
       // Note: none-parsed time values
       vars.time.points = vistk.utils.find_unique_values(vars.new_data, vars.time.var_time);
 
+      if(vars.time.points.length === 1 && typeof vars.time.points[0] === 'undefined') {
+        vars.time.points = [];
+      }
+
       // In case no temporal values, change the accessor
       if(vars.time.var_time === null || vars.type === 'treemap') {
         vars.accessor_data = function(d) { return d; }
