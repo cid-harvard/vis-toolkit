@@ -6,7 +6,7 @@ var w = typeof window === "undefined" ? this : window;
 var vistk = w.vistk || {};
 w.vistk = vistk;
 
-vistk.version = "{{ VERSION }}";
+vistk.version = "0.0.34";
 vistk.utils = {};
 
 if(typeof module === "object" && module.exports) {
@@ -234,37 +234,50 @@ vistk.viz = function() {
 
           var items_mark_text = d3.select(that).selectAll(".items__mark__text.items_" + mark_id).data([d]);
 
-          items_mark_text.enter().append("text")
+          var items_mark_text_enter = items_mark_text.enter().append("text")
               .classed("items__mark__text", true)
               .classed("items_" + mark_id, true)
               .style("text-anchor", params.text_anchor)
               .attr("x", params_x)
               .attr("y", params_y)
               .attr("dy", ".35em")
-              .attr("transform", "translate(" + ([params_translate[0] + params_offset_x, params_translate[1] + params_offset_y]) + ")rotate(" +  params_rotate + ")")
-              .on("mouseover",function(d) { // FIX to prevent hovers
-                if(typeof vars.evt !== 'undefined' && vars.evt == 'none') {
+              .on("mouseover",function(d) { // To prevent hovers
+                if(typeof params.event !== 'undefined' && params.event === null) {
                   d3.event.stopPropagation();
+                  return;
                 }
               })
               .on("mouseleave", function(d) {
-                if(typeof vars.evt !== 'undefined' && vars.evt == 'none') {
+                if(typeof params.event !== 'undefined' && params.event === null) {
                   d3.event.stopPropagation();
+                  return;
                 }
               })
               .on("click", function(d) {
-                if(typeof vars.evt !== 'undefined' && vars.evt == 'none') {
+                if(typeof params.event !== 'undefined' && params.event === null) {
                   d3.event.stopPropagation();
+                  return;
                 }
               });
+
+          if(typeof params.rotate_first !== 'undefined' && params.rotate_first) {
+            items_mark_text_enter.attr("transform", "rotate(" +  params_rotate + ")translate(" + ([params_translate[0] + params_offset_x, params_translate[1] + params_offset_y]) + ")");
+          } else {
+            items_mark_text_enter.attr("transform", "translate(" + ([params_translate[0] + params_offset_x, params_translate[1] + params_offset_y]) + ")rotate(" +  params_rotate + ")");
+          }
 
           items_mark_text
               .classed("highlighted", function(d, i) { return d.__highlighted; })
               .classed("selected", function(d, i) { return d.__selected; })
               .transition().duration(vars.duration)
               .style("stroke", params_stroke)
-              .attr("transform", "translate(" + ([params_translate[0] + params_offset_x, params_translate[1] + params_offset_y]) + ")rotate(" +  params_rotate + ")")
               .text(params_text);
+
+          if(typeof params.rotate_first !== 'undefined' && params.rotate_first) {
+            items_mark_text.attr("transform", "rotate(" +  params_rotate + ")translate(" + ([params_translate[0] + params_offset_x, params_translate[1] + params_offset_y]) + ")");
+          } else {
+            items_mark_text.attr("transform", "translate(" + ([params_translate[0] + params_offset_x, params_translate[1] + params_offset_y]) + ")rotate(" +  params_rotate + ")");
+          }
 
         items_mark_text.exit().remove();
 
@@ -592,12 +605,15 @@ vistk.viz = function() {
               // .style("stroke-dasharray", ("3, 3"))
               .on("mouseover",function(d) { // FIX to prevent hovers
                 d3.event.stopPropagation();
+                return;
               })
               .on("mouseleave", function(d) {
                 d3.event.stopPropagation();
+                return;
               })
               .on("click", function(d) {
                  d3.event.stopPropagation();
+                return;
               });
 
           mark
@@ -736,6 +752,50 @@ vistk.viz = function() {
                 return params["func"](d3.values(this_accessor_values(e)), i, vars);
               })
               .style("fill", params_fill)
+              .style("stroke", params_stroke)
+              .style("stroke-width", params_stroke_width);
+
+          break;
+
+        case "path_coord":
+
+          var this_accessor_values = function(d) { return d.values; };
+
+          if(vars.type == "radial") {
+            this_accessor_values = function(d) { return d; };
+          }
+
+          if(typeof params['func'] == 'undefined') {
+              params['func'] = d3.svg.line()
+               .interpolate('linear')
+               .x(function(d) { return vars.x_scale[0]["func"](d[vars.var_x]); })
+               .y(function(d) { return vars.y_scale[0]["func"](d[vars.var_y]); });
+          }
+
+          var mark = d3.select(that).selectAll(".connect__path_" + mark_id).data([d]);
+
+          mark.enter().append('path')
+              .classed('connect__path', true)
+              .classed('connect__path_' + mark_id, true)
+              .classed("items_" + mark_id, true)
+              .style("fill", "none")
+              .style("stroke", params_stroke)
+              .style("stroke-width", params_stroke_width)
+              .attr('d', function(e) {
+                return params["func"](d3.values(this_accessor_values(e)), i, vars);
+              })
+              .attr("transform", function(d) {
+                return "translate(" +  params_translate + ")rotate(" +  params_rotate + ")";
+              });
+
+          mark
+              .classed("highlighted", function(e, j) { return e.__highlighted; })
+              .classed("selected", function(e, j) { return e.__selected; })
+              .transition().duration(vars.duration)
+              .attr('d', function(e) {
+                return params["func"](d3.values(this_accessor_values(e)), i, vars);
+              })
+              .style("fill", "none")
               .style("stroke", params_stroke)
               .style("stroke-width", params_stroke_width);
 
@@ -975,8 +1035,8 @@ vistk.viz = function() {
           var mark_enter = mark.enter().append("circle")
               .classed("items_" + mark_id, true)
               .classed("items__mark__circle", true)
-              .attr("cx", params_translate[0])
-              .attr("cy", params_translate[1])
+              //.attr("cx", params_translate[0])
+              //.attr("cy", params_translate[1])
               .attr("r", function(d) {
 
                 if(typeof vars.var_r === "undefined") {
@@ -1009,6 +1069,7 @@ vistk.viz = function() {
               })
               .style("stroke", params_stroke)
               .style("fill", params_fill)
+              .style("fill-opacity", params_fill_opacity)
               .style("stroke-width", params_stroke_width)
               .style("stroke-opacity", params_stroke_opacity);
 
@@ -1038,13 +1099,26 @@ vistk.viz = function() {
             mark_enter.classed(params.class(vars.accessor_items(d)), true);
           }
 
+          if(typeof params.rotate_first !== 'undefined' && params.rotate_first) {
+            mark_enter.attr("transform", "rotate(" +  params_rotate + ")translate(" + ([params_translate[0] + params_offset_x, params_translate[1] + params_offset_y]) + ")");
+          } else {
+            mark_enter.attr("transform", "translate(" + ([params_translate[0] + params_offset_x, params_translate[1] + params_offset_y]) + ")rotate(" +  params_rotate + ")");
+          }
+
           mark
               .classed("highlighted", function(d, i) { return d.__highlighted; })
               .classed("highlighted__adjacent", function(d, i) { return d.__highlighted__adjacent; })
               .classed("selected", function(d, i) { return d.__selected; })
               .classed("selected__adjacent", function(d, i) { return d.__selected__adjacent; })
-              .attr("transform", "translate(" +  params_translate + ")rotate(" +  params_rotate + ")")
-              .style("fill", params_fill);
+              .style("fill", params_fill)
+              .style("fill-opacity", params_fill_opacity)
+              .style("stroke-opacity", params_stroke_opacity);
+
+          if(typeof params.rotate_first !== 'undefined' && params.rotate_first) {
+            mark.attr("transform", "rotate(" +  params_rotate + ")translate(" + ([params_translate[0] + params_offset_x, params_translate[1] + params_offset_y]) + ")");
+          } else {
+            mark.attr("transform", "translate(" + ([params_translate[0] + params_offset_x, params_translate[1] + params_offset_y]) + ")rotate(" +  params_rotate + ")");
+          }
 
           mark.exit().remove();
 
@@ -1307,9 +1381,12 @@ vistk.viz = function() {
                       .filter(utils.filters.redraw_only)
                       .call(utils.draw_mark, params, vars);
 
-                  // Bind events to groups after marks have been created
-                  gItems_enter.each(utils.items_group);
+                }
 
+                // Bind events to groups after marks have been created
+                // If params.event is defined, removes all events for the current item
+                if(typeof params.event === 'undefined') {
+                  gItems_enter.each(utils.items_group);
                 }
 
                 gItems
@@ -1538,6 +1615,12 @@ vistk.viz = function() {
       vars_svg.call(utils.y_axis);
     } else {
       vars_svg.selectAll(".y.axis").remove();
+    }
+
+    // Forces axis redraw on refresh to make sure it does not overlap marks
+    if(vars.refresh) {
+      vars_svg.selectAll(".x.grid").remove();
+      vars_svg.selectAll(".y.grid").remove();
     }
 
     if(vars.x_grid_show) {
@@ -1820,6 +1903,13 @@ vistk.viz = function() {
       })
   }
 
+  /**
+  * Generates a data structure with 2 levels of hierarchy (root and var_group)
+  * -root being the top-level
+  * -var_group being the second-level
+  * -items being the bottom-level
+  * @params
+  */
   utils.create_hierarchy = function(vars) {
 
    // Create the root node
@@ -2610,6 +2700,15 @@ vistk.viz = function() {
       // Note: none-parsed time values
       vars.time.points = vistk.utils.find_unique_values(vars.new_data, vars.time.var_time);
 
+      if(vars.time.points.length === 1 && typeof vars.time.points[0] === 'undefined') {
+        vars.time.points = [];
+      }
+
+      // For some reason, some undefined years appear in the least
+      if(vars.time.points.length === 2 && typeof vars.time.points[1] === 'undefined') {
+        vars.time.points = [vars.time.points[0]];
+      }
+
       // In case no temporal values, change the accessor
       if(vars.time.var_time === null || vars.type === 'treemap') {
         vars.accessor_data = function(d) { return d; }
@@ -3261,7 +3360,7 @@ vars.default_params['dotplot'] = function(scope) {
   params.items = [{
     marks: [{
       type: 'circle',
-    },{
+    }, {
       type: 'text',
       rotate: '-90'
     }]
@@ -3478,11 +3577,7 @@ vars.default_params['linechart'] = function(scope) {
   params.y_scale = [{
     func: d3.scale.linear()
             .range([scope.height - scope.margin.top - scope.margin.bottom, scope.margin.top])
-            .domain(d3.extent(Array.prototype.concat.apply([], vars.new_data.map(function(d) {
-              return d3.values(d.values);
-            })), function(d) {
-              return d[vars.var_y];
-            }))
+            .domain(d3.extent(vistk.utils.flatten_values(vars.new_data, vars.var_y)))
   }];
 
   params.items = [{
@@ -3902,23 +3997,22 @@ vars.default_params['piechart'] = function(scope) {
 
 };
 
-vars.default_params["productspace"] = function(scope) {
+vars.default_params['productspace'] = function(scope) {
 
   var params = {};
 
   if(vars.init || vars.refresh) {
 
-    // Links between items
-    // Used for product space
+    // Links between items ussed to build graph
     if(vars.links !== null && vars.type === 'productspace') {
 
       vars.links.forEach(function(d, i) {
 
-        if(typeof d.source === "string") {
+        if(typeof d.source === 'string') {
           d.source = vistk.utils.find_node_by_id(vars.nodes, d.source);
         }
 
-        if(typeof d.target === "string") {
+        if(typeof d.target === 'string') {
           d.target = vistk.utils.find_node_by_id(vars.nodes, d.target);
         }
 
@@ -3929,10 +4023,12 @@ vars.default_params["productspace"] = function(scope) {
     }
 
     // Flagging missing nodes with __missing true attribute
-    if(typeof vars.nodes !== "undefined" && vars.type === 'productspace') {
+    if(typeof vars.nodes !== 'undefined') {
 
       vars.new_data = utils.join(vars.nodes, vars.new_data, vars.var_node_id, vars.var_id, function(new_data, node) {
+
           var r = new_data;
+
           if(typeof node === 'undefined') {
             return;
           }
@@ -3968,7 +4064,7 @@ vars.default_params["productspace"] = function(scope) {
 
         var node = vistk.utils.find_node_coordinates_by_id(vars.new_data, vars.var_id, d[vars.var_node_id]);
 
-        if(typeof node === "undefined") {
+        if(typeof node === 'undefined') {
 
           d.values = [];
           d[vars.var_r] = 0;
@@ -4005,23 +4101,16 @@ vars.default_params["productspace"] = function(scope) {
 
   params.items = [{
     marks: [{
-      type: "circle",
-     // r_scale: d3.scale.linear()
-     //             .range([10, 30])
-     //             .domain(d3.extent(vars.new_data, function(d) { return accessor_values(d)[vars.var_r]; })),
+      type: 'circle',
       fill: function(d) {
         return vars.color(scope.accessor_data(d)[vars.var_color]);
       }
     }, {
-      type: "text",
-      rotate: "30",
-      translate: null
+      type: 'text'
     }]
   }];
 
   params.connect = [{
-    attr: "links",
-    type: "items",
     marks: [{
       type: "line",
       func: null,
@@ -4064,6 +4153,7 @@ vars.default_params["productspace"] = function(scope) {
 
     });
 
+    // Custom highlight function to highlight neighbors
     vars.evt.register("highlightOut", function(d) {
 
       vars.new_data.forEach(function(f, k) {
@@ -4090,6 +4180,7 @@ vars.default_params["productspace"] = function(scope) {
 
     });
 
+    // Persistent selection to show neighbors
     vars.evt.register("selection", function(d) {
 
       // Make sure the highlighted node is above other nodes
@@ -4166,8 +4257,10 @@ vars.default_params['radial'] = function(scope) {
 
   var params = {};
 
-  params.var_x = 'x';
-  params.var_y = 'y';
+  params.var_x = 'x2';
+  params.var_y = 'y2';
+
+  params.diameter = vars.diameter || 360;
 
   scope.accessor_data = function(d) { return d; }
 
@@ -4176,10 +4269,12 @@ vars.default_params['radial'] = function(scope) {
     utils.create_hierarchy(scope);
 
     vars.tree = d3.layout.tree()
-        .size([360, scope.width / 3 - 120])
+        .size([360, params.diameter - 120])
         .separation(function(a, b) { return (a.parent == b.parent ? 1 : 2) / a.depth; });
 
     vars.diagonal = d3.svg.diagonal.radial()
+        .source(function(d) { return {"x": d[0].x, "y": d[0].y}; })
+        .target(function(d) { return {"x": d[1].x, "y": d[1].y}; })
         .projection(function(d) { return [d.y, d.x / 180 * Math.PI]; });
 
     vars.nodes = vars.tree.nodes(vars.root);
@@ -4187,17 +4282,11 @@ vars.default_params['radial'] = function(scope) {
 
     vars.new_data = vars.nodes;
 
-    console.log("NEW DAAT", vars.new_data)
-
+    // In case we want to build an array with temporal values
     vars.new_data.forEach(function(d) {
-
-    //  d.values = [];
-    //  d.values[vars.time.current_time] = {};
-    //  d.values[vars.time.current_time][vars.var_id] = d[vars.var_id];
-    //  d.values[vars.time.current_time][vars.var_x] = d[vars.var_x];
-    //  d.values[vars.time.current_time][vars.var_y] = d[vars.var_y];
-    //  d.values[vars.time.current_time][vars.var_text] = d[vars.var_text];
-
+      // Required for items
+      d.x2 = scope.width / 2;
+      d.y2 = scope.height / 2;
       d.__redraw = true;
     });
 
@@ -4207,39 +4296,58 @@ vars.default_params['radial'] = function(scope) {
 
   }
 
-  params.x_scale = [{
-    func: d3.scale.linear()
-            .range([0, scope.width-scope.margin.left-scope.margin.right])
-            .domain(d3.extent(vars.new_data, function(d) { return d.x; })).nice()
-  }];
-
-  params.y_scale = [{
-    func: d3.scale.linear()
-            .range([scope.height-scope.margin.top-scope.margin.bottom, scope.margin.top])
-            .domain(d3.extent(vars.new_data, function(d) { return d.y; })).nice(),
-  }];
+  params.x_scale = vistk.utils.scale.linear(scope);
+  params.y_scale = vistk.utils.scale.linear(scope);
 
   params.r_scale = d3.scale.linear()
-              .range([10, 30])
-              .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_r]; }));
+                      .range([vars.radius_min, vars.radius_max])
+                      .domain(d3.extent(vars.new_data, function(d) {
+                        return vars.accessor_data(d)[vars.var_r];
+                      }));
 
   params.items = [{
     marks: [{
       type: 'text',
+      rotate_first: true,
+      translate: function(d) {
+        return [d.y, 0];
+      },
+      rotate: function(d) {
+        return (d.x - 90);
+      },
+
     }, {
       type: 'circle',
       r: 10,
-      x: 0,
-      y: 0,
-      rotate: function(d) { return d.x - 90; },
-      translate: function(d) { return [d.y, 0]; }
-    }]
+      rotate_first: true,
+      translate: function(d) {
+        return [d.y, 0];
+      },
+      rotate: function(d) {
+        return (d.x - 90);
+      }
+    }],
+
+   // In case we want to override the marks with groups position
+   //enter: function(data, vars) {
+   //  // attr("transform", function(d) { return "rotate(" + (d.x - 90) + ")translate(" + d.y + ")"; })
+   //  this.attr("transform", function(d, i) {
+   //    return "rotate(" + (d.x - 90) + ")translate(" + d.y + ", 0)";
+   //  })
+   //},
+   //update: function(data, vars) {
+   //  // attr("transform", function(d) { return "rotate(" + (d.x - 90) + ")translate(" + d.y + ")"; })
+   //  this.attr("transform", function(d, i) {
+   //    return "rotate(" + (d.x - 90) + ")translate(" + d.y + ", 0)";
+   //  })
+   //}
   }];
 
   params.connect = [{
     attr: vars.time.var_time,
     marks: [{
-      type: 'path',
+      type: 'path_coord',
+     // type: 'line',
      // fill: function(d) { return vars.color(params.accessor_items(d)[vars.var_color]); },
       stroke: function(d) {
         return 'black';
@@ -4522,11 +4630,7 @@ vars.default_params['sparkline'] = function(scope) {
   params.y_scale = [{
     func: d3.scale.linear()
             .range([scope.margin.top, scope.height - scope.margin.top - scope.margin.bottom])
-            .domain(d3.extent(Array.prototype.concat.apply([], scope.new_data.map(function(d) {
-              return d3.values(d.values);
-            })), function(d) {
-              return d[scope.var_y];
-            }))
+            .domain(d3.extent(vistk.utils.flatten_values(vars.new_data, vars.var_y)))
   }];
 
   params.items = [{
@@ -5790,6 +5894,16 @@ vistk.utils.flatten_years = function(data) {
   });
 
   return flat;
+}
+
+vistk.utils.flatten_values = function(data, attr) {
+
+  return Array.prototype.concat.apply([], data.map(function(d) {
+              return d3.values(d.values);
+            })).map(function(d) {
+              return d[attr];
+            });
+
 }
 
 vistk.utils.find_node_by_id = function(nodes, id) {
