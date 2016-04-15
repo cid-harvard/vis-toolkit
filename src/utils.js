@@ -1046,6 +1046,7 @@
               })
               .style("stroke", params_stroke)
               .style("fill", params_fill)
+              .style("fill-opacity", params_fill_opacity)
               .style("stroke-width", params_stroke_width)
               .style("stroke-opacity", params_stroke_opacity);
 
@@ -1086,7 +1087,9 @@
               .classed("highlighted__adjacent", function(d, i) { return d.__highlighted__adjacent; })
               .classed("selected", function(d, i) { return d.__selected; })
               .classed("selected__adjacent", function(d, i) { return d.__selected__adjacent; })
-              .style("fill", params_fill);
+              .style("fill", params_fill)
+              .style("fill-opacity", params_fill_opacity)
+              .style("stroke-opacity", params_stroke_opacity);
 
           if(typeof params.rotate_first !== 'undefined' && params.rotate_first) {
             mark.attr("transform", "rotate(" +  params_rotate + ")translate(" + ([params_translate[0] + params_offset_x, params_translate[1] + params_offset_y]) + ")");
