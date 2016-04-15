@@ -1594,6 +1594,12 @@
       vars_svg.selectAll(".y.axis").remove();
     }
 
+    // Forces axis redraw on refresh to make sure it does not overlap marks
+    if(vars.refresh) {
+      vars_svg.selectAll(".x.grid").remove();
+      vars_svg.selectAll(".y.grid").remove();
+    }
+
     if(vars.x_grid_show) {
 
       vars_svg.selectAll(".x.grid").data([vars.new_data])
