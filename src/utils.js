@@ -1358,12 +1358,12 @@
                       .filter(utils.filters.redraw_only)
                       .call(utils.draw_mark, params, vars);
 
-                  // Bind events to groups after marks have been created
-                  // If params.event is defined, removes all events for the current item
-                  if(typeof params.event === 'undefined') {
-                    gItems_enter.each(utils.items_group);
-                  }
+                }
 
+                // Bind events to groups after marks have been created
+                // If params.event is defined, removes all events for the current item
+                if(typeof params.event === 'undefined') {
+                  gItems_enter.each(utils.items_group);
                 }
 
                 gItems
