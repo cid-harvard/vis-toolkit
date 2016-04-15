@@ -129,6 +129,11 @@
         vars.time.points = [];
       }
 
+      // For some reason, some undefined years appear in the least
+      if(vars.time.points.length === 2 && typeof vars.time.points[1] === 'undefined') {
+        vars.time.points = [vars.time.points[0]];
+      }
+
       // In case no temporal values, change the accessor
       if(vars.time.var_time === null || vars.type === 'treemap') {
         vars.accessor_data = function(d) { return d; }

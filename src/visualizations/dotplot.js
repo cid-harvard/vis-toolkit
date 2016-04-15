@@ -23,7 +23,7 @@ vars.default_params['dotplot'] = function(scope) {
   params.items = [{
     marks: [{
       type: 'circle',
-    },{
+    }, {
       type: 'text',
       rotate: '-90'
     }]
