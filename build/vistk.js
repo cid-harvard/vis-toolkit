@@ -6,7 +6,7 @@ var w = typeof window === "undefined" ? this : window;
 var vistk = w.vistk || {};
 w.vistk = vistk;
 
-vistk.version = "0.0.34";
+vistk.version = "0.0.35";
 vistk.utils = {};
 
 if(typeof module === "object" && module.exports) {
@@ -4070,7 +4070,7 @@ vars.default_params['productspace'] = function(scope) {
           d[vars.var_r] = 0;
           d[vars.var_id] = d.id;
 
-          utils.init_item(d);
+          vistk.utils.init_item(d);
           d.__redraw = true;
 
           vars.new_data.push(d);
