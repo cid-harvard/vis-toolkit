@@ -1,0 +1,127 @@
+<!doctype html>
+<meta charset="utf-8">
+<script src="../js/d3.js"></script>
+<script src="../build/vistk.js"></script>
+<link href="../css/vistk.css" rel="stylesheet">
+<body>
+<style>
+path: {
+  fill: none;
+}
+
+</style>
+
+<div id="viz"></div>
+<script>
+
+d3.json("../../vis-toolkit-datasets/data/diversification_ubiquity_hs4_1995_2012.json", function(error, countries) {
+
+  var flat_years = vistk.utils.flatten_years(countries).filter(function(d) {
+    return d.year === 1995;
+  })
+
+  visualization = vistk.viz()
+    .params({
+      dev: true,
+      type: "radial",
+      margin: {top: 100, right: 10, bottom: 100, left: 10},
+      container: "#viz",
+      height: 700,
+      width: 1200,
+      data: flat_years,
+      var_id: "name",
+      var_sort: "nb_products",
+      var_group: "continent",
+      var_color: "continent",
+      title: "Number of products by countries / continent",
+      var_size: "nb_products",
+      var_text: "name",
+      var_r: "nb_products",
+      radius_min: 2,
+      radius_max: 50,
+      items: [{
+        marks: [{
+          type: 'text',
+          rotate_first: true,
+          translate: function(d) {
+            return [d.y, 0];
+          },
+          rotate: function(d) {
+            return (d.x - 90);
+          },
+
+        }, {
+          type: 'circle',
+          r: 10,
+          rotate_first: true,
+          translate: function(d) {
+            return [d.y, 0];
+          },
+          rotate: function(d) {
+            return (d.x - 90);
+          }
+        }]
+      }],
+      time: {
+        var_time: "year",
+        current_time: 1995,
+        filter: [1995],
+        parse: function(d) { return d; }
+      },
+      ui: {
+        default: true,
+        options: ["country", "continent"]
+      }
+    });
+
+  d3.select(visualization.container()).call(visualization);
+
+  // Capture click event
+  visualization.params().evt.register('selection', function(d) {
+
+    // Re-configure the graph layout
+    var data_root = d;
+
+    data_root.depth = 0;
+
+    data_root.children.forEach(function(d, i) {
+      d.depth = 1;
+
+      if(typeof d.children !== 'undefined') {
+
+        d.children.forEach(function(e, j) {
+          e.depth = 2;
+        })
+      }
+    })
+
+    data_root.parents.forEach(function(d, i) {
+      d.depth = 1;
+
+      if(typeof d.children !== 'undefined') {
+        d.children.forEach(function(e, j) {
+          e.depth = 2;
+        })
+      }
+    })
+
+    // Both parents and children become childer
+
+    visualization.params().var_group = "custom";
+
+    visualization.params().init = true;
+    visualization.params().refresh = true;
+    // Refresh the graph
+
+    d3.select(visualization.container()).call(visualization);
+
+  });
+
+
+
+
+
+});
+
+</script>
+</body>

@@ -7,6 +7,7 @@
 <style>
 path: {
   fill: none;
+  opacity: .5;
 }
 
 </style>
@@ -14,9 +15,7 @@ path: {
 <div id="viz"></div>
 <script>
 
-d3.json("../../vis-toolkit-datasets/data/diversification_ubiquity_hs4_1995_2012.json", function(error, countries) {
-
-  var flat_years = vistk.utils.flatten_years(countries);
+d3.json("../../vis-toolkit-datasets/data/exports_2012.json", function(error, exports) {
 
   visualization = vistk.viz()
     .params({
@@ -24,19 +23,22 @@ d3.json("../../vis-toolkit-datasets/data/diversification_ubiquity_hs4_1995_2012.
       type: "radial",
       margin: {top: 100, right: 10, bottom: 100, left: 10},
       container: "#viz",
-      height: 700,
-      width: 1200,
-      data: flat_years,
-      var_id: "name",
+      height: 10000,
+      width: 12000,
+      diameter: 1000,
+      data: exports.data,
+      var_id: 'code',
+      var_group: 'community_name',
+      var_color: 'community_name',
+      color: d3.scale.ordinal().domain([0, 9]).range(["#3182bd", "#6baed6", "#9ecae1", "#c6dbef", "#e6550d", "#fd8d3c", "#fdae6b", "#fdd0a2", "#31a354", "#74c476", "#a1d99b", "#c7e9c0", "#756bb1", "#9e9ac8", "#bcbddc", "#dadaeb", "#636363", "#969696", "#bdbdbd", "#d9d9d9"]),
       var_sort: "nb_products",
-      var_group: "continent",
-      var_color: "continent",
       title: "Number of products by countries / continent",
       var_size: "nb_products",
       var_text: "name",
-      var_r: "nb_products",
-      radius_min: 2,
-      radius_max: 50,
+      var_r: "value",
+      var_size: "value",
+      radius_min: 50,
+      radius_max: 500,
       time: {
         var_time: "year",
         current_time: 1995,

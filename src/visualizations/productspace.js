@@ -1,20 +1,19 @@
-vars.default_params["productspace"] = function(scope) {
+vars.default_params['productspace'] = function(scope) {
 
   var params = {};
 
   if(vars.init || vars.refresh) {
 
-    // Links between items
-    // Used for product space
+    // Links between items ussed to build graph
     if(vars.links !== null && vars.type === 'productspace') {
 
       vars.links.forEach(function(d, i) {
 
-        if(typeof d.source === "string") {
+        if(typeof d.source === 'string') {
           d.source = vistk.utils.find_node_by_id(vars.nodes, d.source);
         }
 
-        if(typeof d.target === "string") {
+        if(typeof d.target === 'string') {
           d.target = vistk.utils.find_node_by_id(vars.nodes, d.target);
         }
 
@@ -25,10 +24,12 @@ vars.default_params["productspace"] = function(scope) {
     }
 
     // Flagging missing nodes with __missing true attribute
-    if(typeof vars.nodes !== "undefined" && vars.type === 'productspace') {
+    if(typeof vars.nodes !== 'undefined') {
 
       vars.new_data = utils.join(vars.nodes, vars.new_data, vars.var_node_id, vars.var_id, function(new_data, node) {
+
           var r = new_data;
+
           if(typeof node === 'undefined') {
             return;
           }
@@ -64,13 +65,13 @@ vars.default_params["productspace"] = function(scope) {
 
         var node = vistk.utils.find_node_coordinates_by_id(vars.new_data, vars.var_id, d[vars.var_node_id]);
 
-        if(typeof node === "undefined") {
+        if(typeof node === 'undefined') {
 
           d.values = [];
           d[vars.var_r] = 0;
           d[vars.var_id] = d.id;
 
-          utils.init_item(d);
+          vistk.utils.init_item(d);
           d.__redraw = true;
 
           vars.new_data.push(d);
@@ -101,23 +102,16 @@ vars.default_params["productspace"] = function(scope) {
 
   params.items = [{
     marks: [{
-      type: "circle",
-     // r_scale: d3.scale.linear()
-     //             .range([10, 30])
-     //             .domain(d3.extent(vars.new_data, function(d) { return accessor_values(d)[vars.var_r]; })),
+      type: 'circle',
       fill: function(d) {
         return vars.color(scope.accessor_data(d)[vars.var_color]);
       }
     }, {
-      type: "text",
-      rotate: "30",
-      translate: null
+      type: 'text'
     }]
   }];
 
   params.connect = [{
-    attr: "links",
-    type: "items",
     marks: [{
       type: "line",
       func: null,
@@ -160,6 +154,7 @@ vars.default_params["productspace"] = function(scope) {
 
     });
 
+    // Custom highlight function to highlight neighbors
     vars.evt.register("highlightOut", function(d) {
 
       vars.new_data.forEach(function(f, k) {
@@ -186,6 +181,7 @@ vars.default_params["productspace"] = function(scope) {
 
     });
 
+    // Persistent selection to show neighbors
     vars.evt.register("selection", function(d) {
 
       // Make sure the highlighted node is above other nodes

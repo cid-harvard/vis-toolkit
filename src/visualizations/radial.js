@@ -2,18 +2,24 @@ vars.default_params['radial'] = function(scope) {
 
   var params = {};
 
-  params.var_x = 'x';
-  params.var_y = 'y';
+  params.var_x = 'x2';
+  params.var_y = 'y2';
 
-  if(vars.refresh) {
+  params.diameter = vars.diameter || 360;
+
+  scope.accessor_data = function(d) { return d; }
+
+  if(vars.init || vars.refresh) {
 
     utils.create_hierarchy(scope);
 
     vars.tree = d3.layout.tree()
-        .size([360, scope.width / 3 - 120])
+        .size([360, params.diameter - 120])
         .separation(function(a, b) { return (a.parent == b.parent ? 1 : 2) / a.depth; });
 
     vars.diagonal = d3.svg.diagonal.radial()
+        .source(function(d) { return {"x": d[0].x, "y": d[0].y}; })
+        .target(function(d) { return {"x": d[1].x, "y": d[1].y}; })
         .projection(function(d) { return [d.y, d.x / 180 * Math.PI]; });
 
     vars.nodes = vars.tree.nodes(vars.root);
@@ -21,55 +27,72 @@ vars.default_params['radial'] = function(scope) {
 
     vars.new_data = vars.nodes;
 
+    // In case we want to build an array with temporal values
     vars.new_data.forEach(function(d) {
-
-      d.values = [];
-      d.values[vars.time.current_time] = {};
-      d.values[vars.time.current_time][vars.var_id] = d[vars.var_id];
-      d.values[vars.time.current_time][vars.var_x] = d[vars.var_x];
-      d.values[vars.time.current_time][vars.var_y] = d[vars.var_y];
-      d.values[vars.time.current_time][vars.var_text] = d[vars.var_text];
-
+      // Required for items
+      d.x2 = scope.width / 2;
+      d.y2 = scope.height / 2;
       d.__redraw = true;
     });
 
-    vars.links.forEach(function(d) { d.__redraw = true; });
+    vars.links.forEach(function(d) {
+      d.__redraw = true;
+    });
 
   }
 
-  params.x_scale = [{
-    func: d3.scale.linear()
-            .range([0, scope.width-scope.margin.left-scope.margin.right])
-            .domain(d3.extent(vars.new_data, function(d) { return d.x; })).nice()
-  }];
-
-  params.y_scale = [{
-    func: d3.scale.linear()
-            .range([scope.height-scope.margin.top-scope.margin.bottom, scope.margin.top])
-            .domain(d3.extent(vars.new_data, function(d) { return d.y; })).nice(),
-  }];
+  params.x_scale = vistk.utils.scale.linear(scope);
+  params.y_scale = vistk.utils.scale.linear(scope);
 
   params.r_scale = d3.scale.linear()
-              .range([10, 30])
-              .domain(d3.extent(vars.new_data, function(d) { return d[vars.var_r]; }));
+                      .range([vars.radius_min, vars.radius_max])
+                      .domain(d3.extent(vars.new_data, function(d) {
+                        return vars.accessor_data(d)[vars.var_r];
+                      }));
 
   params.items = [{
     marks: [{
       type: 'text',
+      rotate_first: true,
+      translate: function(d) {
+        return [d.y, 0];
+      },
+      rotate: function(d) {
+        return (d.x - 90);
+      },
+
     }, {
       type: 'circle',
       r: 10,
-      x: 0,
-      y: 0,
-      rotate: function(d) { return d.x - 90; },
-      translate: function(d) { return [d.y, 0]; }
-    }]
+      rotate_first: true,
+      translate: function(d) {
+        return [d.y, 0];
+      },
+      rotate: function(d) {
+        return (d.x - 90);
+      }
+    }],
+
+   // In case we want to override the marks with groups position
+   //enter: function(data, vars) {
+   //  // attr("transform", function(d) { return "rotate(" + (d.x - 90) + ")translate(" + d.y + ")"; })
+   //  this.attr("transform", function(d, i) {
+   //    return "rotate(" + (d.x - 90) + ")translate(" + d.y + ", 0)";
+   //  })
+   //},
+   //update: function(data, vars) {
+   //  // attr("transform", function(d) { return "rotate(" + (d.x - 90) + ")translate(" + d.y + ")"; })
+   //  this.attr("transform", function(d, i) {
+   //    return "rotate(" + (d.x - 90) + ")translate(" + d.y + ", 0)";
+   //  })
+   //}
   }];
 
   params.connect = [{
     attr: vars.time.var_time,
     marks: [{
-      type: 'path',
+      type: 'path_coord',
+     // type: 'line',
      // fill: function(d) { return vars.color(params.accessor_items(d)[vars.var_color]); },
       stroke: function(d) {
         return 'black';

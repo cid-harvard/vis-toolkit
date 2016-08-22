@@ -211,37 +211,50 @@
 
           var items_mark_text = d3.select(that).selectAll(".items__mark__text.items_" + mark_id).data([d]);
 
-          items_mark_text.enter().append("text")
+          var items_mark_text_enter = items_mark_text.enter().append("text")
               .classed("items__mark__text", true)
               .classed("items_" + mark_id, true)
               .style("text-anchor", params.text_anchor)
               .attr("x", params_x)
               .attr("y", params_y)
               .attr("dy", ".35em")
-              .attr("transform", "translate(" + ([params_translate[0] + params_offset_x, params_translate[1] + params_offset_y]) + ")rotate(" +  params_rotate + ")")
-              .on("mouseover",function(d) { // FIX to prevent hovers
-                if(typeof vars.evt !== 'undefined' && vars.evt == 'none') {
+              .on("mouseover",function(d) { // To prevent hovers
+                if(typeof params.event !== 'undefined' && params.event === null) {
                   d3.event.stopPropagation();
+                  return;
                 }
               })
               .on("mouseleave", function(d) {
-                if(typeof vars.evt !== 'undefined' && vars.evt == 'none') {
+                if(typeof params.event !== 'undefined' && params.event === null) {
                   d3.event.stopPropagation();
+                  return;
                 }
               })
               .on("click", function(d) {
-                if(typeof vars.evt !== 'undefined' && vars.evt == 'none') {
+                if(typeof params.event !== 'undefined' && params.event === null) {
                   d3.event.stopPropagation();
+                  return;
                 }
               });
+
+          if(typeof params.rotate_first !== 'undefined' && params.rotate_first) {
+            items_mark_text_enter.attr("transform", "rotate(" +  params_rotate + ")translate(" + ([params_translate[0] + params_offset_x, params_translate[1] + params_offset_y]) + ")");
+          } else {
+            items_mark_text_enter.attr("transform", "translate(" + ([params_translate[0] + params_offset_x, params_translate[1] + params_offset_y]) + ")rotate(" +  params_rotate + ")");
+          }
 
           items_mark_text
               .classed("highlighted", function(d, i) { return d.__highlighted; })
               .classed("selected", function(d, i) { return d.__selected; })
               .transition().duration(vars.duration)
               .style("stroke", params_stroke)
-              .attr("transform", "translate(" + ([params_translate[0] + params_offset_x, params_translate[1] + params_offset_y]) + ")rotate(" +  params_rotate + ")")
               .text(params_text);
+
+          if(typeof params.rotate_first !== 'undefined' && params.rotate_first) {
+            items_mark_text.attr("transform", "rotate(" +  params_rotate + ")translate(" + ([params_translate[0] + params_offset_x, params_translate[1] + params_offset_y]) + ")");
+          } else {
+            items_mark_text.attr("transform", "translate(" + ([params_translate[0] + params_offset_x, params_translate[1] + params_offset_y]) + ")rotate(" +  params_rotate + ")");
+          }
 
         items_mark_text.exit().remove();
 
@@ -569,12 +582,15 @@
               // .style("stroke-dasharray", ("3, 3"))
               .on("mouseover",function(d) { // FIX to prevent hovers
                 d3.event.stopPropagation();
+                return;
               })
               .on("mouseleave", function(d) {
                 d3.event.stopPropagation();
+                return;
               })
               .on("click", function(d) {
                  d3.event.stopPropagation();
+                return;
               });
 
           mark
@@ -713,6 +729,50 @@
                 return params["func"](d3.values(this_accessor_values(e)), i, vars);
               })
               .style("fill", params_fill)
+              .style("stroke", params_stroke)
+              .style("stroke-width", params_stroke_width);
+
+          break;
+
+        case "path_coord":
+
+          var this_accessor_values = function(d) { return d.values; };
+
+          if(vars.type == "radial") {
+            this_accessor_values = function(d) { return d; };
+          }
+
+          if(typeof params['func'] == 'undefined') {
+              params['func'] = d3.svg.line()
+               .interpolate('linear')
+               .x(function(d) { return vars.x_scale[0]["func"](d[vars.var_x]); })
+               .y(function(d) { return vars.y_scale[0]["func"](d[vars.var_y]); });
+          }
+
+          var mark = d3.select(that).selectAll(".connect__path_" + mark_id).data([d]);
+
+          mark.enter().append('path')
+              .classed('connect__path', true)
+              .classed('connect__path_' + mark_id, true)
+              .classed("items_" + mark_id, true)
+              .style("fill", "none")
+              .style("stroke", params_stroke)
+              .style("stroke-width", params_stroke_width)
+              .attr('d', function(e) {
+                return params["func"](d3.values(this_accessor_values(e)), i, vars);
+              })
+              .attr("transform", function(d) {
+                return "translate(" +  params_translate + ")rotate(" +  params_rotate + ")";
+              });
+
+          mark
+              .classed("highlighted", function(e, j) { return e.__highlighted; })
+              .classed("selected", function(e, j) { return e.__selected; })
+              .transition().duration(vars.duration)
+              .attr('d', function(e) {
+                return params["func"](d3.values(this_accessor_values(e)), i, vars);
+              })
+              .style("fill", "none")
               .style("stroke", params_stroke)
               .style("stroke-width", params_stroke_width);
 
@@ -952,8 +1012,8 @@
           var mark_enter = mark.enter().append("circle")
               .classed("items_" + mark_id, true)
               .classed("items__mark__circle", true)
-              .attr("cx", params_translate[0])
-              .attr("cy", params_translate[1])
+              //.attr("cx", params_translate[0])
+              //.attr("cy", params_translate[1])
               .attr("r", function(d) {
 
                 if(typeof vars.var_r === "undefined") {
@@ -986,6 +1046,7 @@
               })
               .style("stroke", params_stroke)
               .style("fill", params_fill)
+              .style("fill-opacity", params_fill_opacity)
               .style("stroke-width", params_stroke_width)
               .style("stroke-opacity", params_stroke_opacity);
 
@@ -1015,13 +1076,26 @@
             mark_enter.classed(params.class(vars.accessor_items(d)), true);
           }
 
+          if(typeof params.rotate_first !== 'undefined' && params.rotate_first) {
+            mark_enter.attr("transform", "rotate(" +  params_rotate + ")translate(" + ([params_translate[0] + params_offset_x, params_translate[1] + params_offset_y]) + ")");
+          } else {
+            mark_enter.attr("transform", "translate(" + ([params_translate[0] + params_offset_x, params_translate[1] + params_offset_y]) + ")rotate(" +  params_rotate + ")");
+          }
+
           mark
               .classed("highlighted", function(d, i) { return d.__highlighted; })
               .classed("highlighted__adjacent", function(d, i) { return d.__highlighted__adjacent; })
               .classed("selected", function(d, i) { return d.__selected; })
               .classed("selected__adjacent", function(d, i) { return d.__selected__adjacent; })
-              .attr("transform", "translate(" +  params_translate + ")rotate(" +  params_rotate + ")")
-              .style("fill", params_fill);
+              .style("fill", params_fill)
+              .style("fill-opacity", params_fill_opacity)
+              .style("stroke-opacity", params_stroke_opacity);
+
+          if(typeof params.rotate_first !== 'undefined' && params.rotate_first) {
+            mark.attr("transform", "rotate(" +  params_rotate + ")translate(" + ([params_translate[0] + params_offset_x, params_translate[1] + params_offset_y]) + ")");
+          } else {
+            mark.attr("transform", "translate(" + ([params_translate[0] + params_offset_x, params_translate[1] + params_offset_y]) + ")rotate(" +  params_rotate + ")");
+          }
 
           mark.exit().remove();
 
@@ -1284,9 +1358,12 @@
                       .filter(utils.filters.redraw_only)
                       .call(utils.draw_mark, params, vars);
 
-                  // Bind events to groups after marks have been created
-                  gItems_enter.each(utils.items_group);
+                }
 
+                // Bind events to groups after marks have been created
+                // If params.event is defined, removes all events for the current item
+                if(typeof params.event === 'undefined') {
+                  gItems_enter.each(utils.items_group);
                 }
 
                 gItems
@@ -1515,6 +1592,12 @@
       vars_svg.call(utils.y_axis);
     } else {
       vars_svg.selectAll(".y.axis").remove();
+    }
+
+    // Forces axis redraw on refresh to make sure it does not overlap marks
+    if(vars.refresh) {
+      vars_svg.selectAll(".x.grid").remove();
+      vars_svg.selectAll(".y.grid").remove();
     }
 
     if(vars.x_grid_show) {
@@ -1797,6 +1880,13 @@
       })
   }
 
+  /**
+  * Generates a data structure with 2 levels of hierarchy (root and var_group)
+  * -root being the top-level
+  * -var_group being the second-level
+  * -items being the bottom-level
+  * @params
+  */
   utils.create_hierarchy = function(vars) {
 
    // Create the root node

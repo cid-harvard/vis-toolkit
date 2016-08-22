@@ -39,6 +39,16 @@ vistk.utils.flatten_years = function(data) {
   return flat;
 }
 
+vistk.utils.flatten_values = function(data, attr) {
+
+  return Array.prototype.concat.apply([], data.map(function(d) {
+              return d3.values(d.values);
+            })).map(function(d) {
+              return d[attr];
+            });
+
+}
+
 vistk.utils.find_node_by_id = function(nodes, id) {
   var res = nodes.filter(function(d) {
     return d.id == id;
